@@ -1,32 +1,3 @@
-# Role and Goal:
-You are an expert in formal verification and SMT solving using the Python Z3 library.
-Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into Z3 constraints.
-
-# Input:
-Context: {context}
-Question: {question}
-Answer Choices: {formatted_answers}
-
-# Instructions for Plan Generation:
-1.  **Analyze the Problem:** Carefully read the context, question, and answer choices.
-2.  **Identify Entities:** List all relevant entities (e.g., people, objects, locations, time slots). Assign clear identifiers if helpful (like mapping names to integers, e.g., George=0, Helen=1). This can simplify indexing later.
-3.  **Define Variables:** Specify the Z3 variables needed.
-    - Clearly state the type (e.g., Int, Bool, Real, or custom Sorts like `DeclareSort('Person')`).
-    - Explain what each variable represents (e.g., `MonM = Int('MonM')` represents the student ID for Monday Morning).
-    - List all variables.
-    - **Indexed Collections**: If you plan to use indexed collections where indices might be symbolic (i.e., Z3 variables themselves), clearly specify the use of Z3 Arrays (e.g., `schedule = Array('schedule', DaySort, PersonSort)`). If using Python lists where Z3 variables *represent* indices for conceptual mapping, ensure the plan describes how these Z3 variables will relate to concrete integer indices for iteration or how Z3 Arrays will be used for symbolic access.
-4.  **Formulate Constraints:** Translate *each piece* of information and *every rule* from the context into logical constraints.
-    - Explain each constraint clearly. Use mathematical notation or pseudo-code where appropriate (e.g., `ForAll(slot_idx, And(slot_array[slot_idx] >= 0, slot_array[slot_idx] <= 7))`, `Implies(ConditionA, ConditionB)`).
-    - Number the constraints.
-    - **Quantifiers**: If using quantifiers like `ForAll` or `Exists`, the plan must specify how the bound variables will be declared (e.g., "Declare `x = Int('x')` as a Z3 integer variable") before being used in the quantifier (e.g., "then use `ForAll([x], x > 0)`").
-5.  **Address the Question:** Explain how the plan will use the constraints to answer the specific question, especially how it will handle the multiple-choice answers (e.g., "Iterate through each answer choice, add its specific assignments as temporary constraints, and check for satisfiability (sat). The first 'sat' result corresponds to the correct answer.").
-
-# Output Requirements:
-- **Output ONLY the plan.**
-- Use clear headings (e.g., "1. Entities", "2. Variables", "3. Constraints", "4. Answering the Question").
-- Be precise and thorough. This plan will be used by another AI to generate the actual code.
-- Do NOT include any Python code, import statements, or Z3 solver instantiation in this plan. Focus *only* on the logical structure.
-
 # Example 1:
 Context: A cruise line is scheduling seven week-long voyages for the ship Freedom. Each voyage will occur in exactly one of the first seven weeks of the season: weeks 1 through 7. Each voyage will be to exactly one of four destinations: Guadeloupe, Jamaica, Martinique, or Trinidad. Each destination will be scheduled for at least one of the weeks. The following conditions apply to Freedom's schedule: Jamaica will not be its destination in week 4. Trinidad will be its destination in week 7. Freedom will make exactly two voyages to Martinique, and at least one voyage to Guadeloupe will occur in some week between those two voyages. Guadeloupe will be its destination in the week preceding any voyage it makes to Jamaica. No destination will be scheduled for consecutive weeks.
 Question: If Freedom makes a voyage to Martinique in week 3, which one of the following could be an accurate list of Freedom's destinations in week 4 and week 5, respectively?
@@ -110,4 +81,5 @@ Answer Choices: [
      - Add temporary constraints representing the schedule proposed in the choice. For example, for Choice A, we will add `student_at_slot[0] == 0`, `student_at_slot[1] == 1`, etc.
      - Check if the solver is satisfiable. If it is, this is the correct answer. We will print the corresponding letter (A, B, etc.) and stop.
      - If the solver is not satisfiable, we will pop the solver state and move on to the next choice.
+
 
