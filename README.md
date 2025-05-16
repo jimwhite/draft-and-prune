@@ -87,6 +87,8 @@ Currently supports:
   - Source: [AR-LSAT GitHub Repository](https://github.com/zhongwanjun/AR-LSAT)
   - Path: AR-LSAT/blob/main/complete_lsat_data/test_ar.json
 
+## To Do
+- [ ] Implement chekcer/verifier
 ## License
 
 [Include your license information here]
