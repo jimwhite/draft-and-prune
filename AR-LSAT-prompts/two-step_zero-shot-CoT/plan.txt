@@ -1,0 +1,50 @@
+# Role and Goal:
+You are an expert in formal verification and SMT solving using the Python Z3 library.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into Z3 constraints.
+
+# Input:
+Context: {context}
+Question: {question}
+Answer Choices: {formatted_answers}
+
+# Instructions for Plan Generation:
+1.  **Analyze the Problem:** Carefully read the context, question, and answer choices.
+2.  **Identify Entities:** List all relevant entities (e.g., people, objects, locations, time slots). Assign clear identifiers if helpful (like mapping names to integers, e.g., George=0, Helen=1). This can simplify indexing later.
+3.  **Define Variables:** Specify the Z3 variables needed.
+    - Clearly state the type (e.g., Int, Bool, Real, or custom Sorts like `DeclareSort('Person')`).
+    - Explain what each variable represents (e.g., `MonM = Int('MonM')` represents the student ID for Monday Morning).
+    - List all variables.
+    - **Indexed Collections**: If you plan to use indexed collections where indices might be symbolic (i.e., Z3 variables themselves), clearly specify the use of Z3 Arrays (e.g., `schedule = Array('schedule', DaySort, PersonSort)`). If using Python lists where Z3 variables *represent* indices for conceptual mapping, ensure the plan describes how these Z3 variables will relate to concrete integer indices for iteration or how Z3 Arrays will be used for symbolic access.
+4.  **Formulate Constraints:** Translate *each piece* of information and *every rule* from the context into logical constraints.
+    - Explain each constraint clearly. Use mathematical notation or pseudo-code where appropriate (e.g., `ForAll(slot_idx, And(slot_array[slot_idx] >= 0, slot_array[slot_idx] <= 7))`, `Implies(ConditionA, ConditionB)`).
+    - Number the constraints.
+    - **Quantifiers**: If using quantifiers like `ForAll` or `Exists`, the plan must specify how the bound variables will be declared (e.g., "Declare `x = Int('x')` as a Z3 integer variable") before being used in the quantifier (e.g., "then use `ForAll([x], x > 0)`").
+5.  **Address the Question:** Explain how the plan will use the constraints to answer the specific question, especially how it will handle the multiple-choice answers (e.g., "Iterate through each answer choice, add its specific assignments as temporary constraints, and check for satisfiability (sat). The first 'sat' result corresponds to the correct answer.").
+
+# Output Requirements:
+- **Output ONLY the plan.**
+- Use clear headings (e.g., "1. Entities", "2. Variables", "3. Constraints", "4. Answering the Question").
+- Be precise and thorough. This plan will be used by another AI to generate the actual code.
+- Do NOT include any Python code, import statements, or Z3 solver instantiation in this plan. Focus *only* on the logical structure.
+
+# Example Plan Snippet (Illustrative):
+1. Entities:
+- Students: George (G=0), Helen (H=1), ... (Map to IDs 0-7)
+- Days: Monday (0), Tuesday (1), Wednesday (2)
+- Times: Morning (0), Afternoon (1)
+2. Variables:
+- `student_at_slot = Array('student_at_slot', IntSort(), IntSort())` # Maps a composite slot_id to student_id
+- Or, individual variables: `MonM = Int('MonM')` - Student ID for Monday Morning slot.
+- `slots_vars = [MonM, MonA, TueM, TueA, WedM, WedA]`
+3. Constraints:
+- Constraint 0 (Domain for individual vars): ForAll `s` in `slot_vars`, `And(s >= 0, s <= 7)`. (Here `s` refers to Python iteration over `slot_vars`).
+- Constraint 1 (Distinctness for individual vars): `Distinct(slot_vars)` - Exactly 6 different students report.
+- Constraint 2 (George's Schedule): `MonM != G`, `MonA != G`, `WedM != G`, `WedA != G` - George (ID 0) only reports on Tuesday.
+- Constraint 3 (Quantified constraint): `x = Int('x')`, `y = Int('y')`. `ForAll([x, y], Implies(And(student_at_slot[x] == G, student_at_slot[y] == H), x != y))` - If George and Helen are scheduled, they are in different slots.
+4. Answering the Question:
+- Create a base Z3 solver with all general constraints.
+- For each answer choice (A, B, C, D, E):
+    - Push the solver state.
+    - Add temporary constraints representing the schedule proposed in the choice (e.g., for Choice A: add `MonM == H_ID`, `MonA == R_ID`, ...).
+    - Check `solver.check()`. If sat, this is the correct answer. Print the corresponding letter (A, B, ...) and stop.
+    - Pop the solver state.
