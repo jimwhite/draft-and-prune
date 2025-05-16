@@ -97,22 +97,22 @@ class Reasoner(ABC):
             print("=" * 80)
             
             # Interpret results
-            is_correct, result_message = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
             
             # Calculate total case time
             case_time = time.time() - start_time_case
             
             # Check if an answer was selected
             if is_correct:
-                print(f"\nReasoning PASSED: {result_message}")
+                print(f"\nReasoning PASSED. Error type: {error_type}")
             else:
-                print(f"\nReasoning FAILED: {result_message}")
+                print(f"\nReasoning FAILED. Error type: {error_type}")
             
             # Record result
             results.append({
                 "problem": test_case,
                 "reasoning_result": reasoning_result,
-                "result_message": result_message,
+                "error_type": error_type,
                 "success": is_correct,
                 "timing": case_time
             })
@@ -227,18 +227,18 @@ class TwoStepReasoner(Reasoner):
     def get_plan_prompt(self, test_case, feedback=None):
         """Get the plan generation prompt with the given inputs."""
         # load the plan generation prompt
-        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/plan_base.txt")
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        
+        base_prompt_path = os.path.join(dataset_prompt_path, "plan_base.txt")
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
-        if self.config.shots == "one":
-            # prompt_path = os.path.join(base_prompt_path, "one-shot-plan.txt")
-            raise ValueError(f"Unsupported number of shots: {self.config.shots}")
-        elif self.config.shots == "two":
-            shot_path = os.path.join(base_prompt_path, "plan_two_shot.txt")
-        
-        with open(shot_path, "r") as file:
-            shot_prompt = file.read()
+        if self.config.shots == "zero":
+            shot_prompt = ""
+        else:
+            shot_path = os.path.join(dataset_prompt_path, f"plan_{self.config.shots}_shot.txt")
+            with open(shot_path, "r") as file:
+                shot_prompt = file.read()
 
         # concatenate the base prompt and the shot prompt
         PLAN_GENERATION_PROMPT = base_prompt + shot_prompt
@@ -264,18 +264,19 @@ class TwoStepReasoner(Reasoner):
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
-        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/code_base.txt")
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        
+        base_prompt_path = os.path.join(dataset_prompt_path, "code_base.txt")
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
-        if self.config.shots == "one":
-            # prompt_path = os.path.join(base_prompt_path, "one-shot-code.txt")
-            raise ValueError(f"Unsupported number of shots: {self.config.shots}")
-        elif self.config.shots == "two":
-            shot_path = os.path.join(base_prompt_path, "code_two_shot.txt")
+        if self.config.shots == "zero":
+            shot_prompt = ""
+        else:
+            shot_path = os.path.join(dataset_prompt_path, f"code_{self.config.shots}_shot.txt")
 
-        with open(shot_path, "r") as file:
-            shot_prompt = file.read()
+            with open(shot_path, "r") as file:
+                shot_prompt = file.read()
 
         # concatenate the base prompt and the shot prompt
         CODE_GENERATION_PROMPT = base_prompt + shot_prompt
@@ -320,8 +321,6 @@ class TwoStepReasoner(Reasoner):
         solver_output = None
         plan_feedback = None
         code_feedback = None
-        accumulated_errors = []
-        accumulated_feedback = ""
 
         if current_plan is None or plan_feedback:
             # Generate plan
@@ -341,40 +340,34 @@ class TwoStepReasoner(Reasoner):
             print("=" * 80)
             print(current_code)
             print("=" * 80)
-    
+
+        syntax_errors = []
         for iteration in range(self.config.max_repairs):
             # Execute code
             is_valid, solver_output = self.execute_z3_code(current_code)
-
             if not is_valid:
-                error_message = f"Iteration {iteration+1}: Execution error: {solver_output}"
-                print(f"\nZ3 code execution failed. Feedback: {solver_output}")
-                
-                # Add this error to accumulated errors
-                accumulated_errors.append(error_message)
-                
-                # Create feedback with all accumulated errors
-                accumulated_feedback = "\n\n".join(accumulated_errors)
-                code_feedback = f"The generated code failed during execution. Please fix the errors and avoid previous mistakes:\n\nAll previous errors:\n```\n{accumulated_feedback}\n```"
-                
-                continue
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(current_code, syntax_errors)
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed Z3 Python code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
             else:
-                # combine current plan, code, and output, plan_feedback, code_feedback as dictionary
-                return {
-                    "plan": current_plan,
-                    "code": current_code,
-                    "solver_output": solver_output,
-                    "plan_feedback": plan_feedback,
-                    "code_feedback": code_feedback
-                }
+                break
         
         # reached max repairs
-        print(f"\nReached max repairs ({self.config.max_repairs})")
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
         return {
             "plan": current_plan,
             "code": current_code,
             "solver_output": solver_output,
             "plan_feedback": plan_feedback,
-            "code_feedback": code_feedback
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
         }
         

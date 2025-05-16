@@ -20,7 +20,7 @@ def main():
     # Optional arguments
     parser.add_argument("--limit", type=int, metavar="N",
                         help="Limit the number of samples to process")
-    parser.add_argument("--model", default="gemini-2.5-flash-preview-04-17", 
+    parser.add_argument("--model", default="gemini-1.5-pro", 
                         help="Specify the model name to use")
     parser.add_argument("--dataset", default="AR-LSAT",
                         choices=["AR-LSAT"], 
