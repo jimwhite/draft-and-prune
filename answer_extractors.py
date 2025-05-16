@@ -24,8 +24,8 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
         """
-        if not response_text:
-            return False, "No response text provided"
+        if 'Traceback' in response_text:
+            return False, 'syntax error'
         
         # Z3 pattern - "Option X is correct"
         answer_match = re.search(r"Option\s+([A-E])\s+is\s+correct", response_text, re.IGNORECASE)
@@ -39,13 +39,12 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
                 label_idx = int(label)
                 label_letter = chr(ord('A') + label_idx)
                 is_correct = chosen_option == label_letter
-                return is_correct, f"Model chose option {chosen_option}, label index was {label_idx} (letter {label_letter})"
             else:
                 is_correct = chosen_option == label
-                return is_correct, f"Model chose option {chosen_option}, expected {label}"
+            
+            return is_correct, None
         else:
-            print(f"No answer match found in response text")  
-            return False, "No answer pattern found in the response text"
+            return False, 'semantic error'
 
 # class CoTAnswerExtractor(AnswerExtractor):
 #     """Answer extractor for Chain-of-Thought style reasoning"""
