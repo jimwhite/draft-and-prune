@@ -343,13 +343,16 @@ class TwoStepReasoner(Reasoner):
 
         syntax_errors = []
         for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
             # Execute code
             is_valid, solver_output = self.execute_z3_code(current_code)
             if not is_valid:
+                print(f"\nZ3 code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
             
                 # Generate fix
                 fix_prompt = self.fix_syntax_errors(current_code, syntax_errors)
+                print("Attempting to fix syntax errors...")
                 current_code = self._call_api(fix_prompt)
                 current_code = self.clean_code(current_code)
                 print("\nFixed Z3 Python code:")
@@ -357,6 +360,7 @@ class TwoStepReasoner(Reasoner):
                 print(current_code)
                 print("=" * 80)
             else:
+                print("Z3 code execution succeeded.")
                 break
         
         # reached max repairs
