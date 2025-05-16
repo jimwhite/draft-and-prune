@@ -48,7 +48,7 @@ class Reasoner(ABC):
         self.api_client = get_api_client(self.api_provider, api_config)
 
     @abstractmethod
-    def reason(self, test_case: Dict) -> str:
+    def reason(self, test_case: Dict) -> Dict:
         """Implement the reasoning strategy"""
         pass
     
@@ -63,6 +63,7 @@ class Reasoner(ABC):
     def run_all_tests(self) -> List[Dict]:
         """Run reasoning on all test cases in the file with optional limit"""
         results = []
+        start_time_total = time.time()
         if os.path.exists(self.results_filename):
             print("The results file already exists, check whether you want to continue")
             exit()
@@ -83,18 +84,23 @@ class Reasoner(ABC):
         for i, test_case in enumerate(cases_to_process):
             print(f"\n\n{'='*40} Processing Test Case {processed_count + 1}/{len(cases_to_process)} {'='*40}")
             print(f"\nAttempting reasoning")
+            # Start timing for this test case
+            start_time_case = time.time()
             
             # Apply reasoning
-            reasoning_text = self.reason(test_case)
+            reasoning_result = self.reason(test_case)
             
             # Display results
             print("\nModel Reasoning:")
             print("=" * 80)
-            print(reasoning_text if reasoning_text else "[No reasoning extracted]")
+            print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
             print("=" * 80)
             
             # Interpret results
-            is_correct, result_message = self.answer_extractor.extract_answer(reasoning_text, test_case["label"])
+            is_correct, result_message = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+            
+            # Calculate total case time
+            case_time = time.time() - start_time_case
             
             # Check if an answer was selected
             if is_correct:
@@ -105,9 +111,10 @@ class Reasoner(ABC):
             # Record result
             results.append({
                 "problem": test_case,
-                "reasoning": reasoning_text,
-                "success": is_correct,
+                "reasoning_result": reasoning_result,
                 "result_message": result_message,
+                "success": is_correct,
+                "timing": case_time
             })
 
             # Save progress after each test case
@@ -123,8 +130,12 @@ class Reasoner(ABC):
                 print(f"Waiting {self.config.inter_test_case_delay}s before next test case...")
                 time.sleep(self.config.inter_test_case_delay)
 
+        # Calculate total execution time
+        total_execution_time = time.time() - start_time_total
+        
         # Print summary of results
         self._print_summary(results)
+        print(f"\nTotal execution time: {total_execution_time:.2f}s")
         
         return results
     
@@ -216,9 +227,21 @@ class TwoStepReasoner(Reasoner):
     def get_plan_prompt(self, test_case, feedback=None):
         """Get the plan generation prompt with the given inputs."""
         # load the plan generation prompt
-        prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/two-step_{self.config.shots}-shot-CoT/plan.txt")
-        with open(prompt_path, "r") as file:
-            PLAN_GENERATION_PROMPT = file.read()
+        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/plan_base.txt")
+        with open(base_prompt_path, "r") as file:
+            base_prompt = file.read()
+        
+        if self.config.shots == "one":
+            # prompt_path = os.path.join(base_prompt_path, "one-shot-plan.txt")
+            raise ValueError(f"Unsupported number of shots: {self.config.shots}")
+        elif self.config.shots == "two":
+            shot_path = os.path.join(base_prompt_path, "plan_two_shot.txt")
+        
+        with open(shot_path, "r") as file:
+            shot_prompt = file.read()
+
+        # concatenate the base prompt and the shot prompt
+        PLAN_GENERATION_PROMPT = base_prompt + shot_prompt
 
         # Pre-format the answers with json.dumps
         if self.config.dataset == "AR-LSAT":
@@ -241,9 +264,21 @@ class TwoStepReasoner(Reasoner):
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
-        prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/two-step_{self.config.shots}-shot-CoT/code.txt")
-        with open(prompt_path, "r") as file:
-            CODE_GENERATION_PROMPT = file.read()
+        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/code_base.txt")
+        with open(base_prompt_path, "r") as file:
+            base_prompt = file.read()
+        
+        if self.config.shots == "one":
+            # prompt_path = os.path.join(base_prompt_path, "one-shot-code.txt")
+            raise ValueError(f"Unsupported number of shots: {self.config.shots}")
+        elif self.config.shots == "two":
+            shot_path = os.path.join(base_prompt_path, "code_two_shot.txt")
+
+        with open(shot_path, "r") as file:
+            shot_prompt = file.read()
+
+        # concatenate the base prompt and the shot prompt
+        CODE_GENERATION_PROMPT = base_prompt + shot_prompt
 
         # Pre-format the answers with json.dumps
         if self.config.dataset == "AR-LSAT":
@@ -265,57 +300,51 @@ class TwoStepReasoner(Reasoner):
         
         return prompt 
 
-    # def get_fix_prompt(self, code, feedback):
-    #     """Get the fix generation prompt with the given inputs."""
-    #     # load the fix generation prompt
-    #     with open(f"../{self.config.dataset}-prompts/two-step/fix.txt", "r") as file:
-    #         FIX_GENERATION_PROMPT = file.read()
+    def fix_syntax_errors(self, code, syntax_error):
+        """Get the fix generation prompt with the given inputs."""
+        # load the fix generation prompt
+        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/fix_base.txt")
+        with open(base_prompt_path, "r") as file:
+            FIX_GENERATION_PROMPT = file.read()
 
-    #     prompt = FIX_GENERATION_PROMPT.format(
-    #         code=code,
-    #         feedback=feedback
-    #     )
-    #     return prompt
+        prompt = FIX_GENERATION_PROMPT.format(
+            code=code,
+            syntax_error=syntax_error
+        )
+        return prompt
     
-    def reason(self, test_case: Dict) -> str:
+    def reason(self, test_case: Dict) -> Dict:
         """Use model to reason and choose the correct answer in one step"""
-        start_time = time.time()
         current_plan = None
         current_code = None
-        current_output = None
+        solver_output = None
         plan_feedback = None
         code_feedback = None
         accumulated_errors = []
         accumulated_feedback = ""
 
+        if current_plan is None or plan_feedback:
+            # Generate plan
+            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
+            current_plan = self._call_api(plan_prompt)
+            print("\nGenerated plan:")
+            print("=" * 80)
+            print(current_plan)
+            print("=" * 80)
+
+        if current_code is None or code_feedback:
+            # Generate code
+            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
+            current_code = self._call_api(code_prompt)
+            current_code = self.clean_code(current_code)
+            print("\nGenerated Z3 Python code:")
+            print("=" * 80)
+            print(current_code)
+            print("=" * 80)
+    
         for iteration in range(self.config.max_repairs):
-            if current_plan is None or plan_feedback:
-                # Generate plan
-                plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
-                current_plan = self._call_api(plan_prompt)
-                print("\nGenerated plan:")
-                print("=" * 80)
-                print(current_plan)
-                print("=" * 80)
-                code_feedback = None
-                current_code = None
-                current_output = None
-
-            if current_code is None or code_feedback:
-                # Generate code
-                code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-                current_code = self._call_api(code_prompt)
-                current_code = self.clean_code(current_code)
-                print("\nGenerated Z3 Python code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
-                code_feedback = None
-                current_output = None
-
             # Execute code
             is_valid, solver_output = self.execute_z3_code(current_code)
-            current_output = solver_output
 
             if not is_valid:
                 error_message = f"Iteration {iteration+1}: Execution error: {solver_output}"
@@ -330,5 +359,22 @@ class TwoStepReasoner(Reasoner):
                 
                 continue
             else:
-                return current_output
-       
+                # combine current plan, code, and output, plan_feedback, code_feedback as dictionary
+                return {
+                    "plan": current_plan,
+                    "code": current_code,
+                    "solver_output": solver_output,
+                    "plan_feedback": plan_feedback,
+                    "code_feedback": code_feedback
+                }
+        
+        # reached max repairs
+        print(f"\nReached max repairs ({self.config.max_repairs})")
+        return {
+            "plan": current_plan,
+            "code": current_code,
+            "solver_output": solver_output,
+            "plan_feedback": plan_feedback,
+            "code_feedback": code_feedback
+        }
+        
