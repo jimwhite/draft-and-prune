@@ -13,7 +13,7 @@ from call_api import APIConfig, get_api_client
 import subprocess
 import tempfile
 import re
-
+from datetime import datetime
 class Reasoner(ABC):
     """Base class for different reasoning approaches"""
     
@@ -26,9 +26,10 @@ class Reasoner(ABC):
         
         self.config = config
         self.data_loader = data_loader
-        self.results_filename = self.config.get_results_filename()
+        self.results_folder = self.create_results_folder()
         self.answer_extractor = answer_extractor
-        
+        self.summary_filepath = os.path.join(self.results_folder, "summary.txt")
+
         # Initialize API client
         api_config = APIConfig(
             model_name=config.model_name,
@@ -51,7 +52,20 @@ class Reasoner(ABC):
     def reason(self, test_case: Dict) -> Dict:
         """Implement the reasoning strategy"""
         pass
-    
+
+
+    def create_results_folder(self) -> None:
+        """Create results folder based on model name"""
+        self.results_folder = f"results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model_name}-{self.config.shots}_shot_CoT/"
+        if os.path.exists(self.results_folder):
+            print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
+            # return self.results_folder
+            # exit()
+        else:
+            print("No existing results found, starting fresh")
+            os.makedirs(self.results_folder)
+        return self.results_folder
+
     def _call_api(self, prompt: str) -> str:
         """Common method to call the API using the modular client"""
         return self.api_client.call(prompt)
@@ -60,15 +74,28 @@ class Reasoner(ABC):
         """Interpret the results from the reasoning"""
         return True, "Model passed the test.", response_text
 
-    def run_all_tests(self) -> List[Dict]:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        """Process the results of a single test case"""
+        pass
+    
+    def get_processed_cases(self) -> List[str]:
+        """Get the list of processed cases"""
+        processed_cases = []
+        # summary_filepath
+        if os.path.exists(self.summary_filepath):
+            with open(self.summary_filepath, "r") as f:
+                try:
+                    results_array = json.load(f)
+                    for result in results_array:
+                        processed_cases.append(result["problem"]["id_string"])
+                except json.JSONDecodeError:
+                    # Empty file or not valid JSON array yet
+                    pass
+        return processed_cases
+
+    def run_all_tests(self) -> None:
         """Run reasoning on all test cases in the file with optional limit"""
-        results = []
         start_time_total = time.time()
-        if os.path.exists(self.results_filename):
-            print("The results file already exists, check whether you want to continue")
-            exit()
-        else:
-            print("No existing results found, starting fresh")
 
         # Load test cases
         test_cases = self.data_loader.load_data(self.config.data_path)
@@ -79,6 +106,12 @@ class Reasoner(ABC):
         else:
             cases_to_process = test_cases
 
+        # filter out cases that have already been processed
+        processed_cases = self.get_processed_cases()
+        cases_to_process = [case for case in cases_to_process if case['id_string'] not in processed_cases]
+        print(f"Processed {len(processed_cases)} test cases")
+        print(f"Processing {len(cases_to_process)} test cases")
+        
         # Process each test case
         processed_count = 0
         for i, test_case in enumerate(cases_to_process):
@@ -89,40 +122,11 @@ class Reasoner(ABC):
             
             # Apply reasoning
             reasoning_result = self.reason(test_case)
-            
-            # Display results
-            print("\nModel Reasoning:")
-            print("=" * 80)
-            print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
-            print("=" * 80)
-            
-            # Interpret results
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
-            
-            # Calculate total case time
-            case_time = time.time() - start_time_case
-            
-            # Check if an answer was selected
-            if is_correct:
-                print(f"\nReasoning PASSED. Error type: {error_type}")
-            else:
-                print(f"\nReasoning FAILED. Error type: {error_type}")
-            
-            # Record result
-            results.append({
-                "problem": test_case,
-                "reasoning_result": reasoning_result,
-                "error_type": error_type,
-                "success": is_correct,
-                "timing": case_time
-            })
 
-            # Save progress after each test case
-            try:
-                with open(self.results_filename, "w") as f:
-                    json.dump(results, f, indent=2)
-            except Exception as e:
-                print(f"Error saving results to {self.results_filename}: {e}")
+            # Calculate total case time
+            case_time = time.time() - start_time_case            
+            
+            self._process_results(test_case, reasoning_result, case_time)
 
             # Increment counter and delay before next test
             processed_count += 1
@@ -132,32 +136,7 @@ class Reasoner(ABC):
 
         # Calculate total execution time
         total_execution_time = time.time() - start_time_total
-        
-        # Print summary of results
-        self._print_summary(results)
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
-        
-        return results
-    
-    def _print_summary(self, results: List[Dict]) -> None:
-        """Print a summary of the test results"""
-        print("\n\n" + "="*80)
-        print("SUMMARY:")
-        if not results:
-            print("No results to summarize.")
-            return
-
-        # Filter results to only include those with valid IDs
-        valid_results = [r for r in results]
-        if not valid_results:
-            print("No valid results to summarize.")
-            return
-
-        # Calculate success rate
-        success_count = sum(1 for r in valid_results if r["success"])
-        total_processed = len(valid_results)
-        print(f"Passed: {success_count}/{total_processed} ({success_count/total_processed*100:.1f}%)")
-        print(f"\nResults saved to {self.config.get_results_filename()}")
        
     def clean_code(self, code_text):
         # Clean potential markdown fences (though the prompt requests raw code)
@@ -375,3 +354,64 @@ class TwoStepReasoner(Reasoner):
             "syntax_errors": syntax_errors
         }
         
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        # save the "plan" and "code" to the results_folder
+        plan_folder = os.path.join(self.results_folder, "plan")
+        code_folder = os.path.join(self.results_folder, "code")
+        if not os.path.exists(plan_folder):
+            os.makedirs(plan_folder)
+        if not os.path.exists(code_folder):
+            os.makedirs(code_folder)
+
+        plan_filepath = os.path.join(plan_folder, f"{test_case['id_string']}.txt")
+        with open(plan_filepath, "w") as f:
+            f.write(reasoning_result["plan"])
+            
+        code_filepath = os.path.join(code_folder, f"{test_case['id_string']}.py")
+        with open(code_filepath, "w") as f:
+            f.write(reasoning_result["code"])
+
+        # Display results
+        # print("\nSolver Output:")
+        # print("=" * 80)
+        # print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
+        # print("=" * 80)
+        
+        # Interpret results
+        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+        
+        # Check if an answer was selected
+        if is_correct:
+            print(f"\nReasoning PASSED. Error type: {error_type}")
+        else:
+            print(f"\nReasoning FAILED. Error type: {error_type}")
+
+        # Record result
+        results = {
+            "problem": test_case,
+            "solver_output": reasoning_result["solver_output"],
+            # "reasoning_result": reasoning_result,
+            "error_type": error_type,
+            "success": is_correct,
+            "timing": case_time
+        }
+
+        # Append results to summary as a JSON array
+        try:
+            results_array = []
+            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
+                with open(self.summary_filepath, "r") as f:
+                    try:
+                        results_array = json.load(f)
+                    except json.JSONDecodeError:
+                        # If not a valid JSON, start with an empty array
+                        results_array = []
+            
+            # Add new result to array
+            results_array.append(results)
+            
+            # Write back the entire array
+            with open(self.summary_filepath, "w") as f:
+                json.dump(results_array, f, indent=2)
+        except Exception as e:
+            print(f"Error saving results to {self.summary_filepath}: {e}")

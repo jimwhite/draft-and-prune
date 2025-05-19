@@ -31,7 +31,7 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
         answer_match = re.search(r"Option\s+([A-E])\s+is\s+correct", response_text, re.IGNORECASE)
         if answer_match:
             chosen_option = answer_match.group(1)
-            print(f"Answer match found: {chosen_option}")
+            # print(f"Answer match found: {chosen_option}")
             
             # Convert numeric label to letter if needed
             if isinstance(label, int) or label.isdigit():

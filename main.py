@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-
+from datetime import datetime
 from config import ReasonerConfig
 from reasoners import TwoStepReasoner
 from data_loaders import AR_LSAT_DatasetLoader
@@ -52,8 +52,10 @@ def main():
         inter_test_case_delay=args.test_delay,
         limit=args.limit,
         shots=args.shots,
-        result_filename_template=f"{args.dataset}_{args.reasoning_method}_results_{args.model}_{args.shots}_shot_COT.json"
+        # current date
+        results_folder=None
     )
+    # config.create_results_folder()
 
     # Create dataset loader based on format
     if args.dataset.lower() == "ar-lsat":
@@ -75,8 +77,8 @@ def main():
         raise ValueError(f"Unsupported reasoning method: {config.reasoning_method}") 
 
 
-    limit_msg = f" with limit {args.limit}" if args.limit else ""
-    print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
+    # limit_msg = f" with limit {args.limit}" if args.limit else ""
+    # print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
     reasoner.run_all_tests()
 
 
