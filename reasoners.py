@@ -240,6 +240,25 @@ class TwoStepReasoner(Reasoner):
         
         return prompt
 
+    def fix_semantic_errors(self, test_case, plan):
+        """Fix the semantic errors in the plan with the given inputs."""
+        # load the plan feedback prompt
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        
+        base_prompt_path = os.path.join(dataset_prompt_path, "fix_semantic_errors.txt")
+        with open(base_prompt_path, "r") as file:
+            base_prompt = file.read()
+        
+        prompt = base_prompt.format(
+            context=test_case["context"],
+            question=test_case["question"],
+            answers=test_case["answers"],
+            plan=plan
+        )
+
+        new_plan = self._call_api(prompt)
+        return new_plan
+        
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
@@ -283,7 +302,7 @@ class TwoStepReasoner(Reasoner):
     def fix_syntax_errors(self, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
-        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/fix_base.txt")
+        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/fix_syntax_errors.txt")
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
 
@@ -306,6 +325,12 @@ class TwoStepReasoner(Reasoner):
             plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
             current_plan = self._call_api(plan_prompt)
             print("\nGenerated plan:")
+            print("=" * 80)
+            print(current_plan)
+            print("=" * 80)
+
+            current_plan = self.fix_semantic_errors(test_case, current_plan)
+            print("\nFixed plan:")
             print("=" * 80)
             print(current_plan)
             print("=" * 80)
