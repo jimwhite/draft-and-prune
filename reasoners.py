@@ -206,7 +206,7 @@ class TwoStepReasoner(Reasoner):
     def get_plan_prompt(self, test_case, feedback=None):
         """Get the plan generation prompt with the given inputs."""
         # load the plan generation prompt
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
         base_prompt_path = os.path.join(dataset_prompt_path, "plan_base.txt")
         with open(base_prompt_path, "r") as file:
@@ -243,7 +243,7 @@ class TwoStepReasoner(Reasoner):
     def fix_semantic_errors(self, test_case, plan):
         """Fix the semantic errors in the plan with the given inputs."""
         # load the plan feedback prompt
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
         base_prompt_path = os.path.join(dataset_prompt_path, "fix_semantic_errors.txt")
         with open(base_prompt_path, "r") as file:
@@ -262,7 +262,7 @@ class TwoStepReasoner(Reasoner):
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/")
+        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
         base_prompt_path = os.path.join(dataset_prompt_path, "code_base.txt")
         with open(base_prompt_path, "r") as file:
@@ -302,7 +302,7 @@ class TwoStepReasoner(Reasoner):
     def fix_syntax_errors(self, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
-        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts/fix_syntax_errors.txt")
+        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/fix_syntax_errors.txt")
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
 
