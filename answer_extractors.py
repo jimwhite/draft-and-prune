@@ -24,7 +24,7 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
         """
-        if 'Traceback' or 'error' in response_text:
+        if 'Traceback' in response_text or 'error' in response_text:
             return False, 'syntax error'
         
         # Z3 pattern - "Option X is correct"

@@ -22,6 +22,8 @@ def main():
                         help="Limit the number of samples to process")
     parser.add_argument("--model", default="gemini-1.5-pro", 
                         help="Specify the model name to use")
+    parser.add_argument("--fix_model", default="gemini-2.5-flash-preview-04-17",
+                        help="Specify the model name to use for fixing errors")
     parser.add_argument("--dataset", default="AR-LSAT",
                         choices=["AR-LSAT"], 
                         help="Specify the dataset to use")
@@ -46,6 +48,7 @@ def main():
         api_key=args.api_key,
         dataset=args.dataset,
         model_name=args.model,
+        fix_model_name=args.fix_model,
         data_path=args.test_file,
         temperature=args.temperature,
         max_repairs=args.max_repairs,

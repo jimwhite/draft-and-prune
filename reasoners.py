@@ -47,6 +47,13 @@ class Reasoner(ABC):
             raise ValueError(f"Unsupported model: {config.model_name}")
             
         self.api_client = get_api_client(self.api_provider, api_config)
+        fix_api_config = APIConfig(
+            model_name=config.fix_model_name,
+            temperature=config.temperature,
+            max_repairs=config.max_repairs,
+            inter_test_case_delay=config.inter_test_case_delay
+        )
+        self.fix_api_client = get_api_client(self.api_provider, fix_api_config)
 
     @abstractmethod
     def reason(self, test_case: Dict) -> Dict:
@@ -69,6 +76,10 @@ class Reasoner(ABC):
     def _call_api(self, prompt: str) -> str:
         """Common method to call the API using the modular client"""
         return self.api_client.call(prompt)
+    
+    def _call_fix_api(self, prompt: str) -> str:
+        """Common method to call the API using the modular client"""
+        return self.fix_api_client.call(prompt)
     
     def interpret_results(self, response_text: str) -> Tuple[bool, str, Optional[str]]:
         """Interpret the results from the reasoning"""
@@ -243,6 +254,7 @@ class TwoStepReasoner(Reasoner):
     def fix_semantic_errors(self, test_case, plan):
         """Fix the semantic errors in the plan with the given inputs."""
         # load the plan feedback prompt
+        print(f"Using {self.config.fix_model_name} to fix the semantic errors in the plan")
         dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
         base_prompt_path = os.path.join(dataset_prompt_path, "fix_semantic_errors.txt")
@@ -256,7 +268,7 @@ class TwoStepReasoner(Reasoner):
             plan=plan
         )
 
-        new_plan = self._call_api(prompt)
+        new_plan = self._call_fix_api(prompt)
         return new_plan
         
     def get_code_prompt(self, test_case, plan, feedback=None):

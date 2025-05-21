@@ -10,6 +10,7 @@ class ReasonerConfig:
                  api_key: str,
                  dataset: str,
                  model_name: str = "gemini-2.5-flash-preview-04-17", 
+                 fix_model_name: str = "gemini-2.5-flash-preview-04-17",
                  data_path: str = None,
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
@@ -21,6 +22,7 @@ class ReasonerConfig:
         self.api_key = api_key
         self.dataset = dataset
         self.model_name = model_name
+        self.fix_model_name = fix_model_name
         self.data_path = data_path
         self.temperature = temperature
         self.max_repairs = max_repairs
