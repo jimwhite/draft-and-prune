@@ -1,0 +1,33 @@
+1. Entities:
+    - Colors: Forest (F=0), Olive (O=1), Peach (P=2), Turquoise (T=3), White (W=4), Yellow (Y=5)
+    - Rugs: Rug1 (0), Rug2 (1), Rug3 (2)
+
+2. Variables:
+    - `color_in_rug = Array('color_in_rug', IntSort(), IntSort())`  # Maps color ID to rug ID (0, 1, or 2). -1 indicates the color is not used.
+
+3. Constraints:
+    - Constraint 1 (Color Usage): `color_used = [Bool('color_used_%d' % i) for i in range(6)]`
+    - Constraint 2 (Five Colors Used): `PbEq([(color_used[i], 1) for i in range(6)], 5)`
+    - Constraint 3 (Color in One Rug or Not Used): `ForAll([c], Implies(color_used[c], And(color_in_rug[c] >= 0, color_in_rug[c] <= 2)))`
+    - Constraint 4 (Each Color in Only One Rug): `ForAll([c1, c2], Implies(And(c1 != c2, color_used[c1], color_used[c2]), color_in_rug[c1] != color_in_rug[c2]))`
+    - Constraint 5 (White Rule): `ForAll([r], Implies(color_in_rug[4] == r, PbEq([(color_in_rug[c] == r, 1) for c in range(6)], 3)))`
+    - Constraint 6 (Olive Rule): `ForAll([r], Implies(color_in_rug[1] == r, color_in_rug[2] == r))`
+    - Constraint 7 (Forest/Turquoise Rule): `ForAll([r], Not(And(color_in_rug[0] == r, color_in_rug[3] == r)))`
+    - Constraint 8 (Peach/Turquoise Rule): `ForAll([r], Not(And(color_in_rug[2] == r, color_in_rug[3] == r)))`
+    - Constraint 9 (Peach/Yellow Rule): `ForAll([r], Not(And(color_in_rug[2] == r, color_in_rug[5] == r)))`
+    - Constraint 10 (Solid Yellow Rug): `color_used[5] = True`
+    `ForAll([r], Implies(color_in_rug[5] == r, PbEq([(color_in_rug[c] == r, 1) for c in range(6)], 1)))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-10.
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints based on the answer choice:
+            - A: `PbEq([(PbEq([(color_in_rug[c] == r, 1) for c in range(6)], 1), 1) for r in range(3)], 1)`
+            - B: `color_used[0] = True` and `Exists([r], And(color_in_rug[0] == r, PbEq([(color_in_rug[c] == r, 1) for c in range(6)], 1)))`
+            - C: `Not(color_used[3])`
+            - D: `Exists([r], And(color_in_rug[0] == r, color_in_rug[1] == r))`
+            - E: `Exists([r], And(color_in_rug[2] == r, color_in_rug[4] == r))`
+        - Check `solver.check()`. If unsat, this is the EXCEPT answer. Print the corresponding letter and stop.
+        - Pop the solver state.

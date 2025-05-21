@@ -1,0 +1,24 @@
+1. Entities:
+    - Accomplices: Peters (P=0), Quinn (Q=1), Rovero (R=2), Stanton (S=3), Tao (T=4), Villas (V=5), White (W=6)
+    - Recruitment Order: Slots 1 through 7
+
+2. Variables:
+    - `recruitment_order = Array('recruitment_order', IntSort(), IntSort())` - Maps a recruitment slot (1-7) to an accomplice ID (0-6).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 7), And(recruitment_order[i] >= 0, recruitment_order[i] <= 6)))` -  Declare `i = Int('i')`. Ensures all assigned accomplice IDs are within the valid range.
+    - Constraint 2 (Distinctness): `Distinct([recruitment_order[i] for i in range(1, 8)])` - Ensures each accomplice is recruited exactly once.
+    - Constraint 3 (Stanton and Tao): `ForAll([i], Implies(And(i >= 1, i <= 6), Not(And(recruitment_order[i] == S, recruitment_order[i+1] == T))))` and `ForAll([i], Implies(And(i >= 2, i <= 7), Not(And(recruitment_order[i] == S, recruitment_order[i-1] == T))))` - Declare `i = Int('i')`. Stanton is not recruited immediately before or after Tao.
+    - Constraint 4 (Quinn and Rovero): `ForAll([i, j], Implies(And(i >= 1, i <= 7, j >= 1, j <= 7, recruitment_order[i] == Q, recruitment_order[j] == R), i < j))` - Declare `i = Int('i')`, `j = Int('j')`. Quinn is recruited earlier than Rovero.
+    - Constraint 5 (Villas and White): `ForAll([i], Implies(And(i >= 2, i <= 7, recruitment_order[i] == W), recruitment_order[i-1] == V))` and `ForAll([i], Implies(And(i >= 1, i <= 6, recruitment_order[i] == V), recruitment_order[i+1] == W))`- Declare `i = Int('i')`. Villas is recruited immediately before White.
+    - Constraint 6 (Peters): `recruitment_order[4] == P` - Peters is recruited fourth.
+    - Constraint 7 (White before Rovero): `ForAll([i, j], Implies(And(i >= 1, i <= 7, j >= 1, j <= 7, recruitment_order[i] == W, recruitment_order[j] == R), i < j))` - Declare `i = Int('i')`, `j = Int('j')`. White is recruited before Rovero.
+    - Constraint 8 (Rovero before Tao): `ForAll([i, j], Implies(And(i >= 1, i <= 7, j >= 1, j <= 7, recruitment_order[i] == R, recruitment_order[j] == T), i < j))` - Declare `i = Int('i')`, `j = Int('j')`. Rovero is recruited before Tao.
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice.
+        - Check `solver.check()`. If `sat`, this is a possible correct answer. Print the answer choice and stop.
+        - Pop the solver state.

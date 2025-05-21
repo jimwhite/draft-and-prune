@@ -1,0 +1,25 @@
+1. Entities:
+    - Singers: Kammer (K=0), Lugo (L=1), Trillo (T=2), Waite (W=3), Yoshida (Y=4), Zinn (Z=5)
+    - Audition Slots: 1, 2, 3, 4, 5, 6
+
+2. Variables:
+    - `audition_schedule = Array('audition_schedule', IntSort(), IntSort())`  Maps audition slot (1-6) to singer ID (0-5).
+
+3. Constraints:
+    - Constraint 1 (Domain of audition_schedule): `ForAll(i, Implies(And(i >= 1, i <= 6), And(audition_schedule[i] >= 0, audition_schedule[i] <= 5)))` where `i = Int('i')`.
+    - Constraint 2 (Distinctness of audition_schedule): `Distinct([audition_schedule[i] for i in range(1, 7)])`
+    - Constraint 3 (Kammer and Lugo recordings): `Sum([If(Or(audition_schedule[i] == K, audition_schedule[i] == L), 1, 0) for i in range(1, 7)]) == 2`
+    - Constraint 4 (Exactly two recordings):  Let `K_slot` be the slot where Kammer auditions and `L_slot` be the slot where Lugo auditions.  These are determined using Z3's `indexof` function (or equivalent).  Then add constraints: `Or(K_slot == 5, L_slot == 5)` and `And(K_slot != 4, L_slot != 4)` and `And(K_slot > 0, K_slot < 7, L_slot > 0, L_slot < 7)` and `K_slot != L_slot`.
+    - Constraint 5 (Waite before recorded): `And(indexof(audition_schedule, W, 6) < indexof(audition_schedule, K, 6), indexof(audition_schedule, W, 6) < indexof(audition_schedule, L, 6))` where `indexof(arr, val, n)` returns the index of `val` in array `arr` of size `n`, or `n` if `val` is not present.
+    - Constraint 6 (Kammer before Trillo): `indexof(audition_schedule, K, 6) < indexof(audition_schedule, T, 6)`
+    - Constraint 7 (Zinn before Yoshida): `indexof(audition_schedule, Z, 6) < indexof(audition_schedule, Y, 6)`
+
+4. Answering the Question:
+    - Create a base solver with constraints 1-7.
+    - Iterate through each answer choice (Kammer, Lugo, Trillo, Waite, Zinn):
+        - Push solver state.
+        - Add constraint `audition_schedule[2] == SingerID` where `SingerID` is the ID corresponding to the current answer choice.
+        - Check `solver.check()`.
+        - If `unsat`, this is the answer. Print the singer's name and stop.
+        - If `sat`, pop solver state and continue to the next choice.
+

@@ -1,0 +1,33 @@
+1. Entities:
+    - Movies: Horror (H=0), Mystery (M=1), Romance (R=2), Sci-Fi (S=3), Western (W=4)
+    - Screens: Screen 1 (1), Screen 2 (2), Screen 3 (3)
+    - Times: 7 PM (7), 8 PM (8), 9 PM (9)
+
+2. Variables:
+    - `movie_screen = Array('movie_screen', IntSort(), IntSort())` - Maps movie ID to screen ID.
+    - `movie_time = Array('movie_time', IntSort(), IntSort())` - Maps movie ID to time.
+
+3. Constraints:
+    - Constraint 1 (Screen Assignment): For all `m` in range(5), `Or(movie_screen[m] == 1, movie_screen[m] == 2, movie_screen[m] == 3)`
+    - Constraint 2 (Time Assignment): For all `m` in range(5), `Or(movie_time[m] == 7, movie_time[m] == 8, movie_time[m] == 9)`
+    - Constraint 3 (Screen Capacity): `And(Sum([If(movie_screen[m] == 1, 1, 0) for m in range(5)]) == 2, Sum([If(movie_screen[m] == 2, 1, 0) for m in range(5)]) == 2, Sum([If(movie_screen[m] == 3, 1, 0) for m in range(5)]) == 1)`
+    - Constraint 4 (Time Slots per Screen): `And(Sum([If(And(movie_screen[m] == 1, movie_time[m] == 7), 1, 0) for m in range(5)]) == 1, Sum([If(And(movie_screen[m] == 1, movie_time[m] == 9), 1, 0) for m in range(5)]) == 1, Sum([If(And(movie_screen[m] == 2, movie_time[m] == 7), 1, 0) for m in range(5)]) == 1, Sum([If(And(movie_screen[m] == 2, movie_time[m] == 9), 1, 0) for m in range(5)]) == 1, Sum([If(And(movie_screen[m] == 3, movie_time[m] == 8), 1, 0) for m in range(5)]) == 1)`
+    - Constraint 5 (Distinctness): `Distinct([movie_screen[m] * 10 + movie_time[m] for m in range(5)])`
+    - Constraint 6 (Western before Horror): `movie_time[W] < movie_time[H]`
+    - Constraint 7 (Sci-fi not on Screen 3): `movie_screen[S] != 3`
+    - Constraint 8 (Romance not on Screen 2): `movie_screen[R] != 2`
+    - Constraint 9 (Horror and Mystery different screens): `movie_screen[H] != movie_screen[M]`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-9.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints for screen 2 schedule:
+            - Choice 1: `And(movie_screen[S] == 2, movie_time[S] == 7, movie_screen[H] == 2, movie_time[H] == 9)`
+            - Choice 2: `And(movie_screen[S] == 2, movie_time[S] == 7, movie_screen[M] == 2, movie_time[M] == 9)`
+            - Choice 3: `And(movie_screen[S] == 2, movie_time[S] == 7, movie_screen[W] == 2, movie_time[W] == 9)`
+            - Choice 4: `And(movie_screen[W] == 2, movie_time[W] == 7, movie_screen[H] == 2, movie_time[H] == 9)`
+            - Choice 5: `And(movie_screen[W] == 2, movie_time[W] == 7, movie_screen[M] == 2, movie_time[M] == 9)`
+        - Check `solver.check()`. If unsat, this is the correct answer (the CANNOT be true case). Print the corresponding choice and stop.
+        - Pop the solver state.
+

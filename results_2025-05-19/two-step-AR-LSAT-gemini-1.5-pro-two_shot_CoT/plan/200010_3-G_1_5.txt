@@ -1,0 +1,31 @@
+1. Entities:
+    - Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    - Days: Monday (0), Tuesday (1), Wednesday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID (day * 2 + time) to a student ID.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(schedule[i] >= 0, schedule[i] < 8))` where `i` ranges from 0 to 5 (inclusive). Declare `i = Int('i')`.
+    - Constraint 2 (Distinctness): `Distinct([schedule[i] for i in range(6)])`
+    - Constraint 3 (George's schedule): `schedule[3] == 0` (Tuesday Afternoon)
+    - Constraint 4 (Olivia/Robert afternoon): `And(Not(Or(schedule[1] == 6, schedule[3] == 6, schedule[5] == 6)), Not(Or(schedule[1] == 7, schedule[3] == 7, schedule[5] == 7)))`
+    - Constraint 5 (Nina's implication):
+        `Implies(schedule[0] == 5, Or(And(schedule[2] == 1, schedule[3] == 2), And(schedule[2] == 2, schedule[3] == 1)))` (Nina on Monday)
+        `Implies(schedule[1] == 5, Or(And(schedule[2] == 1, schedule[3] == 2), And(schedule[2] == 2, schedule[3] == 1)))` (Nina on Monday afternoon)
+        `Implies(schedule[2] == 5, Or(And(schedule[4] == 1, schedule[5] == 2), And(schedule[4] == 2, schedule[5] == 1)))` (Nina on Tuesday morning)
+        `Implies(schedule[3] == 5, Or(And(schedule[4] == 1, schedule[5] == 2), And(schedule[4] == 2, schedule[5] == 1)))` (Nina on Tuesday afternoon)
+        `Implies(Or(schedule[4] == 5, schedule[5] == 5), True)` (Nina on Wednesday)
+
+
+4. Answering the Question:
+    - Add constraint: `schedule[3] == 3` (Kyle on Tuesday afternoon)
+    - Add constraint: `schedule[5] == 1` (Helen on Wednesday afternoon)
+    - For each answer choice:
+        - Push solver state.
+        - Add constraints corresponding to the choice. For example, for choice A ("Irving, Lenore, and Nina"): `schedule[0] == 2`, `schedule[2] == 4`, `schedule[4] == 5`.
+        - Check `solver.check()`. If `sat`, this is a possible correct answer. Record the choice.
+        - Pop solver state.
+    - Output all recorded choices.
+

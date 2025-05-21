@@ -1,0 +1,31 @@
+1. Entities:
+    - Houses: J=0, K=1, L=2, M=3, N=4, O=5, P=6
+    - Showing Times: Morning1=0, Morning2=1, Afternoon1=2, Afternoon2=3, Afternoon3=4, Evening1=5, Evening2=6
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps showing time slot (0-6) to house (0-6).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(schedule[i] >= 0, schedule[i] < 7))` where `i` is an integer variable ranging from 0 to 6.
+    - Constraint 1 (Distinctness): `Distinct([schedule[i] for i in range(7)])`
+    - Constraint 2 (J in Evening): `Or(schedule[5] == 0, schedule[6] == 0)`
+    - Constraint 3 (K not in Morning): `Not(Or(schedule[0] == 1, schedule[1] == 1))`
+    - Constraint 4 (L before M): `ForAll([i,j], Implies(And(i < j, i >=0, i < 7, j >= 0, j < 7), Implies(And(schedule[i] == 2, schedule[j] == 3), i < j)))`
+    - Constraint 5 (K before L): `ForAll([i,j], Implies(And(i < j, i >=0, i < 7, j >= 0, j < 7), Implies(And(schedule[i] == 1, schedule[j] == 2), i < j)))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-5.
+    - For each answer choice (pair of houses):
+        - Push the solver state.
+        - Add temporary constraints representing consecutive showings for the current pair in either order.  For example, for "J, K" (0, 1):
+            - `Or(
+                Or(And(schedule[0] == 0, schedule[1] == 1), And(schedule[0] == 1, schedule[1] == 0)),
+                Or(And(schedule[1] == 0, schedule[2] == 1), And(schedule[1] == 1, schedule[2] == 0)),
+                Or(And(schedule[2] == 0, schedule[3] == 1), And(schedule[2] == 1, schedule[3] == 0)),
+                Or(And(schedule[3] == 0, schedule[4] == 1), And(schedule[3] == 1, schedule[4] == 0)),
+                Or(And(schedule[4] == 0, schedule[5] == 1), And(schedule[4] == 1, schedule[5] == 0)),
+                Or(And(schedule[5] == 0, schedule[6] == 1), And(schedule[5] == 1, schedule[6] == 0))
+              )`
+        - Check `solver.check()`. If unsat, this is the correct answer. Print the corresponding answer choice and stop.
+        - Pop the solver state.

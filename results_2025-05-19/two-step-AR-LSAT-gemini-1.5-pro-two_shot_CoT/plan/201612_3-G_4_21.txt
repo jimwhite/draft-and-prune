@@ -1,0 +1,60 @@
+1. Entities:
+    - Companies: RealProp (RP=0), Southco (SC=1), Trustcorp (TC=2)
+    - Buildings: Garza Tower (GT=0), Yates House (YH=1), Zimmer House (ZH=2), Flores Tower (FT=3), Lynch Building (LB=4), King Building (KB=5), Meyer Building (MB=6), Ortiz Building (OB=7)
+    - Building Classes: Class 1 (C1=0), Class 2 (C2=1), Class 3 (C3=2)
+
+2. Variables:
+    - `owns = Array('owns', IntSort(), IntSort())`  Maps building ID to company ID after trades.
+    - `building_class = Array('building_class', IntSort(), IntSort())` Maps building ID to its class.
+
+3. Constraints:
+    - Constraint 0 (Initial Ownership):
+        - `owns[0] == 0` (RP owns GT)
+        - `owns[1] == 0` (RP owns YH)
+        - `owns[2] == 0` (RP owns ZH)
+        - `owns[3] == 1` (SC owns FT)
+        - `owns[4] == 1` (SC owns LB)
+        - `owns[5] == 2` (TC owns KB)
+        - `owns[6] == 2` (TC owns MB)
+        - `owns[7] == 2` (TC owns OB)
+    - Constraint 1 (Building Classes):
+        - `building_class[0] == 0` (GT is C1)
+        - `building_class[3] == 0` (FT is C1)
+        - `building_class[4] == 1` (LB is C2)
+        - `building_class[5] == 1` (KB is C2)
+        - `building_class[6] == 1` (MB is C2)
+        - `building_class[7] == 1` (OB is C2)
+        - `building_class[1] == 2` (YH is C3)
+        - `building_class[2] == 2` (ZH is C3)
+    - Constraint 2 (RealProp Owns Only Class 2):
+        - `ForAll([b], Implies(owns[b] == 0, building_class[b] == 1))` (All buildings owned by RP are C2)
+    - Constraint 3 (Trade Rules - One for One Same Class):
+        -  Declare `b1 = Int('b1')`, `b2 = Int('b2')`
+        - `ForAll([b1, b2], Implies(And(owns[b1] != owns[b2], building_class[b1] == building_class[b2]),  Or(And(owns[b1] == owns[b2], owns[b2] != owns[b2]), And(owns[b1] != owns[b2], owns[b2] != owns[b1]))))` (Simplified representation of a swap)
+    - Constraint 4 (Trade Rules - C1 for two C2):
+        - Declare `b1 = Int('b1')`, `b2 = Int('b2')`, `b3 = Int('b3')`, `o1 = Int('o1')`, `o2 = Int('o2')`, `o3 = Int('o3')`
+        -  Add constraint to ensure distinct owners before trade: `o1 != o2`, `o1 != o3`
+        - `ForAll([b1, b2, b3, o1, o2, o3], Implies(And(building_class[b1] == 0, building_class[b2] == 1, building_class[b3] == 1, owns[b1] == o1, owns[b2] == o2, owns[b3] == o3, o1 != o2, o1 != o3), Or(And(owns[b1] == o2, owns[b2] == o1, owns[b3] == o1), And(owns[b1] == o3, owns[b2] == o1, owns[b3] == o1))))`
+    - Constraint 5 (Trade Rules - C2 for two C3):
+         - Declare `b1 = Int('b1')`, `b2 = Int('b2')`, `b3 = Int('b3')`, `o1 = Int('o1')`, `o2 = Int('o2')`, `o3 = Int('o3')`
+         - Add constraint to ensure distinct owners before trade: `o1 != o2`, `o1 != o3`
+         - `ForAll([b1, b2, b3, o1, o2, o3], Implies(And(building_class[b1] == 1, building_class[b2] == 2, building_class[b3] == 2, owns[b1] == o1, owns[b2] == o2, owns[b3] == o3, o1 != o2, o1 != o3), Or(And(owns[b1] == o2, owns[b2] == o1, owns[b3] == o1), And(owns[b1] == o3, owns[b2] == o1, owns[b3] == o1))))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-5.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - A: `Exists([b], And(owns[b] == 2, building_class[b] == 0))`
+            - B: `owns[6] == 2`
+            - C: `Exists([b], And(owns[b] == 1, building_class[b] == 1))`
+            - D: `And(owns[1] == 1, owns[2] == 1)`
+            - E: `owns[3] == 1`
+        - Check `solver.check()`.
+        - If `unsat`, the answer choice is *necessarily false*.
+        - If `sat`, add the negation of the answer choice and check `solver.check()`.
+            - If `unsat`, the answer choice is *necessarily true*. This is the correct answer. Print the corresponding letter and stop.
+            - If `sat`, the answer choice is *possibly true, possibly false*.
+        - Pop the solver state.
+

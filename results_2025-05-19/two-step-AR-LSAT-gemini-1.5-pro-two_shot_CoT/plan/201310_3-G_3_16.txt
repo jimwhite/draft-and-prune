@@ -1,0 +1,38 @@
+1. Entities:
+    - Movies: Horror (H=0), Mystery (M=1), Romance (R=2), Sci-fi (S=3), Western (W=4)
+    - Screens: Screen 1 (1), Screen 2 (2), Screen 3 (3)
+    - Times: 7 PM (7), 8 PM (8), 9 PM (9)
+
+2. Variables:
+    - `movie_screen = Array('movie_screen', IntSort(), IntSort())` - Maps movie ID to screen ID.
+    - `movie_time = Array('movie_time', IntSort(), IntSort())` - Maps movie ID to time.
+
+3. Constraints:
+    - Constraint 1 (Screen Assignment): For all `m` in range(5), `Or(movie_screen[m] == 1, movie_screen[m] == 2, movie_screen[m] == 3)`
+    - Constraint 2 (Distinct Screens):  `Distinct([movie_screen[m] for m in range(5)])`
+    - Constraint 3 (Time Assignment): For all `m` in range(5), `Or(movie_time[m] == 7, movie_time[m] == 8, movie_time[m] == 9)`
+    - Constraint 4 (Screen 1 and 2 Times): For all `m` in range(5), `Implies(Or(movie_screen[m] == 1, movie_screen[m] == 2), Or(movie_time[m] == 7, movie_time[m] == 9))`
+    - Constraint 5 (Screen 3 Time): For all `m` in range(5), `Implies(movie_screen[m] == 3, movie_time[m] == 8)`
+    - Constraint 6 (Two Movies per Screen 1 & 2): For s in [1, 2], `Sum([If(movie_screen[m] == s, 1, 0) for m in range(5)]) == 2`
+    - Constraint 7 (One Movie on Screen 3): `Sum([If(movie_screen[m] == 3, 1, 0) for m in range(5)]) == 1`
+    - Constraint 8 (Two Movies per Time Slot on Screens 1 & 2): For t in [7, 9], `Sum([If(And(Or(movie_screen[m] == 1, movie_screen[m] == 2), movie_time[m] == t), 1, 0) for m in range(5)]) == 2`
+    - Constraint 9 (Western before Horror): `movie_time[W] < movie_time[H]`
+    - Constraint 10 (Sci-fi not on Screen 3): `movie_screen[S] != 3`
+    - Constraint 11 (Romance not on Screen 2): `movie_screen[R] != 2`
+    - Constraint 12 (Horror and Mystery Different Screens): `movie_screen[H] != movie_screen[M]`
+    - Constraint 13 (Romance before Western): `movie_time[R] < movie_time[W]`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-13.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - A: `movie_screen[H] != 1`
+            - B: `movie_time[M] != 7`
+            - C: `movie_screen[M] != 2`
+            - D: `movie_time[S] != 9`
+            - E: `movie_screen[S] != 2`
+        - Check `solver.check()`.
+        - If `unsat`, the current choice must be true. Print the corresponding letter and stop.
+        - If `sat`, pop the solver state and proceed to the next choice.
+

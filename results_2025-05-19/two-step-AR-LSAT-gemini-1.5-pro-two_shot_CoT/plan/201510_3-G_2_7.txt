@@ -1,0 +1,25 @@
+1. Entities:
+    - Photographers: Fuentes (F=0), Gagnon (G=1), Hue (H=2)
+    - Sections: Lifestyle (L=0), Metro (M=1), Sports (S=2)
+
+2. Variables:
+    - `counts = [[Int('c_%s_%s' % (p, s)) for s in range(3)] for p in range(3)]` # counts[p][s] stores the number of photos by photographer p in section s.
+
+3. Constraints:
+    - Constraint 1 (Photographer photo counts): `ForAll([p], And(Sum(counts[p]) >= 1, Sum(counts[p]) <= 3))` where `p = Int('p')`.
+    - Constraint 2 (Two photos per section): `ForAll([s], Sum(counts[p][s] for p in range(3)) == 2)` where `s = Int('s')`.
+    - Constraint 3 (Lifestyle/Metro overlap): `Or(counts[0][0] > 0, counts[1][0] > 0, counts[2][0] > 0)`
+    - Constraint 4 (Hue in Lifestyle and Fuentes in Sports): `counts[2][0] == counts[0][2]`
+    - Constraint 5 (No Gagnon in Sports): `counts[1][2] == 0`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-5.
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints based on the current answer choice. For example, for choice A:
+            - "Lifestyle: both photographs by Fuentes": `counts[0][0] == 2`, `counts[1][0] == 0`, `counts[2][0] == 0`
+            - "Metro: one photograph by Fuentes and one by Hue": `counts[0][1] == 1`, `counts[1][1] == 0`, `counts[2][1] == 1`
+            - "Sports: one photograph by Gagnon and one by Hue": `counts[0][2] == 0`, `counts[1][2] == 1`, `counts[2][2] == 1`
+        - Check `solver.check()`. If `sat`, this is the correct answer. Print the corresponding letter (A, B, C, D, or E) and stop.
+        - Pop the solver state.
+

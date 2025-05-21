@@ -1,0 +1,28 @@
+1. Entities:
+    - Students: Grecia (0), Hakeem (1), Joe (2), Katya (3), Louise (4)
+    - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+    - Shifts: First (0), Second (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a student ID.  Slot ID is calculated as `day * 2 + shift`.
+
+3. Constraints:
+    - Constraint 0 (Domain): `slot = Int('slot')`. `ForAll([slot], Implies(And(slot >= 0, slot <= 9), And(schedule[slot] >= 0, schedule[slot] <= 4)))`
+    - Constraint 1 (Each student works exactly two shifts): `student = Int('student')`. `ForAll([student], Implies(And(student >= 0, student <= 4), Sum([If(schedule[slot] == student, 1, 0) for slot in range(10)]) == 2))`
+    - Constraint 2 (Each shift is worked by exactly one student):  `day = Int('day')`. `ForAll([day], Implies(And(day >= 0, day <= 4), Distinct([schedule[day * 2], schedule[day * 2 + 1]])))`
+    - Constraint 3 (Louise works two consecutive second shifts): `Or([And(schedule[day * 2 + 1] == 4, schedule[(day + 1) * 2 + 1] == 4) for day in range(4)])`
+    - Constraint 4 (Grecia works two non-consecutive first shifts): `g_day1 = Int('g_day1')`, `g_day2 = Int('g_day2')`. `Exists([g_day1, g_day2], And(g_day1 >= 0, g_day1 <= 4, g_day2 >= 0, g_day2 <= 4, Not(Or(g_day2 == g_day1 + 1, g_day2 == g_day1 - 1)), schedule[g_day1 * 2] == 0, schedule[g_day2 * 2] == 0, Distinct([g_day1, g_day2])))`
+    - Constraint 5 (Katya works Tuesday and Friday): `Or(schedule[1 * 2] == 3, schedule[1 * 2 + 1] == 3)`, `Or(schedule[4 * 2] == 3, schedule[4 * 2 + 1] == 3)`
+    - Constraint 6 (Hakeem and Joe work on the same day at least once): `Or([Or(And(schedule[day * 2] == 1, schedule[day * 2 + 1] == 2), And(schedule[day * 2] == 2, schedule[day * 2 + 1] == 1)) for day in range(5)])`
+    - Constraint 7 (Grecia and Louise never work on the same day): `day = Int('day')`. `ForAll([day], Implies(And(day >= 0, day <= 4), Not(Or(And(schedule[day * 2] == 0, schedule[day * 2 + 1] == 4), And(schedule[day * 2] == 4, schedule[day * 2 + 1] == 0)))))`
+
+4. Answering the Question:
+    - Add constraint: Hakeem works on Wednesday: `Or(schedule[2 * 2] == 1, schedule[2 * 2 + 1] == 1)`
+    - For each answer choice:
+        - Push solver state.
+        - Add constraints corresponding to Joe's schedule as per the answer choice. For example, for "Monday and Wednesday", add `Or(schedule[0 * 2] == 2, schedule[0 * 2 + 1] == 2)` and `Or(schedule[2 * 2] == 2, schedule[2 * 2 + 1] == 2)`.
+        - Check `solver.check()`. If `sat`, store the answer choice.
+        - Pop solver state.
+    - Return the stored answer choice.
+
+

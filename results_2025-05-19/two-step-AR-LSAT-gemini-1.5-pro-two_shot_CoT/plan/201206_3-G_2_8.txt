@@ -1,0 +1,30 @@
+1. Entities:
+    - Spaces: 1, 2, 3, 4, 5, 6, 7
+    - Businesses: Optometrist (O), Pharmacy (P), Restaurant1 (R1), Restaurant2 (R2), Shoe Store (S), Toy Store (T), Veterinarian (V)
+
+2. Variables:
+    - `business_at_space = Array('business_at_space', IntSort(), IntSort())`  Maps space number (1-7) to business ID (0-6).
+    - Business IDs: O=0, P=1, R1=2, R2=3, S=4, T=5, V=6
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll(i, Implies(And(i >= 1, i <= 7), And(business_at_space[i] >= 0, business_at_space[i] <= 6)))` - All spaces are assigned a valid business ID.
+    - Constraint 2 (Distinctness): `Distinct([business_at_space[i] for i in range(1, 8)])` - Each business occupies a unique space.
+    - Constraint 3 (Pharmacy at End): `Or(business_at_space[1] == 1, business_at_space[7] == 1)` - Pharmacy is at space 1 or 7.
+    - Constraint 4 (Restaurant at Other End): `Implies(business_at_space[1] == 1, Or(business_at_space[7] == 2, business_at_space[7] == 3))` and `Implies(business_at_space[7] == 1, Or(business_at_space[1] == 2, business_at_space[1] == 3))` - A restaurant is at the other end.
+    - Constraint 5 (Restaurants Separated):  `If(business_at_space[1] == 2 Or business_at_space[1] == 3, business_at_space[7] == 2 Or business_at_space[7] ==3)` and `Sum([If(business_at_space[i] == 2 or business_at_space[i] == 3, 1, 0) for i in range(1,8)]) == 2` and `ForAll(i, Implies(And(i >= 1, i <= 7), Implies(Or(business_at_space[i] == 2, business_at_space[i] == 3), Not(Or(business_at_space[i+1] == 2, business_at_space[i+1] == 3, business_at_space[i+2] == 2, business_at_space[i+2] == 3)))) if i < 6 else True)` - Restaurants are separated by at least two spaces.
+    - Constraint 6 (Pharmacy Next to O or V): `Implies(business_at_space[1] == 1, Or(business_at_space[2] == 0, business_at_space[2] == 6))` and `Implies(business_at_space[7] == 1, Or(business_at_space[6] == 0, business_at_space[6] == 6))` - Pharmacy is next to Optometrist or Veterinarian.
+    - Constraint 7 (Toy Store Not Next to V): `ForAll(i, Implies(And(i >= 1, i <= 7), Implies(business_at_space[i] == 5, Not(Or(If(i > 1, business_at_space[i-1] == 6, False), If(i < 7, business_at_space[i+1] == 6, False))))))` - Toy store is not next to Veterinarian.
+    - Constraint 8 (Veterinarian in Space 5): `business_at_space[5] == 6`
+
+4. Answering the Question:
+    - Create a base Z3 solver with all constraints (1-8).
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice.
+            - A: `business_at_space[2] != 0`
+            - B: `business_at_space[7] != 1`
+            - C: `And(business_at_space[4] != 2, business_at_space[4] != 3)`
+            - D: `business_at_space[6] != 4`
+            - E: `business_at_space[3] != 5`
+        - Check `solver.check()`. If `unsat`, this answer choice *must* be true.
+        - Pop the solver state.

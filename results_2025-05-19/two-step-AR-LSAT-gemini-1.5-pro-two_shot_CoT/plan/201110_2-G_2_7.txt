@@ -1,0 +1,24 @@
+1. Entities:
+    - Countries: Venezuela (V=0), Yemen (Y=1), Zambia (Z=2)
+    - Ambassadors: Jaramillo (J=0), Kayne (K=1), Landon (L=2), Novetzke (N=3), Ong (O=4)
+
+2. Variables:
+    - `assignment = Array('assignment', IntSort(), IntSort())` - Maps country ID to ambassador ID.  `assignment[0]` represents the ambassador assigned to Venezuela (country ID 0).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([c], And(assignment[c] >= 0, assignment[c] < 5))` where `c = Int('c')`. Ensures each country is assigned a valid ambassador ID.
+    - Constraint 2 (Distinctness): `Distinct([assignment[0], assignment[1], assignment[2]])`. Ensures each ambassador is assigned to at most one country.
+    - Constraint 3 (Kayne XOR Novetzke): `Or(And(Or(assignment[0] == 1, assignment[1] == 1, assignment[2] == 1), Not(Or(assignment[0] == 3, assignment[1] == 3, assignment[2] == 3))), And(Not(Or(assignment[0] == 1, assignment[1] == 1, assignment[2] == 1)), Or(assignment[0] == 3, assignment[1] == 3, assignment[2] == 3)))`.  Either Kayne or Novetzke is assigned, but not both.
+    - Constraint 4 (Jaramillo implies Kayne): `Implies(Or(assignment[0] == 0, assignment[1] == 0, assignment[2] == 0), Or(assignment[0] == 1, assignment[1] == 1, assignment[2] == 1))`. If Jaramillo is assigned, so is Kayne.
+    - Constraint 5 (Ong to Venezuela implies not Kayne to Yemen): `Implies(assignment[0] == 4, assignment[1] != 1)`. If Ong is assigned to Venezuela, Kayne is not assigned to Yemen.
+    - Constraint 6 (Landon implies Zambia): `Implies(Or(assignment[0] == 2, assignment[1] == 2), False)`. If Landon is assigned, it must be to Zambia (and not to Venezuela or Yemen).
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the answer choice. For example, for "Venezuela: Jaramillo Yemen: Ong Zambia: Novetzke", add `assignment[0] == 0`, `assignment[1] == 4`, `assignment[2] == 3`.
+        - Check `solver.check()`. If 'sat', this is a possible assignment. Print the answer choice and stop.
+        - Pop the solver state.
+

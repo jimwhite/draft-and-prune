@@ -1,0 +1,27 @@
+1. Entities:
+    - Birds: oystercatchers (0), petrels (1), rails (2), sandpipers (3), terns (4)
+    - Locations: Gladwyn Hall (0), Howard Auditorium (1)
+    - Lecture Slots: 1st (0), 2nd (1), 3rd (2), 4th (3), 5th (4)
+
+2. Variables:
+    - `bird_at_slot = Array('bird_at_slot', IntSort(), IntSort())` - Maps lecture slot (0-4) to bird type (0-4).
+    - `location_at_slot = Array('location_at_slot', IntSort(), IntSort())` - Maps lecture slot (0-4) to location (0 or 1).
+
+3. Constraints:
+    - Constraint 1 (Distinct Birds): `Distinct([bird_at_slot[i] for i in range(5)])` - Each bird type is lectured on exactly once.
+    - Constraint 2 (First Lecture Location): `location_at_slot[0] == 0` - First lecture is in Gladwyn Hall.
+    - Constraint 3 (Fourth Lecture Location): `location_at_slot[3] == 1` - Fourth lecture is in Howard Auditorium.
+    - Constraint 4 (Gladwyn Count): `Sum([If(location_at_slot[i] == 0, 1, 0) for i in range(5)]) == 3` - Exactly three lectures are in Gladwyn Hall.
+    - Constraint 5 (Sandpipers Location): `location_at_slot[bird_at_slot.index(3)] == 1` - Sandpipers lecture is in Howard Auditorium.
+    - Constraint 6 (Sandpipers before Oystercatchers): `bird_at_slot.index(3) < bird_at_slot.index(0)` - Sandpipers lecture is before Oystercatchers lecture.
+    - Constraint 7 (Terns before Petrels): `bird_at_slot.index(4) < bird_at_slot.index(1)` - Terns lecture is before Petrels lecture.
+    - Constraint 8 (Petrels Location): `location_at_slot[bird_at_slot.index(1)] == 0` - Petrels lecture is in Gladwyn Hall.
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (1-8).
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints representing the bird order in the current choice. For example, if choice A is "oystercatchers, petrels, rails, sandpipers, terns", add `bird_at_slot[0] == 0`, `bird_at_slot[1] == 1`, `bird_at_slot[2] == 2`, `bird_at_slot[3] == 3`, `bird_at_slot[4] == 4`.
+        - Check `solver.check()`. If 'sat', this is the correct answer.  Return the corresponding choice string and stop.
+        - Pop the solver state.
+

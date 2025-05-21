@@ -1,0 +1,46 @@
+1. Entities and Indices:
+    - Students: Franz (0), Greene (1), Hidalgo (2), Isaacs (3)
+    - Paintings: Oil (0), Watercolor (1)
+    - Walls: 1 (0), 2 (1), 3 (2), 4 (3)
+    - Positions: Upper (0), Lower (1)
+
+2. Variables:
+    - `painting_wall[student][painting_type] = IntSort()`  (Represents the wall where a student's specific painting type is displayed)
+    - `wall_position[wall][position] = IntSort()` (Represents the student whose painting is at a specific wall and position)
+
+
+3. Constraints:
+    - Constraint 1 (Each student displays one oil and one watercolor on different walls):
+        - ForAll `s` in range(4), `painting_wall[s][0] != painting_wall[s][1]`
+    - Constraint 2 (Two paintings per wall, different students, different positions):
+        - ForAll `w` in range(4), `wall_position[w][0] != wall_position[w][1]`
+    - Constraint 3 (No wall has only watercolors):
+        - ForAll `w` in range(4), Exists `s` in range(4), `painting_wall[s][0] == w`
+    - Constraint 4 (No wall has work of only one student): Ensured by Constraint 2.
+    - Constraint 5 (No wall has both Franz and Isaacs):
+        - ForAll `w` in range(4), `Not(And(painting_wall[0][0] == w, painting_wall[3][0] == w))`
+        - ForAll `w` in range(4), `Not(And(painting_wall[0][0] == w, painting_wall[3][1] == w))`
+        - ForAll `w` in range(4), `Not(And(painting_wall[0][1] == w, painting_wall[3][0] == w))`
+        - ForAll `w` in range(4), `Not(And(painting_wall[0][1] == w, painting_wall[3][1] == w))`
+    - Constraint 6 (Greene's watercolor with Franz's oil, Greene's watercolor is upper):
+        - `painting_wall[1][1] == painting_wall[0][0]`
+        - `wall_position[painting_wall[1][1]][0] == 1`
+    - Constraint 7 (Isaacs's oil on wall 4, lower):
+        - `painting_wall[3][0] == 3`
+        - `wall_position[3][1] == 3`
+    - Constraint 8 (Hidalgo's oil on wall 2):
+        - `painting_wall[2][0] == 1`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the answer choice.
+            - "Franz's oil": `painting_wall[0][0] == 1`
+            - "Greene's watercolor": `painting_wall[1][1] == 1`
+            - "Greene's oil": `painting_wall[1][0] == 1`
+            - "Hidalgo's watercolor": `painting_wall[2][1] == 1`
+            - "Isaacs's watercolor": `painting_wall[3][1] == 1`
+        - Check `solver.check()`. If `sat`, this is a possible scenario. Print the corresponding answer choice and stop.
+        - Pop the solver state.
+

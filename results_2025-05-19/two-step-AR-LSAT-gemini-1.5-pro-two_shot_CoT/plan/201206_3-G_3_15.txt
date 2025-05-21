@@ -1,0 +1,25 @@
+1. Entities:
+    - Sales Representatives: Kim (0), Mahr (1), Parra (2), Quinn (3), Stuckey (4), Tiao (5), Udall (6)
+    - Zones: Zone 1 (0), Zone 2 (1), Zone 3 (2)
+
+2. Variables:
+    - `zone_assignment = Array('zone_assignment', IntSort(), IntSort())`  This array maps a sales representative (represented by an integer ID) to a zone (also represented by an integer ID).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(zone_assignment[i] >= 0, zone_assignment[i] <= 2))` for i in range(7).
+    - Constraint 2 (Distinct Zones - Explicit): `ForAll([i, j], Implies(i != j, zone_assignment[i] != zone_assignment[j]))` for i, j in range(7) if i < j. This is necessary because the question asks for a *complete* list.
+    - Constraint 3 (Parra xor Tiao in Zone 1): `Xor(zone_assignment[2] == 0, zone_assignment[5] == 0)`
+    - Constraint 4 (Tiao xor Udall in Zone 2): `Xor(zone_assignment[5] == 1, zone_assignment[6] == 1)`
+    - Constraint 5 (Parra and Quinn same zone): `zone_assignment[2] == zone_assignment[3]`
+    - Constraint 6 (Stuckey and Udall same zone): `zone_assignment[4] == zone_assignment[6]`
+    - Constraint 7 (More in Zone 3 than Zone 2): `Sum([If(zone_assignment[i] == 2, 1, 0) for i in range(7)]) > Sum([If(zone_assignment[i] == 1, 1, 0) for i in range(7)])`
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (1-7).
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints representing the zone assignments proposed in the choice.  For example, for Choice A ("Kim, Mahr"): add `zone_assignment[0] == 2`, `zone_assignment[1] == 2`, and `And([zone_assignment[i] != 2 for i in range(7) if i not in [0, 1]])`. This ensures the list is complete.
+        - Check `solver.check()`. If sat, this is a possible correct answer. Store the letter (A, B, ...).
+        - Pop the solver state.
+    - Output the stored letter corresponding to the correct answer choice.
+

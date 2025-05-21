@@ -1,0 +1,30 @@
+1. Entities:
+    - Articles: G, H, J, Q, R, S, Y
+    - Slots: 1, 2, 3, 4, 5, 6, 7 (representing the order of editing)
+    - Topics: Finance (F), Nutrition (N), Wildlife (W)
+    - Article-Topic Mapping: G-F, H-F, J-F, Q-N, R-N, S-N, Y-W
+
+2. Variables:
+    - `article_at_slot = Array('article_at_slot', IntSort(), IntSort())`  Maps slot (1-7) to article (0-6). Articles will be represented by integers: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 7), And(article_at_slot[i] >= 0, article_at_slot[i] <= 6)))` - Each slot contains a valid article ID.
+    - Constraint 1 (Distinctness): `Distinct([article_at_slot[i] for i in range(1, 8)])` - Each article is edited exactly once.
+    - Constraint 2 (Consecutive Topics): `ForAll([i], Implies(And(i >= 1, i <= 6),
+        Or(
+            And(article_at_slot[i] < 3, Or(article_at_slot[i+1] == 6, And(article_at_slot[i+1] >= 3, article_at_slot[i+1] <= 5))), // F followed by N or W
+            And(article_at_slot[i] >= 3, article_at_slot[i] <= 5, Or(article_at_slot[i+1] == 6, And(article_at_slot[i+1] < 3))), // N followed by F or W
+            And(article_at_slot[i] == 6, Or(article_at_slot[i+1] < 3, And(article_at_slot[i+1] >= 3, article_at_slot[i+1] <= 5))) // W followed by F or N
+        )))`
+    - Constraint 3 (S before Q condition): `Implies(article_at_slot[3] != 3, ForAll([i], Implies(article_at_slot[i] == 5, ForAll([j], Implies(article_at_slot[j] == 3, i < j)))))` - If Q is not third, S is before Q.
+    - Constraint 4 (S before Y): `ForAll([i], Implies(article_at_slot[i] == 5, ForAll([j], Implies(article_at_slot[j] == 6, i < j))))` - S is before Y.
+    - Constraint 5 (J before G before R): `ForAll([i], Implies(article_at_slot[i] == 2, ForAll([j], Implies(article_at_slot[j] == 0, i < j))))` and `ForAll([i], Implies(article_at_slot[i] == 0, ForAll([j], Implies(article_at_slot[j] == 4, i < j))))` - J is before G, and G is before R.
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (0-5).
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints representing the order in the choice. For example, for choice "H, S, J, Q, Y, G, R", add `article_at_slot[1] == 1`, `article_at_slot[2] == 5`, `article_at_slot[3] == 2`, `article_at_slot[4] == 3`, `article_at_slot[5] == 6`, `article_at_slot[6] == 0`, `article_at_slot[7] == 4`.
+        - Check `solver.check()`. If 'sat', this is the correct answer. Print the corresponding choice and stop.
+        - Pop the solver state.
+

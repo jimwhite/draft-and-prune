@@ -1,0 +1,30 @@
+1. Entities:
+    - Bays: 1, 2, 3, 4, 5, 6
+    - Cargo Types: Fuel (F), Grain (G), Livestock (L), Machinery (M), Produce (P), Textiles (T)
+
+2. Variables:
+    - `bay_of_cargo = Array('bay_of_cargo', IntSort(), IntSort())` - Maps cargo type (0-5) to bay number (1-6).
+    - Define integer constants representing cargo types: `F = 0`, `G = 1`, `L = 2`, `M = 3`, `P = 4`, `T = 5`
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([c], Implies(And(c >= 0, c <= 5), And(bay_of_cargo[c] >= 1, bay_of_cargo[c] <= 6)))` where `c = Int('c')`
+    - Constraint 2 (Distinctness): `Distinct([bay_of_cargo[c] for c in range(6)])`
+    - Constraint 3 (Grain > Livestock): `bay_of_cargo[G] > bay_of_cargo[L]`
+    - Constraint 4 (Livestock > Textiles): `bay_of_cargo[L] > bay_of_cargo[T]`
+    - Constraint 5 (Produce > Fuel): `bay_of_cargo[P] > bay_of_cargo[F]`
+    - Constraint 6 (Textiles next to Produce): `Or(bay_of_cargo[T] == bay_of_cargo[P] + 1, bay_of_cargo[T] == bay_of_cargo[P] - 1)`
+    - Constraint 7 (Produce next to Livestock): `Or(bay_of_cargo[P] == bay_of_cargo[L] + 1, bay_of_cargo[P] == bay_of_cargo[L] - 1)`
+
+4. Answering the Question:
+    - Create a base solver with constraints 1-7.
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add the constraints corresponding to the answer choice. For example:
+            - A: `bay_of_cargo[F] == 2`
+            - B: `bay_of_cargo[P] == 4`
+            - C: `bay_of_cargo[T] == 4`
+            - D: `bay_of_cargo[G] == 5`
+            - E: `bay_of_cargo[M] == 5`
+        - Check `solver.check()`. If unsat, this is the EXCEPT answer. Print the corresponding letter and stop.
+        - Pop the solver state.
+

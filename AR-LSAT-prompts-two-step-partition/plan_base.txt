@@ -22,7 +22,7 @@ Answer Choices: {formatted_answers}
 5.  **Address the Question:** Explain how the plan will use the constraints to answer the specific question, especially how it will handle the multiple-choice answers (e.g., "Iterate through each answer choice, add its specific assignments as temporary constraints, and check for satisfiability (sat). The first 'sat' result corresponds to the correct answer.").
 
 # Output Requirements:
-- **Output ONLY the plan.**
+- **Output ONLY the plan. Do not add explanations or comments at last.**
 - Use clear headings (e.g., "1. Entities", "2. Variables", "3. Constraints", "4. Answering the Question").
 - Be precise and thorough. This plan will be used by another AI to generate the actual code.
 - Do NOT include any Python code, import statements, or Z3 solver instantiation in this plan. Focus *only* on the logical structure.

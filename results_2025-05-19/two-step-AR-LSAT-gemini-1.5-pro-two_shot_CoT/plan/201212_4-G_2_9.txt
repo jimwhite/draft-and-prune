@@ -1,0 +1,32 @@
+1. Entities:
+    - Witnesses: Franco (F), Garcia (G), Hong (H), Iturbe (I), Jackson (J)
+    - Days: Monday (M), Tuesday (T), Wednesday (W)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps witness (int) to day (int).
+    - Witness indices: F=0, G=1, H=2, I=3, J=4
+    - Day indices: M=0, T=1, W=2
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([w], And(schedule[w] >= 0, schedule[w] <= 2))` where `w = Int('w')`.
+    - Constraint 2 (One day per witness): `Distinct([schedule[w] for w in range(5)])`
+    - Constraint 3 (Franco != Garcia): `schedule[0] != schedule[1]`
+    - Constraint 4 (Iturbe on Wednesday): `schedule[3] == 2`
+    - Constraint 5 (Two on Tuesday): `Sum([If(schedule[w] == 1, 1, 0) for w in range(5)]) == 2`
+    - Constraint 6 (Hong not on Monday): `schedule[2] != 0`
+    - Constraint 7 (Jackson only on Monday): `schedule[4] == 0`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - A: `schedule[0] != 2`
+            - B: `schedule[2] != 1`
+            - C: `schedule[1] != 1`
+            - D: `schedule[0] != schedule[2]`
+            - E: `schedule[1] != schedule[2]`
+        - Check `solver.check()`. If `unsat`, this is the correct answer. Record the answer choice letter.
+        - Pop the solver state.
+    - Return the recorded answer choice letter.

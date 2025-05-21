@@ -1,0 +1,38 @@
+1. Entities:
+    - Companies: RealProp (RP=0), Southco (SC=1), Trustcorp (TC=2)
+    - Buildings: Garza Tower (GZ=0), Yates House (YH=1), Zimmer House (ZH=2), Flores Tower (FT=3), Lynch Building (LB=4), King Building (KB=5), Meyer Building (MB=6), Ortiz Building (OZ=7)
+    - Classes: Class 1 (C1), Class 2 (C2), Class 3 (C3)
+    - Initial Ownership:  RP owns {GZ, YH, ZH}, SC owns {FT, LB}, TC owns {KB, MB, OZ}
+    - Building Classes: GZ, FT: C1; LB, KB, MB, OZ: C2; YH, ZH: C3
+
+2. Variables:
+    - `owner[t,b]` :  IntSort() - Represents the owner of building `b` at time step `t`.  `b` ranges from 0 to 7 (inclusive), representing the buildings. `t` represents the time step, starting at 0.
+
+3. Constraints:
+    - Constraint 0 (Initial Ownership):  `owner[0,0] == 0`, `owner[0,1] == 0`, `owner[0,2] == 0`, `owner[0,3] == 1`, `owner[0,4] == 1`, `owner[0,5] == 2`, `owner[0,6] == 2`, `owner[0,7] == 2`
+
+    - Constraint 1 (Valid Trades - Same Class):
+        `ForAll([t, b1, b2], Implies(And(t >= 0, b1 >= 0, b1 <= 7, b2 >= 0, b2 <= 7, b1 != b2, SameClass(b1, b2)),
+                                        Implies(owner[t,b1] != owner[t,b2],
+                                                And(owner[t+1,b1] == owner[t,b2], owner[t+1,b2] == owner[t,b1],
+                                                    PreserveOtherOwnerships(t, t+1, b1, b2)))))`
+        - `SameClass(b1, b2)` is a helper function that returns `True` if building `b1` and `b2` are of the same class.
+        - `PreserveOtherOwnerships(t1, t2, b1, b2)` is a helper function that asserts that the ownership of all buildings other than `b1` and `b2` remains the same between time steps `t1` and `t2`.
+
+    - Constraint 2 (Valid Trades - C1 for 2xC2):
+        `ForAll([t, b1, b2, b3], Implies(And(t >= 0, b1 >= 0, b1 <= 7, b2 >= 0, b2 <= 7, b3 >= 0, b3 <= 7, b1 != b2, b1 != b3, b2 != b3, IsClass(b1, C1), IsClass(b2, C2), IsClass(b3, C2)),
+                                        Implies(And(owner[t,b1] != owner[t,b2], owner[t,b1] != owner[t,b3], owner[t,b2] == owner[t,b3]),
+                                                And(owner[t+1,b1] == owner[t,b2], owner[t+1,b2] == owner[t,b1], owner[t+1,b3] == owner[t,b1],
+                                                    PreserveOtherOwnerships(t, t+1, b1, b2, b3)))))`
+        - `IsClass(b, c)` is a helper function that returns `True` if building `b` is of class `c`.
+        - `PreserveOtherOwnerships(t1, t2, b1, b2, b3)` is a helper function that asserts that the ownership of all buildings other than `b1`, `b2`, and `b3` remains the same between time steps `t1` and `t2`.
+
+    - Constraint 3 (Valid Trades - C2 for 2xC3):  Similar to Constraint 2, adapting for C2 and C3.
+
+4. Answering the Question:
+    - For each answer choice:
+        - Create a new solver instance.
+        - Add all base constraints (Constraints 0, 1, 2, and 3) for a fixed number of time steps (e.g., t=0 to t=5, allowing for multiple trades).
+        - Add constraints representing the final ownership described in the answer choice.  For example, for choice A: "The buildings owned by RealProp are the Flores Tower and the Garza Tower," add `owner[5,0] == 0`, `owner[5,3] == 0`, and constraints stating that RP owns *only* GZ and FT at t=5: `ForAll([b], Implies(And(b>=0, b<=7, b!=0, b!=3), owner[5,b] != 0))`.
+        - Check satisfiability. If unsatisfiable, this is the answer that CANNOT be true. Record the answer choice letter.
+        - Continue checking other choices until an unsatisfiable solution is found. Return the recorded letter.

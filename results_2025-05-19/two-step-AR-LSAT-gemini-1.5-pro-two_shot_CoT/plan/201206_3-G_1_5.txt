@@ -1,0 +1,55 @@
+1. Entities:
+    - Lab Assistants: Julio (J=0), Kevin (K=1), Lan (L=2), Nessa (N=3), Olivia (O=4), Rebecca (R=5)
+    - Days: Wednesday (W=0), Thursday (T=1), Friday (F=2)
+    - Times: Morning (M=0), Afternoon (A=1)
+    - Sessions: Represented by a tuple (Day, Time) -  (W,M)=0, (W,A)=1, (T,M)=2, (T,A)=3, (F,M)=4, (F,A)=5
+
+2. Variables:
+    - `assignment = Array('assignment', IntSort(), IntSort())` - Maps session ID (0-5) to Lab Assistant ID (0-5).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(assignment[i] >= 0, assignment[i] < 6))` where `i = Int('i')`.
+    - Constraint 1 (Distinctness): `Distinct([assignment[i] for i in range(6)])`
+    - Constraint 2 (Kevin and Rebecca same day):
+        `Or(And(assignment[0] == K, assignment[1] == R), And(assignment[1] == K, assignment[0] == R),
+            And(assignment[2] == K, assignment[3] == R), And(assignment[3] == K, assignment[2] == R),
+            And(assignment[4] == K, assignment[5] == R), And(assignment[5] == K, assignment[4] == R))`
+    - Constraint 3 (Lan and Olivia different days):
+        `Or(And(assignment[0] == L, Or(assignment[2] == O, assignment[3] == O, assignment[4] == O, assignment[5] == O)),
+           And(assignment[1] == L, Or(assignment[2] == O, assignment[3] == O, assignment[4] == O, assignment[5] == O)),
+           And(assignment[2] == L, Or(assignment[0] == O, assignment[1] == O, assignment[4] == O, assignment[5] == O)),
+           And(assignment[3] == L, Or(assignment[0] == O, assignment[1] == O, assignment[4] == O, assignment[5] == O)),
+           And(assignment[4] == L, Or(assignment[0] == O, assignment[1] == O, assignment[2] == O, assignment[3] == O)),
+           And(assignment[5] == L, Or(assignment[0] == O, assignment[1] == O, assignment[2] == O, assignment[3] == O)),
+           And(assignment[0] == O, Or(assignment[2] == L, assignment[3] == L, assignment[4] == L, assignment[5] == L)),
+           And(assignment[1] == O, Or(assignment[2] == L, assignment[3] == L, assignment[4] == L, assignment[5] == L)),
+           And(assignment[2] == O, Or(assignment[0] == L, assignment[1] == L, assignment[4] == L, assignment[5] == L)),
+           And(assignment[3] == O, Or(assignment[0] == L, assignment[1] == L, assignment[4] == L, assignment[5] == L)),
+           And(assignment[4] == O, Or(assignment[0] == L, assignment[1] == L, assignment[2] == L, assignment[3] == L)),
+           And(assignment[5] == O, Or(assignment[0] == L, assignment[1] == L, assignment[2] == L, assignment[3] == L)))`
+
+    - Constraint 4 (Nessa afternoon): `Or(assignment[1] == N, assignment[3] == N, assignment[5] == N)`
+    - Constraint 5 (Julio before Olivia):
+        `i = Int('i')`
+        `j = Int('j')`
+        `ForAll([i, j], Implies(And(assignment[i] == J, assignment[j] == O), i < j))`
+
+4. Answering the Question:
+    - Add constraint: `assignment[3] == J` (Julio leads Thursday afternoon).
+    - Create a base solver with all constraints.
+    - Initialize a counter `determined_count = 0`.
+    - For each lab assistant other than Julio (Kevin, Lan, Nessa, Olivia, Rebecca):
+        - Initialize `possible_slots` to all session IDs (0-5) excluding 3 (Thursday afternoon).
+        - While `possible_slots` is not empty:
+            - Pick a slot `s` from `possible_slots`.
+            - Push solver state.
+            - Add constraint: `assignment[s] == assistant_id`
+            - Check satisfiability.
+            - If unsat:  Remove `s` from `possible_slots`. Pop solver state.
+            - If sat:
+                - Push solver state.
+                - Add constraint: `assignment[s] != assistant_id`
+                - Check satisfiability.
+                - If unsat: Increment `determined_count`. Pop state. Break inner loop (assistant's session is determined).
+                - If sat: Pop state. Remove `s` from `possible_slots`.
+    - The final value of `determined_count` is the answer.

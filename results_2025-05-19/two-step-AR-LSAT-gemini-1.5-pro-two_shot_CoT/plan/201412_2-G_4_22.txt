@@ -1,0 +1,26 @@
+1. Entities:
+    - Photographers: Frost (0), Gonzalez (1), Heideck (2), Knutson (3), Lai (4), Mays (5)
+    - Universities: Silva (0), Thorne (1)
+
+2. Variables:
+    - `assigned = Array('assigned', IntSort(), IntSort())` - Maps photographer ID to university ID (0 or 1). If a photographer is not assigned, their value will be 2.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([p], And(assigned[p] >= 0, assigned[p] <= 2))` where `p = Int('p')` represents the photographer ID.
+    - Constraint 2 (At least two at each university):
+        - `count_silva = Sum([If(assigned[p] == 0, 1, 0) for p in range(6)])`
+        - `count_thorne = Sum([If(assigned[p] == 1, 1, 0) for p in range(6)])`
+        - `And(count_silva >= 2, count_thorne >= 2)`
+    - Constraint 3 (No photographer at both): `ForAll([p], Implies(assigned[p] != 2, Or(assigned[p] == 0, assigned[p] == 1)))`  Also add: `ForAll([p], Implies(Or(assigned[p] == 0, assigned[p] == 1), assigned[p] != 2))`
+    - Constraint 4 (Frost and Heideck together): `assigned[0] == assigned[2]` and `assigned[0] != 2`
+    - Constraint 5 (Lai and Mays different): `Implies(And(assigned[4] != 2, assigned[5] != 2), assigned[4] != assigned[5])`
+    - Constraint 6 (Gonzalez at Silva implies Lai at Thorne): `Implies(assigned[1] == 0, assigned[4] == 1)`
+    - Constraint 7 (Knutson not at Thorne implies Heideck and Mays at Thorne): `Implies(assigned[3] != 1, And(assigned[2] == 1, assigned[5] == 1))`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints representing the Thorne assignments in the choice. For example, for choice "Frost, Gonzalez, Heideck, Mays", add `assigned[0] == 1`, `assigned[1] == 1`, `assigned[2] == 1`, `assigned[5] == 1`.  For any photographer *not* listed in the Thorne assignment, add the constraint that they are either at Silva *or* unassigned:  `Or(assigned[3] == 0, assigned[3] == 2)`, `Or(assigned[4] == 0, assigned[4] == 2)`.
+        - Check `solver.check()`. If unsat, this is the answer that CANNOT be a complete assignment. Print the choice and stop.
+        - Pop the solver state.

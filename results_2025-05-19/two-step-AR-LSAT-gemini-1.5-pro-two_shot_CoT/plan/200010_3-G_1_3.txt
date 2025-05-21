@@ -1,0 +1,42 @@
+1. Entities:
+    - Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    - Days: Monday (0), Tuesday (1), Wednesday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `report = Array('report', IntSort(), IntSort(), IntSort())`  # report[day][time] = student_id.  
+        - day: 0, 1, 2
+        - time: 0, 1
+        - student_id: 0-7
+
+3. Constraints:
+    - Constraint 1 (Exactly two reports per day): `ForAll([d], Distinct([report[d][0], report[d][1]]))` where `d = Int('d')` and `0 <= d <= 2`.
+    - Constraint 2 (Exactly six students give reports):  Let `reports_list = [report[d][t] for d in range(3) for t in range(2)]`. Then add constraints:
+        - `Distinct(reports_list)`
+        - For each possible combination of 7 students, assert that at least one is missing.  This ensures exactly 6 reports are given. (This is more complex but avoids counting quantifiers which can be inefficient).
+    - Constraint 3 (George reports only on Tuesday): `Or(report[1][0] == 0, report[1][1] == 0)` and `And(report[0][0] != 0, report[0][1] != 0, report[2][0] != 0, report[2][1] != 0)`
+    - Constraint 4 (Olivia and Robert do not give afternoon reports): `And([report[d][1] != 6 for d in range(3)], [report[d][1] != 7 for d in range(3)])`
+    - Constraint 5 (Nina's report implies Helen and Irving report the next day, unless Wednesday): 
+        `ForAll([d], Implies(Or(report[d][0] == 5, report[d][1] == 5),
+                                 If(d < 2,
+                                    And(Or(report[d+1][0] == 1, report[d+1][1] == 1),
+                                        Or(report[d+1][0] == 2, report[d+1][1] == 2)),
+                                    True)))` where `d = Int('d')` and `0 <= d <= 2`.
+
+
+4. Answering the Question:
+    - Create a base solver with constraints 1-5.
+    - For each answer choice (pair of students):
+        - Push solver state.
+        - Let s1 and s2 be the student IDs from the answer choice.
+        - Add a constraint that the two students report on the same day, but not necessarily Wednesday:
+            `same_day = Or(And(Or(report[0][0] == s1, report[0][1] == s1), Or(report[0][0] == s2, report[0][1] == s2)),
+                         And(Or(report[1][0] == s1, report[1][1] == s1), Or(report[1][0] == s2, report[1][1] == s2)),
+                         And(Or(report[2][0] == s1, report[2][1] == s1), Or(report[2][0] == s2, report[2][1] == s2)))`
+        - Add a constraint that they do *not* both report on Wednesday:
+            `not_wednesday = Not(And(Or(report[2][0] == s1, report[2][1] == s1), Or(report[2][0] == s2, report[2][1] == s2)))`
+        - Assert `And(same_day, not_wednesday)`
+        - Check satisfiability. If unsat, this means they *must* report on Wednesday if they report on the same day, so this is the correct answer. Record the answer choice and break the loop.
+        - Pop solver state.
+    - Return the recorded answer choice.
+

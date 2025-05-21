@@ -1,0 +1,37 @@
+1. Entities:
+    - Employees: Robertson (R=0), Souza (S=1), Togowa (T=2), Vaughn (V=3), Xu (X=4), Young (Y=5)
+    - Parking Spaces: #1 (0), #2 (1), #3 (2), #4 (3), #5 (4), #6 (5)
+
+2. Variables:
+    - `assignment = Array('assignment', IntSort(), IntSort())` - Maps employee ID to parking space number.  `assignment[i]` represents the parking space assigned to employee `i`.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(assignment[i] >= 0, assignment[i] <= 5))` where `i` is an integer variable ranging from 0 to 5 inclusive.
+    - Constraint 2 (Distinctness): `Distinct([assignment[i] for i in range(6)])`
+    - Constraint 3 (Young > Togowa): `assignment[Y] > assignment[T]`
+    - Constraint 4 (Xu > Souza): `assignment[X] > assignment[S]`
+    - Constraint 5 (Robertson > Young): `assignment[R] > assignment[Y]`
+    - Constraint 6 (Robertson's Parking Space): `Or(assignment[R] == 0, assignment[R] == 1, assignment[R] == 2, assignment[R] == 3)`
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - Choice A: `assignment[S] == 0`
+            - Choice B: `assignment[Y] == 1`
+            - Choice C: `assignment[V] == 2`
+            - Choice D: `assignment[R] == 3`
+            - Choice E: `assignment[X] == 4`
+        - Check if the solver is satisfiable (`solver.check() == sat`).
+        - If satisfiable, check for uniqueness:
+            - Get the model: `model = solver.model()`
+            - Create a list of assertions representing the current assignments: `current_assignments = [assignment[i] == model[assignment[i]] for i in range(6)]`
+            - Push the solver state.
+            - Add the negation of the conjunction of the current assignments: `solver.add(Not(And(current_assignments)))`
+            - Check if the solver is now unsatisfiable (`solver.check() == unsat`). If so, the solution is unique.
+            - Pop the solver state (for the uniqueness check).
+        - If a unique solution is found, record the answer choice.
+        - Pop the solver state (for the answer choice).
+    - Return the recorded answer choice.
+

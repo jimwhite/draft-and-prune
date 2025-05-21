@@ -1,0 +1,29 @@
+1. Entities:
+    - Sales Representatives: Kim (0), Mahr (1), Parra (2), Quinn (3), Stuckey (4), Tiao (5), Udall (6)
+    - Zones: Zone 1 (0), Zone 2 (1), Zone 3 (2)
+
+2. Variables:
+    - `zone_assignment = Array('zone_assignment', IntSort(), IntSort())`  Maps sales representative ID to zone ID.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(zone_assignment[i] >= 0, zone_assignment[i] < 3))` for i in range(7).
+    - Constraint 2 (Exactly One Zone): `ForAll([i], Or(zone_assignment[i] == 0, zone_assignment[i] == 1, zone_assignment[i] == 2))` for i in range(7)
+    - Constraint 3 (Parra/Tiao Zone 1 - XOR): `Xor(zone_assignment[2] == 0, zone_assignment[5] == 0)`
+    - Constraint 4 (Tiao/Udall Zone 2 - XOR): `Xor(zone_assignment[5] == 1, zone_assignment[6] == 1)`
+    - Constraint 5 (Parra/Quinn Same Zone): `zone_assignment[2] == zone_assignment[3]`
+    - Constraint 6 (Stuckey/Udall Same Zone): `zone_assignment[4] == zone_assignment[6]`
+    - Constraint 7 (Zone 3 > Zone 2): `Sum([If(zone_assignment[i] == 2, 1, 0) for i in range(7)]) > Sum([If(zone_assignment[i] == 1, 1, 0) for i in range(7)])`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints corresponding to the answer choice:
+            - Choice A: `And(zone_assignment[0] == 0, zone_assignment[4] == 0)`
+            - Choice B: `And(zone_assignment[0] == 2, zone_assignment[4] == 2)`
+            - Choice C: `And(zone_assignment[1] == 2, zone_assignment[4] == 2)`
+            - Choice D: `And(zone_assignment[1] == 2, zone_assignment[6] == 2)`
+            - Choice E: `And(zone_assignment[2] == 0, zone_assignment[4] == 0)`
+        - Check `solver.check()`. If `unsat`, this is the answer that MUST be false. Print the corresponding letter and stop.
+        - Pop the solver state.
+

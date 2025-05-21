@@ -1,0 +1,33 @@
+1. Entities:
+    - Ambassadors: Jaramillo (J), Kayne (K), Landon (L), Novetzke (N), Ong (O)
+    - Countries: Venezuela (V), Yemen (Y), Zambia (Z)
+
+2. Variables:
+    - `assignment = [[Bool('J_V'), Bool('J_Y'), Bool('J_Z')], [Bool('K_V'), Bool('K_Y'), Bool('K_Z')], [Bool('L_V'), Bool('L_Y'), Bool('L_Z')], [Bool('N_V'), Bool('N_Y'), Bool('N_Z')], [Bool('O_V'), Bool('O_Y'), Bool('O_Z')]]`  # assignment[ambassador][country]
+
+3. Constraints:
+    - Constraint 1 (One ambassador per country): `And([ExactlyOne(assignment[country]) for country in range(3)])`
+    - Constraint 2 (One country per ambassador): `And([ExactlyOne([assignment[ambassador][country] for country in range(3)]) for ambassador in range(5)])`
+    - Constraint 3 (Kayne XOR Novetzke): `Xor(Or(assignment[1]), Or(assignment[3]))`
+    - Constraint 4 (Jaramillo -> Kayne): `Implies(Or(assignment[0]), Or(assignment[1]))`
+    - Constraint 5 (Ong in Venezuela -> Not Kayne in Yemen): `Implies(assignment[4][0], Not(assignment[1][1]))`
+    - Constraint 6 (Landon -> Zambia): `Implies(Or(assignment[2]), assignment[2][2])`
+
+4. Answering the Question:
+    - Create a base solver with Constraints 1, 2, 3, 5, and 6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the translated constraint from the answer choice:
+            - Choice A: `Implies(Or(assignment[1]), Or(assignment[0]))`
+            - Choice B: `Implies(And(Or(assignment[4]), Or(assignment[2])), Or(assignment[3]))`
+            - Choice C: `Implies(Not(Or(assignment[4])), Or(assignment[1]))`
+            - Choice D: `Not(And(Or(assignment[0]), Or(assignment[3])))`
+            - Choice E: `Not(And(Or(assignment[3]), Or(assignment[4])))`
+        - Check for equivalence with Constraint 4 by checking both implications:
+            - Check if the current constraints imply Constraint 4.
+            - Check if Constraint 4 and the other base constraints imply the current answer choice constraint.
+        - If both implications hold, the answer choice is equivalent to the original constraint. Print the corresponding letter and stop.
+        - Pop the solver state.
+
+Helper Function:
+`ExactlyOne(vars):` Returns a constraint that ensures exactly one of the variables in the list `vars` is true.  This can be implemented as `Or(And([vars[i], And([Not(vars[j]) for j in range(len(vars)) if i != j]) for i in range(len(vars))))`.

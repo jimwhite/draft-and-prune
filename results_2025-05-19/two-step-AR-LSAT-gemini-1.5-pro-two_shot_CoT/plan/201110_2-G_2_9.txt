@@ -1,0 +1,28 @@
+1. Entities:
+- Countries: Venezuela (V=0), Yemen (Y=1), Zambia (Z=2)
+- Ambassadors: Jaramillo (J=0), Kayne (K=1), Landon (L=2), Novetzke (N=3), Ong (O=4)
+
+2. Variables:
+- `assignment = Array('assignment', IntSort(), IntSort())`  # assignment[country_id] = ambassador_id
+
+3. Constraints:
+- Constraint 1 (Domain): `ForAll([c], And(assignment[c] >= 0, assignment[c] < 5))` where `c = Int('c')`
+- Constraint 2 (Range): `Distinct([assignment[0], assignment[1], assignment[2]])`
+- Constraint 3 (Kayne or Novetzke, but not both): `Xor(Exists([c], assignment[c] == 1), Exists([c], assignment[c] == 3))` where `c = Int('c')`
+- Constraint 4 (Jaramillo implies Kayne): `Implies(Exists([c], assignment[c] == 0), Exists([c], assignment[c] == 1))` where `c = Int('c')`
+- Constraint 5 (Ong to Venezuela implies Kayne not to Yemen): `Implies(assignment[0] == 4, assignment[1] != 1)`
+- Constraint 6 (Landon only to Zambia): `Implies(Exists([c], assignment[c] == 2), assignment[2] == 2)` where `c = Int('c')`
+
+
+4. Answering the Question:
+- Add constraint: `assignment[0] == 4` (Ong assigned to Venezuela)
+- For each answer choice:
+    - Push solver state.
+    - Add constraints corresponding to the answer choice:
+        - "Jaramillo and Landon": `And(assignment[1] == 0, assignment[2] == 2) Or And(assignment[2] == 0, assignment[1] == 2) Or And(assignment[1] == 2, assignment[2] == 0)`
+        - "Jaramillo and Novetzke": `And(assignment[1] == 0, assignment[2] == 3) Or And(assignment[2] == 0, assignment[1] == 3) Or And(assignment[1] == 3, assignment[2] == 0)`
+        - "Kayne and Landon": `And(assignment[1] == 1, assignment[2] == 2) Or And(assignment[2] == 1, assignment[1] == 2) Or And(assignment[1] == 2, assignment[2] == 1)`
+        - "Kayne and Novetzke": `And(assignment[1] == 1, assignment[2] == 3) Or And(assignment[2] == 1, assignment[1] == 3) Or And(assignment[1] == 3, assignment[2] == 1)`
+        - "Landon and Novetzke": `And(assignment[1] == 2, assignment[2] == 3) Or And(assignment[2] == 2, assignment[1] == 3) Or And(assignment[1] == 3, assignment[2] == 2)`
+    - Check satisfiability. If sat, this is a possible answer.  
+    - Pop solver state.

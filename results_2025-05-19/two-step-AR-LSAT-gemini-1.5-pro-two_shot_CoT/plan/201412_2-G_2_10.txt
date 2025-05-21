@@ -1,0 +1,31 @@
+1. Entities:
+    - Art Historians: Farley (F), Garcia (G), Holden (H), Jiang (J)
+    - Topics: Lithographs (L), Oil Paintings (O), Sculptures (S), Watercolors (W)
+    - Lecture Slots: 1st, 2nd, 3rd, 4th
+
+2. Variables:
+    - `lecture_historian = Array('lecture_historian', IntSort(), IntSort())` - Maps lecture slot (0-3) to historian (0-3).
+    - `historian_topic = Array('historian_topic', IntSort(), IntSort())` - Maps historian (0-3) to topic (0-3).
+
+3. Constraints:
+    - Constraint 1 (Distinct Lecture Historians): `Distinct([lecture_historian[i] for i in range(4)])`
+    - Constraint 2 (Distinct Historian Topics): `Distinct([historian_topic[i] for i in range(4)])`
+    - Constraint 3 (Oil and Watercolors before Lithographs):  `And(Sum([If(historian_topic[lecture_historian[i]] == 1, 1, 0) for i in range(4)]) < Sum([If(historian_topic[lecture_historian[i]] == 0, 1, 0) for i in range(4)]), Sum([If(historian_topic[lecture_historian[i]] == 3, 1, 0) for i in range(4)]) < Sum([If(historian_topic[lecture_historian[i]] == 0, 1, 0) for i in range(4)]))`
+    - Constraint 4 (Farley before Oil Paintings): `Sum([If(historian_topic[lecture_historian[i]] == 1, i, 4) for i in range(4)]) > Sum([If(historian_topic[lecture_historian[i]] == 0, i, -1) for i in range(4)])`
+    - Constraint 5 (Holden before Garcia and Jiang): `And(Sum([If(historian_topic[lecture_historian[i]] == 1, i, 4) for i in range(4)]) > Sum([If(historian_topic[lecture_historian[i]] == 2, i, -1) for i in range(4)]), Sum([If(historian_topic[lecture_historian[i]] == 3, i, 4) for i in range(4)]) > Sum([If(historian_topic[lecture_historian[i]] == 2, i, -1) for i in range(4)]))`
+    - Constraint 6 (Garcia gives Sculptures lecture): `historian_topic[1] == 2`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice.  We need to express these in terms of historian_topic and lecture_historian:
+            - "The lithographs lecture is third.": `historian_topic[lecture_historian[2]] == 0`
+            - "The oil paintings lecture is third.": `historian_topic[lecture_historian[2]] == 1`
+            - "The sculptures lecture is first.": `historian_topic[lecture_historian[0]] == 2`
+            - "The sculptures lecture is second.": `historian_topic[lecture_historian[1]] == 2`
+            - "The watercolors lecture is second.": `historian_topic[lecture_historian[1]] == 3`
+        - Check `solver.check()`. If `sat`, this is a possible correct answer. Record the answer choice.
+        - Pop the solver state.
+    - Return the recorded answer choice(s).
+

@@ -1,0 +1,27 @@
+1. Entities:
+    - Cookbooks: K, L, M, N, O, P (Map to IDs 0-5)
+    - Seasons: Fall (0), Spring (1)
+
+2. Variables:
+    - `cookbook_season = Array('cookbook_season', IntSort(), IntSort())` - Maps cookbook ID to season ID.
+
+3. Constraints:
+    - Constraint 0 (Domain): `i = Int('i')`. `ForAll([i], Implies(And(i >= 0, i <= 5), And(cookbook_season[i] >= 0, cookbook_season[i] <= 1)))`
+    - Constraint 1 (M and P different seasons): `cookbook_season[2] != cookbook_season[5]` (M=2, P=5)
+    - Constraint 2 (K and N same season): `cookbook_season[0] == cookbook_season[3]` (K=0, N=3)
+    - Constraint 3 (K in fall implies O in fall): `Implies(cookbook_season[0] == 0, cookbook_season[4] == 0)` (K=0, O=4, Fall=0)
+    - Constraint 4 (M in fall implies N in spring): `Implies(cookbook_season[2] == 0, cookbook_season[3] == 1)` (M=2, N=3, Fall=0, Spring=1)
+
+4. Answering the Question:
+    - Add constraint: N is published in the fall: `cookbook_season[3] == 0` (N=3, Fall=0)
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraint representing the answer choice:
+            - A: `cookbook_season[0] == 1` (K=0, Spring=1)
+            - B: `cookbook_season[1] == 0` (L=1, Fall=0)
+            - C: `cookbook_season[2] == 0` (M=2, Fall=0)
+            - D: `cookbook_season[4] == 1` (O=4, Spring=1)
+            - E: `cookbook_season[5] == 1` (P=5, Spring=1)
+        - Check `solver.check()`. If sat, this is a possible correct answer.  Return the letter and stop checking further choices.
+        - Pop the solver state.
+

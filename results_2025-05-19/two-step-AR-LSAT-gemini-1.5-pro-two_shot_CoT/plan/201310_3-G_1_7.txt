@@ -1,0 +1,34 @@
+1. Entities:
+    - Bands: Uneasy (U), Vegemite (V), Wellspring (W), Xpert (X), Yardsign (Y), Zircon (Z)
+    - Slots: 1, 2, 3, 4, 5, 6
+
+2. Variables:
+    - `band_at_slot = Array('band_at_slot', IntSort(), IntSort())` - Maps slot number (1-6) to band (U, V, W, X, Y, Z).  We'll use integer encodings for bands (e.g., U=0, V=1,... Z=5).
+
+3. Constraints (Base Constraints - present in all scenarios):
+    - Constraint 0 (Domain): `ForAll([i], And(band_at_slot[i] >= 0, band_at_slot[i] <= 5))` where `i = Int('i')` ranges from 0 to 5.
+    - Constraint 1 (Distinctness): `Distinct([band_at_slot[i] for i in range(6)])`
+    - Constraint 2 (V before Z): `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(band_at_slot[i] == V, band_at_slot[j] == Z, i >=0, i <=5, j>=0, j<=5), i < j))`
+    - Constraint 5 (U in last three): `i = Int('i')`. `ForAll([i], Implies(And(band_at_slot[i] == U, i >=0, i <=5), i >= 3))`
+    - Constraint 6 (Y in first three): `i = Int('i')`. `ForAll([i], Implies(And(band_at_slot[i] == Y, i >=0, i <=5), i <= 2))`
+
+4. Original Constraint:
+    - Constraint 3 (W before X): `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(band_at_slot[i] == W, band_at_slot[j] == X, i >=0, i <=5, j>=0, j<=5), i < j))`
+    - Constraint 4 (Z before X): `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(band_at_slot[i] == Z, band_at_slot[j] == X, i >=0, i <=5, j>=0, j<=5), i < j))`
+
+5. Answering the Question:
+    - Create a base solver with Base Constraints (0, 1, 2, 5, 6).
+    - Add Constraints 3 and 4 to this solver and check satisfiability (original_sat).
+    - Iterate through each answer choice (A-E):
+        - Push the solver state.
+        - Add constraints corresponding to the current answer choice:
+            - A: `i = Int('i')`. `ForAll([i], Implies(And(band_at_slot[i] != U, i >=0, i <=5), band_at_slot[i] <= X))`
+            - B: `i = Int('i')`, `j = Int('j')`, `k = Int('k')`. `ForAll([i, j, k], Implies(And(band_at_slot[i] == V, band_at_slot[j] == W, band_at_slot[k] == Z, i >=0, i <=5, j>=0, j<=5, k>=0, k<=5), And(i < j, j < k)))`
+            - C: `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(band_at_slot[i] == V, band_at_slot[j] == X, i >=0, i <=5, j>=0, j<=5), i < j))` and `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(band_at_slot[i] == W, band_at_slot[j] == X, i >=0, i <=5, j>=0, j<=5), i < j))`
+            - D: `i = Int('i')`. `ForAll([i], Implies(And(band_at_slot[i] == X, i >=0, i <=5), Or(If(i<5, band_at_slot[i+1] == U, False), If(i>0, band_at_slot[i-1] == U, False))))`
+            - E: `i = Int('i')`. `ForAll([i], Implies(And(band_at_slot[i] == X, i >=0, i <=5), Or(i == 3, i == 4)))`
+        - Check solver satisfiability (choice_sat).
+        - If `original_sat` == `choice_sat` (both sat or both unsat), store the answer choice letter.
+        - Pop the solver state.
+    - After iterating through all choices, output the stored answer choice letter.
+

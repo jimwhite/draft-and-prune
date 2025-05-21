@@ -1,0 +1,32 @@
+1. Entities:
+- Birds: Oystercatchers (O), Petrels (P), Rails (R), Sandpipers (S), Terns (T)
+- Lectures: 1, 2, 3, 4, 5
+- Locations: Gladwyn Hall (G), Howard Auditorium (H)
+
+2. Encoding:
+- `bird[i]`: Integer representing the bird for lecture `i` (1-5).  O=0, P=1, R=2, S=3, T=4.
+- `location[i]`: Integer representing the location for lecture `i` (1-5). G=0, H=1.
+
+3. Constraints:
+- Constraint 1 (Distinct Birds): `Distinct(bird[1], bird[2], bird[3], bird[4], bird[5])`
+- Constraint 2 (First Lecture Location): `location[1] == 0`
+- Constraint 3 (Fourth Lecture Location): `location[4] == 1`
+- Constraint 4 (Three Lectures in Gladwyn): `Sum([If(location[i] == 0, 1, 0) for i in range(1, 6)]) == 3`
+- Constraint 5 (Sandpipers in Howard): `location[Sum([If(bird[i] == 3, i, 0) for i in range(1,6)])] == 1`
+- Constraint 6 (Sandpipers before Oystercatchers): `Sum([If(bird[i] == 3, i, 0) for i in range(1,6)]) < Sum([If(bird[i] == 0, i, 0) for i in range(1,6)])`
+- Constraint 7 (Terns before Petrels): `Sum([If(bird[i] == 4, i, 0) for i in range(1,6)]) < Sum([If(bird[i] == 1, i, 0) for i in range(1,6)])`
+- Constraint 8 (Petrels in Gladwyn): `location[Sum([If(bird[i] == 1, i, 0) for i in range(1,6)])] == 0`
+- Constraint 9 (Third lecture is on Sandpipers): `bird[3] == 3`
+
+4. Answering the Question:
+- Create a base Z3 solver with constraints 1-9.
+- For each answer choice:
+    - Push the solver state.
+    - Add constraints corresponding to the answer choice:
+        - Choice A: `bird[2] == 0` and `location[2] == 0`
+        - Choice B: `bird[5] == 0` and `location[5] == 1`
+        - Choice C: `bird[2] == 2` and `location[2] == 1`
+        - Choice D: `bird[2] == 4` and `location[2] == 0`
+        - Choice E: `bird[4] == 4` and `location[4] == 1`
+    - Check `solver.check()`. If `sat`, this is a possible solution. Print the corresponding letter and stop.
+    - Pop the solver state.

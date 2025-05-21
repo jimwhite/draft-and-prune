@@ -1,0 +1,34 @@
+1. Entities:
+- Bands: Uneasy (U), Vegemite (V), Wellspring (W), Xpert (X), Yardsign (Y), Zircon (Z)
+- Slots: 1 to 6
+
+2. Variables:
+- `band_at_slot = Array('band_at_slot', IntSort(), IntSort())`  Maps slot number (1-indexed) to band ID (0-indexed).
+- Band IDs are arbitrary but distinct.
+
+3. Constraints:
+- Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 6), And(band_at_slot[i] >= 0, band_at_slot[i] <= 5)))` - Each slot contains a valid band ID. Declare `i = Int('i')`.
+- Constraint 1 (Distinctness): `Distinct([band_at_slot[i] for i in range(1, 7)])` - Each band plays in exactly one slot.
+- Constraint 2 (V before Z): `band_at_slot[IndexOf(V)] < band_at_slot[IndexOf(Z)]` where `IndexOf(B)` represents the slot number where band B plays.  We'll define this later.
+- Constraint 3 (W before X): `band_at_slot[IndexOf(W)] < band_at_slot[IndexOf(X)]`
+- Constraint 4 (Z before X): `band_at_slot[IndexOf(Z)] < band_at_slot[IndexOf(X)]`
+- Constraint 5 (U in last three): `Or(band_at_slot[4] == U, band_at_slot[5] == U, band_at_slot[6] == U)`
+- Constraint 6 (Y in first three): `Or(band_at_slot[1] == Y, band_at_slot[2] == Y, band_at_slot[3] == Y)`
+- Constraint 7 (V in slot 3): `band_at_slot[3] == V`
+
+4. Define IndexOf:
+-  `IndexOf(B) = Sum([If(band_at_slot[i] == B, i, 0) for i in range(1,7)])` for each band B. This sums up the slot numbers where B plays. Since B plays in only one slot, this effectively gives the index.
+
+5. Answering the Question:
+- Create a base Z3 solver with constraints 0-7 and the IndexOf definitions.
+- For each answer choice (A, B, C, D, E):
+    - Push the solver state.
+    - Add temporary constraints representing the NEGATION of the answer choice:
+        - A: `IndexOf(X) < IndexOf(U)`
+        - B: `IndexOf(Z) < IndexOf(W)`
+        - C: `IndexOf(U) < IndexOf(X)`
+        - D: `IndexOf(W) < IndexOf(Y)`
+        - E: `IndexOf(U) < IndexOf(Z)`
+    - Check `solver.check()`. If 'unsat', this answer choice *must* be true.
+    - Pop the solver state.
+- The correct answer is the one for which the negated constraint leads to 'unsat'.

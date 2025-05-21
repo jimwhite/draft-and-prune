@@ -1,0 +1,27 @@
+1. Entities:
+    - Compositions: F(0), H(1), L(2), O(3), P(4), R(5), S(6), T(7)
+    - Slots: 0, 1, 2, 3, 4, 5, 6, 7
+
+2. Variables:
+    - `composition_at_slot = Array('composition_at_slot', IntSort(), IntSort())` - Maps slot index to composition ID.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(composition_at_slot[i] >= 0, composition_at_slot[i] <= 7))` where `i` is an integer variable ranging from 0 to 7. Declare `i = Int('i')`.
+    - Constraint 1 (Distinctness): `Distinct([composition_at_slot[i] for i in range(8)])`
+    - Constraint 2 (T before F or after R): `Or(Exists([i], And(i >=0, i < 7, composition_at_slot[i] == 7, composition_at_slot[i+1] == 0)), Exists([i], And(i > 0, i <= 7, composition_at_slot[i] == 7, composition_at_slot[i-1] == 5)))`
+    - Constraint 3 (Two between F and R): `Or(Exists([i, j], And(i >= 0, i < 7, j > i + 1, j <= 7, composition_at_slot[i] == 0, composition_at_slot[j] == 5)), Exists([i, j], And(i >= 0, i < 7, j > i + 1, j <= 7, composition_at_slot[i] == 5, composition_at_slot[j] == 0)))`
+    - Constraint 4 (O is first or fifth): `Or(composition_at_slot[0] == 3, composition_at_slot[4] == 3)`
+    - Constraint 5 (Eighth is L or H): `Or(composition_at_slot[7] == 2, composition_at_slot[7] == 1)`
+    - Constraint 6 (P before S): `Exists([i, j], And(i >= 0, i < 7, j > i, j <= 7, composition_at_slot[i] == 4, composition_at_slot[j] == 6))`
+    - Constraint 7 (One between O and S): `Or(Exists([i, j], And(i >= 0, i < 7, j > i, j <= 7, composition_at_slot[i] == 3, composition_at_slot[j] == 6)), Exists([i, j], And(i >= 0, i < 7, j > i, j <= 7, composition_at_slot[i] == 6, composition_at_slot[j] == 3)))`
+
+
+4. Answering the Question:
+    - Create a base solver with constraints 0-7.
+    - For each answer choice (second, third, fourth, sixth, seventh):
+        - Push solver state.
+        - Add constraint `composition_at_slot[choice_index] == 4` where `choice_index` is the slot index corresponding to the answer choice (1 for second, 2 for third, etc.).
+        - Check `solver.check()`. If `unsat`, this is the correct answer.
+        - Pop solver state.
+    - Return the identified correct answer.
+

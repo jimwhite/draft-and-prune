@@ -1,0 +1,33 @@
+1. Entities:
+    - Photographers: Frost (0), Gonzalez (1), Heideck (2), Knutson (3), Lai (4), Mays (5)
+    - Universities: Silva (0), Thorne (1)
+
+2. Variables:
+    - `assigned = Array('assigned', IntSort(), IntSort())`  # assigned[p] = u means photographer p is assigned to university u. -1 indicates not assigned.
+
+3. Constraints:
+    - Constraint 0 (Domain): `p = Int('p')`. `ForAll([p], Implies(And(p >= 0, p < 6), Or(assigned[p] == 0, assigned[p] == 1, assigned[p] == -1)))`
+    - Constraint 1 (At least two at each university):
+        - `s_count = Sum([If(assigned[i] == 0, 1, 0) for i in range(6)])`
+        - `t_count = Sum([If(assigned[i] == 1, 1, 0) for i in range(6)])`
+        - `And(s_count >= 2, t_count >= 2)`
+    - Constraint 2 (No photographer at both): `p = Int('p')`. `ForAll([p], Implies(Or(assigned[p] == 0, assigned[p] == 1), assigned[p] != 1-assigned[p]))`
+    - Constraint 3 (Frost with Heideck): `Or(And(assigned[0] == 0, assigned[2] == 0), And(assigned[0] == 1, assigned[2] == 1))`
+    - Constraint 4 (Lai and Mays separate): `Implies(And(assigned[4] != -1, assigned[5] != -1), assigned[4] != assigned[5])`
+    - Constraint 5 (Gonzalez at Silva -> Lai at Thorne): `Implies(assigned[1] == 0, assigned[4] == 1)`
+    - Constraint 6 (Knutson not at Thorne -> Heideck and Mays at Thorne): `Implies(assigned[3] != 1, And(assigned[2] == 1, assigned[5] == 1))`
+
+4. Answering the Question:
+    - Create a base solver with constraints 0-5.
+    - For each answer choice:
+        - Add the original constraint 6 to the base solver.
+        - Check for satisfiability and get a model (if satisfiable).
+        - Remove constraint 6 from the solver.
+        - Add the translated constraint from the answer choice:
+            - Choice A: `Implies(assigned[3] == 0, Not(And(assigned[2] == 0, assigned[5] == 0)))`
+            - Choice B: `Implies(assigned[3] == 0, assigned[4] == 0)`
+            - Choice C: `Implies(assigned[3] != 1, And(assigned[0] == 1, assigned[5] == 1))`
+            - Choice D: `Implies(assigned[3] != 1, Not(assigned[2] == assigned[4]))`
+            - Choice E: `Implies(Not(Or(assigned[2] == 1, assigned[5] == 1)), assigned[3] == 1)`
+        - Check for satisfiability with the alternative constraint and get a model (if satisfiable).
+        - Compare the models obtained with the original constraint and the alternative constraint. If for every model obtained with the original constraint, there exists a model with the alternative constraint where the assignments for all photographers are the same, and vice-versa, then the answer choice is correct.  Print the corresponding letter and stop.

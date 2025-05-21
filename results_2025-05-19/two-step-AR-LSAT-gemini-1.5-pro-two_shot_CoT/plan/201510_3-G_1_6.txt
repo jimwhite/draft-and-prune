@@ -1,0 +1,24 @@
+1. Entities:
+    - Accomplices: Peters (P=0), Quinn (Q=1), Rovero (R=2), Stanton (S=3), Tao (T=4), Villas (V=5), White (W=6)
+    - Recruitment Order: Slots 1 through 7
+
+2. Variables:
+    - `recruitment_order = Array('recruitment_order', IntSort(), IntSort())` - Maps a recruitment slot (1-7) to an accomplice ID (0-6).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 7), And(recruitment_order[i] >= 0, recruitment_order[i] <= 6)))` -  Declare `i = Int('i')`. Ensures all assigned accomplice IDs are within the valid range.
+    - Constraint 2 (Distinctness): `Distinct([recruitment_order[i] for i in range(1, 8)])` - Ensures each accomplice is recruited exactly once.
+    - Constraint 3 (Stanton not before/after Tao): `ForAll([i], Implies(And(i >= 1, i <= 7), Not(Or(And(recruitment_order[i] == S, recruitment_order[i+1] == T, i < 7), And(recruitment_order[i] == T, recruitment_order[i+1] == S, i < 7), And(recruitment_order[i] == S, recruitment_order[i-1] == T, i > 1), And(recruitment_order[i] == T, recruitment_order[i-1] == S, i > 1)))))` - Declare `i = Int('i')`.
+    - Constraint 4 (Quinn before Rovero): `Exists([i, j], And(i >= 1, i <= 7, j >= 1, j <= 7, i < j, recruitment_order[i] == Q, recruitment_order[j] == R))` - Declare `i = Int('i')`, `j = Int('j')`.
+    - Constraint 5 (Villas immediately before White): `Exists([i], And(i >= 1, i < 7, recruitment_order[i] == V, recruitment_order[i+1] == W))` - Declare `i = Int('i')`.
+    - Constraint 6 (Peters recruited fourth): `recruitment_order[4] == P`
+    - Constraint 7 (White immediately before Quinn): `Exists([i], And(i >= 1, i < 7, recruitment_order[i] == W, recruitment_order[i+1] == Q))` - Declare `i = Int('i')`.
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - Iterate through each answer choice (Quinn, Rovero, Stanton, Villas, White):
+        - Push the solver state.
+        - Add a temporary constraint representing the negation of the current answer choice being recruited sixth. For example, if the choice is Quinn, add `recruitment_order[6] != Q`.
+        - Check `solver.check()`. If 'unsat', this is the correct answer because its negation leads to a contradiction. Print the current answer choice. Stop.
+        - Pop the solver state.
+

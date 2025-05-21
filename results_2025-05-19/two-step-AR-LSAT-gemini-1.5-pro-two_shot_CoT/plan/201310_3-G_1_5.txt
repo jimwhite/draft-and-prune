@@ -1,0 +1,26 @@
+1. Entities:
+    - Bands: Uneasy (U), Vegemite (V), Wellspring (W), Xpert (X), Yardsign (Y), Zircon (Z)
+    - Slots: 1 to 6
+
+2. Variables:
+    - `band_at_slot = Array('band_at_slot', IntSort(), IntSort())` - Maps slot number (1-indexed) to band ID (0-indexed).
+    - Assign integer values to bands: U=0, V=1, W=2, X=3, Y=4, Z=5
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 6), And(band_at_slot[i] >= 0, band_at_slot[i] <= 5)))` -  Declare `i = Int('i')`.
+    - Constraint 2 (Distinctness): `Distinct([band_at_slot[i] for i in range(1, 7)])` - All bands play in different slots.
+    - Constraint 3 (V before Z):  `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, band_at_slot[i] == V, band_at_slot[j] == Z), i < j))` - Declare `i = Int('i')`, `j = Int('j')`.
+    - Constraint 4 (W before X): `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, band_at_slot[i] == W, band_at_slot[j] == X), i < j))` - Declare `i = Int('i')`, `j = Int('j')`.
+    - Constraint 5 (Z before X): `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, band_at_slot[i] == Z, band_at_slot[j] == X), i < j))` - Declare `i = Int('i')`, `j = Int('j')`.
+    - Constraint 6 (U in last three): `Or(band_at_slot[4] == U, band_at_slot[5] == U, band_at_slot[6] == U)`
+    - Constraint 7 (Y in first three): `Or(band_at_slot[1] == Y, band_at_slot[2] == Y, band_at_slot[3] == Y)`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each band B in {V, W, Y, Z}:
+        - Push the solver state.
+        - Add the constraint `band_at_slot[1] == B`
+        - Check `solver.check()`. If `sat`, add B to the list of possible bands for slot 1.
+        - Pop the solver state.
+    - Return the list of possible bands as the correct answer.

@@ -1,0 +1,26 @@
+1. Entities:
+    - Pianists: Wayne (0), Zara (1)
+    - Solos: 1, 2, 3, 4, 5
+    - Piece Types: Modern (0), Traditional (1)
+
+2. Variables:
+    - `pianist = Array('pianist', IntSort(), IntSort())` - `pianist[i]` represents the pianist for solo `i+1`, where `i` ranges from 0 to 4.
+    - `piece_type = Array('piece_type', IntSort(), IntSort())` - `piece_type[i]` represents the piece type for solo `i+1`, where `i` ranges from 0 to 4.
+
+3. Constraints:
+    - Constraint 1 (Pianist Domain): `ForAll(i, And(pianist[i] >= 0, pianist[i] <= 1))` for `i` in range(5).
+    - Constraint 2 (Piece Type Domain): `ForAll(i, And(piece_type[i] >= 0, piece_type[i] <= 1))` for `i` in range(5).
+    - Constraint 3 (Third Solo Traditional): `piece_type[2] == 1`
+    - Constraint 4 (Exactly Two Consecutive Traditional): `Or(And(piece_type[0] == 1, piece_type[1] == 1, piece_type[2] == 0, piece_type[3] == 0, piece_type[4] == 0), And(piece_type[1] == 1, piece_type[2] == 1, piece_type[0] == 0, piece_type[3] == 0, piece_type[4] == 0), And(piece_type[2] == 1, piece_type[3] == 1, piece_type[0] == 0, piece_type[1] == 0, piece_type[4] == 0), And(piece_type[3] == 1, piece_type[4] == 1, piece_type[0] == 0, piece_type[1] == 0, piece_type[2] == 0))`
+    - Constraint 5 (Fourth Solo): `Or(And(pianist[3] == 0, piece_type[3] == 1), And(pianist[3] == 1, piece_type[3] == 0))`
+    - Constraint 6 (Second and Fifth Solo): `pianist[1] != pianist[4]`
+    - Constraint 7 (No Traditional Until Wayne Modern):  `ForAll([i], Implies(And(i >= 0, i < 5, piece_type[i] == 1), Exists([j], And(j >= 0, j <= i, pianist[j] == 0, piece_type[j] == 0))))`
+
+
+4. Answering the Question:
+    - Add constraint: `And(pianist[4] == 0, piece_type[4] == 1)` (Wayne performs a traditional piece in the fifth solo).
+    - For each answer choice:
+        - Push solver state.
+        - Add constraints corresponding to the answer choice.
+        - Check satisfiability. If sat, this is a possible correct answer.
+        - Pop solver state.

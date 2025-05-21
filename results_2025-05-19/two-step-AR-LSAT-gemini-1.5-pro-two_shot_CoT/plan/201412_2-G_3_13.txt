@@ -1,0 +1,32 @@
+1. Entities:
+    - Colors: Forest (F=0), Olive (O=1), Peach (P=2), Turquoise (T=3), White (W=4), Yellow (Y=5)
+    - Rugs: Rug1 (0), Rug2 (1), Rug3 (2)
+
+2. Variables:
+    - `color_in_rug = Array('color_in_rug', IntSort(), IntSort())` - Maps color ID to rug ID.
+    - `color_used = Array('color_used', IntSort(), BoolSort())` - True if the color is used.
+
+3. Constraints:
+    - Constraint 0 (Color in Rug Domain): `ForAll([c], Implies(color_used[c], And(color_in_rug[c] >= 0, color_in_rug[c] <= 2)))` where `c = Int('c')`.
+    - Constraint 1 (Five Colors Used): `PbEq([(color_used[c], 1) for c in range(6)], 5)`
+    - Constraint 2 (Each Color in One Rug): `ForAll([c1, c2], Implies(And(color_used[c1], color_used[c2], c1 != c2), color_in_rug[c1] != color_in_rug[c2]))` where `c1 = Int('c1')` and `c2 = Int('c2')`.
+    - Constraint 3 (White Rule): `ForAll([r], Implies(Exists([c], And(color_used[c], color_in_rug[c] == r, c == 4)), PbEq([(color_used[c], 1) for c in range(6) if color_in_rug[c] == r], 3)))` where `r = Int('r')`.
+    - Constraint 4 (Olive Rule): `ForAll([r], Implies(Exists([c], And(color_used[c], color_in_rug[c] == r, c == 1)), Exists([c], And(color_used[c], color_in_rug[c] == r, c == 2))))` where `r = Int('r')`.
+    - Constraint 5 (Forest/Turquoise Rule): `ForAll([r], Not(Exists([c1, c2], And(color_used[c1], color_used[c2], color_in_rug[c1] == r, color_in_rug[c2] == r, c1 == 0, c2 == 3))))` where `r = Int('r')`.
+    - Constraint 6 (Peach/Turquoise Rule): `ForAll([r], Not(Exists([c1, c2], And(color_used[c1], color_used[c2], color_in_rug[c1] == r, color_in_rug[c2] == r, c1 == 2, c2 == 3))))` where `r = Int('r')`.
+    - Constraint 7 (Peach/Yellow Rule): `ForAll([r], Not(Exists([c1, c2], And(color_used[c1], color_used[c2], color_in_rug[c1] == r, color_in_rug[c2] == r, c1 == 2, c2 == 5))))` where `r = Int('r')`.
+    - Constraint 8 (Solid Peach Rug): `Exists([r], And(color_used[2], color_in_rug[2] == r, PbEq([(color_used[c], 1) for c in range(6) if color_in_rug[c] == r], 1)))` where `r = Int('r')`.
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (0-8).
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraints corresponding to the answer choice:
+            - A: `ForAll([r], Not(And(color_used[0], color_in_rug[0] == r, PbEq([(color_used[c], 1) for c in range(6) if color_in_rug[c] == r], 1))))` where `r = Int('r')`.
+            - B: `ForAll([r], Not(And(color_used[3], color_in_rug[3] == r, PbEq([(color_used[c], 1) for c in range(6) if color_in_rug[c] == r], 1))))` where `r = Int('r')`.
+            - C: `ForAll([r], Not(And(color_used[5], color_in_rug[5] == r, PbEq([(color_used[c], 1) for c in range(6) if color_in_rug[c] == r], 1))))` where `r = Int('r')`.
+            - D: `ForAll([r], Not(And(color_used[0], color_used[4], color_in_rug[0] == r, color_in_rug[4] == r)))` where `r = Int('r')`.
+            - E: `ForAll([r], Not(And(color_used[4], color_used[5], color_in_rug[4] == r, color_in_rug[5] == r)))` where `r = Int('r')`.
+        - Check `solver.check()`. If 'unsat', this is the correct answer.
+        - Pop the solver state.
+

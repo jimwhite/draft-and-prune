@@ -1,0 +1,40 @@
+1. Entities:
+    - Art Historians: Farley (F=0), Garcia (G=1), Holden (H=2), Jiang (J=3)
+    - Topics: Lithographs (L=0), Oil Paintings (O=1), Sculptures (S=2), Watercolors (W=3)
+    - Lecture Slots: 1st (0), 2nd (1), 3rd (2), 4th (3)
+
+2. Variables:
+    - `lecture_historian = Array('lecture_historian', IntSort(), IntSort())`  
+        - Maps lecture slot (0-3) to the art historian (0-3) giving the lecture.
+    - `lecture_topic = Array('lecture_topic', IntSort(), IntSort())`
+        - Maps lecture slot (0-3) to the topic (0-3) being presented.
+
+3. Constraints:
+    - Constraint 1 (Distinct Historians per Slot): `Distinct([lecture_historian[i] for i in range(4)])`
+    - Constraint 2 (Distinct Topics per Slot): `Distinct([lecture_topic[i] for i in range(4)])`
+    - Constraint 3 (Oil and Watercolors before Lithographs): 
+        - `i = Int('i')`
+        - `j = Int('j')`
+        - `ForAll([i], Implies(lecture_topic[i] == L, And(Exists([j], And(lecture_topic[j] == O, j < i)), Exists([j], And(lecture_topic[j] == W, j < i))))`
+    - Constraint 4 (Farley before Oil Paintings):
+        - `i = Int('i')`
+        - `j = Int('j')`
+        - `ForAll([i], Implies(lecture_topic[i] == O, Exists([j], And(lecture_historian[j] == F, j < i))))`
+    - Constraint 5 (Holden before Garcia and Jiang):
+        - `i = Int('i')`
+        - `j = Int('j')`
+        - `ForAll([i], Implies(lecture_historian[i] == G, Exists([j], And(lecture_historian[j] == H, j < i))))`
+        - `ForAll([i], Implies(lecture_historian[i] == J, Exists([j], And(lecture_historian[j] == H, j < i))))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-5.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the answer choice.  For example, for choice A ("Farley: sculptures; Holden: lithographs; Garcia: oil paintings; Jiang: watercolors"):
+            - `lecture_historian[0] == F` and `lecture_topic[0] == S`
+            - `lecture_historian[1] == H` and `lecture_topic[1] == L`
+            - `lecture_historian[2] == G` and `lecture_topic[2] == O`
+            - `lecture_historian[3] == J` and `lecture_topic[3] == W`
+        - Check `solver.check()`. If 'sat', this is the correct answer.  Print the corresponding letter (A, B, C, D, or E) and stop.
+        - Pop the solver state.

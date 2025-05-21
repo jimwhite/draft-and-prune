@@ -1,0 +1,39 @@
+1. Entities:
+    - Witnesses: Franco (F), Garcia (G), Hong (H), Iturbe (I), Jackson (J)
+    - Days: Monday (M), Tuesday (T), Wednesday (W)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())`  
+      - `schedule[witness_id]` represents the day on which the witness testifies (0 for Monday, 1 for Tuesday, 2 for Wednesday).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([w], And(schedule[w] >= 0, schedule[w] <= 2))` where `w = Int('w')`.
+      - Each witness is scheduled on one of the three days.
+    - Constraint 2 (One Day Each): `Distinct([schedule[0], schedule[1], schedule[2], schedule[3], schedule[4]])`
+      - Each witness testifies on a distinct day.
+    - Constraint 3 (Franco and Garcia): `schedule[0] != schedule[1]`
+      - Franco and Garcia do not testify on the same day.
+    - Constraint 4 (Iturbe): `schedule[3] == 2`
+      - Iturbe testifies on Wednesday.
+    - Constraint 5 (Tuesday): `Sum([If(schedule[w] == 1, 1, 0) for w in range(5)]) == 2`
+      - Exactly two witnesses testify on Tuesday.
+    - Constraint 6 (Hong): `schedule[2] != 0`
+      - Hong does not testify on Monday.
+    - Constraint 7 (Monday): `Sum([If(schedule[w] == 0, 1, 0) for w in range(5)]) >= 1`
+      - At least one witness testifies on Monday.
+    - Constraint 8 (Jackson): `schedule[4] == 2`
+      - Jackson testifies on Wednesday.
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 1-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - A: `schedule[0] != 0` (Franco does NOT testify on Monday)
+            - B: `schedule[1] != 0` (Garcia does NOT testify on Monday)
+            - C: `Sum([If(schedule[w] == 0, 1, 0) for w in range(5)]) != 1` (NOT Exactly one witness testifies on Monday)
+            - D: `Sum([If(schedule[w] == 0, 1, 0) for w in range(5)]) != 2` (NOT Exactly two witnesses testify on Monday)
+            - E: `schedule[1] != schedule[2]` (Garcia does NOT testify on the same day as Hong)
+        - Check `solver.check()`. If `unsat`, this is the correct answer because its negation is inconsistent with the constraints.
+        - Pop the solver state.
+

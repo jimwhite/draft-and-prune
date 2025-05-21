@@ -1,0 +1,34 @@
+1. Entities:
+    - Bays: 1, 2, 3, 4, 5, 6
+    - Cargo Types: Fuel (F), Grain (G), Livestock (L), Machinery (M), Produce (P), Textiles (T)
+
+2. Integer Representation:
+    - Bays: 1 to 6
+    - Cargo Types: F=0, G=1, L=2, M=3, P=4, T=5
+
+3. Variables:
+    - `bay_cargo = Array('bay_cargo', IntSort(), IntSort())`  Maps bay number (1-indexed) to cargo type.
+
+4. Constraints:
+    - Domain Constraint: `ForAll([b], Implies(And(b >= 1, b <= 6), And(bay_cargo[b] >= 0, bay_cargo[b] <= 5)))` where `b = Int('b')`
+    - Distinctness Constraint: `Distinct([bay_cargo[i] for i in range(1, 7)])`
+    - Grain > Livestock: `bay_cargo[Grain_bay] > bay_cargo[Livestock_bay]` where `Grain_bay = Int('Grain_bay')` and `Livestock_bay = Int('Livestock_bay')` are declared and constrained to be between 1 and 6 inclusive. Similarly for other bay variables below.
+    - Livestock > Textiles: `bay_cargo[Livestock_bay] > bay_cargo[Textiles_bay]`
+    - Produce > Fuel: `bay_cargo[Produce_bay] > bay_cargo[Fuel_bay]`
+    - Textiles next to Produce: `Or(bay_cargo[Produce_bay] == bay_cargo[Textiles_bay] + 1, bay_cargo[Textiles_bay] == bay_cargo[Produce_bay] + 1)`
+    - Bay 4 is Produce: `bay_cargo[4] == 4`
+
+5. Answering the Question:
+    - Create a base Z3 solver with constraints from step 4.
+    - Initialize `determined_bays = 0`
+    - For each bay `b` from 1 to 6:
+        - Initialize `possible_cargo_types = 0`
+        - For each cargo type `c` from 0 to 5:
+            - Push the solver state.
+            - Add constraint: `bay_cargo[b] == c`
+            - Check satisfiability.
+            - If satisfiable, increment `possible_cargo_types`.
+            - Pop the solver state.
+        - If `possible_cargo_types == 1`, then increment `determined_bays`.
+    - The final value of `determined_bays` is the answer.  Compare this to the multiple-choice options.
+

@@ -1,0 +1,23 @@
+1. Entities:
+    - Photographers: Fuentes (F=0), Gagnon (G=1), Hue (H=2)
+    - Sections: Lifestyle (L=0), Metro (M=1), Sports (S=2)
+
+2. Variables:
+    - `photo_assignment = [[Int("f_%s_%s" % (p, s)) for s in range(3)] for p in range(3)]`  # photo_assignment[p][s] = 1 if photographer p has a photo in section s, 0 otherwise.
+
+3. Constraints:
+    - Constraint 1 (Binary values): `p = Int('p')`. `s = Int('s')`. `ForAll([p, s], Implies(And(p >= 0, p < 3, s >= 0, s < 3), Or(photo_assignment[p][s] == 0, photo_assignment[p][s] == 1)))`
+    - Constraint 2 (Two photos per section): `s = Int('s')`. `ForAll([s], Implies(And(s >= 0, s < 3), Sum([photo_assignment[p][s] for p in range(3)]) == 2))`
+    - Constraint 3 (At least one and at most three photos per photographer): `p = Int('p')`. `ForAll([p], Implies(And(p >= 0, p < 3), And(Sum([photo_assignment[p][s] for s in range(3)]) >= 1, Sum([photo_assignment[p][s] for s in range(3)]) <= 3)))`
+    - Constraint 4 (Lifestyle and Metro overlap): `Exists([p], Implies(And(p >= 0, p < 3), And(Sum([photo_assignment[p][0] for p in range(3) if p == p]) > 0, Sum([photo_assignment[p][1] for p in range(3) if p == p]) > 0)))`
+    - Constraint 5 (Hue in Lifestyle and Fuentes in Sports): `Sum([photo_assignment[2][0]]) == Sum([photo_assignment[0][2]])`
+    - Constraint 6 (No Gagnon in Sports): `Sum([photo_assignment[1][2]]) == 0`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints corresponding to the answer choice. For example, for choice A ("One is in the Lifestyle section, one is in the Metro section, and one is in the Sports section."):  Add `And(Sum([photo_assignment[0][0]]) == 1, Sum([photo_assignment[0][1]]) == 1, Sum([photo_assignment[0][2]]) == 1)`
+        - Check `solver.check()`. If 'sat', this is a possible solution. Print the corresponding letter and stop.
+        - Pop the solver state.
+

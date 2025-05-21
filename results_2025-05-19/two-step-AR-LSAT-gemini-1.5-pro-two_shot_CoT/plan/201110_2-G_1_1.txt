@@ -1,0 +1,19 @@
+1. Entities:
+    - Employees: Robertson (R), Souza (S), Togowa (T), Vaughn (V), Xu (X), Young (Y)
+    - Parking Spaces: #1, #2, #3, #4, #5, #6
+
+2. Encoding:
+    - Represent the assignment as a function `f: Employee -> ParkingSpace` where `Employee` and `ParkingSpace` are enumerated types representing {R, S, T, V, X, Y} and {1, 2, 3, 4, 5, 6} respectively.
+
+3. Constraints:
+    - All employees are assigned different parking spaces:  `Distinct(f(R), f(S), f(T), f(V), f(X), f(Y))`
+    - Young is assigned a higher numbered space than Togowa: `f(Y) > f(T)`
+    - Xu is assigned a higher numbered space than Souza: `f(X) > f(S)`
+    - Robertson is assigned a higher numbered space than Young: `f(R) > f(Y)`
+    - Robertson is assigned parking space #1, #2, #3, or #4: `Or(f(R) == 1, f(R) == 2, f(R) == 3, f(R) == 4)`
+
+4. Answering the Question:
+    - For each answer choice:
+        - Translate the assignment into constraints on `f`. For example, for choice A: `f(Y) == 1`, `f(S) == 2`, `f(V) == 3`, `f(R) == 4`, `f(T) == 5`, `f(X) == 6`.
+        - Check if the constraints from step 3 and the constraints derived from the answer choice are satisfiable.
+        - If satisfiable, the answer choice is a possible assignment.

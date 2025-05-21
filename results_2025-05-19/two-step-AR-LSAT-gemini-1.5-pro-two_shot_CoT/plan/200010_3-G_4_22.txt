@@ -1,0 +1,31 @@
+1. Entities:
+- Days: 1, 2, 3, 4, 5, 6, 7
+- Kittens: Himalayan (H=0), Manx (M=1), Siamese (S=2)
+- Puppies: Greyhound (G=0), Newfoundland (N=1), Rottweiler (R=2)
+
+2. Variables:
+- `kitten_breed = Array('kitten_breed', IntSort(), IntSort())` # kitten_breed[day] = breed
+- `puppy_breed = Array('puppy_breed', IntSort(), IntSort())` # puppy_breed[day] = breed
+
+3. Constraints:
+- Constraint 0 (Kitten Breed Domain): `ForAll([d], And(kitten_breed[d] >= 0, kitten_breed[d] < 3))` where `d = Int('d')` and `0 <= d < 7`
+- Constraint 1 (Puppy Breed Domain): `ForAll([d], And(puppy_breed[d] >= 0, puppy_breed[d] < 3))` where `d = Int('d')` and `0 <= d < 7`
+- Constraint 2 (Greyhounds on Day 1): `puppy_breed[0] == 0`
+- Constraint 3 (No Consecutive Breeds - Kittens): `ForAll([d], Implies(d < 6, kitten_breed[d] != kitten_breed[d+1]))` where `d = Int('d')` and `0 <= d < 6`
+- Constraint 4 (No Consecutive Breeds - Puppies): `ForAll([d], Implies(d < 6, puppy_breed[d] != puppy_breed[d+1]))` where `d = Int('d')` and `0 <= d < 6`
+- Constraint 5 (No Day 1 Breed on Day 7 - Kittens): `kitten_breed[0] != kitten_breed[6]`
+- Constraint 6 (No Day 1 Breed on Day 7 - Puppies): `puppy_breed[0] != puppy_breed[6]`
+- Constraint 7 (Himalayans on 3 Days): `Sum([If(kitten_breed[d] == 0, 1, 0) for d in range(7)]) == 3`
+- Constraint 8 (No Himalayans on Day 1): `kitten_breed[0] != 0`
+- Constraint 9 (No Rottweilers on Day 7): `puppy_breed[6] != 2`
+- Constraint 10 (No Rottweilers with Himalayans): `ForAll([d], Implies(kitten_breed[d] == 0, puppy_breed[d] != 2))` where `d = Int('d')` and `0 <= d < 7`
+- Constraint 11 (No Himalayans on Day 7): `kitten_breed[6] != 0`
+
+4. Answering the Question:
+- Create a base solver with constraints 0-11.
+- For each answer choice (day_a and day_b):
+    - Push the solver state.
+    - Add the constraint: `And(kitten_breed[day_a - 1] == kitten_breed[day_b - 1], puppy_breed[day_a - 1] == puppy_breed[day_b - 1])`
+    - Check satisfiability. If unsat, this is the correct answer.  Record the answer choice.
+    - Pop the solver state.
+- Return the recorded answer choice.

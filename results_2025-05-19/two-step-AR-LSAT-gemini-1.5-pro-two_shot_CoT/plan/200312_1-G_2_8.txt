@@ -1,0 +1,33 @@
+1. Entities:
+- Bays: 1, 2, 3, 4, 5, 6
+- Cargo Types: Fuel (F=0), Grain (G=1), Livestock (L=2), Machinery (M=3), Produce (P=4), Textiles (T=5)
+
+2. Variables:
+- `bay_cargo = Array('bay_cargo', IntSort(), IntSort())` - Maps bay number (1-indexed) to cargo type ID (0-indexed).
+
+3. Constraints:
+- Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 6), And(bay_cargo[i] >= 0, bay_cargo[i] <= 5)))` -  Declare `i = Int('i')`. Each bay holds a valid cargo type.
+- Constraint 1 (Distinctness): `Distinct([bay_cargo[i] for i in range(1, 7)])` - Each bay holds a different cargo type.
+- Constraint 2 (Grain > Livestock): `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, bay_cargo[i] == G, bay_cargo[j] == L), i > j))` - Declare `i = Int('i')`, `j = Int('j')`.
+- Constraint 3 (Livestock > Textiles): `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, bay_cargo[i] == L, bay_cargo[j] == T), i > j))` - Declare `i = Int('i')`, `j = Int('j')`.
+- Constraint 4 (Produce > Fuel): `ForAll([i, j], Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, bay_cargo[i] == P, bay_cargo[j] == F), i > j))` - Declare `i = Int('i')`, `j = Int('j')`.
+- Constraint 5 (Textiles next to Produce): `Or(Exists([i], And(i >= 1, i < 6, bay_cargo[i] == T, bay_cargo[i+1] == P)), Exists([i], And(i >= 1, i < 6, bay_cargo[i] == P, bay_cargo[i+1] == T)))` - Declare `i = Int('i')`.
+- Constraint 6 (Machinery and Grain separated by one bay): `Or(Exists([i], And(i >= 1, i < 5, bay_cargo[i] == M, bay_cargo[i+2] == G)), Exists([i], And(i >= 1, i < 5, bay_cargo[i] == G, bay_cargo[i+2] == M)))` - Declare `i = Int('i')`.
+
+4. Answering the Question:
+- Create a base solver with constraints 0-6.
+- Check for satisfiability. If unsat, there's an error in the constraints.
+- Initialize `determined_bays = 0`
+- For each bay `i` from 1 to 6:
+    - Initialize `possible_cargo_types = 0`
+    - For each cargo type `c` from 0 to 5:
+        - Push solver state.
+        - Add constraint `bay_cargo[i] == c`.
+        - Check satisfiability.
+        - If sat:
+            - Increment `possible_cargo_types`.
+        - Pop solver state.
+    - If `possible_cargo_types == 1`:
+        - Increment `determined_bays`.
+- Return the answer choice corresponding to the value of `determined_bays`.
+

@@ -1,0 +1,24 @@
+1. Entities:
+    - Years: 1921 (0), 1922 (1), 1923 (2), 1924 (3)
+    - Students: Louis (0), Mollie (1), Onyx (2), Ryan (3), Tiffany (4), Yoshio (5)
+
+2. Variables:
+    - `year_assignment = Array('year_assignment', IntSort(), IntSort())` - Maps year (integer 0-3) to student (integer 0-5).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([y], And(year_assignment[y] >= 0, year_assignment[y] < 6))` where `y = Int('y')`.
+    - Constraint 2 (Range/Distinctness): `Distinct([year_assignment[i] for i in range(4)])` - Each year has a different student.
+    - Constraint 3 (1923): `Or(year_assignment[2] == 0, year_assignment[2] == 4)` - Only Louis or Tiffany can be assigned to 1923.
+    - Constraint 4 (Mollie): `Implies(Or([year_assignment[i] == 1 for i in range(4)]), Or(year_assignment[0] == 1, year_assignment[1] == 1))` - If Mollie is assigned, she must be assigned to 1921 or 1922.
+    - Constraint 5 (Tiffany & Ryan): `Implies(Or([year_assignment[i] == 4 for i in range(4)]), Or([year_assignment[j] == 3 for j in range(4)]))` - If Tiffany is assigned, Ryan must be assigned.
+    - Constraint 6 (Ryan & Onyx): `ForAll([r], Implies(And(r >= 0, r < 4, year_assignment[r] == 3), Implies(r > 0, year_assignment[r-1] == 2)))` - If Ryan is assigned to year r, Onyx must be assigned to year r-1 (if r>0).
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - Initialize a counter `count = 0`.
+    - For each student `s` from 0 to 5:
+        - Push the solver state.
+        - Add the constraint `year_assignment[0] == s`.
+        - Check `solver.check()`. If `sat`, increment `count`.
+        - Pop the solver state.
+    - The final value of `count` represents the number of students who could be assigned to 1921.  Return the string representation of this integer `count`.

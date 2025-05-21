@@ -1,0 +1,27 @@
+1. Constraints:
+    - Constraint 1 (Panel Size): `sum([If(selected[i], 1, 0) for i in range(9)]) == 5` - Exactly 5 scientists are selected.
+    - Constraint 2 (At least one of each type):
+        - `Or(selected[0], selected[1], selected[2])` - At least one botanist.
+        - `Or(selected[3], selected[4], selected[5])` - At least one chemist.
+        - `Or(selected[6], selected[7], selected[8])` - At least one zoologist.
+    - Constraint 3 (More than one botanist implies at most one zoologist):
+        - `Implies(sum([If(selected[i], 1, 0) for i in range(3)]) > 1, sum([If(selected[i], 1, 0) for i in range(6,9)]) <= 1)`
+    - Constraint 4 (F and K cannot both be selected): `Not(And(selected[0], selected[3]))`
+    - Constraint 5 (K and M cannot both be selected): `Not(And(selected[3], selected[5]))`
+    - Constraint 6 (If M is selected, both P and R must be selected): `Implies(selected[5], And(selected[6], selected[8]))`
+    - Constraint 7 (F, L, Q, and R are selected): `And(selected[0], selected[4], selected[7], selected[8])`
+
+2. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice (G, H, K, M, P):
+        - Push the solver state.
+        - Add a temporary constraint representing the fifth scientist: `selected[i]`, where `i` is the index of the scientist based on the answer choice (G=1, H=2, K=3, M=5, P=6).
+        - Check `solver.check()`.
+        - If `sat`, this *could* be the correct answer.  However, we need to ensure it *must* be true.
+        - Pop the solver state.
+        - Push the solver state again.
+        - Add a temporary constraint representing the negation of the fifth scientist: `Not(selected[i])`.
+        - Check `solver.check()`.
+        - If `unsat`, this confirms the answer choice *must* be true.  Print the corresponding letter and stop.
+        - Pop the solver state.
+

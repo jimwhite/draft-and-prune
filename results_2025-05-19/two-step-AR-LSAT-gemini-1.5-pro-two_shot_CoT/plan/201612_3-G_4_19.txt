@@ -1,0 +1,31 @@
+1. Entities:
+    - Companies: RealProp (RP), Southco (SC), Trustcorp (TC)
+    - Buildings: Garza Tower (GT), Yates House (YH), Zimmer House (ZH), Flores Tower (FT), Lynch Building (LB), King Building (KB), Meyer Building (MB), Ortiz Building (OB)
+    - Building Classes: Class 1 (C1), Class 2 (C2), Class 3 (C3)
+    - Initial Ownership:  RP owns [GT, YH, ZH], SC owns [FT, LB], TC owns [KB, MB, OB]
+    - Building Classes: GT, FT (C1); LB, KB, MB, OB (C2); YH, ZH (C3)
+
+2. Analyze Possible Trades based on allowed trade types and initial ownership:
+    - Type 1 (Same Class Swap):
+        - GT <-> FT (C1)
+        - LB <-> KB, LB <-> MB, LB <-> OB (C2)
+        - YH <-> ZH (C3)
+    - Type 2 (C1 for two C2):
+        - GT <-> LB+KB, GT <-> LB+MB, GT <-> LB+OB, GT <-> KB+MB, GT <-> KB+OB, GT <-> MB+OB
+        - FT <-> LB+KB, FT <-> LB+MB, FT <-> LB+OB, FT <-> KB+MB, FT <-> KB+OB, FT <-> MB+OB
+    - Type 3 (C2 for two C3):
+        - LB <-> YH+ZH
+        - KB <-> YH+ZH
+        - MB <-> YH+ZH
+        - OB <-> YH+ZH
+
+3. Evaluate each answer choice against the possible trades:
+    - Choice A:  SC gains YH and ZH, loses nothing. RP gains FT, loses nothing.  Impossible.
+    - Choice B: RP gains KB and OB, loses nothing. TC loses KB and OB, gains YH and ZH. Impossible.
+    - Choice C: RP gains LB, loses nothing. SC gains YH and ZH, loses LB. Impossible.
+    - Choice D: RP gains MB and YH, loses ZH. TC loses MB, gains ZH.  Possible (Type 3 trade: MB <-> YH+ZH, then YH transferred from RP to SC).  Check if another valid trade could result in this outcome.  If not, this is the answer.
+    - Choice E: SC gains OB, loses FT. TC gains FT, loses OB. Possible (Type 1 trade: FT <-> OB, then OB transferred from TC to SC).
+
+4. Verify Choice D:  No other single trade can result in the ownership described in Choice D.
+
+5. Final Answer: Choice D.

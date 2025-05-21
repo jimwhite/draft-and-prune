@@ -1,0 +1,34 @@
+1. Entities:
+    - Cookbooks: K=0, L=1, M=2, N=3, O=4, P=5
+    - Seasons: Fall=0, Spring=1
+
+2. Variables:
+    - `season_of_cookbook = Array('season_of_cookbook', IntSort(), IntSort())` - Maps cookbook ID to season ID.
+
+3. Constraints:
+    - Constraint 0 (Domain): `i = Int('i')`. `ForAll([i], Implies(And(i >= 0, i <= 5), And(season_of_cookbook[i] >= 0, season_of_cookbook[i] <= 1)))`
+    - Constraint 1 (M and P different seasons): `season_of_cookbook[2] != season_of_cookbook[5]`
+    - Constraint 2 (K and N same season): `season_of_cookbook[0] == season_of_cookbook[3]`
+    - Constraint 3 (K fall implies O fall): `Implies(season_of_cookbook[0] == 0, season_of_cookbook[4] == 0)`
+    - Constraint 4 (M fall implies N spring): `Implies(season_of_cookbook[2] == 0, season_of_cookbook[3] == 1)`
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (0-4).
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints representing the answer choice:
+            - A: `season_of_cookbook[0] == 0`, `season_of_cookbook[1] == 1`
+            - B: `season_of_cookbook[4] == 0`, `season_of_cookbook[5] == 1`
+            - C: `season_of_cookbook[5] == 0`, `season_of_cookbook[1] == 1`
+            - D: `season_of_cookbook[0] == 1`, `season_of_cookbook[1] == 1`
+            - E: `season_of_cookbook[2] == 0`, `season_of_cookbook[1] == 0`
+        - Check if the solution is unique:
+            - Get a model (solution) if `solver.check() == sat`.
+            - Iterate through each cookbook (i from 0 to 5):
+                - Push solver state.
+                - Add a constraint that forces the current cookbook to have the opposite season from the model.  `season_of_cookbook[i] != model[season_of_cookbook[i]]`
+                - If `solver.check() == sat`, then there's another valid solution, so the schedule is not fully determined. Break the inner loop and move to the next answer choice.
+                - Pop solver state.
+            - If the inner loop completes without finding another solution, then the schedule is fully determined. Print the corresponding letter (A, B, C, D, or E) and stop.
+        - Pop the solver state (from the outer loop).
+

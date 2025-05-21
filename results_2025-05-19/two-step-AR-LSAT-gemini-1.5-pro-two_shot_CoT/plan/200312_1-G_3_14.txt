@@ -1,0 +1,26 @@
+1. Entities:
+    - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+    - Cookie Types: Oatmeal (O), Peanut Butter (P), Sugar (S)
+    - Batches: 1st (0), 2nd (1), 3rd (2)
+
+2. Variables:
+    - `day = Array('day', IntSort(), IntSort(), IntSort())`  # day[cookie_type][batch] = day_index (0-4)
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([c, b], Implies(And(c >= 0, c <= 2, b >= 0, b <= 2), And(day[c][b] >= 0, day[c][b] <= 4)))` where `c` and `b` are declared as integer variables.
+    - Constraint 2 (No two batches of same cookie on same day): `ForAll([c, b1, b2], Implies(And(b1 >= 0, b1 <= 2, b2 >= 0, b2 <= 2, b1 != b2), day[c][b1] != day[c][b2]))` where `c`, `b1`, and `b2` are declared as integer variables.
+    - Constraint 3 (No two batches of different cookies on same day and same batch number): `ForAll([c1, c2, b], Implies(And(c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, c1 != c2, b >=0, b <=2), day[c1][b] != day[c2][b]))` where `c1`, `c2`, and `b` are declared as integer variables.
+    - Constraint 4 (At least one batch on Monday): `Or([Or([day[c][b] == 0 for b in range(3)]) for c in range(3)])`
+    - Constraint 5 (Oatmeal 2nd batch and Peanut Butter 1st batch on same day): `day[0][1] == day[1][0]`
+    - Constraint 6 (Sugar 2nd batch on Thursday): `day[2][1] == 3`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - Create a list `daily_batch_counts = [Sum([If(day[c][b] == d, 1, 0) for c in range(3) for b in range(3)]) for d in range(5)]`
+    - Initialize `count = 0`
+    - For each day `d` from 0 to 4:
+        - Push the solver state.
+        - Add a temporary constraint: `daily_batch_counts[d] <= 2`
+        - If `solver.check()` is sat, increment `count`.
+        - Pop the solver state.
+    - The final value of `count` corresponds to the correct answer choice.

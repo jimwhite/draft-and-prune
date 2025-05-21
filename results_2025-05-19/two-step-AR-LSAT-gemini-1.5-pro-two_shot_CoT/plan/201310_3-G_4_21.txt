@@ -1,0 +1,36 @@
+1. Entities:
+    - Birds: Oystercatchers (O), Petrels (P), Rails (R), Sandpipers (S), Terns (T)
+    - Lectures: 1, 2, 3, 4, 5
+    - Locations: Gladwyn Hall (G), Howard Auditorium (H)
+
+2. Variables:
+    - `lecture_bird = Array('lecture_bird', IntSort(), IntSort())`  Maps lecture number (1-5) to bird (O=0, P=1, R=2, S=3, T=4).
+    - `lecture_location = Array('lecture_location', IntSort(), IntSort())` Maps lecture number (1-5) to location (G=0, H=1).
+
+3. Constraints:
+    - Constraint 1 (Bird Uniqueness): `Distinct([lecture_bird[i] for i in range(1, 6)])`
+    - Constraint 2 (First Lecture Location): `lecture_location[1] == 0` (Gladwyn Hall)
+    - Constraint 3 (Fourth Lecture Location): `lecture_location[4] == 1` (Howard Auditorium)
+    - Constraint 4 (Gladwyn Count): `Sum([If(lecture_location[i] == 0, 1, 0) for i in range(1, 6)]) == 3`
+    - Constraint 5 (Sandpipers Location and before Oystercatchers):
+        - `lecture_location[lecture_bird.index(3) + 1] == 1` (Howard Auditorium)
+        - `lecture_bird.index(3) < lecture_bird.index(0)`
+    - Constraint 6 (Terns before Petrels and Petrels in Gladwyn):
+        - `lecture_bird.index(4) < lecture_bird.index(1)`
+        - `lecture_location[lecture_bird.index(1) + 1] == 0` (Gladwyn Hall)
+    - Constraint 7 (Terns Location - Howard Auditorium): `lecture_location[lecture_bird.index(4) + 1] == 1`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the answer choice:
+            - Choice A: `And(lecture_bird[3] == 0, lecture_location[3] == 0)`
+            - Choice B: `And(lecture_bird[3] == 2, lecture_location[3] == 1)`
+            - Choice C: `And(lecture_bird[3] == 2, lecture_location[3] == 0)`
+            - Choice D: `And(lecture_bird[3] == 3, lecture_location[3] == 1)`
+            - Choice E: `And(lecture_bird[3] == 4, lecture_location[3] == 1)`
+        - Check `solver.check()`. If `sat`, this is a possible correct answer.
+        - Pop the solver state.
+    - Collect all possible correct answers.

@@ -1,0 +1,24 @@
+1. Entities:
+    - Bands: Uneasy (U=0), Vegemite (V=1), Wellspring (W=2), Xpert (X=3), Yardsign (Y=4), Zircon (Z=5)
+    - Slots: 1 through 6
+
+2. Variables:
+    - `band_at_slot = Array('band_at_slot', IntSort(), IntSort())` - Maps slot number (1-indexed) to band ID (0-indexed).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 1, i <= 6), And(band_at_slot[i] >= 0, band_at_slot[i] <= 5)))` -  Declare `i = Int('i')`.
+    - Constraint 1 (Distinctness): `Distinct([band_at_slot[i] for i in range(1, 7)])` - Each band plays in exactly one slot.
+    - Constraint 2 (V before Z): `Implies(And(band_at_slot[i] == V, band_at_slot[j] == Z), i < j)` where `i, j` are quantified over 1 to 6.
+    - Constraint 3 (W before X): `Implies(And(band_at_slot[i] == W, band_at_slot[j] == X), i < j)` where `i, j` are quantified over 1 to 6.
+    - Constraint 4 (Z before X): `Implies(And(band_at_slot[i] == Z, band_at_slot[j] == X), i < j)` where `i, j` are quantified over 1 to 6.
+    - Constraint 5 (U in last three): `Or(band_at_slot[4] == U, band_at_slot[5] == U, band_at_slot[6] == U)`
+    - Constraint 6 (Y in first three): `Or(band_at_slot[1] == Y, band_at_slot[2] == Y, band_at_slot[3] == Y)`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-6.
+    - For each answer choice (Uneasy, Vegemite, Wellspring, Xpert, Zircon):
+        - Push the solver state.
+        - Add the constraint `band_at_slot[5] == band_id`, where `band_id` corresponds to the current answer choice.
+        - Check `solver.check()`. If unsat, this is the correct answer (the band CANNOT be in slot 5). Print the band name and stop.
+        - Pop the solver state.
+

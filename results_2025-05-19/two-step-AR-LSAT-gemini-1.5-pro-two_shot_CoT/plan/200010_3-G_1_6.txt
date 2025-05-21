@@ -1,0 +1,30 @@
+1. Entities:
+    - Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    - Days: Monday (0), Tuesday (1), Wednesday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `report = Array('report', IntSort(), IntSort(), IntSort())` - `report[day][time]` stores the student ID giving the report on that day and time.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([d, t], And(report[d][t] >= 0, report[d][t] < 8))` where `d` ranges over days (0 to 2) and `t` ranges over times (0 to 1).
+    - Constraint 2 (Exactly 2 reports per day): `ForAll([d], Distinct([report[d][0], report[d][1]]))` where `d` ranges over days (0 to 2).
+    - Constraint 3 (Exactly 6 students report): `Distinct([report[d][t] for d in range(3) for t in range(2)])`
+    - Constraint 4 (George reports only on Tuesday): `And(Not(Or(report[0][0] == 0, report[0][1] == 0)), Not(Or(report[2][0] == 0, report[2][1] == 0)), Or(report[1][0] == 0, report[1][1] == 0))`
+    - Constraint 5 (Olivia and Robert not in afternoon): `ForAll([d], And(report[d][1] != 6, report[d][1] != 7))` where `d` ranges over days (0 to 2).
+    - Constraint 6 (Nina implies Helen and Irving next day, unless Wednesday): `ForAll([d], Implies(Or(report[d][0] == 5, report[d][1] == 5), If(d < 2, And(Or(report[d+1][0] == 1, report[d+1][1] == 1), Or(report[d+1][0] == 2, report[d+1][1] == 2)), True)))` where `d` ranges over days (0 to 2).
+    - Constraint 7 (Helen, Kyle, and Lenore give morning reports): `And(Distinct([report[0][0], report[1][0], report[2][0]]), Or(report[0][0] == 1, report[1][0] == 1, report[2][0] == 1), Or(report[0][0] == 3, report[1][0] == 3, report[2][0] == 3), Or(report[0][0] == 4, report[1][0] == 4, report[2][0] == 4))`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - A: `Not(report[0][0] == 1)`
+            - B: `Not(Or(report[0][0] == 2, report[0][1] == 2))`
+            - C: `Not(Or(report[2][0] == 2, report[2][1] == 2))`
+            - D: `Not(Or(report[1][0] == 3, report[1][1] == 3))`
+            - E: `Not(Or(report[2][0] == 3, report[2][1] == 3))`
+        - Check `solver.check()`. If `unsat`, this is the correct answer.
+        - Pop the solver state.
+

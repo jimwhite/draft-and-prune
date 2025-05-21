@@ -1,0 +1,32 @@
+1. Entities:
+    - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+    - Cookie Types: Oatmeal (0), Peanut Butter (1), Sugar (2)
+    - Batches: 1st (0), 2nd (1), 3rd (2)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort(), IntSort())`  # schedule[day][cookie_type] = batch_number.  A value of -1 indicates no batch of that type is made on that day.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([d, c], Implies(And(d >= 0, d <= 4, c >= 0, c <= 2), And(schedule[d][c] >= -1, schedule[d][c] <= 2)))` where `d` represents day and `c` represents cookie type.
+    - Constraint 2 (Exactly three batches of each cookie type): `ForAll([c], And(Exists([d1, d2, d3], And(Distinct(d1, d2, d3), schedule[d1][c] == 0, schedule[d2][c] == 1, schedule[d3][c] == 2))))` where `c` represents cookie type and `d1`, `d2`, `d3` are distinct day variables.
+    - Constraint 3 (No two batches of the same kind on the same day): `ForAll([c, d1, d2], Implies(And(d1 != d2, d1 >= 0, d1 <=4, d2 >= 0, d2 <= 4), Implies(And(schedule[d1][c] != -1, schedule[d2][c] != -1), schedule[d1][c] != schedule[d2][c])))`
+    - Constraint 4 (At least one batch on Monday): `Exists([c], And(c >= 0, c <= 2, schedule[0][c] != -1))`
+    - Constraint 5 (Oatmeal 2nd batch and Peanut Butter 1st batch on same day): `ForAll([d], Implies(schedule[d][0] == 1, schedule[d][1] == 0))` and `ForAll([d], Implies(schedule[d][1] == 0, schedule[d][0] == 1))`
+    - Constraint 6 (Sugar 2nd batch on Thursday): `schedule[3][2] == 1`
+    - Constraint 7 (Peanut Butter 1st batch on Tuesday): `schedule[1][1] == 0`
+    - Constraint 8 (Only one batch per kind per day): `ForAll([d, c1, c2], Implies(And(c1 != c2, schedule[d][c1] != -1, schedule[d][c2] != -1), False))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints corresponding to the answer choice:
+            - Choice A: `Exists([c1, c2], And(c1 != c2, c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, schedule[0][c1] == 0, schedule[0][c2] == 0))`
+            - Choice B: `Exists([c1, c2], And(c1 != c2, c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, schedule[1][c1] == 0, schedule[1][c2] == 0))`
+            - Choice C: `Exists([c1, c2], And(c1 != c2, c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, schedule[2][c1] == 1, schedule[2][c2] == 1))`
+            - Choice D: `Exists([c1, c2], And(c1 != c2, c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, schedule[3][c1] == 1, schedule[3][c2] == 1))`
+            - Choice E: `Exists([c1, c2], And(c1 != c2, c1 >= 0, c1 <= 2, c2 >= 0, c2 <= 2, schedule[4][c1] == 2, schedule[4][c2] == 2))`
+        - Check `solver.check()`. If unsat, this is the EXCEPT answer. Print the corresponding letter and stop.
+        - Pop the solver state.
+

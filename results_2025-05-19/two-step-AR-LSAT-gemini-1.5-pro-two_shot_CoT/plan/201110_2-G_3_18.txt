@@ -1,0 +1,32 @@
+1. Entities:
+    - Riders: Reynaldo (R=0), Seamus (S=1), Theresa (T=2), Yuki (Y=3)
+    - Bicycles: F (F=0), G (G=1), H (H=2), J (J=3)
+    - Days: Day 1 (0), Day 2 (1)
+
+2. Variables:
+    - `assignment = Array('assignment', IntSort(), IntSort(), IntSort())` -  `assignment[day][rider]` stores the bicycle ID assigned to the rider on that day.
+
+3. Constraints:
+    - Constraint 1 (Domain of Riders): `ForAll([day, rider], And(rider >= 0, rider < 4))`
+    - Constraint 2 (Domain of Bicycles): `ForAll([day, rider], And(assignment[day][rider] >= 0, assignment[day][rider] < 4))`
+    - Constraint 3 (Each rider tests one bicycle per day): `ForAll([day], Distinct([assignment[day][rider] for rider in range(4)]))`
+    - Constraint 4 (All bicycles are tested each day): `ForAll([day], Distinct([assignment[day][rider] for rider in range(4)]))`
+    - Constraint 5 (Each rider tests different bicycles on different days): `ForAll([rider], assignment[0][rider] != assignment[1][rider])`
+    - Constraint 6 (Reynaldo cannot test F): `ForAll([day], assignment[day][0] != 0)`
+    - Constraint 7 (Yuki cannot test J): `ForAll([day], assignment[day][3] != 3)`
+    - Constraint 8 (Theresa must test H): `Or(assignment[0][2] == 2, assignment[1][2] == 2)`
+    - Constraint 9 (Yuki's day 1 bicycle is Seamus's day 2 bicycle): `assignment[0][3] == assignment[1][1]`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-9.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints corresponding to the answer choice.  Note the correction for "both" to ensure it can happen on *either* day:
+            - Choice A (Both Reynaldo and Seamus test J): `Or(And(assignment[0][0] == 3, assignment[0][1] == 3), And(assignment[1][0] == 3, assignment[1][1] == 3))`
+            - Choice B (Both Reynaldo and Theresa test J): `Or(And(assignment[0][0] == 3, assignment[0][2] == 3), And(assignment[1][0] == 3, assignment[1][2] == 3))`
+            - Choice C (Both Reynaldo and Yuki test G): `Or(And(assignment[0][0] == 1, assignment[0][3] == 1), And(assignment[1][0] == 1, assignment[1][3] == 1))`
+            - Choice D (Both Seamus and Theresa test G): `Or(And(assignment[0][1] == 1, assignment[0][2] == 1), And(assignment[1][1] == 1, assignment[1][2] == 1))`
+            - Choice E (Both Theresa and Yuki test F): `Or(And(assignment[0][2] == 0, assignment[0][3] == 0), And(assignment[1][2] == 0, assignment[1][3] == 0))`
+        - Check `solver.check()`. If unsat, this is the correct answer (CANNOT be true). Print the corresponding letter and stop.
+        - Pop the solver state.
+

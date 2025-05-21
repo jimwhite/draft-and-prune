@@ -1,0 +1,25 @@
+1. Entities:
+- Workers: Quinn (0), Ruiz (1), Smith (2), Taylor (3), Verma (4), Wells (5), Xue (6)
+
+2. Variables:
+- `is_member = Array('is_member', IntSort(), BoolSort())`  # is_member[i] is true iff worker i is a project member
+- `is_leader = Array('is_leader', IntSort(), BoolSort())` # is_leader[i] is true iff worker i is the project leader
+
+3. Constraints:
+- Constraint 1 (Exactly 3 members): `PbEq([(is_member[i], 1) for i in range(7)], 3)`
+- Constraint 2 (Exactly 1 leader): `PbEq([(is_leader[i], 1) for i in range(7)], 1)`
+- Constraint 3 (Leader must be a member): `ForAll([i], Implies(is_leader[i], is_member[i]))`
+- Constraint 4 (Quinn/Ruiz member => leader): `ForAll([i], Implies(Or(i == 0, i == 1), Implies(is_member[i], is_leader[i])))`
+- Constraint 5 (Smith member => Taylor member): `Implies(is_member[2], is_member[3])`
+- Constraint 6 (Wells member => not Ruiz/Verma): `Implies(is_member[5], And(Not(is_member[1]), Not(is_member[4])))`
+
+4. Answering the Question:
+- Add constraint: `Not(is_member[3])` (Taylor is not a member)
+- For each answer choice (worker `w`):
+    - Push the solver state.
+    - Add constraint: `Not(is_member[w])` (Assume worker `w` is NOT a member)
+    - Check `solver.check()`.
+    - If `unsat`:
+        - Then `w` must be a member. Print the name corresponding to `w` and stop.
+    - Pop solver state.
+

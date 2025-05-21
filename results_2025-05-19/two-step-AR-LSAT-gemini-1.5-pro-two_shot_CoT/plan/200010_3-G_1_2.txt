@@ -1,0 +1,30 @@
+1. Entities:
+    - Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    - Days: Monday (0), Tuesday (1), Wednesday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `report = Array('report', IntSort(), IntSort(), IntSort())` - `report[day][time]` stores the student ID giving the report on that day and time.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([d, t], And(report[d][t] >= 0, report[d][t] < 8))` where `d = Int('d')` and `t = Int('t')` represent day and time respectively, and range from 0 to 2 and 0 to 1 respectively.
+    - Constraint 2 (Distinctness): `Distinct([report[d][t] for d in range(3) for t in range(2)])` - All reporters are distinct.
+    - Constraint 3 (George's schedule): `Or(report[1][0] == 0, report[1][1] == 0)` and `And(report[0][0] != 0, report[0][1] != 0, report[2][0] != 0, report[2][1] != 0)`
+    - Constraint 4 (Olivia and Robert's afternoon restriction): `And(report[0][1] != 6, report[0][1] != 7, report[1][1] != 6, report[1][1] != 7, report[2][1] != 6, report[2][1] != 7)`
+    - Constraint 5 (Nina's implication): `Implies(Or(report[0][0] == 5, report[0][1] == 5), And(Or(report[1][0] == 1, report[1][1] == 1), Or(report[1][0] == 2, report[1][1] == 2)))` and `Implies(Or(report[1][0] == 5, report[1][1] == 5), And(Or(report[2][0] == 1, report[2][1] == 1), Or(report[2][0] == 2, report[2][1] == 2)))`
+    - Constraint 6 (Kyle and Lenore don't report): `And([And(report[d][t] != 3, report[d][t] != 4) for d in range(3) for t in range(2)])`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints corresponding to the morning reports:
+            - Choice A: `And(report[0][0] == 1, report[1][0] == 0, report[2][0] == 5)`
+            - Choice B: `And(report[0][0] == 2, report[1][0] == 7, report[2][0] == 1)`
+            - Choice C: `And(report[0][0] == 5, report[1][0] == 1, report[2][0] == 6)`
+            - Choice D: `And(report[0][0] == 6, report[1][0] == 7, report[2][0] == 2)`
+            - Choice E: `And(report[0][0] == 7, report[1][0] == 0, report[2][0] == 1)`
+        - Check `solver.check()`. If `sat`, this is a possible correct answer.
+        - Pop the solver state.
+    - Collect all answer choices that resulted in `sat` and present them as the solution.

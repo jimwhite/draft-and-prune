@@ -1,0 +1,33 @@
+1. Entities:
+    - Guitarist (G=0)
+    - Keyboard player (K=1)
+    - Percussionist (P=2)
+    - Saxophonist (S=3)
+    - Trumpeter (T=4)
+    - Violinist (V=5)
+    - Solo slots: 1, 2, 3, 4, 5, 6
+
+2. Variables:
+    - `solo_order = Array('solo_order', IntSort(), IntSort())`  Maps solo slot (1-6) to musician ID (0-5).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll(i, Implies(And(i >= 1, i <= 6), And(solo_order[i] >= 0, solo_order[i] <= 5)))` where `i = Int('i')`
+    - Constraint 2 (Distinctness): `Distinct([solo_order[1], solo_order[2], solo_order[3], solo_order[4], solo_order[5], solo_order[6]])`
+    - Constraint 3 (Guitarist not 4th): `solo_order[4] != G`
+    - Constraint 4 (Percussionist before Keyboard): `solo_order.index(P) < solo_order.index(K)` (using a helper function .index() for clarity)
+    - Constraint 5 (Violinist before Keyboard before Guitarist): `solo_order.index(V) < solo_order.index(K) and solo_order.index(K) < solo_order.index(G)`
+    - Constraint 6 (Saxophonist after P or T, not both): `Xor(solo_order.index(P) < solo_order.index(S), solo_order.index(T) < solo_order.index(S))`
+
+
+4. Answering the Question:
+    - Add constraint: `solo_order[4] == V` (Violinist performs 4th)
+    - For each answer choice:
+        - Push solver state.
+        - Add the negation of the answer choice as a constraint.
+            - A: `Not(solo_order.index(P) < solo_order.index(V))`
+            - B: `Not(solo_order.index(T) < solo_order.index(V))`
+            - C: `Not(solo_order.index(T) < solo_order.index(G))`
+            - D: `Not(solo_order.index(S) < solo_order.index(V))`
+            - E: `Not(solo_order.index(T) < solo_order.index(S))`
+        - Check satisfiability. If sat, this is the EXCEPT answer. Print the corresponding letter and stop.
+        - Pop solver state.

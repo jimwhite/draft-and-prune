@@ -1,0 +1,38 @@
+1. Entities:
+    - Students: Jiang (0), Kramer (1), Lopez (2), Megregian (3), O'Neill (4)
+    - Plays: Sunset (0), Tamerlane (1), Undulation (2)
+
+2. Variables:
+    - `reviews = Array('reviews', IntSort(), IntSort())`  # reviews[student_id][play_id] is True if the student reviews the play.
+    - Declare `i`, `j`, `l`, `k` as IntSort() for quantifier use.
+
+3. Constraints:
+    - Constraint 1 (Each student reviews at least one play): `ForAll([i], Or(reviews[i][0], reviews[i][1], reviews[i][2]))` where `0 <= i < 5`.
+    - Constraint 2 (Kramer and Lopez review fewer plays than Megregian):
+        - `Sum([If(reviews[1][k], 1, 0) for k in range(3)]) < Sum([If(reviews[3][k], 1, 0) for k in range(3)])`
+        - `Sum([If(reviews[2][k], 1, 0) for k in range(3)]) < Sum([If(reviews[3][k], 1, 0) for k in range(3)])`
+    - Constraint 3 (Neither Lopez nor Megregian reviews any play Jiang reviews):
+        - `ForAll([k], Implies(reviews[0][k], Not(reviews[2][k])))` where `0 <= k < 3`
+        - `ForAll([k], Implies(reviews[0][k], Not(reviews[3][k])))` where `0 <= k < 3`
+    - Constraint 4 (Kramer and O'Neill both review Tamerlane):
+        - `reviews[1][1]`
+        - `reviews[4][1]`
+    - Constraint 5 (Exactly two students review the same plays):
+        - `Exists([i, j], And(i != j, ForAll([k], reviews[i][k] == reviews[j][k])))` where `0 <= i < 5` and `0 <= j < 5` and `0 <= k < 3`.
+        - `ForAll([i, j, l], Implies(And(i != j, j != l, i != l, ForAll([k], reviews[i][k] == reviews[j][k])), Not(ForAll([k], reviews[j][k] == reviews[l][k]))))` where `0 <= i < 5` and `0 <= j < 5` and `0 <= l < 5` and `0 <= k < 3`.
+    - Constraint 6 (Exactly three students review Undulation): `Sum([If(reviews[i][2], 1, 0) for i in range(5)]) == 3`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - A: `Not(reviews[3][2])`
+            - B: `Not(reviews[4][2])`
+            - C: `reviews[0][2]`
+            - D: `reviews[2][1]`
+            - E: `reviews[4][0]`
+        - Check `solver.check()`. If `sat`, this is a possible correct answer. Store the answer choice letter.
+        - Pop the solver state.
+    - Return the stored answer choice letter.
+

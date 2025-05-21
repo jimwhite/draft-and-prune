@@ -1,0 +1,24 @@
+1. Entities:
+    - Accomplices: Peters (P=0), Quinn (Q=1), Rovero (R=2), Stanton (S=3), Tao (T=4), Villas (V=5), White (W=6)
+    - Recruitment Order: 1st (0), 2nd (1), 3rd (2), 4th (3), 5th (4), 6th (5), 7th (6)
+
+2. Variables:
+    - `recruitment_order = Array('recruitment_order', IntSort(), IntSort())` - Maps recruitment order (0-6) to accomplice ID (0-6).
+
+3. Constraints:
+    - Constraint 1 (Distinctness): `Distinct([recruitment_order[i] for i in range(7)])`
+    - Constraint 2 (Stanton not before/after Tao): `Not(Or(Exists([i], And(recruitment_order[i] == S, i > 0, recruitment_order[i-1] == T)), Exists([i], And(recruitment_order[i] == S, i < 6, recruitment_order[i+1] == T))))`
+    - Constraint 3 (Quinn before Rovero): `Exists([i, j], And(recruitment_order[i] == Q, recruitment_order[j] == R, i < j))`
+    - Constraint 4 (Villas before White): `Exists([i], And(recruitment_order[i] == V, i < 6, recruitment_order[i+1] == W))`
+    - Constraint 5 (Peters recruited fourth): `recruitment_order[3] == P`
+
+4. Answering the Question:
+    - Create a base solver with constraints 1-5.
+    - Add the hypothetical constraint: `Exists([i], And(recruitment_order[i] == Q, i < 6, recruitment_order[i+1] == R))`
+    - For each answer choice:
+        - Push solver state.
+        - Add constraint representing Stanton's recruitment position. For example, for "first", add `recruitment_order[0] == S`.
+        - Check `solver.check()`. If `unsat`, this is the correct answer. Print the answer choice and stop.
+        - If `sat`, the answer is incorrect.
+        - Pop solver state.
+

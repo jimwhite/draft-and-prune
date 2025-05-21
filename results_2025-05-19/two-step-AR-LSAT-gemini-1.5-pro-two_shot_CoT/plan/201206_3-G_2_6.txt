@@ -1,0 +1,24 @@
+1. Entities:
+    - Businesses: Optometrist (O), Pharmacy (P), Restaurant1 (R1), Restaurant2 (R2), Shoe Store (S), Toy Store (T), Veterinarian (V)
+    - Spaces: 1 through 7
+
+2. Encoding:
+    - Assign integers 0-6 to the businesses: P=0, O=1, R1=2, R2=3, S=4, T=5, V=6.  This is arbitrary but necessary for SMT.
+    - `arrangement = Array('arrangement', IntSort(), IntSort())` - Maps space number (1-7) to business ID (0-6).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([x], Implies(And(x >= 1, x <= 7), And(arrangement[x] >= 0, arrangement[x] <= 6)))` - All spaces are assigned a valid business ID. Declare `x = Int('x')`.
+    - Constraint 2 (Distinctness): `Distinct([arrangement[i] for i in range(1, 8)])` - Each business occupies a unique space.
+    - Constraint 3 (Pharmacy at End): `Or(arrangement[1] == 0, arrangement[7] == 0)` - Pharmacy is at either space 1 or space 7.
+    - Constraint 4 (Restaurant at Other End): `Or(arrangement[1] == 2, arrangement[1] == 3, arrangement[7] == 2, arrangement[7] == 3)` - One restaurant is at the other end.
+    - Constraint 5 (Restaurants Separated): `ForAll([x], Implies(Or(arrangement[x] == 2, arrangement[x] == 3), And(Implies(x+1 <= 7, Not(Or(arrangement[x+1] == 2, arrangement[x+1] == 3))), Implies(x+2 <= 7, Not(Or(arrangement[x+2] == 2, arrangement[x+2] == 3))))))` - Restaurants are separated by at least two spaces. Declare `x = Int('x')`.  Correct the implication and handle array bounds.
+    - Constraint 6 (Pharmacy Next to O or V): `Implies(arrangement[1] == 0, Or(arrangement[2] == 1, arrangement[2] == 6))` and `Implies(arrangement[7] == 0, Or(arrangement[6] == 1, arrangement[6] == 6))` - Pharmacy is next to Optometrist or Veterinarian.
+    - Constraint 7 (Toy Store Not Next to V): `ForAll([x], Implies(arrangement[x] == 5, And(Implies(x+1 <= 7, arrangement[x+1] != 6), Implies(x-1 >= 1, arrangement[x-1] != 6))))` - Toy store is not next to Veterinarian. Declare `x = Int('x')`. Correct the implication and handle array bounds.
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (1-7).
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the business order in the answer choice, using the numerical encoding.  Consider both possible restaurant orderings within each choice.
+        - Check `solver.check()`. If sat, this is a possible solution. Print the corresponding letter and stop.
+        - Pop the solver state.

@@ -1,0 +1,25 @@
+1. Entities:
+    - Lab Assistants: Julio (0), Kevin (1), Lan (2), Nessa (3), Olivia (4), Rebecca (5)
+    - Days: Wednesday (0), Thursday (1), Friday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a lab assistant ID.  The slot ID is calculated as `day * 2 + time`.  So, Wednesday Morning is 0, Wednesday Afternoon is 1, Thursday Morning is 2, etc.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 0, i < 6), And(schedule[i] >= 0, schedule[i] < 6)))` - All assigned lab assistants are within the valid range.
+    - Constraint 1 (Distinctness): `Distinct([schedule[i] for i in range(6)])` - Each lab assistant leads exactly one session.
+    - Constraint 2 (Kevin and Rebecca Same Day): `Or(And(schedule[0] == 1, schedule[1] == 5), And(schedule[0] == 5, schedule[1] == 1), And(schedule[2] == 1, schedule[3] == 5), And(schedule[2] == 5, schedule[3] == 1), And(schedule[4] == 1, schedule[5] == 5), And(schedule[4] == 5, schedule[5] == 1))`
+    - Constraint 3 (Lan and Olivia Different Days): `ForAll([i, j], Implies(And(i >= 0, i < 6, j >= 0, j < 6, i != j, schedule[i] == 2, schedule[j] == 4), Not(i // 2 == j // 2)))`
+    - Constraint 4 (Nessa Afternoon): `Or(schedule[1] == 3, schedule[3] == 3, schedule[5] == 3)`
+    - Constraint 5 (Julio Before Olivia): `ForAll([i, j], Implies(And(i >= 0, i < 6, j >= 0, j < 6, schedule[i] == 0, schedule[j] == 4), i // 2 < j // 2))`
+    - Constraint 6 (Lan Not Wednesday): `And(schedule[0] != 2, schedule[1] != 2)`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-6.
+    - For each answer choice (Rebecca, Olivia, Nessa, Kevin, Julio):
+        - Push the solver state.
+        - Add a temporary constraint that the given lab assistant *does not* lead a Thursday session: `And(schedule[2] != assistant_id, schedule[3] != assistant_id)` (where `assistant_id` is the integer ID of the current answer choice).
+        - Check `solver.check()`. If unsat, this means the lab assistant *must* lead a Thursday session, so this is the correct answer.  Return the corresponding answer choice and stop.
+        - Pop the solver state.
+

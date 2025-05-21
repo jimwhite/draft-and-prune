@@ -1,0 +1,33 @@
+1. Entities:
+    - Birds: Oystercatchers (O), Petrels (P), Rails (R), Sandpipers (S), Terns (T)
+    - Lectures: 1, 2, 3, 4, 5
+    - Locations: Gladwyn Hall (G), Howard Auditorium (H)
+
+2. Variables:
+    - `lecture_bird = Array('lecture_bird', IntSort(), IntSort())`  Maps lecture number (1-5) to bird (O=0, P=1, R=2, S=3, T=4).
+    - `lecture_location = Array('lecture_location', IntSort(), IntSort())` Maps lecture number (1-5) to location (G=0, H=1).
+
+3. Constraints:
+    - Constraint 1 (Bird Uniqueness): `Distinct([lecture_bird[i] for i in range(1, 6)])`
+    - Constraint 2 (First Lecture Location): `lecture_location[1] == 0` (Gladwyn Hall)
+    - Constraint 3 (Fourth Lecture Location): `lecture_location[4] == 1` (Howard Auditorium)
+    - Constraint 4 (Three Lectures in Gladwyn): `Sum([If(lecture_location[i] == 0, 1, 0) for i in range(1, 6)]) == 3`
+    - Constraint 5 (Sandpipers in Howard):  `lecture_location[lecture_bird.index(3) + 1] == 1`
+    - Constraint 6 (Sandpipers before Oystercatchers): `lecture_bird.index(3) < lecture_bird.index(0)`
+    - Constraint 7 (Terns before Petrels): `lecture_bird.index(4) < lecture_bird.index(1)`
+    - Constraint 8 (Petrels in Gladwyn): `lecture_location[lecture_bird.index(1) + 1] == 0`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints based on the answer choice:
+            - Choice A: `lecture_bird[5] == 0` and `lecture_location[5] == 0`
+            - Choice B: `lecture_bird[5] == 1` and `lecture_location[5] == 1`
+            - Choice C: `lecture_bird[5] == 2` and `lecture_location[5] == 1`
+            - Choice D: `lecture_bird[5] == 3` and `lecture_location[5] == 1`
+            - Choice E: `lecture_bird[5] == 4` and `lecture_location[5] == 0`
+        - Check `solver.check()`. If `sat`, this is a possible solution. Print the corresponding letter and stop.
+        - Pop the solver state.
+

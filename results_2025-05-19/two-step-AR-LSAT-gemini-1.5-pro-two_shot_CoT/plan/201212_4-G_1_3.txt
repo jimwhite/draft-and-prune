@@ -1,0 +1,29 @@
+1. Entities:
+    - Houses: J=0, K=1, L=2, M=3, N=4, O=5, P=6
+    - Time Slots: Morning1=0, Morning2=1, Afternoon1=2, Afternoon2=3, Afternoon3=4, Evening1=5, Evening2=6
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a time slot (integer) to a house (integer).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], Implies(And(i >= 0, i < 7), And(schedule[i] >= 0, schedule[i] < 7)))` - All scheduled houses must be within the valid range.
+    - Constraint 1 (Distinctness): `Distinct([schedule[i] for i in range(7)])` - Each house is shown exactly once.
+    - Constraint 2 (J in Evening): `Or(schedule[5] == 0, schedule[6] == 0)` - House J is shown in the evening.
+    - Constraint 3 (K not in Morning): `And(schedule[0] != 1, schedule[1] != 1)` - House K is not shown in the morning.
+    - Constraint 4 (L after K): `ForAll([k, l], Implies(And(k >= 0, k < 7, l >=0, l < 7, schedule[k] == 1, schedule[l] == 2), k < l))` - House L is shown after House K.
+    - Constraint 5 (L before M): `ForAll([l, m], Implies(And(l >= 0, l < 7, m >=0, m < 7, schedule[l] == 2, schedule[m] == 3), l < m))` - House L is shown before house M.
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-5.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - A: `Not(Or(schedule[5] == 1, schedule[6] == 1))`
+            - B: `Not(Or(schedule[2] == 2, schedule[3] == 2, schedule[4] == 2))`
+            - C: `Not(Or(schedule[5] == 2, schedule[6] == 2))`
+            - D: `Not(Or(schedule[0] == 3, schedule[1] == 3))`
+            - E: `Not(Or(schedule[2] == 3, schedule[3] == 3, schedule[4] == 3))`
+        - Check `solver.check()`. If `unsat`, store the answer choice letter.
+        - Pop the solver state.
+    - The answer that *must* be true will be the one whose negation resulted in `unsat`.

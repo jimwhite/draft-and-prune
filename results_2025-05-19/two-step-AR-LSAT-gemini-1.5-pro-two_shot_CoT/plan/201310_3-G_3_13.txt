@@ -1,0 +1,32 @@
+1. Entities:
+    - Movies: Horror (H=0), Mystery (M=1), Romance (R=2), Sci-Fi (S=3), Western (W=4)
+    - Screens: Screen 1 (S1=0), Screen 2 (S2=1), Screen 3 (S3=2)
+    - Times: 7 PM (T7=0), 8 PM (T8=1), 9 PM (T9=2)
+
+2. Variables:
+    - `movie_screen = Array('movie_screen', IntSort(), IntSort())` - Maps movie ID to screen ID.
+    - `movie_time = Array('movie_time', IntSort(), IntSort())` - Maps movie ID to time ID.
+
+3. Constraints:
+    - Constraint 1 (Screen Domain): `ForAll([m], And(movie_screen[m] >= 0, movie_screen[m] <= 2))` -  where `m = Int('m')`.
+    - Constraint 2 (Time Domain): `ForAll([m], And(movie_time[m] >= 0, movie_time[m] <= 2))` - where `m = Int('m')`.
+    - Constraint 3 (Unique Screen/Time Combination): `Distinct([movie_screen[m] * 3 + movie_time[m] for m in range(5)])`
+    - Constraint 4 (Two movies on Screen 1): `Sum([If(movie_screen[m] == 0, 1, 0) for m in range(5)]) == 2`
+    - Constraint 5 (Two movies on Screen 2): `Sum([If(movie_screen[m] == 1, 1, 0) for m in range(5)]) == 2`
+    - Constraint 6 (One movie on Screen 3): `Sum([If(movie_screen[m] == 2, 1, 0) for m in range(5)]) == 1`
+    - Constraint 7 (Western before Horror): `movie_time[W] < movie_time[H]`
+    - Constraint 8 (Sci-fi not on Screen 3): `movie_screen[S] != 2`
+    - Constraint 9 (Romance not on Screen 2): `movie_screen[R] != 1`
+    - Constraint 10 (Horror and Mystery on different screens): `movie_screen[H] != movie_screen[M]`
+    - Constraint 11 (Screens 1 & 2 have 7 PM and 9 PM movies): For all m, if movie_screen[m] == 0 or movie_screen[m] == 1, then movie_time[m] == 0 or movie_time[m] == 2.  `ForAll([m], Implies(Or(movie_screen[m] == 0, movie_screen[m] == 1), Or(movie_time[m] == 0, movie_time[m] == 2)))`
+    - Constraint 12 (Screen 3 has 8 PM movie): `ForAll([m], Implies(movie_screen[m] == 2, movie_time[m] == 1))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-12.
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints corresponding to the answer choice. For example, for choice A: `movie_screen[R] == 0`, `movie_time[R] == 0`, `movie_screen[H] == 0`, `movie_time[H] == 2`, etc.
+        - Check `solver.check()`. If 'sat', this is the correct answer. Print the corresponding letter and stop.
+        - Pop the solver state.
+

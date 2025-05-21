@@ -1,0 +1,28 @@
+1. Entities:
+    - Guitarist (0)
+    - Keyboard player (1)
+    - Percussionist (2)
+    - Saxophonist (3)
+    - Trumpeter (4)
+    - Violinist (5)
+    - Solos: 1st (0), 2nd (1), 3rd (2), 4th (3), 5th (4), 6th (5)
+
+2. Variables:
+    - `solo_order = Array('solo_order', IntSort(), IntSort())`  Maps solo index (0-5) to performer ID (0-5).
+
+3. Constraints:
+    - Constraint 1 (Distinctness): `Distinct([solo_order[i] for i in range(6)])` - Each musician plays exactly one solo.
+    - Constraint 2 (Guitarist not 4th): `solo_order[3] != 0`
+    - Constraint 3 (Percussionist before Keyboard player): `PbLe([(solo_order[i] == 2,1) for i in range(6)], 1) < PbLe([(solo_order[i] == 1,1) for i in range(6)], 1)`
+    - Constraint 4 (Violinist before Keyboard player before Guitarist): `PbLe([(solo_order[i] == 5,1) for i in range(6)], 1) < PbLe([(solo_order[i] == 1,1) for i in range(6)], 1) < PbLe([(solo_order[i] == 0,1) for i in range(6)], 1)`
+    - Constraint 5 (Saxophonist after Percussionist or Trumpeter, but not both): `Xor(PbLe([(solo_order[i] == 2,1) for i in range(6)], 1) < PbLe([(solo_order[i] == 3,1) for i in range(6)], 1), PbLe([(solo_order[i] == 4,1) for i in range(6)], 1) < PbLe([(solo_order[i] == 3,1) for i in range(6)], 1))`
+
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (1-5).
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints based on the order in the choice. For example, for choice A ("violinist, percussionist, saxophonist, guitarist, trumpeter, keyboard player"): `solo_order[0] == 5`, `solo_order[1] == 2`, `solo_order[2] == 3`, `solo_order[3] == 0`, `solo_order[4] == 4`, `solo_order[5] == 1`.
+        - Check `solver.check()`. If 'sat', this is the correct answer. Print the choice and stop.
+        - Pop the solver state.
+
