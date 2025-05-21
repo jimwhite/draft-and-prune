@@ -1,0 +1,27 @@
+1. Entities:
+    - Spaces: 1, 2, 3, 4, 5, 6, 7
+    - Businesses: Optometrist (O), Pharmacy (P), Restaurant (R - two distinct restaurants, R1 and R2), Shoe Store (S), Toy Store (T), Veterinarian (V)
+
+2. Representation:
+    - Use a mapping `space[i]` to denote the business located in space `i` (for i from 1 to 7).
+    - The set of businesses {`space[1]`, ..., `space[7]`} must be exactly {O, P, R1, R2, S, T, V}.
+
+3. Constraints:
+    - Constraint 1 (Distinctness): Each business is in a unique space, and each space has a unique business from the set {O, P, R1, R2, S, T, V}.
+    - Constraint 2 (Pharmacy at End): `Or(space[1] == P, space[7] == P)`
+    - Constraint 3 (Restaurant at Other End): `And(Or(space[1] == R1, space[1] == R2, space[7] == R1, space[7] == R2), Implies(space[1] == P, Or(space[7] == R1, space[7] == R2)), Implies(space[7] == P, Or(space[1] == R1, space[1] == R2)))`
+    - Constraint 4 (Restaurants Separated): For any two spaces `i` and `j` (i != j), if `space[i]` and `space[j]` are the two restaurants (R1 and R2), then `Abs(i - j) >= 3`.
+    - Constraint 5 (Pharmacy Next to O or V): For any space `i` where `space[i] == P`, then `Or(And(i > 1, Or(space[i-1] == O, space[i-1] == V)), And(i < 7, Or(space[i+1] == O, space[i+1] == V)))`.
+    - Constraint 6 (Toy Store Not Next to V): For any space `i` where `space[i] == T`, then `And(Implies(i > 1, space[i-1] != V), Implies(i < 7, space[i+1] != V))`.
+    - Constraint 7 (Veterinarian in Space 5 - from question): `space[5] == V`
+
+4. Answering the Question ("which one of the following must be true?"):
+    - Establish the base set of constraints (Constraints 1-7).
+    - For each multiple-choice answer option:
+        - Formulate the logical statement corresponding to the option.
+        - Formulate the negation of this statement.
+        - Add the negation of the statement to the base constraints.
+        - Check if this combined set of constraints is unsatisfiable.
+        - If the set is unsatisfiable, the original statement (the answer option) must be true.
+        - If the set is satisfiable, the original statement is not necessarily true.
+    - The answer option whose negation leads to an unsatisfiable set of constraints is the correct answer.

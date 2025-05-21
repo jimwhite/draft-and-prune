@@ -1,0 +1,38 @@
+```
+1. Entities:
+    - Compositions: F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7
+    - Performance Slots: 0, 1, 2, 3, 4, 5, 6, 7
+
+2. Variables:
+    - `performance_order = Array('performance_order', IntSort(), IntSort())`  This array maps a performance slot (0-7) to a composition ID (0-7).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(performance_order[i] >= 0, performance_order[i] <= 7))` where `i` is an integer variable ranging from 0 to 7.
+    - Constraint 1 (Distinctness): `Distinct([performance_order[i] for i in range(8)])`
+    - Constraint 2 (T before F or after R): `Or(IndexOf(performance_order, 7) == IndexOf(performance_order, 0) - 1, IndexOf(performance_order, 7) == IndexOf(performance_order, 5) + 1)`
+    - Constraint 3 (Two between F and R): `Abs(IndexOf(performance_order, 0) - IndexOf(performance_order, 5)) >= 3`
+    - Constraint 4 (O is first or fifth): `Or(IndexOf(performance_order, 3) == 0, IndexOf(performance_order, 3) == 4)`
+    - Constraint 5 (Eighth is L or H): `Or(performance_order[7] == 2, performance_order[7] == 1)`
+    - Constraint 6 (P before S): `IndexOf(performance_order, 4) < IndexOf(performance_order, 6)`
+    - Constraint 7 (One between O and S): `Abs(IndexOf(performance_order, 3) - IndexOf(performance_order, 6)) >= 2`
+    - Constraint 8 (T is fifth): `IndexOf(performance_order, 7) == 4`
+    - Constraint 9 (F is sixth): `IndexOf(performance_order, 0) == 5`
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 0-9.
+    - Initialize an empty set `possible_s_positions`.
+    - For each possible position `i` from 0 to 7:
+        - Push the solver state.
+        - Add the constraint `IndexOf(performance_order, 6) == i`.
+        - Check `solver.check()`.
+        - If the result is 'sat', add `i` to `possible_s_positions`.
+        - Pop the solver state.
+    - Compare `possible_s_positions` with the sets of positions in the answer choices (adjusting for 0-indexing vs. 1-indexing in the question text):
+        - 'fourth or seventh': {3, 6}
+        - 'third or sixth': {2, 5}
+        - 'third or fourth': {2, 3}
+        - 'second or seventh': {1, 6}
+        - 'first or fourth': {0, 3}
+    - Identify the answer choice whose set of positions is equal to `possible_s_positions`.
+    - Return the identified answer choice.
+```

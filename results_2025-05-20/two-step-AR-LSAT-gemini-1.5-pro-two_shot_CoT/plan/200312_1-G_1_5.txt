@@ -1,0 +1,36 @@
+1. Entities:
+    - Botanists: F=0, G=1, H=2
+    - Chemists: K=3, L=4, M=5
+    - Zoologists: P=6, Q=7, R=8
+    - Panel: A list of 5 scientists
+
+2. Variables:
+    - `on_panel = Array('on_panel', IntSort(), BoolSort())` - `on_panel[i]` is true iff scientist i is on the panel.
+
+3. Constraints:
+    - Constraint 1 (Panel Size): `Sum([If(on_panel[i], 1, 0) for i in range(9)]) == 5`
+    - Constraint 2 (At least one of each type):
+        - `Or([on_panel[i] for i in range(3)])` (Botanist)
+        - `Or([on_panel[i] for i in range(3, 6)])` (Chemist)
+        - `Or([on_panel[i] for i in range(6, 9)])` (Zoologist)
+    - Constraint 3 (More than one botanist => at most one zoologist):
+        - `Implies(Sum([If(on_panel[i], 1, 0) for i in range(3)]) > 1, Sum([If(on_panel[i], 1, 0) for i in range(6, 9)]) <= 1)`
+    - Constraint 4 (F and K not both selected): `Not(And(on_panel[0], on_panel[3]))`
+    - Constraint 5 (K and M not both selected): `Not(And(on_panel[3], on_panel[5]))`
+    - Constraint 6 (M selected => P and R selected): `Implies(on_panel[5], And(on_panel[6], on_panel[8]))`
+    - Constraint 7 (G and H selected): `And(on_panel[1], on_panel[2])`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - Choice A (F or else K): `Not(Or(on_panel[0], on_panel[3]))`
+            - Choice B (F or else M): `Not(Or(on_panel[0], on_panel[5]))`
+            - Choice C (K or else M): `Not(Or(on_panel[3], on_panel[5]))`
+            - Choice D (M or else Q): `Not(Or(on_panel[5], on_panel[7]))`
+            - Choice E (P or else Q): `Not(Or(on_panel[6], on_panel[7]))`
+        - Check `solver.check()`.
+        - If `solver.check()` returns `unsat`, then the current answer choice *must* be true. This is the correct answer.
+        - Pop the solver state.
+    - The first answer choice for which the solver is unsat when its negation is added is the correct answer.

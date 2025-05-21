@@ -1,0 +1,54 @@
+```
+1.  Entities:
+    -   Students: Franz (0), Greene (1), Hidalgo (2), Isaacs (3)
+    -   Paintings: Oil (0), Watercolor (1)
+    -   Walls: 1 (0), 2 (1), 3 (2), 4 (3)
+    -   Positions: Upper (0), Lower (1)
+    -   Painting Indices (0-7): 0=F_oil, 1=F_wc, 2=G_oil, 3=G_wc, 4=H_oil, 5=H_wc, 6=I_oil, 7=I_wc.
+
+2.  Variables:
+    -   `painting_at = Array('painting_at', IntSort(), IntSort(), IntSort())`
+        -   `painting_at[wall_idx][pos_idx]` represents the index (0-7) of the painting displayed at the specified wall and position.
+    -   Helper lists (can be defined as Python lists or Z3 arrays):
+        -   `student_of_painting = [0, 0, 1, 1, 2, 2, 3, 3]` # Maps painting index to student index
+        -   `type_of_painting = [0, 1, 0, 1, 0, 1, 0, 1]` # Maps painting index to painting type (0=oil, 1=wc)
+
+3.  Constraints:
+    -   Constraint 0 (All paintings are distinct and placed):
+        -   `Distinct([painting_at[w][p] for w in range(4) for p in range(2)])`
+        -   `ForAll([w, p], And(painting_at[w][p] >= 0, painting_at[w][p] <= 7))` # Ensure painting indices are within range
+
+    -   Constraint 1, 2, 3 (Each student 2 paintings, 1 oil/1 wc; Each wall 2 paintings): These are implicitly satisfied by Constraint 0 and the structure of walls/positions and painting indices.
+
+    -   Constraint 4 (No wall has only watercolors):
+        -   `ForAll([w], Exists([p], type_of_painting[painting_at[w][p]] == 0))` for w in range(4)
+
+    -   Constraint 5 (No wall has work of only one student):
+        -   `ForAll([w], student_of_painting[painting_at[w][0]] != student_of_painting[painting_at[w][1]])` for w in range(4)
+
+    -   Constraint 6 (No wall has both Franz and Isaacs):
+        -   `ForAll([w], Not(And(Exists([p], student_of_painting[painting_at[w][p]] == 0), Exists([p], student_of_painting[painting_at[w][p]] == 3))))` for w in range(4)
+
+    -   Constraint 7 (Greene's watercolor is above Franz's oil):
+        -   `ForAll([w], Implies(Or(painting_at[w][0] == 0, painting_at[w][1] == 0), painting_at[w][0] == 3))` for w in range(4)
+
+    -   Constraint 8 (Isaacs's oil is on wall 4, lower):
+        -   `painting_at[3][1] == 6`
+
+    -   Constraint 9 (Franz's oil is on wall 1 - from question premise):
+        -   `Or(painting_at[0][0] == 0, painting_at[0][1] == 0)`
+
+4.  Answering the Question:
+    -   Create a solver and add constraints 0, 4, 5, 6, 7, 8, 9.
+    -   For each answer choice (A, B, C, D, E):
+        -   Push the current solver state.
+        -   Add the constraint corresponding to the answer choice:
+            -   A: Franz's watercolor (1) is displayed on wall 4 (3). `Or(painting_at[3][0] == 1, painting_at[3][1] == 1)`
+            -   B: Greene's oil (2) is displayed on wall 2 (1). `Or(painting_at[1][0] == 2, painting_at[1][1] == 2)`
+            -   C: Greene's watercolor (3) is displayed on wall 2 (1). `Or(painting_at[1][0] == 3, painting_at[1][1] == 3)`
+            -   D: Hidalgo's watercolor (5) is displayed on wall 3 (2). `Or(painting_at[2][0] == 5, painting_at[2][1] == 5)`
+            -   E: Isaacs's oil (6) is displayed on wall 1 (0). `Or(painting_at[0][0] == 6, painting_at[0][1] == 6)`
+        -   Check if the solver is satisfiable (`solver.check() == sat`).
+        -   If satisfiable, this answer choice could be true. Record the answer and stop.
+        -   Pop the solver state to backtrack.
+```

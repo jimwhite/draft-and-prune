@@ -1,0 +1,24 @@
+Revised Plan:
+1. Entities:
+    - Years: 1921 (0), 1922 (1), 1923 (2), 1924 (3)
+    - Students: Louis (0), Mollie (1), Onyx (2), Ryan (3), Tiffany (4), Yoshio (5)
+
+2. Variables:
+    - `year_assignment = Array('year_assignment', IntSort(), IntSort())` - Maps year (integer index 0-3) to student (integer ID 0-5). `year_assignment[i]` represents the student assigned to year `i`.
+
+3. Constraints:
+    - Define the integer variable `i` for the ForAll quantifier: `i = Int('i')`
+    - Constraint 1 (Domain): `ForAll(i, Implies(And(i >= 0, i < 4), And(year_assignment[i] >= 0, year_assignment[i] < 6)))` - Each year is assigned a valid student ID.
+    - Constraint 2 (Distinctness): `Distinct([year_assignment[i] for i in range(4)])` - The four students assigned to the project must be distinct.
+    - Constraint 3 (1923 Assignment): `Or(year_assignment[2] == 0, year_assignment[2] == 4)` - Only Louis (0) or Tiffany (4) can be assigned to 1923 (year 2).
+    - Constraint 4 (Mollie's Assignment): `Implies(Or([year_assignment[i] == 1 for i in range(4)]), Or(year_assignment[0] == 1, year_assignment[1] == 1))` - If Mollie (1) is assigned to the project, then she must be assigned to either 1921 (year 0) or 1922 (year 1).
+    - Constraint 5 (Tiffany/Ryan Assignment): `Implies(Or([year_assignment[i] == 4 for i in range(4)]), Or([year_assignment[i] == 3 for i in range(4)]))` - If Tiffany (4) is assigned to the project, then Ryan (3) must be assigned to the project.
+    - Constraint 6 (Ryan/Onyx Assignment): `Implies(Or([year_assignment[i] == 3 for i in range(4)]), Or(And(year_assignment[0] == 2, year_assignment[1] == 3), And(year_assignment[1] == 2, year_assignment[2] == 3), And(year_assignment[2] == 2, year_assignment[3] == 3)))` - If Ryan (3) is assigned to the project, then Onyx (2) must be assigned to the year immediately prior to Ryan's.
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (1-6).
+    - For each answer choice:
+        - Push the solver state.
+        - Add temporary constraints representing the student assignments in the choice, mapping the student name in the list to the corresponding year index (0 for 1921, 1 for 1922, etc.) and student ID. For example, for choice "Louis, Onyx, Ryan, Yoshio", add `year_assignment[0] == 0`, `year_assignment[1] == 2`, `year_assignment[2] == 3`, `year_assignment[3] == 5`.
+        - Check `solver.check()`. If 'sat', this is a possible solution. Print the corresponding choice and stop.
+        - Pop the solver state.

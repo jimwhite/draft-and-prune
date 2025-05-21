@@ -1,0 +1,29 @@
+1. Entities:
+    - Clients: Image (0), Solide (1), Truvest (2)
+    - Request Types: Website (0), Voicemail (1)
+    - Target Days: 1, 2, 3
+
+2. Variables:
+    - `target_days = Array('target_days', IntSort(), IntSort())` - Represents the target days for each client and request type.  `target_days[client_id][request_type_id]` will store the target days (1, 2, or 3).
+
+3. Constraints:
+    - Constraint 1 (Domain of target_days): `ForAll([c, r], And(target_days[c][r] >= 1, target_days[c][r] <= 3))` where `c = Int('c')` represents the client ID (0, 1, or 2) and `r = Int('r')` represents the request type ID (0 or 1).
+    - Constraint 2 (Website target not longer than voicemail target): `ForAll([c], target_days[c][0] <= target_days[c][1])` where `c = Int('c')`.
+    - Constraint 3 (Image's voicemail target shorter than others): `ForAll([c], Implies(c != 0, target_days[0][1] < target_days[c][1]))` where `c = Int('c')`.
+    - Constraint 4 (Solide's website target shorter than Truvest's): `target_days[1][0] < target_days[2][0]`
+    - Constraint 5 (Image's website target is 2 days): `target_days[0][0] == 2`
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 1 through 5.
+    - Iterate through each answer choice:
+        - a. Push the solver state.
+        - b. Add the constraint corresponding to the *negation* of the current answer choice being 2 days:
+            - "Image's voicemail target": `target_days[0][1] != 2`
+            - "Solide's website target": `target_days[1][0] != 2`
+            - "Solide's voicemail target": `target_days[1][1] != 2`
+            - "Truvest's website target": `target_days[2][0] != 2`
+            - "Truvest's voicemail target": `target_days[2][1] != 2`
+        - c. Check satisfiability (`solver.check()`).
+        - d. If the check result is `unsat`, it means the negation of the answer choice is inconsistent with the constraints, so the answer choice *must* be true. Record the answer choice and stop.
+        - e. Pop the solver state.
+    - Return the recorded answer choice.

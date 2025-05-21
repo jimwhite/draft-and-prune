@@ -1,0 +1,33 @@
+1.  Entities:
+    *   Singers: Kammer (K=0), Lugo (L=1), Trillo (T=2), Waite (W=3), Yoshida (Y=4), Zinn (Z=5)
+    *   Audition Slots: 1, 2, 3, 4, 5, 6
+
+2.  Variables:
+    *   `audition_schedule = Array('audition_schedule', IntSort(), IntSort())` Maps slot number (1-6) to singer ID (0-5).
+    *   `recorded_singer = Array('recorded_singer', IntSort(), BoolSort())` Maps singer ID (0-5) to a boolean indicating if the singer is recorded.
+
+3.  Constraints:
+    *   Constraint 1 (Domain of audition_schedule): `ForAll(i, Implies(And(i >= 1, i <= 6), And(audition_schedule[i] >= 0, audition_schedule[i] <= 5)))` where `i = Int('i')`.
+    *   Constraint 2 (Distinctness of audition_schedule): `Distinct([audition_schedule[i] for i in range(1, 7)])`
+    *   Constraint 3 (Kammer and Lugo are recorded): `recorded_singer[K] == True`, `recorded_singer[L] == True`.
+    *   Constraint 4 (Others are not recorded): `recorded_singer[T] == False`, `recorded_singer[W] == False`, `recorded_singer[Y] == False`, `recorded_singer[Z] == False`.
+    *   Constraint 5 (Fourth audition not recorded): `recorded_singer[audition_schedule[4]] == False`
+    *   Constraint 6 (Fifth audition is recorded): `recorded_singer[audition_schedule[5]] == True`
+    *   Constraint 7 (Waite before recorded): `ForAll(i, ForAll(j, Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, audition_schedule[i] == W, recorded_singer[audition_schedule[j]]), i < j)))`
+    *   Constraint 8 (Kammer before Trillo): `ForAll(i, ForAll(j, Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, audition_schedule[i] == K, audition_schedule[j] == T), i < j)))`
+    *   Constraint 9 (Zinn before Yoshida): `ForAll(i, ForAll(j, Implies(And(i >= 1, i <= 6, j >= 1, j <= 6, audition_schedule[i] == Z, audition_schedule[j] == Y), i < j)))`
+    *   Constraint 10 (Kammer immediately before Yoshida - from question): `ForAll(i, Implies(And(i >= 1, i <= 5, audition_schedule[i] == K), audition_schedule[i+1] == Y))`
+
+4.  Answering the Question:
+    *   Create a base Z3 solver with constraints 1-10.
+    *   For each answer choice:
+        *   Push the solver state.
+        *   Add the constraint corresponding to the answer choice:
+            *   "Kammer's audition is second.": `audition_schedule[2] == K`
+            *   "Trillo's audition is fourth.": `audition_schedule[4] == T`
+            *   "Waite's audition is third.": `audition_schedule[3] == W`
+            *   "Yoshida's audition is sixth.": `audition_schedule[6] == Y`
+            *   "Zinn's audition is second.": `audition_schedule[2] == Z`
+        *   Check `solver.check()`. If `sat`, this is a possible correct answer. Store the answer choice.
+        *   Pop the solver state.
+    *   Return the stored answer choice.

@@ -1,0 +1,39 @@
+Revised Plan:
+1.  Entities:
+    - Pianists: Wayne (0), Zara (1)
+    - Solos: 1, 2, 3, 4, 5 (0-indexed: 0, 1, 2, 3, 4)
+    - Piece Types: Modern (0), Traditional (1)
+
+2.  Variables:
+    - `pianist = Array('pianist', IntSort(), IntSort())` # pianist[i] is the pianist for solo i+1 (0-indexed)
+    - `piece_type = Array('piece_type', IntSort(), IntSort())` # piece_type[i] is the piece type for solo i+1 (0-indexed)
+
+3.  Constraints:
+    - Constraint 1 (Pianist Domain): `ForAll(i, And(i >= 0, i < 5, Or(pianist[i] == 0, pianist[i] == 1)))`
+    - Constraint 2 (Piece Type Domain): `ForAll(i, And(i >= 0, i < 5, Or(piece_type[i] == 0, piece_type[i] == 1)))`
+    - Constraint 3 (Third Solo Traditional): `piece_type[2] == 1`
+    - Constraint 4 (Exactly Two Consecutive Traditional): `Or(And(piece_type[0] == 0, piece_type[1] == 1, piece_type[2] == 1, piece_type[3] == 0, piece_type[4] == 0), And(piece_type[0] == 0, piece_type[1] == 0, piece_type[2] == 1, piece_type[3] == 1, piece_type[4] == 0))` # Assumes exactly two traditional pieces total, and they are consecutive, including solo 3.
+    - Constraint 5 (Fourth Solo): `Or(And(pianist[3] == 0, piece_type[3] == 1), And(pianist[3] == 1, piece_type[3] == 0))`
+    - Constraint 6 (Second and Fifth Solo Pianists Different): `pianist[1] != pianist[4]`
+    - Constraint 7 (No Traditional Until Wayne Modern):
+        - `piece_type[0] == 0` # Derived from the rule for i=0
+        - `Implies(piece_type[1] == 1, Or(And(pianist[0] == 0, piece_type[0] == 0), And(pianist[1] == 0, piece_type[1] == 0)))`
+        - `Implies(piece_type[2] == 1, Or(And(pianist[0] == 0, piece_type[0] == 0), And(pianist[1] == 0, piece_type[1] == 0), And(pianist[2] == 0, piece_type[2] == 0)))`
+        - `Implies(piece_type[3] == 1, Or(And(pianist[0] == 0, piece_type[0] == 0), And(pianist[1] == 0, piece_type[1] == 0), And(pianist[2] == 0, piece_type[2] == 0), And(pianist[3] == 0, piece_type[3] == 0)))`
+        - `Implies(piece_type[4] == 1, Or(And(pianist[0] == 0, piece_type[0] == 0), And(pianist[1] == 0, piece_type[1] == 0), And(pianist[2] == 0, piece_type[2] == 0), And(pianist[3] == 0, piece_type[3] == 0), And(pianist[4] == 0, piece_type[4] == 0)))`
+
+4.  Answering the Question:
+    - Create a base Z3 solver.
+    - Add Constraints 1 through 7 to the solver.
+    - Add the question's premise (If in the fifth solo Wayne performs a traditional piece): `And(pianist[4] == 0, piece_type[4] == 1)` to the solver.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - A: `pianist[0] == 1`
+            - B: `pianist[1] == 0`
+            - C: `pianist[2] == 1`
+            - D: `piece_type[1] == 0`
+            - E: `piece_type[3] == 1`
+        - Check `solver.check()`. If `sat`, this is a possible correct answer.
+        - Pop the solver state.
+        - The first answer choice that results in `sat` is the correct answer.

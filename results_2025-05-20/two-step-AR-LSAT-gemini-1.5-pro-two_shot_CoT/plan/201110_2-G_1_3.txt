@@ -1,0 +1,32 @@
+```
+1. Entities:
+    - Employees: Robertson (R), Souza (S), Togowa (T), Vaughn (V), Xu (X), Young (Y)
+    - Parking Spaces: #1, #2, #3, #4, #5, #6
+
+2. Variables:
+    - `assignment = Array('assignment', IntSort(), IntSort())` - Maps employee (represented by an integer index 0-5) to parking space (represented by an integer index 0-5). Assign indices 0-5 to employees R, S, T, V, X, Y respectively. Assign indices 0-5 to parking spaces #1, #2, #3, #4, #5, #6 respectively.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(assignment[i] >= 0, assignment[i] < 6))` for `i` in {0, 1, 2, 3, 4, 5}.
+    - Constraint 2 (Distinctness): `Distinct([assignment[i] for i in range(6)])`.
+    - Constraint 3 (Young > Togowa): `assignment[Y_index] > assignment[T_index]` (where Y_index and T_index are the integer indices for Young and Togowa).
+    - Constraint 4 (Xu > Souza): `assignment[X_index] > assignment[S_index]` (where X_index and S_index are the integer indices for Xu and Souza).
+    - Constraint 5 (Robertson > Young): `assignment[R_index] > assignment[Y_index]` (where R_index and Y_index are the integer indices for Robertson and Young).
+    - Constraint 6 (Robertson's options): `assignment[R_index] <= 3` (using 0-indexed spaces, #1=0, #2=1, #3=2, #4=3).
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-6.
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice (using the appropriate employee and space indices):
+            - Choice A: Souza is assigned #1 -> `assignment[S_index] == 0`
+            - Choice B: Young is assigned #2 -> `assignment[Y_index] == 1`
+            - Choice C: Vaughn is assigned #3 -> `assignment[V_index] == 2`
+            - Choice D: Robertson is assigned #4 -> `assignment[R_index] == 3`
+            - Choice E: Xu is assigned #5 -> `assignment[X_index] == 4`
+        - Check for satisfiability: `solver.check()`. If `unsat`, this choice does not lead to a valid assignment. Pop the solver state and proceed to the next choice.
+        - If `sat`, get a model: `model = solver.model()`.
+        - Check for uniqueness: Add a constraint that negates the specific assignment found in the model for *all* employees. Construct a list of equalities for each employee based on the model: `model_equalities = [assignment[i] == model[assignment[i]] for i in range(6)]`. Add the constraint `Not(And(model_equalities))`.
+        - Check satisfiability again: `solver.check()`. If `unsat`, the original model was the only possible assignment under the added choice constraint, meaning the assignment is fully and uniquely determined. This is the correct answer. Print the corresponding letter (A, B, C, D, or E) and stop.
+        - If `sat`, there is at least one other valid assignment under the added choice constraint, meaning the assignment is not unique. Pop the solver state (removing both the answer choice constraint and the negation constraint) and proceed to the next choice.
+```

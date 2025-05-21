@@ -1,0 +1,33 @@
+Revised Plan:
+1. Entities:
+    - Bays: 1, 2, 3, 4, 5, 6
+    - Cargo Types: Fuel (F), Grain (G), Livestock (L), Machinery (M), Produce (P), Textiles (T)
+
+2. Variables:
+    - `bay_cargo = Array('bay_cargo', IntSort(), IntSort())`  Maps bay number (1-6) to cargo type (0-5).
+    - Cargo type mapping: Fuel=0, Grain=1, Livestock=2, Machinery=3, Produce=4, Textiles=5
+    - `bay_F, bay_G, bay_L, bay_M, bay_P, bay_T = Ints('bay_F bay_G bay_L bay_M bay_P bay_T')` (Integer variables representing the bay number for each cargo type)
+
+3. Constraints:
+    - Constraint 0 (Domain for bay_cargo): `ForAll([i], Implies(And(i >= 1, i <= 6), And(bay_cargo[i] >= 0, bay_cargo[i] <= 5)))` - Each bay holds a valid cargo type.
+    - Constraint 1 (Distinctness for bay_cargo): `Distinct([bay_cargo[i] for i in range(1, 7)])` - Each bay holds a different cargo type.
+    - Constraint 2 (Domain for index variables): `And(bay_F >= 1, bay_F <= 6, bay_G >= 1, bay_G <= 6, bay_L >= 1, bay_L <= 6, bay_M >= 1, bay_M <= 6, bay_P >= 1, bay_P <= 6, bay_T >= 1, bay_T <= 6)` - Each cargo type is in a valid bay.
+    - Constraint 3 (Distinctness for index variables): `Distinct(bay_F, bay_G, bay_L, bay_M, bay_P, bay_T)` - Each cargo type is in a different bay.
+    - Constraint 4 (Mapping): `And(bay_cargo[bay_F] == 0, bay_cargo[bay_G] == 1, bay_cargo[bay_L] == 2, bay_cargo[bay_M] == 3, bay_cargo[bay_P] == 4, bay_cargo[bay_T] == 5)` - Map cargo types to their specific bay variables.
+    - Constraint 5 (Grain > Livestock): `bay_G > bay_L`
+    - Constraint 6 (Livestock > Textiles): `bay_L > bay_T`
+    - Constraint 7 (Produce > Fuel): `bay_P > bay_F`
+    - Constraint 8 (Textiles next to Produce): `Abs(bay_T - bay_P) == 1`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-8.
+    - For each answer choice:
+        - Push the solver state.
+        - Add a temporary constraint corresponding to the answer choice:
+            - Choice A: `Abs(bay_F - bay_M) == 1` (Fuel next to Machinery)
+            - Choice B: `Abs(bay_G - bay_M) == 1` (Grain next to Machinery)
+            - Choice C: `Abs(bay_L - bay_F) == 1` (Livestock next to Fuel)
+            - Choice D: `Abs(bay_P - bay_L) == 1` (Produce next to Livestock)
+            - Choice E: `Abs(bay_T - bay_F) == 1` (Textiles next to Fuel)
+        - Check `solver.check()`. If the result is `unsat`, the added constraint contradicts the original constraints, meaning the statement MUST be false. Print the corresponding letter and stop.
+        - Pop the solver state.

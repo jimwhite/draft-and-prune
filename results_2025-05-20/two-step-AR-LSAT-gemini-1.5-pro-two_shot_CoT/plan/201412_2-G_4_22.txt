@@ -1,0 +1,28 @@
+```
+1. Entities:
+    - Photographers: Frost (0), Gonzalez (1), Heideck (2), Knutson (3), Lai (4), Mays (5)
+    - Universities: Silva (0), Thorne (1)
+
+2. Variables:
+    - `assigned = Array('assigned', IntSort(), IntSort())`  # assigned[p] = u means photographer p is assigned to university u. -1 indicates not assigned.
+
+3. Constraints:
+    - Constraint 1 (Assignment Domain): `p = Int('p')`. `ForAll([p], Implies(And(p >= 0, p < 6), Or(assigned[p] == 0, assigned[p] == 1, assigned[p] == -1)))`
+    - Constraint 2 (At least two per university):
+        - `u = Int('u')`. `ForAll([u], Implies(And(u >=0, u < 2), Sum([If(assigned[p] == u, 1, 0) for p in range(6)]) >= 2))`
+    - Constraint 3 (No photographer at both): `p = Int('p')`. `ForAll([p], Implies(And(p >= 0, p < 6), Not(And(assigned[p] == 0, assigned[p] == 1))))` (This is redundant given the definition of the `assigned` array, but included for clarity).
+    - Constraint 4 (Frost with Heideck): `Or(And(assigned[0] == 0, assigned[2] == 0), And(assigned[0] == 1, assigned[2] == 1))`
+    - Constraint 5 (Lai and Mays separate): `Implies(And(assigned[4] != -1, assigned[5] != -1), assigned[4] != assigned[5])`
+    - Constraint 6 (Gonzalez at Silva -> Lai at Thorne): `Implies(assigned[1] == 0, assigned[4] == 1)`
+    - Constraint 7 (Knutson not at Thorne -> Heideck and Mays at Thorne): `Implies(assigned[3] != 1, And(assigned[2] == 1, assigned[5] == 1))`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice (representing the complete assignment for Thorne):
+        - Push the solver state.
+        - Add temporary constraints based on the choice:
+            - For each photographer `p` listed in the choice: Add constraint `assigned[p] == 1`.
+            - For each photographer `p` *not* listed in the choice: Add constraint `assigned[p] != 1` (which is equivalent to `Or(assigned[p] == 0, assigned[p] == -1)`).
+        - Check `solver.check()`. If `unsat`, this is the answer we seek (the impossible assignment). Print the choice and stop.
+        - Pop the solver state.
+```

@@ -1,0 +1,15 @@
+1.  Define the set of employees and assign a unique index to each: Myers (0), Ortega (1), Paine (2), Schmidt (3), Thomson (4), Wong (5), Yoder (6), Zayre (7).
+2.  Represent the selection of employees using boolean variables, where `on_team[i]` is true if employee `i` is on the team, and false otherwise.
+3.  Formulate the constraints based on the problem description:
+    *   The team must include at least four employees: `Sum([If(on_team[i], 1, 0) for i in range(8)]) >= 4`.
+    *   If Myers (0) is on the team, neither Ortega (1) nor Paine (2) can be: `Implies(on_team[0], And(Not(on_team[1]), Not(on_team[2])))`.
+    *   If Schmidt (3) is on the team, both Paine (2) and Thomson (4) must also be: `Implies(on_team[3], And(on_team[2], on_team[4]))`.
+    *   If Wong (5) is on the team, both Myers (0) and Yoder (6) must also be: `Implies(on_team[5], And(on_team[0], on_team[6])))`.
+4.  Initialize an SMT solver and assert the constraints defined in step 3.
+5.  Iterate through each pair of employees provided in the multiple-choice answers.
+6.  For the current pair (employee `i` and employee `j`), push the current state of the solver.
+7.  Add the temporary constraint that both employees `i` and `j` are on the team: `And(on_team[i], on_team[j])`.
+8.  Check the satisfiability of the solver with the added constraint.
+9.  If the solver is unsatisfiable, it means the pair (`i`, `j`) cannot be on the team together under the given constraints. This pair is the correct answer. Identify and output the corresponding pair from the multiple-choice answers.
+10. If the solver is satisfiable, it means the pair *can* be on the team together. Pop the temporary constraint added in step 7 to revert the solver state.
+11. Continue to the next pair in the multiple-choice answers (step 5).

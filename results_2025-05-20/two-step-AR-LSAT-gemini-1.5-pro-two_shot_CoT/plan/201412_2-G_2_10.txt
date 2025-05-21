@@ -1,0 +1,43 @@
+1.  Define Entities and Mappings: Map historians (Farley=0, Garcia=1, Holden=2, Jiang=3), topics (Lithographs=0, Oil=1, Sculptures=2, Watercolors=3), and lecture slots (1st=0, 2nd=1, 3rd=2, 4th=3) to integers 0-3.
+2.  Declare Z3 Variables:
+    *   `slot_to_historian = Array('slot_to_historian', IntSort(), IntSort())` - Maps lecture slot (0-3) to historian (0-3).
+    *   `slot_to_topic = Array('slot_to_topic', IntSort(), IntSort())` - Maps lecture slot (0-3) to topic (0-3).
+    *   `historian_to_topic = Array('historian_to_topic', IntSort(), IntSort())` - Maps historian (0-3) to topic (0-3).
+    *   `slot_L, slot_O, slot_S, slot_W = Ints('slot_L slot_O slot_S slot_W')` - Integer variables representing the lecture slots for Lithographs, Oil, Sculptures, and Watercolors, respectively.
+    *   `slot_F, slot_G, slot_H, slot_J = Ints('slot_F slot_G slot_H slot_J')` - Integer variables representing the lecture slots for Farley, Garcia, Holden, and Jiang, respectively.
+3.  Formulate Base Constraints:
+    *   All mappings must be permutations of 0-3:
+        *   `Distinct([slot_to_historian[i] for i in range(4)])`
+        *   `Distinct([slot_to_topic[i] for i in range(4)])`
+        *   `Distinct([historian_to_topic[i] for i in range(4)])`
+    *   Consistency constraint: For each slot `i` from 0 to 3, the topic of the historian in that slot must be the topic assigned to that slot:
+        *   `ForAll(i, Implies(And(i >= 0, i <= 3), historian_to_topic[slot_to_historian[i]] == slot_to_topic[i]))`
+    *   Define the slot variables based on the arrays (finding the slot index for a given topic or historian):
+        *   `slot_to_topic[slot_L] == 0` (Lithographs)
+        *   `slot_to_topic[slot_O] == 1` (Oil)
+        *   `slot_to_topic[slot_S] == 2` (Sculptures)
+        *   `slot_to_topic[slot_W] == 3` (Watercolors)
+        *   `slot_to_historian[slot_F] == 0` (Farley)
+        *   `slot_to_historian[slot_G] == 1` (Garcia)
+        *   `slot_to_historian[slot_H] == 2` (Holden)
+        *   `slot_to_historian[slot_J] == 3` (Jiang)
+        *   Ensure these slot variables are within the valid range [0, 3]:
+            `And([And(x >= 0, x <= 3) for x in [slot_L, slot_O, slot_S, slot_W, slot_F, slot_G, slot_H, slot_J]])`
+    *   Constraint 3 (Oil and Watercolors before Lithographs): `And(slot_O < slot_L, slot_W < slot_L)`
+    *   Constraint 4 (Farley before Oil Paintings): `slot_F < slot_O`
+    *   Constraint 5 (Holden before Garcia and Jiang): `And(slot_H < slot_G, slot_H < slot_J)`
+    *   Constraint 6 (Garcia gives Sculptures lecture): `historian_to_topic[1] == 2` (Using integer mapping G=1, S=2)
+4.  Test Answer Choices:
+    *   Initialize a Z3 solver and add all base constraints from step 3.
+    *   For each answer choice:
+        *   Push the solver state.
+        *   Add the constraint corresponding to the answer choice:
+            *   "The lithographs lecture is third.": `slot_L == 2`
+            *   "The oil paintings lecture is third.": `slot_O == 2`
+            *   "The sculptures lecture is first.": `slot_S == 0`
+            *   "The sculptures lecture is second.": `slot_S == 1`
+            *   "The watercolors lecture is second.": `slot_W == 1`
+        *   Check if the solver is satisfiable (`solver.check() == sat`).
+        *   If satisfiable, this choice could be true. Record the answer choice.
+        *   Pop the solver state.
+    *   Return the recorded answer choice that was satisfiable.

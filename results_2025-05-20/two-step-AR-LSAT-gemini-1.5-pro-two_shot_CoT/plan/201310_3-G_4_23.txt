@@ -1,0 +1,45 @@
+Revised Plan:
+1. Entities:
+    - Birds: Oystercatcher (O), Petrel (P), Rail (R), Sandpiper (S), Tern (T). Map to integers 0-4 (e.g., O=0, P=1, R=2, S=3, T=4).
+    - Lectures: 1, 2, 3, 4, 5.
+    - Locations: Gladwyn Hall (G), Howard Auditorium (H). Map to integers 0-1 (e.g., G=0, H=1).
+
+2. Variables:
+    - `bird_lecture = Array('bird_lecture', IntSort(), IntSort())`: Maps lecture number (1-5) to bird ID (0-4).
+    - `location_lecture = Array('location_lecture', IntSort(), IntSort())`: Maps lecture number (1-5) to location ID (0-1).
+    - `i = Int('i')`, `j = Int('j')`: Integer variables for quantifiers.
+
+3. Constraints:
+    - Constraint 1 (Bird Uniqueness): `Distinct([bird_lecture[i] for i in range(1, 6)])`
+    - Constraint 2 (Location Domain): `ForAll(i, Implies(And(i >= 1, i <= 5), Or(location_lecture[i] == 0, location_lecture[i] == 1)))`
+    - Constraint 3 (First Lecture): `location_lecture[1] == 0` (G=0)
+    - Constraint 4 (Fourth Lecture): `location_lecture[4] == 1` (H=1)
+    - Constraint 5 (Three in Gladwyn): `Sum([If(location_lecture[i] == 0, 1, 0) for i in range(1, 6)]) == 3`
+    - Constraint 6 (Sandpiper in Howard): `ForAll(i, Implies(And(i >= 1, i <= 5, bird_lecture[i] == 3), location_lecture[i] == 1))` (S=3, H=1)
+    - Constraint 7 (Sandpiper before Oystercatcher): `Exists(i, Exists(j, And(i >= 1, i <= 5, j >= 1, j <= 5, bird_lecture[i] == 3, bird_lecture[j] == 0, i < j)))` (S=3, O=0)
+    - Constraint 8 (Tern before Petrel): `Exists(i, Exists(j, And(i >= 1, i <= 5, j >= 1, j <= 5, bird_lecture[i] == 4, bird_lecture[j] == 1, i < j)))` (T=4, P=1)
+    - Constraint 9 (Petrel in Gladwyn): `ForAll(i, Implies(And(i >= 1, i <= 5, bird_lecture[i] == 1), location_lecture[i] == 0))` (P=1, G=0)
+    - Constraint 10 (Third lecture is on Sandpipers - from question): `bird_lecture[3] == 3` (S=3)
+    - Derived Location Constraints (from 3, 4, 5, 6, 10):
+        - `location_lecture[3] == 1` (Sandpiper is lecture 3, Sandpiper is in H)
+        - `location_lecture[1] == 0` (Constraint 3)
+        - `location_lecture[4] == 1` (Constraint 4)
+        - Given 3 G and 2 H total (Constraint 5), and lectures 1 (G), 3 (H), 4 (H) are fixed, the remaining two lectures (2 and 5) must be in G.
+        - `location_lecture[2] == 0`
+        - `location_lecture[5] == 0`
+
+4. Answering the Question:
+    - Create an SMT solver instance.
+    - Add constraints 1-10 and the derived location constraints to the solver.
+    - For each answer choice:
+        - Push the current state of the solver.
+        - Add constraints corresponding to the answer choice (using the defined bird/location IDs):
+            - Choice A: `bird_lecture[2] == 0` and `location_lecture[2] == 0`
+            - Choice B: `bird_lecture[5] == 0` and `location_lecture[5] == 1`
+            - Choice C: `bird_lecture[2] == 2` and `location_lecture[2] == 1`
+            - Choice D: `bird_lecture[2] == 4` and `location_lecture[2] == 0`
+            - Choice E: `bird_lecture[4] == 4` and `location_lecture[4] == 1`
+        - Check if the solver is satisfiable (`solver.check() == sat`).
+        - If satisfiable, this choice could be true. Record the choice letter and potentially stop (since only one could be true).
+        - Pop the solver state to backtrack and test the next choice.
+    - Return the recorded choice letter.

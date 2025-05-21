@@ -1,0 +1,30 @@
+1. Entities and Mapping:
+    - Compositions: F, H, L, O, P, R, S, T
+    - Slots: 0, 1, 2, 3, 4, 5, 6, 7
+    - Mapping: F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7
+
+2. Variables:
+    - `slot_of_composition`: Array mapping composition ID (0-7) to slot index (0-7). `Array('slot_of_composition', IntSort(), IntSort())`
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(slot_of_composition[i] >= 0, slot_of_composition[i] < 8))` for `i` from 0 to 7.
+    - Constraint 1 (Distinctness): `Distinct([slot_of_composition[i] for i in range(8)])`
+    - Constraint 2 (T before F or after R): `Or(slot_of_composition[7] + 1 == slot_of_composition[0], slot_of_composition[5] + 1 == slot_of_composition[7])`
+    - Constraint 3 (Two between F and R): `Abs(slot_of_composition[0] - slot_of_composition[5]) > 2`
+    - Constraint 4 (O first or fifth): `Or(slot_of_composition[3] == 0, slot_of_composition[3] == 4)`
+    - Constraint 5 (L or H eighth): `Or(slot_of_composition[2] == 7, slot_of_composition[1] == 7)`
+    - Constraint 6 (P before S): `slot_of_composition[4] < slot_of_composition[6]`
+    - Constraint 7 (One between O and S): `Abs(slot_of_composition[3] - slot_of_composition[6]) > 1`
+    - Constraint 8 (S is fourth): `slot_of_composition[6] == 3`
+
+4. Answering the Question:
+    - Create a base Z3 solver with all general constraints (0-8).
+    - Define the mapping from letters to IDs: `{'F': 0, 'H': 1, 'L': 2, 'O': 3, 'P': 4, 'R': 5, 'S': 6, 'T': 7}`.
+    - For each answer choice (list of letters, e.g., ['F', 'H', 'P']):
+        - Push the solver state.
+        - Add temporary constraints for the first three compositions based on the choice and mapping. For choice `[c1, c2, c3]`:
+            - `slot_of_composition[mapping[c1]] == 0`
+            - `slot_of_composition[mapping[c2]] == 1`
+            - `slot_of_composition[mapping[c3]] == 2`
+        - Check `solver.check()`. If 'sat', this choice is possible. This is the correct answer.
+        - Pop the solver state.

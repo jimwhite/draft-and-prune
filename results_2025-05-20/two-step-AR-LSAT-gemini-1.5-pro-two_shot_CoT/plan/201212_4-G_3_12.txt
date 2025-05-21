@@ -1,0 +1,28 @@
+1. Entities:
+    - Clients: Image (0), Solide (1), Truvest (2)
+    - Request Types: Website (0), Voicemail (1)
+    - Target Days: 1, 2, 3
+
+2. Variables:
+    - `target_days = Array('target_days', IntSort(), IntSort())` - Represents the target days for each client and request type.  `target_days[client][request_type]` will store the target days (1, 2, or 3).
+
+3. Constraints:
+    - Constraint 1 (Domain of target_days): `ForAll([c, r], And(target_days[c][r] >= 1, target_days[c][r] <= 3))` where `c` ranges from 0 to 2 and `r` ranges from 0 to 1.  This ensures all target days are 1, 2, or 3.
+    - Constraint 2 (Website target not longer than voicemail target): `ForAll([c], target_days[c][0] <= target_days[c][1])` where `c` ranges from 0 to 2.
+    - Constraint 3 (Image's voicemail target shorter than others): `And(target_days[0][1] < target_days[1][1], target_days[0][1] < target_days[2][1])`
+    - Constraint 4 (Solide's website target shorter than Truvest's): `target_days[1][0] < target_days[2][0]`
+    - Constraint 5 (Truvest's website target shorter than voicemail target): `target_days[2][0] < target_days[2][1]`
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 1 through 5.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the negation of the constraint corresponding to the answer choice:
+            - "Image's voicemail target is 2 days.": `target_days[0][1] != 2`
+            - "Image's website target is 2 days.": `target_days[0][0] != 2`
+            - "Image's website target is 1 day.": `target_days[0][0] != 1`
+            - "Solide's website target is 2 days.": `target_days[1][0] != 2`
+            - "Solide's website target is 1 day.": `target_days[1][0] != 1`
+        - Check `solver.check()`.
+        - If `unsat`, the original answer choice (before negation) *must* be true. This is the correct answer.
+        - Pop the solver state.

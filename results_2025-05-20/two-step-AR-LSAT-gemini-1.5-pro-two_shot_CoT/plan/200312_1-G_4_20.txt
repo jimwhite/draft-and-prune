@@ -1,0 +1,39 @@
+Revised Plan:
+1. Entities:
+    - Students: Jiang (0), Kramer (1), Lopez (2), Megregian (3), O'Neill (4)
+    - Plays: Sunset (0), Tamerlane (1), Undulation (2)
+
+2. Variables:
+    - `reviews = Array('reviews', IntSort(), IntSort(), BoolSort())` # reviews[student][play] is True if the student reviews the play.
+
+3. Constraints:
+    - Constraint 1 (Each student reviews at least one play): `ForAll([s], Or(reviews[s][0], reviews[s][1], reviews[s][2]))` for s in range(5).
+    - Constraint 2 (Kramer and Lopez review fewer plays than Megregian):
+        - Let `num_reviews = lambda s: Sum([If(reviews[s][p], 1, 0) for p in range(3)])`
+        - `num_reviews(1) < num_reviews(3)`
+        - `num_reviews(2) < num_reviews(3)`
+    - Constraint 3 (Neither Lopez nor Megregian reviews any play Jiang reviews):
+        - `ForAll([p], Implies(reviews[0][p], Not(reviews[2][p])))` for p in range(3)
+        - `ForAll([p], Implies(reviews[0][p], Not(reviews[3][p])))` for p in range(3)
+    - Constraint 4 (Kramer and O'Neill both review Tamerlane):
+        - `reviews[1][1]`
+        - `reviews[4][1]`
+    - Constraint 5 (Exactly two students review the same plays):
+        - `PbEq([(And(ForAll([p], reviews[i][p] == reviews[j][p]), i!=j), 1) for i in range(5) for j in range(5)], 2)`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-5.
+    - Define the number of reviews for each student: `num_reviews = lambda s: Sum([If(reviews[s][p], 1, 0) for p in range(3)])`
+    - Formulate the constraint for each answer choice:
+        - A: `num_reviews(0) > num_reviews(2)` (Jiang reviews more than Lopez)
+        - B: `num_reviews(3) > num_reviews(0)` (Megregian reviews more than Jiang)
+        - C: `num_reviews(3) > num_reviews(4)` (Megregian reviews more than O'Neill)
+        - D: `num_reviews(4) > num_reviews(0)` (O'Neill reviews more than Jiang)
+        - E: `num_reviews(4) > num_reviews(1)` (O'Neill reviews more than Kramer)
+    - For each answer choice constraint `C`:
+        - Push the solver state.
+        - Add the negation of the answer choice constraint: `Not(C)`.
+        - Check `solver.check()`.
+        - If `solver.check() == unsat`, then the original constraint `C` must be true. This is the correct answer.
+        - Pop the solver state.
+    - The answer choice whose negation leads to an unsatisfiable state is the one that must be true.

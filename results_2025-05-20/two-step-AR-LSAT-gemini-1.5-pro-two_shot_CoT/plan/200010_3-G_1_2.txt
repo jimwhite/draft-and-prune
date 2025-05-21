@@ -1,0 +1,32 @@
+```
+1. Entities:
+    - Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    - Days: Monday (0), Tuesday (1), Wednesday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `report = Array('report', IntSort(), IntSort())` - Maps a composite slot ID (day * 2 + time) to a student ID. Slot IDs range from 0 to 5.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([i], And(report[i] >= 0, report[i] < 8))` for `i` in range(6).
+    - Constraint 2 (Students Reporting): The six students giving reports are George, Helen, Irving, Nina, Olivia, and Robert. Each of these students gives exactly one report. This means the values in the `report` array must be distinct and drawn only from the set {0, 1, 2, 5, 6, 7}.
+        `And(Distinct([report[i] for i in range(6)]), ForAll([i], Or(report[i] == 0, report[i] == 1, report[i] == 2, report[i] == 5, report[i] == 6, report[i] == 7))))` for `i` in range(6).
+    - Constraint 3 (Two reports per day): The morning and afternoon reports on the same day must be given by different students.
+        `And(Distinct([report[i*2], report[i*2+1]]))` for `i` in range(3).
+    - Constraint 4 (George's schedule): Tuesday is the only day George can give a report. George is student 0. Tuesday slots are 2 (AM) and 3 (PM).
+        `And(Or(report[2] == 0, report[3] == 0), report[0] != 0, report[1] != 0, report[4] != 0, report[5] != 0)`
+    - Constraint 5 (Olivia and Robert's schedule): Neither Olivia (6) nor Robert (7) can give an afternoon report. Afternoon slots are 1 (Mon PM), 3 (Tue PM), 5 (Wed PM).
+        `And(report[1] != 6, report[3] != 6, report[5] != 6, report[1] != 7, report[3] != 7, report[5] != 7)`
+    - Constraint 6 (Nina's schedule implication - Mon/Tue): If Nina (5) reports on Monday (slots 0 or 1), then Helen (1) and Irving (2) must both report on Tuesday (slots 2 or 3).
+        `Implies(Or(report[0] == 5, report[1] == 5), And(Or(report[2] == 1, report[3] == 1), Or(report[2] == 2, report[3] == 2)))`
+    - Constraint 7 (Nina's schedule implication - Tue/Wed): If Nina (5) reports on Tuesday (slots 2 or 3), then Helen (1) and Irving (2) must both report on Wednesday (slots 4 or 5).
+        `Implies(Or(report[2] == 5, report[3] == 5), And(Or(report[4] == 1, report[5] == 1), Or(report[4] == 2, report[5] == 2)))`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1-7.
+    - For each answer choice (A-E):
+        - Push the solver state.
+        - Add constraints corresponding to the morning reports on Monday (slot 0), Tuesday (slot 2), and Wednesday (slot 4) as specified by the choice.
+        - Check satisfiability. If `sat`, the current answer choice is a possible set of morning reports. Print the answer choice and stop.
+        - Pop the solver state to backtrack and try the next choice.
+```

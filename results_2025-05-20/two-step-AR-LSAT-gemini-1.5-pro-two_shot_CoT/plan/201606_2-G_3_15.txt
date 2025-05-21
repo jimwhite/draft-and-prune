@@ -1,0 +1,27 @@
+```
+1. Entities:
+    - Antiques: Harmonica (H), Lamp (L), Mirror (M), Sundial (S), Table (T), Vase (V)
+    - Days: June 1st (0), June 2nd (1), June 3rd (2), June 4th (3), June 5th (4), June 6th (5)
+
+2. Variables:
+    - `day_H, day_L, day_M, day_S, day_T, day_V = Ints('day_H day_L day_M day_S day_T day_V')` - Integer variables representing the day (0-5) each antique is auctioned.
+
+3. Constraints:
+    - Constraint 0 (Range and Distinctness): `Distinct([day_H, day_L, day_M, day_S, day_T, day_V])` - Each antique is auctioned on a unique day from 0 to 5.
+    - Constraint 1 (Sundial not on June 1st): `day_S != 0`
+    - Constraint 2 (Harmonica before Lamp implies Mirror before Lamp): `Implies(day_H < day_L, day_M < day_L)`
+    - Constraint 3 (Sundial before Mirror): `day_S < day_M`
+    - Constraint 4 (Sundial before Vase): `day_S < day_V`
+    - Constraint 5 (Table before Harmonica XOR Table before Vase): `Xor(day_T < day_H, day_T < day_V)`
+
+4. Answering the Question:
+    - Create a base Z3 solver.
+    - Add constraints 0-5 to the solver.
+    - Define a mapping from antique variables to their names for output: `antique_names = {day_H: 'the harmonica', day_L: 'the lamp', day_M: 'the mirror', day_S: 'the sundial', day_T: 'the table', day_V: 'the vase'}`.
+    - For each antique variable `day_A` in `[day_H, day_L, day_M, day_S, day_T]`:
+        - Push the solver state.
+        - Add a temporary constraint representing the condition that antique A is auctioned immediately before the vase: `day_V - 1 == day_A`.
+        - Check `solver.check()`.
+        - If the result is `unsat`, then this antique cannot be auctioned immediately before the vase. Print `antique_names[day_A]` and stop.
+        - Pop the solver state.
+```

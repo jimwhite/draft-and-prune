@@ -1,0 +1,30 @@
+Revised Plan:
+1. Define singer IDs: K=0, L=1, T=2, W=3, Y=4, Z=5. Define audition slots: 1, 2, 3, 4, 5, 6.
+2. Declare the SMT variable `audition_schedule = Array('audition_schedule', IntSort(), IntSort())` representing the singer ID in each slot (1-6).
+3. Declare SMT integer variables for the slot number of each singer: `slot_K, slot_L, slot_T, slot_W, slot_Y, slot_Z`.
+4. Add constraints for the `audition_schedule`:
+    - Domain: `ForAll(i, Implies(And(i >= 1, i <= 6), And(audition_schedule[i] >= 0, audition_schedule[i] <= 5)))`.
+    - Distinctness: `Distinct([audition_schedule[i] for i in range(1, 7)])`.
+5. Add constraints linking the `audition_schedule` to the individual singer slot variables:
+    - `audition_schedule[slot_K] == K`
+    - `audition_schedule[slot_L] == L`
+    - `audition_schedule[slot_T] == T`
+    - `audition_schedule[slot_W] == W`
+    - `audition_schedule[slot_Y] == Y`
+    - `audition_schedule[slot_Z] == Z`
+6. Define the recorded status property for singers: `IsRecorded(s) = Or(s == K, s == L)`.
+7. Add constraints based on the recorded status of specific slots:
+    - The singer in slot 4 is not recorded: `Not(IsRecorded(audition_schedule[4]))`.
+    - The singer in slot 5 is recorded: `IsRecorded(audition_schedule[5])`.
+8. Add ordering constraints based on the individual singer slot variables:
+    - Waite before Kammer and Lugo: `slot_W < slot_K` and `slot_W < slot_L`.
+    - Kammer before Trillo: `slot_K < slot_T`.
+    - Zinn before Yoshida: `slot_Z < slot_Y`.
+9. Initialize an SMT solver and assert all constraints from steps 4-8.
+10. For each singer S in the multiple-choice answers (Kammer, Lugo, Trillo, Waite, Zinn):
+    - Push the solver state.
+    - Add the constraint `audition_schedule[6] == S`.
+    - Check if the solver is satisfiable.
+    - If the solver is satisfiable, S is a possible sixth audition. Store this singer as a possible answer.
+    - Pop the solver state.
+11. Return the stored possible answer(s).

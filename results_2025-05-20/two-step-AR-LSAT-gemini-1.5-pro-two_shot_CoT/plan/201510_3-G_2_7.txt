@@ -1,0 +1,46 @@
+```
+1. Entities:
+    - Photographers: Fuentes (0), Gagnon (1), Hue (2)
+    - Sections: Lifestyle (0), Metro (1), Sports (2)
+
+2. Variables:
+    - `counts = [[Int('count_%s_%s' % (p, s)) for s in range(3)] for p in range(3)]` # counts[p][s] stores the number of photos by photographer p in section s.
+
+3. Constraints:
+    - Constraint 1 (Domain of counts): `ForAll([p, s], And(counts[p][s] >= 0, counts[p][s] <= 2))` where `p = Int('p')` and `s = Int('s')`. (At most 2 photos by any photographer in any section, since there are only 2 photos per section total).
+    - Constraint 2 (Two photos per section): `ForAll([s], Sum([counts[p][s] for p in range(3)]) == 2)` where `s = Int('s')`. (Exactly two photos in each section).
+    - Constraint 3 (At least one photo per photographer): `ForAll([p], Sum([counts[p][s] for s in range(3)]) >= 1)` where `p = Int('p')`.
+    - Constraint 4 (At most three photos per photographer): `ForAll([p], Sum([counts[p][s] for s in range(3)]) <= 3)` where `p = Int('p')`.
+    - Constraint 5 (Lifestyle/Metro overlap): `Or([And(counts[p][0] >= 1, counts[p][1] >= 1) for p in range(3)])`. (At least one photographer has photos in both Lifestyle and Metro).
+    - Constraint 6 (Hue in Lifestyle and Fuentes in Sports): `counts[2][0] == counts[0][2]`.
+    - Constraint 7 (No Gagnon in Sports): `counts[1][2] == 0`.
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1 through 7.
+    - For each answer choice (A through E):
+        - Push the solver state.
+        - Add temporary constraints based on the counts specified in the answer choice.
+            - For choice A (Lifestyle: F=2, G=0, H=0; Metro: F=1, G=0, H=1; Sports: F=0, G=1, H=1):
+                `solver.add(counts[0][0] == 2, counts[1][0] == 0, counts[2][0] == 0)`
+                `solver.add(counts[0][1] == 1, counts[1][1] == 0, counts[2][1] == 1)`
+                `solver.add(counts[0][2] == 0, counts[1][2] == 1, counts[2][2] == 1)`
+            - For choice B (Lifestyle: F=1, G=1, H=0; Metro: F=1, G=1, H=0; Sports: F=0, G=0, H=2):
+                `solver.add(counts[0][0] == 1, counts[1][0] == 1, counts[2][0] == 0)`
+                `solver.add(counts[0][1] == 1, counts[1][1] == 1, counts[2][1] == 0)`
+                `solver.add(counts[0][2] == 0, counts[1][2] == 0, counts[2][2] == 2)`
+            - For choice C (Lifestyle: F=2, G=0, H=0; Metro: F=0, G=2, H=0; Sports: F=0, G=0, H=2):
+                `solver.add(counts[0][0] == 2, counts[1][0] == 0, counts[2][0] == 0)`
+                `solver.add(counts[0][1] == 0, counts[1][1] == 2, counts[2][1] == 0)`
+                `solver.add(counts[0][2] == 0, counts[1][2] == 0, counts[2][2] == 2)`
+            - For choice D (Lifestyle: F=0, G=2, H=0; Metro: F=1, G=1, H=0; Sports: F=1, G=0, H=1):
+                `solver.add(counts[0][0] == 0, counts[1][0] == 2, counts[2][0] == 0)`
+                `solver.add(counts[0][1] == 1, counts[1][1] == 1, counts[2][1] == 0)`
+                `solver.add(counts[0][2] == 1, counts[1][2] == 0, counts[2][2] == 1)`
+            - For choice E (Lifestyle: F=0, G=1, H=1; Metro: F=0, G=0, H=2; Sports: F=1, G=0, H=1):
+                `solver.add(counts[0][0] == 0, counts[1][0] == 1, counts[2][0] == 1)`
+                `solver.add(counts[0][1] == 0, counts[1][1] == 0, counts[2][1] == 2)`
+                `solver.add(counts[0][2] == 1, counts[1][2] == 0, counts[2][2] == 1)`
+        - Check `solver.check()`. If `sat`, this is a possible solution. Record the corresponding letter.
+        - Pop the solver state.
+    - The first answer choice found to be satisfiable is the correct answer.
+```

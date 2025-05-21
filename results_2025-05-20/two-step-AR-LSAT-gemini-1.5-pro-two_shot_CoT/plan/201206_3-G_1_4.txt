@@ -1,0 +1,48 @@
+```
+1. Entities:
+    - Lab Assistants: Julio (0), Kevin (1), Lan (2), Nessa (3), Olivia (4), Rebecca (5)
+    - Days: Wednesday (0), Thursday (1), Friday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a lab assistant ID. The slot ID is calculated as `day * 2 + time`. Slot IDs range from 0 (Wed M) to 5 (Fri A).
+
+3. Base Constraints:
+    - Constraint 0 (Domain): Declare `i = Int('i')`. `ForAll([i], Implies(And(i >= 0, i <= 5), And(schedule[i] >= 0, schedule[i] < 6)))`
+    - Constraint 1 (Distinctness): `Distinct([schedule[i] for i in range(6)])`
+    - Constraint 2 (Kevin and Rebecca Same Day):
+        `Or(
+            And(Or(schedule[0] == 1, schedule[1] == 1), Or(schedule[0] == 5, schedule[1] == 5)), # Both on Wednesday
+            And(Or(schedule[2] == 1, schedule[3] == 1), Or(schedule[2] == 5, schedule[3] == 5)), # Both on Thursday
+            And(Or(schedule[4] == 1, schedule[5] == 1), Or(schedule[4] == 5, schedule[5] == 5))  # Both on Friday
+        )`
+    - Constraint 3 (Lan and Olivia Different Days):
+        `And(
+            Implies(Or(schedule[0] == 2, schedule[1] == 2), Not(Or(schedule[2] == 4, schedule[3] == 4, schedule[4] == 4, schedule[5] == 4))), # If L on Wed, O not on Thu or Fri
+            Implies(Or(schedule[2] == 2, schedule[3] == 2), Not(Or(schedule[0] == 4, schedule[1] == 4, schedule[4] == 4, schedule[5] == 4))), # If L on Thu, O not on Wed or Fri
+            Implies(Or(schedule[4] == 2, schedule[5] == 2), Not(Or(schedule[0] == 4, schedule[1] == 4, schedule[2] == 4, schedule[3] == 4)))  # If L on Fri, O not on Wed or Thu
+        )`
+    - Constraint 4 (Nessa Afternoon): `Or(schedule[1] == 3, schedule[3] == 3, schedule[5] == 3)`
+    - Constraint 5 (Julio Before Olivia):
+        `Or(
+            And(Or(schedule[2] == 4, schedule[3] == 4), Or(schedule[0] == 0, schedule[1] == 0)), # If O on Thu, J must be on Wed
+            And(Or(schedule[4] == 4, schedule[5] == 4), Or(schedule[0] == 0, schedule[1] == 0, schedule[2] == 0, schedule[3] == 0)) # If O on Fri, J must be on Wed or Thu
+        )`
+
+4. Answering the Question:
+    - Create a Z3 solver.
+    - Add base constraints (Constraints 0-5).
+    - Add additional conditions from the question:
+        - Julio Morning: `Or(schedule[0] == 0, schedule[2] == 0, schedule[4] == 0)`
+        - Kevin Morning: `Or(schedule[0] == 1, schedule[2] == 1, schedule[4] == 1)`
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - "Lan's session meets Wednesday morning.": `schedule[0] == 2`
+            - "Lan's session meets Thursday afternoon.": `schedule[3] == 2`
+            - "Nessa's session meets Friday afternoon.": `schedule[5] == 3`
+            - "Olivia's session meets Thursday morning.": `schedule[2] == 4`
+            - "Olivia's session meets Friday morning.": `schedule[4] == 4`
+        - Check `solver.check()`. If the result is `unsat`, this choice cannot be true. This is the EXCEPT answer.
+        - Pop the solver state.
+```

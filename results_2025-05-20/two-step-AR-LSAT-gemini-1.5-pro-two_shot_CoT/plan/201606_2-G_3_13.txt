@@ -1,0 +1,28 @@
+1. Entities:
+    - Antiques: Harmonica (H=0), Lamp (L=1), Mirror (M=2), Sundial (S=3), Table (T=4), Vase (V=5)
+    - Days: June 1st (0), June 2nd (1), June 3rd (2), June 4th (3), June 5th (4), June 6th (5)
+
+2. Variables:
+    - `auction_day = Array('auction_day', IntSort(), IntSort())` - Maps antique ID to the day it's auctioned (0-indexed).
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(auction_day[i] >= 0, auction_day[i] <= 5))` for i in range(6). Declare `i = Int('i')`.
+    - Constraint 1 (Distinctness): `Distinct([auction_day[i] for i in range(6)])`
+    - Constraint 2 (Sundial not on June 1st): `auction_day[S] != 0`
+    - Constraint 3 (Harmonica before Lamp implies Mirror before Lamp): `Implies(auction_day[H] < auction_day[L], auction_day[M] < auction_day[L])`
+    - Constraint 4 (Sundial before Mirror): `auction_day[S] < auction_day[M]`
+    - Constraint 5 (Sundial before Vase): `auction_day[S] < auction_day[V]`
+    - Constraint 6 (Table before Harmonica XOR Table before Vase): `Xor(auction_day[T] < auction_day[H], auction_day[T] < auction_day[V])`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-6.
+    - For each answer choice (A, B, C, D, E):
+        - Push the solver state.
+        - Add temporary constraints based on the choice:
+            - A: `auction_day[T] == 1`, `auction_day[L] == 2`
+            - B: `auction_day[S] == 1`, `auction_day[V] == 2`
+            - C: `auction_day[M] == 2`, `auction_day[S] == 3`
+            - D: `auction_day[V] == 3`, `auction_day[S] == 4`
+            - E: `auction_day[S] == 3`, `auction_day[T] == 4`
+        - Check `solver.check()`. If 'sat', print the corresponding letter (A, B, C, D, or E) and stop.
+        - Pop the solver state.

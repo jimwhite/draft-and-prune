@@ -1,0 +1,28 @@
+Revised Plan:
+1.  Define constants for students (Franz=0, Greene=1, Hidalgo=2, Isaacs=3), painting types (Oil=0, Watercolor=1), walls (Wall1=0, Wall2=1, Wall3=2, Wall4=3), and positions (Upper=0, Lower=1).
+2.  Define painting indices 0 through 7 to represent the eight specific paintings: 0=Franz's Oil, 1=Franz's Watercolor, 2=Greene's Oil, 3=Greene's Watercolor, 4=Hidalgo's Oil, 5=Hidalgo's Watercolor, 6=Isaacs's Oil, 7=Isaacs's Watercolor. Note that for a painting index `p`, the student ID is `p // 2` and the painting type is `p % 2`.
+3.  Define Z3 Array variables:
+    - `wall_upper = Array('wall_upper', IntSort(), IntSort())` # Maps wall ID (0-3) to the painting index (0-7) in the upper position.
+    - `wall_lower = Array('wall_lower', IntSort(), IntSort())` # Maps wall ID (0-3) to the painting index (0-7) in the lower position.
+4.  Add the following general constraints to the Z3 solver:
+    - All 8 paintings are displayed exactly once across the 8 positions: `Distinct([wall_upper[w] for w in range(4)] + [wall_lower[w] for w in range(4)])`.
+    - The painting indices assigned to positions are within the valid range [0, 7]: `ForAll([w], And(wall_upper[w] >= 0, wall_upper[w] <= 7, wall_lower[w] >= 0, wall_lower[w] <= 7))`.
+    - No wall has only watercolors: `ForAll([w], Or((wall_upper[w] % 2) == 0, (wall_lower[w] % 2) == 0))` for `w` in {0, 1, 2, 3}.
+    - No wall has the work of only one student: `ForAll([w], (wall_upper[w] // 2) != (wall_lower[w] // 2))` for `w` in {0, 1, 2, 3}.
+    - No wall has both a painting by Franz (student 0) and a painting by Isaacs (student 3): `ForAll([w], Not(Or(And((wall_upper[w] // 2) == 0, (wall_lower[w] // 2) == 3), And((wall_upper[w] // 2) == 3, (wall_lower[w] // 2) == 0))))` for `w` in {0, 1, 2, 3}.
+    - Greene's watercolor (painting 3) is displayed in the upper position of the wall on which Franz's oil (painting 0) is displayed (implying Franz's oil is in the lower position on that wall): `Exists([w], And(wall_upper[w] == 3, wall_lower[w] == 0))`.
+    - Isaacs's oil (painting 6) is displayed in the lower position of wall 4 (wall ID 3): `wall_lower[3] == 6`.
+5.  Add the question premise to the solver: Hidalgo's oil (painting 4) is displayed on wall 2 (wall ID 1): `Or(wall_upper[1] == 4, wall_lower[1] == 4)`.
+6.  For each answer choice, check if it could also be displayed on wall 2:
+    - Push the current solver state.
+    - Determine the painting index (`P_opt`) corresponding to the answer choice:
+        - "Franz's oil": `P_opt = 0`
+        - "Greene's watercolor": `P_opt = 3`
+        - "Greene's oil": `P_opt = 2`
+        - "Hidalgo's watercolor": `P_opt = 5`
+        - "Isaacs's watercolor": `P_opt = 7`
+    - Add the constraint that painting `P_opt` is on wall 2 (wall ID 1) in the position opposite to Hidalgo's oil (painting 4): `Or(And(wall_upper[1] == 4, wall_lower[1] == P_opt), And(wall_lower[1] == 4, wall_upper[1] == P_opt))`.
+    - Check if the solver is satisfiable (`solver.check() == sat`).
+    - If satisfiable, the current answer choice is a possible answer. Record it.
+    - Pop the solver state to backtrack and test the next choice.
+7.  The first answer choice found to be satisfiable is the correct answer.

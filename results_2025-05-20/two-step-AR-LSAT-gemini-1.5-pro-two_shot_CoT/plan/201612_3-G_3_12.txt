@@ -1,0 +1,38 @@
+1.  **Entities:**
+    *   Students: Franz (0), Greene (1), Hidalgo (2), Isaacs (3)
+    *   Painting Types: Oil (0), Watercolor (1)
+    *   Walls: 1 (0), 2 (1), 3 (2), 4 (3)
+    *   Positions: Upper (0), Lower (1)
+
+2.  **Variables:**
+    *   `student_at = Array('student_at', IntSort(), IntSort(), IntSort())` # `student_at[wall_idx][pos_idx]` = student_id
+    *   `painting_type_at = Array('painting_type_at', IntSort(), IntSort(), IntSort())` # `painting_type_at[wall_idx][pos_idx]` = painting_type_id
+
+3.  **Constraints:**
+    *   Domain Constraints:
+        *   `ForAll([w, p], And(w >= 0, w < 4, p >= 0, p < 2, student_at[w][p] >= 0, student_at[w][p] < 4))`
+        *   `ForAll([w, p], And(w >= 0, w < 4, p >= 0, p < 2, painting_type_at[w][p] >= 0, painting_type_at[w][p] < 2))`
+    *   Each painting is placed exactly once (Uniqueness of slots):
+        *   `ForAll([w1, p1, w2, p2], Implies(Or(w1 != w2, p1 != p2), Or(student_at[w1][p1] != student_at[w2][p2], painting_type_at[w1][p1] != painting_type_at[w2][p2])))`
+    *   Constraint 4 (No wall has only watercolors):
+        *   `ForAll([w], Or(painting_type_at[w][0] == 0, painting_type_at[w][1] == 0))`
+    *   Constraint 5 (No wall has work of only one student):
+        *   `ForAll([w], student_at[w][0] != student_at[w][1])`
+    *   Constraint 6 (No wall has both Franz and Isaacs):
+        *   `ForAll([w], Not(Or(And(student_at[w][0] == 0, student_at[w][1] == 3), And(student_at[w][0] == 3, student_at[w][1] == 0))))`
+    *   Constraint 7 (Greene's watercolor above Franz's oil):
+        *   `Exists([w], And(student_at[w][0] == 1, painting_type_at[w][0] == 1, student_at[w][1] == 0, painting_type_at[w][1] == 0))`
+    *   Constraint 8 (Isaacs's oil on wall 4, lower):
+        *   `And(student_at[3][1] == 3, painting_type_at[3][1] == 0)`
+
+4.  **Answering the Question:**
+    *   Create a base Z3 solver with all general constraints (Domain, Uniqueness, 4, 5, 6, 7, 8).
+    *   For each answer choice (A, B, C, D, E):
+        *   Push the solver state.
+        *   Add temporary constraints representing the lower paintings on walls 1 through 4 (indices 0 through 3) as specified in the choice. Map painting names to (student_id, painting_type_id). For a choice listing paintings P1, P2, P3, P4 for walls 1, 2, 3, 4 lower positions:
+            *   Set `student_at[0][1]` and `painting_type_at[0][1]` according to P1.
+            *   Set `student_at[1][1]` and `painting_type_at[1][1]` according to P2.
+            *   Set `student_at[2][1]` and `painting_type_at[2][1]` according to P3.
+            *   Set `student_at[3][1]` and `painting_type_at[3][1]` according to P4.
+        *   Check `solver.check()`. If `sat`, this choice is possible. Print the corresponding letter and stop.
+        *   Pop the solver state.

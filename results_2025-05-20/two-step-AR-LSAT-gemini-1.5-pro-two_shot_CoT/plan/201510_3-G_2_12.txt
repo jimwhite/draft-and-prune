@@ -1,0 +1,38 @@
+```
+1. Entities:
+    - Sections: Lifestyle (L=0), Metro (M=1), Sports (S=2)
+    - Photographers: Fuentes (F=0), Gagnon (G=1), Hue (H=2)
+
+2. Variables:
+    - `photo_by_photographer = Array('photo_by_photographer', IntSort(), IntSort())` - Maps section index (0, 1, 2) to photographer index (0, 1, 2) for the first photo in that section.
+    - `photo_by_photographer_2 = Array('photo_by_photographer_2', IntSort(), IntSort())` - Maps section index (0, 1, 2) to photographer index (0, 1, 2) for the second photo in that section.
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll([s], And(And(photo_by_photographer[s] >= 0, photo_by_photographer[s] <= 2), And(photo_by_photographer_2[s] >= 0, photo_by_photographer_2[s] <= 2)))` where `s = Int('s')` and ranges from 0 to 2.
+    - Constraint 2 (Two per section): This constraint is implicitly handled by having two variables per section. The original `Distinct` requirement was incorrect.
+    - Constraint 3 (Photographer counts):
+        - `count_F = Sum([If(photo_by_photographer[s] == F, 1, 0) for s in range(3)]) + Sum([If(photo_by_photographer_2[s] == F, 1, 0) for s in range(3)])`
+        - `count_G = Sum([If(photo_by_photographer[s] == G, 1, 0) for s in range(3)]) + Sum([If(photo_by_photographer_2[s] == G, 1, 0) for s in range(3)])`
+        - `count_H = Sum([If(photo_by_photographer[s] == H, 1, 0) for s in range(3)]) + Sum([If(photo_by_photographer_2[s] == H, 1, 0) for s in range(3)])`
+        - `And(And(count_F >= 1, count_F <= 3), And(count_G >= 1, count_G <= 3), And(count_H >= 1, count_H <= 3))`
+        - `count_F + count_G + count_H == 6` (Total number of photos)
+    - Constraint 4 (Lifestyle/Metro overlap): `Or(And(Or(photo_by_photographer[L] == F, photo_by_photographer_2[L] == F), Or(photo_by_photographer[M] == F, photo_by_photographer_2[M] == F)), And(Or(photo_by_photographer[L] == G, photo_by_photographer_2[L] == G), Or(photo_by_photographer[M] == G, photo_by_photographer_2[M] == G)), And(Or(photo_by_photographer[L] == H, photo_by_photographer_2[L] == H), Or(photo_by_photographer[M] == H, photo_by_photographer_2[M] == H)))` (At least one photographer has photos in both L and M)
+    - Constraint 5 (Hue/Fuentes): `Sum([If(photo_by_photographer[L] == H, 1, 0), If(photo_by_photographer_2[L] == H, 1, 0)]) == Sum([If(photo_by_photographer[S] == F, 1, 0), If(photo_by_photographer_2[S] == F, 1, 0)])` (Number of H in L equals number of F in S)
+    - Constraint 6 (No Gagnon in Sports): `And(photo_by_photographer[S] != G, photo_by_photographer_2[S] != G)`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 1, 3, 4, 5, and 6.
+    - Add the question premise: "If both photographs in one of the three sections are by Gagnon". Given Constraint 6, this means either L or M has both photos by Gagnon.
+        - `question_premise = Or(And(photo_by_photographer[L] == G, photo_by_photographer_2[L] == G), And(photo_by_photographer[M] == G, photo_by_photographer_2[M] == G))`
+    - Assert `question_premise` in the solver.
+    - For each answer choice:
+        - Push the solver state.
+        - Add constraints corresponding to the answer choice.
+            - A: `And(photo_by_photographer[L] == H, photo_by_photographer_2[L] == H)` (Both photos in L are by H)
+            - B: `Or(And(photo_by_photographer[L] == F, photo_by_photographer_2[L] == H), And(photo_by_photographer[L] == H, photo_by_photographer_2[L] == F))` (One photo in L is by F and one is by H)
+            - C: `And(photo_by_photographer[M] == F, photo_by_photographer_2[M] == F)` (Both photos in M are by F)
+            - D: `Or(And(photo_by_photographer[M] == G, photo_by_photographer_2[M] == H), And(photo_by_photographer[M] == H, photo_by_photographer_2[M] == G))` (One photo in M is by G and one is by H)
+            - E: `And(photo_by_photographer[S] == H, photo_by_photographer_2[S] == H)` (Both photos in S are by H)
+        - Check `solver.check()`. If the result is `sat`, this answer choice *could be true*. This is the correct answer.
+        - Pop the solver state.
+```

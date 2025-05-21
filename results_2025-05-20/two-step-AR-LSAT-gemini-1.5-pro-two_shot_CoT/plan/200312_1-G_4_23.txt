@@ -1,0 +1,37 @@
+Revised Plan:
+1. Entities:
+    - Students: Jiang (0), Kramer (1), Lopez (2), Megregian (3), O'Neill (4)
+    - Plays: Sunset (0), Tamerlane (1), Undulation (2)
+
+2. Variables:
+    - `reviews[i][j]` is a Boolean variable which is true if student `i` reviews play `j`, for `i` in {0, ..., 4} and `j` in {0, 1, 2}.
+
+3. Constraints:
+    - Constraint 1 (Each student reviews at least one play): `ForAll([i], Or(reviews[i][0], reviews[i][1], reviews[i][2]))` for `i` from 0 to 4.
+    - Constraint 2 (Kramer and Lopez review fewer plays than Megregian):
+        - Define `num_reviewed(s)` as the number of plays reviewed by student `s`: `num_reviewed(s) = If(reviews[s][0], 1, 0) + If(reviews[s][1], 1, 0) + If(reviews[s][2], 1, 0)`.
+        - `num_reviewed(1) < num_reviewed(3)`
+        - `num_reviewed(2) < num_reviewed(3)`
+    - Constraint 3 (Neither Lopez nor Megregian reviews any play Jiang reviews):
+        - `ForAll([j], Implies(reviews[0][j], Not(reviews[2][j])))` for `j` from 0 to 2.
+        - `ForAll([j], Implies(reviews[0][j], Not(reviews[3][j])))` for `j` from 0 to 2.
+    - Constraint 4 (Kramer and O'Neill both review Tamerlane): `reviews[1][1]` and `reviews[4][1]`.
+    - Constraint 5 (Exactly two students review the same plays):
+        - Define `same_reviews(i, j)` as true if student `i` and student `j` review the exact same plays: `same_reviews(i, j) = And(reviews[i][0] == reviews[j][0], reviews[i][1] == reviews[j][1], reviews[i][2] == reviews[j][2])`.
+        - `PbEq([(same_reviews(i, j), True) for i in range(5) for j in range(i+1, 5)], 1)`
+
+4. Answering the Question:
+    - Create a base solver and assert constraints 1-5.
+    - Assert the premise: `Not(reviews[0][1])`.
+    - For each answer choice (A through E):
+        - Push the solver state.
+        - Assert the negation of the constraint corresponding to the answer choice:
+            - A: `Not(reviews[0][0])`
+            - B: `Not(reviews[2][2])`
+            - C: `Not(reviews[3][0])`
+            - D: `Not(reviews[3][1])`
+            - E: `Not(reviews[4][2])`
+        - Check if the solver is satisfiable.
+        - If the solver is UNSAT, the original answer choice must be true. Identify the corresponding letter and conclude it is the correct answer.
+        - If the solver is SAT, the original answer choice is not necessarily true.
+        - Pop the solver state to revert for the next check.

@@ -1,0 +1,33 @@
+1. Entities:
+    - Compositions: F(0), H(1), L(2), O(3), P(4), R(5), S(6), T(7)
+    - Slots: 0, 1, 2, 3, 4, 5, 6, 7
+
+2. Variables:
+    - `pos = Array('pos', IntSort(), IntSort())` - Maps composition ID (0-7) to its slot index (0-7).
+
+3. Constraints:
+    - Constraint 0 (Domain and Range): For each composition `i` in {0, ..., 7}, assert `And(pos[i] >= 0, pos[i] < 8)`.
+    - Constraint 1 (Permutation): Assert `Distinct([pos[i] for i in range(8)])`.
+    - Constraint 2 (T before F or after R): Assert `Or(pos[7] + 1 == pos[0], pos[5] + 1 == pos[7])`.
+    - Constraint 3 (Two between F and R): Assert `Or(pos[5] - pos[0] >= 3, pos[0] - pos[5] >= 3)`.
+    - Constraint 4 (O is first or fifth): Assert `Or(pos[3] == 0, pos[3] == 4)`.
+    - Constraint 5 (Eighth is L or H): Assert `Or(pos[2] == 7, pos[1] == 7)`.
+    - Constraint 6 (P before S): Assert `pos[4] < pos[6]`.
+    - Constraint 7 (One between O and S): Assert `Or(pos[3] - pos[6] >= 2, pos[6] - pos[3] >= 2)`.
+    - Constraint 8 (Two after F before O): Assert `pos[3] == pos[0] + 3`.
+
+4. Answering the Question:
+    - Create an SMT solver.
+    - Add constraints 0 through 8 to the solver.
+    - Define answer constraints based on R's position (R is composition ID 5):
+        - A1: R is first (`pos[5] == 0`)
+        - A2: R is third (`pos[5] == 2`)
+        - A3: R is fourth (`pos[5] == 3`)
+        - A4: R is sixth (`pos[5] == 5`)
+        - A5: R is seventh (`pos[5] == 6`)
+    - For each answer constraint `A` in [A1, A2, A3, A4, A5] corresponding to answer choices ['first', 'third', 'fourth', 'sixth', 'seventh']:
+        - Push the solver state.
+        - Assert `Not(A)`.
+        - Check the solver.
+        - If the check is `unsat`, then `A` must be true. Identify the corresponding answer choice string and conclude it is the correct answer.
+        - Pop the solver state.

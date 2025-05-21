@@ -1,0 +1,30 @@
+1. Entities:
+    - Antiques: Harmonica (H=0), Lamp (L=1), Mirror (M=2), Sundial (S=3), Table (T=4), Vase (V=5)
+    - Days: June 1st (0), June 2nd (1), June 3rd (2), June 4th (3), June 5th (4), June 6th (5)
+
+2. Variables:
+    - `auction_day = Array('auction_day', IntSort(), IntSort())` - Maps antique ID to the day it's auctioned.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([i], And(auction_day[i] >= 0, auction_day[i] <= 5))` for i in range(6). Declare `i = Int('i')`.
+    - Constraint 1 (Distinctness): `Distinct([auction_day[i] for i in range(6)])`
+    - Constraint 2 (Sundial not on June 1st): `auction_day[3] != 0`
+    - Constraint 3 (Harmonica before Lamp implies Mirror before Lamp): `Implies(auction_day[0] < auction_day[1], auction_day[2] < auction_day[1])`
+    - Constraint 4 (Sundial before Mirror): `auction_day[3] < auction_day[2]`
+    - Constraint 5 (Sundial before Vase): `auction_day[3] < auction_day[5]`
+    - Constraint 6 (Table before Harmonica XOR Table before Vase): `Xor(auction_day[4] < auction_day[0], auction_day[4] < auction_day[5])`
+    - Constraint 7 (Table after Mirror and Vase - from Question): `And(auction_day[4] > auction_day[2], auction_day[4] > auction_day[5])`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - A: `auction_day[0] < auction_day[4]`
+            - B: `auction_day[4] < auction_day[1]`
+            - C: `auction_day[4] < auction_day[3]`
+            - D: `auction_day[2] < auction_day[5]`
+            - E: `auction_day[3] < auction_day[1]`
+        - Check `solver.check()`. If sat, this is a possible correct answer. Store the answer choice letter.
+        - Pop the solver state.
+    - Return the stored answer choice letter.

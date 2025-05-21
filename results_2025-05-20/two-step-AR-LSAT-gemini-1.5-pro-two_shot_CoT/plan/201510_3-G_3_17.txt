@@ -1,0 +1,33 @@
+Revised Plan:
+1. Entities:
+    - Students: Grecia (0), Hakeem (1), Joe (2), Katya (3), Louise (4)
+    - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+    - Shifts: First (0), Second (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a student ID. The slot ID is calculated as `day * 2 + shift`.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll([d], And(d >= 0, d < 5))` where `d = Int('d')`. `ForAll([s], And(s >= 0, s < 2))` where `s = Int('s')`. `ForAll([d, s], And(schedule[d * 2 + s] >= 0, schedule[d * 2 + s] < 5))`
+    - Constraint 1 (Each student works exactly two shifts): `ForAll([student], Sum([If(schedule[slot] == student, 1, 0) for slot in range(10)]) == 2)` where `student = Int('student')`
+    - Constraint 2 (Each shift is worked by exactly one student): `ForAll([slot], Sum([If(schedule[slot] == student, 1, 0) for student in range(5)]) == 1)` where `slot = Int('slot')`
+    - Constraint 3 (No student works both shifts of any day): `ForAll([day], schedule[day * 2] != schedule[day * 2 + 1])` where `day = Int('day')`
+    - Constraint 4 (Louise works two consecutive second shifts): `Exists([day], And(day >= 0, day < 4, schedule[day * 2 + 1] == 4, schedule[(day + 1) * 2 + 1] == 4))` where `day = Int('day')`
+    - Constraint 5 (Grecia works two non-consecutive first shifts): `Exists([day1, day2], And(day1 >= 0, day1 < 5, day2 >= 0, day2 < 5, day1 != day2, Not(Or(day1 == day2 + 1, day2 == day1 + 1)), schedule[day1 * 2] == 0, schedule[day2 * 2] == 0))` where `day1 = Int('day1')` and `day2 = Int('day2')`
+    - Constraint 6 (Katya works on Tuesday and Friday): `Or(schedule[1 * 2] == 3, schedule[1 * 2 + 1] == 3)`, `Or(schedule[4 * 2] == 3, schedule[4 * 2 + 1] == 3)`
+    - Constraint 7 (Hakeem and Joe work on the same day at least once): `Exists([day], And(Or(schedule[day*2] == 1, schedule[day*2+1] == 1), Or(schedule[day*2] == 2, schedule[day*2+1] == 2)))` where `day = Int('day')`
+    - Constraint 8 (Grecia and Louise never work on the same day): `ForAll([day], Not(And(Or(schedule[day*2] == 0, schedule[day*2+1] == 0), Or(schedule[day*2] == 4, schedule[day*2+1] == 4))))` where `day = Int('day')`
+
+4. Answering the Question:
+    - Create a base Z3 solver with constraints 0-8.
+    - Add the conditional premise from the question: Grecia and Joe work on the same day at least once. This is formulated as: `Exists([day], And(Or(schedule[day*2] == 0, schedule[day*2+1] == 0), Or(schedule[day*2] == 2, schedule[day*2+1] == 2)))` where `day = Int('day')`.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice.
+        - Check satisfiability. If sat, this is a possible answer.
+        - Pop the solver state.
+        - Example for "Grecia works the first shift on Tuesday.": Add `schedule[1 * 2] == 0`.
+        - Example for "Hakeem works the second shift on Monday.": Add `schedule[0 * 2 + 1] == 1`.
+        - Example for "Hakeem works the second shift on Wednesday.": Add `schedule[2 * 2 + 1] == 1`.
+        - Example for "Joe works the first shift on Wednesday.": Add `schedule[2 * 2] == 2`.
+        - Example for "Joe works the first shift on Thursday.": Add `schedule[3 * 2] == 2`.

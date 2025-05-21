@@ -1,0 +1,28 @@
+1. Entities:
+    - Accomplices: Peters (P=0), Quinn (Q=1), Rovero (R=2), Stanton (S=3), Tao (T=4), Villas (V=5), White (W=6)
+    - Recruitment Order: Slots 1 through 7
+
+2. Variables:
+    - `recruitment_order = Array('recruitment_order', IntSort(), IntSort())` This array maps a recruitment slot (1-7) to an accomplice ID (0-6).
+
+3. Constraints:
+    - Constraint 1 (Domain): `ForAll(i, Implies(And(i >= 1, i <= 7), And(recruitment_order[i] >= 0, recruitment_order[i] <= 6)))` where `i = Int('i')`.
+    - Constraint 2 (Distinctness): `Distinct([recruitment_order[i] for i in range(1, 8)])`
+    - Constraint 3 (Stanton not before/after Tao): `ForAll(i, Implies(And(i >= 1, i <= 6), And(recruitment_order[i] != 3 or recruitment_order[i+1] != 4, recruitment_order[i] != 4 or recruitment_order[i+1] != 3)))` where `i = Int('i')`.
+    - Constraint 4 (Quinn before Rovero): `i = Int('i')`, `j = Int('j')`. `ForAll([i, j], Implies(And(i >= 1, i <= 7, j >= 1, j <= 7, recruitment_order[i] == 1, recruitment_order[j] == 2), i < j))`
+    - Constraint 5 (Villas immediately before White): `i = Int('i')`. `ForAll(i, Implies(And(i >= 1, i <= 6), Implies(recruitment_order[i] == 5, recruitment_order[i+1] == 6)))`
+    - Constraint 6 (Peters recruited fourth): `recruitment_order[4] == 0`
+    - Constraint 7 (Tao recruited second): `recruitment_order[2] == 4`
+
+4. Answering the Question:
+    - Create a base Z3 solver and add constraints 1 through 7.
+    - For each answer choice:
+        - Push the solver state.
+        - Add the constraint corresponding to the answer choice:
+            - "Quinn was recruited third.": `recruitment_order[3] == 1`
+            - "Rovero was recruited fifth.": `recruitment_order[5] == 2`
+            - "Stanton was recruited sixth.": `recruitment_order[6] == 3`
+            - "Villas was recruited sixth.": `recruitment_order[6] == 5`
+            - "White was recruited third.": `recruitment_order[3] == 6`
+        - Check `solver.check()`. If `sat`, this is a possible solution. Print the corresponding answer choice and stop.
+        - Pop the solver state.

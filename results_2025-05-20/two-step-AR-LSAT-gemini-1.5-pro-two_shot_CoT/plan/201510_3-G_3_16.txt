@@ -1,0 +1,29 @@
+```
+1. Entities:
+    - Students: Grecia (0), Hakeem (1), Joe (2), Katya (3), Louise (4)
+    - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+    - Shifts: First (0), Second (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a student ID. The slot ID is calculated as `day * 2 + shift`. The range of student IDs should be constrained to 0-4.
+
+3. Constraints:
+    - Constraint 1 (Each student works exactly two shifts): `student = Int('student')`. `ForAll([student], Implies(And(student >= 0, student <= 4), Sum([If(schedule[slot] == student, 1, 0) for slot in range(10)]) == 2))`
+    - Constraint 2 (Each shift is worked by exactly one student): This is implicitly handled by the array mapping `schedule[slot]` to a single student ID. The incorrect `Distinct` constraint is removed.
+    - Constraint 3 (No student works both shifts of any day): `day = Int('day')`. `ForAll([day], Implies(And(day >= 0, day <= 4), schedule[day * 2] != schedule[day * 2 + 1]))`
+    - Constraint 4 (Louise works two consecutive second shifts): `day = Int('day')`. `Or([And(schedule[day * 2 + 1] == 4, schedule[(day + 1) * 2 + 1] == 4) for day in range(4)])`
+    - Constraint 5 (Grecia works two non-consecutive first shifts): `day1 = Int('day1')`, `day2 = Int('day2')`. `Or([And(schedule[day1 * 2] == 0, schedule[day2 * 2] == 0, day1 != day2, day1 != day2 + 1, day1 != day2 -1) for day1 in range(5) for day2 in range(5)])`
+    - Constraint 6 (Katya works on Tuesday and Friday): `Or(schedule[1 * 2] == 3, schedule[1 * 2 + 1] == 3)`, `Or(schedule[4 * 2] == 3, schedule[4 * 2 + 1] == 3)`
+    - Constraint 7 (Hakeem and Joe work on the same day at least once): `day = Int('day')`. `Or([And(Or(schedule[day * 2] == 1, schedule[day * 2 + 1] == 1), Or(schedule[day * 2] == 2, schedule[day * 2 + 1] == 2)) for day in range(5)])`
+    - Constraint 8 (Grecia and Louise never work on the same day): `day = Int('day')`. `ForAll([day], Implies(And(day >= 0, day <= 4), Not(And(Or(schedule[day * 2] == 0, schedule[day * 2 + 1] == 0), Or(schedule[day * 2] == 4, schedule[day * 2 + 1] == 4)))))`
+
+4. Answering the Question:
+    - Add premise: Hakeem works on Wednesday: `Or(schedule[2 * 2] == 1, schedule[2 * 2 + 1] == 1)`
+    - For each answer choice (pair of days for Joe):
+        - Formulate the constraint representing the answer choice. For example, for "Monday and Wednesday", Joe works on Monday AND Joe works on Wednesday: `And(Or(schedule[0*2] == 2, schedule[0*2+1] == 2), Or(schedule[2*2] == 2, schedule[2*2+1] == 2))`
+        - Formulate the negation of the answer choice constraint.
+        - Push solver state.
+        - Add the negation of the answer choice constraint to the solver.
+        - Check if the solver is unsatisfiable. If it is, the original answer choice must be true.
+        - Pop solver state.
+```

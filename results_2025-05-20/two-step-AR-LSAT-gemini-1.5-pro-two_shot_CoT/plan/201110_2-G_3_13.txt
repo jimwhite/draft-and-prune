@@ -1,0 +1,27 @@
+1.  Entities:
+    *   Riders: Reynaldo (R), Seamus (S), Theresa (T), Yuki (Y). Assign integer indices 0, 1, 2, 3 respectively.
+    *   Bicycles: F, G, H, J. Assign integer indices 0, 1, 2, 3 respectively.
+    *   Days: Day 1 (0), Day 2 (1).
+
+2.  Variables:
+    *   `assignment = Array('assignment', IntSort(), IntSort(), IntSort())` - `assignment[day][bike]` stores the rider assigned to that bike on that day.
+
+3.  Constraints:
+    *   Define integer constants for riders (R=0, S=1, T=2, Y=3) and bikes (F=0, G=1, H=2, J=3).
+    *   Constraint 1 (Domain): `ForAll([d, b], And(assignment[d][b] >= 0, assignment[d][b] < 4))` - Each bike on each day is assigned to a valid rider index. `d = Int('d')`, `b = Int('b')`.
+    *   Constraint 2 (Bijection): `ForAll([d], Distinct(assignment[d][F], assignment[d][G], assignment[d][H], assignment[d][J]))` - On each day `d`, the riders assigned to the four bikes must be distinct. This ensures each rider tests exactly one bike and all four bikes are tested each day.
+    *   Constraint 3 (Reynaldo cannot test F): `ForAll([d], assignment[d][F] != R)` - Reynaldo cannot test F on either day. `d = Int('d')`.
+    *   Constraint 4 (Yuki cannot test J): `ForAll([d], assignment[d][J] != Y)` - Yuki cannot test J on either day. `d = Int('d')`.
+    *   Constraint 5 (Theresa must test H): `Or(assignment[0][H] == T, assignment[1][H] == T)` - Theresa must be assigned to bike H on at least one of the two days.
+    *   Constraint 6 (Yuki's first day bike is Seamus's second day bike): `Exists([b], And(assignment[0][b] == Y, assignment[1][b] == S))` - There exists a bike `b` such that Yuki tests `b` on day 1, and Seamus tests the same bike `b` on day 2. `b = Int('b')`.
+    *   Constraint 7 (Each rider tests different bike on day 2): `ForAll([r], Exists([b1, b2], And(assignment[0][b1] == r, assignment[1][b2] == r, b1 != b2)))` - For each rider `r`, the bike `b1` they test on day 1 must be different from the bike `b2` they test on day 2. `r = Int('r')`, `b1 = Int('b1')`, `b2 = Int('b2')`.
+
+4.  Answering the Question:
+    *   Create a base Z3 solver.
+    *   Add constraints 1 through 7 to the solver.
+    *   For each answer choice (A, B, C, D, E):
+        *   Push the solver state.
+        *   Add temporary constraints based on the assignment specified in the answer choice. For an answer choice formatted as "Bike: Rider Day 1, Rider Day 2; ...", add constraints `assignment[0][Bike] == Rider_Day1` and `assignment[1][Bike] == Rider_Day2` for each bike.
+        *   Check if the solver is satisfiable (`solver.check() == sat`).
+        *   If satisfiable, this is a possible assignment. The corresponding answer choice is the correct one. Print the letter of the answer choice and stop.
+        *   If not satisfiable, pop the solver state and proceed to the next answer choice.

@@ -1,0 +1,31 @@
+1.  Entities:
+    *   Employees: Robertson (R), Souza (S), Togowa (T), Vaughn (V), Xu (X), Young (Y). Map these to integer indices 0 through 5 (e.g., R=0, S=1, T=2, V=3, X=4, Y=5).
+    *   Parking Spaces: #1, #2, #3, #4, #5, #6. Map these to integer values 0 through 5 (e.g., #1=0, #2=1, #3=2, #4=3, #5=4, #6=5).
+
+2.  Variables:
+    *   `assignment = Array('assignment', IntSort(), IntSort())` - An array where `assignment[employee_index]` represents the integer value of the parking space assigned to that employee.
+
+3.  Constraints:
+    *   Constraint 1 (Distinct Assignments): `Distinct([assignment[i] for i in range(6)])` - Each employee is assigned a unique parking space.
+    *   Constraint 2 (Parking Space Range): `And([And(assignment[i] >= 0, assignment[i] <= 5) for i in range(6)])` - Each assigned parking space is within the valid range #1 through #6 (0 through 5).
+    *   Constraint 3 (Young > Togowa): `assignment[Y] > assignment[T]` (using the integer mapping for Y and T).
+    *   Constraint 4 (Xu > Souza): `assignment[X] > assignment[S]` (using the integer mapping for X and S).
+    *   Constraint 5 (Robertson > Young): `assignment[R] > assignment[Y]` (using the integer mapping for R and Y).
+    *   Constraint 6 (Robertson's Parking Space): `Or(assignment[R] == 0, assignment[R] == 1, assignment[R] == 2, assignment[R] == 3)` (Robertson is assigned #1, #2, #3, or #4, using integer mapping).
+    *   Constraint 7 (Togowa > Souza): `assignment[T] > assignment[S]` (This is the additional condition from the question, using integer mapping for T and S).
+
+4.  Answering the Question:
+    *   Create a base SMT solver instance.
+    *   Add constraints 1 through 7 to the solver.
+    *   For each answer choice (A through E):
+        *   Push the current state of the solver.
+        *   Add the constraint corresponding to the answer choice, using the integer mappings:
+            *   A: Young is assigned #2 -> `assignment[Y] == 1`
+            *   B: Vaughn is assigned #5 -> `assignment[V] == 4`
+            *   C: Togowa is assigned #3 -> `assignment[T] == 2`
+            *   D: Souza is assigned #2 -> `assignment[S] == 1`
+            *   E: Robertson is assigned #3 -> `assignment[R] == 2`
+        *   Check if the solver is satisfiable (`solver.check() == sat`).
+        *   If satisfiable, this choice *could be true*. This is the correct answer. Record the answer and stop.
+        *   If not satisfiable, this choice *cannot be true* under the given conditions.
+        *   Pop the solver state to revert to the state before adding the answer choice constraint.

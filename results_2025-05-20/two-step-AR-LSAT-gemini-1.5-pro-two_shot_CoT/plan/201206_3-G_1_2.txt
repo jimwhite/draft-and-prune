@@ -1,0 +1,30 @@
+```
+1. Entities:
+    - Lab Assistants: Julio (0), Kevin (1), Lan (2), Nessa (3), Olivia (4), Rebecca (5)
+    - Days: Wednesday (0), Thursday (1), Friday (2)
+    - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+    - `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID to a lab assistant ID. Slot ID is calculated as `day * 2 + time`.
+    - Example: `schedule[0]` represents Wednesday Morning (0 * 2 + 0), `schedule[1]` represents Wednesday Afternoon (0 * 2 + 1), `schedule[2]` represents Thursday Morning (1 * 2 + 0), and so on, up to `schedule[5]` for Friday Afternoon.
+
+3. Constraints:
+    - Constraint 0 (Domain): `ForAll(i, Implies(And(i >= 0, i < 6), And(schedule[i] >= 0, schedule[i] < 6)))` where `i = Int('i')`. Ensures all assigned lab assistants are valid IDs (0-5).
+    - Constraint 1 (Distinctness): `Distinct([schedule[i] for i in range(6)])` - Each lab assistant leads exactly one session.
+    - Constraint 2 (Kevin & Rebecca Same Day): `Or(And(schedule[0] == 1, schedule[1] == 5), And(schedule[0] == 5, schedule[1] == 1), And(schedule[2] == 1, schedule[3] == 5), And(schedule[2] == 5, schedule[3] == 1), And(schedule[4] == 1, schedule[5] == 5), And(schedule[4] == 5, schedule[5] == 1))`. Kevin (1) and Rebecca (5) must be assigned to slots on the same day (slots 0/1 for Wed, 2/3 for Thu, 4/5 for Fri).
+    - Constraint 3 (Lan & Olivia Different Days): `ForAll(i, ForAll(j, Implies(And(schedule[i] == 2, schedule[j] == 4), Not(i // 2 == j // 2))))` where `i = Int('i')` and `j = Int('j')`. If slot `i` has Lan (2) and slot `j` has Olivia (4), their days (`i // 2` and `j // 2`) must be different.
+    - Constraint 4 (Nessa Afternoon): `Or(schedule[1] == 3, schedule[3] == 3, schedule[5] == 3)`. Nessa (3) must be assigned to an afternoon slot (Wednesday PM (1), Thursday PM (3), or Friday PM (5)).
+    - Constraint 5 (Julio Before Olivia): `ForAll(i, ForAll(j, Implies(And(schedule[i] == 0, schedule[j] == 4), i // 2 < j // 2)))` where `i = Int('i')` and `j = Int('j')`. If slot `i` has Julio (0) and slot `j` has Olivia (4), Julio's day (`i // 2`) must be earlier than Olivia's day (`j // 2`).
+    - Constraint 6 (Lan Not Wednesday): `And(schedule[0] != 2, schedule[1] != 2)`. Lan (2) is not assigned to either Wednesday slot (Wednesday AM (0) or Wednesday PM (1)). This is the specific condition given in the question.
+
+4. Answering the Question:
+    - Create a base Z3 solver instance.
+    - Add constraints 0 through 6 to the solver.
+    - For each answer choice (Rebecca (5), Olivia (4), Nessa (3), Kevin (1), Julio (0)):
+        - Push the current state of the solver.
+        - Add a temporary constraint representing the negation of the statement "this lab assistant must lead a Thursday session". This negation is "this lab assistant does *not* lead a Thursday session", which means the assistant is not in slot 2 (Thursday AM) and not in slot 3 (Thursday PM): `And(schedule[2] != assistant_id, schedule[3] != assistant_id)`.
+        - Check the satisfiability of the solver with the added temporary constraint using `solver.check()`.
+        - If `solver.check()` returns `unsat`, it means the temporary constraint (the negation) is impossible given the problem constraints and the condition. Therefore, the original statement ("this lab assistant must lead a Thursday session") must be true. Print the corresponding lab assistant's name and terminate.
+        - If `solver.check()` returns `sat`, it means there is at least one valid schedule where the lab assistant does *not* lead a Thursday session, so this assistant is not the one who *must* lead a Thursday session.
+        - Pop the solver state to remove the temporary constraint.
+```

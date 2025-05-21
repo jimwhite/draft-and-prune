@@ -1,0 +1,38 @@
+1.  Entities:
+    -   Students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7)
+    -   Days: Monday (0), Tuesday (1), Wednesday (2)
+    -   Times: Morning (0), Afternoon (1)
+
+2.  Variables:
+    -   `schedule = Array('schedule', IntSort(), IntSort())` - Maps a composite slot ID (day * 2 + time) to a student ID.
+        -   Slot 0: Monday Morning
+        -   Slot 1: Monday Afternoon
+        -   Slot 2: Tuesday Morning
+        -   Slot 3: Tuesday Afternoon
+        -   Slot 4: Wednesday Morning
+        -   Slot 5: Wednesday Afternoon
+
+3.  Constraints:
+    -   Constraint 1 (Domain): `ForAll([i], Implies(And(i >= 0, i < 6), And(schedule[i] >= 0, schedule[i] < 8)))` - All scheduled students are valid student IDs.
+    -   Constraint 2 (Distinctness): `Distinct([schedule[i] for i in range(6)])` - Exactly 6 different students give reports.
+    -   Constraint 3 (Two reports per day): `ForAll([day], Implies(And(day >=0, day < 3), Distinct([schedule[day * 2], schedule[day * 2 + 1]])))` - The two reports on the same day are by distinct students.
+    -   Constraint 4 (George's schedule): `Or(schedule[2] == 0, schedule[3] == 0)` - George reports only on Tuesday (combined with Distinctness, Constraint 2).
+    -   Constraint 5 (No Olivia/Robert in afternoon): `ForAll([day], Implies(And(day >= 0, day < 3), And(schedule[day * 2 + 1] != 6, schedule[day * 2 + 1] != 7)))` - Olivia (6) and Robert (7) cannot give afternoon reports.
+    -   Constraint 6 (Nina's implication): `ForAll([day], Implies(And(day >= 0, day < 2), Implies(Or(schedule[day * 2] == 5, schedule[day * 2 + 1] == 5), And(Or(schedule[(day + 1) * 2] == 1, schedule[(day + 1) * 2 + 1] == 1), Or(schedule[(day + 1) * 2] == 2, schedule[(day + 1) * 2 + 1] == 2)))))` - If Nina (5) reports on Monday (day 0) or Tuesday (day 1), then Helen (1) and Irving (2) must both report on the next day (day+1).
+
+4.  Answering the Question:
+    -   Initialize SMT solver.
+    -   Add base constraints (1-6) to the solver.
+    -   Add Kyle's Tuesday afternoon constraint: `schedule[3] == 3` (Tue A is Kyle).
+    -   Add Helen's Wednesday afternoon constraint: `schedule[5] == 1` (Wed A is Helen).
+    -   For each answer choice (list of students for Mon M, Tue M, Wed M):
+        -   Push solver state.
+        -   Add the morning report constraints for that choice:
+            -   Choice A ('Irving, Lenore, and Nina'): `schedule[0] == 2`, `schedule[2] == 4`, `schedule[4] == 5`.
+            -   Choice B ('Lenore, George, and Irving'): `schedule[0] == 4`, `schedule[2] == 0`, `schedule[4] == 2`.
+            -   Choice C ('Nina, Irving, and Lenore'): `schedule[0] == 5`, `schedule[2] == 2`, `schedule[4] == 4`.
+            -   Choice D ('Robert, George, and Irving'): `schedule[0] == 7`, `schedule[2] == 0`, `schedule[4] == 2`.
+            -   Choice E ('Robert, Irving, and Lenore'): `schedule[0] == 7`, `schedule[2] == 2`, `schedule[4] == 4`.
+        -   Check `solver.check()`. If the result is `sat`, this choice is possible. The corresponding list is the correct answer. Print the choice and terminate.
+        -   If the result is `unsat`, this choice is not possible.
+        -   Pop solver state to revert for the next choice.
