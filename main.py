@@ -6,12 +6,13 @@ from reasoners import TwoStepReasoner
 from data_loaders import DataLoader, Sampler, AR_LSAT_Dataset
 from answer_extractors import AR_LSAT_AnswerExtractor
 import os
+import sys
 
 def main():
     """Main entry point for the script"""
 
     # Create configuration with command line arguments
-    config = ReasonerConfig.from_yaml("config_sample.yaml")
+    config = ReasonerConfig.from_yaml(sys.argv[1])
 
     # Create dataset loader based on format
     if config.dataset.lower() == "ar-lsat":
