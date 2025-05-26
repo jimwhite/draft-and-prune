@@ -64,7 +64,7 @@ class Reasoner(ABC):
 
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
-        self.results_folder = f"results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT/"
+        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT/"
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
             # return self.results_folder
