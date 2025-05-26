@@ -1,33 +1,157 @@
 #!/usr/bin/env python3
 import os
+import yaml
 from datetime import datetime
+from typing import Optional, Dict, Any
 
 class ReasonerConfig:
     """Configuration for the reasoning system"""
     
     def __init__(self, 
-                 reasoning_method: str,
-                 api_key: str,
-                 dataset: str,
-                 model_name: str = "gemini-2.5-flash-preview-04-17", 
-                 fix_model_name: str = "gemini-2.5-flash-preview-04-17",
-                 data_path: str = None,
+                 dataset: str = None,
+                 test_file: str = None,
+                 reasoning_method: str = None,
+                 api_key: str = None,
+                 model: str = "gemini-2.5-flash-preview-04-17", 
+                 fix_model: str = "gemini-2.5-flash-preview-04-17",
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
-                 limit: int = None,
-                 inter_test_case_delay: int = 5,
-                 shots: int = 0,
-                 results_folder: str = None):
+                 test_delay: int = 5,
+                 prompt_path: str = None,
+                 shots: str = 'zero',
+                 desired_indices: list = None):
+        """
+        Initialize configuration either from parameters or will be loaded from YAML
+        
+        Args:
+            reasoning_method: The reasoning method to use
+            api_key: API key for the model service
+            dataset: Dataset name to use
+            test_file: Test file to use
+            model: Primary model name
+            fix_model: Model name for fixing/repair operations
+            temperature: Temperature for model generation
+            max_repairs: Maximum number of repair attempts
+            test_delay: Delay between test cases in seconds
+            prompt_path: Path to the prompt file
+            shots: Number of shots for few-shot learning
+            desired_indices: Desired indices to use
+        """
+        self.dataset = dataset
+        self.test_file = test_file
         self.reasoning_method = reasoning_method
         self.api_key = api_key
-        self.dataset = dataset
-        self.model_name = model_name
-        self.fix_model_name = fix_model_name
-        self.data_path = data_path
+        self.model = model
+        self.fix_model = fix_model
         self.temperature = temperature
         self.max_repairs = max_repairs
-        self.inter_test_case_delay = inter_test_case_delay
-        self.limit = limit
+        self.test_delay = test_delay
+        self.prompt_path = prompt_path
         self.shots = shots
-        self.results_folder = results_folder
+        self.desired_indices = desired_indices
+    
+    @classmethod
+    def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
+        """
+        Load configuration from a YAML file
+        
+        Args:
+            yaml_path: Path to the YAML configuration file
+            
+        Returns:
+            ReasonerConfig instance with loaded configuration
+            
+        Raises:
+            FileNotFoundError: If the YAML file doesn't exist
+            yaml.YAMLError: If the YAML file is malformed
+            KeyError: If required configuration keys are missing
+        """
+        if not os.path.exists(yaml_path):
+            raise FileNotFoundError(f"Configuration file not found: {yaml_path}")
+        
+        try:
+            with open(yaml_path, 'r', encoding='utf-8') as file:
+                config_data = yaml.safe_load(file)
+        except yaml.YAMLError as e:
+            raise yaml.YAMLError(f"Error parsing YAML file {yaml_path}: {e}")
+        
+        if config_data is None:
+            raise ValueError(f"Empty or invalid YAML file: {yaml_path}")
+        
+        # Create instance with loaded data
+        instance = cls()
+        instance.dataset = config_data['dataset']
+        instance.test_file = config_data['test_file']
+        instance.reasoning_method = config_data['reasoning_method']
+        instance.api_key = config_data['api_key']
+        instance.model = config_data['model']
+        instance.fix_model = config_data['fix_model']
+        instance.temperature = config_data['temperature']
+        instance.max_repairs = config_data['max_repairs']
+        instance.test_delay = config_data['test_delay']
+        instance.prompt_path = config_data['prompt_path']
+        instance.shots = config_data['shots']
+        instance.desired_indices = config_data['desired_indices']
+        instance._validate_config()
+        return instance
+    
+    def _validate_config(self) -> None:
+        """Validate configuration values and types"""
+        if not isinstance(self.reasoning_method, str):
+            raise TypeError("reasoning_method must be a string")
+        if not isinstance(self.api_key, str):
+            raise TypeError("api_key must be a string")
+        if not isinstance(self.dataset, str):
+            raise TypeError("dataset must be a string")
+        if not isinstance(self.model, str):
+            raise TypeError("model must be a string")
+        if not isinstance(self.fix_model, str):
+            raise TypeError("fix_model must be a string")
+        if not isinstance(self.temperature, (int, float)) or self.temperature < 0:
+            raise ValueError("temperature must be a non-negative number")
+        if not isinstance(self.max_repairs, int) or self.max_repairs < 0:
+            raise ValueError("max_repairs must be a non-negative integer")
+        if not isinstance(self.test_delay, int) or self.test_delay < 0:
+            raise ValueError("test_delay must be a non-negative integer")
+        if not isinstance(self.shots, str) or self.shots not in ['zero', 'one', 'two', 'three']:
+            raise ValueError("shots must be a string in ['zero', 'one', 'two', 'three']")
+        if self.desired_indices is not None and not isinstance(self.desired_indices, list):
+            raise TypeError("desired_indices must be a list or None")
+    
+    def save_to_yaml(self, yaml_path: str) -> None:
+        """
+        Save current configuration to a YAML file
+        
+        Args:
+            yaml_path: Path where to save the YAML configuration file
+        """
+        # Create ordered dictionary matching __init__ parameter order
+        ordered_config = {
+            'dataset': self.dataset,
+            'test_file': self.test_file,
+            'reasoning_method': self.reasoning_method,
+            'api_key': self.api_key,
+            'model': self.model,
+            'fix_model': self.fix_model,
+            'temperature': self.temperature,
+            'max_repairs': self.max_repairs,
+            'test_delay': self.test_delay,
+            'prompt_path': self.prompt_path,
+            'shots': self.shots,
+            'desired_indices': self.desired_indices
+        }
+        
+        try:
+            with open(yaml_path, 'w', encoding='utf-8') as file:
+                yaml.dump(ordered_config, file, default_flow_style=False, indent=2)
+        except Exception as e:
+            raise IOError(f"Error saving configuration to {yaml_path}: {e}")
+    
+    def __str__(self) -> str:
+        """String representation of the configuration"""
+        return f"ReasonerConfig({self.__dict__})"
+    
+    def __repr__(self) -> str:
+        """Detailed string representation of the configuration"""
+        return self.__str__()
 
