@@ -52,7 +52,7 @@ The YAML configuration file contains all necessary parameters:
 dataset: "AR-LSAT"                                    # Dataset name to use
 test_file: "./data/AR-LSAT/blob/main/complete_lsat_data/test_ar.json"  # Test file path
 reasoning_method: "two-step"                          # Reasoning approach
-api_key: "YOUR_API_KEY_HERE"                         # Google API key for Gemini models
+api_key: "YOUR_API_KEY_HERE"                         # API key (see API Keys section below)
 model: "gemini-2.5-flash-preview-04-17"             # Primary model name
 fix_model: "gemini-2.5-flash-preview-04-17"         # Model for fixing/repair operations
 temperature: 0                                       # Temperature for generation (0.0 to 1.0)
@@ -62,6 +62,20 @@ prompt_path: "./prompts/AR-LSAT-prompts-two-step-partition/"  # Path to prompt t
 shots: "two"                                         # Number of examples ("zero", "one", "two", "three")
 desired_indices: [0]                                 # Specific test case indices to run (optional)
 ```
+
+## API Keys
+
+The system supports multiple model providers. Set the appropriate API key in your configuration:
+
+### For Gemini Models (Google)
+- Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Use models like: `gemini-2.5-flash-preview-04-17`, `gemini-1.5-pro`
+- Set `api_key: "YOUR_GOOGLE_API_KEY"`
+
+### For GPT Models (OpenAI)
+- Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+- Use models like: `gpt-4-0314`, `gpt-3.5-turbo`
+- Set `api_key: "YOUR_OPENAI_API_KEY"`
 
 ## Configuration Options
 
@@ -80,7 +94,7 @@ desired_indices: [0]                                 # Specific test case indice
 ### Models
 - `"gemini-2.5-flash-preview-04-17"` (default)
 - `"gemini-1.5-pro"`
-- Other Gemini models supported
+- `gpt-4-0314`
 
 ## Examples
 

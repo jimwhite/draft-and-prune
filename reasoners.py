@@ -6,6 +6,7 @@ import time
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Optional, Any, Union
 import uuid
+import openai
 
 from config import ReasonerConfig
 from data_loaders import DataLoader
@@ -23,7 +24,6 @@ class Reasoner(ABC):
                  data_loader: DataLoader,
                  answer_extractor: AnswerExtractor):
         """Initialize the reasoner with the given components"""
-        genai.configure(api_key=config.api_key)
         
         self.config = config
         self.data_loader = data_loader
@@ -39,11 +39,13 @@ class Reasoner(ABC):
             inter_test_case_delay=config.test_delay
         )
         
-        # Determine provider from model name
+        # Determine provider from model name and configure appropriate API
         if 'gemini' in config.model.lower():
             self.api_provider = "gemini"
+            genai.configure(api_key=config.api_key)
         elif 'gpt' in config.model.lower():
             self.api_provider = "gpt"
+            openai.api_key = config.api_key
         else:
             raise ValueError(f"Unsupported model: {config.model}")
             
@@ -64,7 +66,8 @@ class Reasoner(ABC):
 
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
-        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT/"
+        # append uuid to the results folder
+        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
             # return self.results_folder
