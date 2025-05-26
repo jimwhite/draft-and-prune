@@ -1,0 +1,98 @@
+# Example 1 (Problem Description, Plan, and Code Implementation):
+## Problem Description:
+Context: A cruise line is scheduling seven week-long voyages for the ship Freedom. Each voyage will occur in exactly one of the first seven weeks of the season: weeks 1 through 7. Each voyage will be to exactly one of four destinations: Guadeloupe, Jamaica, Martinique, or Trinidad. Each destination will be scheduled for at least one of the weeks. The following conditions apply to Freedom's schedule: Jamaica will not be its destination in week 4. Trinidad will be its destination in week 7. Freedom will make exactly two voyages to Martinique, and at least one voyage to Guadeloupe will occur in some week between those two voyages. Guadeloupe will be its destination in the week preceding any voyage it makes to Jamaica. No destination will be scheduled for consecutive weeks.
+Question: If Freedom makes a voyage to Martinique in week 3, which one of the following could be an accurate list of Freedom's destinations in week 4 and week 5, respectively?
+Answer Choices: [
+  "Guadeloupe, Trinidad",
+  "Jamaica, Guadeloupe",
+  "Martinique, Trinidad",
+  "Trinidad, Jamaica",
+  "Trinidad, Martinique"
+]
+## Plan:
+1. Entities:
+   - People: Alice (A=0), Bob (B=1), Charlie (C=2), David (D=3), Eve (E=4), Frank (F=5), Grace (G=6), Helen (H=7)
+   - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+   - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+   - `person_at_slot = Array('person_at_slot', IntSort(), IntSort())` - This array maps a composite slot_id to person_id. The slot_id is a composite of day and time, calculated as `day*2 + time`. So, Monday Morning becomes `0*2 + 0 = 0`, Monday Afternoon becomes `0*2 + 1 = 1`, Tuesday Morning becomes `1*2 + 0 = 2`, and so on.
+   - Individual variables for each slot, e.g., `MonM = Int('MonM')` - Person ID for Monday Morning slot. Similarly, define `MonA`, `TueM`, `TueA`, `WedM`, `WedA`, `ThuM`, `ThuA`, `FriM`, `FriA`.
+   - `slots_vars = [MonM, MonA, TueM, TueA, WedM, WedA, ThuM, ThuA, FriM, FriA]`
+
+## Code Implementation:
+from z3 import *
+
+# Define the variables
+students = [Int('student_%i' % i) for i in range(1, 6)]
+solver = Solver()
+
+# Add the constraints
+for student in students:
+    solver.add(And(student >= 1, student <= 5))  # Each student ranks between 1 and 5
+solver.add(Distinct(students))  # Each student has a unique rank
+
+# Add the constraints from the problem
+solver.add(students[0] < students[1])  # Student 1 is ranked higher than Student 2
+solver.add(students[1] < students[2])  # Student 2 is ranked higher than Student 3
+solver.add(students[3] < students[1])  # Student 4 is ranked higher than Student 2
+solver.add(students[3] < students[4])  # Student 4 is ranked higher than Student 5
+
+# Check each answer choice
+for i, student in enumerate(students):
+    solver.push()
+    solver.add(student == 1)  # This student is ranked first
+    if solver.check() == sat:
+        print('Option %s is correct' % chr(65 + i))  # Print the correct option
+        exit()
+    solver.pop()
+
+# Example 2 (Problem Description, Plan, and Code Implementation):
+## Problem Description:
+Context: A lighting control panel has exactly seven switches, numbered from 1 to 7. Each switch is either in the on position or in the off position. The circuit load of the panel is the total number of its switches that are on. The control panel must be configured in accordance with the following conditions: If switch 1 is on, then switch 3 and switch 5 are off. If switch 4 is on, then switch 2 and switch 5 are off. The switch whose number corresponds to the circuit load of the panel is itself on.
+Question: If switch 1 and switch 3 are both off, then which one of the following could be two switches that are both on?
+Answer Choices: [
+  "switch 2 and switch 7",
+  "switch 4 and switch 6",
+  "switch 4 and switch 7",
+  "switch 5 and switch 6",
+  "switch 6 and switch 7"
+]
+## Plan:
+1. **Analyze the Problem:**
+   - The problem is a scheduling problem where we need to assign students to slots.
+   - The context provides constraints on how the students can be assigned to slots.
+   - The question asks us to find a valid assignment of students to slots.
+
+2. **Identify Entities:**
+   - Students: We will map the students to integers for simplicity. Let's say Alice=0, Bob=1, Charlie=2, David=3, Eve=4, Frank=5, Grace=6, Helen=7.
+   - Slots: We will also map the slots to integers. Let's say Monday Morning=0, Monday Afternoon=1, Tuesday Morning=2, Tuesday Afternoon=3, Wednesday Morning=4, Wednesday Afternoon=5.
+
+## Code Implementation:
+from z3 import *
+
+# Define the variables
+students = [Int('student_%i' % i) for i in range(1, 6)]
+solver = Solver()
+
+# Add the constraints
+for student in students:
+    solver.add(And(student >= 1, student <= 5))  # Each student ranks between 1 and 5
+solver.add(Distinct(students))  # Each student has a unique rank
+
+# Add the constraints from the problem
+solver.add(students[0] < students[1])  # Student 1 is ranked higher than Student 2
+solver.add(students[1] < students[2])  # Student 2 is ranked higher than Student 3
+solver.add(students[3] < students[1])  # Student 4 is ranked higher than Student 2
+solver.add(students[3] < students[4])  # Student 4 is ranked higher than Student 5
+
+# Check each answer choice
+for i, student in enumerate(students):
+    solver.push()
+    solver.add(student == 1)  # The current student is ranked first
+    if solver.check() == sat:
+        print('Option %s is correct' % chr(65 + i))  # Print the correct answer choice
+        exit()
+    solver.pop()
+
+

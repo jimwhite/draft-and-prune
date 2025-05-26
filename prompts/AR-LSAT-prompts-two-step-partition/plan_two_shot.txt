@@ -1,0 +1,85 @@
+# Example 1:
+Context: A cruise line is scheduling seven week-long voyages for the ship Freedom. Each voyage will occur in exactly one of the first seven weeks of the season: weeks 1 through 7. Each voyage will be to exactly one of four destinations: Guadeloupe, Jamaica, Martinique, or Trinidad. Each destination will be scheduled for at least one of the weeks. The following conditions apply to Freedom's schedule: Jamaica will not be its destination in week 4. Trinidad will be its destination in week 7. Freedom will make exactly two voyages to Martinique, and at least one voyage to Guadeloupe will occur in some week between those two voyages. Guadeloupe will be its destination in the week preceding any voyage it makes to Jamaica. No destination will be scheduled for consecutive weeks.
+Question: If Freedom makes a voyage to Martinique in week 3, which one of the following could be an accurate list of Freedom's destinations in week 4 and week 5, respectively?
+Answer Choices: [
+  "Guadeloupe, Trinidad",
+  "Jamaica, Guadeloupe",
+  "Martinique, Trinidad",
+  "Trinidad, Jamaica",
+  "Trinidad, Martinique"
+]
+
+## Plan:
+1. Entities:
+   - People: Alice (A=0), Bob (B=1), Charlie (C=2), David (D=3), Eve (E=4), Frank (F=5), Grace (G=6), Helen (H=7)
+   - Days: Monday (0), Tuesday (1), Wednesday (2), Thursday (3), Friday (4)
+   - Times: Morning (0), Afternoon (1)
+
+2. Variables:
+   - `person_at_slot = Array('person_at_slot', IntSort(), IntSort())` - This array maps a composite slot_id to person_id. The slot_id is a composite of day and time, calculated as `day*2 + time`. So, Monday Morning becomes `0*2 + 0 = 0`, Monday Afternoon becomes `0*2 + 1 = 1`, Tuesday Morning becomes `1*2 + 0 = 2`, and so on.
+   - Individual variables for each slot, e.g., `MonM = Int('MonM')` - Person ID for Monday Morning slot. Similarly, define `MonA`, `TueM`, `TueA`, `WedM`, `WedA`, `ThuM`, `ThuA`, `FriM`, `FriA`.
+   - `slots_vars = [MonM, MonA, TueM, TueA, WedM, WedA, ThuM, ThuA, FriM, FriA]`
+
+3. Constraints:
+   - Constraint 0 (Domain for individual vars): For all `s` in `slot_vars`, `And(s >= 0, s <= 7)`. Here `s` refers to Python iteration over `slot_vars`.
+   - Constraint 1 (Distinctness for individual vars): `Distinct(slot_vars)` - Exactly 10 different people report.
+   - Constraint 2 (Alice's Schedule): `MonM != A`, `MonA != A`, `TueM != A`, `TueA != A`, `WedM != A`, `WedA != A` - Alice (ID 0) only reports on Thursday and Friday.
+   - Constraint 3 (Bob's Schedule): `TueM != B`, `TueA != B`, `WedM != B`, `WedA != B`, `ThuM != B`, `ThuA != B`, `FriM != B`, `FriA != B` - Bob (ID 1) only reports on Monday.
+   - Constraint 4 (Charlie's Schedule): `MonM != C`, `MonA != C`, `TueM != C`, `TueA != C`, `ThuM != C`, `ThuA != C`, `FriM != C`, `FriA != C` - Charlie (ID 2) only reports on Wednesday.
+   - Constraint 5 (David's Schedule): `MonM != D`, `MonA != D`, `WedM != D`, `WedA != D`, `ThuM != D`, `ThuA != D`, `FriM != D`, `FriA != D` - David (ID 3) only reports on Tuesday.
+   - Constraint 6 (Eve's Schedule): `MonM != E`, `MonA != E`, `TueM != E`, `TueA != E`, `WedM != E`, `WedA != E`, `FriM != E`, `FriA != E` - Eve (ID 4) only reports on Thursday.
+   - Constraint 7 (Frank's Schedule): `MonM != F`, `MonA != F`, `TueM != F`, `TueA != F`, `WedM != F`, `WedA != F`, `ThuM != F`, `ThuA != F` - Frank (ID 5) only reports on Friday.
+   - Constraint 8 (Grace's Schedule): `TueM != G`, `TueA != G`, `WedM != G`, `WedA != G`, `ThuM != G`, `ThuA != G`, `FriM != G`, `FriA != G` - Grace (ID 6) only reports on Monday.
+   - Constraint 9 (Helen's Schedule): `MonM != H`, `MonA != H`, `TueM != H`, `TueA != H`, `WedM != H`, `WedA != H`, `ThuM != H`, `ThuA != H` - Helen (ID 7) only reports on Friday.
+
+4. Answering the Question:
+   - Create a base Z3 solver with all general constraints.
+   - For each answer choice (A, B, C, D, E):
+     - Push the solver state.
+     - Add temporary constraints representing the schedule proposed in the choice. For example, for Choice A: add `MonM == A_ID`, `MonA == B_ID`, `TueM == C_ID`, `TueA == D_ID`, `WedM == E_ID`, `WedA == F_ID`, `ThuM == G_ID`, `ThuA == H_ID`, `FriM == A_ID`, `FriA == B_ID`.
+     - Check `solver.check()`. If sat, this is the correct answer. Print the corresponding letter (A, B, ...) and stop.
+     - Pop the solver state.
+
+# Example 2:
+Context: A lighting control panel has exactly seven switches, numbered from 1 to 7. Each switch is either in the on position or in the off position. The circuit load of the panel is the total number of its switches that are on. The control panel must be configured in accordance with the following conditions: If switch 1 is on, then switch 3 and switch 5 are off. If switch 4 is on, then switch 2 and switch 5 are off. The switch whose number corresponds to the circuit load of the panel is itself on.
+Question: If switch 1 and switch 3 are both off, then which one of the following could be two switches that are both on?
+Answer Choices: [
+  "switch 2 and switch 7",
+  "switch 4 and switch 6",
+  "switch 4 and switch 7",
+  "switch 5 and switch 6",
+  "switch 6 and switch 7"
+]
+
+## Plan:
+1. **Analyze the Problem:**
+   - The problem is a scheduling problem where we need to assign students to slots.
+   - The context provides constraints on how the students can be assigned to slots.
+   - The question asks us to find a valid assignment of students to slots.
+
+2. **Identify Entities:**
+   - Students: We will map the students to integers for simplicity. Let's say Alice=0, Bob=1, Charlie=2, David=3, Eve=4, Frank=5, Grace=6, Helen=7.
+   - Slots: We will also map the slots to integers. Let's say Monday Morning=0, Monday Afternoon=1, Tuesday Morning=2, Tuesday Afternoon=3, Wednesday Morning=4, Wednesday Afternoon=5.
+
+3. **Define Variables:**
+   - We will define a Z3 array `student_at_slot = Array('student_at_slot', IntSort(), IntSort())`. This array maps a slot (represented by an integer) to a student (also represented by an integer). For example, `student_at_slot[0]` represents the student assigned to the Monday Morning slot.
+
+4. **Formulate Constraints:**
+   - Constraint 1 (Domain): For all `i` in range(6), `And(student_at_slot[i] >= 0, student_at_slot[i] <= 7)`. This ensures that each slot is assigned a valid student ID.
+   - Constraint 2 (Distinctness): `Distinct([student_at_slot[i] for i in range(6)])`. This ensures that each student is assigned to exactly one slot.
+   - Constraint 3 (Alice's Schedule): `And(student_at_slot[0] != 0, student_at_slot[1] != 0)`. This ensures that Alice does not report on Monday.
+   - Constraint 4 (Bob's Schedule): `And(student_at_slot[2] != 1, student_at_slot[3] != 1)`. This ensures that Bob does not report on Tuesday.
+   - Constraint 5 (Charlie's Schedule): `And(student_at_slot[4] != 2, student_at_slot[5] != 2)`. This ensures that Charlie does not report on Wednesday.
+   - Constraint 6 (David and Eve's Schedule): `ForAll([i, j], Implies(And(student_at_slot[i] == 3, student_at_slot[j] == 4), i != j))`. This ensures that if David and Eve are scheduled, they are in different slots.
+   - Constraint 7 (Frank and Grace's Schedule): `ForAll([i, j], Implies(And(student_at_slot[i] == 5, student_at_slot[j] == 6), i != j))`. This ensures that if Frank and Grace are scheduled, they are in different slots.
+   - Constraint 8 (Helen's Schedule): `student_at_slot[5] == 7`. This ensures that Helen reports on Wednesday afternoon.
+
+5. **Answering the Question:**
+   - We will create a Z3 solver and add all the constraints to it.
+   - For each answer choice, we will:
+     - Push the solver state.
+     - Add temporary constraints representing the schedule proposed in the choice. For example, for Choice A, we will add `student_at_slot[0] == 0`, `student_at_slot[1] == 1`, etc.
+     - Check if the solver is satisfiable. If it is, this is the correct answer. We will print the corresponding letter (A, B, etc.) and stop.
+     - If the solver is not satisfiable, we will pop the solver state and move on to the next choice.
+
+
