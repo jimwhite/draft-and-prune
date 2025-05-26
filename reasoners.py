@@ -5,9 +5,10 @@ import os
 import time
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Optional, Any, Union
+import uuid
 
 from config import ReasonerConfig
-from data_loaders import DatasetLoader
+from data_loaders import DataLoader
 from answer_extractors import AnswerExtractor
 from call_api import APIConfig, get_api_client
 import subprocess
@@ -19,7 +20,7 @@ class Reasoner(ABC):
     
     def __init__(self, 
                  config: ReasonerConfig,
-                 data_loader: DatasetLoader,
+                 data_loader: DataLoader,
                  answer_extractor: AnswerExtractor):
         """Initialize the reasoner with the given components"""
         genai.configure(api_key=config.api_key)
@@ -32,26 +33,26 @@ class Reasoner(ABC):
 
         # Initialize API client
         api_config = APIConfig(
-            model_name=config.model_name,
+            model_name=config.model,
             temperature=config.temperature,
             max_repairs=config.max_repairs,
-            inter_test_case_delay=config.inter_test_case_delay
+            inter_test_case_delay=config.test_delay
         )
         
         # Determine provider from model name
-        if 'gemini' in config.model_name.lower():
+        if 'gemini' in config.model.lower():
             self.api_provider = "gemini"
-        elif 'gpt' in config.model_name.lower():
+        elif 'gpt' in config.model.lower():
             self.api_provider = "gpt"
         else:
-            raise ValueError(f"Unsupported model: {config.model_name}")
+            raise ValueError(f"Unsupported model: {config.model}")
             
         self.api_client = get_api_client(self.api_provider, api_config)
         fix_api_config = APIConfig(
-            model_name=config.fix_model_name,
+            model_name=config.fix_model,
             temperature=config.temperature,
             max_repairs=config.max_repairs,
-            inter_test_case_delay=config.inter_test_case_delay
+            inter_test_case_delay=config.test_delay
         )
         self.fix_api_client = get_api_client(self.api_provider, fix_api_config)
 
@@ -63,7 +64,7 @@ class Reasoner(ABC):
 
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
-        self.results_folder = f"results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model_name}-{self.config.shots}_shot_CoT/"
+        self.results_folder = f"results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT/"
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
             # return self.results_folder
@@ -88,62 +89,28 @@ class Reasoner(ABC):
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
         """Process the results of a single test case"""
         pass
-    
-    def get_processed_cases(self) -> List[str]:
-        """Get the list of processed cases"""
-        processed_cases = []
-        # summary_filepath
-        if os.path.exists(self.summary_filepath):
-            with open(self.summary_filepath, "r") as f:
-                try:
-                    results_array = json.load(f)
-                    for result in results_array:
-                        processed_cases.append(result["problem"]["id_string"])
-                except json.JSONDecodeError:
-                    # Empty file or not valid JSON array yet
-                    pass
-        return processed_cases
 
     def run_all_tests(self) -> None:
         """Run reasoning on all test cases in the file with optional limit"""
         start_time_total = time.time()
-
-        # Load test cases
-        test_cases = self.data_loader.load_data(self.config.data_path)
-
-        # Filter out already processed cases and apply limit
-        if self.config.limit is not None:
-            cases_to_process = test_cases[:self.config.limit]
-        else:
-            cases_to_process = test_cases
-
-        # filter out cases that have already been processed
-        processed_cases = self.get_processed_cases()
-        cases_to_process = [case for case in cases_to_process if case['id_string'] not in processed_cases]
-        print(f"Processed {len(processed_cases)} test cases")
-        print(f"Processing {len(cases_to_process)} test cases")
-        
-        # Process each test case
         processed_count = 0
-        for i, test_case in enumerate(cases_to_process):
-            print(f"\n\n{'='*40} Processing Test Case {processed_count + 1}/{len(cases_to_process)} {'='*40}")
-            print(f"\nAttempting reasoning")
+        for i, batch in enumerate(self.data_loader):
             # Start timing for this test case
             start_time_case = time.time()
             
             # Apply reasoning
-            reasoning_result = self.reason(test_case)
+            reasoning_result = self.reason(batch[0])
 
             # Calculate total case time
             case_time = time.time() - start_time_case            
             
-            self._process_results(test_case, reasoning_result, case_time)
+            self._process_results(batch[0], reasoning_result, case_time)
 
             # Increment counter and delay before next test
             processed_count += 1
-            if processed_count < len(cases_to_process):  # Avoid delay after the last item
-                print(f"Waiting {self.config.inter_test_case_delay}s before next test case...")
-                time.sleep(self.config.inter_test_case_delay)
+            if processed_count < len(self.data_loader):  # Avoid delay after the last item
+                print(f"Waiting {self.config.test_delay}s before next test case...")
+                time.sleep(self.config.test_delay)
 
         # Calculate total execution time
         total_execution_time = time.time() - start_time_total
@@ -210,23 +177,22 @@ class TwoStepReasoner(Reasoner):
 
     def __init__(self, 
                  config: ReasonerConfig,
-                 data_loader: DatasetLoader,
+                 data_loader: DataLoader,
                  answer_extractor: AnswerExtractor):
         super().__init__(config, data_loader, answer_extractor)
 
     def get_plan_prompt(self, test_case, feedback=None):
         """Get the plan generation prompt with the given inputs."""
         # load the plan generation prompt
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
-        base_prompt_path = os.path.join(dataset_prompt_path, "plan_base.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "plan_base.txt")
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
         if self.config.shots == "zero":
             shot_prompt = ""
         else:
-            shot_path = os.path.join(dataset_prompt_path, f"plan_{self.config.shots}_shot.txt")
+            shot_path = os.path.join(self.config.prompt_path, f"plan_{self.config.shots}_shot.txt")
             with open(shot_path, "r") as file:
                 shot_prompt = file.read()
 
@@ -254,10 +220,9 @@ class TwoStepReasoner(Reasoner):
     def fix_semantic_errors(self, test_case, plan):
         """Fix the semantic errors in the plan with the given inputs."""
         # load the plan feedback prompt
-        print(f"Using {self.config.fix_model_name} to fix the semantic errors in the plan")
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
+        print(f"Using {self.config.fix_model} to fix the semantic errors in the plan")
         
-        base_prompt_path = os.path.join(dataset_prompt_path, "fix_semantic_errors.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "fix_semantic_errors.txt")
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
@@ -274,16 +239,15 @@ class TwoStepReasoner(Reasoner):
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
-        dataset_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/")
         
-        base_prompt_path = os.path.join(dataset_prompt_path, "code_base.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "code_base.txt")
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
         if self.config.shots == "zero":
             shot_prompt = ""
         else:
-            shot_path = os.path.join(dataset_prompt_path, f"code_{self.config.shots}_shot.txt")
+            shot_path = os.path.join(self.config.prompt_path, f"code_{self.config.shots}_shot.txt")
 
             with open(shot_path, "r") as file:
                 shot_prompt = file.read()
@@ -314,7 +278,7 @@ class TwoStepReasoner(Reasoner):
     def fix_syntax_errors(self, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
-        base_prompt_path = os.path.join(os.path.dirname(__file__), f"{self.config.dataset}-prompts-two-step-partition/fix_syntax_errors.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
 
@@ -400,11 +364,17 @@ class TwoStepReasoner(Reasoner):
         if not os.path.exists(code_folder):
             os.makedirs(code_folder)
 
-        plan_filepath = os.path.join(plan_folder, f"{test_case['id_string']}.txt")
+        # get the problem name from the id_string if it exists, otherwise use the id_string
+        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        
+        # Generate unique UUID for this plan and code
+        unique_id = str(uuid.uuid4())
+        
+        plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}.txt")
         with open(plan_filepath, "w") as f:
             f.write(reasoning_result["plan"])
             
-        code_filepath = os.path.join(code_folder, f"{test_case['id_string']}.py")
+        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
         with open(code_filepath, "w") as f:
             f.write(reasoning_result["code"])
 
