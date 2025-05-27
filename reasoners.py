@@ -38,7 +38,6 @@ class Reasoner(ABC):
             max_repairs=config.max_repairs,
             inter_test_case_delay=config.test_delay
         )
-        
         # Determine provider from model name and configure appropriate API
         if 'gemini' in config.model.lower():
             self.api_provider = "gemini"
@@ -48,15 +47,26 @@ class Reasoner(ABC):
             openai.api_key = config.api_key
         else:
             raise ValueError(f"Unsupported model: {config.model}")
-            
         self.api_client = get_api_client(self.api_provider, api_config)
-        fix_api_config = APIConfig(
-            model_name=config.fix_model,
-            temperature=config.temperature,
-            max_repairs=config.max_repairs,
-            inter_test_case_delay=config.test_delay
-        )
-        self.fix_api_client = get_api_client(self.api_provider, fix_api_config)
+        
+        if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
+            fix_api_config = APIConfig(
+                model_name=config.fix_model,
+                temperature=config.temperature,
+                max_repairs=config.max_repairs,
+                inter_test_case_delay=config.test_delay
+            )
+            # Determine provider for fix model separately
+            if 'gemini' in config.fix_model.lower():
+                fix_api_provider = "gemini"
+                genai.configure(api_key=config.fix_api_key)
+            elif 'gpt' in config.fix_model.lower():
+                fix_api_provider = "gpt"
+                openai.api_key = config.fix_api_key
+            else:
+                raise ValueError(f"Unsupported fix model: {config.fix_model}")
+            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config)
+        
 
     @abstractmethod
     def reason(self, test_case: Dict) -> Dict:
@@ -67,7 +77,7 @@ class Reasoner(ABC):
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
         # append uuid to the results folder
-        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-{self.config.model}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
+        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-generate-with-{self.config.model}-fix-with-{self.config.fix_model}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
             # return self.results_folder
@@ -401,6 +411,154 @@ class TwoStepReasoner(Reasoner):
             "problem": test_case,
             "solver_output": reasoning_result["solver_output"],
             # "reasoning_result": reasoning_result,
+            "error_type": error_type,
+            "success": is_correct,
+            "timing": case_time
+        }
+
+        # Append results to summary as a JSON array
+        try:
+            results_array = []
+            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
+                with open(self.summary_filepath, "r") as f:
+                    try:
+                        results_array = json.load(f)
+                    except json.JSONDecodeError:
+                        # If not a valid JSON, start with an empty array
+                        results_array = []
+            
+            # Add new result to array
+            results_array.append(results)
+            
+            # Write back the entire array
+            with open(self.summary_filepath, "w") as f:
+                json.dump(results_array, f, indent=2)
+        except Exception as e:
+            print(f"Error saving results to {self.summary_filepath}: {e}")
+
+
+class DirectReasoner(Reasoner):
+    """Direct reasoning approach - generates Z3 code in one step"""
+
+    def __init__(self, 
+                 config: ReasonerConfig,
+                 data_loader: DataLoader,
+                 answer_extractor: AnswerExtractor):
+        super().__init__(config, data_loader, answer_extractor)
+
+    def get_direct_prompt(self, test_case, feedback=None):
+        """Get the direct code generation prompt with the given inputs."""
+        # Load the direct prompt from the specified path
+        prompt_path = "/home/zhiyu/Partitioned-Neural-Symbolic-Reasoning/prompts/AR-LSAT-prompts-one-step/prompt.txt"
+        
+        with open(prompt_path, "r") as file:
+            DIRECT_PROMPT = file.read()
+
+        # Pre-format the answers with json.dumps
+        if self.config.dataset == "AR-LSAT":
+            context = test_case["context"]
+            question = test_case["question"]
+            answers = test_case["answers"]
+            
+            # Format the prompt with the test case data
+            prompt = DIRECT_PROMPT.format(
+                context=context,
+                question=question,
+                answers=answers  # The prompt template uses json.dumps(answers, indent=2) internally
+            )
+        
+        return prompt
+
+    def fix_syntax_errors(self, code, syntax_error):
+        """Get the fix generation prompt with the given inputs."""
+        # load the fix generation prompt
+        base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
+        with open(base_prompt_path, "r") as file:
+            FIX_GENERATION_PROMPT = file.read()
+
+        prompt = FIX_GENERATION_PROMPT.format(
+            code=code,
+            syntax_error=syntax_error
+        )
+        return prompt
+    
+    def reason(self, test_case: Dict) -> Dict:
+        """Generate Z3 code directly in one step and execute it"""
+        current_code = None
+        solver_output = None
+        code_feedback = None
+
+        # Generate code directly
+        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
+        current_code = self._call_api(direct_prompt)
+        current_code = self.clean_code(current_code)
+        print("\nGenerated Z3 Python code:")
+        print("=" * 80)
+        print(current_code)
+        print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = self.execute_z3_code(current_code)
+            if not is_valid:
+                print(f"\nZ3 code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(current_code, syntax_errors[-1])  # Use latest error
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed Z3 Python code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print("Z3 code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+            
+        return {
+            "code": current_code,
+            "solver_output": solver_output,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+        
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        # save the "code" to the results_folder
+        code_folder = os.path.join(self.results_folder, "code")
+        if not os.path.exists(code_folder):
+            os.makedirs(code_folder)
+
+        # get the problem name from the id_string if it exists, otherwise use the id_string
+        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        
+        # Generate unique UUID for this code
+        unique_id = str(uuid.uuid4())
+        
+        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
+        with open(code_filepath, "w") as f:
+            f.write(reasoning_result["code"])
+
+        # Interpret results
+        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+        
+        # Check if an answer was selected
+        if is_correct:
+            print(f"\nReasoning PASSED. Error type: {error_type}")
+        else:
+            print(f"\nReasoning FAILED. Error type: {error_type}")
+
+        # Record result
+        results = {
+            "problem": test_case,
+            "solver_output": reasoning_result["solver_output"],
             "error_type": error_type,
             "success": is_correct,
             "timing": case_time

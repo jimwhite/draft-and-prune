@@ -13,7 +13,8 @@ class ReasonerConfig:
                  reasoning_method: str = None,
                  api_key: str = None,
                  model: str = "gemini-2.5-flash-preview-04-17", 
-                 fix_model: str = "gemini-2.5-flash-preview-04-17",
+                 fix_model: str = None,
+                 fix_api_key: str = None,
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
                  test_delay: int = 5,
@@ -43,6 +44,7 @@ class ReasonerConfig:
         self.api_key = api_key
         self.model = model
         self.fix_model = fix_model
+        self.fix_api_key = fix_api_key
         self.temperature = temperature
         self.max_repairs = max_repairs
         self.test_delay = test_delay
@@ -85,7 +87,10 @@ class ReasonerConfig:
         instance.reasoning_method = config_data['reasoning_method']
         instance.api_key = config_data['api_key']
         instance.model = config_data['model']
-        instance.fix_model = config_data['fix_model']
+        if config_data.get('fix_model'):
+            instance.fix_model = config_data['fix_model']
+        if config_data.get('fix_api_key'):
+            instance.fix_api_key = config_data['fix_api_key']
         instance.temperature = config_data['temperature']
         instance.max_repairs = config_data['max_repairs']
         instance.test_delay = config_data['test_delay']
@@ -107,6 +112,8 @@ class ReasonerConfig:
             raise TypeError("model must be a string")
         if not isinstance(self.fix_model, str):
             raise TypeError("fix_model must be a string")
+        if self.fix_api_key is not None and not isinstance(self.fix_api_key, str):
+            raise TypeError("fix_api_key must be a string")
         if not isinstance(self.temperature, (int, float)) or self.temperature < 0:
             raise ValueError("temperature must be a non-negative number")
         if not isinstance(self.max_repairs, int) or self.max_repairs < 0:
@@ -132,7 +139,8 @@ class ReasonerConfig:
             'reasoning_method': self.reasoning_method,
             'api_key': self.api_key,
             'model': self.model,
-            'fix_model': self.fix_model,
+            'fix_model': self.fix_model if self.fix_model is not None else None,
+            'fix_api_key': self.fix_api_key if self.fix_api_key is not None else None,
             'temperature': self.temperature,
             'max_repairs': self.max_repairs,
             'test_delay': self.test_delay,

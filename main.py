@@ -2,7 +2,7 @@
 # import argparse
 # from datetime import datetime
 from config import ReasonerConfig
-from reasoners import TwoStepReasoner
+from reasoners import TwoStepReasoner, DirectReasoner
 from data_loaders import DataLoader, Sampler, AR_LSAT_Dataset
 from answer_extractors import AR_LSAT_AnswerExtractor
 import os
@@ -28,8 +28,8 @@ def main():
     
     # Create reasoner based on reasoning method
     if config.reasoning_method == "one-step":
-        # reasoner = DirectReasoner(config, data_loader, answer_extractor)
-        raise ValueError(f"Unsupported reasoning method: {config.reasoning_method}")
+        reasoner = DirectReasoner(config, dataloader, answer_extractor)
+        # raise ValueError(f"Unsupported reasoning method: {config.reasoning_method}")
     elif config.reasoning_method == "two-step":
         reasoner = TwoStepReasoner(config, dataloader, answer_extractor)
     elif config.reasoning_method == "three-step":
