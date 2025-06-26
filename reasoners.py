@@ -38,17 +38,29 @@ class Reasoner(ABC):
             max_repairs=config.max_repairs,
             inter_test_case_delay=config.test_delay
         )
-        # Determine provider from model name and configure appropriate API
-        if 'gemini' in config.model.lower():
+
+        azure_params = {}
+        if config.azure_endpoint:  # Check if Azure configuration is present
+            self.api_provider = "azure-openai"
+            azure_params = {
+                'endpoint': config.azure_endpoint,
+                'deployment': config.azure_deployment,
+                'managed_identity_client_id': config.azure_managed_identity_client_id
+            }
+            # For Azure, api_key in config is not used for client init directly
+        elif 'gemini' in config.model.lower():
             self.api_provider = "gemini"
             genai.configure(api_key=config.api_key)
         elif 'gpt' in config.model.lower():
             self.api_provider = "gpt"
+            # For standard GPT, API key is set globally for the openai library
             openai.api_key = config.api_key
         else:
-            raise ValueError(f"Unsupported model: {config.model}")
-        self.api_client = get_api_client(self.api_provider, api_config)
+            raise ValueError(f"Unsupported model or configuration: {config.model}")
         
+        self.api_client = get_api_client(self.api_provider, api_config, **azure_params)
+        
+        # Initialize fix_api_client if needed
         if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
             fix_api_config = APIConfig(
                 model_name=config.fix_model,
@@ -56,16 +68,26 @@ class Reasoner(ABC):
                 max_repairs=config.max_repairs,
                 inter_test_case_delay=config.test_delay
             )
+            
+            fix_azure_params = {}
             # Determine provider for fix model separately
-            if 'gemini' in config.fix_model.lower():
+            if config.azure_endpoint: # Assuming fix model also uses Azure if primary does
+                fix_api_provider = "azure-openai"
+                fix_azure_params = {
+                    'endpoint': config.azure_endpoint, # Use same endpoint
+                    'deployment': config.fix_model,    # Deployment name might be same as model or different
+                    'managed_identity_client_id': config.azure_managed_identity_client_id
+                }
+            elif 'gemini' in config.fix_model.lower():
                 fix_api_provider = "gemini"
-                genai.configure(api_key=config.fix_api_key)
+                # Ensure fix_api_key is used if available, otherwise fallback to primary api_key
+                genai.configure(api_key=config.fix_api_key if config.fix_api_key else config.api_key)
             elif 'gpt' in config.fix_model.lower():
                 fix_api_provider = "gpt"
-                openai.api_key = config.fix_api_key
+                openai.api_key = config.fix_api_key if config.fix_api_key else config.api_key
             else:
                 raise ValueError(f"Unsupported fix model: {config.fix_model}")
-            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config)
+            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_azure_params)
         
 
     @abstractmethod
@@ -78,6 +100,8 @@ class Reasoner(ABC):
         """Create results folder based on model name"""
         # append uuid to the results folder
         self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-generate-with-{self.config.model}-fix-with-{self.config.fix_model}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
+        print(f"Results folder: {self.results_folder}")
+        
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
             # return self.results_folder
@@ -198,36 +222,21 @@ class TwoStepReasoner(Reasoner):
         """Get the plan generation prompt with the given inputs."""
         # load the plan generation prompt
         
-        base_prompt_path = os.path.join(self.config.prompt_path, "plan_base.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "plan.txt")
         with open(base_prompt_path, "r") as file:
-            base_prompt = file.read()
-        
-        if self.config.shots == "zero":
-            shot_prompt = ""
-        else:
-            shot_path = os.path.join(self.config.prompt_path, f"plan_{self.config.shots}_shot.txt")
-            with open(shot_path, "r") as file:
-                shot_prompt = file.read()
-
-        # concatenate the base prompt and the shot prompt
-        PLAN_GENERATION_PROMPT = base_prompt + shot_prompt
+            PLAN_GENERATION_PROMPT = file.read()
 
         # Pre-format the answers with json.dumps
         if self.config.dataset == "AR-LSAT":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
-            formatted_answers = json.dumps(answers, indent=2)
-            
-            prompt = PLAN_GENERATION_PROMPT.format(
-                context=context,
-                question=question,
-                formatted_answers=formatted_answers
-            )
-        
-        if feedback:
-            prompt += f"\n\n# Feedback on Previous Plan Attempt:\n{feedback}\n# Please Regenerate the Plan Based on This Feedback:"
-        
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{answers}", str(answers))
+        else:
+            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
         return prompt
 
     def fix_semantic_errors(self, test_case, plan):
@@ -253,42 +262,25 @@ class TwoStepReasoner(Reasoner):
         """Get the code generation prompt with the given inputs."""
         # load the code generation prompt
         
-        base_prompt_path = os.path.join(self.config.prompt_path, "code_base.txt")
+        base_prompt_path = os.path.join(self.config.prompt_path, "code.txt")
         with open(base_prompt_path, "r") as file:
-            base_prompt = file.read()
+            CODE_GENERATION_PROMPT = file.read()
         
-        if self.config.shots == "zero":
-            shot_prompt = ""
-        else:
-            shot_path = os.path.join(self.config.prompt_path, f"code_{self.config.shots}_shot.txt")
-
-            with open(shot_path, "r") as file:
-                shot_prompt = file.read()
-
-        # concatenate the base prompt and the shot prompt
-        CODE_GENERATION_PROMPT = base_prompt + shot_prompt
-
         # Pre-format the answers with json.dumps
         if self.config.dataset == "AR-LSAT":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
-            formatted_answers = json.dumps(answers, indent=2)
-
-            # Now format with the regular variables
-            prompt = CODE_GENERATION_PROMPT.format(
-                context=context,
-                question=question,
-                formatted_answers=formatted_answers,
-                plan=plan
-            )
-        
-        if feedback:
-            prompt += f"\n\n# Feedback on Previous Code Attempt (Based on the Plan):\n{feedback}\n# Please Correct the Code:"
+            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{answers}", str(answers))
+            prompt = prompt.replace("{plan}", plan)
+        else:
+            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
         
         return prompt 
 
-    def fix_syntax_errors(self, code, syntax_error):
+    def fix_syntax_errors(self, test_case, plan, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
@@ -296,6 +288,10 @@ class TwoStepReasoner(Reasoner):
             FIX_GENERATION_PROMPT = file.read()
 
         prompt = FIX_GENERATION_PROMPT.format(
+            context=test_case["context"],
+            question=test_case["question"],
+            answers=test_case["answers"],
+            plan=plan,
             code=code,
             syntax_error=syntax_error
         )
@@ -318,11 +314,11 @@ class TwoStepReasoner(Reasoner):
             print(current_plan)
             print("=" * 80)
 
-            current_plan = self.fix_semantic_errors(test_case, current_plan)
-            print("\nFixed plan:")
-            print("=" * 80)
-            print(current_plan)
-            print("=" * 80)
+            # current_plan = self.fix_semantic_errors(test_case, current_plan)
+            # print("\nFixed plan:")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
 
         if current_code is None or code_feedback:
             # Generate code
@@ -344,7 +340,7 @@ class TwoStepReasoner(Reasoner):
                 syntax_errors.append(solver_output)
             
                 # Generate fix
-                fix_prompt = self.fix_syntax_errors(current_code, syntax_errors)
+                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
                 print("Attempting to fix syntax errors...")
                 current_code = self._call_api(fix_prompt)
                 current_code = self.clean_code(current_code)
@@ -398,7 +394,7 @@ class TwoStepReasoner(Reasoner):
         # print("=" * 80)
         
         # Interpret results
-        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
         
         # Check if an answer was selected
         if is_correct:
@@ -449,7 +445,7 @@ class DirectReasoner(Reasoner):
     def get_direct_prompt(self, test_case, feedback=None):
         """Get the direct code generation prompt with the given inputs."""
         # Load the direct prompt from the specified path
-        prompt_path = "/home/zhiyu/Partitioned-Neural-Symbolic-Reasoning/prompts/AR-LSAT-prompts-one-step/prompt.txt"
+        prompt_path = os.path.join(self.config.prompt_path, "prompt.txt")
         
         with open(prompt_path, "r") as file:
             DIRECT_PROMPT = file.read()
@@ -460,26 +456,32 @@ class DirectReasoner(Reasoner):
             question = test_case["question"]
             answers = test_case["answers"]
             
-            # Format the prompt with the test case data
-            prompt = DIRECT_PROMPT.format(
-                context=context,
-                question=question,
-                answers=answers  # The prompt template uses json.dumps(answers, indent=2) internally
-            )
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = DIRECT_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{answers}", str(answers))
         
         return prompt
 
-    def fix_syntax_errors(self, code, syntax_error):
+    def fix_syntax_errors(self, test_case, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
 
-        prompt = FIX_GENERATION_PROMPT.format(
-            code=code,
-            syntax_error=syntax_error
-        )
+        if self.config.dataset == "AR-LSAT":
+            context = test_case["context"]
+            question = test_case["question"]
+            answers = test_case["answers"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{answers}", str(answers))
+            prompt = prompt.replace("{code}", code)
+            prompt = prompt.replace("{syntax_error}", syntax_error)
+        
         return prompt
     
     def reason(self, test_case: Dict) -> Dict:
@@ -507,7 +509,7 @@ class DirectReasoner(Reasoner):
                 syntax_errors.append(solver_output)
             
                 # Generate fix
-                fix_prompt = self.fix_syntax_errors(current_code, syntax_errors[-1])  # Use latest error
+                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
                 print("Attempting to fix syntax errors...")
                 current_code = self._call_api(fix_prompt)
                 current_code = self.clean_code(current_code)
@@ -547,7 +549,7 @@ class DirectReasoner(Reasoner):
             f.write(reasoning_result["code"])
 
         # Interpret results
-        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"])
+        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
         
         # Check if an answer was selected
         if is_correct:
@@ -579,6 +581,106 @@ class DirectReasoner(Reasoner):
             results_array.append(results)
             
             # Write back the entire array
+            with open(self.summary_filepath, "w") as f:
+                json.dump(results_array, f, indent=2)
+        except Exception as e:
+            print(f"Error saving results to {self.summary_filepath}: {e}")
+
+
+class CoTReasoner(Reasoner):
+    """Chain-of-Thought reasoning approach"""
+
+    def __init__(self,
+                 config: ReasonerConfig,
+                 data_loader: DataLoader,
+                 answer_extractor: AnswerExtractor):
+        super().__init__(config, data_loader, answer_extractor)
+
+    def get_cot_prompt(self, test_case: Dict) -> str:
+        """Get the CoT prompt with the given inputs."""
+        # Load the CoT prompt from the specified path
+        # Assuming the prompt path is relative to the project root or a known directory
+        # For example, using the path provided in the context
+        prompt_path = os.path.join(self.config.prompt_path, "prompt.txt")
+        
+        with open(prompt_path, "r") as file:
+            COT_PROMPT_TEMPLATE = file.read()
+
+        if self.config.dataset == "AR-LSAT":
+            context = test_case["context"]
+            question = test_case["question"]
+            answers = test_case["answers"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{answers}", str(answers))
+        else:
+            # Fallback or error for unsupported datasets
+            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner prompts.")
+        
+        return prompt
+
+    def reason(self, test_case: Dict) -> Dict:
+        """Generate reasoning using the CoT prompt"""
+        cot_prompt = self.get_cot_prompt(test_case)
+        
+        print("\nGenerating CoT reasoning:")
+        print("=" * 80)
+        # print(cot_prompt) # Optional: print the prompt for debugging
+        print("=" * 80)
+
+        reasoning_output = self._call_api(cot_prompt)
+        
+        print("\nGenerated CoT Output:")
+        print("=" * 80)
+        print(reasoning_output)
+        print("=" * 80)
+        
+        return {
+            "reasoning_output": reasoning_output
+        }
+
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        # Save the "reasoning_output" to the results_folder
+        reasoning_folder = os.path.join(self.results_folder, "reasoning")
+        if not os.path.exists(reasoning_folder):
+            os.makedirs(reasoning_folder)
+
+        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        
+        unique_id = str(uuid.uuid4())
+        
+        reasoning_filepath = os.path.join(reasoning_folder, f"{problem_name}-{unique_id}.txt")
+        with open(reasoning_filepath, "w") as f:
+            f.write(reasoning_result["reasoning_output"])
+
+        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        
+        if is_correct:
+            print(f"\nReasoning PASSED. Error type: {error_type}")
+        else:
+            print(f"\nReasoning FAILED. Error type: {error_type}")
+
+        results = {
+            "problem": test_case,
+            "reasoning_output": reasoning_result["reasoning_output"],
+            "error_type": error_type,
+            "success": is_correct,
+            "timing": case_time
+        }
+
+        try:
+            results_array = []
+            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
+                with open(self.summary_filepath, "r") as f:
+                    try:
+                        results_array = json.load(f)
+                    except json.JSONDecodeError:
+                        results_array = []
+            
+            results_array.append(results)
+            
             with open(self.summary_filepath, "w") as f:
                 json.dump(results_array, f, indent=2)
         except Exception as e:

@@ -1,0 +1,210 @@
+You are an expert Python programmer specializing in the Z3 SMT solver library.
+Your goal is to write executable Python Z3 code that precisely implements the provided plan to solve the given problem.
+Remember to only output the raw Python code.
+
+Problem:
+"On Tuesday Vladimir and Wendy … Wendy eats an omelet for lunch."
+Question:
+"Vladimir must eat which one of the following foods?"
+Choices:
+["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+Plan:
+"
+1. Enumerate the five possible foods and give them integer codes.
+2. Create four Int variables for Vladimir (breakfast, lunch, dinner, snack) and four for Wendy.
+3. Add domain constraints for each variable, reflecting the menu for that meal.
+4. Constrain Wendy's lunch variable to the code for omelet.
+5. Add no-repeat constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.
+6. Add no-same-meal constraints: for every meal index m, V[m] != W[m].
+7. To answer the question, iterate through the five food codes:
+   • For each code, assert that Vladimir never eats that food anywhere.
+   • If this assumption makes the model UNSAT, then that food is forced; record it and stop.
+8. Print/return the forced food as Vladimir's mandatory choice.
+"
+Z3 Program:
+```
+from z3 import *
+foods = ["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+(FISH, HOT, MAC, OME, POE) = range(5)
+
+# Meal variables: 0-breakfast, 1-lunch, 2-dinner, 3-snack
+V = [Int(f"V_{m}") for m in range(4)]
+W = [Int(f"W_{m}") for m in range(4)]
+s1 = Solver()
+
+# Domain constraints
+s1.add(Or(V[0] == HOT, V[0] == POE, V[0] == OME))
+s1.add(Or(V[1] == FISH, V[1] == HOT, V[1] == MAC, V[1] == OME))
+s1.add(Or(V[2] == FISH, V[2] == HOT, V[2] == MAC, V[2] == OME))
+s1.add(Or(V[3] == FISH, V[3] == OME))
+
+s1.add(Or(W[0] == HOT, W[0] == POE, W[0] == OME))
+s1.add(W[1] == OME)               # Wendy lunch
+s1.add(Or(W[2] == FISH, W[2] == HOT, W[2] == MAC, W[2] == OME))
+s1.add(Or(W[3] == FISH, W[3] == OME))
+
+# No repeats
+for i in range(4):
+    for j in range(i + 1, 4):
+        s1.add(V[i] != V[j], W[i] != W[j])
+
+# No same food in same meal
+for m in range(4):
+    s1.add(V[m] != W[m])
+
+# Find forced food
+must_eat = None
+for code, name in enumerate(foods):
+    s_chk = Solver()
+    s_chk.add(s1.assertions())
+    s_chk.add(And(*(V[k] != code for k in range(4))))
+    if s_chk.check() == unsat:
+        must_eat = code
+        break
+
+print(must_eat)
+```
+
+Problem:
+"In a repair facility there are exactly six technicians … Urma repairs exactly two types of machines."
+Question:
+"Which one of the following pairs of technicians could repair all and only the same types of machines as each other?"
+Choices:
+["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
+Plan:
+"
+1. List the six technicians and the three machine types {R,T,V}.  
+2. For every technician i and type j create a Boolean `t[i][j]` meaning "tech i repairs type j".  
+3. **At-least-one** constraint: for every technician, `R or T or V`.  
+4. Radio rule: set `t[Xena][R] = True`; constrain `Σ_{i} t[i][R] = 4` (Xena plus exactly three others).  
+5. Yolanda: force `T = True` and `V = True`.  
+6. Stacy avoids all Yolanda types: set `t[Stacy][T] = False`, `t[Stacy][V] = False`.  
+7. Zane repairs **more types** than Yolanda: `count(Zane) > count(Yolanda)`.  
+8. Wim shares **no** type with Stacy: for each j, `t[Stacy][j] → ¬t[Wim][j]`.  
+9. Urma repairs **exactly two** types: `count(Urma) = 2`.  
+10. For every answer choice (ordered list of pairs):  
+    a. Clone the base constraints into a fresh solver.  
+    b. Add `t[i][j] == t[k][j]` for all three j so the two named technicians have identical type sets.  
+    c. Check SAT; the first SAT pair is the valid answer.  
+11. Output that pair.
+"
+Z3 Program:
+```
+from z3 import *
+techs = ["Stacy", "Urma", "Wim", "Xena", "Yolanda", "Zane"]
+types = ["R", "T", "V"]
+
+t = [[Bool(f"{techs[i]}_{types[j]}") for j in range(3)] for i in range(6)]
+S, U, Wm, X, Y, Z = range(6)
+
+s2 = Solver()
+
+# Each tech repairs ≥1 type
+for i in range(6):
+    s2.add(Or(t[i][0], t[i][1], t[i][2]))
+
+# Radio rule
+s2.add(t[X][0])                                # Xena repairs R
+s2.add(Sum([If(t[i][0], 1, 0) for i in range(6)]) == 4)
+
+# Yolanda repairs T and V
+s2.add(t[Y][1], t[Y][2])
+
+# Stacy shares nothing with Yolanda
+s2.add(Not(t[S][1]), Not(t[S][2]))
+
+# Zane repairs more types than Yolanda
+count = lambda idx: Sum([If(t[idx][j], 1, 0) for j in range(3)])
+s2.add(count(Z) > count(Y))
+
+# Wim shares nothing with Stacy
+for j in range(3):
+    s2.add(Implies(t[S][j], Not(t[Wm][j])))
+
+# Urma exactly two types
+s2.add(count(U) == 2)
+
+pairs = [("Stacy and Urma", S, U),
+         ("Urma and Yolanda", U, Y),
+         ("Urma and Xena", U, X),
+         ("Wim and Xena", Wm, X),
+         ("Xena and Yolanda", X, Y)]
+
+answer = None
+for idx, (lbl, i, j) in enumerate(pairs):
+    sc = Solver();  sc.add(s2.assertions())
+    for k in range(3):
+        sc.add(t[i][k] == t[j][k])
+    if sc.check() == sat:
+        answer = idx
+        break
+
+print(answer)
+```
+
+Problem:
+"Workers at a water treatment plant open eight valves … I is opened after K."
+Question:
+"Each of the following could be the fifth valve opened EXCEPT:"
+Choices:
+["H", "I", "K", "N", "O"]
+Plan:
+"
+1. Enumerate the eight valves; create an `Int` variable `pos_V` for each, representing its opening position 1‥8.  
+2. Constrain all positions to be in 1‥8 and pairwise `Distinct`.  
+3. Encode the ordering rules:  
+    • `pos_K < pos_H`, `pos_P < pos_H`, `pos_N < pos_H`  
+    • `pos_H < pos_O < pos_L`  
+    • `pos_G < pos_L`  
+    • `pos_K < pos_I`  
+4. For every candidate valve v in the answer list:  
+    a. Clone the base constraints.  
+    b. Add `pos_v == 5`.  
+    c. If the model is UNSAT, then v **cannot** be fifth → that is the required "EXCEPT" answer.  
+5. Return the valve that makes the solver UNSAT.
+"
+Z3 Program:
+```
+from z3 import *
+valves = ["G", "H", "I", "K", "L", "N", "O", "P"]
+pos = {v: Int(f"pos_{v}") for v in valves}
+
+base = Solver()
+for v in valves:
+    base.add(pos[v] >= 1, pos[v] <= 8)
+base.add(Distinct(*pos.values()))
+
+base.add(pos["K"] < pos["H"])
+base.add(pos["P"] < pos["H"])
+base.add(pos["N"] < pos["H"])
+
+base.add(pos["H"] < pos["O"])
+base.add(pos["O"] < pos["L"])
+base.add(pos["G"] < pos["L"])
+
+base.add(pos["K"] < pos["I"])
+
+candidates = ["H", "I", "K", "N", "O"]
+not_possible = None
+for idx, v in enumerate(candidates):
+    sc = Solver(); sc.add(base.assertions())
+    sc.add(pos[v] == 5)
+    if sc.check() == unsat:
+        not_possible = idx
+        break
+
+print(not_possible)
+```
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{answers}
+Plan:
+{plan}
+Z3 Program:
+```
+
+```

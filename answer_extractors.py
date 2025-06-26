@@ -13,73 +13,87 @@ class AnswerExtractor(ABC):
 class AR_LSAT_AnswerExtractor(AnswerExtractor):
     """Answer extractor specifically tailored for AR-LSAT dataset format"""
     
-    def extract_answer(self, response_text: str, label: str) -> Tuple[bool, str]:
+    def extract_answer(self, response_text: str, label: str, answers: Optional[list] = None, reasoning_method: str = "cot") -> Tuple[bool, str]:
         """
         Extract answer from response text and check if it matches the correct label.
         
         Args:
             response_text: The model's response text containing reasoning and answer
-            label: The correct answer option (A, B, C, D, or E)
+            label: The correct answer option index (0, 1, 2, 3, 4) or letter (A, B, C, D, E)
+            answers: List of answer choices (optional, for content matching)
         
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
         """
         if 'Traceback' in response_text or 'error' in response_text:
             return False, 'syntax error'
-        
-        # Z3 pattern - "Option X is correct"
-        answer_match = re.search(r"Option\s+([A-E])\s+is\s+correct", response_text, re.IGNORECASE)
-        if answer_match:
-            chosen_option = answer_match.group(1)
-            # print(f"Answer match found: {chosen_option}")
-            
-            # Convert numeric label to letter if needed
-            if isinstance(label, int) or label.isdigit():
-                # Convert 0-based index to letter (0->A, 1->B, etc.)
-                label_idx = int(label)
-                label_letter = chr(ord('A') + label_idx)
-                is_correct = chosen_option == label_letter
-            else:
-                is_correct = chosen_option == label
-            
-            if is_correct:
-                return True, None
-            else:
-                return False, 'semantic error'
-        else:
-            return False, 'semantic error'
 
-# class CoTAnswerExtractor(AnswerExtractor):
-#     """Answer extractor for Chain-of-Thought style reasoning"""
-    
-#     def extract_answer(self, response_text: str) -> Tuple[Optional[str], Optional[str]]:
-#         if not response_text:
-#             return None, None
-                
-#         # CoT often concludes with simple statements like "Therefore, the answer is X"
-#         answer_match = re.search(r"(?:Therefore|Thus|Hence|So|In conclusion),?\s+(?:the )?(?:answer|option|choice) (?:is|should be|would be|must be)(?:\s*:)?\s*(?:option)?\s*([A-E])", 
-#                                 response_text, re.IGNORECASE)
+        # Convert label to index if it's a letter
+        if isinstance(label, str) and label.upper() in ['A', 'B', 'C', 'D', 'E']:
+            label_idx = ord(label.upper()) - ord('A')
+        elif isinstance(label, int) or label.isdigit():
+            label_idx = int(label)
+        else:
+            return False, 'invalid label format'
+
+        # CoT pattern "Conclusion: {answer}"
+        if reasoning_method == "cot":
+            cot_answer = self._extract_cot_conclusion(response_text, answers)
+            if cot_answer is not None:
+                # Find the index of the extracted answer in the choices
+                if answers is not None:
+                    for i, choice in enumerate(answers):
+                        if choice.strip() == cot_answer.strip():
+                            is_correct = i == label_idx
+                            if is_correct:
+                                return True, None
+                            else:
+                                return False, 'semantic error'
+                return False, 'answer not found in choices'
+
+        # Solver output pattern 'one of answer choices'
+        elif reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
+            if answers is not None:
+                response_clean = response_text.strip()
+                # Try to match by answer string
+                # for i, answer_choice in enumerate(answers):
+                #     if answer_choice.strip() == response_clean:
+                #         is_correct = i == label_idx
+                #         if is_correct:
+                #             return True, None
+                #         else:
+                #             return False, 'semantic error'
+                # Try to match by index (solver output is index as string or int)
+                if response_clean.isdigit():
+                    idx = int(response_clean)
+                    is_correct = idx == label_idx
+                    if 0 <= idx < len(answers):
+                        if is_correct:
+                            return True, None
+                        else:
+                            return False, 'semantic error'
         
-#         if answer_match:
-#             chosen_option = answer_match.group(1).upper()
-#             return response_text, chosen_option
+        return False, 'semantic error'
+
+    def _extract_cot_conclusion(self, response_text: str, answers: Optional[list] = None) -> Optional[str]:
+        """
+        Extract the chosen answer from CoT response text using various patterns.
+        """
+
+        # Define patterns to check in order of preference
+        patterns = [
+            (r"Final Answer:\s*\{([^}]+)\}", "Final Answer with braces"),
+            (r"Final Answer:\s*(.+)", "Final Answer without braces"),
+            (r"Conclusion:\s*\{([^}]+)\}", "Conclusion with braces"),
+            (r"Conclusion:\s*(.+)", "Conclusion without braces")
+        ]
         
-#         # Try with boxed format
-#         answer_match = re.search(r"\$\\boxed\{([A-E])\}\$", response_text)
-#         if answer_match:
-#             chosen_option = answer_match.group(1)
-#             return response_text, chosen_option
-            
-#         # Try to find a explicit statement in the last paragraph
-#         paragraphs = response_text.split('\n\n')
-#         if paragraphs:
-#             last_paragraph = paragraphs[-1]
-#             answer_match = re.search(r"(?:answer|option|choice) (?:is|should be|would be)(?:\s*:)?\s*([A-E])", 
-#                                     last_paragraph, re.IGNORECASE)
-#             if answer_match:
-#                 chosen_option = answer_match.group(1).upper()
-#                 return response_text, chosen_option
+        for pattern, description in patterns:
+            match = re.search(pattern, response_text, re.IGNORECASE)
+            if match:
+                extracted_answer = match.group(1).strip()
+                return extracted_answer
         
-#         # No matches found
-#         print(f"Warning: Could not find any answer pattern in the CoT response.")
-#         return response_text, None 
+        # No match found
+        return None
+

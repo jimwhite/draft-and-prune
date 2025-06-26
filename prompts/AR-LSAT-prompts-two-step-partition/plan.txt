@@ -1,0 +1,81 @@
+You are an expert in logical reasoning and SMT Z3 solver.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into Z3 constraints.
+Remember to only output the raw plan.
+
+Problem:
+"On Tuesday Vladimir and Wendy … Wendy eats an omelet for lunch."
+Question:
+"Vladimir must eat which one of the following foods?"
+Choices:
+["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+Plan:
+"
+1. Enumerate the five possible foods and give them integer codes.  
+2. Create four `Int` variables for Vladimir (breakfast, lunch, dinner, snack) and four for Wendy.  
+3. Add **domain constraints** for each variable, reflecting the menu for that meal.  
+4. Constrain Wendy's lunch variable to the code for *omelet*.  
+5. Add **no-repeat** constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.  
+6. Add **no-same-meal** constraints: for every meal index m, `V[m] != W[m]`.  
+7. To answer the question, iterate through the five food codes:  
+    • For each code, assert that Vladimir never eats that food anywhere.  
+    • If this assumption makes the model UNSAT, then that food is **forced**; record its index and stop.  
+8. Output the index of the forced food in the choices list.
+"
+
+Problem:
+"In a repair facility there are exactly six technicians … Urma repairs exactly two types of machines."
+Question:
+"Which one of the following pairs of technicians could repair all and only the same types of machines as each other?"
+Choices:
+["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
+Plan:
+"
+1. List the six technicians and the three machine types {R,T,V}.  
+2. For every technician i and type j create a Boolean `t[i][j]` meaning "tech i repairs type j".  
+3. **At-least-one** constraint: for every technician, `R or T or V`.  
+4. Radio rule: set `t[Xena][R] = True`; constrain `Σ_{i} t[i][R] = 4` (Xena plus exactly three others).  
+5. Yolanda: force `T = True` and `V = True`.  
+6. Stacy avoids all Yolanda types: set `t[Stacy][T] = False`, `t[Stacy][V] = False`.  
+7. Zane repairs **more types** than Yolanda: `count(Zane) > count(Yolanda)`.  
+8. Wim shares **no** type with Stacy: for each j, `t[Stacy][j] → ¬t[Wim][j]`.  
+9. Urma repairs **exactly two** types: `count(Urma) = 2`.  
+10. For every answer choice (ordered list of pairs):  
+    a. Clone the base constraints into a fresh solver.  
+    b. Add `t[i][j] == t[k][j]` for all three j so the two named technicians have identical type sets.  
+    c. Check SAT; the first SAT pair is the valid answer.  
+11. Output the index of the valid pair in the choices list.
+"
+
+Problem:
+"Workers at a water treatment plant open eight valves … I is opened after K."
+Question:
+"Each of the following could be the fifth valve opened EXCEPT:"
+Choices:
+["H", "I", "K", "N", "O"]
+Plan:
+"
+1. Enumerate the eight valves; create an `Int` variable `pos_V` for each, representing its opening position 1‥8.  
+2. Constrain all positions to be in 1‥8 and pairwise `Distinct`.  
+3. Encode the ordering rules:  
+    • `pos_K < pos_H`, `pos_P < pos_H`, `pos_N < pos_H`  
+    • `pos_H < pos_O < pos_L`  
+    • `pos_G < pos_L`  
+    • `pos_K < pos_I`  
+4. For every candidate valve v in the answer list:  
+    a. Clone the base constraints.  
+    b. Add `pos_v == 5`.  
+    c. If the model is UNSAT, then v **cannot** be fifth → that is the required 'EXCEPT' answer.  
+5. Output the index of the valve that makes the solver UNSAT in the choices list.
+"
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{answers}
+Plan:
+"
+"
+
+

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import time
+import os
 from typing import Optional, Tuple, Dict, Any
 from abc import ABC, abstractmethod
 import openai
 import google.generativeai as genai
+from openai import AzureOpenAI
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 
 class APIConfig:
     """Configuration class for API calls"""
@@ -114,11 +117,93 @@ class GPTClient(APIClient):
                 time.sleep(1.1) # Rate limiting delay
         return f"API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
 
-def get_api_client(provider: str, config: APIConfig) -> APIClient:
+class AzureOpenAIClient(APIClient):
+    """Client for Azure OpenAI API with Entra ID authentication"""
+    def __init__(self, config: APIConfig, endpoint: str = None, deployment: str = None, managed_identity_client_id: str = None):
+        super().__init__(config)
+        self.endpoint = endpoint or os.getenv("ENDPOINT_URL", "https://ai4mtest1.openai.azure.com/")
+        self.deployment = deployment or os.getenv("DEPLOYMENT_NAME", self.config.model_name)
+        self.managed_identity_client_id = managed_identity_client_id or os.getenv("MANAGED_IDENTITY_CLIENT_ID")
+        
+        # Initialize Azure OpenAI client with Entra ID authentication
+        if self.managed_identity_client_id:
+            credential = DefaultAzureCredential(managed_identity_client_id=self.managed_identity_client_id)
+        else:
+            credential = DefaultAzureCredential()
+        
+        token_provider = get_bearer_token_provider(credential, "https://cognitiveservices.azure.com/.default")
+        
+        # Map models to appropriate API versions
+        if self.config.model_name == "gpt-4o":
+            api_version="2025-01-01-preview"
+        elif self.config.model_name == "gpt-4o-mini":
+            api_version="2024-11-01-preview"
+        elif self.config.model_name == "gpt-4":
+            api_version="2024-02-01"  # Updated from 2023-05-15
+        elif self.config.model_name == "gpt-4-turbo":
+            api_version="2024-02-01"
+        elif self.config.model_name == "gpt-35-turbo" or self.config.model_name == "gpt-3.5-turbo":
+            api_version="2024-02-01"  # Updated from 2023-05-15
+        elif self.config.model_name == "gpt-35-turbo-16k" or self.config.model_name == "gpt-3.5-turbo-16k":
+            api_version="2024-02-01"
+        else:
+            # Default to a recent stable version for unknown models
+            api_version="2024-02-01"
+        
+        self.client = AzureOpenAI(
+            azure_endpoint=self.endpoint,
+            azure_ad_token_provider=token_provider,
+            api_version=api_version,
+        )
+    
+    def call(self, prompt: str) -> str:
+        """Call the Azure OpenAI API with error handling and retries"""
+        last_error = None
+        for attempt in range(self.config.max_repairs):
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.deployment,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=self.config.temperature,
+                    max_tokens=2048,
+                    top_p=0.95,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    stop=None,
+                    stream=False
+                )
+                
+                # Extract the content from the first choice
+                if response.choices and len(response.choices) > 0 and response.choices[0].message:
+                    return response.choices[0].message.content
+                else:
+                    error_message = "Azure OpenAI response was empty."
+                    print(f"Warning: {error_message}")
+                    last_error = error_message
+                    continue # Retry
+            except Exception as e:
+                error_message = f"Error in Azure OpenAI API call (attempt {attempt+1}/{self.config.max_repairs}): {str(e)}"
+                print(error_message)
+                last_error = error_message
+                if attempt == self.config.max_repairs - 1:
+                    return f"Azure OpenAI API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+                print(f"Waiting {2**(attempt+1)} seconds before retry...")
+                time.sleep(2**(attempt+1)) # Exponential backoff
+            finally:
+                time.sleep(1.1) # Rate limiting delay
+        return f"Azure OpenAI API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+
+def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
     """Factory function to get the appropriate API client based on provider"""
     if provider.lower() == "gemini":
         return GeminiClient(config)
     elif provider.lower() == "gpt":
         return GPTClient(config)
+    elif provider.lower() == "azure-openai" or provider.lower() == "azure":
+        # Extract Azure-specific parameters from kwargs
+        endpoint = kwargs.get('endpoint')
+        deployment = kwargs.get('deployment')
+        managed_identity_client_id = kwargs.get('managed_identity_client_id')
+        return AzureOpenAIClient(config, endpoint, deployment, managed_identity_client_id)
     else:
         raise ValueError(f"Unsupported API provider: {provider}") 

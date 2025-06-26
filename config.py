@@ -20,7 +20,11 @@ class ReasonerConfig:
                  test_delay: int = 5,
                  prompt_path: str = None,
                  shots: str = 'zero',
-                 desired_indices: list = None):
+                 desired_indices: list = None,
+                 # Azure OpenAI specific parameters
+                 azure_endpoint: str = None,
+                 azure_deployment: str = None,
+                 azure_managed_identity_client_id: str = None):
         """
         Initialize configuration either from parameters or will be loaded from YAML
         
@@ -37,6 +41,9 @@ class ReasonerConfig:
             prompt_path: Path to the prompt file
             shots: Number of shots for few-shot learning
             desired_indices: Desired indices to use
+            azure_endpoint: Azure OpenAI endpoint
+            azure_deployment: Azure OpenAI deployment
+            azure_managed_identity_client_id: Azure managed identity client ID
         """
         self.dataset = dataset
         self.test_file = test_file
@@ -51,6 +58,9 @@ class ReasonerConfig:
         self.prompt_path = prompt_path
         self.shots = shots
         self.desired_indices = desired_indices
+        self.azure_endpoint = azure_endpoint
+        self.azure_deployment = azure_deployment
+        self.azure_managed_identity_client_id = azure_managed_identity_client_id
     
     @classmethod
     def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
@@ -97,6 +107,10 @@ class ReasonerConfig:
         instance.prompt_path = config_data['prompt_path']
         instance.shots = config_data['shots']
         instance.desired_indices = config_data['desired_indices']
+        # Azure OpenAI fields are optional for backward compatibility
+        instance.azure_endpoint = config_data.get('azure_endpoint')
+        instance.azure_deployment = config_data.get('azure_deployment')
+        instance.azure_managed_identity_client_id = config_data.get('azure_managed_identity_client_id')
         instance._validate_config()
         return instance
     
@@ -124,6 +138,12 @@ class ReasonerConfig:
             raise ValueError("shots must be a string in ['zero', 'one', 'two', 'three']")
         if self.desired_indices is not None and not isinstance(self.desired_indices, list):
             raise TypeError("desired_indices must be a list or None")
+        if self.azure_endpoint is not None and not isinstance(self.azure_endpoint, str):
+            raise TypeError("azure_endpoint must be a string or None")
+        if self.azure_deployment is not None and not isinstance(self.azure_deployment, str):
+            raise TypeError("azure_deployment must be a string or None")
+        if self.azure_managed_identity_client_id is not None and not isinstance(self.azure_managed_identity_client_id, str):
+            raise TypeError("azure_managed_identity_client_id must be a string or None")
     
     def save_to_yaml(self, yaml_path: str) -> None:
         """
@@ -146,12 +166,15 @@ class ReasonerConfig:
             'test_delay': self.test_delay,
             'prompt_path': self.prompt_path,
             'shots': self.shots,
-            'desired_indices': self.desired_indices
+            'desired_indices': self.desired_indices,
+            'azure_endpoint': self.azure_endpoint,
+            'azure_deployment': self.azure_deployment,
+            'azure_managed_identity_client_id': self.azure_managed_identity_client_id
         }
         
         try:
             with open(yaml_path, 'w', encoding='utf-8') as file:
-                yaml.dump(ordered_config, file, default_flow_style=False, indent=2)
+                yaml.dump(ordered_config, file, default_flow_style=False, indent=2, sort_keys=False)
         except Exception as e:
             raise IOError(f"Error saving configuration to {yaml_path}: {e}")
     

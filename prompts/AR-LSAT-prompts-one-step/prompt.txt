@@ -1,100 +1,178 @@
-# Role and Goal:
 You are an expert in formal verification and SMT solving using the Python Z3 library.
-Your primary goal is to translate the given natural language problem into syntactically correct and logically sound Python Z3 code.
 
-# Task:
-Generate the Python Z3 code to solve the problem based on the guidelines above.
+Your primary goal is to translate the given natural language problem into syntactically and semantically correct Python Z3 program, consisting three parts: Declarations, Constraints, and Options.
+- Declarations: Declare the variables and functions.
+- Constraints: Write the constraints in the problem description.
+- Options: Write the options in the question.
+
 Remember to only output the raw Python code.
 
-## Context:
-A cruise line is scheduling seven week-long voyages for the ship Freedom. Each voyage will occur in exactly one of the first seven weeks of the season: weeks 1 through 7. Each voyage will be to exactly one of four destinations: Guadeloupe, Jamaica, Martinique, or Trinidad. Each destination will be scheduled for at least one of the weeks. The following conditions apply to Freedom's schedule: Jamaica will not be its destination in week 4. Trinidad will be its destination in week 7. Freedom will make exactly two voyages to Martinique, and at least one voyage to Guadeloupe will occur in some week between those two voyages. Guadeloupe will be its destination in the week preceding any voyage it makes to Jamaica. No destination will be scheduled for consecutive weeks.
-## Question:
-If Freedom makes a voyage to Martinique in week 3, which one of the following could be an accurate list of Freedom's destinations in week 4 and week 5, respectively?
-## Answer Choices:
-[
-  "Guadeloupe, Trinidad",
-  "Jamaica, Guadeloupe",
-  "Martinique, Trinidad",
-  "Trinidad, Jamaica",
-  "Trinidad, Martinique"
-]
-## Code Implementation:
+Problem:
+"On Tuesday Vladimir and Wendy each eat exactly four separate meals: breakfast, lunch, dinner, and a snack. The following is all that is known about what they eat during that day: At no meal does Vladimir eat the same kind of food as Wendy. Neither of them eats the same kind of food more than once during the day. For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelet. For lunch, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For dinner, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For a snack, each eats exactly one of the following: fish or omelet. Wendy eats an omelet for lunch."
+Question:
+"Vladimir must eat which one of the following foods?"
+Choices:
+["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+Z3 Program:
 ```
 from z3 import *
+foods = ["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+(FISH, HOT, MAC, OME, POE) = range(5)
 
-# Define the variables
-students = [Int('student_%i' % i) for i in range(1, 6)]
-solver = Solver()
+# Meal variables: 0-breakfast, 1-lunch, 2-dinner, 3-snack
+V = [Int(f"V_{m}") for m in range(4)]
+W = [Int(f"W_{m}") for m in range(4)]
+s1 = Solver()
 
-# Add the constraints
-for student in students:
-    solver.add(And(student >= 1, student <= 5))  # Each student ranks between 1 and 5
-solver.add(Distinct(students))  # Each student has a unique rank
+# Domain constraints
+s1.add(Or(V[0] == HOT, V[0] == POE, V[0] == OME))
+s1.add(Or(V[1] == FISH, V[1] == HOT, V[1] == MAC, V[1] == OME))
+s1.add(Or(V[2] == FISH, V[2] == HOT, V[2] == MAC, V[2] == OME))
+s1.add(Or(V[3] == FISH, V[3] == OME))
 
-# Add the constraints from the problem
-solver.add(students[0] < students[1])  # Student 1 is ranked higher than Student 2
-solver.add(students[1] < students[2])  # Student 2 is ranked higher than Student 3
-solver.add(students[3] < students[1])  # Student 4 is ranked higher than Student 2
-solver.add(students[3] < students[4])  # Student 4 is ranked higher than Student 5
+s1.add(Or(W[0] == HOT, W[0] == POE, W[0] == OME))
+s1.add(W[1] == OME)                                                # Wendy lunch
+s1.add(Or(W[2] == FISH, W[2] == HOT, W[2] == MAC, W[2] == OME))
+s1.add(Or(W[3] == FISH, W[3] == OME))
 
-# Check each answer choice
-for i, student in enumerate(students):
-    solver.push()
-    solver.add(student == 1)  # This student is ranked first
-    if solver.check() == sat:
-        print('Option %s is correct' % chr(65 + i))  # Print the correct option
-        exit()
-    solver.pop()
+# No repeats for each person
+for i in range(4):
+    for j in range(i + 1, 4):
+        s1.add(V[i] != V[j], W[i] != W[j])
+
+# No same food at the same meal
+for m in range(4):
+    s1.add(V[m] != W[m])
+
+# Determine which food Vladimir must eat
+must_eat = None
+for food_val, food_name in enumerate(foods):
+    s_check = Solver()
+    s_check.add(s1.assertions())
+    # Assume Vladimir never eats this food
+    s_check.add(And(V[0] != food_val, V[1] != food_val, V[2] != food_val, V[3] != food_val))
+    if s_check.check() == unsat:
+        must_eat = food_name
+        break
+
+print(must_eat)
 ```
 
-## Context:
-A lighting control panel has exactly seven switches, numbered from 1 to 7. Each switch is either in the on position or in the off position. The circuit load of the panel is the total number of its switches that are on. The control panel must be configured in accordance with the following conditions: If switch 1 is on, then switch 3 and switch 5 are off. If switch 4 is on, then switch 2 and switch 5 are off. The switch whose number corresponds to the circuit load of the panel is itself on.
-## Question:
-If switch 1 and switch 3 are both off, then which one of the following could be two switches that are both on?
-## Answer Choices:
-[
-  "switch 2 and switch 7",
-  "switch 4 and switch 6",
-  "switch 4 and switch 7",
-  "switch 5 and switch 6",
-  "switch 6 and switch 7"
-]
-## Code Implementation:
+Problem:
+"In a repair facility there are exactly six technicians: Stacy, Urma, Wim, Xena, Yolanda, and Zane. Each technician repairs machines of at least one of the following three types—radios, televisions, and VCRs—and no other types. The following conditions apply: Xena and exactly three other technicians repair radios. Yolanda repairs both televisions and VCRs. Stacy does not repair any type of machine that Yolanda repairs. Zane repairs more types of machines than Yolanda repairs. Wim does not repair any type of machine that Stacy repairs. Urma repairs exactly two types of machines."
+Question:
+"Which one of the following pairs of technicians could repair all and only the same types of machines as each other?"
+Choices:
+["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
+Z3 Program:
 ```
 from z3 import *
+techs = ["Stacy", "Urma", "Wim", "Xena", "Yolanda", "Zane"]
+types = ["R", "T", "V"]
 
-# Define the variables
-students = [Int('student_%i' % i) for i in range(1, 6)]
-solver = Solver()
+# Boolean matrix t[i][j] true ↔ technician i repairs type j
+t = [[Bool(f"{techs[i]}_{types[j]}") for j in range(3)] for i in range(6)]
+S, U, Wm, X, Y, Z = range(6)   # indices
 
-# Add the constraints
-for student in students:
-    solver.add(And(student >= 1, student <= 5))  # Each student ranks between 1 and 5
-solver.add(Distinct(students))  # Each student has a unique rank
+s2 = Solver()
 
-# Add the constraints from the problem
-solver.add(students[0] < students[1])  # Student 1 is ranked higher than Student 2
-solver.add(students[1] < students[2])  # Student 2 is ranked higher than Student 3
-solver.add(students[3] < students[1])  # Student 4 is ranked higher than Student 2
-solver.add(students[3] < students[4])  # Student 4 is ranked higher than Student 5
+# Each technician repairs at least one type
+for i in range(6):
+    s2.add(Or(t[i][0], t[i][1], t[i][2]))
 
-# Check each answer choice
-for i, student in enumerate(students):
-    solver.push()
-    solver.add(student == 1)  # The current student is ranked first
-    if solver.check() == sat:
-        print('Option %s is correct' % chr(65 + i))  # Print the correct answer choice
-        exit()
-    solver.pop()
+# Xena & exactly 3 others repair radios
+radios = [t[i][0] for i in range(6)]
+s2.add(t[X][0])                             # Xena repairs R
+s2.add(Sum([If(r, 1, 0) for r in radios]) == 4)
+
+# Yolanda repairs both T and V
+s2.add(t[Y][1], t[Y][2])
+
+# Stacy shares nothing with Yolanda (T,V)
+s2.add(Not(t[S][1]), Not(t[S][2]))
+
+# Zane repairs more types than Yolanda
+count = lambda idx: Sum([If(v, 1, 0) for v in t[idx]])
+s2.add(count(Z) > count(Y))
+
+# Wim shares nothing with Stacy
+for j in range(3):
+    s2.add(Implies(t[S][j], Not(t[Wm][j])))
+
+# Urma exactly two types
+s2.add(count(U) == 2)
+
+# Candidate pairs
+pairs = [("Stacy and Urma", S, U),
+         ("Urma and Yolanda", U, Y),
+         ("Urma and Xena", U, X),
+         ("Wim and Xena", Wm, X),
+         ("Xena and Yolanda", X, Y)]
+
+possible_pair = None
+for label, i, j in pairs:
+    s_check = Solver()
+    s_check.add(s2.assertions())
+    # Impose identical type-sets for the pair
+    for k in range(3):
+        s_check.add(t[i][k] == t[j][k])
+    if s_check.check() == sat:
+        possible_pair = label
+        break
+
+print(possible_pair)
 ```
 
-# Problem Definition:
-## Context:
+Problem:
+"Workers at a water treatment plant open eight valves—G, H, I, K, L, N, O, and P—to flush out a system of pipes that needs emergency repairs. To maximize safety and efficiency, each valve is opened exactly once, and no two valves are opened at the same time. The valves are opened in accordance with the following conditions: Both K and P are opened before H. O is opened before L but after H. L is opened after G. N is opened before H. I is opened after K."
+Question:
+"Each of the following could be the fifth valve opened EXCEPT:"
+Choices:
+["H", "I", "K", "N", "O"]
+Z3 Program:
+```
+from z3 import *
+s = ["G", "H", "I", "K", "L", "N", "O", "P"]
+pos = {v: Int(f"pos_{v}") for v in valves}
+s3_base = Solver()
+
+# Positions are 1..8 and all different
+for v in valves:
+    s3_base.add(pos[v] >= 1, pos[v] <= 8)
+s3_base.add(Distinct(*pos.values()))
+
+# Constraints
+s3_base.add(pos["K"] < pos["H"])
+s3_base.add(pos["P"] < pos["H"])
+s3_base.add(pos["N"] < pos["H"])
+
+s3_base.add(pos["H"] < pos["O"])
+s3_base.add(pos["O"] < pos["L"])
+s3_base.add(pos["G"] < pos["L"])
+
+s3_base.add(pos["K"] < pos["I"])
+
+candidates = ["H", "I", "K", "N", "O"]
+impossible = None
+for v in candidates:
+    s_check = Solver()
+    s_check.add(s3_base.assertions())
+    s_check.add(pos[v] == 5)
+    if s_check.check() == unsat:
+        impossible = v
+        break
+
+print(impossible)
+```
+
+Problem:
 {context}
-## Question:
+Question:
 {question}
-## Answer Choices:
+Choices:
 {answers}
-## Code Implementation:
+Z3 Program:
 ```
+
 ```
+
