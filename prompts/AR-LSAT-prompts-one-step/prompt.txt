@@ -31,28 +31,27 @@ s1.add(Or(V[2] == FISH, V[2] == HOT, V[2] == MAC, V[2] == OME))
 s1.add(Or(V[3] == FISH, V[3] == OME))
 
 s1.add(Or(W[0] == HOT, W[0] == POE, W[0] == OME))
-s1.add(W[1] == OME)                                                # Wendy lunch
+s1.add(W[1] == OME)               # Wendy lunch
 s1.add(Or(W[2] == FISH, W[2] == HOT, W[2] == MAC, W[2] == OME))
 s1.add(Or(W[3] == FISH, W[3] == OME))
 
-# No repeats for each person
+# No repeats
 for i in range(4):
     for j in range(i + 1, 4):
         s1.add(V[i] != V[j], W[i] != W[j])
 
-# No same food at the same meal
+# No same food in same meal
 for m in range(4):
     s1.add(V[m] != W[m])
 
-# Determine which food Vladimir must eat
+# Find forced food
 must_eat = None
-for food_val, food_name in enumerate(foods):
-    s_check = Solver()
-    s_check.add(s1.assertions())
-    # Assume Vladimir never eats this food
-    s_check.add(And(V[0] != food_val, V[1] != food_val, V[2] != food_val, V[3] != food_val))
-    if s_check.check() == unsat:
-        must_eat = food_name
+for code, name in enumerate(foods):
+    s_chk = Solver()
+    s_chk.add(s1.assertions())
+    s_chk.add(And(*(V[k] != code for k in range(4))))
+    if s_chk.check() == unsat:
+        must_eat = code
         break
 
 print(must_eat)
@@ -70,29 +69,27 @@ from z3 import *
 techs = ["Stacy", "Urma", "Wim", "Xena", "Yolanda", "Zane"]
 types = ["R", "T", "V"]
 
-# Boolean matrix t[i][j] true ↔ technician i repairs type j
 t = [[Bool(f"{techs[i]}_{types[j]}") for j in range(3)] for i in range(6)]
-S, U, Wm, X, Y, Z = range(6)   # indices
+S, U, Wm, X, Y, Z = range(6)
 
 s2 = Solver()
 
-# Each technician repairs at least one type
+# Each tech repairs ≥1 type
 for i in range(6):
     s2.add(Or(t[i][0], t[i][1], t[i][2]))
 
-# Xena & exactly 3 others repair radios
-radios = [t[i][0] for i in range(6)]
-s2.add(t[X][0])                             # Xena repairs R
-s2.add(Sum([If(r, 1, 0) for r in radios]) == 4)
+# Radio rule
+s2.add(t[X][0])                                # Xena repairs R
+s2.add(Sum([If(t[i][0], 1, 0) for i in range(6)]) == 4)
 
-# Yolanda repairs both T and V
+# Yolanda repairs T and V
 s2.add(t[Y][1], t[Y][2])
 
-# Stacy shares nothing with Yolanda (T,V)
+# Stacy shares nothing with Yolanda
 s2.add(Not(t[S][1]), Not(t[S][2]))
 
 # Zane repairs more types than Yolanda
-count = lambda idx: Sum([If(v, 1, 0) for v in t[idx]])
+count = lambda idx: Sum([If(t[idx][j], 1, 0) for j in range(3)])
 s2.add(count(Z) > count(Y))
 
 # Wim shares nothing with Stacy
@@ -102,25 +99,22 @@ for j in range(3):
 # Urma exactly two types
 s2.add(count(U) == 2)
 
-# Candidate pairs
 pairs = [("Stacy and Urma", S, U),
          ("Urma and Yolanda", U, Y),
          ("Urma and Xena", U, X),
          ("Wim and Xena", Wm, X),
          ("Xena and Yolanda", X, Y)]
 
-possible_pair = None
-for label, i, j in pairs:
-    s_check = Solver()
-    s_check.add(s2.assertions())
-    # Impose identical type-sets for the pair
+answer = None
+for idx, (lbl, i, j) in enumerate(pairs):
+    sc = Solver();  sc.add(s2.assertions())
     for k in range(3):
-        s_check.add(t[i][k] == t[j][k])
-    if s_check.check() == sat:
-        possible_pair = label
+        sc.add(t[i][k] == t[j][k])
+    if sc.check() == sat:
+        answer = idx
         break
 
-print(possible_pair)
+print(answer)
 ```
 
 Problem:
@@ -132,37 +126,34 @@ Choices:
 Z3 Program:
 ```
 from z3 import *
-s = ["G", "H", "I", "K", "L", "N", "O", "P"]
+valves = ["G", "H", "I", "K", "L", "N", "O", "P"]
 pos = {v: Int(f"pos_{v}") for v in valves}
-s3_base = Solver()
 
-# Positions are 1..8 and all different
+base = Solver()
 for v in valves:
-    s3_base.add(pos[v] >= 1, pos[v] <= 8)
-s3_base.add(Distinct(*pos.values()))
+    base.add(pos[v] >= 1, pos[v] <= 8)
+base.add(Distinct(*pos.values()))
 
-# Constraints
-s3_base.add(pos["K"] < pos["H"])
-s3_base.add(pos["P"] < pos["H"])
-s3_base.add(pos["N"] < pos["H"])
+base.add(pos["K"] < pos["H"])
+base.add(pos["P"] < pos["H"])
+base.add(pos["N"] < pos["H"])
 
-s3_base.add(pos["H"] < pos["O"])
-s3_base.add(pos["O"] < pos["L"])
-s3_base.add(pos["G"] < pos["L"])
+base.add(pos["H"] < pos["O"])
+base.add(pos["O"] < pos["L"])
+base.add(pos["G"] < pos["L"])
 
-s3_base.add(pos["K"] < pos["I"])
+base.add(pos["K"] < pos["I"])
 
 candidates = ["H", "I", "K", "N", "O"]
-impossible = None
-for v in candidates:
-    s_check = Solver()
-    s_check.add(s3_base.assertions())
-    s_check.add(pos[v] == 5)
-    if s_check.check() == unsat:
-        impossible = v
+not_possible = None
+for idx, v in enumerate(candidates):
+    sc = Solver(); sc.add(base.assertions())
+    sc.add(pos[v] == 5)
+    if sc.check() == unsat:
+        not_possible = idx
         break
 
-print(impossible)
+print(not_possible)
 ```
 
 Problem:
