@@ -3,8 +3,9 @@
 # from datetime import datetime
 from config import ReasonerConfig
 from reasoners import CoTReasoner, TwoStepReasoner, DirectReasoner
-from data_loaders import DataLoader, Sampler, AR_LSAT_Dataset
-from answer_extractors import AR_LSAT_AnswerExtractor
+from data_loaders import DataLoader, Sampler, JSON_Dataset
+from answer_extractors import (AR_LSAT_AnswerExtractor, 
+                               ProofWriter_AnswerExtractor)
 import os
 import sys
 
@@ -13,12 +14,13 @@ def main():
 
     # Create configuration with command line arguments
     config = ReasonerConfig.from_yaml(sys.argv[1])
+    dataset = JSON_Dataset.from_file(config.test_file)
 
     # Create dataset loader based on format
     if config.dataset.lower() == "ar-lsat":
-        # reasoner = AR_LSAT_Reasoner(config)
-        dataset = AR_LSAT_Dataset.from_file(config.test_file)
         answer_extractor = AR_LSAT_AnswerExtractor()
+    elif config.dataset.lower() == "proofwriter":
+        answer_extractor = ProofWriter_AnswerExtractor()
     else:
         raise ValueError(f"Unsupported dataset: {config.dataset}")
     

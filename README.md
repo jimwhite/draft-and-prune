@@ -82,6 +82,9 @@ python analysis_include_cot_as_backup.py <main_results_file> <cot_results_file>
 - AR-LSAT: Analytical Reasoning tasks from LSAT
   - Source: [AR-LSAT GitHub](https://github.com/zhongwanjun/AR-LSAT)
   - Path: `AR-LSAT/blob/main/complete_lsat_data/test_ar.json`
+- ProofWriter: Commonly Used Dataset for Deductive Logical Reasoning
+  - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
+  - Path: `Logic-LLM/blob/main/data/AR-LSAT/test.json`
 
 ## To Do
 - [ ] Implement checker/verifier

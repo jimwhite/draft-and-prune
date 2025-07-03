@@ -309,7 +309,7 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
             id_str,
             status,
             expected,
-            result_message[:80],  # Truncate long messages
+            str(result_message)[:80],  # Truncate long messages
             timing,
             error_type
         ])
@@ -327,6 +327,9 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
             if "problem" in test and "id_string" in test["problem"]:
                 test_id = test["problem"]["id_string"]
                 question = test["problem"].get("question", "N/A")
+            elif "problem" in test and "id" in test["problem"]:
+                test_id = test["problem"]["id"]
+                question = test["problem"].get("question", "N/A")
             else:
                 test_id = test.get("id", "unknown")
                 question = test.get("question", "N/A")
@@ -341,6 +344,8 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
                     expected_answer = f"Option {chr(65+label_idx)}: {test['problem']['answers'][label_idx]}"
                 else:
                     expected_answer = f"Label {label_idx}"
+            elif "problem" in test and "options" in test["problem"] and "answer" in test["problem"]:
+                expected_answer = test["problem"]["answer"]
             else:
                 expected_answer = test.get("expected_answer", "?")
                 
