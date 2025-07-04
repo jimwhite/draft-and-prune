@@ -143,24 +143,45 @@ class ProofWriter_AnswerExtractor(AnswerExtractor):
             else:
                 return False, 'semantic error'
 
-    def _extract_cot_conclusion(self, response_text: str, answers: Optional[list] = None) -> Optional[str]:
-        """
-        Extract the chosen answer from CoT response text using various patterns.
-        """
 
-        # Define patterns to check in order of preference
-        patterns = [
-            (r"Final Answer:\s*\{([^}]+)\}", "Final Answer with braces"),
-            (r"Final Answer:\s*(.+)", "Final Answer without braces"),
-            (r"Conclusion:\s*\{([^}]+)\}", "Conclusion with braces"),
-            (r"Conclusion:\s*(.+)", "Conclusion without braces")
-        ]
+class FOLIO_AnswerExtractor(AnswerExtractor):
+    """Answer extractor specifically tailored for FOLIO dataset format"""
+    
+    def extract_answer(self, response_text: Union[str, Optional[bool]], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """
+        Extract answer from response text and check if it matches the correct label.
         
-        for pattern, description in patterns:
-            match = re.search(pattern, response_text, re.IGNORECASE)
-            if match:
-                extracted_answer = match.group(1).strip()
-                return extracted_answer
+        Args:
+            response_text: The model's response text containing reasoning and answer
+            label: The correct answer option letter (A, B, C)
         
-        # No match found
-        return None
+        Returns:
+            Tuple[bool, str]: (True if the extracted answer matches the label, result message)
+        """       
+        if reasoning_method == "cot":
+            keywords = ['A', 'B', 'C', 'True', 'False', 'Uncertain']
+            positions = {word: response_text.rfind(word) for word in keywords}
+
+            valid_positions = {k: v for k, v in positions.items() if v != -1}
+            
+            if not valid_positions:
+                return False, 'answer not found in choices'
+
+            target = max(valid_positions.items(), key=lambda x: x[1])[0]
+            if (label == 'A' and (target == 'A' or target == 'True')) \
+            or (label == 'B' and (target == 'B' or target == 'False')) \
+            or (label == 'C' and (target == 'C' or target == 'Uncertain')):
+                return True, None
+            else:
+                return False, 'semantic error'
+            
+        if isinstance(response_text, str) and ('Traceback' in response_text or 'error' in response_text.lower()):
+            return False, 'syntax error'
+        
+        if reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
+            if (label == 'A' and response_text == True) \
+            or (label == 'B' and response_text == False) \
+            or (label == 'C' and response_text == None):
+                return True, None
+            else:
+                return False, 'semantic error'

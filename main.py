@@ -5,7 +5,8 @@ from config import ReasonerConfig
 from reasoners import CoTReasoner, TwoStepReasoner, DirectReasoner
 from data_loaders import DataLoader, Sampler, JSON_Dataset
 from answer_extractors import (AR_LSAT_AnswerExtractor, 
-                               ProofWriter_AnswerExtractor)
+                               ProofWriter_AnswerExtractor,
+                               FOLIO_AnswerExtractor)
 import os
 import sys
 
@@ -21,6 +22,8 @@ def main():
         answer_extractor = AR_LSAT_AnswerExtractor()
     elif config.dataset.lower() == "proofwriter":
         answer_extractor = ProofWriter_AnswerExtractor()
+    elif config.dataset.lower() == "folio":
+        answer_extractor = FOLIO_AnswerExtractor()
     else:
         raise ValueError(f"Unsupported dataset: {config.dataset}")
     
