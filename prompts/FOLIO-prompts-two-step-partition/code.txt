@@ -1,0 +1,167 @@
+You are an expert in formal verification and SMT solving using the Prover9 Solver.
+
+Your primary goal is to translate the given natural language problem into syntactically and semantically correct Prover9 program.
+
+Remember to only output the raw code.
+
+Problem:
+The 2008 Summer Olympics were held in Beijing, China. The 2008 Summer Olympics were the second Summer Olympic Games to be held in a communist state. China won the most gold medals (48) in the 2008 Summer Olympics. The United States placed second in the gold medal tally but won the highest number of medals overall (112) in the 2008 Summer Olympics. The third place in the gold medal tally was achieved by Russia in the 2008 Summer Olympics. If a country places third in gold medals, then they had fewer gold medals than the team that won the most gold medals. 87 countries won at least one medal during the 2008 Games.
+Question:
+Based on the above information, is the following statement true, false, or uncertain? Russia won fewer gold medals than China.
+Plan:
+1. Identify the relevant entities: Russia, China, USA.
+2. Define a predicate that ranks countries by gold medals: 
+   • "MostGoldMedals(x)" if x won the most gold medals.
+   • "SecondGoldMedals(x)", "ThirdGoldMedals(x)" for 2nd and 3rd.
+3. Declare a relation "LessGoldMedals(x, y)" meaning x won fewer golds than y.
+4. Extract facts from the context:
+   • China had the most gold medals.
+   • USA was second.
+   • Russia was third.
+5. Translate the reasoning rule: 
+   • If a country is ranked third and another is ranked first, then the third-ranked country must have fewer gold medals than the first.
+6. Goal:
+   • Try to prove: Russia had fewer gold medals than China.
+7. If the statement can be derived using the rule and facts, return TRUE; 
+   if it contradicts, return FALSE; if undecidable, return UNCERTAIN.
+Code:
+```prover9
+%% Assumptions:
+%% - China won the most gold medals in the 2008 Summer Olympics.
+%% - The United States placed second in the gold medal tally.
+%% - Russia placed third in the gold medal tally.
+%% - If a country places third and another country placed first, then the third-place country had fewer gold medals than the first.
+
+formulas(assumptions).
+  MostGoldMedals(China).                     %% China won the most gold medals
+  SecondGoldMedals(USA).                     %% USA placed second in gold medals
+  ThirdGoldMedals(Russia).                   %% Russia placed third in gold medals
+  all x all y ((ThirdGoldMedals(x) & MostGoldMedals(y)) 
+               -> LessGoldMedals(x,y)).      %% Third-place countries had fewer gold medals than the first-place country
+end_of_list.
+
+%% Goal:
+%% - Determine whether Russia won fewer gold medals than China.
+
+formulas(goals).
+  LessGoldMedals(Russia, China).             %% Russia won fewer gold medals than China
+end_of_list.
+```
+
+Problem:
+Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music. Any choral conductor is a musician. Some musicians love music. Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant.
+Question:
+Based on the above information, is the following statement true, false, or uncertain? No choral conductor specialized in the performance of Renaissance.
+Plan:
+1. Introduce Miroslav as a named individual.
+2. Identify Miroslav's role and interests:
+   • He is a choral conductor.
+   • He specializes in both Renaissance and Baroque music.
+3. Define relevant types:
+   • ChoralConductor(x): x is a choral conductor.
+   • Specialize(x, y): x specializes in musical style y.
+4. Encode background assumptions:
+   • All choral conductors are musicians.
+   • Some musicians love music (irrelevant here but can be included for completeness).
+5. Focus on the negated existential claim:
+   • Is it true that no choral conductor specializes in Renaissance?
+6. Strategy:
+   • From the given facts, Miroslav is a counterexample — a choral conductor who *does* specialize in Renaissance.
+7. Conclusion:
+   • Try to refute the negated existential: prove that there **exists** a choral conductor who specializes in Renaissance.
+   • If successful, the original statement is FALSE.
+Code:
+```prover9
+%% Assumptions:
+%% - Miroslav Venhoda was a Czech choral conductor.
+%% - He specialized in the performance of Renaissance and Baroque music.
+%% - Any choral conductor is a musician.
+%% - Some musicians love music. (This is unrelated to the conclusion.)
+%% - Miroslav Venhoda published a book in 1946 called *Method of Studying Gregorian Chant*.
+
+formulas(assumptions).
+  Czech(Miroslav).                                         %% Miroslav Venhoda was Czech
+  ChoralConductor(Miroslav).                               %% He was a choral conductor
+  Specialize(Miroslav, Renaissance).                       %% He specialized in Renaissance music
+  Specialize(Miroslav, Baroque).                           %% He also specialized in Baroque music
+  all x (ChoralConductor(x) -> Musician(x)).               %% Every choral conductor is a musician
+  exists x (Musician(x) & Love(x, Music)).                 %% Some musicians love music
+  Book(MethodOfStudyingGregorianChant).                    %% A book titled "Method of Studying Gregorian Chant"
+  Author(Miroslav, MethodOfStudyingGregorianChant).        %% Miroslav is the author of that book
+  Publish(MethodOfStudyingGregorianChant, Year1946).       %% The book was published in 1946
+end_of_list.
+
+%% Goal:
+%% - Determine whether the statement "No choral conductor specialized in the performance of Renaissance" is true.
+
+formulas(goals).
+  -(exists x (ChoralConductor(x) & Specialize(x, Renaissance))). %% No choral conductor specialized in Renaissance music
+end_of_list.
+```
+
+Problem:
+All people who regularly drink coffee are dependent on caffeine. People either regularly drink coffee or joke about being addicted to caffeine. No one who jokes about being addicted to caffeine is unaware that caffeine is a drug. Rina is either a student and unaware that caffeine is a drug, or neither a student nor unaware that caffeine is a drug. If Rina is not a person dependent on caffeine and a student, then Rina is either a person dependent on caffeine and a student, or neither a person dependent on caffeine nor a student.
+Question:
+Based on the above information, is the following statement true, false, or uncertain? If Rina is either a person who jokes about being addicted to caffeine and a person who is unaware that caffeine is a drug, or neither a person who jokes about being addicted to caffeine nor a person who is unaware that caffeine is a drug, then Rina jokes about being addicted to caffeine and regularly drinks coffee.
+Plan:
+1. Identify the person Rina and key attributes:
+   • Whether she drinks coffee, is dependent on caffeine, jokes about addiction, is unaware caffeine is a drug, and whether she is a student.
+2. Define binary behavior choices (either-or):
+   • People either joke or drink (but not both).
+   • People who joke are not unaware.
+3. Model nested logic:
+   • The premise is an exclusive-or-like condition: Rina is either (jokes and unaware) or (not jokes and not unaware).
+4. Background implication:
+   • If someone drinks, they are dependent on caffeine.
+5. Introduce a known identity tautology about Rina's (student & unaware) status.
+6. Introduce a strange tautology regarding her dependence & student status.
+   • These are designed to force logical symmetry or ambiguity.
+7. Goal:
+   • Under the complex XOR condition on (Jokes, Unaware), does it logically follow that Rina jokes and drinks?
+8. Encode the entire premise and attempt to derive the conclusion:
+   • Use standard FOL modeling tools like DeMorgan laws, XNOR encoding, and boolean simplification.
+9. Return TRUE if derivable, FALSE if contradicted, else UNCERTAIN.
+Code:
+```prover9
+%% Assumptions:
+%% - All people who regularly drink coffee are dependent on caffeine.
+%% - People either regularly drink coffee or joke about being addicted to caffeine (but not both).
+%% - No one who jokes about being addicted to caffeine is unaware that caffeine is a drug.
+%% - Rina is either (a student and unaware that caffeine is a drug) or (neither a student nor unaware).
+%% - If Rina is not a caffeine-dependent student, then she is either a caffeine-dependent student or neither caffeine-dependent nor a student.
+
+formulas(assumptions).
+  all x (Drinks(x) -> Dependent(x)).                       %% Regular coffee drinkers are dependent on caffeine
+  all x ((Drinks(x) & -Jokes(x)) | (-Drinks(x) & Jokes(x))). %% People either drink coffee or joke about being addicted
+  all x (Jokes(x) -> -Unaware(x)).                         %% Those who joke are not unaware that caffeine is a drug
+  (((Student(Rina) & Unaware(Rina)) & -(-(Student(Rina) | Unaware(Rina)))) |
+   (-(Student(Rina) & Unaware(Rina)) & -(Student(Rina) | Unaware(Rina)))).
+   %% Rina is either (a student and unaware) or (neither student nor unaware)
+
+  (((-(Dependent(Rina) & Student(Rina)) -> (Dependent(Rina) & Student(Rina))) 
+     & -(-(Dependent(Rina) | Student(Rina)))) |
+   (-(-(Dependent(Rina) & Student(Rina)) -> (Dependent(Rina) & Student(Rina))) 
+     & -(Dependent(Rina) | Student(Rina)))).
+   %% If Rina is not both dependent and a student, then she is either both or neither
+end_of_list.
+
+%% Goal:
+%% - Determine whether the following statement is true:
+%%   If Rina is either (jokes about being addicted to caffeine and is unaware caffeine is a drug)
+%%   or (neither jokes nor is unaware), then she jokes and regularly drinks coffee.
+
+formulas(goals).
+  ((((Jokes(Rina) & Unaware(Rina)) & -(-(Jokes(Rina) | Unaware(Rina)))) |
+    (-(Jokes(Rina) & Unaware(Rina)) & -(Jokes(Rina) | Unaware(Rina))))
+   -> 
+   (Jokes(Rina) & Drinks(Rina))).
+end_of_list.
+```
+
+Problem:
+{context}
+Question:
+{question}
+Plan:
+{plan}
+Code:

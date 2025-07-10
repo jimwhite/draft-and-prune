@@ -7,15 +7,19 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Optional, Any, Union
 import uuid
 import openai
+import traceback
 
 from config import ReasonerConfig
 from data_loaders import DataLoader
 from answer_extractors import AnswerExtractor
 from call_api import APIConfig, get_api_client
+from pyke import knowledge_engine
 import subprocess
 import tempfile
 import re
 from datetime import datetime
+
+
 class Reasoner(ABC):
     """Base class for different reasoning approaches"""
     
@@ -30,6 +34,10 @@ class Reasoner(ABC):
         self.results_folder = self.create_results_folder()
         self.answer_extractor = answer_extractor
         self.summary_filepath = os.path.join(self.results_folder, "summary.txt")
+        self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
+        if os.path.exists("./compiled_krb"):
+            print('removing compiled_krb')
+            os.system(f'rm -rf ./compiled_krb')
 
         # Initialize API client
         api_config = APIConfig(
@@ -88,7 +96,12 @@ class Reasoner(ABC):
             else:
                 raise ValueError(f"Unsupported fix model: {config.fix_model}")
             self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_azure_params)
-        
+            
+    def __del__(self):
+        """Clean up cache files"""
+        if os.path.exists("./compiled_krb"):
+            print('removing compiled_krb')
+            os.system(f'rm -rf ./compiled_krb')
 
     @abstractmethod
     def reason(self, test_case: Dict) -> Dict:
@@ -153,27 +166,43 @@ class Reasoner(ABC):
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
        
-    def clean_code(self, code_text):
-        # Clean potential markdown fences (though the prompt requests raw code)
-        cleaned_code = code_text
-        if "```python" in cleaned_code :
-             match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
-             if match:
-                 cleaned_code = match.group(1).strip()
-        elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
-             cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
-             cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
-             cleaned_code = cleaned_code.strip()
+    def clean_code(self, code_text: str) -> str:
+        if self.config.dataset.lower() == 'ar-lsat':
+            # Clean potential markdown fences (though the prompt requests raw code)
+            cleaned_code = code_text
+            if "```python" in cleaned_code :
+                match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
+                if match:
+                    cleaned_code = match.group(1).strip()
+            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
+                cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
+                cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
+                cleaned_code = cleaned_code.strip()
 
-        # Basic check for Z3 import
-        if not cleaned_code.strip().startswith("from z3 import *"):
-             # If import is missing, prepend it. Add a newline for separation.
-             print("Warning: 'from z3 import *' missing from generated code. Prepending it.")
-             cleaned_code = "from z3 import *\n\n" + cleaned_code
+            # Basic check for Z3 import
+            if not cleaned_code.strip().startswith("from z3 import *"):
+                # If import is missing, prepend it. Add a newline for separation.
+                print("Warning: 'from z3 import *' missing from generated code. Prepending it.")
+                cleaned_code = "from z3 import *\n\n" + cleaned_code
 
-        return cleaned_code
+            return cleaned_code
+        
+        # Leave it to be processed at execution time
+        elif self.config.dataset.lower() == 'proofwriter':
+            return code_text
+        
+        elif self.config.dataset.lower() == 'folio':
+            matches = re.search(r"```prover9\n(.*?)```", code_text, re.DOTALL)
+            if matches:
+                return matches.group(1)
+            else:
+                print("Warning: No ```prover9 code block found in the output text.")
+                return code_text
+        
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for Reasoner clean_code.")
     
-    def execute_z3_code(self, z3_code):
+    def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
         """Execute the Python Z3 code and return the results."""
         # Identical to the original script's implementation
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
@@ -209,6 +238,114 @@ class Reasoner(ABC):
                  os.unlink(tmp_filename)
             return False, f"Error executing Z3 code: {str(e)}"
         
+    def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
+        """Execute the PyKe code and return the results."""
+        try:
+            facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
+            rules = re.search(r"```rules\n(.*?)```", pyke_code, re.DOTALL).group(1)
+            query = re.search(r"```query\n(.*?)```", pyke_code, re.DOTALL).group(1)
+
+            if "True" in query:
+                final_answer = True
+                query = query.replace("True", "$target")
+            elif "False" in query:
+                final_answer = False
+                query = query.replace("False", "$target")
+            else:
+                raise ValueError("Boolean value for the query target not found")
+            
+            os.makedirs(self.temp_cache_dir, exist_ok=True)
+            with open(os.path.join(self.temp_cache_dir, "facts.kfb"), 'w') as fp:
+                fp.write(facts)
+            with open(os.path.join(self.temp_cache_dir, "rules.krb"), 'w') as fp:
+                fp.write(rules)
+                
+            engine = knowledge_engine.engine(self.temp_cache_dir)
+            engine.reset()
+            engine.activate('rules')
+            engine.get_kb('facts')
+
+            with engine.prove_goal(query.strip()) as gen:
+                found = False
+                for vars, plan in gen:
+                    found = True
+                    return True, final_answer
+                if not found:
+                    return True, None
+                
+        except Exception as e:
+            return False, f"Error executing PyKe Program: {str(e)}"
+        
+        finally:
+            if os.path.exists("./compiled_krb"):
+                print('removing compiled_krb')
+                os.system(f'rm -rf compiled_krb/*')
+    
+    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
+        """Execute the Prover9 code and return the results."""
+        def negate_prover9_goal(prover9_input: str) -> str:
+            """
+            Extract the formulas(goals) block from the Prover9 input,
+            negate the formula inside it, and replace the original goal
+            with the negated formula. Returns the modified input string.
+            """
+            goal_match = re.search(
+                # r"formulas\(goals\)\.\s*(.*?)\s*\.\s*end_of_list\.",
+                r"formulas\(goals\)\.\s*(.*?)\s*\.",
+                prover9_input,
+                re.DOTALL
+            )
+            if not goal_match:
+                raise ValueError("formulas(goals) block not found or improperly formatted.")
+            
+            goal_formula = goal_match.group(1).strip()
+            negated_goal = f"-({goal_formula})"
+            new_goal_block = f"formulas(goals).\n  {negated_goal}.\nend_of_list."
+            new_input = re.sub(
+                r"formulas\(goals\)\.\s*.*?\s*end_of_list\.",
+                new_goal_block,
+                prover9_input,
+                flags=re.DOTALL
+            )
+            return new_input
+    
+        try:
+            PROVER9_BIN = "../Prover9/bin/prover9"
+            TIMEOUT = 10
+            result = subprocess.run(
+                [PROVER9_BIN],
+                input = prover9_code,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.PIPE,
+                timeout = TIMEOUT,
+                text = True
+            )
+            
+            if "THEOREM PROVED" in result.stdout:
+                return True, True
+            elif "SEARCH FAILED" in result.stdout:
+                negate_prover9_code = negate_prover9_goal(prover9_code)
+                result = subprocess.run(
+                    [PROVER9_BIN],
+                    input = negate_prover9_code,
+                    stdout = subprocess.PIPE,
+                    stderr = subprocess.PIPE,
+                    timeout = TIMEOUT,
+                    text = True
+                )
+                if "THEOREM PROVED" in result.stdout:
+                    return True, False
+                elif "SEARCH FAILED" in result.stdout:
+                    return True, None
+                else:
+                    return False, result.stderr 
+            else:
+                return False, result.stderr 
+            
+        except Exception as e:
+            return False, f"Error executing Prover9 Program: {str(e)}"      
+    
+    
 class TwoStepReasoner(Reasoner):
     """Two-step reasoning approach"""
 
@@ -227,7 +364,7 @@ class TwoStepReasoner(Reasoner):
             PLAN_GENERATION_PROMPT = file.read()
 
         # Pre-format the answers with json.dumps
-        if self.config.dataset == "AR-LSAT":
+        if self.config.dataset.lower() == "ar-lsat":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
@@ -235,8 +372,26 @@ class TwoStepReasoner(Reasoner):
             prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
+            
+        elif self.config.dataset.lower() == "proofwriter":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            
+        elif self.config.dataset.lower() == "folio":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            
         else:
             raise ValueError(f"Unsupported dataset: {self.config.dataset}")
+
         return prompt
 
     def fix_semantic_errors(self, test_case, plan):
@@ -248,12 +403,27 @@ class TwoStepReasoner(Reasoner):
         with open(base_prompt_path, "r") as file:
             base_prompt = file.read()
         
-        prompt = base_prompt.format(
-            context=test_case["context"],
-            question=test_case["question"],
-            answers=test_case["answers"],
-            plan=plan
-        )
+        if self.config.dataset.lower() == "ar-lsat":
+            prompt = base_prompt.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                answers=test_case["answers"],
+                plan=plan
+            )
+        elif self.config.dataset.lower() == "proofwriter": 
+            prompt = base_prompt.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                plan=plan
+            )
+        elif self.config.dataset.lower() == "folio": 
+            prompt = base_prompt.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                plan=plan
+            )
+        else:
+            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
 
         new_plan = self._call_fix_api(prompt)
         return new_plan
@@ -267,7 +437,7 @@ class TwoStepReasoner(Reasoner):
             CODE_GENERATION_PROMPT = file.read()
         
         # Pre-format the answers with json.dumps
-        if self.config.dataset == "AR-LSAT":
+        if self.config.dataset.lower() == "ar-lsat":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
@@ -275,8 +445,28 @@ class TwoStepReasoner(Reasoner):
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
             prompt = prompt.replace("{plan}", plan)
+            
+        elif self.config.dataset.lower() == "proofwriter":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{plan}", plan)    
+            
+        elif self.config.dataset.lower() == "folio":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{plan}", plan)    
+        
         else:
-            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
+            # Fallback or error for unsupported datasets
+            raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner prompts.")
         
         return prompt 
 
@@ -286,19 +476,39 @@ class TwoStepReasoner(Reasoner):
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
-
-        prompt = FIX_GENERATION_PROMPT.format(
-            context=test_case["context"],
-            question=test_case["question"],
-            answers=test_case["answers"],
-            plan=plan,
-            code=code,
-            syntax_error=syntax_error
-        )
+            
+        if self.config.dataset.lower() == "ar-lsat":
+            prompt = FIX_GENERATION_PROMPT.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                answers=test_case["answers"],
+                plan=plan,
+                code=code,
+                syntax_error=syntax_error
+            )
+        elif self.config.dataset.lower() == "proofwriter": 
+            prompt = FIX_GENERATION_PROMPT.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                plan=plan,
+                code=code,
+                syntax_error=syntax_error
+            )
+        elif self.config.dataset.lower() == "folio": 
+            prompt = FIX_GENERATION_PROMPT.format(
+                context=test_case["context"],
+                question=test_case["question"],
+                plan=plan,
+                code=code,
+                syntax_error=syntax_error
+            )
+        else:
+            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
+        
         return prompt
     
-    def reason(self, test_case: Dict) -> Dict:
-        """Use model to reason and choose the correct answer in one step"""
+    def reason_z3_code(self, test_case: Dict) -> Dict:
+        """Use model to reason and choose the correct answer in two step"""
         current_plan = None
         current_code = None
         solver_output = None
@@ -364,6 +574,151 @@ class TwoStepReasoner(Reasoner):
             "syntax_errors": syntax_errors
         }
         
+    def reason_pyke_code(self, test_case: Dict) -> Dict:
+        """Use model to reason and choose the correct answer in two step"""
+        current_plan = None
+        current_code = None
+        solver_output = None
+        plan_feedback = None
+        code_feedback = None
+
+        if current_plan is None or plan_feedback:
+            # Generate plan
+            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
+            current_plan = self._call_api(plan_prompt)
+            print("\nGenerated plan:")
+            print("=" * 80)
+            print(current_plan)
+            print("=" * 80)
+
+            # current_plan = self.fix_semantic_errors(test_case, current_plan)
+            # print("\nFixed plan:")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
+
+        if current_code is None or code_feedback:
+            # Generate code
+            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
+            current_code = self._call_api(code_prompt)
+            current_code = self.clean_code(current_code)
+            print("\nGenerated PyKe code:")
+            print("=" * 80)
+            print(current_code)
+            print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = self.execute_pyke_code(current_code)
+            if not is_valid:
+                print(f"\nPyKe code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed PyKe code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print("PyKe code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+        return {
+            "plan": current_plan,
+            "code": current_code,
+            "solver_output": solver_output,
+            "plan_feedback": plan_feedback,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+    
+    def reason_prover9_code(self, test_case: Dict) -> Dict:
+        """Use model to reason and choose the correct answer in two step"""
+        current_plan = None
+        current_code = None
+        solver_output = None
+        plan_feedback = None
+        code_feedback = None
+
+        if current_plan is None or plan_feedback:
+            # Generate plan
+            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
+            current_plan = self._call_api(plan_prompt)
+            print("\nGenerated plan:")
+            print("=" * 80)
+            print(current_plan)
+            print("=" * 80)
+
+            # current_plan = self.fix_semantic_errors(test_case, current_plan)
+            # print("\nFixed plan:")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
+
+        if current_code is None or code_feedback:
+            # Generate code
+            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
+            current_code = self._call_api(code_prompt)
+            current_code = self.clean_code(current_code)
+            print("\nGenerated Prover9 code:")
+            print("=" * 80)
+            print(current_code)
+            print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = self.execute_prover9_code(current_code)
+            if not is_valid:
+                print(f"\nProver9 code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed Prover9 code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print("Prover9 code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+        return {
+            "plan": current_plan,
+            "code": current_code,
+            "solver_output": solver_output,
+            "plan_feedback": plan_feedback,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+    
+    def reason(self, test_case: Dict) -> Dict:
+        """Generate formal code directly in two step and execute it"""
+        if self.config.dataset.lower() == "ar-lsat":
+            return self.reason_z3_code(test_case)
+        elif self.config.dataset.lower() == "proofwriter":
+            return self.reason_pyke_code(test_case)
+        elif self.config.dataset.lower() == "folio":
+            return self.reason_prover9_code(test_case)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
+        
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
@@ -394,8 +749,15 @@ class TwoStepReasoner(Reasoner):
         # print("=" * 80)
         
         # Interpret results
-        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        
+        if self.config.dataset.lower() == "ar-lsat":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "proofwriter":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "folio":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+
         # Check if an answer was selected
         if is_correct:
             print(f"\nReasoning PASSED. Error type: {error_type}")
@@ -434,7 +796,7 @@ class TwoStepReasoner(Reasoner):
 
 
 class DirectReasoner(Reasoner):
-    """Direct reasoning approach - generates Z3 code in one step"""
+    """Direct reasoning approach - generates formal code in one step"""
 
     def __init__(self, 
                  config: ReasonerConfig,
@@ -451,7 +813,7 @@ class DirectReasoner(Reasoner):
             DIRECT_PROMPT = file.read()
 
         # Pre-format the answers with json.dumps
-        if self.config.dataset == "AR-LSAT":
+        if self.config.dataset.lower() == "ar-lsat":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
@@ -460,6 +822,26 @@ class DirectReasoner(Reasoner):
             prompt = DIRECT_PROMPT.replace("{context}", context)
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
+            
+        elif self.config.dataset.lower() == "proofwriter":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = DIRECT_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+        
+        elif self.config.dataset.lower() == "folio":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = DIRECT_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+        
+        else:
+            # Fallback or error for unsupported datasets
+            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner prompts.")
         
         return prompt
 
@@ -470,7 +852,7 @@ class DirectReasoner(Reasoner):
         with open(base_prompt_path, "r") as file:
             FIX_GENERATION_PROMPT = file.read()
 
-        if self.config.dataset == "AR-LSAT":
+        if self.config.dataset.lower() == "ar-lsat":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
@@ -482,9 +864,32 @@ class DirectReasoner(Reasoner):
             prompt = prompt.replace("{code}", code)
             prompt = prompt.replace("{syntax_error}", syntax_error)
         
+        elif self.config.dataset.lower() == "proofwriter":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{code}", code)
+            prompt = prompt.replace("{syntax_error}", syntax_error)
+            
+        elif self.config.dataset.lower() == "folio":
+            context = test_case["context"]
+            question = test_case["question"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{code}", code)
+            prompt = prompt.replace("{syntax_error}", syntax_error)
+            
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner fix_syntax_errors.")
+        
         return prompt
     
-    def reason(self, test_case: Dict) -> Dict:
+    def reason_z3_code(self, test_case: Dict) -> Dict:
         """Generate Z3 code directly in one step and execute it"""
         current_code = None
         solver_output = None
@@ -532,6 +937,113 @@ class DirectReasoner(Reasoner):
             "syntax_errors": syntax_errors
         }
         
+    def reason_pyke_code(self, test_case: Dict) -> Dict:
+        """Generate PyKe code directly in one step and execute it"""
+        current_code = None
+        solver_output = None
+        code_feedback = None
+
+        # Generate code directly
+        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
+        current_code = self._call_api(direct_prompt)
+        current_code = self.clean_code(current_code)
+        print("\nGenerated PyKe code:")
+        print("=" * 80)
+        print(current_code)
+        print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = self.execute_pyke_code(current_code)
+            if not is_valid:
+                print(f"\nPyKe code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed PyKe code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print("PyKe code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+            
+        return {
+            "code": current_code,
+            "solver_output": solver_output,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+    
+    def reason_prover9_code(self, test_case: Dict) -> Dict:
+        """Generate Prover9 code directly in one step and execute it"""
+        current_code = None
+        solver_output = None
+        code_feedback = None
+
+        # Generate code directly
+        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
+        current_code = self._call_api(direct_prompt)
+        current_code = self.clean_code(current_code)
+        print("\nGenerated Prover9 code:")
+        print("=" * 80)
+        print(current_code)
+        print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = self.execute_prover9_code(current_code)
+            if not is_valid:
+                print(f"\nProver9 code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print("\nFixed Prover9 code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print("Prover9 code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+            
+        return {
+            "code": current_code,
+            "solver_output": solver_output,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+    
+    def reason(self, test_case: Dict) -> Dict:
+        """Generate formal code directly in one step and execute it"""
+        if self.config.dataset.lower() == "ar-lsat":
+            return self.reason_z3_code(test_case)
+        elif self.config.dataset.lower() == "proofwriter":
+            return self.reason_pyke_code(test_case)
+        elif self.config.dataset.lower() == "folio":
+            return self.reason_prover9_code(test_case)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
+            
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
@@ -549,7 +1061,14 @@ class DirectReasoner(Reasoner):
             f.write(reasoning_result["code"])
 
         # Interpret results
-        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        if self.config.dataset.lower() == "ar-lsat":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "proofwriter":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "folio":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
         
         # Check if an answer was selected
         if is_correct:
@@ -606,7 +1125,7 @@ class CoTReasoner(Reasoner):
         with open(prompt_path, "r") as file:
             COT_PROMPT_TEMPLATE = file.read()
 
-        if self.config.dataset == "AR-LSAT":
+        if self.config.dataset.lower() == "ar-lsat":
             context = test_case["context"]
             question = test_case["question"]
             answers = test_case["answers"]
@@ -615,6 +1134,27 @@ class CoTReasoner(Reasoner):
             prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
+            
+        elif self.config.dataset.lower() == "proofwriter":
+            context = test_case["context"]
+            question = test_case["question"]
+            options = test_case["options"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{options}", str(options))    
+        
+        elif self.config.dataset.lower() == "folio":
+            context = test_case["context"]
+            question = test_case["question"]
+            options = test_case["options"]
+
+            # Use string replacement instead of .format() to avoid curly brace issues
+            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
+            prompt = prompt.replace("{question}", question)
+            prompt = prompt.replace("{options}", str(options))
+        
         else:
             # Fallback or error for unsupported datasets
             raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner prompts.")
@@ -655,7 +1195,14 @@ class CoTReasoner(Reasoner):
         with open(reasoning_filepath, "w") as f:
             f.write(reasoning_result["reasoning_output"])
 
-        is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        if self.config.dataset.lower() == "ar-lsat":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "proofwriter":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "folio":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
         
         if is_correct:
             print(f"\nReasoning PASSED. Error type: {error_type}")

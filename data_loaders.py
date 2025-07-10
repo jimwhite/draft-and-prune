@@ -20,15 +20,15 @@ class Dataset(ABC):
         pass
 
 
-class AR_LSAT_Dataset(Dataset):
-    """PyTorch-style Dataset for AR-LSAT data"""
+class JSON_Dataset(Dataset):
+    """PyTorch-style Dataset for json data"""
     
     def __init__(self, data: List[Dict]):
         """
         Initialize dataset with loaded data
         
         Args:
-            data: List of test case dictionaries from AR_LSAT_DatasetLoader
+            data: List of test case dictionaries
         """
         self.data = data
     
@@ -42,11 +42,12 @@ class AR_LSAT_Dataset(Dataset):
         return self.data[idx]
     
     @classmethod
-    def from_file(cls, file_path: str) -> 'AR_LSAT_Dataset':
+    def from_file(cls, file_path: str) -> 'JSON_Dataset':
         """Create dataset from file"""
         with open(file_path, 'r') as f:
             data = json.load(f)
         return cls(data)
+
 
 class Sampler:
     """
