@@ -10,16 +10,16 @@ Choices:
 ["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
 Plan:
 "
-1. Enumerate the five possible foods and give them integer codes.
-2. Create four Int variables for Vladimir (breakfast, lunch, dinner, snack) and four for Wendy.
-3. Add domain constraints for each variable, reflecting the menu for that meal.
-4. Constrain Wendy's lunch variable to the code for omelet.
-5. Add no-repeat constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.
-6. Add no-same-meal constraints: for every meal index m, V[m] != W[m].
-7. To answer the question, iterate through the five food codes:
-   • For each code, assert that Vladimir never eats that food anywhere.
-   • If this assumption makes the model UNSAT, then that food is forced; record it and stop.
-8. Print/return the forced food as Vladimir's mandatory choice.
+1. Enumerate the five possible foods and give them integer codes.  
+2. Create four `Int` variables for Vladimir (breakfast, lunch, dinner, snack) and four for Wendy.  
+3. Add **domain constraints** for each variable, reflecting the menu for that meal.  
+4. Constrain Wendy's lunch variable to the code for *omelet*.  
+5. Add **no-repeat** constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.  
+6. Add **no-same-meal** constraints: for every meal index m, `V[m] != W[m]`.  
+7. To answer the question, iterate through the five food codes:  
+    • For each code, assert that Vladimir never eats that food anywhere.  
+    • If this assumption makes the model UNSAT, then that food is **forced**; record its index and stop.  
+8. Output the index of the forced food in the choices list.
 "
 Z3 Program:
 ```
@@ -86,7 +86,7 @@ Plan:
     a. Clone the base constraints into a fresh solver.  
     b. Add `t[i][j] == t[k][j]` for all three j so the two named technicians have identical type sets.  
     c. Check SAT; the first SAT pair is the valid answer.  
-11. Output that pair.
+11. Output the index of the valid pair in the choices list.
 "
 Z3 Program:
 ```
@@ -160,8 +160,8 @@ Plan:
 4. For every candidate valve v in the answer list:  
     a. Clone the base constraints.  
     b. Add `pos_v == 5`.  
-    c. If the model is UNSAT, then v **cannot** be fifth → that is the required "EXCEPT" answer.  
-5. Return the valve that makes the solver UNSAT.
+    c. If the model is UNSAT, then v **cannot** be fifth → that is the required 'EXCEPT' answer.  
+5. Output the index of the valve that makes the solver UNSAT in the choices list.
 "
 Z3 Program:
 ```
