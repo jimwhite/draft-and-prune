@@ -269,7 +269,7 @@ class Reasoner(ABC):
                 found = False
                 for vars, plan in gen:
                     found = True
-                    return True, final_answer
+                    return True, vars['target'] == final_answer
                 if not found:
                     return True, None
                 
