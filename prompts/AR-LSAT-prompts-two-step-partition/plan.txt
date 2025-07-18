@@ -16,10 +16,12 @@ Plan:
 4. Constrain Wendy's lunch variable to the code for *omelet*.  
 5. Add **no-repeat** constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.  
 6. Add **no-same-meal** constraints: for every meal index m, `V[m] != W[m]`.  
-7. To answer the question, iterate through the five food codes:  
-    • For each code, assert that Vladimir never eats that food anywhere.  
-    • If this assumption makes the model UNSAT, then that food is **forced**; record its index and stop.  
-8. Output the index of the forced food in the choices list.
+7. Define a answer index list []. 
+8. For every food in the choices list,
+    - Clone the base constraints into a fresh solver.  
+    - Assert that Vladimir never eats that food anywhere.  
+    - If this assumption makes the model UNSAT, then that food is **forced**; append the food index to the answer index list.  
+9. Print the answer index list.
 "
 
 Problem:
@@ -31,7 +33,7 @@ Choices:
 Plan:
 "
 1. List the six technicians and the three machine types {R,T,V}.  
-2. For every technician i and type j create a Boolean `t[i][j]` meaning "tech i repairs type j".  
+2. For every technician i and type j create a Boolean `t[i][j]` meaning 'tech i repairs type j'.  
 3. **At-least-one** constraint: for every technician, `R or T or V`.  
 4. Radio rule: set `t[Xena][R] = True`; constrain `Σ_{i} t[i][R] = 4` (Xena plus exactly three others).  
 5. Yolanda: force `T = True` and `V = True`.  
@@ -39,11 +41,12 @@ Plan:
 7. Zane repairs **more types** than Yolanda: `count(Zane) > count(Yolanda)`.  
 8. Wim shares **no** type with Stacy: for each j, `t[Stacy][j] → ¬t[Wim][j]`.  
 9. Urma repairs **exactly two** types: `count(Urma) = 2`.  
-10. For every answer choice (ordered list of pairs):  
+10. Define a answer index list [].
+11. For every answer choice (ordered list of pairs):  
     a. Clone the base constraints into a fresh solver.  
     b. Add `t[i][j] == t[k][j]` for all three j so the two named technicians have identical type sets.  
-    c. Check SAT; the first SAT pair is the valid answer.  
-11. Output the index of the valid pair in the choices list.
+    c. Check SAT; if SAT, append the answer index to the answer index list.
+12. Print the answer index list.
 "
 
 Problem:
@@ -61,11 +64,12 @@ Plan:
     • `pos_H < pos_O < pos_L`  
     • `pos_G < pos_L`  
     • `pos_K < pos_I`  
-4. For every candidate valve v in the answer list:  
+4. Define a answer index list [].
+5. For every candidate valve v in the answer list:  
     a. Clone the base constraints.  
     b. Add `pos_v == 5`.  
-    c. If the model is UNSAT, then v **cannot** be fifth → that is the required 'EXCEPT' answer.  
-5. Output the index of the valve that makes the solver UNSAT in the choices list.
+    c. If the model is UNSAT, then v **cannot** be fifth → that is the required 'EXCEPT' answer, append the valve index to the answer index list.
+6. Print the answer index list.
 "
 
 Problem:
@@ -77,5 +81,4 @@ Choices:
 Plan:
 "
 "
-
 

@@ -1,24 +1,24 @@
-You are an expert in logical reasoning, specifically for analyzing and refining reasoning plans for SMT problems.
-You will be given the context of an SMT problem, the specific question, the available multiple-choice answers, and an initial reasoning plan that may contain semantic errors.
+You are an expert in logical reasoning, specifically for analyzing and refining reasoning constraints for SMT problems.
+You will be given the context of an SMT problem, the specific question, the available multiple-choice answers, and initial reasoning constraints that may contain semantic errors.
 
 Semantic errors can include:
 - Logical fallacies or inconsistencies.
 - Misinterpretations or misapplications of rules or facts presented in the context.
 - Incorrect logical formulation for specific question types (e.g., for "must be true" questions, failing to check the unsatisfiability of an option's negation).
 - Flawed representation of choices or conditions if they conflict with established premises or constraints in the problem.
-- Steps in the plan that do not logically follow from preceding steps.
+- Steps in the constraints that do not logically follow from preceding steps.
 - Conclusions that are not adequately supported by the reasoning.
 - Irrelevant or distracting lines of reasoning.
 
-Your task is to carefully review the 'Original Plan' in light of the 'Problem Context', 'Question', and 'Multiple-Choice Answers'.
-Your goal is to produce a 'Revised Plan' that corrects all identified semantic errors. The 'Revised Plan' must be:
+Your task is to carefully review the 'Original Constraints' in light of the 'Problem Context', 'Question', and 'Multiple-Choice Answers'.
+Your goal is to produce 'Revised Constraints' that correct all identified semantic errors. The 'Revised Constraints' must be:
 1. Logically sound and coherent.
 2. Faithful to the problem's context and question.
 3. Clearly articulated, maintaining a step-by-step format similar to the original if appropriate.
-4. Focused on correcting the flaws while preserving the correct and relevant parts of the original plan.
+4. Focused on correcting the flaws while preserving the correct and relevant parts of the original constraints.
 
-Do NOT simply create a new plan from scratch. Focus on revising the provided plan.
-The output should ONLY be the 'Revised Plan' itself, without any additional explanations, apologies, or introductory/concluding remarks.
+Do NOT simply create new constraints from scratch. Focus on revising the provided constraints.
+The output should ONLY be the 'Revised Constraints' itself, without any additional explanations, apologies, or introductory/concluding remarks.
 
 Problem Context:
 {context}
@@ -29,7 +29,7 @@ Question:
 Multiple-Choice Answers:
 {answers}
 
-Original Plan (may contain semantic errors):
-{plan}
+Original Constraints (may contain semantic errors):
+{constraints}
 
-Revised Plan:
+Revised Constraints:
