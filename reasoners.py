@@ -506,73 +506,6 @@ class TwoStepReasoner(Reasoner):
             raise ValueError(f"Unsupported dataset: {self.config.dataset}")
         
         return prompt
-    
-    # def reason_z3_code(self, test_case: Dict) -> Dict:
-    #     """Use model to reason and choose the correct answer in two step"""
-    #     current_plan = None
-    #     current_code = None
-    #     solver_output = None
-    #     plan_feedback = None
-    #     code_feedback = None
-
-    #     if current_plan is None or plan_feedback:
-    #         # Generate plan
-    #         plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
-    #         current_plan = self._call_api(plan_prompt)
-    #         print("\nGenerated plan:")
-    #         print("=" * 80)
-    #         print(current_plan)
-    #         print("=" * 80)
-
-    #         # current_plan = self.fix_semantic_errors(test_case, current_plan)
-    #         # print("\nFixed plan:")
-    #         # print("=" * 80)
-    #         # print(current_plan)
-    #         # print("=" * 80)
-
-    #     if current_code is None or code_feedback:
-    #         # Generate code
-    #         code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-    #         current_code = self._call_api(code_prompt)
-    #         current_code = self.clean_code(current_code)
-    #         print("\nGenerated Z3 Python code:")
-    #         print("=" * 80)
-    #         print(current_code)
-    #         print("=" * 80)
-
-    #     syntax_errors = []
-    #     for iteration in range(self.config.max_repairs):
-    #         print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-    #         # Execute code
-    #         is_valid, solver_output = self.execute_z3_code(current_code)
-    #         if not is_valid:
-    #             print(f"\nZ3 code execution failed. Error type: {solver_output}")
-    #             syntax_errors.append(solver_output)
-            
-    #             # Generate fix
-    #             fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
-    #             print("Attempting to fix syntax errors...")
-    #             current_code = self._call_api(fix_prompt)
-    #             current_code = self.clean_code(current_code)
-    #             print("\nFixed Z3 Python code:")
-    #             print("=" * 80)
-    #             print(current_code)
-    #             print("=" * 80)
-    #         else:
-    #             print("Z3 code execution succeeded.")
-    #             break
-        
-    #     # reached max repairs
-    #     if iteration == self.config.max_repairs - 1:
-    #         print(f"\nReached max repairs ({self.config.max_repairs})")
-    #     return {
-    #         "plan": current_plan,
-    #         "code": current_code,
-    #         "solver_output": solver_output,
-    #         "plan_feedback": plan_feedback,
-    #         "code_feedback": code_feedback,
-    #         "syntax_errors": syntax_errors
-    #     }
 
     def reason_z3_code(self, test_case: Dict) -> Dict:
         """Use model to reason and choose the correct answer with enhanced diversity parameters"""
@@ -693,164 +626,6 @@ class TwoStepReasoner(Reasoner):
         return {
             "all_plan_results": all_plan_results
         }
-        
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
-        # save the "plan" and "code" to the results_folder
-        plan_folder = os.path.join(self.results_folder, "plan")
-        code_folder = os.path.join(self.results_folder, "code")
-        if not os.path.exists(plan_folder):
-            os.makedirs(plan_folder)
-        if not os.path.exists(code_folder):
-            os.makedirs(code_folder)
-
-        # get the problem name from the id_string if it exists, otherwise use the id_string
-        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Generate unique UUID for this plan and code
-        unique_id = str(uuid.uuid4())
-        
-        # Process all plan results and collect solver outputs for majority voting
-        all_plan_results = reasoning_result.get("all_plan_results", [])
-        total_code_count = 0
-        plan_summaries = []
-        all_solver_outputs = []  # Collect all valid solver outputs for majority voting
-        
-        for plan_result in all_plan_results:
-            plan_idx = plan_result["plan_idx"]
-            plan_config = plan_result["plan_config"]
-            plan_temp = plan_config["temperature"]  # Extract temperature from config
-            
-            # Save the plan with config info
-            plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-temp{plan_temp}.txt")
-            with open(plan_filepath, "w") as f:
-                f.write(f"Plan Config: {plan_config}\n\n")
-                f.write(plan_result["plan"])
-            
-            # Process codes for this plan
-            code_results = plan_result.get("code_results", [])
-            plan_code_results = []
-            
-            for code_result in code_results:
-                code_idx = code_result["code_idx"]
-                generation_config = code_result.get("generation_config", {})
-                
-                # Save each code with generation config info
-                code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-code{code_idx}.py")
-                with open(code_filepath, "w") as f:
-                    f.write(f"# Plan Config: {plan_config}\n")
-                    f.write(f"# Generation Config: {generation_config}\n\n")
-                    f.write(code_result["code"])
-                
-                # Collect solver outputs for majority voting (only valid ones)
-                solver_output = code_result["solver_output"]
-                if solver_output is not None and code_result["is_valid"]:
-                    all_solver_outputs.append(solver_output)
-                
-                total_code_count += 1
-                
-                code_eval_result = {
-                    "plan_idx": plan_idx,
-                    "code_idx": code_idx,
-                    "solver_output": solver_output,
-                    "is_valid": code_result["is_valid"],
-                    "generation_config": generation_config
-                }
-                plan_code_results.append(code_eval_result)
-                
-                print(f"Plan {plan_idx} - Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
-            
-            plan_summaries.append({
-                "plan_idx": plan_idx,
-                "plan_config": plan_config,
-                "total_codes": len(code_results),
-                "code_results": plan_code_results
-            })
-        
-        # Perform majority voting on all valid solver outputs
-        if all_solver_outputs:
-            # Interpret results
-            if self.config.dataset.lower() == "ar-lsat":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["label"], 
-                test_case["answers"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "proofwriter":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "folio":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            else:
-                raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
-
-            print(f"\n{'='*80}")
-            print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
-            print(f"Details: {vote_result}")
-            print(f"Total valid outputs used: {len(all_solver_outputs)}")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
-            print(f"{'='*80}")
-            
-            # Record result with majority voting information
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "majority_vote_correct": is_correct,
-                "majority_vote_details": vote_result,
-                "total_valid_outputs": len(all_solver_outputs),
-                "total_code_count": total_code_count,
-                "valid_output_rate": len(all_solver_outputs) / total_code_count if total_code_count > 0 else 0,
-                "all_solver_outputs": all_solver_outputs,
-                "plan_summaries": plan_summaries
-            }
-        else:
-            print(f"\n{'='*80}")
-            print(f"NO VALID SOLVER OUTPUTS FOUND")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"All codes failed to produce valid outputs")
-            print(f"{'='*80}")
-            
-            # Record result with no valid outputs
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "majority_vote_correct": False,
-                "majority_vote_details": "no valid outputs",
-                "total_valid_outputs": 0,
-                "total_code_count": total_code_count,
-                "valid_output_rate": 0,
-                "all_solver_outputs": [],
-                "plan_summaries": plan_summaries
-            }
-
-        # Append results to summary as a JSON array
-        try:
-            results_array = []
-            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
-                with open(self.summary_filepath, "r") as f:
-                    try:
-                        results_array = json.load(f)
-                    except json.JSONDecodeError:
-                        # If not a valid JSON, start with an empty array
-                        results_array = []
-            
-            # Add new result to array
-            results_array.append(results)
-            
-            # Write back the entire array
-            with open(self.summary_filepath, "w") as f:
-                json.dump(results_array, f, indent=2)
-        except Exception as e:
-            print(f"Error saving results to {self.summary_filepath}: {e}")
-
 
     def reason_pyke_code(self, test_case: Dict) -> Dict:
         """Use model to reason and choose the correct answer in two step"""
@@ -1012,45 +787,127 @@ class TwoStepReasoner(Reasoner):
         # Generate unique UUID for this plan and code
         unique_id = str(uuid.uuid4())
         
-        plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}.txt")
-        with open(plan_filepath, "w") as f:
-            f.write(reasoning_result["plan"])
-            
-        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
-        with open(code_filepath, "w") as f:
-            f.write(reasoning_result["code"])
-
-        # Display results
-        # print("\nSolver Output:")
-        # print("=" * 80)
-        # print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
-        # print("=" * 80)
+        # Process all plan results and collect solver outputs for majority voting
+        all_plan_results = reasoning_result.get("all_plan_results", [])
+        total_code_count = 0
+        plan_summaries = []
+        all_solver_outputs = []  # Collect all valid solver outputs for majority voting
         
-        # Interpret results
-        if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "folio":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+        for plan_result in all_plan_results:
+            plan_idx = plan_result["plan_idx"]
+            plan_config = plan_result["plan_config"]
+            plan_temp = plan_config["temperature"]  # Extract temperature from config
+            
+            # Save the plan with config info
+            plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-temp{plan_temp}.txt")
+            with open(plan_filepath, "w") as f:
+                f.write(f"Plan Config: {plan_config}\n\n")
+                f.write(plan_result["plan"])
+            
+            # Process codes for this plan
+            code_results = plan_result.get("code_results", [])
+            plan_code_results = []
+            
+            for code_result in code_results:
+                code_idx = code_result["code_idx"]
+                generation_config = code_result.get("generation_config", {})
+                
+                # Save each code with generation config info
+                code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-code{code_idx}.py")
+                with open(code_filepath, "w") as f:
+                    f.write(f"# Plan Config: {plan_config}\n")
+                    f.write(f"# Generation Config: {generation_config}\n\n")
+                    f.write(code_result["code"])
+                
+                # Collect solver outputs for majority voting (only valid ones)
+                solver_output = code_result["solver_output"]
+                if solver_output is not None and code_result["is_valid"]:
+                    all_solver_outputs.append(solver_output)
+                
+                total_code_count += 1
+                
+                code_eval_result = {
+                    "plan_idx": plan_idx,
+                    "code_idx": code_idx,
+                    "solver_output": solver_output,
+                    "is_valid": code_result["is_valid"],
+                    "generation_config": generation_config
+                }
+                plan_code_results.append(code_eval_result)
+                
+                print(f"Plan {plan_idx} - Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
+            
+            plan_summaries.append({
+                "plan_idx": plan_idx,
+                "plan_config": plan_config,
+                "total_codes": len(code_results),
+                "code_results": plan_code_results
+            })
+        
+        # Perform majority voting on all valid solver outputs
+        if all_solver_outputs:
+            # Interpret results
+            if self.config.dataset.lower() == "ar-lsat":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["label"], 
+                test_case["answers"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == "proofwriter":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == "folio":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            else:
+                raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
 
-        # Check if an answer was selected
-        if is_correct:
-            print(f"\nReasoning PASSED. Error type: {error_type}")
+            print(f"\n{'='*80}")
+            print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
+            print(f"Details: {vote_result}")
+            print(f"Total valid outputs used: {len(all_solver_outputs)}")
+            print(f"Total codes generated: {total_code_count}")
+            print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
+            print(f"{'='*80}")
+            
+            # Record result with majority voting information
+            results = {
+                "problem": test_case,
+                "timing": case_time,
+                "majority_vote_correct": is_correct,
+                "majority_vote_details": vote_result,
+                "total_valid_outputs": len(all_solver_outputs),
+                "total_code_count": total_code_count,
+                "valid_output_rate": len(all_solver_outputs) / total_code_count if total_code_count > 0 else 0,
+                "all_solver_outputs": all_solver_outputs,
+                "plan_summaries": plan_summaries
+            }
         else:
-            print(f"\nReasoning FAILED. Error type: {error_type}")
-
-        # Record result
-        results = {
-            "problem": test_case,
-            "solver_output": reasoning_result["solver_output"],
-            # "reasoning_result": reasoning_result,
-            "error_type": error_type,
-            "success": is_correct,
-            "timing": case_time
-        }
+            print(f"\n{'='*80}")
+            print(f"NO VALID SOLVER OUTPUTS FOUND")
+            print(f"Total codes generated: {total_code_count}")
+            print(f"All codes failed to produce valid outputs")
+            print(f"{'='*80}")
+            
+            # Record result with no valid outputs
+            results = {
+                "problem": test_case,
+                "timing": case_time,
+                "majority_vote_correct": False,
+                "majority_vote_details": "no valid outputs",
+                "total_valid_outputs": 0,
+                "total_code_count": total_code_count,
+                "valid_output_rate": 0,
+                "all_solver_outputs": [],
+                "plan_summaries": plan_summaries
+            }
 
         # Append results to summary as a JSON array
         try:
