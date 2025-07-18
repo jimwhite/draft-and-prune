@@ -4,7 +4,7 @@ import google.generativeai as genai
 import os
 import time
 from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple, Optional, Any, Union
+from typing import List, Dict, Tuple, Optional, Any, Union, Literal, Callable
 import uuid
 import openai
 import traceback
@@ -238,7 +238,7 @@ class Reasoner(ABC):
                  os.unlink(tmp_filename)
             return False, f"Error executing Z3 code: {str(e)}"
         
-    def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
+    def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, Any]:
         """Execute the PyKe code and return the results."""
         try:
             facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
@@ -281,7 +281,7 @@ class Reasoner(ABC):
                 print('removing compiled_krb')
                 os.system(f'rm -rf compiled_krb/*')
     
-    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
+    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, Any]:
         """Execute the Prover9 code and return the results."""
         def negate_prover9_goal(prover9_input: str) -> str:
             """
@@ -506,8 +506,81 @@ class TwoStepReasoner(Reasoner):
             raise ValueError(f"Unsupported dataset: {self.config.dataset}")
         
         return prompt
+    
+    def reason_code_greedy(self, 
+                           test_case: dict, 
+                           solver_name: Literal["z3", "pyke", "prover9"],
+                           execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
+        """Use model to reason and choose the correct answer in two step"""
+        current_plan = None
+        current_code = None
+        solver_output = None
+        plan_feedback = None
+        code_feedback = None
 
-    def reason_z3_code(self, test_case: Dict) -> Dict:
+        if current_plan is None or plan_feedback:
+            # Generate plan
+            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
+            current_plan = self._call_api(plan_prompt)
+            print("\nGenerated plan:")
+            print("=" * 80)
+            print(current_plan)
+            print("=" * 80)
+
+            # current_plan = self.fix_semantic_errors(test_case, current_plan)
+            # print("\nFixed plan:")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
+
+        if current_code is None or code_feedback:
+            # Generate code
+            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
+            current_code = self._call_api(code_prompt)
+            current_code = self.clean_code(current_code)
+            print(f"\nGenerated {solver_name} code:")
+            print("=" * 80)
+            print(current_code)
+            print("=" * 80)
+
+        syntax_errors = []
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
+            # Execute code
+            is_valid, solver_output = execute_func(current_code)
+            if not is_valid:
+                print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
+                syntax_errors.append(solver_output)
+            
+                # Generate fix
+                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
+                print("Attempting to fix syntax errors...")
+                current_code = self._call_api(fix_prompt)
+                current_code = self.clean_code(current_code)
+                print(f"\nFixed {solver_name} code:")
+                print("=" * 80)
+                print(current_code)
+                print("=" * 80)
+            else:
+                print(f"{solver_name} code execution succeeded.")
+                break
+        
+        # reached max repairs
+        if iteration == self.config.max_repairs - 1:
+            print(f"\nReached max repairs ({self.config.max_repairs})")
+        return {
+            "plan": current_plan,
+            "code": current_code,
+            "solver_output": solver_output,
+            "plan_feedback": plan_feedback,
+            "code_feedback": code_feedback,
+            "syntax_errors": syntax_errors
+        }
+
+    def reason_code_diversity(self, 
+                              test_case: dict,
+                              solver_name: Literal["z3", "pyke", "prover9"],
+                              execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
         """Use model to reason and choose the correct answer with enhanced diversity parameters"""
         plan_feedback = None
         code_feedback = None
@@ -571,7 +644,7 @@ class TwoStepReasoner(Reasoner):
                 temp_code = temp_code_response
                 temp_code = self.clean_code(temp_code)
                 
-                print(f"\nGenerated Z3 Python code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
+                print(f"\nGenerated {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
                 print("=" * 50)
                 print(temp_code)
                 print("=" * 50)
@@ -579,9 +652,9 @@ class TwoStepReasoner(Reasoner):
                 # Execute the code to check solver output
                 for iteration in range(self.config.max_repairs):
                     print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for plan={plan_config_idx + 1}, code={code_gen_idx}")
-                    is_valid, temp_solver_output = self.execute_z3_code(temp_code)
+                    is_valid, temp_solver_output = execute_func(temp_code)
                     if not is_valid:
-                        print(f"\nZ3 code execution failed for plan={plan_config_idx + 1}, code={code_gen_idx}. Error type: {temp_solver_output}")
+                        print(f"\n{solver_name} code execution failed for plan={plan_config_idx + 1}, code={code_gen_idx}. Error type: {temp_solver_output}")
                     
                         # Generate fix using single generation
                         fix_prompt = self.fix_syntax_errors(test_case, current_plan, temp_code, temp_solver_output)
@@ -589,12 +662,12 @@ class TwoStepReasoner(Reasoner):
                         fix_response = self._call_api(fix_prompt)
                         temp_code = fix_response  # API now always returns a single string
                         temp_code = self.clean_code(temp_code)
-                        print(f"\nFixed Z3 Python code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
+                        print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
                         print("=" * 50)
                         print(temp_code)
                         print("=" * 50)
                     else:
-                        print(f"Z3 code execution succeeded for plan={plan_config_idx + 1}, code={code_gen_idx}.")
+                        print(f"{solver_name} code execution succeeded for plan={plan_config_idx + 1}, code={code_gen_idx}.")
                         break
                 
                 # Store this code generation's results
@@ -626,153 +699,94 @@ class TwoStepReasoner(Reasoner):
         return {
             "all_plan_results": all_plan_results
         }
-
-    def reason_pyke_code(self, test_case: Dict) -> Dict:
-        """Use model to reason and choose the correct answer in two step"""
-        current_plan = None
-        current_code = None
-        solver_output = None
-        plan_feedback = None
-        code_feedback = None
-
-        if current_plan is None or plan_feedback:
-            # Generate plan
-            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
-            current_plan = self._call_api(plan_prompt)
-            print("\nGenerated plan:")
-            print("=" * 80)
-            print(current_plan)
-            print("=" * 80)
-
-            # current_plan = self.fix_semantic_errors(test_case, current_plan)
-            # print("\nFixed plan:")
-            # print("=" * 80)
-            # print(current_plan)
-            # print("=" * 80)
-
-        if current_code is None or code_feedback:
-            # Generate code
-            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-            current_code = self._call_api(code_prompt)
-            current_code = self.clean_code(current_code)
-            print("\nGenerated PyKe code:")
-            print("=" * 80)
-            print(current_code)
-            print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            is_valid, solver_output = self.execute_pyke_code(current_code)
-            if not is_valid:
-                print(f"\nPyKe code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print("\nFixed PyKe code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
-            else:
-                print("PyKe code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-        return {
-            "plan": current_plan,
-            "code": current_code,
-            "solver_output": solver_output,
-            "plan_feedback": plan_feedback,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
-    
-    def reason_prover9_code(self, test_case: Dict) -> Dict:
-        """Use model to reason and choose the correct answer in two step"""
-        current_plan = None
-        current_code = None
-        solver_output = None
-        plan_feedback = None
-        code_feedback = None
-
-        if current_plan is None or plan_feedback:
-            # Generate plan
-            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
-            current_plan = self._call_api(plan_prompt)
-            print("\nGenerated plan:")
-            print("=" * 80)
-            print(current_plan)
-            print("=" * 80)
-
-            # current_plan = self.fix_semantic_errors(test_case, current_plan)
-            # print("\nFixed plan:")
-            # print("=" * 80)
-            # print(current_plan)
-            # print("=" * 80)
-
-        if current_code is None or code_feedback:
-            # Generate code
-            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-            current_code = self._call_api(code_prompt)
-            current_code = self.clean_code(current_code)
-            print("\nGenerated Prover9 code:")
-            print("=" * 80)
-            print(current_code)
-            print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            is_valid, solver_output = self.execute_prover9_code(current_code)
-            if not is_valid:
-                print(f"\nProver9 code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print("\nFixed Prover9 code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
-            else:
-                print("Prover9 code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-        return {
-            "plan": current_plan,
-            "code": current_code,
-            "solver_output": solver_output,
-            "plan_feedback": plan_feedback,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
     
     def reason(self, test_case: Dict) -> Dict:
         """Generate formal code directly in two step and execute it"""
         if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_z3_code(test_case)
+            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code)
         elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_pyke_code(test_case)
+            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code)
         elif self.config.dataset.lower() == "folio":
-            return self.reason_prover9_code(test_case)
+            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code)
         else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
+            raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
         
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        # save the "plan" and "code" to the results_folder
+        plan_folder = os.path.join(self.results_folder, "plan")
+        code_folder = os.path.join(self.results_folder, "code")
+        if not os.path.exists(plan_folder):
+            os.makedirs(plan_folder)
+        if not os.path.exists(code_folder):
+            os.makedirs(code_folder)
+
+        # get the problem name from the id_string if it exists, otherwise use the id_string
+        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        
+        # Generate unique UUID for this plan and code
+        unique_id = str(uuid.uuid4())
+        
+        plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}.txt")
+        with open(plan_filepath, "w") as f:
+            f.write(reasoning_result["plan"])
+            
+        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
+        with open(code_filepath, "w") as f:
+            f.write(reasoning_result["code"])
+
+        # Display results
+        # print("\nSolver Output:")
+        # print("=" * 80)
+        # print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
+        # print("=" * 80)
+        
+        # Interpret results
+        if self.config.dataset.lower() == "ar-lsat":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "proofwriter":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        elif self.config.dataset.lower() == "folio":
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
+        else:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+
+        # Check if an answer was selected
+        if is_correct:
+            print(f"\nReasoning PASSED. Error type: {error_type}")
+        else:
+            print(f"\nReasoning FAILED. Error type: {error_type}")
+
+        # Record result
+        results = {
+            "problem": test_case,
+            "solver_output": reasoning_result["solver_output"],
+            # "reasoning_result": reasoning_result,
+            "error_type": error_type,
+            "success": is_correct,
+            "timing": case_time
+        }
+
+        # Append results to summary as a JSON array
+        try:
+            results_array = []
+            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
+                with open(self.summary_filepath, "r") as f:
+                    try:
+                        results_array = json.load(f)
+                    except json.JSONDecodeError:
+                        # If not a valid JSON, start with an empty array
+                        results_array = []
+            
+            # Add new result to array
+            results_array.append(results)
+            
+            # Write back the entire array
+            with open(self.summary_filepath, "w") as f:
+                json.dump(results_array, f, indent=2)
+        except Exception as e:
+            print(f"Error saving results to {self.summary_filepath}: {e}")
+        
+    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -929,6 +943,9 @@ class TwoStepReasoner(Reasoner):
         except Exception as e:
             print(f"Error saving results to {self.summary_filepath}: {e}")
 
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+        return self._process_results_diversity(test_case, reasoning_result, case_time)
+
 
 class DirectReasoner(Reasoner):
     """Direct reasoning approach - generates formal code in one step"""
@@ -1024,8 +1041,11 @@ class DirectReasoner(Reasoner):
         
         return prompt
     
-    def reason_z3_code(self, test_case: Dict) -> Dict:
-        """Generate Z3 code directly in one step and execute it"""
+    def reason_code_greedy(self, 
+                           test_case: dict, 
+                           solver_name: Literal["z3", "pyke", "prover9"],
+                           execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
+        """Generate formal code directly in one step and execute it"""
         current_code = None
         solver_output = None
         code_feedback = None
@@ -1034,7 +1054,7 @@ class DirectReasoner(Reasoner):
         direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
         current_code = self._call_api(direct_prompt)
         current_code = self.clean_code(current_code)
-        print("\nGenerated Z3 Python code:")
+        print(f"\nGenerated {solver_name} code:")
         print("=" * 80)
         print(current_code)
         print("=" * 80)
@@ -1043,9 +1063,9 @@ class DirectReasoner(Reasoner):
         for iteration in range(self.config.max_repairs):
             print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
             # Execute code
-            is_valid, solver_output = self.execute_z3_code(current_code)
+            is_valid, solver_output = execute_func(current_code)
             if not is_valid:
-                print(f"\nZ3 code execution failed. Error type: {solver_output}")
+                print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
             
                 # Generate fix
@@ -1053,108 +1073,12 @@ class DirectReasoner(Reasoner):
                 print("Attempting to fix syntax errors...")
                 current_code = self._call_api(fix_prompt)
                 current_code = self.clean_code(current_code)
-                print("\nFixed Z3 Python code:")
+                print(f"\nFixed {solver_name} code:")
                 print("=" * 80)
                 print(current_code)
                 print("=" * 80)
             else:
-                print("Z3 code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-            
-        return {
-            "code": current_code,
-            "solver_output": solver_output,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
-        
-    def reason_pyke_code(self, test_case: Dict) -> Dict:
-        """Generate PyKe code directly in one step and execute it"""
-        current_code = None
-        solver_output = None
-        code_feedback = None
-
-        # Generate code directly
-        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
-        current_code = self._call_api(direct_prompt)
-        current_code = self.clean_code(current_code)
-        print("\nGenerated PyKe code:")
-        print("=" * 80)
-        print(current_code)
-        print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            is_valid, solver_output = self.execute_pyke_code(current_code)
-            if not is_valid:
-                print(f"\nPyKe code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print("\nFixed PyKe code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
-            else:
-                print("PyKe code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-            
-        return {
-            "code": current_code,
-            "solver_output": solver_output,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
-    
-    def reason_prover9_code(self, test_case: Dict) -> Dict:
-        """Generate Prover9 code directly in one step and execute it"""
-        current_code = None
-        solver_output = None
-        code_feedback = None
-
-        # Generate code directly
-        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
-        current_code = self._call_api(direct_prompt)
-        current_code = self.clean_code(current_code)
-        print("\nGenerated Prover9 code:")
-        print("=" * 80)
-        print(current_code)
-        print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            is_valid, solver_output = self.execute_prover9_code(current_code)
-            if not is_valid:
-                print(f"\nProver9 code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print("\nFixed Prover9 code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
-            else:
-                print("Prover9 code execution succeeded.")
+                print(f"{solver_name} code execution succeeded.")
                 break
         
         # reached max repairs
@@ -1171,11 +1095,11 @@ class DirectReasoner(Reasoner):
     def reason(self, test_case: Dict) -> Dict:
         """Generate formal code directly in one step and execute it"""
         if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_z3_code(test_case)
+            return self.reason_code_greedy(test_case, "z3", self.execute_z3_code)
         elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_pyke_code(test_case)
+            return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code)
         elif self.config.dataset.lower() == "folio":
-            return self.reason_prover9_code(test_case)
+            return self.reason_code_greedy(test_case, "prover9", self.execute_prover9_code)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
