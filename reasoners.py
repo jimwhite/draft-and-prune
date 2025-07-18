@@ -238,7 +238,7 @@ class Reasoner(ABC):
                  os.unlink(tmp_filename)
             return False, f"Error executing Z3 code: {str(e)}"
         
-    def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, Any]:
+    def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
         """Execute the PyKe code and return the results."""
         try:
             facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
@@ -269,9 +269,9 @@ class Reasoner(ABC):
                 found = False
                 for vars, plan in gen:
                     found = True
-                    return True, vars['target'] == final_answer
+                    return True, str(vars['target'] == final_answer)
                 if not found:
-                    return True, None
+                    return True, "Unknown"
                 
         except Exception as e:
             return False, f"Error executing PyKe Program: {str(e)}"
@@ -281,7 +281,7 @@ class Reasoner(ABC):
                 print('removing compiled_krb')
                 os.system(f'rm -rf compiled_krb/*')
     
-    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, Any]:
+    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
         """Execute the Prover9 code and return the results."""
         def negate_prover9_goal(prover9_input: str) -> str:
             """
@@ -322,7 +322,7 @@ class Reasoner(ABC):
             )
             
             if "THEOREM PROVED" in result.stdout:
-                return True, True
+                return True, "True"
             elif "SEARCH FAILED" in result.stdout:
                 negate_prover9_code = negate_prover9_goal(prover9_code)
                 result = subprocess.run(
@@ -334,9 +334,9 @@ class Reasoner(ABC):
                     text = True
                 )
                 if "THEOREM PROVED" in result.stdout:
-                    return True, False
+                    return True, "False"
                 elif "SEARCH FAILED" in result.stdout:
-                    return True, None
+                    return True, "Unknown"
                 else:
                     return False, result.stderr 
             else:
@@ -676,7 +676,7 @@ class TwoStepReasoner(Reasoner):
                     "code_idx": code_gen_idx,
                     "code": temp_code,
                     "solver_output": temp_solver_output,
-                    "is_valid": temp_solver_output is not None,
+                    "is_valid": temp_solver_output is not None and is_valid,
                     "generation_config": code_config.copy()
                 }
                 plan_code_results.append(code_result)

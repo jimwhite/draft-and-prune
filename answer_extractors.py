@@ -263,7 +263,7 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
 
 
 class ProofWriter_AnswerExtractor(AnswerExtractor):
-    """Answer extractor specifically tailored for ProofWriter dataset format"""
+    """Answer extractor specifically tailored for FOLIO dataset format"""
     
     def extract_answer(self, response_text: Union[str, Optional[bool]], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
         """
@@ -276,6 +276,58 @@ class ProofWriter_AnswerExtractor(AnswerExtractor):
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
         """       
+        is_valid, return_value = self._extract_single_answer(response_text, reasoning_method)
+        if is_valid:
+            if self._judge_answer(return_value, label, reasoning_method):
+                return True, None
+            else:
+                return False, 'semantic error'
+        else:
+            return False, return_value
+
+    def extract_answer_with_majority_vote(self, response_texts: List[Union[str, Optional[bool]]], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Extract answers from multiple response texts and perform majority voting"""
+        # Extract single-length answers from all responses
+        single_answers, error_stats = [], []
+        for response_text in response_texts:
+            is_valid, return_value = self._extract_single_answer(response_text, reasoning_method)
+            if is_valid:
+                single_answers.append(return_value)
+            else:
+                error_stats.append(return_value)
+            
+        # Check if we have any valid single answers
+        if not single_answers:
+            error_stats = Counter(error_stats)
+            most_common_error = error_stats.most_common(1)[0][0] if error_stats else 'no valid answers'
+            return False, f'no single answers found: {most_common_error}'
+        
+        # Perform majority voting
+        answer_counts = Counter(single_answers)
+        majority_answer, majority_count = answer_counts.most_common(1)[0]
+        
+        # Check if there's a clear majority (more than half)
+        total_votes = len(single_answers)
+        if majority_count > total_votes / 2:
+            is_correct = self._judge_answer(majority_answer, label, reasoning_method)
+            confidence = majority_count / total_votes
+            
+            if is_correct:
+                return True, f'majority vote correct: {majority_answer} ({majority_count}/{total_votes}, {confidence:.2%})'
+            else:
+                return False, f'majority vote incorrect: {majority_answer} vs {label} ({majority_count}/{total_votes}, {confidence:.2%})'
+        else:
+            # No clear majority - return the most common answer but indicate tie
+            is_correct = self._judge_answer(majority_answer, label, reasoning_method)
+            confidence = majority_count / total_votes
+            
+            if is_correct:
+                return True, f'plurality vote correct: {majority_answer} ({majority_count}/{total_votes}, {confidence:.2%})'
+            else:
+                return False, f'plurality vote incorrect: {majority_answer} vs {label} ({majority_count}/{total_votes}, {confidence:.2%})'
+        
+    def _extract_single_answer(self, response_text: Union[str, Optional[bool]], reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Extract answers from one response text"""
         if reasoning_method == "cot":
             keywords = ['A', 'B', 'C', 'True', 'False', 'Unknown']
             positions = {word: response_text.rfind(word) for word in keywords}
@@ -286,10 +338,12 @@ class ProofWriter_AnswerExtractor(AnswerExtractor):
                 return False, 'answer not found in choices'
 
             target = max(valid_positions.items(), key=lambda x: x[1])[0]
-            if (label == 'A' and (target == 'A' or target == 'True')) \
-            or (label == 'B' and (target == 'B' or target == 'False')) \
-            or (label == 'C' and (target == 'C' or target == 'Unknown')):
-                return True, None
+            if target == 'A' or target == 'True':
+                return True, 'A'
+            elif target == 'B' or target == 'False':
+                return True, 'B'
+            elif target == 'C' or target == 'Unknown':
+                return True, 'C'
             else:
                 return False, 'semantic error'
             
@@ -297,15 +351,18 @@ class ProofWriter_AnswerExtractor(AnswerExtractor):
             return False, 'syntax error'
         
         if reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
-            if (label == 'A' and response_text == True) \
-            or (label == 'B' and response_text == False) \
-            or (label == 'C' and response_text == None):
-                return True, None
+            if response_text == 'True':
+                return True, 'A'
+            elif response_text == 'False':
+                return True, 'B'
+            elif response_text == 'Unknown':
+                return True, 'C'
             else:
                 return False, 'semantic error'
-
-    def extract_answer_with_majority_vote(self, response_texts: List[str], label: str, answers: Optional[list] = None, reasoning_method: str = "cot") -> Tuple[bool, str]:
-        raise NotImplementedError("Majority vote is not implemented for ProofWriter.")
+            
+    def _judge_answer(self, extract_answer: List[str], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Determine whether the extracted answer is correct"""
+        return extract_answer == label
 
 
 class FOLIO_AnswerExtractor(AnswerExtractor):
@@ -322,6 +379,58 @@ class FOLIO_AnswerExtractor(AnswerExtractor):
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
         """       
+        is_valid, return_value = self._extract_single_answer(response_text, reasoning_method)
+        if is_valid:
+            if self._judge_answer(return_value, label, reasoning_method):
+                return True, None
+            else:
+                return False, 'semantic error'
+        else:
+            return False, return_value
+
+    def extract_answer_with_majority_vote(self, response_texts: List[Union[str, Optional[bool]]], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Extract answers from multiple response texts and perform majority voting"""
+        # Extract single-length answers from all responses
+        single_answers, error_stats = [], []
+        for response_text in response_texts:
+            is_valid, return_value = self._extract_single_answer(response_text, reasoning_method)
+            if is_valid:
+                single_answers.append(return_value)
+            else:
+                error_stats.append(return_value)
+            
+        # Check if we have any valid single answers
+        if not single_answers:
+            error_stats = Counter(error_stats)
+            most_common_error = error_stats.most_common(1)[0][0] if error_stats else 'no valid answers'
+            return False, f'no single answers found: {most_common_error}'
+        
+        # Perform majority voting
+        answer_counts = Counter(single_answers)
+        majority_answer, majority_count = answer_counts.most_common(1)[0]
+        
+        # Check if there's a clear majority (more than half)
+        total_votes = len(single_answers)
+        if majority_count > total_votes / 2:
+            is_correct = self._judge_answer(majority_answer, label, reasoning_method)
+            confidence = majority_count / total_votes
+            
+            if is_correct:
+                return True, f'majority vote correct: {majority_answer} ({majority_count}/{total_votes}, {confidence:.2%})'
+            else:
+                return False, f'majority vote incorrect: {majority_answer} vs {label} ({majority_count}/{total_votes}, {confidence:.2%})'
+        else:
+            # No clear majority - return the most common answer but indicate tie
+            is_correct = self._judge_answer(majority_answer, label, reasoning_method)
+            confidence = majority_count / total_votes
+            
+            if is_correct:
+                return True, f'plurality vote correct: {majority_answer} ({majority_count}/{total_votes}, {confidence:.2%})'
+            else:
+                return False, f'plurality vote incorrect: {majority_answer} vs {label} ({majority_count}/{total_votes}, {confidence:.2%})'
+        
+    def _extract_single_answer(self, response_text: Union[str, Optional[bool]], reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Extract answers from one response text"""
         if reasoning_method == "cot":
             keywords = ['A', 'B', 'C', 'True', 'False', 'Uncertain']
             positions = {word: response_text.rfind(word) for word in keywords}
@@ -332,10 +441,12 @@ class FOLIO_AnswerExtractor(AnswerExtractor):
                 return False, 'answer not found in choices'
 
             target = max(valid_positions.items(), key=lambda x: x[1])[0]
-            if (label == 'A' and (target == 'A' or target == 'True')) \
-            or (label == 'B' and (target == 'B' or target == 'False')) \
-            or (label == 'C' and (target == 'C' or target == 'Uncertain')):
-                return True, None
+            if target == 'A' or target == 'True':
+                return True, 'A'
+            elif target == 'B' or target == 'False':
+                return True, 'B'
+            elif target == 'C' or target == 'Uncertain':
+                return True, 'C'
             else:
                 return False, 'semantic error'
             
@@ -343,12 +454,16 @@ class FOLIO_AnswerExtractor(AnswerExtractor):
             return False, 'syntax error'
         
         if reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
-            if (label == 'A' and response_text == True) \
-            or (label == 'B' and response_text == False) \
-            or (label == 'C' and response_text == None):
-                return True, None
+            if response_text == 'True':
+                return True, 'A'
+            elif response_text == 'False':
+                return True, 'B'
+            elif response_text == 'Unknown':
+                return True, 'C'
             else:
                 return False, 'semantic error'
-
-    def extract_answer_with_majority_vote(self, response_texts: List[str], label: str, answers: Optional[list] = None, reasoning_method: str = "cot") -> Tuple[bool, str]:
-        raise NotImplementedError("Majority vote is not implemented for FOLIO.")
+            
+    def _judge_answer(self, extract_answer: List[str], label: str, reasoning_method: str = "cot") -> Tuple[bool, str]:
+        """Determine whether the extracted answer is correct"""
+        return extract_answer == label
+        
