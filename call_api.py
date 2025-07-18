@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import os
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 import openai
 import google.generativeai as genai
@@ -27,9 +27,19 @@ class APIClient(ABC):
     def __init__(self, config: APIConfig):
         self.config = config
     
+    @property
+    def temperature(self) -> float:
+        """Get the current temperature setting"""
+        return self.config.temperature
+    
+    @temperature.setter
+    def temperature(self, value: float):
+        """Set the temperature setting"""
+        self.config.temperature = value
+    
     @abstractmethod
     def call(self, prompt: str) -> str:
-        """Make an API call with the given prompt"""
+        """Make an API call with the given prompt and return the response"""
         pass
 
 class GeminiClient(APIClient):
@@ -42,7 +52,8 @@ class GeminiClient(APIClient):
     
         # Configure the generation parameters
         generation_config = genai.types.GenerationConfig(
-            temperature=self.config.temperature
+            temperature=self.config.temperature,
+            candidate_count=1  # Single generation only
         )
         
         # Using less restrictive safety settings
@@ -96,10 +107,17 @@ class GPTClient(APIClient):
                     model=self.config.model_name,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=self.config.temperature,
+                    n=1,
                 )
-                # Extract the content from the first choice
-                if response.choices and len(response.choices) > 0 and response.choices[0].message:
-                    return response.choices[0].message.content
+                # Extract the content from the choices
+                if response.choices and len(response.choices) > 0:
+                    if response.choices[0].message:
+                        return response.choices[0].message.content
+                    else:
+                        error_message = "GPT response was empty."
+                        print(f"Warning: {error_message}")
+                        last_error = error_message
+                        continue # Retry
                 else:
                     error_message = "GPT response was empty."
                     print(f"Warning: {error_message}")
@@ -134,18 +152,8 @@ class AzureOpenAIClient(APIClient):
         token_provider = get_bearer_token_provider(credential, "https://cognitiveservices.azure.com/.default")
         
         # Map models to appropriate API versions
-        if self.config.model_name == "gpt-4o":
-            api_version="2025-01-01-preview"
-        elif self.config.model_name == "gpt-4o-mini":
-            api_version="2024-11-01-preview"
-        elif self.config.model_name == "gpt-4":
+        if self.config.model_name == "gpt-4":
             api_version="2024-02-01"  # Updated from 2023-05-15
-        elif self.config.model_name == "gpt-4-turbo":
-            api_version="2024-02-01"
-        elif self.config.model_name == "gpt-35-turbo" or self.config.model_name == "gpt-3.5-turbo":
-            api_version="2024-02-01"  # Updated from 2023-05-15
-        elif self.config.model_name == "gpt-35-turbo-16k" or self.config.model_name == "gpt-3.5-turbo-16k":
-            api_version="2024-02-01"
         else:
             # Default to a recent stable version for unknown models
             api_version="2024-02-01"
@@ -166,16 +174,20 @@ class AzureOpenAIClient(APIClient):
                     messages=[{"role": "user", "content": prompt}],
                     temperature=self.config.temperature,
                     max_tokens=2048,
-                    top_p=0.95,
-                    frequency_penalty=0,
-                    presence_penalty=0,
+                    n=1,
                     stop=None,
                     stream=False
                 )
                 
-                # Extract the content from the first choice
-                if response.choices and len(response.choices) > 0 and response.choices[0].message:
-                    return response.choices[0].message.content
+                # Extract the content from the choices
+                if response.choices and len(response.choices) > 0:
+                    if response.choices[0].message:
+                        return response.choices[0].message.content
+                    else:
+                        error_message = "Azure OpenAI response was empty."
+                        print(f"Warning: {error_message}")
+                        last_error = error_message
+                        continue # Retry
                 else:
                     error_message = "Azure OpenAI response was empty."
                     print(f"Warning: {error_message}")
