@@ -48,7 +48,7 @@ def main():
     # Run all tests
     # limit_msg = f" with limit {args.limit}" if args.limit else ""
     # print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
-    reasoner.run_all_tests()
+    reasoner.run_all_tests_parallel(10)
 
     # save the config to a yaml file in the results folder
     reasoner.config.save_to_yaml(os.path.join(reasoner.results_folder, "config.yaml"))

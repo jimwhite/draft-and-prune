@@ -1,23 +1,71 @@
 #!/usr/bin/env python3
-import json
-import google.generativeai as genai
+
+import io
 import os
+import re
+import json
 import time
-from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple, Optional, Any, Union, Literal, Callable
 import uuid
 import openai
+import tempfile
 import traceback
+import subprocess
+import multiprocessing as mp
+import google.generativeai as genai
+
+from datetime import datetime
+from contextlib import redirect_stdout
+from abc import ABC, abstractmethod
+from typing import List, Dict, Tuple, Optional, Any, Union, Literal, Callable
+from pyke import knowledge_engine
 
 from config import ReasonerConfig
 from data_loaders import DataLoader
 from answer_extractors import AnswerExtractor
 from call_api import APIConfig, get_api_client
-from pyke import knowledge_engine
-import subprocess
-import tempfile
-import re
-from datetime import datetime
+
+
+def _parallel_worker(args: Tuple[Any, Dict]) -> None:
+    """
+    Executes the test task in a single subprocess and redirects all standard output to the specified file
+    """
+    test_runner_instance, test_case = args
+    
+    problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+    unique_id = str(uuid.uuid4())
+    log_filepath = os.path.join(test_runner_instance.log_folder, f"{problem_name}-{unique_id}.txt")
+    print(f"Start working on {problem_name}...")
+
+    try:
+        # Open a log file and redirect stdout to it
+        with open(log_filepath, 'w', encoding='utf-8') as log_file:
+            with redirect_stdout(log_file):
+                # Start recording information in the log
+                print(f"--- Log for Task ID: {problem_name} ---")
+                print(f"Process ID: {os.getpid()}")
+                start_process_time = time.time()
+                print(f"Start Time: {datetime.fromtimestamp(start_process_time).strftime('%Y-%m-%d %H:%M:%S')}")
+                print("-" * 30 + "\n")
+
+                # Call the instance's reason method
+                start_reason_time = time.time()
+                reasoning_result = test_runner_instance.reason(test_case)
+                case_reason_time = time.time() - start_reason_time
+                test_runner_instance._process_results(test_case, reasoning_result, case_reason_time, unique_id)
+
+                # Record the end information at the end of the log
+                case_process_time = time.time() - start_process_time
+                print(f"\n" + "-" * 30)
+                print(f"Task finished in {case_process_time:.2f}s.")
+
+    except Exception as e:
+        # If an error occurs during execution, the error message will also be recorded
+        with open(log_filepath, 'a', encoding='utf-8') as log_file:
+            log_file.write("\n\n****** AN ERROR OCCURRED ******\n")
+            log_file.write(traceback.format_exc())
+            
+    finally:
+        print(f"End working on {problem_name}")
 
 
 class Reasoner(ABC):
@@ -33,7 +81,12 @@ class Reasoner(ABC):
         self.data_loader = data_loader
         self.results_folder = self.create_results_folder()
         self.answer_extractor = answer_extractor
-        self.summary_filepath = os.path.join(self.results_folder, "summary.txt")
+        
+        self.summary_folder = os.path.join(self.results_folder, "summary")
+        self.log_folder = os.path.join(self.results_folder, "log")
+        os.makedirs(self.summary_folder, exist_ok=True)
+        os.makedirs(self.log_folder, exist_ok=True)
+        
         self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
         if os.path.exists("./compiled_krb"):
             print('removing compiled_krb')
@@ -108,7 +161,6 @@ class Reasoner(ABC):
         """Implement the reasoning strategy"""
         pass
 
-
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
         # append uuid to the results folder
@@ -154,7 +206,7 @@ class Reasoner(ABC):
             # Calculate total case time
             case_time = time.time() - start_time_case            
             
-            self._process_results(batch[0], reasoning_result, case_time)
+            self._process_results(batch[0], reasoning_result, case_time, str(uuid.uuid4()))
 
             # Increment counter and delay before next test
             processed_count += 1
@@ -165,7 +217,44 @@ class Reasoner(ABC):
         # Calculate total execution time
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
-       
+        
+    def run_all_tests_parallel(self, num_processes: int=10) -> None:
+        """
+        Use multiple processes to run all test cases in parallel
+
+        Args:
+            num_processes (int): The number of processes to use for parallel execution
+        """
+        # TODO: This parameter can be passed into config if necessary
+        # num_processes = getattr(self.config, "num_processes", num_processes)
+        print(f"Start parallel testing, using {num_processes} processes...")
+        print(f"Please visit the {self.log_folder} to view the real-time output log")
+
+        start_time_total = time.time()
+        
+        all_tasks = [(self, batch[0]) for batch in self.data_loader]
+        processes = []
+        try:
+            for task in all_tasks:
+                while len(processes) >= num_processes:
+                    processes = [p for p in processes if p.is_alive()]
+                    time.sleep(0.1)
+                p = mp.Process(target=_parallel_worker, args=(task,))
+                p.start()
+                processes.append(p)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt received! Terminating all processes...")
+            for p in processes:
+                if p.is_alive():
+                    p.terminate()
+        finally:
+            for p in processes:
+                p.join()
+            print("All processes joined.")
+
+        total_execution_time = time.time() - start_time_total
+        print(f"\nTotal execution time: {total_execution_time:.2f}s")
+    
     def clean_code(self, code_text: str) -> str:
         if self.config.dataset.lower() == 'ar-lsat':
             # Clean potential markdown fences (though the prompt requests raw code)
@@ -711,7 +800,7 @@ class TwoStepReasoner(Reasoner):
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
         
-    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -722,9 +811,6 @@ class TwoStepReasoner(Reasoner):
 
         # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Generate unique UUID for this plan and code
-        unique_id = str(uuid.uuid4())
         
         plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}.txt")
         with open(plan_filepath, "w") as f:
@@ -766,27 +852,12 @@ class TwoStepReasoner(Reasoner):
             "timing": case_time
         }
 
-        # Append results to summary as a JSON array
-        try:
-            results_array = []
-            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
-                with open(self.summary_filepath, "r") as f:
-                    try:
-                        results_array = json.load(f)
-                    except json.JSONDecodeError:
-                        # If not a valid JSON, start with an empty array
-                        results_array = []
-            
-            # Add new result to array
-            results_array.append(results)
-            
-            # Write back the entire array
-            with open(self.summary_filepath, "w") as f:
-                json.dump(results_array, f, indent=2)
-        except Exception as e:
-            print(f"Error saving results to {self.summary_filepath}: {e}")
+        # Save result
+        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
+        with open(summary_filepath, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
         
-    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -797,9 +868,6 @@ class TwoStepReasoner(Reasoner):
 
         # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Generate unique UUID for this plan and code
-        unique_id = str(uuid.uuid4())
         
         # Process all plan results and collect solver outputs for majority voting
         all_plan_results = reasoning_result.get("all_plan_results", [])
@@ -923,28 +991,13 @@ class TwoStepReasoner(Reasoner):
                 "plan_summaries": plan_summaries
             }
 
-        # Append results to summary as a JSON array
-        try:
-            results_array = []
-            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
-                with open(self.summary_filepath, "r") as f:
-                    try:
-                        results_array = json.load(f)
-                    except json.JSONDecodeError:
-                        # If not a valid JSON, start with an empty array
-                        results_array = []
-            
-            # Add new result to array
-            results_array.append(results)
-            
-            # Write back the entire array
-            with open(self.summary_filepath, "w") as f:
-                json.dump(results_array, f, indent=2)
-        except Exception as e:
-            print(f"Error saving results to {self.summary_filepath}: {e}")
+        # Save result
+        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
+        with open(summary_filepath, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
-        return self._process_results_diversity(test_case, reasoning_result, case_time)
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
 
 
 class DirectReasoner(Reasoner):
@@ -1103,7 +1156,7 @@ class DirectReasoner(Reasoner):
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
         if not os.path.exists(code_folder):
@@ -1111,9 +1164,6 @@ class DirectReasoner(Reasoner):
 
         # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Generate unique UUID for this code
-        unique_id = str(uuid.uuid4())
         
         code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
         with open(code_filepath, "w") as f:
@@ -1144,25 +1194,10 @@ class DirectReasoner(Reasoner):
             "timing": case_time
         }
 
-        # Append results to summary as a JSON array
-        try:
-            results_array = []
-            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
-                with open(self.summary_filepath, "r") as f:
-                    try:
-                        results_array = json.load(f)
-                    except json.JSONDecodeError:
-                        # If not a valid JSON, start with an empty array
-                        results_array = []
-            
-            # Add new result to array
-            results_array.append(results)
-            
-            # Write back the entire array
-            with open(self.summary_filepath, "w") as f:
-                json.dump(results_array, f, indent=2)
-        except Exception as e:
-            print(f"Error saving results to {self.summary_filepath}: {e}")
+        # Save result
+        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
+        with open(summary_filepath, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
 
 
 class CoTReasoner(Reasoner):
@@ -1240,15 +1275,13 @@ class CoTReasoner(Reasoner):
             "reasoning_output": reasoning_output
         }
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         # Save the "reasoning_output" to the results_folder
         reasoning_folder = os.path.join(self.results_folder, "reasoning")
         if not os.path.exists(reasoning_folder):
             os.makedirs(reasoning_folder)
 
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        unique_id = str(uuid.uuid4())
         
         reasoning_filepath = os.path.join(reasoning_folder, f"{problem_name}-{unique_id}.txt")
         with open(reasoning_filepath, "w") as f:
@@ -1275,19 +1308,8 @@ class CoTReasoner(Reasoner):
             "success": is_correct,
             "timing": case_time
         }
-
-        try:
-            results_array = []
-            if os.path.exists(self.summary_filepath) and os.path.getsize(self.summary_filepath) > 0:
-                with open(self.summary_filepath, "r") as f:
-                    try:
-                        results_array = json.load(f)
-                    except json.JSONDecodeError:
-                        results_array = []
-            
-            results_array.append(results)
-            
-            with open(self.summary_filepath, "w") as f:
-                json.dump(results_array, f, indent=2)
-        except Exception as e:
-            print(f"Error saving results to {self.summary_filepath}: {e}")
+        
+        # Save result
+        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
+        with open(summary_filepath, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
