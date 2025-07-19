@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import io
 import os
 import re
 import json
@@ -25,11 +24,11 @@ from answer_extractors import AnswerExtractor
 from call_api import APIConfig, get_api_client
 
 
-def _parallel_worker(args: Tuple[Any, Dict]) -> None:
+def _parallel_worker(args: Tuple[Any, Dict, Any]) -> None:
     """
     Executes the test task in a single subprocess and redirects all standard output to the specified file
     """
-    test_runner_instance, test_case = args
+    test_runner_instance, test_case, mp_lock = args
     
     problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
     unique_id = str(uuid.uuid4())
@@ -49,7 +48,7 @@ def _parallel_worker(args: Tuple[Any, Dict]) -> None:
 
                 # Call the instance's reason method
                 start_reason_time = time.time()
-                reasoning_result = test_runner_instance.reason(test_case)
+                reasoning_result = test_runner_instance.reason(test_case, mp_lock)
                 case_reason_time = time.time() - start_reason_time
                 test_runner_instance._process_results(test_case, reasoning_result, case_reason_time, unique_id)
 
@@ -149,12 +148,6 @@ class Reasoner(ABC):
             else:
                 raise ValueError(f"Unsupported fix model: {config.fix_model}")
             self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_azure_params)
-            
-    def __del__(self):
-        """Clean up cache files"""
-        if os.path.exists("./compiled_krb"):
-            print('removing compiled_krb')
-            os.system(f'rm -rf ./compiled_krb')
 
     @abstractmethod
     def reason(self, test_case: Dict) -> Dict:
@@ -232,7 +225,8 @@ class Reasoner(ABC):
 
         start_time_total = time.time()
         
-        all_tasks = [(self, batch[0]) for batch in self.data_loader]
+        mp_lock = mp.Lock()
+        all_tasks = [(self, batch[0], mp_lock) for batch in self.data_loader]
         processes = []
         try:
             for task in all_tasks:
@@ -348,7 +342,7 @@ class Reasoner(ABC):
                 fp.write(facts)
             with open(os.path.join(self.temp_cache_dir, "rules.krb"), 'w') as fp:
                 fp.write(rules)
-                
+
             engine = knowledge_engine.engine(self.temp_cache_dir)
             engine.reset()
             engine.activate('rules')
@@ -599,7 +593,8 @@ class TwoStepReasoner(Reasoner):
     def reason_code_greedy(self, 
                            test_case: dict, 
                            solver_name: Literal["z3", "pyke", "prover9"],
-                           execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
+                           execute_func: Callable[[str], Tuple[bool, Any]],
+                           mp_lock: Optional[Any] = None) -> dict:
         """Use model to reason and choose the correct answer in two step"""
         current_plan = None
         current_code = None
@@ -636,7 +631,11 @@ class TwoStepReasoner(Reasoner):
         for iteration in range(self.config.max_repairs):
             print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
             # Execute code
-            is_valid, solver_output = execute_func(current_code)
+            if mp_lock is not None:
+                with mp_lock:
+                    is_valid, solver_output = execute_func(current_code)
+            else:
+                is_valid, solver_output = execute_func(current_code)
             if not is_valid:
                 print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
@@ -669,7 +668,8 @@ class TwoStepReasoner(Reasoner):
     def reason_code_diversity(self, 
                               test_case: dict,
                               solver_name: Literal["z3", "pyke", "prover9"],
-                              execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
+                              execute_func: Callable[[str], Tuple[bool, Any]],
+                              mp_lock: Optional[Any] = None) -> dict:
         """Use model to reason and choose the correct answer with enhanced diversity parameters"""
         plan_feedback = None
         code_feedback = None
@@ -741,7 +741,12 @@ class TwoStepReasoner(Reasoner):
                 # Execute the code to check solver output
                 for iteration in range(self.config.max_repairs):
                     print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for plan={plan_config_idx + 1}, code={code_gen_idx}")
-                    is_valid, temp_solver_output = execute_func(temp_code)
+                    # Execute code
+                    if mp_lock is not None:
+                        with mp_lock:
+                            is_valid, temp_solver_output = execute_func(temp_code)
+                    else:
+                        is_valid, temp_solver_output = execute_func(temp_code)
                     if not is_valid:
                         print(f"\n{solver_name} code execution failed for plan={plan_config_idx + 1}, code={code_gen_idx}. Error type: {temp_solver_output}")
                     
@@ -789,14 +794,14 @@ class TwoStepReasoner(Reasoner):
             "all_plan_results": all_plan_results
         }
     
-    def reason(self, test_case: Dict) -> Dict:
+    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Generate formal code directly in two step and execute it"""
         if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code)
+            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code, mp_lock)
         elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code)
+            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
         elif self.config.dataset.lower() == "folio":
-            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code)
+            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code, mp_lock)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
         
@@ -1097,7 +1102,8 @@ class DirectReasoner(Reasoner):
     def reason_code_greedy(self, 
                            test_case: dict, 
                            solver_name: Literal["z3", "pyke", "prover9"],
-                           execute_func: Callable[[str], Tuple[bool, Any]]) -> dict:
+                           execute_func: Callable[[str], Tuple[bool, Any]],
+                           mp_lock: Optional[Any] = None) -> dict:
         """Generate formal code directly in one step and execute it"""
         current_code = None
         solver_output = None
@@ -1116,7 +1122,11 @@ class DirectReasoner(Reasoner):
         for iteration in range(self.config.max_repairs):
             print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
             # Execute code
-            is_valid, solver_output = execute_func(current_code)
+            if mp_lock is not None:
+                with mp_lock:
+                    is_valid, solver_output = execute_func(current_code)
+            else:
+                is_valid, solver_output = execute_func(current_code)
             if not is_valid:
                 print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
@@ -1145,14 +1155,14 @@ class DirectReasoner(Reasoner):
             "syntax_errors": syntax_errors
         }
     
-    def reason(self, test_case: Dict) -> Dict:
+    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Generate formal code directly in one step and execute it"""
         if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_code_greedy(test_case, "z3", self.execute_z3_code)
+            return self.reason_code_greedy(test_case, "z3", self.execute_z3_code, mp_lock)
         elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code)
+            return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code, mp_lock)
         elif self.config.dataset.lower() == "folio":
-            return self.reason_code_greedy(test_case, "prover9", self.execute_prover9_code)
+            return self.reason_code_greedy(test_case, "prover9", self.execute_prover9_code, mp_lock)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
@@ -1255,7 +1265,7 @@ class CoTReasoner(Reasoner):
         
         return prompt
 
-    def reason(self, test_case: Dict) -> Dict:
+    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Generate reasoning using the CoT prompt"""
         cot_prompt = self.get_cot_prompt(test_case)
         
