@@ -44,6 +44,13 @@ def load_results(results_file):
 
 def analyze_results(results):
     """Analyze the verification results and generate comprehensive statistics."""
+    # Preprocessing
+    for res in results:
+        if "majority_vote_correct" in res and "success" not in res:
+            res["success"] = res["majority_vote_correct"]
+        if "majority_vote_details" in res and "error_type" not in res:
+            res["error_type"] = res["majority_vote_details"]
+    
     total = len(results)
     successful = sum(1 for r in results if r["success"])
     failed = total - successful
@@ -377,13 +384,39 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
     
     return "\n".join(report)
 
+def merge_summary(results_folder):
+    """Merge all summary files in a folder"""
+    # assert os.path.exists(results_folder) and os.path.isdir(results_folder), f"Invalid results_folder: {results_folder}"
+    
+    results_array = []
+    for file in os.listdir(results_folder):
+        if file.endswith(".json"):
+            try:
+                with open(os.path.join(results_folder, file), "r") as f:
+                    results = json.load(f)
+                results_array.append(results)
+            except Exception as e:
+                print(f"Error loading results from {os.path.join(results_folder, file)}: {e}")
+                
+    results_file = os.path.join(os.path.dirname(results_folder), "summary.txt")
+    with open(results_file, "w") as f:
+        json.dump(results_array, f, indent=2, ensure_ascii=False)
+        
+    print(f"The merged summary file has been generated: {results_file}")
+    return results_file
+
 def main():
     if len(sys.argv) < 2:
         print("Usage:")
-        print("  python analysis.py <results_file> [output_report_file]")
+        print("  python analysis.py <results_file> [output_report_file/output_report_folder]")
         sys.exit(1)
     
     results_file = sys.argv[1]
+    
+    # If it is a folder, merge it first
+    if os.path.exists(results_file) and os.path.isdir(results_file):
+        results_file = merge_summary(results_file)
+    
     # put the output file in the same directory as the results file
     output_file = os.path.join(os.path.dirname(results_file), os.path.basename(results_file).replace('.txt', '_analysis_report.md'))
     # file_prefix = os.path.splitext(output_file)[0]

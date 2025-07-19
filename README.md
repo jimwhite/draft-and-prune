@@ -84,7 +84,10 @@ python analysis_include_cot_as_backup.py <main_results_file> <cot_results_file>
   - Path: `AR-LSAT/blob/main/complete_lsat_data/test_ar.json`
 - ProofWriter: Commonly Used Dataset for Deductive Logical Reasoning
   - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
-  - Path: `Logic-LLM/blob/main/data/AR-LSAT/test.json`
+  - Path: `Logic-LLM/blob/main/data/AR-LSAT/dev.json`
+- FOLIO: A Challenging Expert-written Dataset for Logical Reasoning
+  - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
+  - Path: `Logic-LLM/blob/main/data/FOLIO/dev.json`
 
 ## To Do
 - [ ] Implement checker/verifier
