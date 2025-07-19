@@ -118,6 +118,13 @@ def has_option_format_output(solver_outputs):
             return True
     return False
 
+def no_single_answer_found(item):
+    """Checks if the majority vote details indicate that no single answer was found."""
+    majority_vote_details = item.get("majority_vote_details", "")
+    if isinstance(majority_vote_details, str):
+        return "no single answers found" in majority_vote_details.lower()
+    return False
+
 def main(main_results_file, cot_results_file):
     main_results = parse_summary_file(main_results_file)
     cot_results_raw = parse_summary_file(cot_results_file)
@@ -165,8 +172,6 @@ def main(main_results_file, cot_results_file):
     for main_item in main_results:
         total_problems += 1
         
-        is_successful = get_success_status(main_item)
-        
         problem_data = main_item.get("problem")
         problem_id = None
         if isinstance(problem_data, dict):
@@ -174,40 +179,42 @@ def main(main_results_file, cot_results_file):
         
         if not problem_id:
             print(f"Warning: Main result item missing 'id_string' or 'problem' field. Cannot use CoT backup for this item: {str(main_item)[:200]}")
-            # This item will be counted in total_problems. If it was 'success:false', it remains incorrect.
-            # If it was 'success:true' initially, it would be counted below.
 
-        if is_successful:
-            correct_count += 1
+        # Check if no single answer was found (regardless of ground truth success)
+        if no_single_answer_found(main_item):
+            # No single answer found, try CoT backup
+            if problem_id and problem_id in cot_results_map:
+                cot_item = cot_results_map[problem_id]
+                if get_success_status(cot_item):
+                    correct_count += 1
+                    print(f"Info: Problem {problem_id} corrected by CoT backup (no single answer found in main).")
+                else:
+                    print(f"Info: Problem {problem_id} used CoT backup but CoT also failed.")
+            elif problem_id:
+                print(f"Info: Problem {problem_id} had no single answer found, but not found in CoT results.")
         else:
-            # Main process reported failure
-            solver_outputs = get_solver_outputs(main_item)
-            if not has_option_format_output(solver_outputs):
-                # Solver output is not "Option X is correct", so trigger CoT backup
-                if problem_id and problem_id in cot_results_map:
-                    cot_item = cot_results_map[problem_id]
-                    if get_success_status(cot_item):
-                        correct_count += 1
-                        print(f"Info: Problem {problem_id} corrected by CoT backup.")
-                elif problem_id:
-                    print(f"Info: Problem {problem_id} eligible for CoT backup, but not found in CoT results.")
+            # Single answer was found in main process, use main result
+            is_successful = get_success_status(main_item)
+            if is_successful:
+                correct_count += 1
+                print(f"Info: Problem {problem_id} solved correctly by main process.")
             else:
-                print(f"Info: Problem {problem_id} failed with standard output format. No CoT backup applied by rule.")
-                # It failed, but the format was "Option X is correct", so no CoT backup triggered by this specific rule.
+                print(f"Info: Problem {problem_id} had single answer from main process but was incorrect.")
 
     if total_problems > 0:
         success_rate = (correct_count / total_problems) * 100
         print(f"\n--- Final Results ---")
         print(f"Total problems processed: {total_problems}")
-        print(f"Correctly solved (after CoT backup for specific cases): {correct_count}")
+        print(f"Correctly solved (after CoT backup when no single answer found): {correct_count}")
         print(f"Final success rate: {success_rate:.2f}%")
     else:
         print("No problems processed from the main results file.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Calculate success rate with CoT backup for specific failure cases.\n"
-                   "Supports both old format (with 'success' field) and new format (with 'majority_vote_correct' field).",
+        description="Calculate success rate with CoT backup when no single answer is found.\n"
+                   "Supports both old format (with 'success' field) and new format (with 'majority_vote_correct' field).\n"
+                   "CoT backup is only applied when the main process fails to find a single answer, not based on correctness.",
         formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument("main_file", 
