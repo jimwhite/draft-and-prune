@@ -1,0 +1,276 @@
+You are an expert Python programmer specializing in the python-constraint library.
+Your goal is to write executable python-constraint code that precisely implements the provided plan to solve the given problem.
+Remember to only output the raw Python code.
+
+Problem:
+"The following paragraphs each describe a set of five objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are five birds: a quail, an owl, a raven, a falcon, and a robin. The owl is the leftmost. The robin is to the left of the raven. The quail is the rightmost. The raven is the third from the left."
+Question:
+"Which of the following is true?"
+Choices:
+["A) The quail is the rightmost.", "B) The owl is the rightmost.", "C) The raven is the rightmost.", "D) The falcon is the rightmost.", "E) The robin is the rightmost."]
+Plan:
+"
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Create a list of strings representing the five birds: `"quail"`, `"owl"`, `"raven"`, `"falcon"`, and `"robin"`. These will be the variables in our problem.
+    * Define the domain for these variables as the integer positions from 1 to 5, where 1 represents the leftmost position and 5 represents the rightmost.
+    * Add the variables and their domain to the `Problem` instance.
+
+3.  **Add Constraints from the Problem Statement:**
+    * Add an `AllDifferentConstraint` to ensure that each bird occupies a unique position.
+    * Translate each statement from the problem description into a specific constraint using lambda functions:
+        * "The owl is the leftmost" translates to the owl's position being equal to 1.
+        * "The robin is to the left of the raven" translates to the robin's position value being less than the raven's position value.
+        * "The quail is the rightmost" translates to the quail's position being equal to 5.
+        * "The raven is the third from the left" translates to the raven's position being equal to 3.
+
+4.  **Solve the Problem:**
+    * Call the `getSolutions()` method on the `Problem` object to find all valid arrangements.
+    * Since the problem has a unique solution, retrieve the first (and only) solution from the returned list.
+
+5.  **Identify the Correct Choice:**
+    * The question asks which bird is the rightmost (position 5).
+    * Create a dictionary to map the choice letters ("A", "B", "C", "D", "E") to the corresponding bird names from the choices.
+    * Iterate through the choices. For each choice, check if the bird's position in the found solution is 5.
+    * When the condition is met, print the corresponding choice letter as the final answer.
+"
+python-constraint Program:
+```
+from constraint import *
+
+"""
+Solves the bird arrangement logic puzzle using the python-constraint library.
+"""
+problem = Problem()
+
+# The five birds are the variables
+birds = ["quail", "owl", "raven", "falcon", "robin"]
+
+# The domain is the five positions on the branch (1=leftmost, 5=rightmost)
+positions = range(1, 6)
+
+problem.addVariables(birds, positions)
+
+# Add constraints based on the problem description
+# 1. All birds are in different positions
+problem.addConstraint(AllDifferentConstraint())
+
+# 2. "The owl is the leftmost."
+problem.addConstraint(lambda owl: owl == 1, ["owl"])
+
+# 3. "The robin is to the left of the raven."
+problem.addConstraint(lambda robin, raven: robin < raven, ["robin", "raven"])
+
+# 4. "The quail is the rightmost."
+problem.addConstraint(lambda quail: quail == 5, ["quail"])
+
+# 5. "The raven is the third from the left."
+problem.addConstraint(lambda raven: raven == 3, ["raven"])
+
+# Get the single solution
+solution = problem.getSolutions()[0]
+
+# The choices map a letter to the bird stated as being the rightmost.
+# The rightmost position is 5.
+choices = {
+    "A": "quail",
+    "B": "owl",
+    "C": "raven",
+    "D": "falcon",
+    "E": "robin"
+}
+
+# Determine the correct choice
+for letter, bird_name in choices.items():
+    if solution[bird_name] == 5:
+        print(letter)
+        break
+```
+
+Problem:
+"The following paragraphs each describe a set of five objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are five vehicles: a hatchback, a bus, a convertible, a tractor, and a minivan. The tractor is older than the bus. The minivan is newer than the bus. The hatchback is the second-newest. The minivan is older than the convertible."
+Question:
+"Which of the following is true?"
+Choices:
+["A) The hatchback is the second-oldest.", "B) The bus is the second-oldest.", "C) The convertible is the second-oldest.", "D) The tractor is the second-oldest.", "E) The minivan is the second-oldest."]
+Plan:
+"
+1.  **Initialize the Problem Environment:**
+    * Import the necessary `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold the variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables of the problem, which are the five vehicles: `"hatchback"`, `"bus"`, `"convertible"`, `"tractor"`, and `"minivan"`.
+    * Define a numerical domain to represent the age ranking. Use integers from 1 to 5, where **1 represents the oldest** and **5 represents the newest** vehicle.
+    * Add the vehicle variables and their rank domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two vehicles have the same age rank.
+    * Convert each rule from the problem description into a formal constraint using a `lambda` function:
+        * "The tractor is older than the bus" means the tractor's rank is a smaller number than the bus's rank (`tractor < bus`).
+        * "The minivan is newer than the bus" means the minivan's rank is a larger number than the bus's rank (`bus < minivan`).
+        * "The hatchback is the second-newest" means its rank is 4 (since 5 is the newest).
+        * "The minivan is older than the convertible" means the minivan's rank is a smaller number than the convertible's rank (`minivan < convertible`).
+
+4.  **Solve for the Arrangement:**
+    * Use the `getSolutions()` method to find all possible valid arrangements that satisfy every constraint.
+    * Since the problem is well-defined, extract the single unique solution from the list of solutions.
+
+5.  **Identify the Correct Answer:**
+    * Analyze the question: "Which of the following is the second-oldest?". Based on our ranking system (1=oldest), this corresponds to the vehicle with **rank 2**.
+    * Create a dictionary that maps the choice letters ("A", "B", etc.) to the vehicle names they represent.
+    * Iterate through the solved arrangement to find which vehicle has the rank of 2.
+    * Print the letter corresponding to the vehicle that satisfies this condition.
+"
+python-constraint Program:
+```
+from constraint import *
+
+# Initialize the constraint satisfaction problem
+problem = Problem()
+
+# Define the variables (the five vehicles) and the domain (their age rank)
+# Let's use ranks 1 to 5, where 1 is the oldest and 5 is the newest.
+vehicles = ["hatchback", "bus", "convertible", "tractor", "minivan"]
+ranks = range(1, 6)
+problem.addVariables(vehicles, ranks)
+
+# Add constraints based on the puzzle's statements
+# 1. All vehicles must have a different age rank.
+problem.addConstraint(AllDifferentConstraint())
+
+# 2. "The tractor is older than the bus." (Tractor's rank is a smaller number)
+problem.addConstraint(lambda tractor, bus: tractor < bus, ("tractor", "bus"))
+
+# 3. "The minivan is newer than the bus." (Minivan's rank is a larger number)
+problem.addConstraint(lambda bus, minivan: bus < minivan, ("bus", "minivan"))
+
+# 4. "The hatchback is the second-newest." (The 4th rank out of 5)
+problem.addConstraint(lambda hatchback: hatchback == 4, ("hatchback",))
+
+# 5. "The minivan is older than the convertible."
+problem.addConstraint(lambda minivan, convertible: minivan < convertible, ("minivan", "convertible"))
+
+# Find the unique solution to the problem
+solution = problem.getSolutions()[0]
+
+# The question asks which vehicle is the "second-oldest".
+# In our ranking system (1=oldest), the second-oldest has a rank of 2.
+choices = {
+    "A": "hatchback",
+    "B": "bus",
+    "C": "convertible",
+    "D": "tractor",
+    "E": "minivan"
+}
+
+# Check the solution to find the vehicle with rank 2 and print the corresponding letter.
+for letter, vehicle_name in choices.items():
+    if solution[vehicle_name] == 2:
+        print(letter)
+        break
+```
+
+Problem:
+"The following paragraphs each describe a set of five objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are five books: a yellow book, a green book, a gray book, a blue book, and an orange book. The gray book is to the left of the green book. The gray book is the second from the right. The yellow book is to the right of the orange book. The blue book is the second from the left."
+Question:
+"Which of the following is true?"
+Choices:
+["A) The yellow book is the leftmost.", "B) The green book is the leftmost.", "C) The gray book is the leftmost.", "D) The blue book is the leftmost.", "E) The orange book is the leftmost."]
+Plan:
+"
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the puzzle solver.
+
+2.  **Define Variables and the Domain:**
+    * Identify the variables, which are the five books: `"yellow"`, `"green"`, `"gray"`, `"blue"`, and `"orange"`.
+    * Define the domain for these variables. This will be a range of integers from 1 to 5, representing the positions on the shelf. Establish a clear mapping: **1 = leftmost** and **5 = rightmost**.
+    * Add the book variables and their position domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each book is in a different position.
+    * Translate each rule from the text into a logical constraint using `lambda` functions:
+        * "The gray book is to the left of the green book" implies the gray book's position number is less than the green book's (`gray < green`).
+        * "The gray book is the second from the right" corresponds to **position 4** in our 1-to-5 scale.
+        * "The yellow book is to the right of the orange book" implies the orange book's position number is less than the yellow book's (`orange < yellow`).
+        * "The blue book is the second from the left" corresponds to **position 2**.
+
+4.  **Solve for the Final Arrangement:**
+    * Execute the solver by calling the `getSolutions()` method.
+    * The problem has a single, unique solution, so retrieve it from the list of solutions returned by the solver.
+
+5.  **Determine the Correct Answer:**
+    * The question asks to identify the **leftmost** book. In our defined system, this is the book at **position 1**.
+    * Create a dictionary to map the multiple-choice letters ("A", "B", etc.) to the book names.
+    * Iterate through the `solution` dictionary to find the book whose value (position) is 1.
+    * Print the corresponding choice letter for that book as the final answer.
+"
+python-constraint Program:
+```
+from constraint import *
+
+# Initialize the constraint satisfaction problem.
+problem = Problem()
+
+# Define the variables (the five books) and the domain (their positions on the shelf).
+# We'll use positions 1 to 5, where 1 is the leftmost and 5 is the rightmost.
+books = ["yellow", "green", "gray", "blue", "orange"]
+positions = range(1, 6)
+problem.addVariables(books, positions)
+
+# Add constraints based on the puzzle's statements.
+# 1. All books must be in a unique position.
+problem.addConstraint(AllDifferentConstraint())
+
+# 2. "The gray book is to the left of the green book."
+# (The gray book's position number is less than the green book's).
+problem.addConstraint(lambda gray, green: gray < green, ("gray", "green"))
+
+# 3. "The gray book is the second from the right."
+# In a set of 5, this is position 4.
+problem.addConstraint(lambda gray: gray == 4, ("gray",))
+
+# 4. "The yellow book is to the right of the orange book."
+# (The orange book's position number is less than the yellow book's).
+problem.addConstraint(lambda orange, yellow: orange < yellow, ("orange", "yellow"))
+
+# 5. "The blue book is the second from the left."
+# This is position 2.
+problem.addConstraint(lambda blue: blue == 2, ("blue",))
+
+# Find the unique solution to the problem.
+solution = problem.getSolutions()[0]
+
+# The question asks which book is the "leftmost".
+# The leftmost position is 1.
+choices = {
+    "A": "yellow",
+    "B": "green",
+    "C": "gray",
+    "D": "blue",
+    "E": "orange"
+}
+
+# Check the solution to find which book is at position 1 and print its corresponding letter.
+for letter, book_name in choices.items():
+    if solution[book_name] == 1:
+        print(letter)
+        break
+```
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{options}
+Plan:
+{plan}
+python-constraint Program:
+```
+
+```
