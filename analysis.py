@@ -283,6 +283,8 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
         # Handle different formats
         if "problem" in result and "id_string" in result["problem"]:
             id_str = result["problem"]["id_string"]
+        elif "problem" in result and "id" in result["problem"]:
+            id_str = result["problem"]["id"]
         else:
             id_str = result.get("id", f"test_{i}")
             

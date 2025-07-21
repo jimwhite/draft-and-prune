@@ -88,6 +88,12 @@ python analysis_include_cot_as_backup.py <main_results_file> <cot_results_file>
 - FOLIO: A Challenging Expert-written Dataset for Logical Reasoning
   - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
   - Path: `Logic-LLM/blob/main/data/FOLIO/dev.json`
+- ProntoQA: A Recent Synthetic Dataset Created to Analyze the Capacity of LLMs for Deductive Reasoning
+  - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
+  - Path: `Logic-LLM/blob/main/data/ProntoQA/dev.json`
+- LogicalDeduction: A Challenging Logical Reasoning Task from the BigBench Collaborative Benchmark
+  - Source: [Logic-LLM Github](https://github.com/teacherpeterpan/Logic-LLM)
+  - Path: `Logic-LLM/blob/main/data/LogicalDeduction/dev.json`
 
 ## To Do
 - [ ] Implement checker/verifier

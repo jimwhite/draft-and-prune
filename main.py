@@ -6,7 +6,9 @@ from reasoners import CoTReasoner, TwoStepReasoner, DirectReasoner
 from data_loaders import DataLoader, Sampler, JSON_Dataset
 from answer_extractors import (AR_LSAT_AnswerExtractor, 
                                ProofWriter_AnswerExtractor,
-                               FOLIO_AnswerExtractor)
+                               FOLIO_AnswerExtractor,
+                               ProntoQA_AnswerExtractor,
+                               LogicalDeduction_AnswerExtractor)
 import os
 import sys
 
@@ -24,6 +26,10 @@ def main():
         answer_extractor = ProofWriter_AnswerExtractor()
     elif config.dataset.lower() == "folio":
         answer_extractor = FOLIO_AnswerExtractor()
+    elif config.dataset.lower() == "prontoqa":
+        answer_extractor = ProntoQA_AnswerExtractor()
+    elif config.dataset.lower() == "logicaldeduction":
+        answer_extractor = LogicalDeduction_AnswerExtractor()
     else:
         raise ValueError(f"Unsupported dataset: {config.dataset}")
     
@@ -48,7 +54,7 @@ def main():
     # Run all tests
     # limit_msg = f" with limit {args.limit}" if args.limit else ""
     # print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
-    reasoner.run_all_tests_parallel(10)
+    reasoner.run_all_tests_parallel(5)
 
     # save the config to a yaml file in the results folder
     reasoner.config.save_to_yaml(os.path.join(reasoner.results_folder, "config.yaml"))
