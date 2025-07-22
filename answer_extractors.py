@@ -578,7 +578,7 @@ class LogicalDeduction_AnswerExtractor(AnswerExtractor):
         
         Args:
             response_text: The model's response text containing reasoning and answer
-            label: The correct answer option letter (A, B, C, D, E)
+            label: The correct answer option letter (A, B, C, D, E, F, G)
         
         Returns:
             Tuple[bool, str]: (True if the extracted answer matches the label, result message)
@@ -666,7 +666,7 @@ class LogicalDeduction_AnswerExtractor(AnswerExtractor):
             return False, 'syntax error'
         
         if reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
-            if response_text in ['A', 'B', 'C', 'D', 'E']:
+            if response_text in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
                 return True, response_text
             else:
                 return False, 'semantic error'
