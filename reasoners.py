@@ -181,7 +181,7 @@ class Reasoner(ABC):
         """Interpret the results from the reasoning"""
         return True, "Model passed the test.", response_text
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float) -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         """Process the results of a single test case"""
         pass
 
@@ -1360,11 +1360,102 @@ class DirectReasoner(Reasoner):
             "code_feedback": code_feedback,
             "syntax_errors": syntax_errors
         }
+
+    def reason_code_diversity(self, 
+                              test_case: dict,
+                              solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
+                              execute_func: Callable[[str], Tuple[bool, Any]],
+                              mp_lock: Optional[Any] = None) -> dict:
+        """Generate multiple code variants with diverse parameters for DirectReasoner"""
+        code_feedback = None
+
+        # Enhanced code generation configurations with diverse parameters
+        code_configs = [
+            {"temperature": 0.0},
+            {"temperature": 0.6},
+            {"temperature": 1.0},
+            {"temperature": 1.0},
+            {"temperature": 1.0},
+        ]
+        
+        all_code_results = []
+        
+        # Store original parameters
+        original_temp = self.api_client.temperature
+        
+        for code_config_idx, code_config in enumerate(code_configs):
+            print(f"\n{'='*80}")
+            print(f"GENERATING CODE {code_config_idx + 1}/{len(code_configs)} with config: {code_config}")
+            print(f"{'='*80}")
+            
+            # Set generation parameters for code generation
+            self.api_client.temperature = code_config["temperature"]
+            
+            # Generate code directly
+            direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
+            current_code_response = self._call_api(direct_prompt)
+            current_code = current_code_response if isinstance(current_code_response, str) else current_code_response[0]
+            current_code = self.clean_code(current_code)
+            
+            print(f"\nGenerated {solver_name} code (config={code_config}):")
+            print("=" * 80)
+            print(current_code)
+            print("=" * 80)
+
+            # Execute the code to check solver output
+            syntax_errors = []
+            temp_solver_output = None
+            for iteration in range(self.config.max_repairs):
+                print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for code {code_config_idx + 1}")
+                # Execute code
+                if mp_lock is not None:
+                    with mp_lock:
+                        is_valid, temp_solver_output = execute_func(current_code)
+                else:
+                    is_valid, temp_solver_output = execute_func(current_code)
+                    
+                if not is_valid:
+                    print(f"\n{solver_name} code execution failed for code {code_config_idx + 1}. Error type: {temp_solver_output}")
+                    syntax_errors.append(temp_solver_output)
+                
+                    # Generate fix
+                    fix_prompt = self.fix_syntax_errors(test_case, current_code, temp_solver_output)
+                    print("Attempting to fix syntax errors...")
+                    fix_response = self._call_api(fix_prompt)
+                    current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
+                    current_code = self.clean_code(current_code)
+                    print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
+                    print("=" * 80)
+                    print(current_code)
+                    print("=" * 80)
+                else:
+                    print(f"{solver_name} code execution succeeded for code {code_config_idx + 1}.")
+                    break
+            
+            # Store this code generation's results
+            code_result = {
+                "code_idx": code_config_idx + 1,
+                "code": current_code,
+                "solver_output": temp_solver_output,
+                "is_valid": temp_solver_output is not None and is_valid,
+                "generation_config": code_config.copy(),
+                "syntax_errors": syntax_errors
+            }
+            all_code_results.append(code_result)
+            
+            print(f"Code {code_config_idx + 1} solver output: {temp_solver_output}")
+        
+        # Restore original parameters
+        self.api_client.temperature = original_temp
+        
+        return {
+            "all_code_results": all_code_results
+        }
     
     def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Generate formal code directly in one step and execute it"""
         if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_code_greedy(test_case, "z3", self.execute_z3_code, mp_lock)
+            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code, mp_lock)
         elif self.config.dataset.lower() == "proofwriter":
             return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code, mp_lock)
         elif self.config.dataset.lower() == "folio":
@@ -1377,6 +1468,11 @@ class DirectReasoner(Reasoner):
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+        # Check if this is a diversity result (has all_code_results) or greedy result
+        if "all_code_results" in reasoning_result:
+            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+        
+        # Original greedy processing
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
         if not os.path.exists(code_folder):
@@ -1417,6 +1513,162 @@ class DirectReasoner(Reasoner):
             "success": is_correct,
             "timing": case_time
         }
+
+        # Save result
+        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
+        with open(summary_filepath, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
+
+    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+        # save the "code" to the results_folder
+        code_folder = os.path.join(self.results_folder, "code")
+        if not os.path.exists(code_folder):
+            os.makedirs(code_folder)
+
+        # get the problem name from the id_string if it exists, otherwise use the id_string
+        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        
+        # Process all code results and collect solver outputs for majority voting
+        all_code_results = reasoning_result.get("all_code_results", [])
+        total_code_count = 0
+        code_summaries = []
+        all_solver_outputs = []  # Collect all valid solver outputs for majority voting
+        
+        # Initialize first_is_correct as False (will be set to True if first code is correct)
+        first_is_correct = False
+        first_code_found = False
+        
+        for code_result in all_code_results:
+            code_idx = code_result["code_idx"]
+            generation_config = code_result.get("generation_config", {})
+            
+            # Save each code with generation config info
+            code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-code{code_idx}.py")
+            with open(code_filepath, "w") as f:
+                f.write(f"# Generation Config: {generation_config}\n\n")
+                f.write(code_result["code"])
+            
+            # Check if this is the first code result and evaluate its correctness
+            if not first_code_found and code_result["is_valid"]:
+                solver_output = code_result["solver_output"]
+                if solver_output is not None:
+                    # Evaluate first code correctness for AR-LSAT
+                    if self.config.dataset.lower() == "ar-lsat":
+                        first_is_correct, _ = self.answer_extractor.extract_answer(
+                            solver_output, 
+                            test_case["label"], 
+                            test_case["answers"], 
+                            self.config.reasoning_method
+                        )
+                    else:
+                        # For other datasets, use their specific label format
+                        if self.config.dataset.lower() == "proofwriter":
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
+                        elif self.config.dataset.lower() == "folio":
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
+                        elif self.config.dataset.lower() == 'prontoqa':
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
+                        elif self.config.dataset.lower() == 'logicaldeduction':
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
+                    
+                    first_code_found = True
+                    print(f"First code correctness check: {'CORRECT' if first_is_correct else 'INCORRECT'} (Code {code_idx})")
+            
+            # Collect solver outputs for majority voting (only valid ones)
+            solver_output = code_result["solver_output"]
+            if solver_output is not None and code_result["is_valid"]:
+                all_solver_outputs.append(solver_output)
+            
+            total_code_count += 1
+            
+            code_eval_result = {
+                "code_idx": code_idx,
+                "solver_output": solver_output,
+                "is_valid": code_result["is_valid"],
+                "generation_config": generation_config
+            }
+            code_summaries.append(code_eval_result)
+            
+            print(f"Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
+        
+        # Perform majority voting on all valid solver outputs
+        if all_solver_outputs:
+            # Interpret results
+            if self.config.dataset.lower() == "ar-lsat":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["label"], 
+                test_case["answers"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == "proofwriter":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == "folio":
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == 'prontoqa':
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            elif self.config.dataset.lower() == 'logicaldeduction':
+                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
+                all_solver_outputs, 
+                test_case["answer"], 
+                self.config.reasoning_method
+            )
+            else:
+                raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner AnswerExtractor.")
+
+            print(f"\n{'='*80}")
+            print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
+            print(f"Details: {vote_result}")
+            print(f"Total valid outputs used: {len(all_solver_outputs)}")
+            print(f"Total codes generated: {total_code_count}")
+            print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
+            print(f"{'='*80}")
+            
+            # Record result with majority voting information
+            results = {
+                "problem": test_case,
+                "timing": case_time,
+                "first_code_correct": first_is_correct,
+                "majority_vote_correct": is_correct,
+                "majority_vote_details": vote_result,
+                "total_valid_outputs": len(all_solver_outputs),
+                "total_code_count": total_code_count,
+                "valid_output_rate": len(all_solver_outputs) / total_code_count if total_code_count > 0 else 0,
+                "all_solver_outputs": all_solver_outputs,
+                "code_summaries": code_summaries
+            }
+        else:
+            print(f"\n{'='*80}")
+            print(f"NO VALID SOLVER OUTPUTS FOUND")
+            print(f"Total codes generated: {total_code_count}")
+            print(f"All codes failed to produce valid outputs")
+            print(f"{'='*80}")
+            
+            # Record result with no valid outputs
+            results = {
+                "problem": test_case,
+                "timing": case_time,
+                "first_code_correct": first_is_correct,
+                "majority_vote_correct": False,
+                "majority_vote_details": "no valid outputs",
+                "total_valid_outputs": 0,
+                "total_code_count": total_code_count,
+                "valid_output_rate": 0,
+                "all_solver_outputs": [],
+                "code_summaries": code_summaries
+            }
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
