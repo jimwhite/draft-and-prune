@@ -540,23 +540,7 @@ class TwoStepReasoner(Reasoner):
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
             
-        elif self.config.dataset.lower() == "proofwriter":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            
-        elif self.config.dataset.lower() == "folio":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             context = test_case["context"]
             question = test_case["question"]
 
@@ -595,19 +579,7 @@ class TwoStepReasoner(Reasoner):
                 answers=test_case["answers"],
                 plan=plan
             )
-        elif self.config.dataset.lower() == "proofwriter": 
-            prompt = base_prompt.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan
-            )
-        elif self.config.dataset.lower() == "folio": 
-            prompt = base_prompt.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan
-            )
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa": 
             prompt = base_prompt.format(
                 context=test_case["context"],
                 question=test_case["question"],
@@ -644,7 +616,7 @@ class TwoStepReasoner(Reasoner):
             prompt = prompt.replace("{answers}", str(answers))
             prompt = prompt.replace("{plan}", plan)
             
-        elif self.config.dataset.lower() == "proofwriter":
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             context = test_case["context"]
             question = test_case["question"]
 
@@ -652,24 +624,6 @@ class TwoStepReasoner(Reasoner):
             prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{plan}", plan)    
-            
-        elif self.config.dataset.lower() == "folio":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{plan}", plan)    
-        
-        elif self.config.dataset.lower() == 'prontoqa':
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{plan}", plan)
             
         elif self.config.dataset.lower() == 'logicaldeduction':
             context = test_case["context"]
@@ -704,23 +658,7 @@ class TwoStepReasoner(Reasoner):
                 code=code,
                 syntax_error=syntax_error
             )
-        elif self.config.dataset.lower() == "proofwriter": 
-            prompt = FIX_GENERATION_PROMPT.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan,
-                code=code,
-                syntax_error=syntax_error
-            )
-        elif self.config.dataset.lower() == "folio": 
-            prompt = FIX_GENERATION_PROMPT.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan,
-                code=code,
-                syntax_error=syntax_error
-            )
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa": 
             prompt = FIX_GENERATION_PROMPT.format(
                 context=test_case["context"],
                 question=test_case["question"],
@@ -990,11 +928,7 @@ class TwoStepReasoner(Reasoner):
         # Interpret results
         if self.config.dataset.lower() == "ar-lsat":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "folio":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
         elif self.config.dataset.lower() == 'logicaldeduction':
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
@@ -1101,19 +1035,7 @@ class TwoStepReasoner(Reasoner):
                 test_case["answers"], 
                 self.config.reasoning_method
             )
-            elif self.config.dataset.lower() == "proofwriter":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "folio":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == 'prontoqa':
+            elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
                 is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
                 all_solver_outputs, 
                 test_case["answer"], 
@@ -1126,7 +1048,7 @@ class TwoStepReasoner(Reasoner):
                 self.config.reasoning_method
             )
             else:
-                raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+                raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner AnswerExtractor.")
 
             print(f"\n{'='*80}")
             print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
@@ -1205,23 +1127,7 @@ class DirectReasoner(Reasoner):
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
             
-        elif self.config.dataset.lower() == "proofwriter":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = DIRECT_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-        
-        elif self.config.dataset.lower() == "folio":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = DIRECT_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             context = test_case["context"]
             question = test_case["question"]
 
@@ -1264,27 +1170,7 @@ class DirectReasoner(Reasoner):
             prompt = prompt.replace("{code}", code)
             prompt = prompt.replace("{syntax_error}", syntax_error)
         
-        elif self.config.dataset.lower() == "proofwriter":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{code}", code)
-            prompt = prompt.replace("{syntax_error}", syntax_error)
-            
-        elif self.config.dataset.lower() == "folio":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{code}", code)
-            prompt = prompt.replace("{syntax_error}", syntax_error)
-            
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             context = test_case["context"]
             question = test_case["question"]
 
@@ -1494,11 +1380,7 @@ class DirectReasoner(Reasoner):
         # Interpret results
         if self.config.dataset.lower() == "ar-lsat":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "folio":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
         elif self.config.dataset.lower() == 'logicaldeduction':
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
@@ -1566,17 +1448,13 @@ class DirectReasoner(Reasoner):
                             test_case["answers"], 
                             self.config.reasoning_method
                         )
+                    elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
+                    elif self.config.dataset.lower() == 'logicaldeduction':
+                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
                     else:
-                        # For other datasets, use their specific label format
-                        if self.config.dataset.lower() == "proofwriter":
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                        elif self.config.dataset.lower() == "folio":
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                        elif self.config.dataset.lower() == 'prontoqa':
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                        elif self.config.dataset.lower() == 'logicaldeduction':
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                    
+                        raise ValueError(f"Dataset {self.config.dataset} not configured for DirectStepReasoner AnswerExtractor.")
+                        
                     first_code_found = True
                     print(f"First code correctness check: {'CORRECT' if first_is_correct else 'INCORRECT'} (Code {code_idx})")
             
@@ -1607,19 +1485,7 @@ class DirectReasoner(Reasoner):
                 test_case["answers"], 
                 self.config.reasoning_method
             )
-            elif self.config.dataset.lower() == "proofwriter":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "folio":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == 'prontoqa':
+            elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
                 is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
                 all_solver_outputs, 
                 test_case["answer"], 
@@ -1711,27 +1577,7 @@ class CoTReasoner(Reasoner):
             prompt = prompt.replace("{question}", question)
             prompt = prompt.replace("{answers}", str(answers))
             
-        elif self.config.dataset.lower() == "proofwriter":
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))    
-        
-        elif self.config.dataset.lower() == "folio":
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))
-        
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             context = test_case["context"]
             question = test_case["question"]
             options = test_case["options"]
@@ -1791,11 +1637,7 @@ class CoTReasoner(Reasoner):
 
         if self.config.dataset.lower() == "ar-lsat":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "folio":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'prontoqa':
+        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
         elif self.config.dataset.lower() == 'logicaldeduction':
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
