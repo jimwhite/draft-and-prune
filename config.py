@@ -17,6 +17,7 @@ class ReasonerConfig:
                  fix_api_key: str = None,
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
+                 max_retries: int = 10,
                  test_delay: int = 5,
                  prompt_path: str = None,
                  shots: str = 'zero',
@@ -37,6 +38,7 @@ class ReasonerConfig:
             fix_model: Model name for fixing/repair operations
             temperature: Temperature for model generation
             max_repairs: Maximum number of repair attempts
+            max_retries: Maximum number of LLM requests
             test_delay: Delay between test cases in seconds
             prompt_path: Path to the prompt file
             shots: Number of shots for few-shot learning
@@ -54,6 +56,7 @@ class ReasonerConfig:
         self.fix_api_key = fix_api_key
         self.temperature = temperature
         self.max_repairs = max_repairs
+        self.max_retries = max_retries
         self.test_delay = test_delay
         self.prompt_path = prompt_path
         self.shots = shots
@@ -103,6 +106,10 @@ class ReasonerConfig:
             instance.fix_api_key = config_data['fix_api_key']
         instance.temperature = config_data['temperature']
         instance.max_repairs = config_data['max_repairs']
+        if config_data.get('max_retries'):
+            instance.max_retries = config_data['max_retries']
+        else:
+            instance.max_retries = 10   # Set Default Value
         instance.test_delay = config_data['test_delay']
         instance.prompt_path = config_data['prompt_path']
         instance.shots = config_data['shots']
@@ -132,6 +139,8 @@ class ReasonerConfig:
             raise ValueError("temperature must be a non-negative number")
         if not isinstance(self.max_repairs, int) or self.max_repairs < 0:
             raise ValueError("max_repairs must be a non-negative integer")
+        if not isinstance(self.max_retries, int) or self.max_retries <= 0:
+            raise ValueError("max_retries must be a positive integer")
         if not isinstance(self.test_delay, int) or self.test_delay < 0:
             raise ValueError("test_delay must be a non-negative integer")
         if not isinstance(self.shots, str) or self.shots not in ['zero', 'one', 'two', 'three']:
@@ -163,6 +172,7 @@ class ReasonerConfig:
             'fix_api_key': self.fix_api_key if self.fix_api_key is not None else None,
             'temperature': self.temperature,
             'max_repairs': self.max_repairs,
+            'max_retries': self.max_retries,
             'test_delay': self.test_delay,
             'prompt_path': self.prompt_path,
             'shots': self.shots,

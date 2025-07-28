@@ -14,12 +14,12 @@ class APIConfig:
         self,
         model_name: str,
         temperature: float = 0.0,
-        max_repairs: int = 3,
+        max_retries: int = 10,
         inter_test_case_delay: float = 2.0
     ):
         self.model_name = model_name
         self.temperature = temperature
-        self.max_repairs = max_repairs
+        self.max_retries = max_retries
         self.inter_test_case_delay = inter_test_case_delay
 
 class APIClient(ABC):
@@ -65,7 +65,7 @@ class GeminiClient(APIClient):
         }
 
         # Try multiple times in case of errors
-        for attempt in range(self.config.max_repairs):
+        for attempt in range(self.config.max_retries):
             try:
                 response = model.generate_content(
                     contents=prompt,
@@ -77,17 +77,17 @@ class GeminiClient(APIClient):
                     return response.text
                 else:
                     block_reason = response.prompt_feedback.block_reason if response.prompt_feedback else 'Unknown'
-                    print(f"Warning: Model response was empty or blocked (Attempt {attempt+1}/{self.config.max_repairs}). Reason: {block_reason}")
-                    if block_reason != 'Unknown' and attempt < self.config.max_repairs - 1:
+                    print(f"Warning: Model response was empty or blocked (Attempt {attempt+1}/{self.config.max_retries}). Reason: {block_reason}")
+                    if block_reason != 'Unknown' and attempt < self.config.max_retries - 1:
                         print(f"Retrying due to block reason: {block_reason}")
                         time.sleep(self.config.inter_test_case_delay**(attempt+1))  # Exponential backoff
                         continue
                     return f"Generation failed. Reason: {block_reason}"
 
             except Exception as e:
-                print(f"Error in API call (attempt {attempt+1}/{self.config.max_repairs}): {str(e)}")
-                if attempt == self.config.max_repairs - 1:
-                    return f"API call failed after {self.config.max_repairs} attempts: {str(e)}"
+                print(f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}")
+                if attempt == self.config.max_retries - 1:
+                    return f"API call failed after {self.config.max_retries} attempts: {str(e)}"
                 print(f"Waiting {self.config.inter_test_case_delay**(attempt+1)} seconds before retry...")
                 time.sleep(self.config.inter_test_case_delay**(attempt+1))
             finally:
@@ -101,7 +101,7 @@ class GPTClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call the GPT API with error handling and retries"""
         last_error = None
-        for attempt in range(self.config.max_repairs):
+        for attempt in range(self.config.max_retries):
             try:
                 response = openai.chat.completions.create(
                     model=self.config.model_name,
@@ -124,16 +124,16 @@ class GPTClient(APIClient):
                     last_error = error_message
                     continue # Retry
             except Exception as e:
-                error_message = f"Error in API call (attempt {attempt+1}/{self.config.max_repairs}): {str(e)}"
+                error_message = f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
                 print(error_message)
                 last_error = error_message
-                if attempt == self.config.max_repairs - 1:
-                    return f"API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+                if attempt == self.config.max_retries - 1:
+                    return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
                 print(f"Waiting {2**(attempt+1)} seconds before retry...")
                 time.sleep(2**(attempt+1)) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
-        return f"API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+        return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
 class AzureOpenAIClient(APIClient):
     """Client for Azure OpenAI API with Entra ID authentication"""
@@ -167,7 +167,7 @@ class AzureOpenAIClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call the Azure OpenAI API with error handling and retries"""
         last_error = None
-        for attempt in range(self.config.max_repairs):
+        for attempt in range(self.config.max_retries):
             try:
                 response = self.client.chat.completions.create(
                     model=self.deployment,
@@ -194,16 +194,16 @@ class AzureOpenAIClient(APIClient):
                     last_error = error_message
                     continue # Retry
             except Exception as e:
-                error_message = f"Error in Azure OpenAI API call (attempt {attempt+1}/{self.config.max_repairs}): {str(e)}"
+                error_message = f"Error in Azure OpenAI API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
                 print(error_message)
                 last_error = error_message
-                if attempt == self.config.max_repairs - 1:
-                    return f"Azure OpenAI API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+                if attempt == self.config.max_retries - 1:
+                    return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
                 print(f"Waiting {2**(attempt+1)} seconds before retry...")
                 time.sleep(2**(attempt+1)) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
-        return f"Azure OpenAI API call failed after {self.config.max_repairs} attempts. Last error: {last_error}"
+        return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
 def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
     """Factory function to get the appropriate API client based on provider"""

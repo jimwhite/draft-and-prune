@@ -95,7 +95,7 @@ class Reasoner(ABC):
         api_config = APIConfig(
             model_name=config.model,
             temperature=config.temperature,
-            max_repairs=config.max_repairs,
+            max_retries=config.max_retries,
             inter_test_case_delay=config.test_delay
         )
 
@@ -125,7 +125,7 @@ class Reasoner(ABC):
             fix_api_config = APIConfig(
                 model_name=config.fix_model,
                 temperature=config.temperature,
-                max_repairs=config.max_repairs,
+                max_retries=config.max_retries,
                 inter_test_case_delay=config.test_delay
             )
             
