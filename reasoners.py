@@ -1096,7 +1096,11 @@ class TwoStepReasoner(Reasoner):
             json.dump(results, f, indent=2, ensure_ascii=False)
 
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
-        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+        # Check if this is a diversity result or greedy result
+        if "all_plan_results" in reasoning_result:
+            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+        else:
+            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id)
 
 
 class DirectReasoner(Reasoner):
@@ -1359,12 +1363,7 @@ class DirectReasoner(Reasoner):
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
-        # Check if this is a diversity result (has all_code_results) or greedy result
-        if "all_code_results" in reasoning_result:
-            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
-        
-        # Original greedy processing
+    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
         if not os.path.exists(code_folder):
@@ -1547,6 +1546,12 @@ class DirectReasoner(Reasoner):
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+        # Check if this is a diversity result or greedy result
+        if "all_code_results" in reasoning_result:
+            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+        else:
+            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id)
 
 class CoTReasoner(Reasoner):
     """Chain-of-Thought reasoning approach"""
