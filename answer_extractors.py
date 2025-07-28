@@ -357,6 +357,8 @@ class ProofWriter_AnswerExtractor(AnswerExtractor):
                 return True, 'B'
             elif response_text == 'Unknown':
                 return True, 'C'
+            elif response_text == 'multiple answers':
+                return False, 'multiple answers'
             else:
                 return False, 'semantic error'
             
@@ -460,6 +462,8 @@ class FOLIO_AnswerExtractor(AnswerExtractor):
                 return True, 'B'
             elif response_text == 'Unknown':
                 return True, 'C'
+            elif response_text == 'multiple answers':
+                return False, 'multiple answers'
             else:
                 return False, 'semantic error'
             
@@ -561,6 +565,8 @@ class ProntoQA_AnswerExtractor(AnswerExtractor):
                 return True, 'B'
             elif response_text == 'Unknown':
                 return False, 'uncertain error'
+            elif response_text == 'multiple answers':
+                return False, 'multiple answers'
             else:
                 return False, 'semantic error'
             
@@ -666,8 +672,12 @@ class LogicalDeduction_AnswerExtractor(AnswerExtractor):
             return False, 'syntax error'
         
         if reasoning_method == "one-step" or reasoning_method == "two-step" or reasoning_method == "three-step":
-            if response_text in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
-                return True, response_text
+            lines = [line.strip() for line in response_text.strip().split('\n') if line.strip()]
+            unique_lines = list(set(lines))
+            if len(unique_lines) == 1 and unique_lines[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+                return True, unique_lines[0]
+            elif len(unique_lines) >= 2:
+                return False, 'multiple answers'
             else:
                 return False, 'semantic error'
             

@@ -369,13 +369,19 @@ class Reasoner(ABC):
             engine.activate('rules')
             engine.get_kb('facts')
 
+            answer_list = []
             with engine.prove_goal(query.strip()) as gen:
                 found = False
                 for vars, plan in gen:
                     found = True
-                    return True, str(vars['target'] == final_answer)
+                    answer_list.append(vars['target'])
                 if not found:
                     return True, "Unknown"
+                else:
+                    if True in answer_list and False in answer_list:
+                        return True, "multiple answers"
+                    else:
+                        return True, str(answer_list[0] == final_answer)
                 
         except Exception as e:
             return False, f"Error executing PyKe Program: {str(e)}"
@@ -416,7 +422,7 @@ class Reasoner(ABC):
         try:
             PROVER9_BIN = "../Prover9/bin/prover9"
             TIMEOUT = 10
-            result = subprocess.run(
+            pos_result = subprocess.run(
                 [PROVER9_BIN],
                 input = prover9_code,
                 stdout = subprocess.PIPE,
@@ -425,26 +431,26 @@ class Reasoner(ABC):
                 text = True
             )
             
-            if "THEOREM PROVED" in result.stdout:
+            negate_prover9_code = negate_prover9_goal(prover9_code)
+            neg_result = subprocess.run(
+                [PROVER9_BIN],
+                input = negate_prover9_code,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.PIPE,
+                timeout = TIMEOUT,
+                text = True
+            )
+            
+            if "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" not in neg_result.stdout:
                 return True, "True"
-            elif "SEARCH FAILED" in result.stdout:
-                negate_prover9_code = negate_prover9_goal(prover9_code)
-                result = subprocess.run(
-                    [PROVER9_BIN],
-                    input = negate_prover9_code,
-                    stdout = subprocess.PIPE,
-                    stderr = subprocess.PIPE,
-                    timeout = TIMEOUT,
-                    text = True
-                )
-                if "THEOREM PROVED" in result.stdout:
-                    return True, "False"
-                elif "SEARCH FAILED" in result.stdout:
-                    return True, "Unknown"
-                else:
-                    return False, result.stderr 
+            elif "THEOREM PROVED" not in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
+                return True, "False"
+            elif "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
+                return True, "multiple answers"
+            elif "SEARCH FAILED" in pos_result.stdout and "SEARCH FAILED" in neg_result.stdout:
+                return True, "Unknown"
             else:
-                return False, result.stderr 
+                return False, pos_result.stderr
             
         except Exception as e:
             return False, f"Error executing Prover9 Program: {str(e)}"      

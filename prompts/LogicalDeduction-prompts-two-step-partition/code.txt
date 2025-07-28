@@ -71,7 +71,7 @@ problem.addConstraint(lambda quail: quail == 5, ["quail"])
 problem.addConstraint(lambda raven: raven == 3, ["raven"])
 
 # Get the single solution
-solution = problem.getSolutions()[0]
+solutions = problem.getSolutions()
 
 # The choices map a letter to the bird stated as being the rightmost.
 # The rightmost position is 5.
@@ -84,10 +84,10 @@ choices = {
 }
 
 # Determine the correct choice
-for letter, bird_name in choices.items():
-    if solution[bird_name] == 5:
-        print(letter)
-        break
+for solution in solutions:
+    for letter, bird_name in choices.items():
+        if solution[bird_name] == 5:
+            print(letter)
 ```
 
 Problem:
@@ -155,7 +155,7 @@ problem.addConstraint(lambda hatchback: hatchback == 4, ("hatchback",))
 problem.addConstraint(lambda minivan, convertible: minivan < convertible, ("minivan", "convertible"))
 
 # Find the unique solution to the problem
-solution = problem.getSolutions()[0]
+solutions = problem.getSolutions()
 
 # The question asks which vehicle is the "second-oldest".
 # In our ranking system (1=oldest), the second-oldest has a rank of 2.
@@ -168,10 +168,10 @@ choices = {
 }
 
 # Check the solution to find the vehicle with rank 2 and print the corresponding letter.
-for letter, vehicle_name in choices.items():
-    if solution[vehicle_name] == 2:
-        print(letter)
-        break
+for solution in solutions:
+    for letter, vehicle_name in choices.items():
+        if solution[vehicle_name] == 2:
+            print(letter)
 ```
 
 Problem:
@@ -243,7 +243,7 @@ problem.addConstraint(lambda orange, yellow: orange < yellow, ("orange", "yellow
 problem.addConstraint(lambda blue: blue == 2, ("blue",))
 
 # Find the unique solution to the problem.
-solution = problem.getSolutions()[0]
+solutions = problem.getSolutions()
 
 # The question asks which book is the "leftmost".
 # The leftmost position is 1.
@@ -256,10 +256,10 @@ choices = {
 }
 
 # Check the solution to find which book is at position 1 and print its corresponding letter.
-for letter, book_name in choices.items():
-    if solution[book_name] == 1:
-        print(letter)
-        break
+for solution in solutions:
+    for letter, book_name in choices.items():
+        if solution[book_name] == 1:
+            print(letter)
 ```
 
 Problem:
