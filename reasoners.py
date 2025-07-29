@@ -730,15 +730,16 @@ class TwoStepReasoner(Reasoner):
                 print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
             
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print(f"\nFixed {solver_name} code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
+                if iteration < self.config.max_repairs - 1:
+                    # Generate fix
+                    fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
+                    print("Attempting to fix syntax errors...")
+                    current_code = self._call_api(fix_prompt)
+                    current_code = self.clean_code(current_code)
+                    print(f"\nFixed {solver_name} code:")
+                    print("=" * 80)
+                    print(current_code)
+                    print("=" * 80)
             else:
                 print(f"{solver_name} code execution succeeded.")
                 break
@@ -840,16 +841,17 @@ class TwoStepReasoner(Reasoner):
                     if not is_valid:
                         print(f"\n{solver_name} code execution failed for plan={plan_config_idx + 1}, code={code_gen_idx}. Error type: {temp_solver_output}")
                     
-                        # Generate fix using single generation
-                        fix_prompt = self.fix_syntax_errors(test_case, current_plan, temp_code, temp_solver_output)
-                        print("Attempting to fix syntax errors...")
-                        fix_response = self._call_api(fix_prompt)
-                        temp_code = fix_response  # API now always returns a single string
-                        temp_code = self.clean_code(temp_code)
-                        print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
-                        print("=" * 50)
-                        print(temp_code)
-                        print("=" * 50)
+                        if iteration < self.config.max_repairs - 1:
+                            # Generate fix using single generation
+                            fix_prompt = self.fix_syntax_errors(test_case, current_plan, temp_code, temp_solver_output)
+                            print("Attempting to fix syntax errors...")
+                            fix_response = self._call_api(fix_prompt)
+                            temp_code = fix_response  # API now always returns a single string
+                            temp_code = self.clean_code(temp_code)
+                            print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
+                            print("=" * 50)
+                            print(temp_code)
+                            print("=" * 50)
                     else:
                         print(f"{solver_name} code execution succeeded for plan={plan_config_idx + 1}, code={code_gen_idx}.")
                         break
@@ -1233,15 +1235,16 @@ class DirectReasoner(Reasoner):
                 print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
                 syntax_errors.append(solver_output)
             
-                # Generate fix
-                fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
-                print("Attempting to fix syntax errors...")
-                current_code = self._call_api(fix_prompt)
-                current_code = self.clean_code(current_code)
-                print(f"\nFixed {solver_name} code:")
-                print("=" * 80)
-                print(current_code)
-                print("=" * 80)
+                if iteration < self.config.max_repairs - 1:
+                    # Generate fix
+                    fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
+                    print("Attempting to fix syntax errors...")
+                    current_code = self._call_api(fix_prompt)
+                    current_code = self.clean_code(current_code)
+                    print(f"\nFixed {solver_name} code:")
+                    print("=" * 80)
+                    print(current_code)
+                    print("=" * 80)
             else:
                 print(f"{solver_name} code execution succeeded.")
                 break
@@ -1313,17 +1316,18 @@ class DirectReasoner(Reasoner):
                 if not is_valid:
                     print(f"\n{solver_name} code execution failed for code {code_config_idx + 1}. Error type: {temp_solver_output}")
                     syntax_errors.append(temp_solver_output)
-                
-                    # Generate fix
-                    fix_prompt = self.fix_syntax_errors(test_case, current_code, temp_solver_output)
-                    print("Attempting to fix syntax errors...")
-                    fix_response = self._call_api(fix_prompt)
-                    current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
-                    current_code = self.clean_code(current_code)
-                    print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
-                    print("=" * 80)
-                    print(current_code)
-                    print("=" * 80)
+                    
+                    if iteration < self.config.max_repairs - 1:
+                        # Generate fix
+                        fix_prompt = self.fix_syntax_errors(test_case, current_code, temp_solver_output)
+                        print("Attempting to fix syntax errors...")
+                        fix_response = self._call_api(fix_prompt)
+                        current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
+                        current_code = self.clean_code(current_code)
+                        print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
+                        print("=" * 80)
+                        print(current_code)
+                        print("=" * 80)
                 else:
                     print(f"{solver_name} code execution succeeded for code {code_config_idx + 1}.")
                     break
