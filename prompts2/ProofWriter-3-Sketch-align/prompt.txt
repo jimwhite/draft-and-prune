@@ -1,0 +1,56 @@
+Given a problem statement as contexts, the task is to answer a logical reasoning question. 
+------
+Problem:
+The cow is blue. The cow is round. The cow likes the lion. The cow visits the tiger. The lion is cold. The lion is nice. The lion likes the squirrel. The squirrel is round. The squirrel sees the lion. The squirrel visits the cow. The tiger likes the cow. The tiger likes the squirrel. If something is cold then it visits the tiger. If something visits the tiger then it is nice. If something sees the tiger and it is young then it is blue. If something is nice then it sees the tiger. If something likes the squirrel and it likes the cow then it visits the tiger. If something is nice and it sees the tiger then it is young. If the cow is cold and the cow visits the lion then the lion sees the squirrel.
+Question:
+Based on the above information, is the following statement true, false, or unknown? The tiger is not young.
+
+Options:
+A) True
+B) False
+C) Unknown
+
+Reasoning:
+The tiger likes the cow. The tiger likes the squirrel. If something likes the squirrel and it likes the cow, then it visits the tiger. So the tiger visits the tiger. If something visits the tiger then it is nice. So the tiger is nice. If something is nice then it sees the tiger. So the tiger sees the tiger. If something is nice and it sees the tiger then it is young. So the tiger is young. Therefore, the statement "The tiger is not young" is false.
+
+The correct option is: B
+------
+Problem:
+Dave is big. Dave is red. Erin is smart. Fiona is kind. Fiona is smart. Gary is rough. Gary is white. All young people are white. If someone is kind and white then they are big. If someone is kind then they are young. If Fiona is young and Fiona is rough then Fiona is red. If someone is big then they are rough. All rough, white people are red. If someone is kind and not big then they are red.
+Question:
+Based on the above information, is the following statement true, false, or unknown? Erin is smart.
+
+Options:
+A) True
+B) False
+C) Unknown
+
+Reasoning:
+The statement "Erin is smart" is given as a fact in the context. Therefore, it is true.
+
+The correct option is: A
+------
+Problem:
+The bald eagle sees the dog. The dog chases the tiger. The dog eats the rabbit. The dog sees the bald eagle. The rabbit sees the dog. The tiger chases the bald eagle. The tiger eats the rabbit. The tiger is blue. The tiger is cold. The tiger sees the dog. If something is blue and it sees the bald eagle then the bald eagle sees the rabbit. If something is cold then it eats the bald eagle. If something sees the bald eagle then it chases the dog. If something eats the bald eagle then it is big. If something sees the bald eagle then the bald eagle sees the dog. If something chases the tiger and the tiger is big then it is cold. If something chases the tiger then it is rough.
+Question:
+Based on the above information, is the following statement true, false, or unknown? The rabbit sees the tiger.
+
+Options:
+A) True
+B) False
+C) Unknown
+
+Reasoning:
+The provided information states what the rabbit sees ("The rabbit sees the dog") and what other animals do to the rabbit ("The dog eats the rabbit", "The tiger eats the rabbit"). However, there are no facts or rules that allow us to determine whether the rabbit sees the tiger. Therefore, the statement is unknown.
+
+The correct option is: C
+------
+Context:
+{context}
+
+Question: {question}
+
+Options:
+{options}
+
+Reasoning:

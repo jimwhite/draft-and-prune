@@ -1,0 +1,97 @@
+You are an expert in logical reasoning and python-constraint library.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into python-constraint code.
+Remember to only output the raw plan.
+
+Problem:
+"The following paragraphs each describe a set of five objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are five birds: a quail, an owl, a raven, a falcon, and a robin. The owl is the leftmost. The robin is to the left of the raven. The quail is the rightmost. The raven is the third from the left."
+Question:
+"Which of the following is true?"
+Choices:
+["A) The quail is the rightmost.", "B) The owl is the rightmost.", "C) The raven is the rightmost.", "D) The falcon is the rightmost.", "E) The robin is the rightmost."]
+Plan:
+"
+1.  **Initialize the Constraint Satisfaction Problem:**
+
+      * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+      * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+
+      * Create a list of strings representing the five birds: `"quail"`, `"owl"`, `"raven"`, `"falcon"`, and `"robin"`. These will be the variables in our problem.
+      * Define the domain for these variables as the integer positions from 1 to 5, where **1 represents the leftmost** position and **5 represents the rightmost**.
+      * Add the variables and their domain to the `Problem` instance.
+
+3.  **Add Constraints from the Problem Statement:**
+
+      * Add an `AllDifferentConstraint` to ensure that each bird occupies a unique position.
+      * Translate each statement from the problem description into a specific constraint using lambda functions:
+          * "The owl is the leftmost" translates to the owl's position being equal to 1.
+          * "The robin is to the left of the raven" translates to the robin's position value being less than the raven's position value.
+          * "The quail is the rightmost" translates to the quail's position being equal to 5.
+          * "The raven is the third from the left" translates to the raven's position being equal to 3.
+
+4.  **Solve the Problem:**
+
+      * Call the `getSolutions()` method on the `Problem` object to find all valid arrangements.
+      * Since the problem has a unique solution, retrieve the first (and only) solution from the returned list.
+
+5.  **Identify the Correct Choice:**
+
+      * The question asks which bird is the rightmost, which corresponds to **position 5**. One of the choices is a direct restatement of a premise.
+      * Create a dictionary to map the choice letters ("A", "B", "C", "D", "E") to the corresponding bird names from the choices.
+      * Iterate through the choices. For each choice, check if the bird's position in the found solution is 5.
+      * When the condition is met, print the corresponding choice letter as the final answer.
+"
+
+Problem:
+"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a bus, a motorcyle, a hatchback, a station wagon, a minivan, a truck, and a limousine. The station wagon is the fourth-newest. The motorcyle is newer than the truck. The station wagon is older than the hatchback. The minivan is newer than the hatchback. The bus is newer than the minivan. The truck is newer than the limousine."
+Question:
+"Which of the following is true?"
+Choices:
+["A) The truck is the oldest.", "B) The limousine is the oldest.", "C) The bus is the oldest.", "D) The hatchback is the oldest.", "E) The station wagon is the oldest."]
+Plan:
+"
+1.  **Initialize the Problem Environment:**
+
+      * Import the `Problem` and `AllDifferentConstraint` classes.
+      * Create a `Problem` instance.
+
+2.  **Define Variables and Domain:**
+
+      * Identify the seven vehicles as the problem's variables: `"bus"`, `"motorcyle"`, `"hatchback"`, `"station wagon"`, `"minivan"`, `"truck"`, `"limousine"`.
+      * Define the domain as an integer range from 1 to 7 to represent the age ranking, where **1 is the oldest** and **7 is the newest**.
+      * Add the variables and their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+
+      * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+      * Convert each statement into a lambda constraint:
+          * "The station wagon is the fourth-newest": In a 1-7 scale (newest=7), the fourth-newest is position **4**.
+          * "The motorcyle is newer than the truck": The truck's rank number is less than the motorcycle's (`truck < motorcyle`).
+          * "The station wagon is older than the hatchback": The station wagon's rank number is less than the hatchback's (`station wagon < hatchback`).
+          * "The minivan is newer than the hatchback": The hatchback's rank is less than the minivan's (`hatchback < minivan`).
+          * "The bus is newer than the minivan": The minivan's rank is less than the bus's (`minivan < bus`).
+          * "The truck is newer than the limousine": The limousine's rank is less than the truck's (`limousine < truck`).
+
+4.  **Solve the Problem:**
+
+      * Use the `getSolutions()` method to find the single valid arrangement of vehicles.
+
+5.  **Identify the Correct Choice:**
+
+      * The question asks to identify the **oldest** vehicle. In our ranking system, this corresponds to the vehicle with **rank 1**.
+      * Create a dictionary to map the choice letters to the vehicle names.
+      * Iterate through the solution to find which vehicle is assigned rank 1.
+      * Print the letter of the choice corresponding to that vehicle.
+"
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{options}
+Plan:
+"
+"
+
