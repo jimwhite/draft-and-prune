@@ -1,0 +1,22 @@
+You are an expert in formal verification and SMT solving using the PyKe Solver.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into PyKe constraints.
+Remember to only output the raw plan.
+
+Problem:
+Each jompus is fruity. Every jompus is a wumpus. Every wumpus is not transparent. Wumpuses are tumpuses. Tumpuses are mean. Tumpuses are vumpuses. Every vumpus is cold. Each vumpus is a yumpus. Yumpuses are orange. Yumpuses are numpuses. Numpuses are dull. Each numpus is a dumpus. Every dumpus is not shy. Impuses are shy. Dumpuses are rompuses. Each rompus is liquid. Rompuses are zumpuses. Alex is a tumpus.
+Question:
+True or false: Alex is not shy.
+Plan:
+1.  Identify all entities and types: Alex, jompus, wumpus, tumpus, vumpus, yumpus, numpus, dumpus, impus, rompus, zumpus.
+2.  Identify all properties: fruity, transparent, mean, cold, orange, dull, shy, liquid.
+3.  Represent "Alex is a tumpus" as a base fact: `is_a("Alex", "tumpus", True)`.
+4.  Translate all class properties and subclass relationships into rules.
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the conclusion.
+6.  The query tests if the statement "Alex is not shy" is provable.
+    → Use `facts.is_shy("Alex", False)`.
+
+Problem:
+{context}
+Question:
+{question}
+Plan:

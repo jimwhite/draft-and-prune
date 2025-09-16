@@ -1,0 +1,29 @@
+You are an expert in formal verification and SMT solving using the PyKe Solver.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into PyKe constraints.
+Remember to only output the raw plan.
+
+Problem:
+Anne is quiet. Erin is furry. Erin is green. Fiona is furry. Fiona is quiet. Fiona is red. Fiona is rough. Fiona is white. Harry is furry. Harry is quiet. Harry is white. Young people are furry. If Anne is quiet then Anne is red. Young, green people are rough. If someone is green then they are white. If someone is furry and quiet then they are white. If someone is young and white then they are rough. All red people are young.
+Question:
+Based on the above information, is the following statement true, false, or unknown? Anne is white.
+Plan:
+1.  Identify all entities involved: Anne, Erin, Fiona, Harry.
+2.  Define all explicit properties using ternary predicates of the form predicate(subject, object, True), such as is_quiet, is_furry, is_green, is_red, is_rough, is_white, is_young.
+3.  Encode all directly stated descriptions as facts, e.g., facts.is_quiet("Anne", True).
+4.  Translate each conditional sentence from the context into a rule using PyKe syntax:
+    • Young people are furry.
+    • If Anne is quiet → Anne is red.
+    • Young, green people are rough.
+    • If someone is green → they are white.
+    • If someone is furry and quiet → they are white.
+    • If someone is young and white → they are rough.
+    • All red people are young.
+5.  Encode each rule using a `foreach` block for the condition and an `assert` clause for the consequence.
+6.  The query tests whether Anne is white:
+    → Use facts.is_white("Anne", True)
+
+Problem:
+{context}
+Question:
+{question}
+Plan:

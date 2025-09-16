@@ -1,0 +1,605 @@
+The following is a first-order logic (FOL) problem. The problem is to determine whether the conclusion follows from the premises. The premises are given in the form of a set of first-order logic sentences. The conclusion is given in the form of a single first-order logic sentence.
+
+You are an expert in formal verification and SMT solving using the PyKe Solver, so that the expressions can be evaluated by a theorem solver to determine whether the conclusion follows from the premises. Expressions should be adhere to the format of the Pyke Program.
+
+Your primary goal is to translate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.
+- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.
+- Rules: Encode conditional logic from the context (e.g., "If... then...") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.
+- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.
+
+Remember to only output the raw code.
+
+Problem:
+Every yumpus is small. Every tumpus is hot. Each tumpus is a zumpus. Zumpuses are not small. Each zumpus is a rompus. Rompuses are brown. Each rompus is a wumpus. Fae is a zumpus.
+Question:
+Is the following statement true or false? Fae is not small.
+Facts:
+```facts
+# --- Fact about Fae ---
+is_a("Fae", "zumpus", True)
+```
+Rules:
+```rules
+# Rule: Every yumpus is small.
+yumpus_is_small
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_small($thing, True)
+
+# Rule: Every tumpus is hot.
+tumpus_is_hot
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_hot($thing, True)
+
+# Rule: Each tumpus is a zumpus.
+tumpus_is_zumpus
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_a($thing, "zumpus", True)
+
+# Rule: Zumpuses are not small.
+zumpus_is_not_small
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_small($thing, False)
+
+# Rule: Each zumpus is a rompus.
+zumpus_is_rompus
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_a($thing, "rompus", True)
+
+# Rule: Rompuses are brown.
+rompus_is_brown
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_brown($thing, True)
+
+# Rule: Each rompus is a wumpus.
+rompus_is_wumpus
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_a($thing, "wumpus", True)
+```
+Query:
+```query
+facts.is_small("Fae", False)
+```
+
+Problem:
+Zumpuses are floral. Each zumpus is a jompus. Each jompus is brown. Jompuses are numpuses. Dumpuses are bright. Each numpus is not opaque. Every numpus is a yumpus. Every yumpus is not bright. Every yumpus is a wumpus. Wumpuses are luminous. Wumpuses are impuses. Every impus is hot. Impuses are rompuses. Rompuses are mean. Each rompus is a vumpus. Vumpuses are sweet. Vumpuses are tumpuses. Sam is a yumpus.
+Question:
+Is the following statement true or false? Sam is bright.
+Facts:
+```facts
+# --- Fact about Sam ---
+is_a("Sam", "yumpus", True)
+```
+Rules:
+```rules
+# Rule: Zumpuses are floral.
+zumpus_is_floral
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_floral($thing, True)
+
+# Rule: Each zumpus is a jompus.
+zumpus_is_jompus
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_a($thing, "jompus", True)
+
+# Rule: Each jompus is brown.
+jompus_is_brown
+    foreach
+        facts.is_a($thing, "jompus", True)
+    assert
+        facts.is_brown($thing, True)
+
+# Rule: Jompuses are numpuses.
+jompus_is_numpus
+    foreach
+        facts.is_a($thing, "jompus", True)
+    assert
+        facts.is_a($thing, "numpus", True)
+
+# Rule: Dumpuses are bright.
+dumpus_is_bright
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_bright($thing, True)
+
+# Rule: Each numpus is not opaque.
+numpus_is_not_opaque
+    foreach
+        facts.is_a($thing, "numpus", True)
+    assert
+        facts.is_opaque($thing, False)
+
+# Rule: Every numpus is a yumpus.
+numpus_is_yumpus
+    foreach
+        facts.is_a($thing, "numpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+
+# Rule: Every yumpus is not bright.
+yumpus_is_not_bright
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_bright($thing, False)
+
+# Rule: Every yumpus is a wumpus.
+yumpus_is_wumpus
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_a($thing, "wumpus", True)
+
+# Rule: Wumpuses are luminous.
+wumpus_is_luminous
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_luminous($thing, True)
+
+# Rule: Wumpuses are impuses.
+wumpus_is_impus
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_a($thing, "impus", True)
+
+# Rule: Every impus is hot.
+impus_is_hot
+    foreach
+        facts.is_a($thing, "impus", True)
+    assert
+        facts.is_hot($thing, True)
+
+# Rule: Impuses are rompuses.
+impus_is_rompus
+    foreach
+        facts.is_a($thing, "impus", True)
+    assert
+        facts.is_a($thing, "rompus", True)
+
+# Rule: Rompuses are mean.
+rompus_is_mean
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_mean($thing, True)
+
+# Rule: Each rompus is a vumpus.
+rompus_is_vumpus
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_a($thing, "vumpus", True)
+
+# Rule: Vumpuses are sweet.
+vumpus_is_sweet
+    foreach
+        facts.is_a($thing, "vumpus", True)
+    assert
+        facts.is_sweet($thing, True)
+
+# Rule: Vumpuses are tumpuses.
+vumpus_is_tumpus
+    foreach
+        facts.is_a($thing, "vumpus", True)
+    assert
+        facts.is_a($thing, "tumpus", True)
+```
+Query:
+```query
+facts.is_bright("Sam", True)
+```
+
+Problem:
+Every dumpus is luminous. Each dumpus is a numpus. Numpuses are cold. Numpuses are tumpuses. Tumpuses are bright. Each tumpus is a yumpus. Every yumpus is opaque. Jompuses are amenable. Yumpuses are zumpuses. Every zumpus is not amenable. Zumpuses are rompuses. Rompuses are blue. Rompuses are wumpuses. Wumpuses are spicy. Every wumpus is a vumpus. Wren is a zumpus.
+Question:
+Is the following statement true or false? Wren is not amenable.
+Facts:
+```facts
+# --- Fact about Wren ---
+is_a("Wren", "zumpus", True)
+```
+Rules:
+```rules
+# Rule: Every dumpus is luminous.
+dumpus_is_luminous
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_luminous($thing, True)
+
+# Rule: Each dumpus is a numpus.
+dumpus_is_numpus
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_a($thing, "numpus", True)
+
+# Rule: Numpuses are cold.
+numpus_is_cold
+    foreach
+        facts.is_a($thing, "numpus", True)
+    assert
+        facts.is_cold($thing, True)
+
+# Rule: Numpuses are tumpuses.
+numpus_is_tumpus
+    foreach
+        facts.is_a($thing, "numpus", True)
+    assert
+        facts.is_a($thing, "tumpus", True)
+
+# Rule: Tumpuses are bright.
+tumpus_is_bright
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_bright($thing, True)
+
+# Rule: Each tumpus is a yumpus.
+tumpus_is_yumpus
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+
+# Rule: Every yumpus is opaque.
+yumpus_is_opaque
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_opaque($thing, True)
+
+# Rule: Jompuses are amenable.
+jompus_is_amenable
+    foreach
+        facts.is_a($thing, "jompus", True)
+    assert
+        facts.is_amenable($thing, True)
+
+# Rule: Yumpuses are zumpuses.
+yumpus_is_zumpus
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_a($thing, "zumpus", True)
+
+# Rule: Every zumpus is not amenable.
+zumpus_is_not_amenable
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_amenable($thing, False)
+
+# Rule: Zumpuses are rompuses.
+zumpus_is_rompus
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_a($thing, "rompus", True)
+
+# Rule: Rompuses are blue.
+rompus_is_blue
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_blue($thing, True)
+
+# Rule: Rompuses are wumpuses.
+rompus_is_wumpus
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_a($thing, "wumpus", True)
+
+# Rule: Wumpuses are spicy.
+wumpus_is_spicy
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_spicy($thing, True)
+
+# Rule: Every wumpus is a vumpus.
+wumpus_is_vumpus
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_a($thing, "vumpus", True)
+```
+Query:
+```query
+facts.is_amenable("Wren", False)
+```
+
+Problem:
+Every vumpus is a zumpus. Zumpuses are not green. Every zumpus is a tumpus. Tumpuses are happy. Yumpuses are sour. Gizmo is a vumpus.
+Question:
+Is the following statement true or false? Gizmo is green.
+Facts:
+```facts
+# --- Fact about Gizmo ---
+is_a("Gizmo", "vumpus", True)
+```
+Rules:
+```rules
+# Rule: Every vumpus is a zumpus.
+vumpus_is_zumpus
+    foreach
+        facts.is_a($thing, "vumpus", True)
+    assert
+        facts.is_a($thing, "zumpus", True)
+
+# Rule: Zumpuses are not green.
+zumpus_is_not_green
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_green($thing, False)
+
+# Rule: Every zumpus is a tumpus.
+zumpus_is_tumpus
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_a($thing, "tumpus", True)
+
+# Rule: Tumpuses are happy.
+tumpus_is_happy
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_happy($thing, True)
+
+# Rule: Yumpuses are sour.
+yumpus_is_sour
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_sour($thing, True)
+```
+Query:
+```query
+facts.is_green("Gizmo", True)
+```
+
+Problem:
+Each jompus is a rompus. Every rompus is a wumpus. Wumpuses are fuzzy. Dumpuses are cold. Rompuses are blue. Pip is a jompus.
+Question:
+Is the following statement true or false? Pip is fuzzy.
+Facts:
+```facts
+# --- Fact about Pip ---
+is_a("Pip", "jompus", True)
+```
+Rules:
+```rules
+# Rule: Each jompus is a rompus.
+jompus_is_rompus
+    foreach
+        facts.is_a($thing, "jompus", True)
+    assert
+        facts.is_a($thing, "rompus", True)
+
+# Rule: Every rompus is a wumpus.
+rompus_is_wumpus
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_a($thing, "wumpus", True)
+
+# Rule: Wumpuses are fuzzy.
+wumpus_is_fuzzy
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_fuzzy($thing, True)
+
+# Rule: Dumpuses are cold.
+dumpus_is_cold
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_cold($thing, True)
+
+# Rule: Rompuses are blue.
+rompus_is_blue
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_blue($thing, True)
+```
+Query:
+```query
+facts.is_fuzzy("Pip", True)
+```
+
+Problem:
+Dumpuses are yumpuses. Every yumpus is a wumpus. Every wumpus is not shiny. Impuses are metallic. Every yumpus is an impus. Zumpuses are yumpuses. Elara is a dumpus.
+Question:
+Is the following statement true or false? Elara is not shiny.
+Facts:
+```facts
+# --- Fact about Elara ---
+is_a("Elara", "dumpus", True)
+```
+Rules:
+```rules
+# Rule: Dumpuses are yumpuses.
+dumpus_is_yumpus
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+
+# Rule: Every yumpus is a wumpus.
+yumpus_is_wumpus
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_a($thing, "wumpus", True)
+
+# Rule: Every wumpus is not shiny.
+wumpus_is_not_shiny
+    foreach
+        facts.is_a($thing, "wumpus", True)
+    assert
+        facts.is_shiny($thing, False)
+
+# Rule: Impuses are metallic.
+impus_is_metallic
+    foreach
+        facts.is_a($thing, "impus", True)
+    assert
+        facts.is_metallic($thing, True)
+
+# Rule: Every yumpus is an impus.
+yumpus_is_impus
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_a($thing, "impus", True)
+
+# Rule: Zumpuses are yumpuses.
+zumpus_is_yumpus
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+```
+Query:
+```query
+facts.is_shiny("Elara", False)
+```
+
+Problem:
+Rompuses are not quiet. Each rompus is a vumpus. Every vumpus is blue. Tumpuses are yumpuses. Jompuses are tumpuses. Zorp is a rompus.
+Question:
+Is the following statement true or false? Zorp is quiet.
+Facts:
+```facts
+# --- Fact about Zorp ---
+is_a("Zorp", "rompus", True)
+```
+Rules:
+```rules
+# Rule: Rompuses are not quiet.
+rompus_is_not_quiet
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_quiet($thing, False)
+
+# Rule: Each rompus is a vumpus.
+rompus_is_vumpus
+    foreach
+        facts.is_a($thing, "rompus", True)
+    assert
+        facts.is_a($thing, "vumpus", True)
+
+# Rule: Every vumpus is blue.
+vumpus_is_blue
+    foreach
+        facts.is_a($thing, "vumpus", True)
+    assert
+        facts.is_blue($thing, True)
+
+# Rule: Tumpuses are yumpuses.
+tumpus_is_yumpus
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+
+# Rule: Jompuses are tumpuses.
+jompus_is_tumpus
+    foreach
+        facts.is_a($thing, "jompus", True)
+    assert
+        facts.is_a($thing, "tumpus", True)
+```
+Query:
+```query
+facts.is_quiet("Zorp", True)
+```
+
+Problem:
+Each impus is a dumpus. Every dumpus is a zumpus. Zumpuses are sour. Tumpuses are sweet. Yumpuses are round. Each dumpus is a yumpus. Milo is an impus.
+Question:
+Is the following statement true or false? Milo is sour.
+Facts:
+```facts
+# --- Fact about Milo ---
+is_a("Milo", "impus", True)
+```
+Rules:
+```rules
+# Rule: Each impus is a dumpus.
+impus_is_dumpus
+    foreach
+        facts.is_a($thing, "impus", True)
+    assert
+        facts.is_a($thing, "dumpus", True)
+
+# Rule: Every dumpus is a zumpus.
+dumpus_is_zumpus
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_a($thing, "zumpus", True)
+
+# Rule: Zumpuses are sour.
+zumpus_is_sour
+    foreach
+        facts.is_a($thing, "zumpus", True)
+    assert
+        facts.is_sour($thing, True)
+
+# Rule: Tumpuses are sweet.
+tumpus_is_sweet
+    foreach
+        facts.is_a($thing, "tumpus", True)
+    assert
+        facts.is_sweet($thing, True)
+
+# Rule: Yumpuses are round.
+yumpus_is_round
+    foreach
+        facts.is_a($thing, "yumpus", True)
+    assert
+        facts.is_round($thing, True)
+
+# Rule: Each dumpus is a yumpus.
+dumpus_is_yumpus
+    foreach
+        facts.is_a($thing, "dumpus", True)
+    assert
+        facts.is_a($thing, "yumpus", True)
+```
+Query:
+```query
+facts.is_sour("Milo", True)
+```
+
+Problem:
+{context}
+Question:
+{question}
