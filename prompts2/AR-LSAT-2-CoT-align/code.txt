@@ -1,0 +1,207 @@
+You are an expert Python programmer specializing in the Z3 SMT solver library.
+Your goal is to write executable Python Z3 code that precisely implements the provided plan to solve the given problem.
+Remember to only output the raw Python code.
+
+Problem:
+"During a single week, from Monday through Friday, tours will be conducted of a company's three divisions—Operations, Production, and Sales. Exactly five tours will be conducted that week, one each day. The schedule of tours for the week must conform to the following restrictions: Each division is toured at least once. The Operations division is not toured on Monday. The Production division is not toured on Wednesday. The Sales division is toured on two consecutive days, and on no other days. If the Operations division is toured on Thursday, then the Production division is toured on Friday."
+Question:
+"Which one of the following CANNOT be true of the week's tour schedule?"
+Choices:
+["The division that is toured on Monday is also toured on Tuesday.", "The division that is toured on Monday is also toured on Friday.", "The division that is toured on Tuesday is also toured on Thursday.", "The division that is toured on Wednesday is also toured on Friday.", "The division that is toured on Thursday is also toured on Friday."]
+Plan:
+"
+1. Define the three divisions as integer constants: Operations = 0, Production = 1, Sales = 2.
+2. Create five Int variables representing the division toured each day: Monday, Tuesday, Wednesday, Thursday, Friday.
+3. Add domain constraints: each day variable must be in {0, 1, 2}.
+4. Add constraint: Each division is toured at least once - use Or constraints to ensure at least one day for each division.
+5. Add constraint: Operations division is not toured on Monday - Monday != 0.
+6. Add constraint: Production division is not toured on Wednesday - Wednesday != 1.
+7. Add constraint: Sales division is toured on exactly two consecutive days and no other days.
+   - Create boolean variables for each possible consecutive pair: (Mon,Tue), (Tue,Wed), (Wed,Thu), (Thu,Fri).
+   - Exactly one pair must be true.
+   - For the true pair, both days must be Sales (= 2).
+   - For all other days, the division cannot be Sales.
+8. Add constraint: If Operations on Thursday, then Production on Friday - Implies(Thursday == 0, Friday == 1).
+9. Define answer index list [].
+10. For each choice option:
+    a. Clone the base constraints into a fresh solver.
+    b. Add the negation of the choice condition (to test if it CANNOT be true).
+    c. If the solver returns UNSAT, then the choice CANNOT be true, append the choice index to the answer list.
+11. Print the answer index list.
+"
+Z3 Program:
+```
+from z3 import *
+
+# Define divisions
+Operations, Production, Sales = 0, 1, 2
+
+# Create variables for each day
+Monday = Int('Monday')
+Tuesday = Int('Tuesday') 
+Wednesday = Int('Wednesday')
+Thursday = Int('Thursday')
+Friday = Int('Friday')
+
+# Base solver
+base_solver = Solver()
+
+# Domain constraints
+days = [Monday, Tuesday, Wednesday, Thursday, Friday]
+for day in days:
+    base_solver.add(Or(day == Operations, day == Production, day == Sales))
+
+# Each division is toured at least once
+base_solver.add(Or(Monday == Operations, Tuesday == Operations, Wednesday == Operations, Thursday == Operations, Friday == Operations))
+base_solver.add(Or(Monday == Production, Tuesday == Production, Wednesday == Production, Thursday == Production, Friday == Production))
+base_solver.add(Or(Monday == Sales, Tuesday == Sales, Wednesday == Sales, Thursday == Sales, Friday == Sales))
+
+# Operations not on Monday
+base_solver.add(Monday != Operations)
+
+# Production not on Wednesday  
+base_solver.add(Wednesday != Production)
+
+# Sales on exactly two consecutive days
+sales_pairs = [
+    Bool('sales_mon_tue'),
+    Bool('sales_tue_wed'), 
+    Bool('sales_wed_thu'),
+    Bool('sales_thu_fri')
+]
+
+# Exactly one consecutive pair
+base_solver.add(Sum([If(pair, 1, 0) for pair in sales_pairs]) == 1)
+
+# If Monday-Tuesday pair is sales
+base_solver.add(Implies(sales_pairs[0], And(Monday == Sales, Tuesday == Sales, Wednesday != Sales, Thursday != Sales, Friday != Sales)))
+
+# If Tuesday-Wednesday pair is sales  
+base_solver.add(Implies(sales_pairs[1], And(Monday != Sales, Tuesday == Sales, Wednesday == Sales, Thursday != Sales, Friday != Sales)))
+
+# If Wednesday-Thursday pair is sales
+base_solver.add(Implies(sales_pairs[2], And(Monday != Sales, Tuesday != Sales, Wednesday == Sales, Thursday == Sales, Friday != Sales)))
+
+# If Thursday-Friday pair is sales
+base_solver.add(Implies(sales_pairs[3], And(Monday != Sales, Tuesday != Sales, Wednesday != Sales, Thursday == Sales, Friday == Sales)))
+
+# If Operations on Thursday, then Production on Friday
+base_solver.add(Implies(Thursday == Operations, Friday == Production))
+
+# Test each choice to see which CANNOT be true
+choices = [
+    And(Monday == Tuesday),  # A) Same division Monday and Tuesday
+    And(Monday == Friday),   # B) Same division Monday and Friday  
+    And(Tuesday == Thursday), # C) Same division Tuesday and Thursday
+    And(Wednesday == Friday), # D) Same division Wednesday and Friday
+    And(Thursday == Friday)   # E) Same division Thursday and Friday
+]
+
+answer = []
+for i, choice in enumerate(choices):
+    test_solver = Solver()
+    test_solver.add(base_solver.assertions())
+    test_solver.add(Not(choice))  # Test if choice CANNOT be true
+    if test_solver.check() == unsat:
+        answer.append(i)
+
+print(answer)
+```
+
+Problem:
+"Each of seven candidates for the position of judge—Hamadi, Jefferson, Kurtz, Li, McDonnell, Ortiz, and Perkins—will be appointed to an open position on one of two courts—the appellate court or the trial court. There are three open positions on the appellate court and six open positions on the trial court, but not all of them will be filled at this time. The judicial appointments will conform to the following conditions: Li must be appointed to the appellate court. Kurtz must be appointed to the trial court. Hamadi cannot be appointed to the same court as Perkins."
+Question:
+"Which one of the following is an acceptable set of appointments of candidates to courts?"
+Choices:
+["appellate: Hamadi, Ortiz trial: Jefferson, Kurtz, Li, McDonnell, Perkins", "appellate: Hamadi, Li, Perkins trial: Jefferson, Kurtz, McDonnell, Ortiz", "appellate: Kurtz, Li, Perkins trial: Hamadi, Jefferson, McDonnell, Ortiz", "appellate: Li, McDonnell, Ortiz trial: Hamadi, Jefferson, Kurtz, Perkins", "appellate: Li, Perkins trial: Hamadi, Jefferson, Kurtz, McDonnell, Ortiz"]
+Plan:
+"
+1. Define the seven candidates as integer constants: Hamadi = 0, Jefferson = 1, Kurtz = 2, Li = 3, McDonnell = 4, Ortiz = 5, Perkins = 6.
+2. Define court assignment as Boolean variables: for each candidate, create a Bool variable (True = appellate court, False = trial court).
+3. Add constraint: Li must be appointed to appellate court - Li_court = True.
+4. Add constraint: Kurtz must be appointed to trial court - Kurtz_court = False.
+5. Add constraint: Hamadi cannot be appointed to the same court as Perkins - Hamadi_court != Perkins_court.
+6. Add constraint: At most 3 candidates can be appointed to appellate court - Sum of all True court assignments <= 3.
+7. Add constraint: At most 6 candidates can be appointed to trial court - Sum of all False court assignments <= 6.
+8. Define answer index list [].
+9. For each choice option:
+   a. Clone the base constraints into a fresh solver.
+   b. Parse the choice to extract which candidates are assigned to which court.
+   c. Add constraints matching the specific assignment in the choice.
+   d. If the solver returns SAT, then this choice is acceptable, append the choice index to the answer list.
+10. Print the answer index list.
+"
+Z3 Program:
+```
+from z3 import *
+
+# Define candidates
+candidates = ["Hamadi", "Jefferson", "Kurtz", "Li", "McDonnell", "Ortiz", "Perkins"]
+Hamadi, Jefferson, Kurtz, Li, McDonnell, Ortiz, Perkins = range(7)
+
+# Create Boolean variables for court assignments (True = appellate, False = trial)
+court = [Bool(f"court_{name}") for name in candidates]
+
+# Base solver
+base_solver = Solver()
+
+# Li must be appointed to appellate court
+base_solver.add(court[Li] == True)
+
+# Kurtz must be appointed to trial court  
+base_solver.add(court[Kurtz] == False)
+
+# Hamadi cannot be appointed to the same court as Perkins
+base_solver.add(court[Hamadi] != court[Perkins])
+
+# At most 3 candidates can be appointed to appellate court
+base_solver.add(Sum([If(court[i], 1, 0) for i in range(7)]) <= 3)
+
+# At most 6 candidates can be appointed to trial court (this is automatically satisfied)
+base_solver.add(Sum([If(Not(court[i]), 1, 0) for i in range(7)]) <= 6)
+
+# Define the choices with their court assignments
+choices = [
+    # A) appellate: Hamadi, Ortiz trial: Jefferson, Kurtz, Li, McDonnell, Perkins
+    {Hamadi: True, Jefferson: False, Kurtz: False, Li: False, McDonnell: False, Ortiz: True, Perkins: False},
+    
+    # B) appellate: Hamadi, Li, Perkins trial: Jefferson, Kurtz, McDonnell, Ortiz  
+    {Hamadi: True, Jefferson: False, Kurtz: False, Li: True, McDonnell: False, Ortiz: False, Perkins: True},
+    
+    # C) appellate: Kurtz, Li, Perkins trial: Hamadi, Jefferson, McDonnell, Ortiz
+    {Hamadi: False, Jefferson: False, Kurtz: True, Li: True, McDonnell: False, Ortiz: False, Perkins: True},
+    
+    # D) appellate: Li, McDonnell, Ortiz trial: Hamadi, Jefferson, Kurtz, Perkins
+    {Hamadi: False, Jefferson: False, Kurtz: False, Li: True, McDonnell: True, Ortiz: True, Perkins: False},
+    
+    # E) appellate: Li, Perkins trial: Hamadi, Jefferson, Kurtz, McDonnell, Ortiz
+    {Hamadi: False, Jefferson: False, Kurtz: False, Li: True, McDonnell: False, Ortiz: False, Perkins: True}
+]
+
+answer = []
+for i, assignment in enumerate(choices):
+    test_solver = Solver()
+    test_solver.add(base_solver.assertions())
+    
+    # Add constraints for this specific assignment
+    for candidate_idx, is_appellate in assignment.items():
+        test_solver.add(court[candidate_idx] == is_appellate)
+    
+    if test_solver.check() == sat:
+        answer.append(i)
+
+print(answer)
+```
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{options}
+Plan:
+{plan}
+Z3 Program:
+```
+
+```

@@ -1,0 +1,64 @@
+Given a problem statement as contexts, the task is to answer a logical reasoning question. 
+------
+Context:
+On Tuesday Vladimir and Wendy each eat exactly four separate meals: breakfast, lunch, dinner, and a snack. The following is all that is known about what they eat during that day: At no meal does Vladimir eat the same kind of food as Wendy. Neither of them eats the same kind of food more than once during the day. For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelet. For lunch, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For dinner, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For a snack, each eats exactly one of the following: fish or omelet. Wendy eats an omelet for lunch.
+
+Question: Vladimir must eat which one of the following foods?
+
+Options: 
+A) fish
+B) hot cakes
+C) macaroni
+D) omelet
+E) poached eggs
+
+Reasoning:
+Since Wendy eats omelet for lunch, Vladimir cannot eat omelet for lunch. Given the constraints that neither person eats the same food twice and they never eat the same food at the same meal, let's analyze what Vladimir must eat. For snack, the only options are fish or omelet. If Vladimir doesn't eat omelet anywhere, he must eat fish for snack. But then he can't eat fish for lunch or dinner. Looking at breakfast, Vladimir could eat hot cakes, poached eggs, or omelet. If he eats omelet for breakfast, he satisfies the constraint of eating omelet. Since each person must eat different foods and Wendy already has omelet at lunch, Vladimir must eat omelet at some meal to ensure variety. Therefore, Vladimir must eat omelet.
+
+The correct option is: D
+------
+Context:
+In a repair facility there are exactly six technicians: Stacy, Urma, Wim, Xena, Yolanda, and Zane. Each technician repairs machines of at least one of the following three types—radios, televisions, and VCRs—and no other types. The following conditions apply: Xena and exactly three other technicians repair radios. Yolanda repairs both televisions and VCRs. Stacy does not repair any type of machine that Yolanda repairs. Zane repairs more types of machines than Yolanda repairs. Wim does not repair any type of machine that Stacy repairs. Urma repairs exactly two types of machines.
+
+Question: Which one of the following pairs of technicians could repair all and only the same types of machines as each other?
+
+Options:
+A) Stacy and Urma
+B) Urma and Yolanda
+C) Urma and Xena
+D) Wim and Xena
+E) Xena and Yolanda
+
+Reasoning:
+Let's analyze the constraints: Yolanda repairs T and V (2 types). Zane repairs more than 2 types, so Zane repairs all 3 types (R, T, V). Stacy repairs none of Yolanda's types, so Stacy repairs only R. Wim repairs none of Stacy's types, so Wim doesn't repair R. Since everyone repairs at least one type, Wim repairs T, V, or both. Xena repairs R (given), and exactly 4 technicians repair R total. We have Stacy, Xena, Zane, and one more. Urma repairs exactly 2 types. If Urma repairs R, then Urma could repair R and one other type. Looking at the options, Urma and Xena could both repair R and one other type in common, making them repair the same types.
+
+The correct option is: C
+------
+Context:
+Workers at a water treatment plant open eight valves—G, H, I, K, L, N, O, and P—to flush out a system of pipes that needs emergency repairs. To maximize safety and efficiency, each valve is opened exactly once, and no two valves are opened at the same time. The valves are opened in accordance with the following conditions: Both K and P are opened before H. O is opened before L but after H. L is opened after G. N is opened before H. I is opened after K.
+
+Question: Each of the following could be the fifth valve opened EXCEPT:
+
+Options:
+A) H
+B) I
+C) K
+D) N
+E) O
+
+Reasoning:
+Let's establish the ordering constraints: K < H, P < H, N < H (so K, P, N all come before H). H < O < L (so H comes before O, which comes before L). G < L (so G comes before L). K < I (so K comes before I). This means at least K, P, N must come before H, so H cannot be earlier than position 4. Since H < O < L, if H is in position 4, then O would be in position 5 or later, and L even later. But we also need G < L. Given these constraints, K must be quite early since K < H and K < I. If K were in position 5, then H would have to be in position 6 or later, but we need room for O and L after H. This creates too many constraints for the remaining positions.
+
+The correct option is: C
+------
+Context:
+{context}
+
+Question: {question}
+
+Options:
+{answers}
+
+Reasoning:
+
+The correct option is:

@@ -1,0 +1,65 @@
+You are an expert in logical reasoning and SMT Z3 solver.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into Z3 constraints.
+Remember to only output the raw plan.
+
+Problem:
+"During a single week, from Monday through Friday, tours will be conducted of a company's three divisions—Operations, Production, and Sales. Exactly five tours will be conducted that week, one each day. The schedule of tours for the week must conform to the following restrictions: Each division is toured at least once. The Operations division is not toured on Monday. The Production division is not toured on Wednesday. The Sales division is toured on two consecutive days, and on no other days. If the Operations division is toured on Thursday, then the Production division is toured on Friday."
+Question:
+"Which one of the following CANNOT be true of the week's tour schedule?"
+Choices:
+["The division that is toured on Monday is also toured on Tuesday.", "The division that is toured on Monday is also toured on Friday.", "The division that is toured on Tuesday is also toured on Thursday.", "The division that is toured on Wednesday is also toured on Friday.", "The division that is toured on Thursday is also toured on Friday."]
+Plan:
+"
+1. Define the three divisions as integer constants: Operations = 0, Production = 1, Sales = 2.
+2. Create five Int variables representing the division toured each day: Monday, Tuesday, Wednesday, Thursday, Friday.
+3. Add domain constraints: each day variable must be in {0, 1, 2}.
+4. Add constraint: Each division is toured at least once - use Or constraints to ensure at least one day for each division.
+5. Add constraint: Operations division is not toured on Monday - Monday != 0.
+6. Add constraint: Production division is not toured on Wednesday - Wednesday != 1.
+7. Add constraint: Sales division is toured on exactly two consecutive days and no other days.
+   - Create boolean variables for each possible consecutive pair: (Mon,Tue), (Tue,Wed), (Wed,Thu), (Thu,Fri).
+   - Exactly one pair must be true.
+   - For the true pair, both days must be Sales (= 2).
+   - For all other days, the division cannot be Sales.
+8. Add constraint: If Operations on Thursday, then Production on Friday - Implies(Thursday == 0, Friday == 1).
+9. Define answer index list [].
+10. For each choice option:
+    a. Clone the base constraints into a fresh solver.
+    b. Add the negation of the choice condition (to test if it CANNOT be true).
+    c. If the solver returns UNSAT, then the choice CANNOT be true, append the choice index to the answer list.
+11. Print the answer index list.
+"
+
+Problem:
+"Each of seven candidates for the position of judge—Hamadi, Jefferson, Kurtz, Li, McDonnell, Ortiz, and Perkins—will be appointed to an open position on one of two courts—the appellate court or the trial court. There are three open positions on the appellate court and six open positions on the trial court, but not all of them will be filled at this time. The judicial appointments will conform to the following conditions: Li must be appointed to the appellate court. Kurtz must be appointed to the trial court. Hamadi cannot be appointed to the same court as Perkins."
+Question:
+"Which one of the following is an acceptable set of appointments of candidates to courts?"
+Choices:
+["appellate: Hamadi, Ortiz trial: Jefferson, Kurtz, Li, McDonnell, Perkins", "appellate: Hamadi, Li, Perkins trial: Jefferson, Kurtz, McDonnell, Ortiz", "appellate: Kurtz, Li, Perkins trial: Hamadi, Jefferson, McDonnell, Ortiz", "appellate: Li, McDonnell, Ortiz trial: Hamadi, Jefferson, Kurtz, Perkins", "appellate: Li, Perkins trial: Hamadi, Jefferson, Kurtz, McDonnell, Ortiz"]
+Plan:
+"
+1. Define the seven candidates as integer constants: Hamadi = 0, Jefferson = 1, Kurtz = 2, Li = 3, McDonnell = 4, Ortiz = 5, Perkins = 6.
+2. Define court assignment as Boolean variables: for each candidate, create a Bool variable (True = appellate court, False = trial court).
+3. Add constraint: Li must be appointed to appellate court - Li_court = True.
+4. Add constraint: Kurtz must be appointed to trial court - Kurtz_court = False.
+5. Add constraint: Hamadi cannot be appointed to the same court as Perkins - Hamadi_court != Perkins_court.
+6. Add constraint: At most 3 candidates can be appointed to appellate court - Sum of all True court assignments <= 3.
+7. Add constraint: At most 6 candidates can be appointed to trial court - Sum of all False court assignments <= 6.
+8. Define answer index list [].
+9. For each choice option:
+   a. Clone the base constraints into a fresh solver.
+   b. Parse the choice to extract which candidates are assigned to which court.
+   c. Add constraints matching the specific assignment in the choice.
+   d. If the solver returns SAT, then this choice is acceptable, append the choice index to the answer list.
+10. Print the answer index list.
+"
+
+Problem:
+{context}
+Question:
+{question}
+Choices:
+{options}
+Plan:
+"
+"
