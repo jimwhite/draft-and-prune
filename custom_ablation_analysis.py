@@ -3,8 +3,11 @@
 Generalized ablation analysis script for neural-symbolic reasoning experiments. (Remember to first run python analysis_simple.py /path/to/xxx/summary to get the summary.txt file)
 
 This script analyzes experimental results and creates comprehensive CSV files with:
-1. Method 1: No pruning + majority vote (uses all output lists)
-2. Method 2: With pruning + no majority vote (extracts first valid output)
+1. SketchFormal: With pruning + majority vote (use filtered output lists then do majority vote) [PRIMARY METHOD]
+2. Ablation Study 1: No pruning + majority vote (uses all output lists) [OPTIONAL]
+3. Ablation Study 2: With pruning + no majority vote (extracts first valid output) [OPTIONAL]
+
+By default, only SketchFormal method is run. Use --all-methods flag to run all three methods.
 
 === PARAMETER MEANINGS ===
 
@@ -47,16 +50,25 @@ Performance Metrics:
 - accuracy by path: Path-level accuracy (correct paths / syntactically correct paths)
 
 Usage:
+    # Run only SketchFormal method (default)
     python custom_ablation_analysis.py <results_directory>
     
-Example:
-    python custom_ablation_analysis.py results/Sketch-only-Sep18-2025/one-step-AR-LSAT-...
+    # Run all three methods
+    python custom_ablation_analysis.py <results_directory> --all-methods
+    
+    # Run specific methods
+    python custom_ablation_analysis.py <results_directory> --methods sketchformal ablation_study_1
+    
+Examples:
+    python custom_ablation_analysis.py results/experiment_folder/
+    python custom_ablation_analysis.py results/experiment_folder/ --all-methods
 """
 
 import json
 import pandas as pd
 import yaml
 import ast
+import argparse
 from collections import Counter
 import re
 import os
@@ -150,7 +162,7 @@ def extract_config_info(config):
         'has_sketch': has_sketch
     }
 
-def create_comprehensive_csv(results_dir, summary_file, config_file, result1, result2):
+def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
     """Create comprehensive CSV file with all required columns."""
     
     # Load config
@@ -162,10 +174,10 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, result1, re
     # Extract experiment ID from directory name
     exp_id = os.path.basename(results_dir)
     
-    # Create rows for both methods
+    # Create rows for all methods
     rows = []
     
-    for i, result in enumerate([result1, result2]):
+    for i, result in enumerate(results):
         row = {
             'ID': f"{exp_id}_{result['method']}",
             'Benchmarks': config.get('dataset', 'unknown'),
@@ -283,6 +295,62 @@ def extract_answer_first_list(all_solver_outputs):
     
     return None
 
+def extract_answer_pruning_majority_vote(all_solver_outputs):
+    """Extract answer using pruning criteria first, then majority vote on filtered outputs."""
+    if not all_solver_outputs:
+        return None, False  # predicted_answer, has_tied_voting
+    
+    # Step 1: Apply pruning criteria to filter valid outputs
+    filtered_outputs = []
+    for output_str in all_solver_outputs:
+        parsed_output = parse_solver_output(output_str)
+        
+        if parsed_output != 'syntax error':
+            flat_output = list(_flatten(parsed_output))
+            
+            # Check pruning criteria: length=1 and value 0-4
+            if len(flat_output) == 1:
+                try:
+                    value = int(flat_output[0])
+                    if 0 <= value <= 4:
+                        filtered_outputs.append(output_str)
+                except (ValueError, TypeError):
+                    continue
+    
+    # Step 2: If no outputs pass pruning criteria, return None
+    if not filtered_outputs:
+        return None, False
+    
+    # Step 3: Apply majority vote on filtered outputs
+    output_counts = Counter(filtered_outputs)
+    
+    # Check for tied voting
+    has_tied_voting = False
+    if len(output_counts) > 1:
+        vote_counts = list(output_counts.values())
+        max_votes = max(vote_counts)
+        tied_count = sum(1 for count in vote_counts if count == max_votes)
+        if tied_count > 1:
+            has_tied_voting = True
+    
+    most_frequent_output = output_counts.most_common(1)[0][0]
+    
+    # Parse the most frequent filtered output to get the answer
+    parsed_output = parse_solver_output(most_frequent_output)
+    flat_output = list(_flatten(parsed_output))
+    
+    if len(flat_output) == 0 or parsed_output == 'syntax error':
+        return None, has_tied_voting
+    
+    try:
+        predicted_answer = int(flat_output[0])
+        return predicted_answer, has_tied_voting
+    except (ValueError, TypeError):
+        if isinstance(flat_output[0], int):
+            return flat_output[0], has_tied_voting
+        else:
+            return None, has_tied_voting
+
 def calculate_accuracy_generic(results, method_name, extraction_func):
     """Generic function to calculate accuracy for any extraction method."""
     correct = 0
@@ -319,14 +387,32 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
         extraction_result = extraction_func(all_solver_outputs)
         
         # Handle different return types from extraction functions
-        if method_name == 'no_pruning_majority_vote':
+        if method_name == 'ablation_study_1':  # No pruning + majority vote
             predicted_answer, has_tied_voting = extraction_result
             if has_tied_voting:
                 tied_voting_samples += 1
             paths_after_pruning = len(all_solver_outputs)  # No pruning
-        elif method_name == 'with_pruning_no_majority':
+        elif method_name == 'ablation_study_2':  # With pruning + no majority
             predicted_answer = extraction_result
             paths_after_pruning = 1 if predicted_answer is not None else 0
+        elif method_name == 'sketchformal':  # With pruning + majority vote
+            predicted_answer, has_tied_voting = extraction_result
+            if has_tied_voting:
+                tied_voting_samples += 1
+            # Count how many outputs pass pruning criteria
+            pruned_count = 0
+            for output_str in all_solver_outputs:
+                parsed_output = parse_solver_output(output_str)
+                if parsed_output != 'syntax error':
+                    flat_output = list(_flatten(parsed_output))
+                    if len(flat_output) == 1:
+                        try:
+                            value = int(flat_output[0])
+                            if 0 <= value <= 4:
+                                pruned_count += 1
+                        except (ValueError, TypeError):
+                            continue
+            paths_after_pruning = pruned_count
         else:
             raise ValueError(f"Invalid method name: {method_name}")
         
@@ -372,27 +458,59 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
         'details': details
     }
 
-def calculate_accuracy_no_pruning_majority_vote(results):
-    """Calculate accuracy without pruning using all lists with majority vote."""
-    return calculate_accuracy_generic(results, 'no_pruning_majority_vote', extract_answer_majority_vote)
+def calculate_accuracy_sketchformal(results):
+    """SketchFormal: Calculate accuracy with pruning (length=1, value 0-4) then majority vote on filtered outputs."""
+    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote)
 
-def calculate_accuracy_with_pruning_no_majority(results):
-    """Calculate accuracy with pruning (length=1, value 0-4) without majority vote (first list)."""
-    return calculate_accuracy_generic(results, 'with_pruning_no_majority', extract_answer_first_list)
+def calculate_accuracy_ablation_study_1(results):
+    """Ablation Study 1: Calculate accuracy without pruning using all lists with majority vote."""
+    return calculate_accuracy_generic(results, 'ablation_study_1', extract_answer_majority_vote)
+
+def calculate_accuracy_ablation_study_2(results):
+    """Ablation Study 2: Calculate accuracy with pruning (length=1, value 0-4) without majority vote (first list)."""
+    return calculate_accuracy_generic(results, 'ablation_study_2', extract_answer_first_list)
 
 def main():
-    # Check command line arguments
-    if len(sys.argv) < 2:
-        print("Usage: python custom_ablation_analysis.py <results_directory>")
-        print("Example: python custom_ablation_analysis.py results/Sketch-only-Sep18-2025/one-step-AR-LSAT-...")
-        # Use default path if no argument provided
-        results_dir = '/home/argustest/logic-reasoning-workspace/zhiyu/Partitioned-Neural-Symbolic-Reasoning-v0/results/Sketch-only-Sep18-2025/one-step-AR-LSAT-generate-plan-with-gpt-4-generate-code-with-gpt-4-three_shot_CoT-713e5554-8e1e-41f9-b1f8-3d4c79a16fd3'
-        print(f"Using default results directory: {results_dir}")
+    # Set up argument parser
+    parser = argparse.ArgumentParser(
+        description='Analyze experimental results with SketchFormal method (primary) and optional ablation studies.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+    # Run only SketchFormal method (default)
+    python custom_ablation_analysis.py results/experiment_folder/
+    
+    # Run all three methods
+    python custom_ablation_analysis.py results/experiment_folder/ --all-methods
+    
+    # Run specific methods
+    python custom_ablation_analysis.py results/experiment_folder/ --methods sketchformal ablation_study_1
+        """
+    )
+    
+    parser.add_argument('results_directory', 
+                       help='Path to the experiment results directory')
+    
+    parser.add_argument('--all-methods', action='store_true',
+                       help='Run all three methods: SketchFormal, Ablation Study 1, and Ablation Study 2')
+    
+    parser.add_argument('--methods', nargs='+', 
+                       choices=['sketchformal', 'ablation_study_1', 'ablation_study_2'],
+                       default=['sketchformal'],
+                       help='Specify which methods to run (default: sketchformal only)')
+    
+    args = parser.parse_args()
+    
+    # Determine which methods to run
+    if args.all_methods:
+        methods_to_run = ['sketchformal', 'ablation_study_1', 'ablation_study_2']
     else:
-        results_dir = sys.argv[1]
-        # If relative path, make it absolute
-        if not os.path.isabs(results_dir):
-            results_dir = os.path.abspath(results_dir)
+        methods_to_run = args.methods
+    
+    results_dir = args.results_directory
+    # If relative path, make it absolute
+    if not os.path.isabs(results_dir):
+        results_dir = os.path.abspath(results_dir)
     
     # File paths
     summary_file = os.path.join(results_dir, 'summary.txt')
@@ -410,59 +528,88 @@ def main():
     results = load_results(summary_file)
     print(f"Loaded {len(results)} items")
     
-    print("\nCalculating accuracy without pruning (majority vote)...")
-    result1 = calculate_accuracy_no_pruning_majority_vote(results)
+    print(f"\nRunning methods: {', '.join(methods_to_run)}")
     
-    print("\nCalculating accuracy with pruning (no majority vote)...")
-    result2 = calculate_accuracy_with_pruning_no_majority(results)
+    # Dictionary to store results
+    method_results = {}
+    
+    # Run selected methods
+    if 'sketchformal' in methods_to_run:
+        print("\n🎯 Calculating SketchFormal (with pruning + majority vote)...")
+        method_results['sketchformal'] = calculate_accuracy_sketchformal(results)
+    
+    if 'ablation_study_1' in methods_to_run:
+        print("\n📊 Calculating Ablation Study 1 (no pruning + majority vote)...")
+        method_results['ablation_study_1'] = calculate_accuracy_ablation_study_1(results)
+    
+    if 'ablation_study_2' in methods_to_run:
+        print("\n📊 Calculating Ablation Study 2 (with pruning + no majority vote)...")
+        method_results['ablation_study_2'] = calculate_accuracy_ablation_study_2(results)
     
     # Print results
     print("\n" + "="*80)
-    print("ABLATION STUDY RESULTS")
+    print("EXPERIMENTAL RESULTS")
     print("="*80)
     
-    print(f"\n=== METHOD 1: NO PRUNING + MAJORITY VOTE ===")
-    print(f"Correct: {result1['correct']}")
-    print(f"Total: {result1['total']}")
-    print(f"Accuracy: {result1['accuracy']:.4f} ({result1['accuracy']*100:.2f}%)")
-    print(f"Accuracy by path: {result1['accuracy_by_path']:.4f} ({result1['accuracy_by_path']*100:.2f}%)")
-    print(f"Correct paths: {result1['correct_paths']}")
-    print(f"Syntactic correct paths: {result1['syntactic_correct_paths']}")
-    print(f"Tied voting samples: {result1['tied_voting_samples']}")
-    print(f"Tied voting rate: {result1['tied_voting_rate']:.4f} ({result1['tied_voting_rate']*100:.2f}%)")
-    print(f"Failed extractions: {result1['failed_extractions']}")
-    print(f"Syntax errors: {result1['syntax_errors']}")
-    print(f"Total paths before pruning: {result1['total_paths_before']}")
-    print(f"Total paths after pruning: {result1['total_paths_after']}")
-    print(f"Avg paths before pruning: {result1['avg_paths_before']:.2f}")
-    print(f"Avg paths after pruning: {result1['avg_paths_after']:.2f}")
-    
-    print(f"\n=== METHOD 2: WITH PRUNING + NO MAJORITY VOTE ===")
-    print(f"Correct: {result2['correct']}")
-    print(f"Total: {result2['total']}")
-    print(f"Accuracy: {result2['accuracy']:.4f} ({result2['accuracy']*100:.2f}%)")
-    print(f"Accuracy by path: {result2['accuracy_by_path']:.4f} ({result2['accuracy_by_path']*100:.2f}%)")
-    print(f"Correct paths: {result2['correct_paths']}")
-    print(f"Syntactic correct paths: {result2['syntactic_correct_paths']}")
-    print(f"Failed extractions: {result2['failed_extractions']}")
-    print(f"Syntax errors: {result2['syntax_errors']}")
-    print(f"Total paths before pruning: {result2['total_paths_before']}")
-    print(f"Total paths after pruning: {result2['total_paths_after']}")
-    print(f"Avg paths before pruning: {result2['avg_paths_before']:.2f}")
-    print(f"Avg paths after pruning: {result2['avg_paths_after']:.2f}")
-    
-    print("\nCreating comprehensive CSV file...")
-    df, output_file = create_comprehensive_csv(results_dir, summary_file, config_file, result1, result2)
-    
-    print(f"\nResults saved to: {output_file}")
-    print("\nCSV Preview:")
-    print(df.to_string(index=False))
-    
-    # Save detailed results
-    detailed_results = {
-        'method1_no_pruning_majority_vote': result1,
-        'method2_with_pruning_no_majority': result2
+    # Define method display names and order
+    method_display = {
+        'sketchformal': '🎯 SKETCHFORMAL (PRIMARY METHOD)',
+        'ablation_study_1': '📊 ABLATION STUDY 1',
+        'ablation_study_2': '📊 ABLATION STUDY 2'
     }
+    
+    # Print results in the order they were run, with SketchFormal first if present
+    method_order = ['sketchformal', 'ablation_study_1', 'ablation_study_2']
+    
+    for method_name in method_order:
+        if method_name in method_results:
+            result = method_results[method_name]
+            print(f"\n=== {method_display[method_name]} ===")
+            print(f"Correct: {result['correct']}")
+            print(f"Total: {result['total']}")
+            print(f"Accuracy: {result['accuracy']:.4f} ({result['accuracy']*100:.2f}%)")
+            print(f"Accuracy by path: {result['accuracy_by_path']:.4f} ({result['accuracy_by_path']*100:.2f}%)")
+            print(f"Correct paths: {result['correct_paths']}")
+            print(f"Syntactic correct paths: {result['syntactic_correct_paths']}")
+            
+            # Only show tied voting for methods that support it
+            if method_name in ['sketchformal', 'ablation_study_1']:
+                print(f"Tied voting samples: {result['tied_voting_samples']}")
+                print(f"Tied voting rate: {result['tied_voting_rate']:.4f} ({result['tied_voting_rate']*100:.2f}%)")
+            
+            print(f"Failed extractions: {result['failed_extractions']}")
+            print(f"Syntax errors: {result['syntax_errors']}")
+            print(f"Total paths before pruning: {result['total_paths_before']}")
+            print(f"Total paths after pruning: {result['total_paths_after']}")
+            print(f"Avg paths before pruning: {result['avg_paths_before']:.2f}")
+            print(f"Avg paths after pruning: {result['avg_paths_after']:.2f}")
+    
+    # Create CSV and detailed results only if we have results
+    if method_results:
+        print("\nCreating comprehensive CSV file...")
+        
+        # Convert method_results to the expected format for CSV creation
+        results_list = []
+        for method_name in ['sketchformal', 'ablation_study_1', 'ablation_study_2']:
+            if method_name in method_results:
+                results_list.append(method_results[method_name])
+        
+        df, output_file = create_comprehensive_csv(results_dir, summary_file, config_file, *results_list)
+        
+        print(f"\nResults saved to: {output_file}")
+        print("\nCSV Preview:")
+        print(df.to_string(index=False))
+        
+        # Save detailed results with new naming
+        detailed_results = {}
+        method_mapping = {
+            'sketchformal': 'sketchformal_primary_method',
+            'ablation_study_1': 'ablation_study_1_no_pruning_majority_vote',
+            'ablation_study_2': 'ablation_study_2_with_pruning_no_majority'
+        }
+        
+        for method_name, result in method_results.items():
+            detailed_results[method_mapping[method_name]] = result
     
     detailed_output_file = os.path.join(results_dir, 'detailed_ablation_results.json')
     with open(detailed_output_file, 'w') as f:
