@@ -102,7 +102,7 @@ def parse_solver_output(output_str, dataset=None):
     """Parse solver output string to extract list of answers based on dataset format."""
     try:
         # Check for syntax error pattern first
-        if isinstance(output_str, str) and "execution error" in output_str:
+        if isinstance(output_str, str) and "error" in output_str.lower():
             return 'syntax error'
         
         # Handle different dataset formats
@@ -476,17 +476,24 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
     details = []
     
     for item in results:
-        if 'problem' not in item or 'label' not in item['problem']:
+        if 'problem' not in item:
+            continue
+        
+        # 'label' for AR-LSAT, 'answer' for others
+        if 'label' in item['problem']:
+            true_label = item['problem']['label']
+        elif 'answer' in item['problem']:
+            true_label = item['problem']['answer']
+        else:
             continue
             
-        true_label = item['problem']['label']
         all_solver_outputs = item.get('all_solver_outputs', [])
         
         total += 1
         total_paths_before += len(all_solver_outputs)
         
         # Count syntax errors
-        syntax_error_count = sum(1 for output in all_solver_outputs if "execution error" in str(output))
+        syntax_error_count = sum(1 for output in all_solver_outputs if "error" in str(output).lower())
         syntax_errors += syntax_error_count
         
         # Calculate path-level metrics
@@ -570,6 +577,10 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
                     is_correct = pred_int == true_int
                 except (ValueError, TypeError):
                     is_correct = False
+            elif dataset and dataset.lower() in ['proofwriter', 'prontoqa']:
+                is_correct = (predicted_answer == "True" and true_label == "A") or \
+                             (predicted_answer == "False" and true_label == "B") or \
+                             (predicted_answer == "Unknown" and true_label == "C")
             else:
                 # Other datasets: string comparison
                 is_correct = str(predicted_answer) == str(true_label)
@@ -578,7 +589,7 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
             correct += 1
             
         details.append({
-            'id': item['problem'].get('id_string', f'item_{total}'),
+            'id': item['problem'].get('id_string', item['problem'].get('id', f'item_{total}')),
             'true_label': true_label,
             'predicted': predicted_answer,
             'correct': is_correct,

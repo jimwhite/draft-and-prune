@@ -57,7 +57,6 @@ def main():
     # Copy the prompts folder to preserve exact prompts used
     reasoner.save_prompts_folder()
 
-    import pdb; pdb.set_trace()
     # Run all tests
     # limit_msg = f" with limit {args.limit}" if args.limit else ""
     # print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
