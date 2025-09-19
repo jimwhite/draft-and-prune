@@ -7,6 +7,15 @@ This script analyzes experimental results and creates comprehensive CSV files wi
 2. Ablation Study 1: No pruning + majority vote (uses all output lists) [OPTIONAL]
 3. Ablation Study 2: With pruning + no majority vote (extracts first valid output) [OPTIONAL]
 
+SUPPORTED DATASETS:
+- AR-LSAT: Multiple choice (0-4 indices), pruning criteria: single valid index
+- ProofWriter: Boolean logic (True/False/Unknown), pruning criteria: single valid boolean
+- FOLIO: Boolean logic (True/False/Unknown), pruning criteria: single valid boolean  
+- ProntoQA: Boolean logic (True/False), pruning criteria: single valid boolean
+- LogicalDeduction: Multiple choice (A-G letters), pruning criteria: single valid letter
+
+The script automatically detects the dataset from config.yaml and applies appropriate parsing and pruning rules.
+
 By default, only SketchFormal method is run. Use --all-methods flag to run all three methods.
 
 === PARAMETER MEANINGS ===
@@ -89,32 +98,71 @@ def load_results(results_file):
         print(f"Error loading results file: {e}")
         return []
 
-def parse_solver_output(output_str):
-    """Parse solver output string to extract list of answers."""
+def parse_solver_output(output_str, dataset=None):
+    """Parse solver output string to extract list of answers based on dataset format."""
     try:
         # Check for syntax error pattern first
         if isinstance(output_str, str) and "execution error" in output_str:
             return 'syntax error'
         
-        # Handle string representations of lists like "[2]", "[]", etc.
-        if isinstance(output_str, str):
-            # Try to parse as Python literal
-            parsed = ast.literal_eval(output_str)
-            if isinstance(parsed, list):
-                return parsed
-            else:
-                return [parsed] if parsed is not None else []
-        elif isinstance(output_str, list):
-            return output_str
+        # Handle different dataset formats
+        if dataset and dataset.lower() in ['proofwriter', 'folio', 'prontoqa']:
+            # Boolean-based datasets: True, False, Unknown
+            if isinstance(output_str, str):
+                output_clean = output_str.strip()
+                if output_clean in ['True', 'False', 'Unknown']:
+                    return [output_clean]
+                elif output_clean == 'multiple answers':
+                    return ['multiple answers']
+                else:
+                    return []
+            return []
+        
+        elif dataset and dataset.lower() == 'logicaldeduction':
+            # Letter-based dataset: A, B, C, D, E, F, G
+            if isinstance(output_str, str):
+                output_clean = output_str.strip()
+                valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+                if output_clean in valid_letters:
+                    return [output_clean]
+                else:
+                    # Try to extract from lines
+                    lines = [line.strip() for line in output_clean.split('\n') if line.strip()]
+                    unique_lines = list(set(lines))
+                    if len(unique_lines) == 1 and unique_lines[0] in valid_letters:
+                        return [unique_lines[0]]
+                    elif len(unique_lines) > 1:
+                        return ['multiple answers']
+                    else:
+                        return []
+            return []
+        
         else:
-            return []
+            # AR-LSAT format: Handle string representations of lists like "[2]", "[]", etc.
+            if isinstance(output_str, str):
+                # Try to parse as Python literal
+                parsed = ast.literal_eval(output_str)
+                if isinstance(parsed, list):
+                    return parsed
+                else:
+                    return [parsed] if parsed is not None else []
+            elif isinstance(output_str, list):
+                return output_str
+            else:
+                return []
     except:
-        # If parsing fails, try to extract numbers manually
-        try:
-            numbers = re.findall(r'\d+', str(output_str))
-            return [int(n) for n in numbers]
-        except:
-            return []
+        # Fallback parsing
+        if dataset and dataset.lower() == 'logicaldeduction':
+            # Try to extract letters
+            letters = re.findall(r'\b[A-G]\b', str(output_str))
+            return letters if letters else []
+        else:
+            # Try to extract numbers for AR-LSAT
+            try:
+                numbers = re.findall(r'\d+', str(output_str))
+                return [int(n) for n in numbers]
+            except:
+                return []
 
 def _flatten(nested_list):
     """Flatten arbitrarily nested lists into a flat list (non-list elements)."""
@@ -217,21 +265,31 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
     
     return df, output_file
 
-def calculate_path_level_metrics(all_solver_outputs, true_label):
+def calculate_path_level_metrics(all_solver_outputs, true_label, dataset=None):
     """Calculate path-level metrics for accuracy by path calculation."""
     correct_paths = 0
     syntactic_correct_paths = 0
     
     for output_str in all_solver_outputs:
-        parsed_output = parse_solver_output(output_str)
+        parsed_output = parse_solver_output(output_str, dataset)
         if parsed_output != 'syntax error':
             syntactic_correct_paths += 1
             flat_output = list(_flatten(parsed_output))
             if len(flat_output) == 1:
                 try:
-                    path_answer = int(flat_output[0])
-                    if path_answer == true_label:
-                        correct_paths += 1
+                    path_answer = flat_output[0]
+                    
+                    # Handle different answer formats
+                    if dataset and dataset.lower() == 'ar-lsat':
+                        # AR-LSAT: numeric comparison
+                        path_answer = int(path_answer)
+                        true_label_int = int(true_label)
+                        if path_answer == true_label_int:
+                            correct_paths += 1
+                    else:
+                        # Other datasets: string comparison
+                        if str(path_answer) == str(true_label):
+                            correct_paths += 1
                 except (ValueError, TypeError):
                     pass
     
@@ -273,29 +331,51 @@ def extract_answer_majority_vote(all_solver_outputs):
         else:
             return None, has_tied_voting
 
-def extract_answer_first_list(all_solver_outputs):
+def extract_answer_first_list(all_solver_outputs, dataset=None):
     """Extract answer from first output that meets pruning criteria."""
     if not all_solver_outputs:
         return None
     
     first_output = all_solver_outputs[0]
-    parsed_output = parse_solver_output(first_output)
+    parsed_output = parse_solver_output(first_output, dataset)
     
     if parsed_output != 'syntax error':
         flat_output = list(_flatten(parsed_output))
         
-        # Check pruning criteria: length=1 and value 0-4
+        # Check pruning criteria based on dataset
         if len(flat_output) == 1:
-            try:
-                value = int(flat_output[0])
-                if 0 <= value <= 4:
-                    return value
-            except (ValueError, TypeError):
-                pass
+            if dataset and dataset.lower() == 'ar-lsat':
+                # AR-LSAT: value 0-4
+                try:
+                    value = int(flat_output[0])
+                    if 0 <= value <= 4:
+                        return value
+                except (ValueError, TypeError):
+                    pass
+            elif dataset and dataset.lower() in ['proofwriter', 'folio']:
+                # ProofWriter/FOLIO: True, False, Unknown
+                if flat_output[0] in ['True', 'False', 'Unknown']:
+                    return flat_output[0]
+            elif dataset and dataset.lower() == 'prontoqa':
+                # ProntoQA: True, False only
+                if flat_output[0] in ['True', 'False']:
+                    return flat_output[0]
+            elif dataset and dataset.lower() == 'logicaldeduction':
+                # LogicalDeduction: A-G
+                if flat_output[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+                    return flat_output[0]
+            else:
+                # Default AR-LSAT behavior for backward compatibility
+                try:
+                    value = int(flat_output[0])
+                    if 0 <= value <= 4:
+                        return value
+                except (ValueError, TypeError):
+                    pass
     
     return None
 
-def extract_answer_pruning_majority_vote(all_solver_outputs):
+def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
     """Extract answer using pruning criteria first, then majority vote on filtered outputs."""
     if not all_solver_outputs:
         return None, False  # predicted_answer, has_tied_voting
@@ -303,19 +383,45 @@ def extract_answer_pruning_majority_vote(all_solver_outputs):
     # Step 1: Apply pruning criteria to filter valid outputs
     filtered_outputs = []
     for output_str in all_solver_outputs:
-        parsed_output = parse_solver_output(output_str)
+        parsed_output = parse_solver_output(output_str, dataset)
         
         if parsed_output != 'syntax error':
             flat_output = list(_flatten(parsed_output))
             
-            # Check pruning criteria: length=1 and value 0-4
+            # Check pruning criteria based on dataset
             if len(flat_output) == 1:
-                try:
-                    value = int(flat_output[0])
-                    if 0 <= value <= 4:
-                        filtered_outputs.append(output_str)
-                except (ValueError, TypeError):
-                    continue
+                is_valid = False
+                if dataset and dataset.lower() == 'ar-lsat':
+                    # AR-LSAT: value 0-4
+                    try:
+                        value = int(flat_output[0])
+                        if 0 <= value <= 4:
+                            is_valid = True
+                    except (ValueError, TypeError):
+                        continue
+                elif dataset and dataset.lower() in ['proofwriter', 'folio']:
+                    # ProofWriter/FOLIO: True, False, Unknown
+                    if flat_output[0] in ['True', 'False', 'Unknown']:
+                        is_valid = True
+                elif dataset and dataset.lower() == 'prontoqa':
+                    # ProntoQA: True, False only
+                    if flat_output[0] in ['True', 'False']:
+                        is_valid = True
+                elif dataset and dataset.lower() == 'logicaldeduction':
+                    # LogicalDeduction: A-G
+                    if flat_output[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+                        is_valid = True
+                else:
+                    # Default AR-LSAT behavior for backward compatibility
+                    try:
+                        value = int(flat_output[0])
+                        if 0 <= value <= 4:
+                            is_valid = True
+                    except (ValueError, TypeError):
+                        continue
+                
+                if is_valid:
+                    filtered_outputs.append(output_str)
     
     # Step 2: If no outputs pass pruning criteria, return None
     if not filtered_outputs:
@@ -336,22 +442,27 @@ def extract_answer_pruning_majority_vote(all_solver_outputs):
     most_frequent_output = output_counts.most_common(1)[0][0]
     
     # Parse the most frequent filtered output to get the answer
-    parsed_output = parse_solver_output(most_frequent_output)
+    parsed_output = parse_solver_output(most_frequent_output, dataset)
     flat_output = list(_flatten(parsed_output))
     
     if len(flat_output) == 0 or parsed_output == 'syntax error':
         return None, has_tied_voting
     
-    try:
-        predicted_answer = int(flat_output[0])
-        return predicted_answer, has_tied_voting
-    except (ValueError, TypeError):
-        if isinstance(flat_output[0], int):
-            return flat_output[0], has_tied_voting
-        else:
-            return None, has_tied_voting
+    # Return the appropriate answer format based on dataset
+    if dataset and dataset.lower() in ['proofwriter', 'folio', 'prontoqa', 'logicaldeduction']:
+        return flat_output[0], has_tied_voting  # String format
+    else:
+        # AR-LSAT numeric format
+        try:
+            predicted_answer = int(flat_output[0])
+            return predicted_answer, has_tied_voting
+        except (ValueError, TypeError):
+            if isinstance(flat_output[0], int):
+                return flat_output[0], has_tied_voting
+            else:
+                return None, has_tied_voting
 
-def calculate_accuracy_generic(results, method_name, extraction_func):
+def calculate_accuracy_generic(results, method_name, extraction_func, dataset=None):
     """Generic function to calculate accuracy for any extraction method."""
     correct = 0
     total = 0
@@ -379,12 +490,17 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
         syntax_errors += syntax_error_count
         
         # Calculate path-level metrics
-        item_correct_paths, item_syntactic_correct_paths = calculate_path_level_metrics(all_solver_outputs, true_label)
+        item_correct_paths, item_syntactic_correct_paths = calculate_path_level_metrics(all_solver_outputs, true_label, dataset)
         correct_paths += item_correct_paths
         syntactic_correct_paths += item_syntactic_correct_paths
         
         # Extract answer using the provided extraction function
-        extraction_result = extraction_func(all_solver_outputs)
+        if method_name in ['sketchformal', 'ablation_study_2']:
+            # These methods need dataset parameter
+            extraction_result = extraction_func(all_solver_outputs, dataset)
+        else:
+            # Ablation study 1 (majority vote) doesn't need dataset parameter yet
+            extraction_result = extraction_func(all_solver_outputs)
         
         # Handle different return types from extraction functions
         if method_name == 'ablation_study_1':  # No pruning + majority vote
@@ -402,16 +518,38 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
             # Count how many outputs pass pruning criteria
             pruned_count = 0
             for output_str in all_solver_outputs:
-                parsed_output = parse_solver_output(output_str)
+                parsed_output = parse_solver_output(output_str, dataset)
                 if parsed_output != 'syntax error':
                     flat_output = list(_flatten(parsed_output))
                     if len(flat_output) == 1:
-                        try:
-                            value = int(flat_output[0])
-                            if 0 <= value <= 4:
-                                pruned_count += 1
-                        except (ValueError, TypeError):
-                            continue
+                        is_valid = False
+                        if dataset and dataset.lower() == 'ar-lsat':
+                            try:
+                                value = int(flat_output[0])
+                                if 0 <= value <= 4:
+                                    is_valid = True
+                            except (ValueError, TypeError):
+                                continue
+                        elif dataset and dataset.lower() in ['proofwriter', 'folio']:
+                            if flat_output[0] in ['True', 'False', 'Unknown']:
+                                is_valid = True
+                        elif dataset and dataset.lower() == 'prontoqa':
+                            if flat_output[0] in ['True', 'False']:
+                                is_valid = True
+                        elif dataset and dataset.lower() == 'logicaldeduction':
+                            if flat_output[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+                                is_valid = True
+                        else:
+                            # Default AR-LSAT behavior
+                            try:
+                                value = int(flat_output[0])
+                                if 0 <= value <= 4:
+                                    is_valid = True
+                            except (ValueError, TypeError):
+                                continue
+                        
+                        if is_valid:
+                            pruned_count += 1
             paths_after_pruning = pruned_count
         else:
             raise ValueError(f"Invalid method name: {method_name}")
@@ -421,7 +559,21 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
         if predicted_answer is None:
             failed_extractions += 1
         
-        is_correct = predicted_answer == true_label if predicted_answer is not None else False
+        # Handle different answer format comparisons
+        is_correct = False
+        if predicted_answer is not None:
+            if dataset and dataset.lower() == 'ar-lsat':
+                # AR-LSAT: numeric comparison
+                try:
+                    pred_int = int(predicted_answer)
+                    true_int = int(true_label)
+                    is_correct = pred_int == true_int
+                except (ValueError, TypeError):
+                    is_correct = False
+            else:
+                # Other datasets: string comparison
+                is_correct = str(predicted_answer) == str(true_label)
+        
         if is_correct:
             correct += 1
             
@@ -458,17 +610,17 @@ def calculate_accuracy_generic(results, method_name, extraction_func):
         'details': details
     }
 
-def calculate_accuracy_sketchformal(results):
-    """SketchFormal: Calculate accuracy with pruning (length=1, value 0-4) then majority vote on filtered outputs."""
-    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote)
+def calculate_accuracy_sketchformal(results, dataset=None):
+    """SketchFormal: Calculate accuracy with pruning then majority vote on filtered outputs."""
+    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote, dataset)
 
-def calculate_accuracy_ablation_study_1(results):
+def calculate_accuracy_ablation_study_1(results, dataset=None):
     """Ablation Study 1: Calculate accuracy without pruning using all lists with majority vote."""
-    return calculate_accuracy_generic(results, 'ablation_study_1', extract_answer_majority_vote)
+    return calculate_accuracy_generic(results, 'ablation_study_1', extract_answer_majority_vote, dataset)
 
-def calculate_accuracy_ablation_study_2(results):
-    """Ablation Study 2: Calculate accuracy with pruning (length=1, value 0-4) without majority vote (first list)."""
-    return calculate_accuracy_generic(results, 'ablation_study_2', extract_answer_first_list)
+def calculate_accuracy_ablation_study_2(results, dataset=None):
+    """Ablation Study 2: Calculate accuracy with pruning without majority vote (first list)."""
+    return calculate_accuracy_generic(results, 'ablation_study_2', extract_answer_first_list, dataset)
 
 def main():
     # Set up argument parser
@@ -528,6 +680,11 @@ Examples:
     results = load_results(summary_file)
     print(f"Loaded {len(results)} items")
     
+    # Load config to detect dataset
+    config = load_config(config_file)
+    dataset = config.get('dataset', 'ar-lsat').lower()  # Default to AR-LSAT for backward compatibility
+    print(f"Detected dataset: {dataset.upper()}")
+    
     print(f"\nRunning methods: {', '.join(methods_to_run)}")
     
     # Dictionary to store results
@@ -535,16 +692,16 @@ Examples:
     
     # Run selected methods
     if 'sketchformal' in methods_to_run:
-        print("\n🎯 Calculating SketchFormal (with pruning + majority vote)...")
-        method_results['sketchformal'] = calculate_accuracy_sketchformal(results)
+        print(f"\n🎯 Calculating SketchFormal (with pruning + majority vote for {dataset.upper()})...")
+        method_results['sketchformal'] = calculate_accuracy_sketchformal(results, dataset)
     
     if 'ablation_study_1' in methods_to_run:
-        print("\n📊 Calculating Ablation Study 1 (no pruning + majority vote)...")
-        method_results['ablation_study_1'] = calculate_accuracy_ablation_study_1(results)
+        print(f"\n📊 Calculating Ablation Study 1 (no pruning + majority vote for {dataset.upper()})...")
+        method_results['ablation_study_1'] = calculate_accuracy_ablation_study_1(results, dataset)
     
     if 'ablation_study_2' in methods_to_run:
-        print("\n📊 Calculating Ablation Study 2 (with pruning + no majority vote)...")
-        method_results['ablation_study_2'] = calculate_accuracy_ablation_study_2(results)
+        print(f"\n📊 Calculating Ablation Study 2 (with pruning + no majority vote for {dataset.upper()})...")
+        method_results['ablation_study_2'] = calculate_accuracy_ablation_study_2(results, dataset)
     
     # Print results
     print("\n" + "="*80)
