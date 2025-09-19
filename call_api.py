@@ -43,7 +43,32 @@ class APIClient(ABC):
         pass
 
 class GeminiClient(APIClient):
-    """Client for Google's Gemini API"""
+    """Client for Google's Gemini API with multiple key support"""
+    def __init__(self, config: APIConfig, api_key: str = None, api_keys: list = None):
+        super().__init__(config)
+        # Support both single key and multiple keys
+        if api_keys and isinstance(api_keys, list):
+            self.api_keys = api_keys
+            self.current_key_index = 0
+            self.api_key = self.api_keys[0]
+        else:
+            self.api_keys = [api_key] if api_key else []
+            self.current_key_index = 0
+            self.api_key = api_key
+        
+        if self.api_key:
+            genai.configure(api_key=self.api_key)
+    
+    def rotate_api_key(self):
+        """Rotate to the next API key if multiple keys are available"""
+        if len(self.api_keys) > 1:
+            self.current_key_index = (self.current_key_index + 1) % len(self.api_keys)
+            self.api_key = self.api_keys[self.current_key_index]
+            genai.configure(api_key=self.api_key)
+            print(f"Rotated to API key #{self.current_key_index + 1}")
+            return True
+        return False
+    
     def call(self, prompt: str) -> str:
         """Call the Gemini API with error handling and retries"""
         # Initialize the model
@@ -85,9 +110,18 @@ class GeminiClient(APIClient):
                     return f"Generation failed. Reason: {block_reason}"
 
             except Exception as e:
-                print(f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}")
+                error_str = str(e)
+                print(f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {error_str}")
+                
+                # Check if it's a rate limit error and try rotating API keys
+                if ("quota" in error_str.lower() or "rate" in error_str.lower() or "limit" in error_str.lower()):
+                    if self.rotate_api_key():
+                        print("Retrying with rotated API key...")
+                        time.sleep(2)  # Short delay after key rotation
+                        continue
+                
                 if attempt == self.config.max_retries - 1:
-                    return f"API call failed after {self.config.max_retries} attempts: {str(e)}"
+                    return f"API call failed after {self.config.max_retries} attempts: {error_str}"
                 print(f"Waiting {self.config.inter_test_case_delay**(attempt+1)} seconds before retry...")
                 time.sleep(self.config.inter_test_case_delay**(attempt+1))
             finally:
@@ -208,7 +242,9 @@ class AzureOpenAIClient(APIClient):
 def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
     """Factory function to get the appropriate API client based on provider"""
     if provider.lower() == "gemini":
-        return GeminiClient(config)
+        api_key = kwargs.get('api_key')
+        api_keys = kwargs.get('api_keys')  # Support multiple keys
+        return GeminiClient(config, api_key, api_keys)
     elif provider.lower() == "gpt":
         return GPTClient(config)
     elif provider.lower() == "azure-openai" or provider.lower() == "azure":

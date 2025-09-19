@@ -5,6 +5,7 @@ import re
 import json
 import time
 import uuid
+import shutil
 import openai
 import tempfile
 import traceback
@@ -24,11 +25,11 @@ from answer_extractors import AnswerExtractor
 from call_api import APIConfig, get_api_client
 
 
-def _parallel_worker(args: Tuple[Any, Dict, Any]) -> None:
+def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
     """
     Executes the test task in a single subprocess and redirects all standard output to the specified file
     """
-    test_runner_instance, test_case, mp_lock = args
+    test_runner_instance, test_case, mp_lock, sample_index = args
     
     problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
     unique_id = str(uuid.uuid4())
@@ -45,6 +46,25 @@ def _parallel_worker(args: Tuple[Any, Dict, Any]) -> None:
                 start_process_time = time.time()
                 print(f"Start Time: {datetime.fromtimestamp(start_process_time).strftime('%Y-%m-%d %H:%M:%S')}")
                 print("-" * 30 + "\n")
+
+                # Assign API key based on sample index for batch-based key distribution
+                if hasattr(test_runner_instance.config, 'gemini_api_keys') and test_runner_instance.config.gemini_api_keys:
+                    num_keys = len(test_runner_instance.config.gemini_api_keys)
+                    assigned_key_index = sample_index % num_keys
+                    assigned_key = test_runner_instance.config.gemini_api_keys[assigned_key_index]
+                    print(f"Sample {sample_index}: Assigned API Key #{assigned_key_index + 1} ({assigned_key[:20]}...)")
+                    
+                    # Update both main API client and fix API client with the assigned key
+                    if hasattr(test_runner_instance.api_client, 'api_key'):
+                        import google.generativeai as genai
+                        genai.configure(api_key=assigned_key)
+                        test_runner_instance.api_client.api_key = assigned_key
+                        print(f"Main API client updated with key #{assigned_key_index + 1}")
+                        
+                        # Also update fix API client if it exists
+                        if hasattr(test_runner_instance, 'fix_api_client') and hasattr(test_runner_instance.fix_api_client, 'api_key'):
+                            test_runner_instance.fix_api_client.api_key = assigned_key
+                            print(f"Fix API client also updated with key #{assigned_key_index + 1}")
 
                 # Call the instance's reason method
                 start_reason_time = time.time()
@@ -91,63 +111,110 @@ class Reasoner(ABC):
             print('removing compiled_krb')
             os.system(f'rm -rf ./compiled_krb')
 
-        # Initialize API client
+        # Initialize API client for plan generation
+        plan_model = getattr(config, 'plan_model', config.model)  # Use plan_model if available, fallback to model
         api_config = APIConfig(
-            model_name=config.model,
+            model_name=plan_model,
             temperature=config.temperature,
             max_retries=config.max_retries,
             inter_test_case_delay=config.test_delay
         )
 
-        azure_params = {}
+        client_params = {}
         if config.azure_endpoint:  # Check if Azure configuration is present
             self.api_provider = "azure-openai"
-            azure_params = {
+            client_params = {
                 'endpoint': config.azure_endpoint,
                 'deployment': config.azure_deployment,
                 'managed_identity_client_id': config.azure_managed_identity_client_id
             }
             # For Azure, api_key in config is not used for client init directly
-        elif 'gemini' in config.model.lower():
+        elif 'gemini' in plan_model.lower():
             self.api_provider = "gemini"
-            genai.configure(api_key=config.api_key)
-        elif 'gpt' in config.model.lower():
+            # Use multiple API keys if available, otherwise single key
+            if config.gemini_api_keys:
+                client_params = {'api_keys': config.gemini_api_keys}
+                print(f"Initialized Gemini client with {len(config.gemini_api_keys)} API keys for rotation")
+            else:
+                client_params = {'api_key': config.api_key}
+        elif 'gpt' in plan_model.lower():
             self.api_provider = "gpt"
             # For standard GPT, API key is set globally for the openai library
             openai.api_key = config.api_key
         else:
-            raise ValueError(f"Unsupported model or configuration: {config.model}")
+            raise ValueError(f"Unsupported model or configuration: {plan_model}")
         
-        self.api_client = get_api_client(self.api_provider, api_config, **azure_params)
+        self.api_client = get_api_client(self.api_provider, api_config, **client_params)
         
-        # Initialize fix_api_client if needed
+        # Initialize fix_api_client if needed for code generation
         if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
+            code_model = getattr(config, 'code_model', getattr(config, 'fix_model', plan_model))  # Use code_model if available, fallback to fix_model or plan_model
             fix_api_config = APIConfig(
-                model_name=config.fix_model,
+                model_name=code_model,
                 temperature=config.temperature,
                 max_retries=config.max_retries,
                 inter_test_case_delay=config.test_delay
             )
             
-            fix_azure_params = {}
+            fix_client_params = {}
             # Determine provider for fix model separately
             if config.azure_endpoint: # Assuming fix model also uses Azure if primary does
                 fix_api_provider = "azure-openai"
-                fix_azure_params = {
+                fix_client_params = {
                     'endpoint': config.azure_endpoint, # Use same endpoint
-                    'deployment': config.fix_model,    # Deployment name might be same as model or different
+                    'deployment': code_model,    # Deployment name might be same as model or different
                     'managed_identity_client_id': config.azure_managed_identity_client_id
                 }
-            elif 'gemini' in config.fix_model.lower():
+            elif 'gemini' in code_model.lower():
                 fix_api_provider = "gemini"
                 # Ensure fix_api_key is used if available, otherwise fallback to primary api_key
-                genai.configure(api_key=config.fix_api_key if config.fix_api_key else config.api_key)
-            elif 'gpt' in config.fix_model.lower():
+                fix_client_params = {'api_key': config.fix_api_key if config.fix_api_key else config.api_key}
+            elif 'gpt' in code_model.lower():
                 fix_api_provider = "gpt"
                 openai.api_key = config.fix_api_key if config.fix_api_key else config.api_key
             else:
-                raise ValueError(f"Unsupported fix model: {config.fix_model}")
-            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_azure_params)
+                raise ValueError(f"Unsupported code model: {code_model}")
+            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_client_params)
+
+    def save_prompts_folder(self) -> None:
+        """
+        Copy the prompts folder to the results directory to preserve exact prompts used
+        """
+        if not os.path.exists(self.config.prompt_path):
+            print(f"Warning: Prompt path {self.config.prompt_path} does not exist, skipping prompt folder copy")
+            return
+            
+        # Create prompts folder in results directory
+        prompts_dest = os.path.join(self.results_folder, "prompts")
+        
+        try:
+            if os.path.exists(prompts_dest):
+                print(f"Prompts folder already exists at {prompts_dest}, removing old copy...")
+                shutil.rmtree(prompts_dest)
+            
+            # Copy the entire prompts folder
+            shutil.copytree(self.config.prompt_path, prompts_dest)
+            print(f"✅ Prompts folder copied to: {prompts_dest}")
+            
+            # Also create a metadata file about the prompts
+            prompt_metadata = {
+                "original_prompt_path": self.config.prompt_path,
+                "copied_at": datetime.now().isoformat(),
+                "reasoning_method": self.config.reasoning_method,
+                "dataset": self.config.dataset,
+                "shots": self.config.shots
+            }
+            
+            metadata_path = os.path.join(prompts_dest, "prompt_metadata.json")
+            with open(metadata_path, 'w') as f:
+                json.dump(prompt_metadata, f, indent=2)
+            
+            print(f"✅ Prompt metadata saved to: {metadata_path}")
+            
+        except Exception as e:
+            print(f"❌ Error copying prompts folder: {e}")
+            print(f"   Source: {self.config.prompt_path}")
+            print(f"   Destination: {prompts_dest}")
 
     @abstractmethod
     def reason(self, test_case: Dict) -> Dict:
@@ -157,7 +224,10 @@ class Reasoner(ABC):
     def create_results_folder(self) -> None:
         """Create results folder based on model name"""
         # append uuid to the results folder
-        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-generate-with-{self.config.model}-fix-with-{self.config.fix_model}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
+        # Create results folder name using new model field names
+        plan_model_name = getattr(self.config, 'plan_model', self.config.model)
+        code_model_name = getattr(self.config, 'code_model', getattr(self.config, 'fix_model', plan_model_name))
+        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
         print(f"Results folder: {self.results_folder}")
         
         if os.path.exists(self.results_folder):
@@ -224,7 +294,7 @@ class Reasoner(ABC):
         start_time_total = time.time()
         
         mp_lock = mp.Lock()
-        all_tasks = [(self, batch[0], mp_lock) for batch in self.data_loader]
+        all_tasks = [(self, batch[0], mp_lock, idx) for idx, batch in enumerate(self.data_loader)]
         processes = []
         try:
             for task in all_tasks:
@@ -566,7 +636,8 @@ class TwoStepReasoner(Reasoner):
     def fix_semantic_errors(self, test_case, plan):
         """Fix the semantic errors in the plan with the given inputs."""
         # load the plan feedback prompt
-        print(f"Using {self.config.fix_model} to fix the semantic errors in the plan")
+        code_model_name = getattr(self.config, 'code_model', getattr(self.config, 'fix_model', 'code model'))
+        print(f"Using {code_model_name} to fix the semantic errors in the plan")
         
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_semantic_errors.txt")
         with open(base_prompt_path, "r") as file:
@@ -696,10 +767,10 @@ class TwoStepReasoner(Reasoner):
             # Generate plan
             plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
             current_plan = self._call_api(plan_prompt)
-            print("\nGenerated plan:")
-            print("=" * 80)
-            print(current_plan)
-            print("=" * 80)
+            # print("\nGenerated plan:")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
 
             # current_plan = self.fix_semantic_errors(test_case, current_plan)
             # print("\nFixed plan:")
@@ -736,10 +807,10 @@ class TwoStepReasoner(Reasoner):
                     print("Attempting to fix syntax errors...")
                     current_code = self._call_api(fix_prompt)
                     current_code = self.clean_code(current_code)
-                    print(f"\nFixed {solver_name} code:")
-                    print("=" * 80)
-                    print(current_code)
-                    print("=" * 80)
+                    # print(f"\nFixed {solver_name} code:")
+                    # print("=" * 80)
+                    # print(current_code)
+                    # print("=" * 80)
             else:
                 print(f"{solver_name} code execution succeeded.")
                 break
@@ -781,9 +852,7 @@ class TwoStepReasoner(Reasoner):
         original_temp = self.api_client.temperature
         
         for plan_config_idx, plan_config in enumerate(plan_configs):
-            print(f"\n{'='*80}")
-            print(f"GENERATING PLAN {plan_config_idx + 1}/{len(plan_configs)} with config: {plan_config}")
-            print(f"{'='*80}")
+            print(f"Generating plan {plan_config_idx + 1}/{len(plan_configs)}...")
             
             # Set generation parameters for plan generation
             self.api_client.temperature = plan_config["temperature"]
@@ -793,10 +862,10 @@ class TwoStepReasoner(Reasoner):
             current_plan_response = self._call_api(plan_prompt)
             current_plan = current_plan_response if isinstance(current_plan_response, str) else current_plan_response[0]
             
-            print(f"\nGenerated plan (config={plan_config}):")
-            print("=" * 80)
-            print(current_plan)
-            print("=" * 80)
+            # print(f"\nGenerated plan (config={plan_config}):")
+            # print("=" * 80)
+            # print(current_plan)
+            # print("=" * 80)
 
             # Enhanced code generation with batch generation
             code_configs = [
@@ -808,11 +877,11 @@ class TwoStepReasoner(Reasoner):
             plan_code_results = []
             total_codes_for_plan = len(code_configs)  # Now we generate 1 code per config
             
-            print(f"\nGenerating {total_codes_for_plan} codes for plan {plan_config_idx + 1}")
+            # print(f"\nGenerating {total_codes_for_plan} codes for plan {plan_config_idx + 1}")
             
             code_gen_idx = 1
             for code_config in code_configs:
-                print(f"\nCode generation with config: {code_config}")
+                # print(f"\nCode generation with config: {code_config}")
                 
                 # Set generation parameters for code generation
                 self.api_client.temperature = code_config["temperature"]
@@ -824,9 +893,9 @@ class TwoStepReasoner(Reasoner):
                 temp_code = temp_code_response
                 temp_code = self.clean_code(temp_code)
                 
-                print(f"\nGenerated {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
-                print("=" * 50)
-                print(temp_code)
+                # print(f"\nGenerated {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
+                # print("=" * 50)
+                # print(temp_code)
                 print("=" * 50)
                 
                 # Execute the code to check solver output
@@ -848,10 +917,10 @@ class TwoStepReasoner(Reasoner):
                             fix_response = self._call_api(fix_prompt)
                             temp_code = fix_response  # API now always returns a single string
                             temp_code = self.clean_code(temp_code)
-                            print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
-                            print("=" * 50)
-                            print(temp_code)
-                            print("=" * 50)
+                            # print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
+                            # print("=" * 50)
+                            # print(temp_code)
+                            # print("=" * 50)
                     else:
                         print(f"{solver_name} code execution succeeded for plan={plan_config_idx + 1}, code={code_gen_idx}.")
                         break
@@ -867,7 +936,7 @@ class TwoStepReasoner(Reasoner):
                 }
                 plan_code_results.append(code_result)
                 
-                print(f"Plan {plan_config_idx + 1} - Code {code_gen_idx} solver output: {temp_solver_output}")
+                # print(f"Plan {plan_config_idx + 1} - Code {code_gen_idx} solver output: {temp_solver_output}")
                 code_gen_idx += 1
             
             # Store this plan's results
@@ -1002,9 +1071,9 @@ class TwoStepReasoner(Reasoner):
                     f.write(f"# Generation Config: {generation_config}\n\n")
                     f.write(code_result["code"])
                 
-                # Collect solver outputs for majority voting (only valid ones)
+                # Collect solver outputs for majority voting (include all outputs, even failed ones)
                 solver_output = code_result["solver_output"]
-                if solver_output is not None and code_result["is_valid"]:
+                if solver_output is not None:
                     all_solver_outputs.append(solver_output)
                 
                 total_code_count += 1
@@ -1018,7 +1087,7 @@ class TwoStepReasoner(Reasoner):
                 }
                 plan_code_results.append(code_eval_result)
                 
-                print(f"Plan {plan_idx} - Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
+                # print(f"Plan {plan_idx} - Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
             
             plan_summaries.append({
                 "plan_idx": plan_idx,
@@ -1060,17 +1129,11 @@ class TwoStepReasoner(Reasoner):
             print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
             print(f"{'='*80}")
             
-            # Record result with majority voting information
+            # Record result with essential information only
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "majority_vote_correct": is_correct,
-                "majority_vote_details": vote_result,
-                "total_valid_outputs": len(all_solver_outputs),
-                "total_code_count": total_code_count,
-                "valid_output_rate": len(all_solver_outputs) / total_code_count if total_code_count > 0 else 0,
-                "all_solver_outputs": all_solver_outputs,
-                "plan_summaries": plan_summaries
+                "all_solver_outputs": all_solver_outputs
             }
         else:
             print(f"\n{'='*80}")
@@ -1083,13 +1146,7 @@ class TwoStepReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "majority_vote_correct": False,
-                "majority_vote_details": "no valid outputs",
-                "total_valid_outputs": 0,
-                "total_code_count": total_code_count,
-                "valid_output_rate": 0,
-                "all_solver_outputs": [],
-                "plan_summaries": plan_summaries
+                "all_solver_outputs": []
             }
 
         # Save result
@@ -1217,10 +1274,10 @@ class DirectReasoner(Reasoner):
         direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
         current_code = self._call_api(direct_prompt)
         current_code = self.clean_code(current_code)
-        print(f"\nGenerated {solver_name} code:")
-        print("=" * 80)
-        print(current_code)
-        print("=" * 80)
+        # print(f"\nGenerated {solver_name} code:")
+        # print("=" * 80)
+        # print(current_code)
+        # print("=" * 80)
 
         syntax_errors = []
         for iteration in range(self.config.max_repairs):
@@ -1241,10 +1298,10 @@ class DirectReasoner(Reasoner):
                     print("Attempting to fix syntax errors...")
                     current_code = self._call_api(fix_prompt)
                     current_code = self.clean_code(current_code)
-                    print(f"\nFixed {solver_name} code:")
-                    print("=" * 80)
-                    print(current_code)
-                    print("=" * 80)
+                    # print(f"\nFixed {solver_name} code:")
+                    # print("=" * 80)
+                    # print(current_code)
+                    # print("=" * 80)
             else:
                 print(f"{solver_name} code execution succeeded.")
                 break
@@ -1283,9 +1340,7 @@ class DirectReasoner(Reasoner):
         original_temp = self.api_client.temperature
         
         for code_config_idx, code_config in enumerate(code_configs):
-            print(f"\n{'='*80}")
-            print(f"GENERATING CODE {code_config_idx + 1}/{len(code_configs)} with config: {code_config}")
-            print(f"{'='*80}")
+            print(f"Generating code {code_config_idx + 1}/{len(code_configs)}...")
             
             # Set generation parameters for code generation
             self.api_client.temperature = code_config["temperature"]
@@ -1296,10 +1351,10 @@ class DirectReasoner(Reasoner):
             current_code = current_code_response if isinstance(current_code_response, str) else current_code_response[0]
             current_code = self.clean_code(current_code)
             
-            print(f"\nGenerated {solver_name} code (config={code_config}):")
-            print("=" * 80)
-            print(current_code)
-            print("=" * 80)
+                # print(f"\nGenerated {solver_name} code (config={code_config}):")
+            # print("=" * 80)
+            # print(current_code)
+            # print("=" * 80)
 
             # Execute the code to check solver output
             syntax_errors = []
@@ -1324,10 +1379,10 @@ class DirectReasoner(Reasoner):
                         fix_response = self._call_api(fix_prompt)
                         current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
                         current_code = self.clean_code(current_code)
-                        print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
-                        print("=" * 80)
-                        print(current_code)
-                        print("=" * 80)
+                        # print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
+                        # print("=" * 80)
+                        # print(current_code)
+                        # print("=" * 80)
                 else:
                     print(f"{solver_name} code execution succeeded for code {code_config_idx + 1}.")
                     break
@@ -1343,7 +1398,7 @@ class DirectReasoner(Reasoner):
             }
             all_code_results.append(code_result)
             
-            print(f"Code {code_config_idx + 1} solver output: {temp_solver_output}")
+            # print(f"Code {code_config_idx + 1} solver output: {temp_solver_output}")
         
         # Restore original parameters
         self.api_client.temperature = original_temp
@@ -1459,11 +1514,11 @@ class DirectReasoner(Reasoner):
                         raise ValueError(f"Dataset {self.config.dataset} not configured for DirectStepReasoner AnswerExtractor.")
                         
                     first_code_found = True
-                    print(f"First code correctness check: {'CORRECT' if first_is_correct else 'INCORRECT'} (Code {code_idx})")
+                    # print(f"First code correctness check: {'CORRECT' if first_is_correct else 'INCORRECT'} (Code {code_idx})")
             
-            # Collect solver outputs for majority voting (only valid ones)
+            # Collect solver outputs for majority voting (include all outputs, even failed ones)
             solver_output = code_result["solver_output"]
-            if solver_output is not None and code_result["is_valid"]:
+            if solver_output is not None:
                 all_solver_outputs.append(solver_output)
             
             total_code_count += 1
@@ -1476,7 +1531,7 @@ class DirectReasoner(Reasoner):
             }
             code_summaries.append(code_eval_result)
             
-            print(f"Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
+            # print(f"Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
         
         # Perform majority voting on all valid solver outputs
         if all_solver_outputs:
@@ -1511,18 +1566,11 @@ class DirectReasoner(Reasoner):
             print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
             print(f"{'='*80}")
             
-            # Record result with majority voting information
+            # Record result with essential information only
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "first_code_correct": first_is_correct,
-                "majority_vote_correct": is_correct,
-                "majority_vote_details": vote_result,
-                "total_valid_outputs": len(all_solver_outputs),
-                "total_code_count": total_code_count,
-                "valid_output_rate": len(all_solver_outputs) / total_code_count if total_code_count > 0 else 0,
-                "all_solver_outputs": all_solver_outputs,
-                "code_summaries": code_summaries
+                "all_solver_outputs": all_solver_outputs
             }
         else:
             print(f"\n{'='*80}")
@@ -1535,14 +1583,7 @@ class DirectReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "first_code_correct": first_is_correct,
-                "majority_vote_correct": False,
-                "majority_vote_details": "no valid outputs",
-                "total_valid_outputs": 0,
-                "total_code_count": total_code_count,
-                "valid_output_rate": 0,
-                "all_solver_outputs": [],
-                "code_summaries": code_summaries
+                "all_solver_outputs": []
             }
 
         # Save result
@@ -1617,16 +1658,16 @@ class CoTReasoner(Reasoner):
         cot_prompt = self.get_cot_prompt(test_case)
         
         print("\nGenerating CoT reasoning:")
-        print("=" * 80)
+        # print("=" * 80)
         # print(cot_prompt) # Optional: print the prompt for debugging
-        print("=" * 80)
+        # print("=" * 80)
 
         reasoning_output = self._call_api(cot_prompt)
         
-        print("\nGenerated CoT Output:")
-        print("=" * 80)
-        print(reasoning_output)
-        print("=" * 80)
+        # print("\nGenerated CoT Output:")
+        # print("=" * 80)
+        # print(reasoning_output)
+        # print("=" * 80)
         
         return {
             "reasoning_output": reasoning_output
@@ -1658,12 +1699,13 @@ class CoTReasoner(Reasoner):
         else:
             print(f"\nReasoning FAILED. Error type: {error_type}")
 
+        # CoTReasoner uses a different format - not compatible with multi-path analysis
         results = {
             "problem": test_case,
+            "timing": case_time,
             "reasoning_output": reasoning_result["reasoning_output"],
             "error_type": error_type,
-            "success": is_correct,
-            "timing": case_time
+            "success": is_correct
         }
         
         # Save result

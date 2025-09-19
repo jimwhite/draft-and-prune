@@ -12,8 +12,10 @@ class ReasonerConfig:
                  test_file: str = None,
                  reasoning_method: str = None,
                  api_key: str = None,
-                 model: str = "gemini-2.5-flash-preview-04-17", 
-                 fix_model: str = None,
+                 model: str = "gemini-2.5-flash-preview-04-17",  # Backward compatibility
+                 plan_model: str = None,  # New: Model for plan generation
+                 code_model: str = None,  # New: Model for code generation
+                 fix_model: str = None,   # Backward compatibility
                  fix_api_key: str = None,
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
@@ -25,7 +27,9 @@ class ReasonerConfig:
                  # Azure OpenAI specific parameters
                  azure_endpoint: str = None,
                  azure_deployment: str = None,
-                 azure_managed_identity_client_id: str = None):
+                 azure_managed_identity_client_id: str = None,
+                 # Gemini multiple API keys
+                 gemini_api_keys: list = None):
         """
         Initialize configuration either from parameters or will be loaded from YAML
         
@@ -51,8 +55,10 @@ class ReasonerConfig:
         self.test_file = test_file
         self.reasoning_method = reasoning_method
         self.api_key = api_key
-        self.model = model
-        self.fix_model = fix_model
+        self.model = model  # Backward compatibility
+        self.plan_model = plan_model
+        self.code_model = code_model
+        self.fix_model = fix_model  # Backward compatibility
         self.fix_api_key = fix_api_key
         self.temperature = temperature
         self.max_repairs = max_repairs
@@ -64,6 +70,7 @@ class ReasonerConfig:
         self.azure_endpoint = azure_endpoint
         self.azure_deployment = azure_deployment
         self.azure_managed_identity_client_id = azure_managed_identity_client_id
+        self.gemini_api_keys = gemini_api_keys
     
     @classmethod
     def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
@@ -99,9 +106,23 @@ class ReasonerConfig:
         instance.test_file = config_data['test_file']
         instance.reasoning_method = config_data['reasoning_method']
         instance.api_key = config_data['api_key']
-        instance.model = config_data['model']
-        if config_data.get('fix_model'):
+        
+        # Handle new model field names with backward compatibility
+        if 'plan_model' in config_data:
+            instance.plan_model = config_data['plan_model']
+            instance.model = config_data['plan_model']  # For backward compatibility
+        else:
+            instance.model = config_data.get('model', 'gemini-2.5-flash')
+            instance.plan_model = instance.model
+            
+        if 'code_model' in config_data:
+            instance.code_model = config_data['code_model']
+            instance.fix_model = config_data['code_model']  # For backward compatibility
+        elif config_data.get('fix_model'):
             instance.fix_model = config_data['fix_model']
+            instance.code_model = instance.fix_model
+        else:
+            instance.code_model = instance.plan_model  # Default to same as plan model
         if config_data.get('fix_api_key'):
             instance.fix_api_key = config_data['fix_api_key']
         instance.temperature = config_data['temperature']
@@ -118,6 +139,8 @@ class ReasonerConfig:
         instance.azure_endpoint = config_data.get('azure_endpoint')
         instance.azure_deployment = config_data.get('azure_deployment')
         instance.azure_managed_identity_client_id = config_data.get('azure_managed_identity_client_id')
+        # Gemini multiple API keys are optional
+        instance.gemini_api_keys = config_data.get('gemini_api_keys')
         instance._validate_config()
         return instance
     
@@ -161,12 +184,16 @@ class ReasonerConfig:
         Args:
             yaml_path: Path where to save the YAML configuration file
         """
-        # Create ordered dictionary matching __init__ parameter order
+        # Create ordered dictionary with both new and legacy field names
         ordered_config = {
             'dataset': self.dataset,
             'test_file': self.test_file,
             'reasoning_method': self.reasoning_method,
             'api_key': self.api_key,
+            # New model field names (preferred)
+            'plan_model': getattr(self, 'plan_model', self.model),
+            'code_model': getattr(self, 'code_model', getattr(self, 'fix_model', self.model)),
+            # Legacy field names (for backward compatibility)
             'model': self.model,
             'fix_model': self.fix_model if self.fix_model is not None else None,
             'fix_api_key': self.fix_api_key if self.fix_api_key is not None else None,
@@ -179,7 +206,9 @@ class ReasonerConfig:
             'desired_indices': self.desired_indices,
             'azure_endpoint': self.azure_endpoint,
             'azure_deployment': self.azure_deployment,
-            'azure_managed_identity_client_id': self.azure_managed_identity_client_id
+            'azure_managed_identity_client_id': self.azure_managed_identity_client_id,
+            # Multiple Gemini API keys for batch distribution
+            'gemini_api_keys': getattr(self, 'gemini_api_keys', None)
         }
         
         try:
