@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Generalized ablation analysis script for neural-symbolic reasoning experiments. (Remember to first run python analysis_simple.py /path/to/xxx/summary to get the summary.txt file)
+Generalized ablation analysis script for neural-symbolic reasoning experiments.
 
-This script analyzes experimental results and creates comprehensive CSV files with:
+This script analyzes experimental results and creates comprehensive CSV/XLSX files with:
 1. SketchFormal: With pruning + majority vote (use filtered output lists then do majority vote) [PRIMARY METHOD]
 2. Ablation Study 1: No pruning + majority vote (uses all output lists) [OPTIONAL]
 3. Ablation Study 2: With pruning + no majority vote (extracts first valid output) [OPTIONAL]
@@ -16,7 +16,19 @@ SUPPORTED DATASETS:
 
 The script automatically detects the dataset from config.yaml and applies appropriate parsing and pruning rules.
 
+KEY FEATURES:
+- Enhanced syntax error handling: Missing paths (when samples have <5 outputs) are counted as syntax errors
+- Dual format output: Automatically saves both CSV and XLSX formats
+- Smart model extraction: Extracts sketch-gen and code-gen models from filename when not in config
+- Flexible file detection: Finds summary.txt in main directory or summary/ subdirectory
+- Path pruning annotation: SketchFormal method marked with "yes" for all pruning columns
+
 By default, only SketchFormal method is run. Use --all-methods flag to run all three methods.
+
+=== OUTPUT DIRECTORIES ===
+- CSV files: ./standard-experiments/
+- XLSX files: ./standard-experiments-xlsx/
+- Detailed JSON: [original_experiment_directory]/detailed_ablation_results.json
 
 === PARAMETER MEANINGS ===
 
@@ -29,36 +41,39 @@ Core Experiment Info:
 - #total samples: Total number of samples
 
 Path Generation:
-- K (#paths per sample): Average number of generated paths per sample (default: 5)
-- path pruning: Left blank (for manual annotation)
-- path pruning (existence): Left blank (for manual annotation)  
-- path pruning (uniqueness): Left blank (for manual annotation)
+- K (#paths per sample): Expected number of generated paths per sample (default: 5)
+- path pruning: "yes" for SketchFormal and Ablation Study 2, "no" for Ablation Study 1
+- path pruning (existence): "yes" for SketchFormal and Ablation Study 2, "no" for Ablation Study 1
+- path pruning (uniqueness): "yes" for SketchFormal and Ablation Study 2, "no" for Ablation Study 1
+- ensemble: "yes" for SketchFormal and Ablation Study 1 (majority vote), "no" for Ablation Study 2
 
 Model Configuration:
-- sketch-gen model: Model used for sketch/plan generation (from config "plan_model")
-- code-gen model: Model used for code generation (from config "code_model")
+- sketch-gen model: Model used for sketch/plan generation (from config or extracted from filename)
+- code-gen model: Model used for code generation (from config or extracted from filename)
 - sketch temp: Temperature for sketch generation (default: 1)
 - code temp: Temperature for code generation (default: 0)
 
 Error Analysis:
-- #samples failed by syntax error : Number of samples with at least one syntax error
-- #paths failed by syntax error: Total number of paths with syntax errors
-- syntax error rate: Ratio of syntax error paths to total paths
+- #samples failed by syntax error: Number of samples with at least one syntax error (including missing paths)
+- #paths failed by syntax error: Total number of paths with syntax errors (including missing paths)
+- syntax error rate: Ratio of syntax error paths to total expected paths
 
 Path Statistics:
-- Total #paths before pruning: Total paths across all samples before any filtering
+- Total #paths before pruning: Total expected paths across all samples (samples × expected_paths_per_sample)
 - Total #paths after pruning: Total paths after applying method-specific filtering
-- Avg #paths before pruning: Average paths per sample before filtering
+- Avg #paths before pruning: Average expected paths per sample
 - Avg #paths after pruning: Average paths per sample after filtering
 
 Performance Metrics:
 - tied voting rate: Ratio of samples with tied votes (multiple answers with same max votes)
-- #samples with auto-formalization failure: Number of samples where no valid answer could be extracted from any path (due to syntax errors, invalid formats, or empty outputs)
-- backup method: Fallback method used when primary extraction fails
+- #samples with auto-formalization failure: Number of samples where no valid answer could be extracted
+- backup method: Fallback method used when primary extraction fails (currently "none")
 - overall accuracy: Sample-level accuracy (correct samples / total samples)
 - accuracy by path: Path-level accuracy (correct paths / syntactically correct paths)
 
-Usage:
+=== USAGE ===
+
+Basic Commands:
     # Run only SketchFormal method (default)
     python custom_ablation_analysis.py <results_directory>
     
@@ -68,9 +83,26 @@ Usage:
     # Run specific methods
     python custom_ablation_analysis.py <results_directory> --methods sketchformal ablation_study_1
     
+    # Specify expected paths per sample (when not all samples have 5 paths due to syntax errors)
+    python custom_ablation_analysis.py <results_directory> --expected-paths 3
+
 Examples:
     python custom_ablation_analysis.py results/experiment_folder/
     python custom_ablation_analysis.py results/experiment_folder/ --all-methods
+    python custom_ablation_analysis.py results/experiment_folder/ --expected-paths 5
+
+=== MODEL EXTRACTION ===
+If sketch-gen model and code-gen model are not found in config.yaml, the script automatically
+extracts them from the experiment directory name using patterns like:
+- "generate-with-gpt-4-fix-with-gpt-4" → sketch-gen: gpt-4, code-gen: gpt-4
+
+=== SYNTAX ERROR HANDLING ===
+The script handles cases where all_solver_outputs has fewer than expected paths:
+- Missing paths are automatically counted as syntax errors
+- Total paths before pruning uses expected count (default: 5 per sample)
+- Provides accurate syntax error rates and statistics
+
+Example: If a sample has only 3 outputs instead of 5, the 2 missing outputs are counted as syntax errors.
 """
 
 import json
@@ -181,8 +213,8 @@ def load_config(config_file):
         print(f"Error loading config file: {e}")
         return {}
 
-def extract_config_info(config):
-    """Extract information from config."""
+def extract_config_info(config, exp_id):
+    """Extract information from config and experiment ID."""
     # Extract shots from config
     shots_mapping = {
         'zero': 0,
@@ -205,9 +237,27 @@ def extract_config_info(config):
         # Fallback: check if plan_model exists
         has_sketch = config.get('plan_model') is not None
     
+    # Extract model information from config or filename
+    plan_model = config.get('plan_model', '')
+    code_model = config.get('code_model', '')
+    
+    # If models not found in config, extract from experiment ID filename
+    if not plan_model or not code_model:
+        # Look for pattern like "generate-with-gpt-4-fix-with-gpt-4"
+        import re
+        pattern = r'generate-with-(gpt-[^-]+)-fix-with-(gpt-[^-]+)'
+        match = re.search(pattern, exp_id)
+        if match:
+            if not plan_model:
+                plan_model = match.group(1)
+            if not code_model:
+                code_model = match.group(2)
+    
     return {
         'shots': shots,
-        'has_sketch': has_sketch
+        'has_sketch': has_sketch,
+        'plan_model': plan_model,
+        'code_model': code_model
     }
 
 def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
@@ -216,16 +266,39 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
     # Load config
     config = load_config(config_file)
     
-    # Extract config info
-    config_info = extract_config_info(config)
-    
     # Extract experiment ID from directory name
     exp_id = os.path.basename(results_dir)
+    
+    # Extract config info
+    config_info = extract_config_info(config, exp_id)
     
     # Create rows for all methods
     rows = []
     
     for i, result in enumerate(results):
+        # Determine path pruning values and ensemble based on method
+        method_name = result['method']
+        if method_name == 'sketchformal':
+            path_pruning = 'yes'
+            path_pruning_existence = 'yes'
+            path_pruning_uniqueness = 'yes'
+            ensemble = 'yes'
+        elif method_name == 'ablation_study_1':  # No pruning + majority vote
+            path_pruning = 'no'
+            path_pruning_existence = 'no'
+            path_pruning_uniqueness = 'no'
+            ensemble = 'yes'
+        elif method_name == 'ablation_study_2':  # With pruning + no majority vote
+            path_pruning = 'yes'
+            path_pruning_existence = 'yes'
+            path_pruning_uniqueness = 'yes'
+            ensemble = 'no'
+        else:
+            path_pruning = ''
+            path_pruning_existence = ''
+            path_pruning_uniqueness = ''
+            ensemble = ''
+        
         row = {
             'ID': f"{exp_id}_{result['method']}",
             'Benchmarks': config.get('dataset', 'unknown'),
@@ -234,11 +307,12 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
             'sketch': 'yes' if config_info['has_sketch'] else 'no',
             '#total samples': result['total'],
             'K (#paths per sample)': 5,  # Default value as specified
-            'path pruning': '',  # Leave blank as specified
-            'path pruning (existence)': '',  # Leave blank as specified
-            'path pruning (uniqueness)': '',  # Leave blank as specified
-            'sketch-gen model': config.get('plan_model', ''),
-            'code-gen model': config.get('code_model', ''),
+            'path pruning': path_pruning,
+            'path pruning (existence)': path_pruning_existence,
+            'path pruning (uniqueness)': path_pruning_uniqueness,
+            'ensemble': ensemble,
+            'sketch-gen model': config_info['plan_model'],
+            'code-gen model': config_info['code_model'],
             'sketch temp': 1,  # Default value as specified
             'code temp': 0,  # Default value as specified
             '#samples failed by syntax error': len([d for d in result['details'] if d['syntax_error_count'] > 0]),
@@ -259,11 +333,31 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, *results):
     # Create DataFrame
     df = pd.DataFrame(rows)
     
-    # Save to CSV
-    output_file = os.path.join(results_dir, 'ablation_study_results.csv')
-    df.to_csv(output_file, index=False)
+    # Save to both CSV and XLSX formats
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_dir = os.path.join(script_dir, 'standard-experiments')
+    xlsx_dir = os.path.join(script_dir, 'standard-experiments-xlsx')
     
-    return df, output_file
+    # Create directories if they don't exist
+    os.makedirs(csv_dir, exist_ok=True)
+    os.makedirs(xlsx_dir, exist_ok=True)
+    
+    # Save CSV file
+    csv_filename = f"{exp_id}.csv"
+    csv_output_file = os.path.join(csv_dir, csv_filename)
+    df.to_csv(csv_output_file, index=False)
+    
+    # Save XLSX file
+    xlsx_filename = f"{exp_id}.xlsx"
+    xlsx_output_file = os.path.join(xlsx_dir, xlsx_filename)
+    try:
+        df.to_excel(xlsx_output_file, index=False, engine='openpyxl')
+        xlsx_saved = True
+    except ImportError:
+        print("Warning: openpyxl not installed. XLSX file not saved. Install with: pip install openpyxl")
+        xlsx_saved = False
+    
+    return df, csv_output_file, xlsx_output_file if xlsx_saved else None
 
 def calculate_path_level_metrics(all_solver_outputs, true_label, dataset=None):
     """Calculate path-level metrics for accuracy by path calculation."""
@@ -462,7 +556,7 @@ def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
             else:
                 return None, has_tied_voting
 
-def calculate_accuracy_generic(results, method_name, extraction_func, dataset=None):
+def calculate_accuracy_generic(results, method_name, extraction_func, dataset=None, expected_paths_per_sample=5):
     """Generic function to calculate accuracy for any extraction method."""
     correct = 0
     total = 0
@@ -490,10 +584,16 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
         all_solver_outputs = item.get('all_solver_outputs', [])
         
         total += 1
-        total_paths_before += len(all_solver_outputs)
         
-        # Count syntax errors
-        syntax_error_count = sum(1 for output in all_solver_outputs if "error" in str(output).lower())
+        # Calculate total paths before pruning, accounting for missing paths due to syntax errors
+        actual_paths = len(all_solver_outputs)
+        # Missing paths are considered syntax errors
+        missing_paths = expected_paths_per_sample - actual_paths
+        total_paths_before += expected_paths_per_sample
+        
+        # Count syntax errors in existing outputs plus missing paths
+        explicit_syntax_errors = sum(1 for output in all_solver_outputs if "error" in str(output).lower())
+        syntax_error_count = explicit_syntax_errors + missing_paths
         syntax_errors += syntax_error_count
         
         # Calculate path-level metrics
@@ -594,6 +694,10 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
             'predicted': predicted_answer,
             'correct': is_correct,
             'all_outputs': all_solver_outputs,
+            'actual_paths': actual_paths,
+            'expected_paths': expected_paths_per_sample,
+            'missing_paths': missing_paths,
+            'explicit_syntax_errors': explicit_syntax_errors,
             'syntax_error_count': syntax_error_count,
             'paths_after_pruning': paths_after_pruning
         })
@@ -621,17 +725,17 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
         'details': details
     }
 
-def calculate_accuracy_sketchformal(results, dataset=None):
+def calculate_accuracy_sketchformal(results, dataset=None, expected_paths_per_sample=5):
     """SketchFormal: Calculate accuracy with pruning then majority vote on filtered outputs."""
-    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote, dataset)
+    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote, dataset, expected_paths_per_sample)
 
-def calculate_accuracy_ablation_study_1(results, dataset=None):
+def calculate_accuracy_ablation_study_1(results, dataset=None, expected_paths_per_sample=5):
     """Ablation Study 1: Calculate accuracy without pruning using all lists with majority vote."""
-    return calculate_accuracy_generic(results, 'ablation_study_1', extract_answer_majority_vote, dataset)
+    return calculate_accuracy_generic(results, 'ablation_study_1', extract_answer_majority_vote, dataset, expected_paths_per_sample)
 
-def calculate_accuracy_ablation_study_2(results, dataset=None):
+def calculate_accuracy_ablation_study_2(results, dataset=None, expected_paths_per_sample=5):
     """Ablation Study 2: Calculate accuracy with pruning without majority vote (first list)."""
-    return calculate_accuracy_generic(results, 'ablation_study_2', extract_answer_first_list, dataset)
+    return calculate_accuracy_generic(results, 'ablation_study_2', extract_answer_first_list, dataset, expected_paths_per_sample)
 
 def main():
     # Set up argument parser
@@ -662,6 +766,9 @@ Examples:
                        default=['sketchformal'],
                        help='Specify which methods to run (default: sketchformal only)')
     
+    parser.add_argument('--expected-paths', type=int, default=5,
+                       help='Expected number of paths per sample (default: 5). Missing paths are treated as syntax errors.')
+    
     args = parser.parse_args()
     
     # Determine which methods to run
@@ -675,13 +782,19 @@ Examples:
     if not os.path.isabs(results_dir):
         results_dir = os.path.abspath(results_dir)
     
-    # File paths
+    # File paths - check both direct path and summary subdirectory
     summary_file = os.path.join(results_dir, 'summary.txt')
+    if not os.path.exists(summary_file):
+        # Try summary subdirectory
+        summary_file_alt = os.path.join(results_dir, 'summary', 'summary.txt')
+        if os.path.exists(summary_file_alt):
+            summary_file = summary_file_alt
+    
     config_file = os.path.join(results_dir, 'config.yaml')
     
     # Check if files exist
     if not os.path.exists(summary_file):
-        print(f"Error: summary.txt not found at {summary_file}")
+        print(f"Error: summary.txt not found at {os.path.join(results_dir, 'summary.txt')} or {os.path.join(results_dir, 'summary', 'summary.txt')}")
         sys.exit(1)
     if not os.path.exists(config_file):
         print(f"Error: config.yaml not found at {config_file}")
@@ -702,17 +815,20 @@ Examples:
     method_results = {}
     
     # Run selected methods
+    expected_paths = args.expected_paths
+    print(f"Expected paths per sample: {expected_paths}")
+    
     if 'sketchformal' in methods_to_run:
         print(f"\n🎯 Calculating SketchFormal (with pruning + majority vote for {dataset.upper()})...")
-        method_results['sketchformal'] = calculate_accuracy_sketchformal(results, dataset)
+        method_results['sketchformal'] = calculate_accuracy_sketchformal(results, dataset, expected_paths)
     
     if 'ablation_study_1' in methods_to_run:
         print(f"\n📊 Calculating Ablation Study 1 (no pruning + majority vote for {dataset.upper()})...")
-        method_results['ablation_study_1'] = calculate_accuracy_ablation_study_1(results, dataset)
+        method_results['ablation_study_1'] = calculate_accuracy_ablation_study_1(results, dataset, expected_paths)
     
     if 'ablation_study_2' in methods_to_run:
         print(f"\n📊 Calculating Ablation Study 2 (with pruning + no majority vote for {dataset.upper()})...")
-        method_results['ablation_study_2'] = calculate_accuracy_ablation_study_2(results, dataset)
+        method_results['ablation_study_2'] = calculate_accuracy_ablation_study_2(results, dataset, expected_paths)
     
     # Print results
     print("\n" + "="*80)
@@ -762,9 +878,12 @@ Examples:
             if method_name in method_results:
                 results_list.append(method_results[method_name])
         
-        df, output_file = create_comprehensive_csv(results_dir, summary_file, config_file, *results_list)
+        result = create_comprehensive_csv(results_dir, summary_file, config_file, *results_list)
+        df, csv_output_file, xlsx_output_file = result if len(result) == 3 else (result[0], result[1], None)
         
-        print(f"\nResults saved to: {output_file}")
+        print(f"\nCSV Results saved to: {csv_output_file}")
+        if xlsx_output_file:
+            print(f"XLSX Results saved to: {xlsx_output_file}")
         print("\nCSV Preview:")
         print(df.to_string(index=False))
         
