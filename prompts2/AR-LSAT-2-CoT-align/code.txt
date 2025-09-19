@@ -10,102 +10,70 @@ Choices:
 ["The division that is toured on Monday is also toured on Tuesday.", "The division that is toured on Monday is also toured on Friday.", "The division that is toured on Tuesday is also toured on Thursday.", "The division that is toured on Wednesday is also toured on Friday.", "The division that is toured on Thursday is also toured on Friday."]
 Plan:
 "
-1. Define the three divisions as integer constants: Operations = 0, Production = 1, Sales = 2.
-2. Create five Int variables representing the division toured each day: Monday, Tuesday, Wednesday, Thursday, Friday.
-3. Add domain constraints: each day variable must be in {0, 1, 2}.
-4. Add constraint: Each division is toured at least once - use Or constraints to ensure at least one day for each division.
-5. Add constraint: Operations division is not toured on Monday - Monday != 0.
-6. Add constraint: Production division is not toured on Wednesday - Wednesday != 1.
-7. Add constraint: Sales division is toured on exactly two consecutive days and no other days.
-   - Create boolean variables for each possible consecutive pair: (Mon,Tue), (Tue,Wed), (Wed,Thu), (Thu,Fri).
-   - Exactly one pair must be true.
-   - For the true pair, both days must be Sales (= 2).
-   - For all other days, the division cannot be Sales.
-8. Add constraint: If Operations on Thursday, then Production on Friday - Implies(Thursday == 0, Friday == 1).
-9. Define answer index list [].
-10. For each choice option:
+1. Enumerate the three divisions (Operations, Production, Sales) as integers 0, 1, 2 and the five days (Monday-Friday) as integers 0-4.
+2. Create five Int variables, one for each day, to represent which division is toured on that day.
+3. Constrain each day's tour variable to be one of the three division codes.
+4. Add a constraint for each division d ensuring it is toured at least once: Or(day0==d, day1==d, ...).
+5. Add the specific day constraints: Operations is not on Monday (tour[0] != O), and Production is not on Wednesday (tour[2] != P).
+6. Add the Sales tour constraint: the count of Sales tours must be exactly two, and they must be on consecutive days. This can be modeled as Sum(If(tour[d]==S, 1, 0)) == 2 and Or(And(tour[0]==S, tour[1]==S), And(tour[1]==S, tour[2]==S), ...).
+7. Add the conditional constraint: Implies(tour[3]==O, tour[4]==P).
+8. Define an answer index list cannot_be_true.
+9. For each choice (e.g., tour[0] == tour[1]):
     a. Clone the base constraints into a fresh solver.
-    b. Add the negation of the choice condition (to test if it CANNOT be true).
-    c. If the solver returns UNSAT, then the choice CANNOT be true, append the choice index to the answer list.
-11. Print the answer index list.
+    b. Add the constraint from the current choice.
+    c. If the solver reports the model is UNSAT, then this choice is impossible. Append its index to the cannot_be_true list.
+10. Print the list of indices for choices that cannot be true.
 "
 Z3 Program:
 ```
 from z3 import *
+# Divisions: O=0, P=1, S=2
+# Days: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4
+(O, P, S) = (0, 1, 2)
+tour = [Int(f"tour_{d}") for d in range(5)]
 
-# Define divisions
-Operations, Production, Sales = 0, 1, 2
-
-# Create variables for each day
-Monday = Int('Monday')
-Tuesday = Int('Tuesday') 
-Wednesday = Int('Wednesday')
-Thursday = Int('Thursday')
-Friday = Int('Friday')
-
-# Base solver
-base_solver = Solver()
+s = Solver()
 
 # Domain constraints
-days = [Monday, Tuesday, Wednesday, Thursday, Friday]
-for day in days:
-    base_solver.add(Or(day == Operations, day == Production, day == Sales))
+for d in range(5):
+    s.add(tour[d] >= 0, tour[d] <= 2)
 
-# Each division is toured at least once
-base_solver.add(Or(Monday == Operations, Tuesday == Operations, Wednesday == Operations, Thursday == Operations, Friday == Operations))
-base_solver.add(Or(Monday == Production, Tuesday == Production, Wednesday == Production, Thursday == Production, Friday == Production))
-base_solver.add(Or(Monday == Sales, Tuesday == Sales, Wednesday == Sales, Thursday == Sales, Friday == Sales))
+# Each division is toured at least once.
+for div in [O, P, S]:
+    s.add(Or([tour[d] == div for d in range(5)]))
 
-# Operations not on Monday
-base_solver.add(Monday != Operations)
+# O not on Monday
+s.add(tour[0] != O)
 
-# Production not on Wednesday  
-base_solver.add(Wednesday != Production)
+# P not on Wednesday
+s.add(tour[2] != P)
 
-# Sales on exactly two consecutive days
-sales_pairs = [
-    Bool('sales_mon_tue'),
-    Bool('sales_tue_wed'), 
-    Bool('sales_wed_thu'),
-    Bool('sales_thu_fri')
-]
+# S is toured on two consecutive days, and no other days.
+s.add(Sum([If(tour[d] == S, 1, 0) for d in range(5)]) == 2)
+consecutive_s = Or([And(tour[d] == S, tour[d+1] == S) for d in range(4)])
+s.add(consecutive_s)
 
-# Exactly one consecutive pair
-base_solver.add(Sum([If(pair, 1, 0) for pair in sales_pairs]) == 1)
+# If O on Thursday, then P on Friday.
+s.add(Implies(tour[3] == O, tour[4] == P))
 
-# If Monday-Tuesday pair is sales
-base_solver.add(Implies(sales_pairs[0], And(Monday == Sales, Tuesday == Sales, Wednesday != Sales, Thursday != Sales, Friday != Sales)))
-
-# If Tuesday-Wednesday pair is sales  
-base_solver.add(Implies(sales_pairs[1], And(Monday != Sales, Tuesday == Sales, Wednesday == Sales, Thursday != Sales, Friday != Sales)))
-
-# If Wednesday-Thursday pair is sales
-base_solver.add(Implies(sales_pairs[2], And(Monday != Sales, Tuesday != Sales, Wednesday == Sales, Thursday == Sales, Friday != Sales)))
-
-# If Thursday-Friday pair is sales
-base_solver.add(Implies(sales_pairs[3], And(Monday != Sales, Tuesday != Sales, Wednesday != Sales, Thursday == Sales, Friday == Sales)))
-
-# If Operations on Thursday, then Production on Friday
-base_solver.add(Implies(Thursday == Operations, Friday == Production))
-
-# Test each choice to see which CANNOT be true
+# Choices
 choices = [
-    And(Monday == Tuesday),  # A) Same division Monday and Tuesday
-    And(Monday == Friday),   # B) Same division Monday and Friday  
-    And(Tuesday == Thursday), # C) Same division Tuesday and Thursday
-    And(Wednesday == Friday), # D) Same division Wednesday and Friday
-    And(Thursday == Friday)   # E) Same division Thursday and Friday
+    tour[0] == tour[1], # Mon == Tue
+    tour[0] == tour[4], # Mon == Fri
+    tour[1] == tour[3], # Tue == Thu
+    tour[2] == tour[4], # Wed == Fri
+    tour[3] == tour[4]  # Thu == Fri
 ]
 
-answer = []
+cannot_be_true = []
 for i, choice in enumerate(choices):
-    test_solver = Solver()
-    test_solver.add(base_solver.assertions())
-    test_solver.add(Not(choice))  # Test if choice CANNOT be true
-    if test_solver.check() == unsat:
-        answer.append(i)
+    s_check = Solver()
+    s_check.add(s.assertions())
+    s_check.add(choice)
+    if s_check.check() == unsat:
+        cannot_be_true.append(i)
 
-print(answer)
+print(cannot_be_true)
 ```
 
 Problem:
@@ -116,81 +84,68 @@ Choices:
 ["appellate: Hamadi, Ortiz trial: Jefferson, Kurtz, Li, McDonnell, Perkins", "appellate: Hamadi, Li, Perkins trial: Jefferson, Kurtz, McDonnell, Ortiz", "appellate: Kurtz, Li, Perkins trial: Hamadi, Jefferson, McDonnell, Ortiz", "appellate: Li, McDonnell, Ortiz trial: Hamadi, Jefferson, Kurtz, Perkins", "appellate: Li, Perkins trial: Hamadi, Jefferson, Kurtz, McDonnell, Ortiz"]
 Plan:
 "
-1. Define the seven candidates as integer constants: Hamadi = 0, Jefferson = 1, Kurtz = 2, Li = 3, McDonnell = 4, Ortiz = 5, Perkins = 6.
-2. Define court assignment as Boolean variables: for each candidate, create a Bool variable (True = appellate court, False = trial court).
-3. Add constraint: Li must be appointed to appellate court - Li_court = True.
-4. Add constraint: Kurtz must be appointed to trial court - Kurtz_court = False.
-5. Add constraint: Hamadi cannot be appointed to the same court as Perkins - Hamadi_court != Perkins_court.
-6. Add constraint: At most 3 candidates can be appointed to appellate court - Sum of all True court assignments <= 3.
-7. Add constraint: At most 6 candidates can be appointed to trial court - Sum of all False court assignments <= 6.
-8. Define answer index list [].
-9. For each choice option:
-   a. Clone the base constraints into a fresh solver.
-   b. Parse the choice to extract which candidates are assigned to which court.
-   c. Add constraints matching the specific assignment in the choice.
-   d. If the solver returns SAT, then this choice is acceptable, append the choice index to the answer list.
-10. Print the answer index list.
+1. Enumerate the seven candidates and two courts (appellate=0, trial=1).
+2. For each candidate, create an Int variable court[c] to represent their assigned court, with a domain of {0, 1}.
+3. Add the specific appointment constraints:
+    court[Li] == appellate
+    court[Kurtz] == trial
+    court[Hamadi] != court[Perkins]
+4. Add the court capacity constraints:
+    The number of appointments to the appellate court is at most 3: Sum(If(court[c] == appellate, 1, 0)) <= 3.
+    The number of appointments to the trial court is at most 6.
+5. Define an answer index list acceptable_appointments.
+6. For each choice, which represents a complete assignment of all candidates:
+a. Create a fresh solver and add the base constraints.
+b. Add a set of constraints that defines the complete assignment from the choice.
+c. If the solver reports SAT, this assignment is valid and consistent with all rules. Append its index to the acceptable_appointments list.
+7. Print the list of indices for the acceptable choices.
 "
 Z3 Program:
 ```
 from z3 import *
-
-# Define candidates
 candidates = ["Hamadi", "Jefferson", "Kurtz", "Li", "McDonnell", "Ortiz", "Perkins"]
-Hamadi, Jefferson, Kurtz, Li, McDonnell, Ortiz, Perkins = range(7)
+(H, J, K, L, M, O, P) = range(7)
+(Appellate, Trial) = (0, 1)
 
-# Create Boolean variables for court assignments (True = appellate, False = trial)
-court = [Bool(f"court_{name}") for name in candidates]
+court = [Int(f"court_{c}") for c in range(len(candidates))]
 
-# Base solver
-base_solver = Solver()
+s = Solver()
 
-# Li must be appointed to appellate court
-base_solver.add(court[Li] == True)
+# Domain constraints for each candidate's court
+for i in range(len(candidates)):
+    s.add(court[i] >= Appellate, court[i] <= Trial)
 
-# Kurtz must be appointed to trial court  
-base_solver.add(court[Kurtz] == False)
+# Li to appellate
+s.add(court[L] == Appellate)
 
-# Hamadi cannot be appointed to the same court as Perkins
-base_solver.add(court[Hamadi] != court[Perkins])
+# Kurtz to trial
+s.add(court[K] == Trial)
 
-# At most 3 candidates can be appointed to appellate court
-base_solver.add(Sum([If(court[i], 1, 0) for i in range(7)]) <= 3)
+# Hamadi and Perkins on different courts
+s.add(court[H] != court[P])
 
-# At most 6 candidates can be appointed to trial court (this is automatically satisfied)
-base_solver.add(Sum([If(Not(court[i]), 1, 0) for i in range(7)]) <= 6)
+# Capacity constraints
+s.add(Sum([If(c == Appellate, 1, 0) for c in court]) <= 3)
+s.add(Sum([If(c == Trial, 1, 0) for c in court]) <= 6)
 
-# Define the choices with their court assignments
+# Choices representing full assignments
 choices = [
-    # A) appellate: Hamadi, Ortiz trial: Jefferson, Kurtz, Li, McDonnell, Perkins
-    {Hamadi: True, Jefferson: False, Kurtz: False, Li: False, McDonnell: False, Ortiz: True, Perkins: False},
-    
-    # B) appellate: Hamadi, Li, Perkins trial: Jefferson, Kurtz, McDonnell, Ortiz  
-    {Hamadi: True, Jefferson: False, Kurtz: False, Li: True, McDonnell: False, Ortiz: False, Perkins: True},
-    
-    # C) appellate: Kurtz, Li, Perkins trial: Hamadi, Jefferson, McDonnell, Ortiz
-    {Hamadi: False, Jefferson: False, Kurtz: True, Li: True, McDonnell: False, Ortiz: False, Perkins: True},
-    
-    # D) appellate: Li, McDonnell, Ortiz trial: Hamadi, Jefferson, Kurtz, Perkins
-    {Hamadi: False, Jefferson: False, Kurtz: False, Li: True, McDonnell: True, Ortiz: True, Perkins: False},
-    
-    # E) appellate: Li, Perkins trial: Hamadi, Jefferson, Kurtz, McDonnell, Ortiz
-    {Hamadi: False, Jefferson: False, Kurtz: False, Li: True, McDonnell: False, Ortiz: False, Perkins: True}
+    [court[H]==Appellate, court[O]==Appellate, court[J]==Trial, court[K]==Trial, court[L]==Trial, court[M]==Trial, court[P]==Trial],
+    [court[H]==Appellate, court[L]==Appellate, court[P]==Appellate, court[J]==Trial, court[K]==Trial, court[M]==Trial, court[O]==Trial],
+    [court[K]==Appellate, court[L]==Appellate, court[P]==Appellate, court[H]==Trial, court[J]==Trial, court[M]==Trial, court[O]==Trial],
+    [court[L]==Appellate, court[M]==Appellate, court[O]==Appellate, court[H]==Trial, court[J]==Trial, court[K]==Trial, court[P]==Trial],
+    [court[L]==Appellate, court[P]==Appellate, court[H]==Trial, court[J]==Trial, court[K]==Trial, court[M]==Trial, court[O]==Trial]
 ]
 
-answer = []
-for i, assignment in enumerate(choices):
-    test_solver = Solver()
-    test_solver.add(base_solver.assertions())
-    
-    # Add constraints for this specific assignment
-    for candidate_idx, is_appellate in assignment.items():
-        test_solver.add(court[candidate_idx] == is_appellate)
-    
-    if test_solver.check() == sat:
-        answer.append(i)
+acceptable_appointments = []
+for i, choice_list in enumerate(choices):
+    s_check = Solver()
+    s_check.add(s.assertions())
+    s_check.add(And(choice_list))
+    if s_check.check() == sat:
+        acceptable_appointments.append(i)
 
-print(answer)
+print(acceptable_appointments)
 ```
 
 Problem:

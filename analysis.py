@@ -292,11 +292,22 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
         
         # Get expected answer based on format
         if "problem" in result and "label" in result["problem"] and "answers" in result["problem"]:
-            label_idx = result["problem"]["label"]
-            if 0 <= label_idx < len(result["problem"]["answers"]):
-                expected = f"Option {chr(65+label_idx)}"
+            label = result["problem"]["label"]
+            # Convert letter label to index if it's a string
+            if isinstance(label, str) and len(label) == 1 and label.isalpha():
+                label_idx = ord(label.upper()) - ord('A')
+                if 0 <= label_idx < len(result["problem"]["answers"]):
+                    expected = f"Option {label.upper()}"
+                else:
+                    expected = f"Label {label}"
+            elif isinstance(label, int):
+                # Handle numeric labels
+                if 0 <= label < len(result["problem"]["answers"]):
+                    expected = f"Option {chr(65+label)}"
+                else:
+                    expected = f"Label {label}"
             else:
-                expected = f"Label {label_idx}"
+                expected = f"Label {label}"
         else:
             expected = result.get("expected_answer", "?")
             
@@ -348,11 +359,22 @@ def generate_combined_report(results, analysis, results_file, timing_info=None, 
             
             # Expected answer based on format
             if "problem" in test and "label" in test["problem"] and "answers" in test["problem"]:
-                label_idx = test["problem"]["label"]
-                if 0 <= label_idx < len(test["problem"]["answers"]):
-                    expected_answer = f"Option {chr(65+label_idx)}: {test['problem']['answers'][label_idx]}"
+                label = test["problem"]["label"]
+                # Convert letter label to index if it's a string
+                if isinstance(label, str) and len(label) == 1 and label.isalpha():
+                    label_idx = ord(label.upper()) - ord('A')
+                    if 0 <= label_idx < len(test["problem"]["answers"]):
+                        expected_answer = f"Option {label.upper()}: {test['problem']['answers'][label_idx]}"
+                    else:
+                        expected_answer = f"Label {label}"
+                elif isinstance(label, int):
+                    # Handle numeric labels
+                    if 0 <= label < len(test["problem"]["answers"]):
+                        expected_answer = f"Option {chr(65+label)}: {test['problem']['answers'][label]}"
+                    else:
+                        expected_answer = f"Label {label}"
                 else:
-                    expected_answer = f"Label {label_idx}"
+                    expected_answer = f"Label {label}"
             elif "problem" in test and "options" in test["problem"] and "answer" in test["problem"]:
                 expected_answer = test["problem"]["answer"]
             else:

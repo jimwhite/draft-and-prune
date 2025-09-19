@@ -249,13 +249,18 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
             (r"Final Answer:\s*\{([^}]+)\}", "Final Answer with braces"),
             (r"Final Answer:\s*(.+)", "Final Answer without braces"),
             (r"Conclusion:\s*\{([^}]+)\}", "Conclusion with braces"),
-            (r"Conclusion:\s*(.+)", "Conclusion without braces")
+            (r"Conclusion:\s*(.+)", "Conclusion without braces"),
+            (r"The correct option is:\s*(.+)", "The correct option is")
         ]
         
         for pattern, description in patterns:
             match = re.search(pattern, response_text, re.IGNORECASE)
             if match:
                 extracted_answer = match.group(1).strip()
+                if extracted_answer in answers:
+                    return extracted_answer
+                else:
+                    return None
                 return extracted_answer
         
         # No match found
