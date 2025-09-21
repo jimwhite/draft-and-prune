@@ -865,9 +865,7 @@ class TwoStepReasoner(Reasoner):
 
             # Enhanced code generation with batch generation
             code_configs = [
-                {"temperature": 0.0},
-                # {"temperature": 0.6},
-                # {"temperature": 1.0}
+                {"temperature": self.config.temperature},
             ]
             
             plan_code_results = []
@@ -1321,12 +1319,10 @@ class DirectReasoner(Reasoner):
         code_feedback = None
 
         # Enhanced code generation configurations with diverse parameters
+        # Use config values for number of paths and temperature
         code_configs = [
-            {"temperature": 0.0},
-            {"temperature": 0.6},
-            {"temperature": 1.0},
-            {"temperature": 1.0},
-            {"temperature": 1.0},
+            {"temperature": self.config.temperature}
+            for _ in range(self.config.num_paths)
         ]
         
         all_code_results = []
@@ -1407,13 +1403,13 @@ class DirectReasoner(Reasoner):
         if self.config.dataset.lower() == "ar-lsat":
             return self.reason_code_diversity(test_case, "z3", self.execute_z3_code, mp_lock)
         elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code, mp_lock)
+            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
         elif self.config.dataset.lower() == "folio":
-            return self.reason_code_greedy(test_case, "prover9", self.execute_prover9_code, mp_lock)
+            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code, mp_lock)
         elif self.config.dataset.lower() == 'prontoqa':
-            return self.reason_code_greedy(test_case, "pyke", self.execute_pyke_code, mp_lock)
+            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
         elif self.config.dataset.lower() == 'logicaldeduction':
-            return self.reason_code_greedy(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
+            return self.reason_code_diversity(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
