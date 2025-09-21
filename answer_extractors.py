@@ -245,23 +245,46 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
         """
 
         # Define patterns to check in order of preference
+        # Put more specific patterns first to avoid greedy matching issues
         patterns = [
+            (r"\$\\boxed\{([A-E])\}\$", "LaTeX boxed answer (letter only)"),  # New pattern for Gemini-2.5-Flash
+            (r"The correct option is:\s*([A-E])\b", "The correct option is (letter only)"),
             (r"Final Answer:\s*\{([^}]+)\}", "Final Answer with braces"),
+            (r"Final Answer:\s*([A-E])\b", "Final Answer (letter only)"),
             (r"Final Answer:\s*(.+)", "Final Answer without braces"),
             (r"Conclusion:\s*\{([^}]+)\}", "Conclusion with braces"),
-            (r"Conclusion:\s*(.+)", "Conclusion without braces"),
-            (r"The correct option is:\s*(.+)", "The correct option is")
+            (r"The correct option is:\s*(.+)", "The correct option is"),
+            (r"Conclusion:\s*(.+)", "Conclusion without braces")
         ]
         
         for pattern, description in patterns:
             match = re.search(pattern, response_text, re.IGNORECASE)
             if match:
                 extracted_answer = match.group(1).strip()
-                if extracted_answer in answers:
+                
+                # Handle single letter answers (A, B, C, D, E)
+                if extracted_answer.upper() in ['A', 'B', 'C', 'D', 'E'] and answers:
+                    # Convert letter to index and return the corresponding full answer
+                    letter_idx = ord(extracted_answer.upper()) - ord('A')
+                    if 0 <= letter_idx < len(answers):
+                        return answers[letter_idx]
+                
+                # Check if the extracted answer matches any full answer option
+                if answers and extracted_answer in answers:
                     return extracted_answer
-                else:
-                    return None
-                return extracted_answer
+                
+                # If no answers list provided, return the extracted answer as-is
+                if not answers:
+                    return extracted_answer
+                    
+                # If we have answers but no match, try partial matching for robustness
+                if answers:
+                    for answer in answers:
+                        if extracted_answer.lower() in answer.lower():
+                            return answer
+                
+                # If this pattern didn't work, continue to the next pattern
+                continue
         
         # No match found
         return None
