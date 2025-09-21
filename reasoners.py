@@ -1673,16 +1673,29 @@ class CoTReasoner(Reasoner):
         
         reasoning_filepath = os.path.join(reasoning_folder, f"{problem_name}-{unique_id}.txt")
         with open(reasoning_filepath, "w") as f:
-            f.write(reasoning_result["reasoning_output"])
+            reasoning_output = reasoning_result.get("reasoning_output", "")
+            if reasoning_output is None:
+                reasoning_output = "[ERROR: No reasoning output generated]"
+            f.write(reasoning_output)
 
+        # Handle case where reasoning output is None (API failure)
+        reasoning_output_for_extraction = reasoning_result.get("reasoning_output", "")
+        if reasoning_output_for_extraction is None:
+            reasoning_output_for_extraction = ""
+        
         if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["label"], test_case["answers"], self.config.reasoning_method)
         elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
         elif self.config.dataset.lower() == 'logicaldeduction':
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["reasoning_output"], test_case["answer"], self.config.reasoning_method)
+            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+        
+        # If reasoning output was None, override the error type
+        if reasoning_result.get("reasoning_output") is None:
+            is_correct = False
+            error_type = "API failure - no output generated"
         
         if is_correct:
             print(f"\nReasoning PASSED. Error type: {error_type}")
