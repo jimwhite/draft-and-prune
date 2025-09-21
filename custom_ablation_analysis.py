@@ -702,6 +702,10 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
             
         all_solver_outputs = item.get('all_solver_outputs', [])
         
+        # For path ablation methods, limit to only the first n paths
+        if method_name.startswith('path_ablation_') and method_name.endswith('_paths'):
+            all_solver_outputs = all_solver_outputs[:paths_used_per_sample]
+        
         total += 1
         
         # Calculate total paths before pruning, accounting for missing paths due to syntax errors
@@ -733,6 +737,7 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
         # Add path ablation methods to multipath_methods (they use majority voting)
         if method_name.startswith('path_ablation_') and method_name.endswith('_paths'):
             multipath_methods.append(method_name)
+            pruning_methods.append(method_name)  # Path ablation methods also use pruning
         
         # Handle different return types from extraction functions
         if method_name in multipath_methods:  # Methods using majority vote
@@ -992,14 +997,9 @@ def extract_answer_path_ablation_majority_vote(all_solver_outputs, dataset=None,
     if not all_solver_outputs:
         return None, False
     
-    # Use the voter sensitivity simulation logic with 1 simulation to get deterministic result
-    simulation_votes = simulate_voting_with_n_voters(all_solver_outputs, num_paths, 1, dataset)
-    vote = simulation_votes[0] if simulation_votes else None
-    
-    if vote is None:
-        return None, False
-    else:
-        return vote, False  # No tied voting info for single simulation
+    # Since all_solver_outputs has already been sliced to the first num_paths in calculate_accuracy_generic,
+    # we just need to apply majority vote to all available outputs
+    return extract_answer_pruning_majority_vote(all_solver_outputs, dataset)
 
 def calculate_accuracy_path_ablation(results, num_paths, dataset=None, expected_paths_per_sample=5):
     """Calculate accuracy using a specific number of paths with majority vote."""
