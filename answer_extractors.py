@@ -248,10 +248,16 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
         # Put more specific patterns first to avoid greedy matching issues
         patterns = [
             (r"\$\\boxed\{([A-E])\}\$", "LaTeX boxed answer (letter only)"),  # New pattern for Gemini-2.5-Flash
+            (r"The correct option is:\s*\[([0-4])\]", "The correct option is with brackets and number"),  # New pattern for [X] format
+            (r"The correct option is:\s*([0-4])\b", "The correct option is (number only)"),  # New pattern for numbers
             (r"The correct option is:\s*([A-E])\b", "The correct option is (letter only)"),
+            (r"Final Answer:\s*\[([0-4])\]", "Final Answer with brackets and number"),  # New pattern
+            (r"Final Answer:\s*([0-4])\b", "Final Answer (number only)"),  # New pattern
             (r"Final Answer:\s*\{([^}]+)\}", "Final Answer with braces"),
             (r"Final Answer:\s*([A-E])\b", "Final Answer (letter only)"),
             (r"Final Answer:\s*(.+)", "Final Answer without braces"),
+            (r"Conclusion:\s*\[([0-4])\]", "Conclusion with brackets and number"),  # New pattern
+            (r"Conclusion:\s*([0-4])\b", "Conclusion (number only)"),  # New pattern
             (r"Conclusion:\s*\{([^}]+)\}", "Conclusion with braces"),
             (r"The correct option is:\s*(.+)", "The correct option is"),
             (r"Conclusion:\s*(.+)", "Conclusion without braces")
@@ -261,6 +267,12 @@ class AR_LSAT_AnswerExtractor(AnswerExtractor):
             match = re.search(pattern, response_text, re.IGNORECASE)
             if match:
                 extracted_answer = match.group(1).strip()
+                
+                # Handle numeric indices (0, 1, 2, 3, 4)
+                if extracted_answer.isdigit() and answers:
+                    numeric_idx = int(extracted_answer)
+                    if 0 <= numeric_idx < len(answers):
+                        return answers[numeric_idx]
                 
                 # Handle single letter answers (A, B, C, D, E)
                 if extracted_answer.upper() in ['A', 'B', 'C', 'D', 'E'] and answers:
