@@ -321,9 +321,9 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, dataset, *r
             'sketch_only': {'sketch': 'yes', 'multipath': 'no', 'pruning': 'no'},  # VXX
             'direct_translation_multipath': {'sketch': 'no', 'multipath': 'yes', 'pruning': 'no'},  # XVX
             'direct_translation_pruning': {'sketch': 'no', 'multipath': 'no', 'pruning': 'yes'},  # XXV
-            # Pruning ablation methods
-            'existence_pruning_majority_vote': {'sketch': 'yes', 'multipath': 'yes', 'pruning': 'existence'},  # Special pruning
-            'uniqueness_pruning_majority_vote': {'sketch': 'yes', 'multipath': 'yes', 'pruning': 'uniqueness'},  # Special pruning
+            # Pruning ablation methods - sketch value depends on experiment type
+            'existence_pruning_majority_vote': {'sketch': 'auto', 'multipath': 'yes', 'pruning': 'existence'},  # Special pruning
+            'uniqueness_pruning_majority_vote': {'sketch': 'auto', 'multipath': 'yes', 'pruning': 'uniqueness'},  # Special pruning
         }
         
         # Handle path ablation methods dynamically
@@ -359,7 +359,13 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, dataset, *r
         ensemble = 'yes' if config['multipath'] == 'yes' else ('no' if config['multipath'] == 'no' else '')
         
         # Override sketch value based on method (for display purposes)
-        sketch_value = config['sketch'] if config['sketch'] else ('yes' if config_info['has_sketch'] else 'no')
+        if config['sketch'] == 'auto':
+            # For pruning ablation methods, use the experiment type to determine sketch value
+            sketch_value = 'yes' if config_info['has_sketch'] else 'no'
+        elif config['sketch']:
+            sketch_value = config['sketch']
+        else:
+            sketch_value = 'yes' if config_info['has_sketch'] else 'no'
         
         # Determine actual paths per sample for this method
         method_name = result['method']
