@@ -66,16 +66,13 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
                             test_runner_instance.fix_api_client.api_key = assigned_key
                             print(f"Fix API client also updated with key #{assigned_key_index + 1}")
 
-                # Call the instance's reason method
-                start_reason_time = time.time()
-                reasoning_result = test_runner_instance.reason(test_case, mp_lock)
-                case_reason_time = time.time() - start_reason_time
-                test_runner_instance._process_results(test_case, reasoning_result, case_reason_time, unique_id)
+            # Call the instance's reason method
+            reasoning_result = test_runner_instance.reason(test_case, mp_lock)
+            
+            test_runner_instance._process_results(test_case, reasoning_result, 0.0, unique_id, None)
 
-                # Record the end information at the end of the log
-                case_process_time = time.time() - start_process_time
-                print(f"\n" + "-" * 30)
-                print(f"Task finished in {case_process_time:.2f}s.")
+            print(f"\n" + "-" * 30)
+            print(f"Task finished.")
 
     except Exception as e:
         # If an error occurs during execution, the error message will also be recorded
@@ -251,7 +248,7 @@ class Reasoner(ABC):
         """Interpret the results from the reasoning"""
         return True, "Model passed the test.", response_text
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         """Process the results of a single test case"""
         pass
 
@@ -260,16 +257,10 @@ class Reasoner(ABC):
         start_time_total = time.time()
         processed_count = 0
         for i, batch in enumerate(self.data_loader):
-            # Start timing for this test case
-            start_time_case = time.time()
-            
             # Apply reasoning
             reasoning_result = self.reason(batch[0])
-
-            # Calculate total case time
-            case_time = time.time() - start_time_case            
             
-            self._process_results(batch[0], reasoning_result, case_time, str(uuid.uuid4()))
+            self._process_results(batch[0], reasoning_result, 0.0, str(uuid.uuid4()), None)
 
             # Increment counter and delay before next test
             processed_count += 1
@@ -280,6 +271,7 @@ class Reasoner(ABC):
         # Calculate total execution time
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
+        
         
     def run_all_tests_parallel(self, num_processes: int=10) -> None:
         """
@@ -316,6 +308,9 @@ class Reasoner(ABC):
 
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
+        # save the total execution time to the results folder
+        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w") as f:
+            f.write(f"{total_execution_time:.2f}s")
     
     def clean_code(self, code_text: str) -> str:
         if self.config.dataset.lower() == 'ar-lsat':
@@ -378,6 +373,7 @@ class Reasoner(ABC):
     
     def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
         """Execute the Python Z3 code and return the results."""
+        # Execute Z3 code
         # Identical to the original script's implementation
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
@@ -414,6 +410,7 @@ class Reasoner(ABC):
         
     def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
         """Execute the PyKe code and return the results."""
+        # Execute PyKe code
         try:
             facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
             rules = re.search(r"```rules\n(.*?)```", pyke_code, re.DOTALL).group(1)
@@ -452,7 +449,7 @@ class Reasoner(ABC):
                         return True, "multiple answers"
                     else:
                         return True, str(answer_list[0] == final_answer)
-                
+                    
         except Exception as e:
             return False, f"Error executing PyKe Program: {str(e)}"
         
@@ -463,6 +460,7 @@ class Reasoner(ABC):
     
     def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
         """Execute the Prover9 code and return the results."""
+        # Execute Prover9 code
         def negate_prover9_goal(prover9_input: str) -> str:
             """
             Extract the formulas(goals) block from the Prover9 input,
@@ -527,6 +525,7 @@ class Reasoner(ABC):
     
     def execute_csp_code(self, csp_code: str) -> Tuple[bool, str]:
         """Execute the Python CSP code and return the results."""
+        # Execute CSP code
         # Identical to the original script's implementation
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
@@ -837,13 +836,10 @@ class TwoStepReasoner(Reasoner):
         code_feedback = None
 
         # Enhanced plan generation configurations with diverse parameters
-        # temp 2 results in non-readable plan
+        # Use config values for number of paths and temperature
         plan_configs = [
-            {"temperature": 1.0},
-            {"temperature": 1.0},
-            {"temperature": 1.0},
-            {"temperature": 1.0},
-            {"temperature": 1.0},
+            {"temperature": self.config.plan_temp}
+            for _ in range(self.config.num_paths)
         ]
         
         all_plan_results = []
@@ -970,7 +966,7 @@ class TwoStepReasoner(Reasoner):
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
         
-    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -1019,15 +1015,15 @@ class TwoStepReasoner(Reasoner):
             # "reasoning_result": reasoning_result,
             "error_type": error_type,
             "success": is_correct,
-            "timing": case_time
-        }
+            "timing": case_time        }
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
         
-    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+        
+    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -1133,8 +1129,7 @@ class TwoStepReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "all_solver_outputs": all_solver_outputs
-            }
+                "all_solver_outputs": all_solver_outputs            }
         else:
             print(f"\n{'='*80}")
             print(f"NO VALID SOLVER OUTPUTS FOUND")
@@ -1146,20 +1141,20 @@ class TwoStepReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "all_solver_outputs": []
-            }
+                "all_solver_outputs": []            }
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
+        
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # Check if this is a diversity result or greedy result
         if "all_plan_results" in reasoning_result:
-            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
         else:
-            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id)
+            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
 
 
 class DirectReasoner(Reasoner):
@@ -1422,7 +1417,7 @@ class DirectReasoner(Reasoner):
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
             
-    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
         if not os.path.exists(code_folder):
@@ -1457,15 +1452,15 @@ class DirectReasoner(Reasoner):
             "solver_output": reasoning_result["solver_output"],
             "error_type": error_type,
             "success": is_correct,
-            "timing": case_time
-        }
+            "timing": case_time        }
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
+        
 
-    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
         if not os.path.exists(code_folder):
@@ -1570,8 +1565,7 @@ class DirectReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "all_solver_outputs": all_solver_outputs
-            }
+                "all_solver_outputs": all_solver_outputs            }
         else:
             print(f"\n{'='*80}")
             print(f"NO VALID SOLVER OUTPUTS FOUND")
@@ -1583,20 +1577,20 @@ class DirectReasoner(Reasoner):
             results = {
                 "problem": test_case,
                 "timing": case_time,
-                "all_solver_outputs": []
-            }
+                "all_solver_outputs": []            }
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
+        
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # Check if this is a diversity result or greedy result
         if "all_code_results" in reasoning_result:
-            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id)
+            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
         else:
-            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id)
+            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
 
 class CoTReasoner(Reasoner):
     """Chain-of-Thought reasoning approach"""
@@ -1673,7 +1667,7 @@ class CoTReasoner(Reasoner):
             "reasoning_output": reasoning_output
         }
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="") -> None:
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # Save the "reasoning_output" to the results_folder
         reasoning_folder = os.path.join(self.results_folder, "reasoning")
         if not os.path.exists(reasoning_folder):
@@ -1705,10 +1699,10 @@ class CoTReasoner(Reasoner):
             "timing": case_time,
             "reasoning_output": reasoning_result["reasoning_output"],
             "error_type": error_type,
-            "success": is_correct
-        }
+            "success": is_correct        }
         
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
+        

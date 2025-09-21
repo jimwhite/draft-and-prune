@@ -20,6 +20,7 @@ class ReasonerConfig:
                  temperature: float = 0.6, 
                  max_repairs: int = 3,
                  max_retries: int = 10,
+                 num_processes: int = 1,
                  test_delay: int = 5,
                  prompt_path: str = None,
                  shots: str = 'zero',
@@ -29,7 +30,10 @@ class ReasonerConfig:
                  azure_deployment: str = None,
                  azure_managed_identity_client_id: str = None,
                  # Gemini multiple API keys
-                 gemini_api_keys: list = None):
+                 gemini_api_keys: list = None,
+                 # Plan generation parameters
+                 num_paths: int = 3,
+                 plan_temp: float = 1.0):
         """
         Initialize configuration either from parameters or will be loaded from YAML
         
@@ -43,6 +47,7 @@ class ReasonerConfig:
             temperature: Temperature for model generation
             max_repairs: Maximum number of repair attempts
             max_retries: Maximum number of LLM requests
+            num_processes: Number of parallel processes to use
             test_delay: Delay between test cases in seconds
             prompt_path: Path to the prompt file
             shots: Number of shots for few-shot learning
@@ -50,6 +55,8 @@ class ReasonerConfig:
             azure_endpoint: Azure OpenAI endpoint
             azure_deployment: Azure OpenAI deployment
             azure_managed_identity_client_id: Azure managed identity client ID
+            num_paths: Number of different plans to generate
+            plan_temp: Temperature for plan generation
         """
         self.dataset = dataset
         self.test_file = test_file
@@ -63,6 +70,7 @@ class ReasonerConfig:
         self.temperature = temperature
         self.max_repairs = max_repairs
         self.max_retries = max_retries
+        self.num_processes = num_processes
         self.test_delay = test_delay
         self.prompt_path = prompt_path
         self.shots = shots
@@ -71,6 +79,8 @@ class ReasonerConfig:
         self.azure_deployment = azure_deployment
         self.azure_managed_identity_client_id = azure_managed_identity_client_id
         self.gemini_api_keys = gemini_api_keys
+        self.num_paths = num_paths
+        self.plan_temp = plan_temp
     
     @classmethod
     def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
@@ -131,6 +141,7 @@ class ReasonerConfig:
             instance.max_retries = config_data['max_retries']
         else:
             instance.max_retries = 10   # Set Default Value
+        instance.num_processes = config_data.get('num_processes', 1)  # Default to 1 if not specified
         instance.test_delay = config_data['test_delay']
         instance.prompt_path = config_data['prompt_path']
         instance.shots = config_data['shots']
@@ -141,6 +152,9 @@ class ReasonerConfig:
         instance.azure_managed_identity_client_id = config_data.get('azure_managed_identity_client_id')
         # Gemini multiple API keys are optional
         instance.gemini_api_keys = config_data.get('gemini_api_keys')
+        # Plan generation parameters with defaults
+        instance.num_paths = config_data.get('num_paths', 3)
+        instance.plan_temp = config_data.get('plan_temp', 1.0)
         instance._validate_config()
         return instance
     
@@ -164,6 +178,8 @@ class ReasonerConfig:
             raise ValueError("max_repairs must be a non-negative integer")
         if not isinstance(self.max_retries, int) or self.max_retries <= 0:
             raise ValueError("max_retries must be a positive integer")
+        if not isinstance(self.num_processes, int) or self.num_processes <= 0:
+            raise ValueError("num_processes must be a positive integer")
         if not isinstance(self.test_delay, int) or self.test_delay < 0:
             raise ValueError("test_delay must be a non-negative integer")
         if not isinstance(self.shots, str) or self.shots not in ['zero', 'one', 'two', 'three']:
@@ -176,6 +192,10 @@ class ReasonerConfig:
             raise TypeError("azure_deployment must be a string or None")
         if self.azure_managed_identity_client_id is not None and not isinstance(self.azure_managed_identity_client_id, str):
             raise TypeError("azure_managed_identity_client_id must be a string or None")
+        if not isinstance(self.num_paths, int) or self.num_paths <= 0:
+            raise ValueError("num_paths must be a positive integer")
+        if not isinstance(self.plan_temp, (int, float)) or self.plan_temp < 0:
+            raise ValueError("plan_temp must be a non-negative number")
     
     def save_to_yaml(self, yaml_path: str) -> None:
         """
@@ -200,6 +220,7 @@ class ReasonerConfig:
             'temperature': self.temperature,
             'max_repairs': self.max_repairs,
             'max_retries': self.max_retries,
+            'num_processes': self.num_processes,
             'test_delay': self.test_delay,
             'prompt_path': self.prompt_path,
             'shots': self.shots,
@@ -208,7 +229,10 @@ class ReasonerConfig:
             'azure_deployment': self.azure_deployment,
             'azure_managed_identity_client_id': self.azure_managed_identity_client_id,
             # Multiple Gemini API keys for batch distribution
-            'gemini_api_keys': getattr(self, 'gemini_api_keys', None)
+            'gemini_api_keys': getattr(self, 'gemini_api_keys', None),
+            # Plan generation parameters
+            'num_paths': getattr(self, 'num_paths', 3),
+            'plan_temp': getattr(self, 'plan_temp', 1.0)
         }
         
         try:
