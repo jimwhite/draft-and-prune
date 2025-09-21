@@ -227,10 +227,7 @@ python main.py config_gemini_multi_key.yaml
 
 ### 2. Analyze Results  
 ```bash
-# Step 1: Merge individual results
-python analysis_simple.py ./results/results_2025-09-19/your-experiment-folder/summary/
-
-# Step 2: Generate comprehensive analysis
+# Merge individual results and generate comprehensive analysis
 python custom_ablation_analysis.py ./results/results_2025-09-19/your-experiment-folder/
 ```
 
