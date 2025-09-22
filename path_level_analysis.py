@@ -8,6 +8,7 @@ This script creates a detailed dataframe with path-level information including:
 - Correctness evaluation (parse solver output and compare with label)
 - Pruning status (pruned by existence, pruned by uniqueness)
 - Pruning results (None if pruned, otherwise original output)
+- Combined existence & uniqueness pruning results
 
 The script processes experiment results and generates a comprehensive path-level CSV/XLSX file.
 It can automatically merge individual result files from a summary/ subdirectory if summary.txt is not found.
@@ -425,6 +426,18 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
             existence_pruning_result = None if pruned_by_existence else (str(parsed_output) if parsed_output != 'syntax error' else 'syntax error')
             uniqueness_pruning_result = None if pruned_by_uniqueness else (str(parsed_output) if parsed_output != 'syntax error' else 'syntax error')
             
+            # Calculate combined existence & uniqueness pruning result
+            # Path is kept only if it passes BOTH existence AND uniqueness criteria
+            # Calculate combined existence & uniqueness pruning result
+            # Path is kept only if it passes BOTH existence AND uniqueness criteria
+            if pruned_by_existence or pruned_by_uniqueness:
+                combined_pruning_result = None
+            else:
+                if parsed_output != 'syntax error':
+                    combined_pruning_result = str(parsed_output)
+                else:
+                    combined_pruning_result = 'syntax error'
+            
             row = {
                 'dataset': dataset.upper(),
                 'sample_id': sample_id,
@@ -446,6 +459,7 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
                 'existence_pruning_result': existence_pruning_result,
                 'pruned_by_uniqueness': pruned_by_uniqueness,
                 'uniqueness_pruning_result': uniqueness_pruning_result,
+                'existence_uniqueness_pruning_result': combined_pruning_result,
                 # 'passes_existence_filter': not pruned_by_existence,
                 # 'passes_uniqueness_filter': not pruned_by_uniqueness,
                 # 'output_length': len(list(_flatten(parsed_output))) if parsed_output != 'syntax error' else 0
@@ -455,7 +469,7 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
     return pd.DataFrame(rows)
 
 
-def calculate_one_path_accuracy(df):
+def calculate_one_path_accuracy(df, use_cot_backup=False):
     """Calculate accuracy metrics for one-path (single path) results."""
     # Filter to only path_index 0 (first path only)
     first_paths = df[df['path_index'] == 0].copy()
@@ -468,10 +482,41 @@ def calculate_one_path_accuracy(df):
             'syntax_error_samples': 0,
             'syntax_error_rate': 0.0,
             'valid_samples': 0,
-            'valid_accuracy': 0.0
+            'valid_accuracy': 0.0,
+            'cot_backup_used': 0,
+            'cot_backup_correct': 0
         }
     
     total_samples = len(first_paths)
+    
+    # Apply CoT backup for syntax errors if enabled
+    cot_backup_used = 0
+    cot_backup_correct = 0
+    
+    if use_cot_backup and 'cot_correctness' in first_paths.columns:
+        # Create a copy to modify
+        first_paths_with_backup = first_paths.copy()
+        
+        # Find syntax error samples that have CoT correctness available
+        syntax_error_mask = first_paths_with_backup['is_syntax_error'] == True
+        cot_available_mask = first_paths_with_backup['cot_correctness'].notna()
+        cot_correct_mask = first_paths_with_backup['cot_correctness'] == True
+        
+        # Apply backup: use CoT result for syntax errors where CoT was correct
+        backup_mask = syntax_error_mask & cot_available_mask & cot_correct_mask
+        
+        if backup_mask.any():
+            cot_backup_used = backup_mask.sum()
+            # Mark these samples as correct (CoT backup succeeded)
+            first_paths_with_backup.loc[backup_mask, 'is_correct'] = True
+
+            cot_backup_correct = cot_backup_used  # All CoT backups are correct by definition
+            
+            print(f"CoT backup applied to {cot_backup_used} syntax error samples in first path accuracy")
+        
+        # Use the modified dataframe for calculations
+        first_paths = first_paths_with_backup
+    
     correct_samples = first_paths['is_correct'].sum()
     syntax_error_samples = first_paths['is_syntax_error'].sum()
     valid_samples = total_samples - syntax_error_samples
@@ -492,9 +537,56 @@ def calculate_one_path_accuracy(df):
         'syntax_error_samples': syntax_error_samples,
         'syntax_error_rate': syntax_error_rate,
         'valid_samples': valid_samples,
-        'valid_accuracy': valid_accuracy
+        'valid_accuracy': valid_accuracy,
+        'cot_backup_used': cot_backup_used,
+        'cot_backup_correct': cot_backup_correct
     }
 
+
+
+def add_cot_correctness_column(df, cot_summary_file):
+    """Add CoT correctness column to path-level dataframe by mapping id_string to sample_id."""
+    if not os.path.exists(cot_summary_file):
+        print(f"Warning: CoT summary file not found: {cot_summary_file}")
+        return df
+    
+    print(f"Adding CoT correctness from: {cot_summary_file}")
+    
+    # Load CoT summary
+    try:
+        cot_results = load_results(cot_summary_file)
+        if not cot_results:
+            print("Warning: No CoT results found")
+            return df
+    except Exception as e:
+        print(f"Error loading CoT summary: {e}")
+        return df
+    
+    # Create mapping from id_string to success
+    id_to_success = {}
+    for result in cot_results:
+        if 'problem' in result and 'id_string' in result['problem']:
+            id_string = result['problem']['id_string']
+            success = result.get('success', False)
+            id_to_success[id_string] = success
+    
+    print(f"Loaded {len(id_to_success)} CoT results")
+    
+    # Add cot_correctness column to dataframe
+    df['cot_correctness'] = df['sample_id'].map(id_to_success)
+    
+    # Report mapping statistics
+    mapped_count = df['cot_correctness'].notna().sum()
+    total_count = len(df)
+    print(f"Successfully mapped {mapped_count}/{total_count} samples ({mapped_count/total_count*100:.1f}%)")
+    
+    if mapped_count < total_count:
+        unmapped_samples = df[df['cot_correctness'].isna()]['sample_id'].unique()
+        print(f"Warning: {len(unmapped_samples)} samples could not be mapped to CoT results")
+        if len(unmapped_samples) <= 10:
+            print(f"Unmapped sample IDs: {list(unmapped_samples)}")
+    
+    return df
 
 
 def main():
@@ -507,7 +599,7 @@ Examples:
     python path_level_analysis.py results/experiment_folder/ --expected-paths 5
     python path_level_analysis.py results/experiment_folder/ --output-format xlsx
     python path_level_analysis.py results/experiment_folder/ --force-merge --expected-paths 30
-    python path_level_analysis.py results/experiment_folder/ --save-accuracy-summary
+    python path_level_analysis.py results/experiment_folder/ --cot-summary path/to/cot_summary.txt
         """
     )
     
@@ -522,6 +614,12 @@ Examples:
     
     parser.add_argument('--force-merge', action='store_true',
                        help='Force merge individual result files even if summary.txt exists')
+    
+    parser.add_argument('--cot-summary', type=str,
+                       help='Path to CoT summary.txt file to add cot_correctness column')
+    
+    parser.add_argument('--cot-backup', action='store_true',
+                       help='Use CoT as backup for syntax errors in first path accuracy calculation')
     
     args = parser.parse_args()
     
@@ -581,6 +679,10 @@ Examples:
     
     print(f"Created dataframe with {len(df)} rows (paths)")
     
+    # Add CoT correctness column if specified
+    if args.cot_summary:
+        df = add_cot_correctness_column(df, args.cot_summary)
+    
     # Summary statistics
     total_paths = len(df)
     correct_paths = df['is_correct'].sum()
@@ -608,7 +710,7 @@ Examples:
     print("ONE-PATH ACCURACY ANALYSIS (First Path Only, without pruning)")
     print("="*60)
     
-    one_path_results = calculate_one_path_accuracy(df)
+    one_path_results = calculate_one_path_accuracy(df, use_cot_backup=args.cot_backup)
     print(f"Total samples: {one_path_results['total_samples']}")
     print(f"Correct samples: {one_path_results['correct_samples']}")
     print(f"Overall accuracy: {one_path_results['accuracy']:.4f} ({one_path_results['accuracy']*100:.2f}%)")
@@ -616,6 +718,14 @@ Examples:
     print(f"Syntax error rate: {one_path_results['syntax_error_rate']:.4f} ({one_path_results['syntax_error_rate']*100:.2f}%)")
     print(f"Valid samples (excluding syntax errors): {one_path_results['valid_samples']}")
     print(f"Accuracy on valid samples only: {one_path_results['valid_accuracy']:.4f} ({one_path_results['valid_accuracy']*100:.2f}%)")
+    
+    # Show CoT backup statistics if enabled
+    if args.cot_backup:
+        print(f"CoT backup used: {one_path_results['cot_backup_used']} samples")
+        print(f"CoT backup correct: {one_path_results['cot_backup_correct']} samples")
+        if one_path_results['cot_backup_used'] > 0:
+            backup_accuracy = one_path_results['cot_backup_correct'] / one_path_results['cot_backup_used']
+            print(f"CoT backup accuracy: {backup_accuracy:.4f} ({backup_accuracy*100:.2f}%)")
     
     
     # Save results
