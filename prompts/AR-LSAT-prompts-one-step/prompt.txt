@@ -1,7 +1,152 @@
-You are an expert in formal verification and SMT solving using the Python Z3 library.
+You are an expert Python programmer specializing in the Z3 SMT solver library.
 Your goal is to write executable Python Z3 code to solve the given problem.
 Remember to only output the raw Python code.
-Remember to print the final answer as a list of indices of the choices like [0, 1, 2, 3, 4].
+
+Problem:
+"On Tuesday Vladimir and Wendy each eat exactly four separate meals: breakfast, lunch, dinner, and a snack. The following is all that is known about what they eat during that day: At no meal does Vladimir eat the same kind of food as Wendy. Neither of them eats the same kind of food more than once during the day. For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelet. For lunch, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For dinner, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For a snack, each eats exactly one of the following: fish or omelet. Wendy eats an omelet for lunch."
+Question:
+"Vladimir must eat which one of the following foods?"
+Choices:
+["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+Z3 Program:
+```
+from z3 import *
+foods = ["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+(FISH, HOT, MAC, OME, POE) = range(5)
+
+# Meal variables: 0-breakfast, 1-lunch, 2-dinner, 3-snack
+V = [Int(f"V_{m}") for m in range(4)]
+W = [Int(f"W_{m}") for m in range(4)]
+s1 = Solver()
+
+# Domain constraints
+s1.add(Or(V[0] == HOT, V[0] == POE, V[0] == OME))
+s1.add(Or(V[1] == FISH, V[1] == HOT, V[1] == MAC, V[1] == OME))
+s1.add(Or(V[2] == FISH, V[2] == HOT, V[2] == MAC, V[2] == OME))
+s1.add(Or(V[3] == FISH, V[3] == OME))
+
+s1.add(Or(W[0] == HOT, W[0] == POE, W[0] == OME))
+s1.add(W[1] == OME)               # Wendy lunch
+s1.add(Or(W[2] == FISH, W[2] == HOT, W[2] == MAC, W[2] == OME))
+s1.add(Or(W[3] == FISH, W[3] == OME))
+
+# No repeats
+for i in range(4):
+    for j in range(i + 1, 4):
+        s1.add(V[i] != V[j], W[i] != W[j])
+
+# No same food in same meal
+for m in range(4):
+    s1.add(V[m] != W[m])
+
+# Find forced food
+must_eat = []
+for code, name in enumerate(foods):
+    s_chk = Solver()
+    s_chk.add(s1.assertions())
+    s_chk.add(And(*(V[k] != code for k in range(4))))
+    if s_chk.check() == unsat:
+        must_eat.append(code)
+
+print(must_eat)
+```
+
+Problem:
+"In a repair facility there are exactly six technicians: Stacy, Urma, Wim, Xena, Yolanda, and Zane. Each technician repairs machines of at least one of the following three types—radios, televisions, and VCRs—and no other types. The following conditions apply: Xena and exactly three other technicians repair radios. Yolanda repairs both televisions and VCRs. Stacy does not repair any type of machine that Yolanda repairs. Zane repairs more types of machines than Yolanda repairs. Wim does not repair any type of machine that Stacy repairs. Urma repairs exactly two types of machines."
+Question:
+"Which one of the following pairs of technicians could repair all and only the same types of machines as each other?"
+Choices:
+["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
+Z3 Program:
+```
+from z3 import *
+techs = ["Stacy", "Urma", "Wim", "Xena", "Yolanda", "Zane"]
+types = ["R", "T", "V"]
+
+t = [[Bool(f"{techs[i]}_{types[j]}") for j in range(3)] for i in range(6)]
+S, U, Wm, X, Y, Z = range(6)
+
+s2 = Solver()
+
+# Each tech repairs ≥1 type
+for i in range(6):
+    s2.add(Or(t[i][0], t[i][1], t[i][2]))
+
+# Radio rule
+s2.add(t[X][0])                                # Xena repairs R
+s2.add(Sum([If(t[i][0], 1, 0) for i in range(6)]) == 4)
+
+# Yolanda repairs T and V
+s2.add(t[Y][1], t[Y][2])
+
+# Stacy shares nothing with Yolanda
+s2.add(Not(t[S][1]), Not(t[S][2]))
+
+# Zane repairs more types than Yolanda
+count = lambda idx: Sum([If(t[idx][j], 1, 0) for j in range(3)])
+s2.add(count(Z) > count(Y))
+
+# Wim shares nothing with Stacy
+for j in range(3):
+    s2.add(Implies(t[S][j], Not(t[Wm][j])))
+
+# Urma exactly two types
+s2.add(count(U) == 2)
+
+pairs = [("Stacy and Urma", S, U),
+         ("Urma and Yolanda", U, Y),
+         ("Urma and Xena", U, X),
+         ("Wim and Xena", Wm, X),
+         ("Xena and Yolanda", X, Y)]
+
+answer = []
+for idx, (lbl, i, j) in enumerate(pairs):
+    sc = Solver();  sc.add(s2.assertions())
+    for k in range(3):
+        sc.add(t[i][k] == t[j][k])
+    if sc.check() == sat:
+        answer.append(idx)
+
+print(answer)
+```
+
+Problem:
+"Workers at a water treatment plant open eight valves—G, H, I, K, L, N, O, and P—to flush out a system of pipes that needs emergency repairs. To maximize safety and efficiency, each valve is opened exactly once, and no two valves are opened at the same time. The valves are opened in accordance with the following conditions: Both K and P are opened before H. O is opened before L but after H. L is opened after G. N is opened before H. I is opened after K."
+Question:
+"Each of the following could be the fifth valve opened EXCEPT:"
+Choices:
+["H", "I", "K", "N", "O"]
+Z3 Program:
+```
+from z3 import *
+valves = ["G", "H", "I", "K", "L", "N", "O", "P"]
+pos = {v: Int(f"pos_{v}") for v in valves}
+
+base = Solver()
+for v in valves:
+    base.add(pos[v] >= 1, pos[v] <= 8)
+base.add(Distinct(*pos.values()))
+
+base.add(pos["K"] < pos["H"])
+base.add(pos["P"] < pos["H"])
+base.add(pos["N"] < pos["H"])
+
+base.add(pos["H"] < pos["O"])
+base.add(pos["O"] < pos["L"])
+base.add(pos["G"] < pos["L"])
+
+base.add(pos["K"] < pos["I"])
+
+candidates = ["H", "I", "K", "N", "O"]
+not_possible = []
+for idx, v in enumerate(candidates):
+    sc = Solver(); sc.add(base.assertions())
+    sc.add(pos[v] == 5)
+    if sc.check() == unsat:
+        not_possible.append(idx)
+
+print(not_possible)
+```
 
 Problem:
 {context}
@@ -13,4 +158,3 @@ Z3 Program:
 ```
 
 ```
-
