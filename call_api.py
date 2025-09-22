@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time
+import random
 import os
 from typing import Optional, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
@@ -163,8 +164,9 @@ class GPTClient(APIClient):
                 last_error = error_message
                 if attempt == self.config.max_retries - 1:
                     return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
-                print(f"Waiting {2**(attempt+1)} seconds before retry...")
-                time.sleep(2**(attempt+1)) # Exponential backoff
+                random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
+                print(f"Waiting {random_sleep} seconds before retry...")
+                time.sleep(random_sleep) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
         return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
@@ -233,8 +235,9 @@ class AzureOpenAIClient(APIClient):
                 last_error = error_message
                 if attempt == self.config.max_retries - 1:
                     return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
-                print(f"Waiting {2**(attempt+1)} seconds before retry...")
-                time.sleep(2**(attempt+1)) # Exponential backoff
+                random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
+                print(f"Waiting {random_sleep} seconds before retry...")
+                time.sleep(random_sleep) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
         return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
