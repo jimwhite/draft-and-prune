@@ -248,8 +248,8 @@ def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
         api_key = kwargs.get('api_key')
         api_keys = kwargs.get('api_keys')  # Support multiple keys
         return GeminiClient(config, api_key, api_keys)
-    elif provider.lower() == "gpt":
-        return GPTClient(config)
+    # elif provider.lower() == "gpt":
+    #     return GPTClient(config)
     elif provider.lower() == "azure-openai" or provider.lower() == "azure":
         # Extract Azure-specific parameters from kwargs
         endpoint = kwargs.get('endpoint')

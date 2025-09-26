@@ -61,6 +61,7 @@ def main():
     # limit_msg = f" with limit {args.limit}" if args.limit else ""
     # print(f"Running all tests from {args.dataset}{limit_msg} using {args.reasoning_method} reasoning")
     reasoner.run_all_tests_parallel(config.num_processes)
+    # reasoner.run_all_tests()
 
 
 if __name__ == "__main__":

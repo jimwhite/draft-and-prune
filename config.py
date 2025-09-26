@@ -17,7 +17,7 @@ class ReasonerConfig:
                  code_model: str = None,  # New: Model for code generation
                  fix_model: str = None,   # Backward compatibility
                  fix_api_key: str = None,
-                 temperature: float = 0.6, 
+                 code_temp: float = 0.6, 
                  max_repairs: int = 3,
                  max_retries: int = 10,
                  num_processes: int = 1,
@@ -44,7 +44,7 @@ class ReasonerConfig:
             test_file: Test file to use
             model: Primary model name
             fix_model: Model name for fixing/repair operations
-            temperature: Temperature for model generation
+            code_temp: code_temp for model generation
             max_repairs: Maximum number of repair attempts
             max_retries: Maximum number of LLM requests
             num_processes: Number of parallel processes to use
@@ -56,7 +56,7 @@ class ReasonerConfig:
             azure_deployment: Azure OpenAI deployment
             azure_managed_identity_client_id: Azure managed identity client ID
             num_paths: Number of different plans to generate
-            plan_temp: Temperature for plan generation
+            plan_temp: code_temp for plan generation
         """
         self.dataset = dataset
         self.test_file = test_file
@@ -67,7 +67,7 @@ class ReasonerConfig:
         self.code_model = code_model
         self.fix_model = fix_model  # Backward compatibility
         self.fix_api_key = fix_api_key
-        self.temperature = temperature
+        self.code_temp = code_temp
         self.max_repairs = max_repairs
         self.max_retries = max_retries
         self.num_processes = num_processes
@@ -135,7 +135,7 @@ class ReasonerConfig:
             instance.code_model = instance.plan_model  # Default to same as plan model
         if config_data.get('fix_api_key'):
             instance.fix_api_key = config_data['fix_api_key']
-        instance.temperature = config_data['temperature']
+        instance.code_temp = config_data['code_temp']
         instance.max_repairs = config_data['max_repairs']
         if config_data.get('max_retries'):
             instance.max_retries = config_data['max_retries']
@@ -172,8 +172,8 @@ class ReasonerConfig:
             raise TypeError("fix_model must be a string")
         if self.fix_api_key is not None and not isinstance(self.fix_api_key, str):
             raise TypeError("fix_api_key must be a string")
-        if not isinstance(self.temperature, (int, float)) or self.temperature < 0:
-            raise ValueError("temperature must be a non-negative number")
+        if not isinstance(self.code_temp, (int, float)) or self.code_temp < 0:
+            raise ValueError("code_temp must be a non-negative number")
         if not isinstance(self.max_repairs, int) or self.max_repairs < 0:
             raise ValueError("max_repairs must be a non-negative integer")
         if not isinstance(self.max_retries, int) or self.max_retries <= 0:
@@ -217,7 +217,7 @@ class ReasonerConfig:
             'model': self.model,
             'fix_model': self.fix_model if self.fix_model is not None else None,
             'fix_api_key': self.fix_api_key if self.fix_api_key is not None else None,
-            'temperature': self.temperature,
+            'code_temp': self.code_temp,
             'max_repairs': self.max_repairs,
             'max_retries': self.max_retries,
             'num_processes': self.num_processes,

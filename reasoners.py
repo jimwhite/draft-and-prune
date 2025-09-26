@@ -22,7 +22,7 @@ from pyke import knowledge_engine
 from config import ReasonerConfig
 from data_loaders import DataLoader
 from answer_extractors import AnswerExtractor
-from call_api import APIConfig, get_api_client
+from call_api import APIConfig, get_api_client, APIClient
 
 
 def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
@@ -62,8 +62,8 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
                         print(f"Main API client updated with key #{assigned_key_index + 1}")
                         
                         # Also update fix API client if it exists
-                        if hasattr(test_runner_instance, 'fix_api_client') and hasattr(test_runner_instance.fix_api_client, 'api_key'):
-                            test_runner_instance.fix_api_client.api_key = assigned_key
+                        if hasattr(test_runner_instance, 'code_api_client') and hasattr(test_runner_instance.code_api_client, 'api_key'):
+                            test_runner_instance.code_api_client.api_key = assigned_key
                             print(f"Fix API client also updated with key #{assigned_key_index + 1}")
 
             # Call the instance's reason method
@@ -103,76 +103,74 @@ class Reasoner(ABC):
         os.makedirs(self.summary_folder, exist_ok=True)
         os.makedirs(self.log_folder, exist_ok=True)
         
+        # Initialize temp cache directory for PyKe
         self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
         if os.path.exists("./compiled_krb"):
             print('removing compiled_krb')
             os.system(f'rm -rf ./compiled_krb')
 
-        # Initialize API client for plan generation
-        plan_model = getattr(config, 'plan_model', config.model)  # Use plan_model if available, fallback to model
-        api_config = APIConfig(
-            model_name=plan_model,
+        if config.reasoning_method == "cot" or config.reasoning_method == "one-step":
+            model = getattr(config, 'model', None)
+            api_config = APIConfig(
+            model_name=model,
             temperature=config.temperature,
             max_retries=config.max_retries,
             inter_test_case_delay=config.test_delay
-        )
+            )
 
-        client_params = {}
-        if config.azure_endpoint:  # Check if Azure configuration is present
-            self.api_provider = "azure-openai"
-            client_params = {
-                'endpoint': config.azure_endpoint,
-                'deployment': config.azure_deployment,
-                'managed_identity_client_id': config.azure_managed_identity_client_id
-            }
-            # For Azure, api_key in config is not used for client init directly
-        elif 'gemini' in plan_model.lower():
-            self.api_provider = "gemini"
-            # Use multiple API keys if available, otherwise single key
-            if config.gemini_api_keys:
-                client_params = {'api_keys': config.gemini_api_keys}
-                print(f"Initialized Gemini client with {len(config.gemini_api_keys)} API keys for rotation")
-            else:
-                client_params = {'api_key': config.api_key}
-        elif 'gpt' in plan_model.lower():
-            self.api_provider = "gpt"
-            # For standard GPT, API key is set globally for the openai library
-            openai.api_key = config.api_key
-        else:
-            raise ValueError(f"Unsupported model or configuration: {plan_model}")
-        
-        self.api_client = get_api_client(self.api_provider, api_config, **client_params)
-        
-        # Initialize fix_api_client if needed for code generation
+            self.api_client = self.initialize_api_client(model, api_config)
+        # import pdb; pdb.set_trace()
+        # Initialize code_api_client if needed for code generation
         if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
-            code_model = getattr(config, 'code_model', getattr(config, 'fix_model', plan_model))  # Use code_model if available, fallback to fix_model or plan_model
+            plan_model = getattr(config, 'plan_model', None)  # Use plan_model if available, fallback to model
+            print(f"Plan model: {plan_model}")
+            if plan_model is None:
+                raise ValueError("plan_model is not set")
+            api_config = APIConfig(
+                model_name=plan_model,
+                temperature=config.plan_temp,
+                max_retries=config.max_retries,
+                inter_test_case_delay=config.test_delay
+            )
+            self.api_client = self.initialize_api_client(plan_model, api_config)
+
+            code_model = getattr(config, 'code_model', None)  # Use code_model if available, raise an error if not set
+            print(f"Code model: {code_model}")
+            if code_model is None:
+                raise ValueError("code_model is not set")
             fix_api_config = APIConfig(
                 model_name=code_model,
-                temperature=config.temperature,
+                temperature=config.code_temp,
                 max_retries=config.max_retries,
                 inter_test_case_delay=config.test_delay
             )
             
-            fix_client_params = {}
-            # Determine provider for fix model separately
-            if config.azure_endpoint: # Assuming fix model also uses Azure if primary does
-                fix_api_provider = "azure-openai"
-                fix_client_params = {
-                    'endpoint': config.azure_endpoint, # Use same endpoint
-                    'deployment': code_model,    # Deployment name might be same as model or different
-                    'managed_identity_client_id': config.azure_managed_identity_client_id
-                }
-            elif 'gemini' in code_model.lower():
-                fix_api_provider = "gemini"
-                # Ensure fix_api_key is used if available, otherwise fallback to primary api_key
-                fix_client_params = {'api_key': config.fix_api_key if config.fix_api_key else config.api_key}
-            elif 'gpt' in code_model.lower():
-                fix_api_provider = "gpt"
-                openai.api_key = config.fix_api_key if config.fix_api_key else config.api_key
-            else:
-                raise ValueError(f"Unsupported code model: {code_model}")
-            self.fix_api_client = get_api_client(fix_api_provider, fix_api_config, **fix_client_params)
+            self.code_api_client = self.initialize_api_client(code_model, fix_api_config)
 
+    def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
+        client_params = {}
+        if 'gpt' in model_name.lower():
+            api_config.provider = "azure-openai"
+            client_params = {
+                'endpoint': self.config.azure_endpoint,
+                'deployment': self.config.azure_deployment,
+                'managed_identity_client_id': self.config.azure_managed_identity_client_id
+            }
+            # For Azure, api_key in config is not used for client init directly
+        elif 'gemini' in model_name.lower():
+            api_config.provider = "gemini"
+            # Use multiple API keys if available, otherwise single key
+            if self.config.gemini_api_keys:
+                client_params = {'api_keys': self.config.gemini_api_keys}
+                print(f"Initialized Gemini client with {len(self.config.gemini_api_keys)} API keys for rotation")
+            else:
+                client_params = {'api_key': self.config.gemini_api_key}
+        else:
+            raise ValueError(f"Unsupported plan model: {model_name}")
+        
+        api_client = get_api_client(api_config.provider, api_config, **client_params)
+        return api_client
+    
     def save_prompts_folder(self) -> None:
         """
         Copy the prompts folder to the results directory to preserve exact prompts used
@@ -222,8 +220,13 @@ class Reasoner(ABC):
         """Create results folder based on model name"""
         # append uuid to the results folder
         # Create results folder name using new model field names
-        plan_model_name = getattr(self.config, 'plan_model', self.config.model)
-        code_model_name = getattr(self.config, 'code_model', getattr(self.config, 'fix_model', plan_model_name))
+        # if plan_model is not set, raise an error
+        plan_model_name = getattr(self.config, 'plan_model', None)
+        if plan_model_name is None:
+            raise ValueError("plan_model is not set")
+        code_model_name = getattr(self.config, 'code_model', None)
+        if code_model_name is None:
+            raise ValueError("code_model is not set")
         self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
         print(f"Results folder: {self.results_folder}")
         
@@ -242,7 +245,7 @@ class Reasoner(ABC):
     
     def _call_fix_api(self, prompt: str) -> str:
         """Common method to call the API using the modular client"""
-        return self.fix_api_client.call(prompt)
+        return self.code_api_client.call(prompt)
     
     def interpret_results(self, response_text: str) -> Tuple[bool, str, Optional[str]]:
         """Interpret the results from the reasoning"""
@@ -559,27 +562,6 @@ class Reasoner(ABC):
             if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
                  os.unlink(tmp_filename)
             return False, f"Error executing CSP code: {str(e)}"
-        
-        # timeout=20
-        # keys=None
-        # def execute(x):
-        #     try:
-        #         exec(x)
-        #         locals_ = locals()
-        #         if keys is None:
-        #             return locals_.get('ans', None), ""
-        #         else:
-        #             return [locals_.get(k, None) for k in keys], ""
-        #     except Exception as e:
-        #         # if debug_mode:
-        #         #     print(e)
-        #         return None, e
-        # try:
-        #     ans, error_msg = func_timeout.func_timeout(timeout, execute, args=(csp_code,))
-        # except func_timeout.FunctionTimedOut:
-        #     ans = None
-        #     error_msg = "timeout"
-        # return ans, error_msg
 
     
 class TwoStepReasoner(Reasoner):
@@ -631,42 +613,6 @@ class TwoStepReasoner(Reasoner):
             raise ValueError(f"Unsupported dataset: {self.config.dataset}")
 
         return prompt
-
-    def fix_semantic_errors(self, test_case, plan):
-        """Fix the semantic errors in the plan with the given inputs."""
-        # load the plan feedback prompt
-        code_model_name = getattr(self.config, 'code_model', getattr(self.config, 'fix_model', 'code model'))
-        print(f"Using {code_model_name} to fix the semantic errors in the plan")
-        
-        base_prompt_path = os.path.join(self.config.prompt_path, "fix_semantic_errors.txt")
-        with open(base_prompt_path, "r") as file:
-            base_prompt = file.read()
-        
-        if self.config.dataset.lower() == "ar-lsat":
-            prompt = base_prompt.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                answers=test_case["answers"],
-                plan=plan
-            )
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa": 
-            prompt = base_prompt.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan
-            )
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            prompt = base_prompt.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                options = test_case["options"],
-                plan=plan
-            )
-        else:
-            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
-
-        new_plan = self._call_fix_api(prompt)
-        return new_plan
         
     def get_code_prompt(self, test_case, plan, feedback=None):
         """Get the code generation prompt with the given inputs."""
@@ -712,7 +658,7 @@ class TwoStepReasoner(Reasoner):
         
         return prompt 
 
-    def fix_syntax_errors(self, test_case, plan, code, syntax_error):
+    def get_fix_syntax_error_prompt(self, test_case, plan, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
@@ -749,82 +695,6 @@ class TwoStepReasoner(Reasoner):
             raise ValueError(f"Unsupported dataset: {self.config.dataset}")
         
         return prompt
-    
-    def reason_code_greedy(self, 
-                           test_case: dict, 
-                           solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
-                           execute_func: Callable[[str], Tuple[bool, Any]],
-                           mp_lock: Optional[Any] = None) -> dict:
-        """Use model to reason and choose the correct answer in two step"""
-        current_plan = None
-        current_code = None
-        solver_output = None
-        plan_feedback = None
-        code_feedback = None
-
-        if current_plan is None or plan_feedback:
-            # Generate plan
-            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
-            current_plan = self._call_api(plan_prompt)
-            # print("\nGenerated plan:")
-            # print("=" * 80)
-            # print(current_plan)
-            # print("=" * 80)
-
-            # current_plan = self.fix_semantic_errors(test_case, current_plan)
-            # print("\nFixed plan:")
-            # print("=" * 80)
-            # print(current_plan)
-            # print("=" * 80)
-
-        if current_code is None or code_feedback:
-            # Generate code
-            code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-            current_code = self._call_api(code_prompt)
-            current_code = self.clean_code(current_code)
-            print(f"\nGenerated {solver_name} code:")
-            print("=" * 80)
-            print(current_code)
-            print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            if mp_lock is not None:
-                with mp_lock:
-                    is_valid, solver_output = execute_func(current_code)
-            else:
-                is_valid, solver_output = execute_func(current_code)
-            if not is_valid:
-                print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                if iteration < self.config.max_repairs - 1:
-                    # Generate fix
-                    fix_prompt = self.fix_syntax_errors(test_case, current_plan, current_code, syntax_errors)
-                    print("Attempting to fix syntax errors...")
-                    current_code = self._call_api(fix_prompt)
-                    current_code = self.clean_code(current_code)
-                    # print(f"\nFixed {solver_name} code:")
-                    # print("=" * 80)
-                    # print(current_code)
-                    # print("=" * 80)
-            else:
-                print(f"{solver_name} code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-        return {
-            "plan": current_plan,
-            "code": current_code,
-            "solver_output": solver_output,
-            "plan_feedback": plan_feedback,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
 
     def reason_code_diversity(self, 
                               test_case: dict,
@@ -841,18 +711,17 @@ class TwoStepReasoner(Reasoner):
             {"temperature": self.config.plan_temp}
             for _ in range(self.config.num_paths)
         ]
-        
-        all_plan_results = []
-        
         # Store original parameters
-        original_temp = self.api_client.temperature
-        
+        # original_temp = self.api_client.temperature
+
+        all_plan_results = []
         for plan_config_idx, plan_config in enumerate(plan_configs):
             print(f"Generating plan {plan_config_idx + 1}/{len(plan_configs)}...")
-            
             # Set generation parameters for plan generation
             self.api_client.temperature = plan_config["temperature"]
-            
+            # print api client name
+            print(f"Generating plan with API client name: {self.api_client}")
+
             # Generate plan
             plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
             current_plan_response = self._call_api(plan_prompt)
@@ -865,21 +734,18 @@ class TwoStepReasoner(Reasoner):
 
             # Enhanced code generation with batch generation
             code_configs = [
-                {"temperature": self.config.temperature},
+                {"temperature": self.config.code_temp},
             ]
             
             plan_code_results = []
-            total_codes_for_plan = len(code_configs)  # Now we generate 1 code per config
-            
-            # print(f"\nGenerating {total_codes_for_plan} codes for plan {plan_config_idx + 1}")
-            
             code_gen_idx = 1
             for code_config in code_configs:
-                # print(f"\nCode generation with config: {code_config}")
                 
                 # Set generation parameters for code generation
-                self.api_client.temperature = code_config["temperature"]
-                
+                self.code_api_client.temperature = code_config["temperature"]
+                # print api client name
+                print(f"Generating code with API client name: {self.code_api_client}")
+
                 code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
                 temp_code_response = self._call_api(code_prompt)
                 
@@ -890,7 +756,7 @@ class TwoStepReasoner(Reasoner):
                 # print(f"\nGenerated {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
                 # print("=" * 50)
                 # print(temp_code)
-                print("=" * 50)
+                # print("=" * 50)
                 
                 # Execute the code to check solver output
                 for iteration in range(self.config.max_repairs):
@@ -906,8 +772,10 @@ class TwoStepReasoner(Reasoner):
                     
                         if iteration < self.config.max_repairs - 1:
                             # Generate fix using single generation
-                            fix_prompt = self.fix_syntax_errors(test_case, current_plan, temp_code, temp_solver_output)
-                            print("Attempting to fix syntax errors...")
+                            fix_prompt = self.get_fix_syntax_error_prompt(test_case, current_plan, temp_code, temp_solver_output)
+                            # print("Attempting to fix syntax errors...")
+                            print(f"Syntax error fix with API client name: {self.code_api_client}")
+
                             fix_response = self._call_api(fix_prompt)
                             temp_code = fix_response  # API now always returns a single string
                             temp_code = self.clean_code(temp_code)
@@ -926,7 +794,7 @@ class TwoStepReasoner(Reasoner):
                     "code": temp_code,
                     "solver_output": temp_solver_output,
                     "is_valid": temp_solver_output is not None and is_valid,
-                    "generation_config": code_config.copy()
+                    "code generation_config": code_config.copy()
                 }
                 plan_code_results.append(code_result)
                 
@@ -943,7 +811,7 @@ class TwoStepReasoner(Reasoner):
             all_plan_results.append(plan_result)
         
         # Restore original parameters
-        self.api_client.temperature = original_temp
+        # self.api_client.temperature = original_temp
         
         return {
             "all_plan_results": all_plan_results
@@ -963,64 +831,7 @@ class TwoStepReasoner(Reasoner):
             return self.reason_code_diversity(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
-        
-    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # save the "plan" and "code" to the results_folder
-        plan_folder = os.path.join(self.results_folder, "plan")
-        code_folder = os.path.join(self.results_folder, "code")
-        if not os.path.exists(plan_folder):
-            os.makedirs(plan_folder)
-        if not os.path.exists(code_folder):
-            os.makedirs(code_folder)
-
-        # get the problem name from the id_string if it exists, otherwise use the id_string
-        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}.txt")
-        with open(plan_filepath, "w") as f:
-            f.write(reasoning_result["plan"])
-            
-        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
-        with open(code_filepath, "w") as f:
-            f.write(reasoning_result["code"])
-
-        # Display results
-        # print("\nSolver Output:")
-        # print("=" * 80)
-        # print(reasoning_result["solver_output"] if reasoning_result["solver_output"] else "[No reasoning extracted]")
-        # print("=" * 80)
-        
-        # Interpret results
-        if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
-
-        # Check if an answer was selected
-        if is_correct:
-            print(f"\nReasoning PASSED. Error type: {error_type}")
-        else:
-            print(f"\nReasoning FAILED. Error type: {error_type}")
-
-        # Record result
-        results = {
-            "problem": test_case,
-            "solver_output": reasoning_result["solver_output"],
-            # "reasoning_result": reasoning_result,
-            "error_type": error_type,
-            "success": is_correct,
-            "timing": case_time        }
-
-        # Save result
-        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
-        with open(summary_filepath, "w") as f:
-            json.dump(results, f, indent=2, ensure_ascii=False)
-        
-        
+                
     def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
@@ -1033,11 +844,11 @@ class TwoStepReasoner(Reasoner):
         # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         
-        # Process all plan results and collect solver outputs for majority voting
+        # Process all plan results and collect solver outputs for 
         all_plan_results = reasoning_result.get("all_plan_results", [])
         total_code_count = 0
         plan_summaries = []
-        all_solver_outputs = []  # Collect all valid solver outputs for majority voting
+        all_solver_outputs = []  # Collect all valid solver outputs for 
         
         for plan_result in all_plan_results:
             plan_idx = plan_result["plan_idx"]
@@ -1056,16 +867,16 @@ class TwoStepReasoner(Reasoner):
             
             for code_result in code_results:
                 code_idx = code_result["code_idx"]
-                generation_config = code_result.get("generation_config", {})
+                code_generation_config = code_result.get("code_generation_config", {})
                 
                 # Save each code with generation config info
                 code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-code{code_idx}.py")
                 with open(code_filepath, "w") as f:
                     f.write(f"# Plan Config: {plan_config}\n")
-                    f.write(f"# Generation Config: {generation_config}\n\n")
+                    f.write(f"# Generation Config: {code_generation_config}\n\n")
                     f.write(code_result["code"])
                 
-                # Collect solver outputs for majority voting (include all outputs, even failed ones)
+                # Collect solver outputs for  (include all outputs, even failed ones)
                 solver_output = code_result["solver_output"]
                 if solver_output is not None:
                     all_solver_outputs.append(solver_output)
@@ -1077,7 +888,7 @@ class TwoStepReasoner(Reasoner):
                     "code_idx": code_idx,
                     "solver_output": solver_output,
                     "is_valid": code_result["is_valid"],
-                    "generation_config": generation_config
+                    "code_generation_config": code_generation_config
                 }
                 plan_code_results.append(code_eval_result)
                 
@@ -1089,70 +900,19 @@ class TwoStepReasoner(Reasoner):
                 "total_codes": len(code_results),
                 "code_results": plan_code_results
             })
-        
-        # Perform majority voting on all valid solver outputs
-        if all_solver_outputs:
-            # Interpret results
-            if self.config.dataset.lower() == "ar-lsat":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["label"], 
-                test_case["answers"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == 'logicaldeduction':
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            else:
-                raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner AnswerExtractor.")
-
-            print(f"\n{'='*80}")
-            print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
-            print(f"Details: {vote_result}")
-            print(f"Total valid outputs used: {len(all_solver_outputs)}")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
-            print(f"{'='*80}")
             
-            # Record result with essential information only
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "all_solver_outputs": all_solver_outputs            }
-        else:
-            print(f"\n{'='*80}")
-            print(f"NO VALID SOLVER OUTPUTS FOUND")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"All codes failed to produce valid outputs")
-            print(f"{'='*80}")
-            
-            # Record result with no valid outputs
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "all_solver_outputs": []            }
+        results = {
+            "problem": test_case,
+            "timing": case_time,
+            "all_solver_outputs": all_solver_outputs}
 
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
-            json.dump(results, f, indent=2, ensure_ascii=False)
-        
+            json.dump(results, f, indent=2, ensure_ascii=False)        
 
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # Check if this is a diversity result or greedy result
-        if "all_plan_results" in reasoning_result:
-            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
-        else:
-            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
+        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
 
 
 class DirectReasoner(Reasoner):
@@ -1207,7 +967,7 @@ class DirectReasoner(Reasoner):
         
         return prompt
 
-    def fix_syntax_errors(self, test_case, code, syntax_error):
+    def get_fix_syntax_error_prompt(self, test_case, code, syntax_error):
         """Get the fix generation prompt with the given inputs."""
         # load the fix generation prompt
         base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
@@ -1252,63 +1012,6 @@ class DirectReasoner(Reasoner):
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner fix_syntax_errors.")
         
         return prompt
-    
-    def reason_code_greedy(self, 
-                           test_case: dict, 
-                           solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
-                           execute_func: Callable[[str], Tuple[bool, Any]],
-                           mp_lock: Optional[Any] = None) -> dict:
-        """Generate formal code directly in one step and execute it"""
-        current_code = None
-        solver_output = None
-        code_feedback = None
-
-        # Generate code directly
-        direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
-        current_code = self._call_api(direct_prompt)
-        current_code = self.clean_code(current_code)
-        # print(f"\nGenerated {solver_name} code:")
-        # print("=" * 80)
-        # print(current_code)
-        # print("=" * 80)
-
-        syntax_errors = []
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs}")
-            # Execute code
-            if mp_lock is not None:
-                with mp_lock:
-                    is_valid, solver_output = execute_func(current_code)
-            else:
-                is_valid, solver_output = execute_func(current_code)
-            if not is_valid:
-                print(f"\n{solver_name} code execution failed. Error type: {solver_output}")
-                syntax_errors.append(solver_output)
-            
-                if iteration < self.config.max_repairs - 1:
-                    # Generate fix
-                    fix_prompt = self.fix_syntax_errors(test_case, current_code, syntax_errors[-1])  # Use latest error
-                    print("Attempting to fix syntax errors...")
-                    current_code = self._call_api(fix_prompt)
-                    current_code = self.clean_code(current_code)
-                    # print(f"\nFixed {solver_name} code:")
-                    # print("=" * 80)
-                    # print(current_code)
-                    # print("=" * 80)
-            else:
-                print(f"{solver_name} code execution succeeded.")
-                break
-        
-        # reached max repairs
-        if iteration == self.config.max_repairs - 1:
-            print(f"\nReached max repairs ({self.config.max_repairs})")
-            
-        return {
-            "code": current_code,
-            "solver_output": solver_output,
-            "code_feedback": code_feedback,
-            "syntax_errors": syntax_errors
-        }
 
     def reason_code_diversity(self, 
                               test_case: dict,
@@ -1365,7 +1068,7 @@ class DirectReasoner(Reasoner):
                     
                     if iteration < self.config.max_repairs - 1:
                         # Generate fix
-                        fix_prompt = self.fix_syntax_errors(test_case, current_code, temp_solver_output)
+                        fix_prompt = self.get_fix_syntax_error_prompt(test_case, current_code, temp_solver_output)
                         print("Attempting to fix syntax errors...")
                         fix_response = self._call_api(fix_prompt)
                         current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
@@ -1412,50 +1115,7 @@ class DirectReasoner(Reasoner):
             return self.reason_code_diversity(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
-            
-    def _process_results_greedy(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # save the "code" to the results_folder
-        code_folder = os.path.join(self.results_folder, "code")
-        if not os.path.exists(code_folder):
-            os.makedirs(code_folder)
-
-        # get the problem name from the id_string if it exists, otherwise use the id_string
-        problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         
-        code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}.py")
-        with open(code_filepath, "w") as f:
-            f.write(reasoning_result["code"])
-
-        # Interpret results
-        if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_result["solver_output"], test_case["answer"], self.config.reasoning_method)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
-        
-        # Check if an answer was selected
-        if is_correct:
-            print(f"\nReasoning PASSED. Error type: {error_type}")
-        else:
-            print(f"\nReasoning FAILED. Error type: {error_type}")
-
-        # Record result
-        results = {
-            "problem": test_case,
-            "solver_output": reasoning_result["solver_output"],
-            "error_type": error_type,
-            "success": is_correct,
-            "timing": case_time        }
-
-        # Save result
-        summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
-        with open(summary_filepath, "w") as f:
-            json.dump(results, f, indent=2, ensure_ascii=False)
-        
-
     def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
         # save the "code" to the results_folder
         code_folder = os.path.join(self.results_folder, "code")
@@ -1465,11 +1125,11 @@ class DirectReasoner(Reasoner):
         # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         
-        # Process all code results and collect solver outputs for majority voting
+        # Process all code results and collect solver outputs for 
         all_code_results = reasoning_result.get("all_code_results", [])
         total_code_count = 0
         code_summaries = []
-        all_solver_outputs = []  # Collect all valid solver outputs for majority voting
+        all_solver_outputs = []  # Collect all valid solver outputs for 
         
         # Initialize first_is_correct as False (will be set to True if first code is correct)
         first_is_correct = False
@@ -1477,37 +1137,15 @@ class DirectReasoner(Reasoner):
         
         for code_result in all_code_results:
             code_idx = code_result["code_idx"]
-            generation_config = code_result.get("generation_config", {})
+            code_generation_config = code_result.get("code_generation_config", {})
             
             # Save each code with generation config info
             code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-code{code_idx}.py")
             with open(code_filepath, "w") as f:
-                f.write(f"# Generation Config: {generation_config}\n\n")
+                f.write(f"# Generation Config: {code_generation_config}\n\n")
                 f.write(code_result["code"])
             
-            # Check if this is the first code result and evaluate its correctness
-            if not first_code_found and code_result["is_valid"]:
-                solver_output = code_result["solver_output"]
-                if solver_output is not None:
-                    # Evaluate first code correctness for AR-LSAT
-                    if self.config.dataset.lower() == "ar-lsat":
-                        first_is_correct, _ = self.answer_extractor.extract_answer(
-                            solver_output, 
-                            test_case["label"], 
-                            test_case["answers"], 
-                            self.config.reasoning_method
-                        )
-                    elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                    elif self.config.dataset.lower() == 'logicaldeduction':
-                            first_is_correct, _ = self.answer_extractor.extract_answer(solver_output, test_case["answer"], self.config.reasoning_method)
-                    else:
-                        raise ValueError(f"Dataset {self.config.dataset} not configured for DirectStepReasoner AnswerExtractor.")
-                        
-                    first_code_found = True
-                    # print(f"First code correctness check: {'CORRECT' if first_is_correct else 'INCORRECT'} (Code {code_idx})")
-            
-            # Collect solver outputs for majority voting (include all outputs, even failed ones)
+            # Collect solver outputs for  (include all outputs, even failed ones)
             solver_output = code_result["solver_output"]
             if solver_output is not None:
                 all_solver_outputs.append(solver_output)
@@ -1518,76 +1156,28 @@ class DirectReasoner(Reasoner):
                 "code_idx": code_idx,
                 "solver_output": solver_output,
                 "is_valid": code_result["is_valid"],
-                "generation_config": generation_config
+                "code_generation_config": code_generation_config
             }
             code_summaries.append(code_eval_result)
             
-            # print(f"Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
-        
-        # Perform majority voting on all valid solver outputs
-        if all_solver_outputs:
-            # Interpret results
-            if self.config.dataset.lower() == "ar-lsat":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["label"], 
-                test_case["answers"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            elif self.config.dataset.lower() == 'logicaldeduction':
-                is_correct, vote_result = self.answer_extractor.extract_answer_with_majority_vote(
-                all_solver_outputs, 
-                test_case["answer"], 
-                self.config.reasoning_method
-            )
-            else:
-                raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner AnswerExtractor.")
-
-            print(f"\n{'='*80}")
-            print(f"MAJORITY VOTE RESULT: {'PASSED' if is_correct else 'FAILED'}")
-            print(f"Details: {vote_result}")
-            print(f"Total valid outputs used: {len(all_solver_outputs)}")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"Valid output rate: {len(all_solver_outputs)}/{total_code_count} = {len(all_solver_outputs)/total_code_count:.2%}")
-            print(f"{'='*80}")
-            
-            # Record result with essential information only
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "all_solver_outputs": all_solver_outputs            }
-        else:
-            print(f"\n{'='*80}")
-            print(f"NO VALID SOLVER OUTPUTS FOUND")
-            print(f"Total codes generated: {total_code_count}")
-            print(f"All codes failed to produce valid outputs")
-            print(f"{'='*80}")
-            
-            # Record result with no valid outputs
-            results = {
-                "problem": test_case,
-                "timing": case_time,
-                "all_solver_outputs": []            }
-
+        # Record result with essential information only
+        results = {
+            "problem": test_case,
+            "timing": case_time,
+            "all_solver_outputs": all_solver_outputs            }
         # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
         
-
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # Check if this is a diversity result or greedy result
-        if "all_code_results" in reasoning_result:
-            return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
-        else:
-            return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
-
+        # # Check if this is a diversity result or greedy result
+        # if "all_code_results" in reasoning_result:
+        #     return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
+        # else:
+        #     return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
+        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
+    
 class CoTReasoner(Reasoner):
     """Chain-of-Thought reasoning approach"""
 
