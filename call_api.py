@@ -175,9 +175,9 @@ class AzureOpenAIClient(APIClient):
     """Client for Azure OpenAI API with Entra ID authentication"""
     def __init__(self, config: APIConfig, endpoint: str = None, deployment: str = None, managed_identity_client_id: str = None):
         super().__init__(config)
-        self.endpoint = endpoint or os.getenv("ENDPOINT_URL", "https://ai4mtest1.openai.azure.com/")
-        self.deployment = deployment or os.getenv("DEPLOYMENT_NAME", self.config.model_name)
-        self.managed_identity_client_id = managed_identity_client_id or os.getenv("MANAGED_IDENTITY_CLIENT_ID")
+        self.endpoint = endpoint
+        self.deployment = deployment
+        self.managed_identity_client_id = managed_identity_client_id
         
         # Initialize Azure OpenAI client with Entra ID authentication
         if self.managed_identity_client_id:

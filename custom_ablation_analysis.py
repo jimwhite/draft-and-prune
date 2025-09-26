@@ -113,11 +113,15 @@ Basic Commands:
     # Run pruning ablation study
     python custom_ablation_analysis.py <results_directory> --pruning-ablation
     
+    # Use CoT backup for failed extractions
+    python custom_ablation_analysis.py <results_directory> --cot_backup <cot_summary_file>
+    
 Examples:
     python custom_ablation_analysis.py results/experiment_folder/
     python custom_ablation_analysis.py results/experiment_folder/ --all-methods
     python custom_ablation_analysis.py results/experiment_folder/ --path-ablation --expected-paths 5
     python custom_ablation_analysis.py results/experiment_folder/ --pruning-ablation
+    python custom_ablation_analysis.py results/experiment_folder/ --cot_backup results/cot_experiment/summary.txt
 
 === MODEL EXTRACTION ===
 If sketch-gen model and code-gen model are not found in config.yaml, the script automatically
@@ -148,6 +152,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
+def load_cot_backup_results(cot_summary_file):
+    """Load CoT backup results from summary file."""
+    if not cot_summary_file or not os.path.exists(cot_summary_file):
+        print(f"Warning: CoT backup file not found: {cot_summary_file}")
+        return None
+    
+    try:
+        with open(cot_summary_file, 'r') as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                cot_backup_results = {item['problem']['id']: item for item in data}
+                print(f"Loaded {len(cot_backup_results)} CoT backup results from {cot_summary_file}")
+                return cot_backup_results
+            else:
+                print(f"Warning: Unexpected CoT backup file format")
+                return None
+    except Exception as e:
+        print(f"Error loading CoT backup results: {e}")
+        return None
+
+def CoT_correct(problem_id, cot_backup_results):
+    """Check if CoT backup gives the correct answer for a given problem ID."""
+    if not cot_backup_results:
+        return False
+    
+    if problem_id not in cot_backup_results:
+        return False
+    
+    cot_item = cot_backup_results[problem_id]
+    
+    # Check if the CoT reasoning was successful
+    if not cot_item.get('success', False):
+        return False
+
+    return False
+
 def load_results(results_file):
     """Load results from JSON or TXT file containing JSON."""
     try:
@@ -163,6 +204,23 @@ def load_results(results_file):
         print(f"Error loading results file: {e}")
         return []
 
+def _flatten(nested_list):
+    """Flatten arbitrarily nested lists into a flat list (non-list elements)."""
+    for item in nested_list:
+        if isinstance(item, list):
+            yield from _flatten(item)
+        else:
+            yield item
+
+def preprocess_solver_output(output_str):
+    """Preprocess solver output string to extract list of answers based on dataset format."""
+    if isinstance(output_str, str) and "error" in output_str.lower():
+            return 'syntax error'
+    if isinstance(output_str, str):
+        return output_str.strip()
+    else:
+        return []
+    
 def parse_solver_output(output_str, dataset=None):
     """Parse solver output string to extract list of answers based on dataset format."""
     try:
@@ -177,8 +235,6 @@ def parse_solver_output(output_str, dataset=None):
                 output_clean = output_str.strip()
                 if output_clean in ['True', 'False', 'Unknown']:
                     return [output_clean]
-                elif output_clean == 'multiple answers':
-                    return ['multiple answers']
                 else:
                     return []
             return []
@@ -196,13 +252,11 @@ def parse_solver_output(output_str, dataset=None):
                     unique_lines = list(set(lines))
                     if len(unique_lines) == 1 and unique_lines[0] in valid_letters:
                         return [unique_lines[0]]
-                    elif len(unique_lines) > 1:
-                        return ['multiple answers']
                     else:
                         return []
             return []
         
-        else:
+        elif dataset and dataset.lower() == 'ar-lsat':
             # AR-LSAT format: Handle string representations of lists like "[2]", "[]", etc.
             if isinstance(output_str, str):
                 # Try to parse as Python literal
@@ -215,27 +269,11 @@ def parse_solver_output(output_str, dataset=None):
                 return output_str
             else:
                 return []
+        else:
+            raise NotImplementedError(f"Invalid dataset: {dataset}")
     except:
-        # Fallback parsing
-        if dataset and dataset.lower() == 'logicaldeduction':
-            # Try to extract letters
-            letters = re.findall(r'\b[A-G]\b', str(output_str))
-            return letters if letters else []
-        else:
-            # Try to extract numbers for AR-LSAT
-            try:
-                numbers = re.findall(r'\d+', str(output_str))
-                return [int(n) for n in numbers]
-            except:
-                return []
+        return []
 
-def _flatten(nested_list):
-    """Flatten arbitrarily nested lists into a flat list (non-list elements)."""
-    for item in nested_list:
-        if isinstance(item, list):
-            yield from _flatten(item)
-        else:
-            yield item
 
 def load_config(config_file):
     """Load configuration from YAML file."""
@@ -401,8 +439,8 @@ def create_comprehensive_csv(results_dir, summary_file, config_file, dataset, *r
             'Avg #paths before pruning': result['avg_paths_before'],
             'Avg #paths after pruning': result['avg_paths_after'],
             'tied voting rate': result.get('tied_voting_rate', 0),
-            '#samples with auto-formalization failure': result['failed_extractions'],
-            'backup method': 'none',
+            '#samples with auto-formalization failure': result['failed_extractions'], # syntax error or syntax error after pruning criteria
+            'backup method': 'CoT' if result.get('used_cot_backup', False) else 'none',
             'overall accuracy': result['accuracy'],
             'accuracy by path (successfully auto-formalized only, discard those with syntax errors)': result['accuracy_by_path']
         }
@@ -443,6 +481,7 @@ def calculate_path_level_metrics(all_solver_outputs, true_label, dataset=None):
     syntactic_correct_paths = 0
     
     for output_str in all_solver_outputs:
+        # import pdb; pdb.set_trace()
         parsed_output = parse_solver_output(output_str, dataset)
         if parsed_output != 'syntax error':
             syntactic_correct_paths += 1
@@ -467,11 +506,37 @@ def calculate_path_level_metrics(all_solver_outputs, true_label, dataset=None):
     
     return correct_paths, syntactic_correct_paths
 
+def apply_existence_pruning(all_solver_outputs, dataset=None):
+    """Apply existence pruning: keep only outputs with length >= 1 (can be satisfied)."""
+    filtered_outputs = []
+    for output_str in all_solver_outputs:
+        parsed_output = parse_solver_output(output_str, dataset)
+        if parsed_output != 'syntax error':
+            flat_output = parsed_output
+            if len(flat_output) >= 1:  # Can be satisfied (has at least one solution)
+                filtered_outputs.append(output_str)
+    return filtered_outputs
+
+def apply_uniqueness_pruning(all_solver_outputs, dataset=None):
+    """Apply uniqueness pruning: keep only outputs with length <= 1 (unique solution)."""
+    filtered_outputs = []
+    for output_str in all_solver_outputs:
+        parsed_output = parse_solver_output(output_str, dataset)
+        if parsed_output != 'syntax error':
+            flat_output = parsed_output
+            if len(flat_output) <= 1:  # Unique solution
+                filtered_outputs.append(output_str)
+    return filtered_outputs
+
 def extract_answer_majority_vote(all_solver_outputs, dataset=None):
     """Extract answer using majority vote across all outputs."""
-    if not all_solver_outputs:
-        return None, False  # predicted_answer, has_tied_voting
+    if not all_solver_outputs: # if all_solver_outputs is empty, return [] as predicted_answer
+        return [], False  
+    # import pdb; pdb.set_trace()
+    # use parse_solver_output to preprocess the output
+    all_solver_outputs = [preprocess_solver_output(output) for output in all_solver_outputs]
     
+    # import pdb; pdb.set_trace()
     # Count frequency of each complete output string
     output_counts = Counter(all_solver_outputs)
     
@@ -484,114 +549,88 @@ def extract_answer_majority_vote(all_solver_outputs, dataset=None):
         if tied_count > 1:
             has_tied_voting = True
     
+    # Parse the most frequent output to get the answer list
     most_frequent_output = output_counts.most_common(1)[0][0]
     
-    # Parse the most frequent output to get the answer list
-    parsed_output = parse_solver_output(most_frequent_output, dataset)
-    flat_output = list(_flatten(parsed_output))
-    
-    # Extract the answer from the majority vote result
-    if len(flat_output) == 0 or parsed_output == 'syntax error':
+    # Extract the answer from the majority vote result, None if syntax error
+    if most_frequent_output == 'syntax error': # syntax error, return None to do cot as backup
         return None, has_tied_voting
     
-    # Return the appropriate answer format based on dataset
-    if dataset and dataset.lower() in ['proofwriter', 'folio', 'prontoqa', 'logicaldeduction']:
-        return flat_output[0], has_tied_voting  # String format
-    else:
-        # AR-LSAT numeric format
-        try:
-            predicted_answer = int(flat_output[0])
-            return predicted_answer, has_tied_voting
-        except (ValueError, TypeError):
-            if isinstance(flat_output[0], int):
-                return flat_output[0], has_tied_voting
-            else:
-                return None, has_tied_voting
-
-def apply_existence_pruning(all_solver_outputs, dataset=None):
-    """Apply existence pruning: keep only outputs with length >= 1 (can be satisfied)."""
-    filtered_outputs = []
-    for output_str in all_solver_outputs:
-        parsed_output = parse_solver_output(output_str, dataset)
-        if parsed_output != 'syntax error':
-            flat_output = list(_flatten(parsed_output))
-            if len(flat_output) >= 1:  # Can be satisfied (has at least one solution)
-                filtered_outputs.append(output_str)
-    return filtered_outputs
-
-def apply_uniqueness_pruning(all_solver_outputs, dataset=None):
-    """Apply uniqueness pruning: keep only outputs with length <= 1 (unique solution)."""
-    filtered_outputs = []
-    for output_str in all_solver_outputs:
-        parsed_output = parse_solver_output(output_str, dataset)
-        if parsed_output != 'syntax error':
-            flat_output = list(_flatten(parsed_output))
-            if len(flat_output) <= 1:  # Unique solution
-                filtered_outputs.append(output_str)
-    return filtered_outputs
+    return most_frequent_output, has_tied_voting # A list: could be [], [A, B, C], [1, 2, 3], ['True', 'False', 'Unknown']
 
 def extract_answer_existence_pruning_majority_vote(all_solver_outputs, dataset=None):
     """Extract answer using existence pruning then majority vote."""
     filtered_outputs = apply_existence_pruning(all_solver_outputs, dataset)
-    if not filtered_outputs:
+    if not filtered_outputs: # if filtered_outputs is empty, it means no outputs pass the existence pruning criteria, return None to do cot as backup
         return None, False
     return extract_answer_majority_vote(filtered_outputs, dataset)
 
 def extract_answer_uniqueness_pruning_majority_vote(all_solver_outputs, dataset=None):
     """Extract answer using uniqueness pruning then majority vote."""
     filtered_outputs = apply_uniqueness_pruning(all_solver_outputs, dataset)
-    if not filtered_outputs:
+    if not filtered_outputs: # if filtered_outputs is empty, it means no outputs pass the uniqueness pruning criteria, return None to do cot as backup
         return None, False
     return extract_answer_majority_vote(filtered_outputs, dataset)
 
-
-def extract_answer_first_list(all_solver_outputs, dataset=None):
-    """Extract answer from first output that meets pruning criteria."""
-    if not all_solver_outputs:
+def extract_answer_from_first_path_and_return_with_pruning(all_solver_outputs, dataset=None):
+    """Extract answer list from first path and do pruning criteria. If the list is a valid single answer, return it. Otherwise, return None.
+    Pruning also includes the prior knowledge from the problem, like the output should be in a certain format.
+    """
+    if not all_solver_outputs: # if all_solver_outputs is empty, pruning criteria not met, return None to do cot as backup
         return None
     
     first_output = all_solver_outputs[0]
     parsed_output = parse_solver_output(first_output, dataset)
     
-    if parsed_output != 'syntax error':
-        flat_output = list(_flatten(parsed_output))
+    if parsed_output == 'syntax error': # syntax error, return None to do cot as backup
+        return None
+    else:
+        flat_output = parsed_output
         
         # Check pruning criteria based on dataset
         if len(flat_output) == 1:
+            # A list with one element like [A] or [1] or ['True']
             if dataset and dataset.lower() == 'ar-lsat':
                 # AR-LSAT: value 0-4
                 try:
-                    value = int(flat_output[0])
-                    if 0 <= value <= 4:
-                        return value
+                    if 0 <= int(flat_output[0]) <= 4:
+                        return flat_output
                 except (ValueError, TypeError):
                     pass
             elif dataset and dataset.lower() in ['proofwriter', 'folio']:
                 # ProofWriter/FOLIO: True, False, Unknown
                 if flat_output[0] in ['True', 'False', 'Unknown']:
-                    return flat_output[0]
+                    return flat_output
             elif dataset and dataset.lower() == 'prontoqa':
                 # ProntoQA: True, False only
                 if flat_output[0] in ['True', 'False']:
-                    return flat_output[0]
+                    return flat_output
             elif dataset and dataset.lower() == 'logicaldeduction':
                 # LogicalDeduction: A-G
                 if flat_output[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
-                    return flat_output[0]
+                    return flat_output 
             else:
-                # Default AR-LSAT behavior for backward compatibility
-                try:
-                    value = int(flat_output[0])
-                    if 0 <= value <= 4:
-                        return value
-                except (ValueError, TypeError):
-                    pass
+                raise NotImplementedError(f"Invalid dataset: {dataset}")
+        else:
+            return None # pruning criteria not met, return None to do cot as backup
     
-    return None
 
-def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
+def extract_answer_from_first_path_and_return_without_pruning(all_solver_outputs, dataset=None):
+    """Extract answer list from first path and return without pruning criteria."""
+    if not all_solver_outputs: # if all_solver_outputs is empty, return [] as predicted_answer as there is no pruning criteria
+        return []
+    
+    first_output = all_solver_outputs[0]
+    parsed_output = parse_solver_output(first_output, dataset)
+
+    if parsed_output == 'syntax error': # syntax error, return None to do cot as backup
+        return None
+    
+    return parsed_output # A list: could be [], [A, B, C], [1, 2, 3], ['True', 'False', 'Unknown']
+
+def extract_answer_with_pruning_and_majority_vote(all_solver_outputs, dataset=None):
     """Extract answer using pruning criteria first, then majority vote on filtered outputs."""
-    if not all_solver_outputs:
+    if not all_solver_outputs: # if all_solver_outputs is empty, return None to do cot as backup
         return None, False  # predicted_answer, has_tied_voting
     
     # Step 1: Apply pruning criteria to filter valid outputs
@@ -600,10 +639,11 @@ def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
         parsed_output = parse_solver_output(output_str, dataset)
         
         if parsed_output != 'syntax error':
-            flat_output = list(_flatten(parsed_output))
+            flat_output = parsed_output
             
             # Check pruning criteria based on dataset
             if len(flat_output) == 1:
+                # A list with one element like [A] or [1] or ['True']
                 is_valid = False
                 if dataset and dataset.lower() == 'ar-lsat':
                     # AR-LSAT: value 0-4
@@ -626,17 +666,12 @@ def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
                     if flat_output[0] in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
                         is_valid = True
                 else:
-                    # Default AR-LSAT behavior for backward compatibility
-                    try:
-                        value = int(flat_output[0])
-                        if 0 <= value <= 4:
-                            is_valid = True
-                    except (ValueError, TypeError):
-                        continue
+                    raise NotImplementedError(f"Invalid dataset: {dataset}")
                 
                 if is_valid:
                     filtered_outputs.append(output_str)
     
+    # filtered_outputs only contains strings or lists with one element
     # Step 2: If no outputs pass pruning criteria, return None
     if not filtered_outputs:
         return None, False
@@ -655,28 +690,12 @@ def extract_answer_pruning_majority_vote(all_solver_outputs, dataset=None):
     
     most_frequent_output = output_counts.most_common(1)[0][0]
     
-    # Parse the most frequent filtered output to get the answer
+    # Parse the most frequent filtered output to get the answer, must be a list with one element
     parsed_output = parse_solver_output(most_frequent_output, dataset)
-    flat_output = list(_flatten(parsed_output))
     
-    if len(flat_output) == 0 or parsed_output == 'syntax error':
-        return None, has_tied_voting
-    
-    # Return the appropriate answer format based on dataset
-    if dataset and dataset.lower() in ['proofwriter', 'folio', 'prontoqa', 'logicaldeduction']:
-        return flat_output[0], has_tied_voting  # String format
-    else:
-        # AR-LSAT numeric format
-        try:
-            predicted_answer = int(flat_output[0])
-            return predicted_answer, has_tied_voting
-        except (ValueError, TypeError):
-            if isinstance(flat_output[0], int):
-                return flat_output[0], has_tied_voting
-            else:
-                return None, has_tied_voting
+    return parsed_output, has_tied_voting 
 
-def calculate_accuracy_generic(results, method_name, extraction_func, dataset=None, expected_paths_per_sample=30):
+def calculate_accuracy_generic(results, method_name, extraction_func, dataset=None, expected_paths_per_sample=30, cot_backup_results=None):
     """Generic function to calculate accuracy for any extraction method."""
     correct = 0
     total = 0
@@ -687,6 +706,7 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
     correct_paths = 0
     syntactic_correct_paths = 0
     tied_voting_samples = 0
+    used_cot_backup = bool(cot_backup_results)
     details = []
     
     # For path ablation methods, determine the actual number of paths used
@@ -709,9 +729,8 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
             
         all_solver_outputs = item.get('all_solver_outputs', [])
         
-        # For path ablation methods, limit to only the first n paths
-        if method_name.startswith('path_ablation_') and method_name.endswith('_paths'):
-            all_solver_outputs = all_solver_outputs[:paths_used_per_sample]
+        # Limit to only the first n paths for all methods based on expected_paths_per_sample
+        all_solver_outputs = all_solver_outputs[:paths_used_per_sample]
         
         total += 1
         
@@ -733,20 +752,26 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
         syntactic_correct_paths += item_syntactic_correct_paths
         
         # Extract answer using the provided extraction function (all functions now take dataset parameter)
+        # None: syntax error
+        # A list with one element: could be [], [A, B, C], [1, 2, 3], ['True', 'False', 'Unknown']
         extraction_result = extraction_func(all_solver_outputs, dataset)
         
         # Determine method characteristics
         multipath_methods = ['sketchformal', 'direct_translation_multipath_pruning', 'sketchformal_majority_vote', 'direct_translation_multipath',
                             'existence_pruning_majority_vote', 'uniqueness_pruning_majority_vote']
-        pruning_methods = ['sketchformal', 'direct_translation_multipath_pruning', 'sketchformal_pruning_only', 'direct_translation_pruning',
-                          'existence_pruning_majority_vote', 'uniqueness_pruning_majority_vote']
+        # Semantic pruning methods: require exactly 1 valid answer (length == 1)
+        semantic_pruning_methods = ['sketchformal', 'direct_translation_multipath_pruning', 'sketchformal_pruning_only', 'direct_translation_pruning']
+        # Special pruning methods: use their own pruning criteria
+        existence_pruning_methods = ['existence_pruning_majority_vote']
+        uniqueness_pruning_methods = ['uniqueness_pruning_majority_vote']
         
-        # Add path ablation methods to multipath_methods (they use majority voting)
+        # Add path ablation methods to multipath_methods (they use majority voting and semantic pruning)
         if method_name.startswith('path_ablation_') and method_name.endswith('_paths'):
             multipath_methods.append(method_name)
-            pruning_methods.append(method_name)  # Path ablation methods also use pruning
+            semantic_pruning_methods.append(method_name)  # Path ablation methods also use semantic pruning
         
         # Handle different return types from extraction functions
+        # predicted_answer: None: syntax error, A list with one element: could be [], [A, B, C], [1, 2, 3], ['True', 'False', 'Unknown']
         if method_name in multipath_methods:  # Methods using majority vote
             predicted_answer, has_tied_voting = extraction_result
             if has_tied_voting:
@@ -756,19 +781,18 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
             has_tied_voting = False
         
         # Calculate paths after pruning based on method type
-        if method_name in pruning_methods:
-            # Pruning methods: count valid outputs that pass pruning criteria
+        if method_name in semantic_pruning_methods:
+            # Semantic pruning methods: count valid outputs that pass semantic pruning criteria (length == 1)
             pruned_count = 0
             for output_str in all_solver_outputs:
                 parsed_output = parse_solver_output(output_str, dataset)
                 if parsed_output != 'syntax error':
-                    flat_output = list(_flatten(parsed_output))
+                    flat_output = parsed_output
                     if len(flat_output) == 1:
                         is_valid = False
                         if dataset and dataset.lower() == 'ar-lsat':
                             try:
-                                value = int(flat_output[0])
-                                if 0 <= value <= 4:
+                                if 0 <= int(flat_output[0]) <= 4:
                                     is_valid = True
                             except (ValueError, TypeError):
                                 continue
@@ -783,50 +807,73 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
                                 is_valid = True
                         else:
                             # Default AR-LSAT behavior
-                            try:
-                                value = int(flat_output[0])
-                                if 0 <= value <= 4:
-                                    is_valid = True
-                            except (ValueError, TypeError):
-                                continue
+                            raise NotImplementedError(f"Invalid dataset: {dataset}")
                         
                         if is_valid:
                             pruned_count += 1
-            if method_name in multipath_methods:
-                paths_after_pruning = pruned_count
-            else:
-                paths_after_pruning = 1 if predicted_answer is not None else 0
+            paths_after_pruning = pruned_count
+        elif method_name in existence_pruning_methods:
+            # Existence pruning methods: count outputs with length >= 1
+            pruned_count = 0
+            for output_str in all_solver_outputs:
+                parsed_output = parse_solver_output(output_str, dataset)
+                if parsed_output != 'syntax error':
+                    flat_output = list(_flatten(parsed_output))
+                    if len(flat_output) >= 1:  # Existence pruning: can be satisfied
+                        pruned_count += 1
+            paths_after_pruning = pruned_count
+        elif method_name in uniqueness_pruning_methods:
+            # Uniqueness pruning methods: count outputs with length <= 1
+            pruned_count = 0
+            for output_str in all_solver_outputs:
+                parsed_output = parse_solver_output(output_str, dataset)
+                if parsed_output != 'syntax error':
+                    flat_output = list(_flatten(parsed_output))
+                    if len(flat_output) <= 1:  # Uniqueness pruning: unique solution
+                        pruned_count += 1
+            paths_after_pruning = pruned_count
         else:
-            # No pruning methods: use all paths or single path
+            # No pruning methods: use all available paths (no filtering applied)
             if method_name in multipath_methods:
                 paths_after_pruning = len(all_solver_outputs)
             else:
-                paths_after_pruning = 1 if predicted_answer is not None else 0
+                # Single-path methods with no pruning: count actual input paths, not extraction success
+                paths_after_pruning = len(all_solver_outputs)
         
         total_paths_after += paths_after_pruning
-        
-        if predicted_answer is None:
-            failed_extractions += 1
-        
-        # Handle different answer format comparisons
+
         is_correct = False
-        if predicted_answer is not None:
-            if dataset and dataset.lower() == 'ar-lsat':
-                # AR-LSAT: numeric comparison
-                try:
-                    pred_int = int(predicted_answer)
-                    true_int = int(true_label)
-                    is_correct = pred_int == true_int
-                except (ValueError, TypeError):
-                    is_correct = False
-            elif dataset and dataset.lower() in ['proofwriter', 'prontoqa']:
-                is_correct = (predicted_answer == "True" and true_label == "A") or \
-                             (predicted_answer == "False" and true_label == "B") or \
-                             (predicted_answer == "Unknown" and true_label == "C")
+
+        if predicted_answer is None: # syntax error or pruning criteria not met
+            failed_extractions += 1
+            if cot_backup_results:
+                is_correct = CoT_correct(item['problem']['id_string'], cot_backup_results)
+        else:
+            if not predicted_answer:
+                is_correct = False
             else:
-                # Other datasets: string comparison
-                is_correct = str(predicted_answer) == str(true_label)
-        
+                if dataset and dataset.lower() == 'ar-lsat':
+                    # AR-LSAT: numeric comparison
+                    try:
+                        pred_int = int(predicted_answer[0])
+                        true_int = int(true_label)
+                        is_correct = pred_int == true_int
+                    except (ValueError, TypeError):
+                        is_correct = False
+                elif dataset and dataset.lower() in ['proofwriter', 'folio']:
+                    is_correct = (predicted_answer[0] == "True" and true_label == "A") or \
+                                (predicted_answer[0] == "False" and true_label == "B") or \
+                                (predicted_answer[0] == "Unknown" and true_label == "C")
+                elif dataset and dataset.lower() == 'prontoqa':
+                    is_correct = (predicted_answer[0] == "True" and true_label == "A") or \
+                                (predicted_answer[0] == "False" and true_label == "B")
+                elif dataset and dataset.lower() == 'logicaldeduction':
+                    # compare with letter
+                    is_correct = predicted_answer[0] == true_label
+                else:
+                    raise NotImplementedError(f"Invalid dataset: {dataset}")
+
+
         if is_correct:
             correct += 1
             
@@ -864,40 +911,53 @@ def calculate_accuracy_generic(results, method_name, extraction_func, dataset=No
         'accuracy_by_path': accuracy_by_path,
         'tied_voting_samples': tied_voting_samples,
         'tied_voting_rate': tied_voting_rate,
+        'used_cot_backup': used_cot_backup,
         'details': details
     }
 
-def calculate_accuracy_sketchformal(results, dataset=None, expected_paths_per_sample=5):
+### VVV, VXV, VVX, XVV
+def calculate_accuracy_sketchformal(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """SketchFormal (VVV): Sketch Plans + Multi-path + Semantic Pruning."""
-    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_pruning_majority_vote, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'sketchformal', extract_answer_with_pruning_and_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_direct_translation_multipath_pruning(results, dataset=None, expected_paths_per_sample=5):
-    """Direct translation with multi-path and pruning (XVV): No sketch + Multi-path + Semantic Pruning."""
-    return calculate_accuracy_generic(results, 'direct_translation_multipath_pruning', extract_answer_pruning_majority_vote, dataset, expected_paths_per_sample)
-
-def calculate_accuracy_sketchformal_pruning_only(results, dataset=None, expected_paths_per_sample=5):
+def calculate_accuracy_sketchformal_pruning_only(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """SketchFormal with semantic pruning only (VXV): Sketch Plans + Single path + Semantic Pruning."""
-    return calculate_accuracy_generic(results, 'sketchformal_pruning_only', extract_answer_first_list, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'sketchformal_pruning_only', extract_answer_from_first_path_and_return_with_pruning, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_sketchformal_majority_vote(results, dataset=None, expected_paths_per_sample=5):
+def calculate_accuracy_sketchformal_majority_vote(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """SketchFormal with majority vote (VVX): Sketch Plans + Multi-path + No pruning."""
-    return calculate_accuracy_generic(results, 'sketchformal_majority_vote', extract_answer_majority_vote, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'sketchformal_majority_vote', extract_answer_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_direct_translation(results, dataset=None, expected_paths_per_sample=5):
-    """Direct translation (XXX): No sketch + Single path + No pruning."""
-    return calculate_accuracy_generic(results, 'direct_translation', extract_answer_first_list, dataset, expected_paths_per_sample)
+def calculate_accuracy_direct_translation_multipath_pruning(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
+    """Direct translation with multi-path and pruning (XVV): No sketch + Multi-path + Semantic Pruning."""
+    return calculate_accuracy_generic(results, 'direct_translation_multipath_pruning', extract_answer_with_pruning_and_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_sketch_only(results, dataset=None, expected_paths_per_sample=5):
+### XXx
+def calculate_accuracy_direct_translation(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
+    """Direct translation with single path(XXX): No sketch + Single path + No pruning."""
+    return calculate_accuracy_generic(results, 'direct_translation', extract_answer_from_first_path_and_return_without_pruning, dataset, expected_paths_per_sample, cot_backup_results)
+
+### VXX, XVX, XXV
+def calculate_accuracy_sketch_only(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """Sketch-only (VXX): Sketch Plans + Single path + No pruning."""
-    return calculate_accuracy_generic(results, 'sketch_only', extract_answer_first_list, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'sketch_only', extract_answer_from_first_path_and_return_without_pruning, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_direct_translation_multipath(results, dataset=None, expected_paths_per_sample=5):
+def calculate_accuracy_direct_translation_multipath(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """Direct translation with multi-path (XVX): No sketch + Multi-path + No pruning."""
-    return calculate_accuracy_generic(results, 'direct_translation_multipath', extract_answer_majority_vote, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'direct_translation_multipath', extract_answer_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
 
-def calculate_accuracy_direct_translation_pruning(results, dataset=None, expected_paths_per_sample=5):
+def calculate_accuracy_direct_translation_pruning(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """Direct translation with pruning (XXV): No sketch + Single path + Semantic Pruning."""
-    return calculate_accuracy_generic(results, 'direct_translation_pruning', extract_answer_first_list, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, 'direct_translation_pruning', extract_answer_from_first_path_and_return_with_pruning, dataset, expected_paths_per_sample, cot_backup_results)
+
+# Pruning ablation study methods
+def calculate_accuracy_existence_pruning_majority_vote(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
+    """Existence pruning + majority vote: Keep outputs with length >= 1."""
+    return calculate_accuracy_generic(results, 'existence_pruning_majority_vote', extract_answer_existence_pruning_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
+
+def calculate_accuracy_uniqueness_pruning_majority_vote(results, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
+    """Uniqueness pruning + majority vote: Keep outputs with length <= 1."""
+    return calculate_accuracy_generic(results, 'uniqueness_pruning_majority_vote', extract_answer_uniqueness_pruning_majority_vote, dataset, expected_paths_per_sample, cot_backup_results)
 
 # Voter Sensitivity Analysis Functions
 def parse_solver_output_for_voting(output_str: str, dataset=None):
@@ -989,15 +1049,6 @@ def simulate_voting_with_n_voters(all_outputs, n_voters: int, num_simulations: i
     
     return results
 
-# Pruning ablation study methods
-def calculate_accuracy_existence_pruning_majority_vote(results, dataset=None, expected_paths_per_sample=5):
-    """Existence pruning + majority vote: Keep outputs with length >= 1."""
-    return calculate_accuracy_generic(results, 'existence_pruning_majority_vote', extract_answer_existence_pruning_majority_vote, dataset, expected_paths_per_sample)
-
-def calculate_accuracy_uniqueness_pruning_majority_vote(results, dataset=None, expected_paths_per_sample=5):
-    """Uniqueness pruning + majority vote: Keep outputs with length <= 1."""
-    return calculate_accuracy_generic(results, 'uniqueness_pruning_majority_vote', extract_answer_uniqueness_pruning_majority_vote, dataset, expected_paths_per_sample)
-
 # Path ablation study methods (same as voter sensitivity but integrated into main analysis)
 def extract_answer_path_ablation_majority_vote(all_solver_outputs, dataset=None, num_paths=5):
     """Extract answer using majority vote with a specific number of paths (same as voter sensitivity)."""
@@ -1006,15 +1057,15 @@ def extract_answer_path_ablation_majority_vote(all_solver_outputs, dataset=None,
     
     # Since all_solver_outputs has already been sliced to the first num_paths in calculate_accuracy_generic,
     # we just need to apply majority vote to all available outputs
-    return extract_answer_pruning_majority_vote(all_solver_outputs, dataset)
+    return extract_answer_with_pruning_and_majority_vote(all_solver_outputs, dataset)
 
-def calculate_accuracy_path_ablation(results, num_paths, dataset=None, expected_paths_per_sample=5):
+def calculate_accuracy_path_ablation(results, num_paths, dataset=None, expected_paths_per_sample=5, cot_backup_results=None):
     """Calculate accuracy using a specific number of paths with majority vote."""
     def extraction_func(all_solver_outputs, dataset_param=None):
         return extract_answer_path_ablation_majority_vote(all_solver_outputs, dataset_param, num_paths)
     
     method_name = f'path_ablation_{num_paths}_paths'
-    return calculate_accuracy_generic(results, method_name, extraction_func, dataset, expected_paths_per_sample)
+    return calculate_accuracy_generic(results, method_name, extraction_func, dataset, expected_paths_per_sample, cot_backup_results)
 
 
 def generate_path_counts_from_config(num_paths):
@@ -1135,6 +1186,9 @@ Examples:
                        default=[1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,30],
                        help='List of path counts to analyze for path ablation (default: auto-generate from config num_paths - e.g., for 5 paths: 1,3,5; for 30 paths: 1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,30)')
     
+    parser.add_argument('--cot_backup', type=str, default=None,
+                       help='Path to CoT result summary file to use as backup when syntax error or pruning criteria not met')
+    
     args = parser.parse_args()
     
     results_dir = args.results_directory
@@ -1156,18 +1210,16 @@ Examples:
     # Determine which methods to run based on experiment type
     if args.pruning_ablation:
         # Pruning ablation study: compare different pruning strategies
-        methods_to_run = ['sketchformal_majority_vote', 'existence_pruning_majority_vote', 
+        methods_to_run = ['existence_pruning_majority_vote', 
                          'uniqueness_pruning_majority_vote', 'sketchformal']
     elif args.all_methods:
         # Check if this is a two-step or one-step experiment
         if config_info['has_sketch']:
-            # Two-step: VVV, VXX, VXV, VVX + 2 semantic pruning ablations
-            methods_to_run = ['sketchformal', 'sketch_only', 'sketchformal_pruning_only', 'sketchformal_majority_vote',
-                             'existence_pruning_majority_vote', 'uniqueness_pruning_majority_vote']
+            # Two-step: VVV, VXX, VXV, VVX
+            methods_to_run = ['sketchformal', 'sketch_only', 'sketchformal_pruning_only', 'sketchformal_majority_vote']
         else:
-            # One-step: XXX, XXV, XVX, XVV + 2 semantic pruning ablations
-            methods_to_run = ['direct_translation', 'direct_translation_pruning', 'direct_translation_multipath', 'direct_translation_multipath_pruning',
-                             'existence_pruning_majority_vote', 'uniqueness_pruning_majority_vote']
+            # One-step: XXX, XXV, XVX, XVV
+            methods_to_run = ['direct_translation', 'direct_translation_pruning', 'direct_translation_multipath', 'direct_translation_multipath_pruning']
 
     elif args.path_ablation:
         methods_to_run = [f'path_ablation_{num_paths}_paths' for num_paths in args.path_counts]
@@ -1199,12 +1251,19 @@ Examples:
     print(f"Detected dataset: {dataset.upper()}")
     print(f"Experiment type: {'Two-step (sketch-based)' if config_info['has_sketch'] else 'One-step (direct translation)'}")
     
+    # Initialize CoT backup if provided
+    cot_backup_results = None
+    if args.cot_backup:
+        cot_backup_results = load_cot_backup_results(args.cot_backup)
+    
     # Regular analysis
     print("Loading results...")
     results = load_results(summary_file)
     print(f"Loaded {len(results)} items")
     
     print(f"\nRunning methods: {', '.join(methods_to_run)}")
+    if cot_backup_results:
+        print("🔄 CoT backup enabled for failed extractions")
     
     # Dictionary to store results
     method_results = {}
@@ -1231,12 +1290,12 @@ Examples:
         if method_name in method_calculators:
             calc_func, description = method_calculators[method_name]
             print(f"\n{description} for {dataset.upper()}...")
-            method_results[method_name] = calc_func(results, dataset, expected_paths)
+            method_results[method_name] = calc_func(results, dataset, expected_paths, cot_backup_results)
         elif method_name.startswith('path_ablation_') and method_name.endswith('_paths'):
             # Handle path ablation methods dynamically
             num_paths = int(method_name.split('_')[2])  # Extract number from 'path_ablation_X_paths'
             print(f"\n🛤️  Path ablation with {num_paths} paths for {dataset.upper()}...")
-            method_results[method_name] = calculate_accuracy_path_ablation(results, num_paths, dataset, expected_paths)
+            method_results[method_name] = calculate_accuracy_path_ablation(results, num_paths, dataset, expected_paths, cot_backup_results)
     
     # Print results
     print("\n" + "="*80)
