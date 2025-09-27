@@ -119,7 +119,7 @@ class Reasoner(ABC):
             )
 
             self.api_client = self.initialize_api_client(model, api_config)
-        # import pdb; pdb.set_trace()
+
         # Initialize code_api_client if needed for code generation
         if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
             plan_model = getattr(config, 'plan_model', None)  # Use plan_model if available, fallback to model
@@ -148,6 +148,7 @@ class Reasoner(ABC):
             self.code_api_client = self.initialize_api_client(code_model, fix_api_config)
 
     def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
+        """Initialize the API client for the given model name and API configuration"""
         client_params = {}
         if 'gpt' in model_name.lower():
             api_config.provider = "azure-openai"
@@ -217,7 +218,14 @@ class Reasoner(ABC):
         pass
 
     def create_results_folder(self) -> None:
-        """Create results folder based on model name"""
+        """Create results folder based on model name
+        
+        Args:
+            model_name (str): The name of the model to use for the results folder.
+
+        Returns:
+            The results folder name.
+        """
         # append uuid to the results folder
         # Create results folder name using new model field names
         # if plan_model is not set, raise an error
@@ -316,6 +324,7 @@ class Reasoner(ABC):
             f.write(f"{total_execution_time:.2f}s")
     
     def clean_code(self, code_text: str) -> str:
+        """Clean the code from the model output which have '```python' or '```' fences (not counted as syntax errors)"""
         if self.config.dataset.lower() == 'ar-lsat':
             # Clean potential markdown fences (though the prompt requests raw code)
             cleaned_code = code_text
@@ -375,8 +384,14 @@ class Reasoner(ABC):
             raise ValueError(f"Dataset {self.config.dataset} not configured for Reasoner clean_code.")
     
     def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
-        """Execute the Python Z3 code and return the results."""
-        # Execute Z3 code
+        """Execute the Python Z3 code and return the results.
+        
+        Args:
+            z3_code (str): The Z3 code to execute.
+
+        Returns:
+            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output of the code execution.
+        """
         # Identical to the original script's implementation
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
@@ -412,7 +427,14 @@ class Reasoner(ABC):
             return False, f"Error executing Z3 code: {str(e)}"
         
     def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
-        """Execute the PyKe code and return the results."""
+        """Execute the PyKe code and return the results.
+        
+        Args:
+            pyke_code (str): The PyKe code to execute.
+
+        Returns:
+            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the PyKe code.
+        """
         # Execute PyKe code
         try:
             facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
@@ -461,73 +483,87 @@ class Reasoner(ABC):
                 print('removing compiled_krb')
                 os.system(f'rm -rf compiled_krb/*')
     
-    def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
-        """Execute the Prover9 code and return the results."""
-        # Execute Prover9 code
-        def negate_prover9_goal(prover9_input: str) -> str:
-            """
-            Extract the formulas(goals) block from the Prover9 input,
-            negate the formula inside it, and replace the original goal
-            with the negated formula. Returns the modified input string.
-            """
-            goal_match = re.search(
-                # r"formulas\(goals\)\.\s*(.*?)\s*\.\s*end_of_list\.",
-                r"formulas\(goals\)\.\s*(.*?)\s*\.",
-                prover9_input,
-                re.DOTALL
-            )
-            if not goal_match:
-                raise ValueError("formulas(goals) block not found or improperly formatted.")
+    # def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
+    #     """Execute the Prover9 code and return the results.
+        
+    #     Args:
+    #         prover9_code (str): The Prover9 code to execute.
+
+    #     Returns:
+    #         Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the Prover9 code.
+    #     """
+    #     # Execute Prover9 code
+    #     def negate_prover9_goal(prover9_input: str) -> str:
+    #         """
+    #         Extract the formulas(goals) block from the Prover9 input,
+    #         negate the formula inside it, and replace the original goal
+    #         with the negated formula. Returns the modified input string.
+    #         """
+    #         goal_match = re.search(
+    #             # r"formulas\(goals\)\.\s*(.*?)\s*\.\s*end_of_list\.",
+    #             r"formulas\(goals\)\.\s*(.*?)\s*\.",
+    #             prover9_input,
+    #             re.DOTALL
+    #         )
+    #         if not goal_match:
+    #             raise ValueError("formulas(goals) block not found or improperly formatted.")
             
-            goal_formula = goal_match.group(1).strip()
-            negated_goal = f"-({goal_formula})"
-            new_goal_block = f"formulas(goals).\n  {negated_goal}.\nend_of_list."
-            new_input = re.sub(
-                r"formulas\(goals\)\.\s*.*?\s*end_of_list\.",
-                new_goal_block,
-                prover9_input,
-                flags=re.DOTALL
-            )
-            return new_input
+    #         goal_formula = goal_match.group(1).strip()
+    #         negated_goal = f"-({goal_formula})"
+    #         new_goal_block = f"formulas(goals).\n  {negated_goal}.\nend_of_list."
+    #         new_input = re.sub(
+    #             r"formulas\(goals\)\.\s*.*?\s*end_of_list\.",
+    #             new_goal_block,
+    #             prover9_input,
+    #             flags=re.DOTALL
+    #         )
+    #         return new_input
     
-        try:
-            PROVER9_BIN = "../Prover9/bin/prover9"
-            TIMEOUT = 10
-            pos_result = subprocess.run(
-                [PROVER9_BIN],
-                input = prover9_code,
-                stdout = subprocess.PIPE,
-                stderr = subprocess.PIPE,
-                timeout = TIMEOUT,
-                text = True
-            )
+    #     try:
+    #         PROVER9_BIN = "../Prover9/bin/prover9"
+    #         TIMEOUT = 10
+    #         pos_result = subprocess.run(
+    #             [PROVER9_BIN],
+    #             input = prover9_code,
+    #             stdout = subprocess.PIPE,
+    #             stderr = subprocess.PIPE,
+    #             timeout = TIMEOUT,
+    #             text = True
+    #         )
             
-            negate_prover9_code = negate_prover9_goal(prover9_code)
-            neg_result = subprocess.run(
-                [PROVER9_BIN],
-                input = negate_prover9_code,
-                stdout = subprocess.PIPE,
-                stderr = subprocess.PIPE,
-                timeout = TIMEOUT,
-                text = True
-            )
+    #         negate_prover9_code = negate_prover9_goal(prover9_code)
+    #         neg_result = subprocess.run(
+    #             [PROVER9_BIN],
+    #             input = negate_prover9_code,
+    #             stdout = subprocess.PIPE,
+    #             stderr = subprocess.PIPE,
+    #             timeout = TIMEOUT,
+    #             text = True
+    #         )
             
-            if "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" not in neg_result.stdout:
-                return True, "True"
-            elif "THEOREM PROVED" not in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
-                return True, "False"
-            elif "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
-                return True, "multiple answers"
-            elif "SEARCH FAILED" in pos_result.stdout and "SEARCH FAILED" in neg_result.stdout:
-                return True, "Unknown"
-            else:
-                return False, pos_result.stderr
+    #         if "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" not in neg_result.stdout:
+    #             return True, "True"
+    #         elif "THEOREM PROVED" not in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
+    #             return True, "False"
+    #         elif "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
+    #             return True, "multiple answers"
+    #         elif "SEARCH FAILED" in pos_result.stdout and "SEARCH FAILED" in neg_result.stdout:
+    #             return True, "Unknown"
+    #         else:
+    #             return False, pos_result.stderr
             
-        except Exception as e:
-            return False, f"Error executing Prover9 Program: {str(e)}"      
+    #     except Exception as e:
+    #         return False, f"Error executing Prover9 Program: {str(e)}"      
     
     def execute_csp_code(self, csp_code: str) -> Tuple[bool, str]:
-        """Execute the Python CSP code and return the results."""
+        """Execute the Python CSP code and return the results.
+        
+        Args:
+            csp_code (str): The CSP code to execute.
+
+        Returns:
+            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the CSP code.
+        """
         # Execute CSP code
         # Identical to the original script's implementation
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
@@ -667,27 +703,16 @@ class TwoStepReasoner(Reasoner):
             
         if self.config.dataset.lower() == "ar-lsat":
             prompt = FIX_GENERATION_PROMPT.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                answers=test_case["answers"],
-                plan=plan,
                 code=code,
                 syntax_error=syntax_error
             )
         elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa": 
             prompt = FIX_GENERATION_PROMPT.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                plan=plan,
                 code=code,
                 syntax_error=syntax_error
             )
         elif self.config.dataset.lower() == 'logicaldeduction':
             prompt = FIX_GENERATION_PROMPT.format(
-                context=test_case["context"],
-                question=test_case["question"],
-                options = test_case["options"],
-                plan=plan,
                 code=code,
                 syntax_error=syntax_error
             )
@@ -701,7 +726,17 @@ class TwoStepReasoner(Reasoner):
                               solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
                               execute_func: Callable[[str], Tuple[bool, Any]],
                               mp_lock: Optional[Any] = None) -> dict:
-        """Use model to reason and choose the correct answer with enhanced diversity parameters"""
+        """Inference code with diversity parameters
+        
+        Args:
+            test_case (dict): The test case to reason about.
+            solver_name (Literal["z3", "pyke", "prover9", "pythonconstraint"]): The name of the solver to use.
+            execute_func (Callable[[str], Tuple[bool, Any]]): The function to execute the code.
+            mp_lock (Optional[Any]): The multiprocessing lock to use.
+
+        Returns:
+            dict: Sketched Plans and their corresponding codes with their execution results.
+        """
         plan_feedback = None
         code_feedback = None
 
@@ -711,8 +746,6 @@ class TwoStepReasoner(Reasoner):
             {"temperature": self.config.plan_temp}
             for _ in range(self.config.num_paths)
         ]
-        # Store original parameters
-        # original_temp = self.api_client.temperature
 
         all_plan_results = []
         for plan_config_idx, plan_config in enumerate(plan_configs):
@@ -740,7 +773,6 @@ class TwoStepReasoner(Reasoner):
             plan_code_results = []
             code_gen_idx = 1
             for code_config in code_configs:
-                
                 # Set generation parameters for code generation
                 self.code_api_client.temperature = code_config["temperature"]
                 # print api client name
@@ -810,9 +842,6 @@ class TwoStepReasoner(Reasoner):
             }
             all_plan_results.append(plan_result)
         
-        # Restore original parameters
-        # self.api_client.temperature = original_temp
-        
         return {
             "all_plan_results": all_plan_results
         }
@@ -833,6 +862,7 @@ class TwoStepReasoner(Reasoner):
             raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
                 
     def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
+        """Save the "plan" and "code" to the results_folder"""
         # save the "plan" and "code" to the results_folder
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
@@ -925,7 +955,15 @@ class DirectReasoner(Reasoner):
         super().__init__(config, data_loader, answer_extractor)
 
     def get_direct_prompt(self, test_case, feedback=None):
-        """Get the direct code generation prompt with the given inputs."""
+        """Get the direct code generation prompt with the given inputs.
+        
+        Args:
+            test_case (dict): The test case to reason about.
+            feedback (Optional[str]): The feedback to use for the prompt.
+
+        Returns:
+            str: The direct code generation prompt.
+        """
         # Load the direct prompt from the specified path
         prompt_path = os.path.join(self.config.prompt_path, "prompt.txt")
         
@@ -975,37 +1013,18 @@ class DirectReasoner(Reasoner):
             FIX_GENERATION_PROMPT = file.read()
 
         if self.config.dataset.lower() == "ar-lsat":
-            context = test_case["context"]
-            question = test_case["question"]
-            answers = test_case["answers"]
-
             # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{answers}", str(answers))
-            prompt = prompt.replace("{code}", code)
+            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
             prompt = prompt.replace("{syntax_error}", syntax_error)
         
         elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            context = test_case["context"]
-            question = test_case["question"]
-
             # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{code}", code)
+            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
             prompt = prompt.replace("{syntax_error}", syntax_error)
             
         elif self.config.dataset.lower() == 'logicaldeduction':
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
             # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{code}", code)
-            prompt = prompt.replace("{options}", str(options))
+            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
             prompt = prompt.replace("{syntax_error}", syntax_error)
             
         else:
@@ -1045,7 +1064,7 @@ class DirectReasoner(Reasoner):
             current_code = current_code_response if isinstance(current_code_response, str) else current_code_response[0]
             current_code = self.clean_code(current_code)
             
-                # print(f"\nGenerated {solver_name} code (config={code_config}):")
+            # print(f"\nGenerated {solver_name} code (config={code_config}):")
             # print("=" * 80)
             # print(current_code)
             # print("=" * 80)
@@ -1131,10 +1150,6 @@ class DirectReasoner(Reasoner):
         code_summaries = []
         all_solver_outputs = []  # Collect all valid solver outputs for 
         
-        # Initialize first_is_correct as False (will be set to True if first code is correct)
-        first_is_correct = False
-        first_code_found = False
-        
         for code_result in all_code_results:
             code_idx = code_result["code_idx"]
             code_generation_config = code_result.get("code_generation_config", {})
@@ -1171,11 +1186,6 @@ class DirectReasoner(Reasoner):
             json.dump(results, f, indent=2, ensure_ascii=False)
         
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # # Check if this is a diversity result or greedy result
-        # if "all_code_results" in reasoning_result:
-        #     return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
-        # else:
-        #     return self._process_results_greedy(test_case, reasoning_result, case_time, unique_id, timing_data)
         return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
     
 class CoTReasoner(Reasoner):
@@ -1273,6 +1283,7 @@ class CoTReasoner(Reasoner):
         if reasoning_output_for_extraction is None:
             reasoning_output_for_extraction = ""
         
+        # Extract the answer from the reasoning output, only for CoTReasoner
         if self.config.dataset.lower() == "ar-lsat":
             is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["label"], test_case["answers"], self.config.reasoning_method)
         elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":

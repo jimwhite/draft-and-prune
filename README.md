@@ -23,7 +23,7 @@ Please refer to the `config_gpt.yaml` file for the configuration details. Gemini
 ```
 ├── main.py                     # Main entry point for experiments
 ├── config.py                   # Configuration management and parsing
-├── reasoners.py                # Core reasoning logic (CoT, two-step, one-step)
+├── reasoners.py                # Core reasoning logic (CoT, two-step, one-step).
 ├── call_api.py                 # API client implementations (GPT-4, Gemini)
 ├── data_loaders.py             # Dataset loading and sampling utilities
 ├── answer_extractors.py        # Answer extraction from solver outputs (only CoT is supported)
@@ -60,6 +60,10 @@ Please refer to the `config_gpt.yaml` file for the configuration details. Gemini
     ├── logs/                   #   Execution logs
     ├── __pycache__/            #   Python cache files
 ```
+
+Note: 
+1. We use a 'clean_code' function in 'reasoners.py' to clean the code, which have '```python```' or '``` ```' fences or missing 'import' statements. This is not counted as syntax errors.
+2. We only enable the online analysis for CoTReasoner, not for One-Step Reasoner and Two-Step Reasoner. All the analysis for One-Step Reasoner and Two-Step Reasoner are done offline. Please refer to the 'path_level_analysis.py' file for the offline analysis.
 
 ### Prompt Structure Details
 
