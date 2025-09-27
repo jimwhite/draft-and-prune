@@ -1,0 +1,32 @@
+# Azure OpenAI Configuration
+# Note: Currently only supports single model. 
+# You need to set 'plan_model', 'code_model', and 'azure_deployment' as the same model.
+
+# Required fields
+dataset: "" # AR-LSAT, ProofWriter, ProntoQA, LogicalDeduction
+test_file: "" # Path to the test file, e.g. "./data/AR-LSAT/blob/main/complete_lsat_data/test_ar.json"
+prompt_path: "" # Path to the prompt file, e.g. "./prompts/AR-LSAT-prompts-two-step-partition/"
+shots: "three" # Number of shots for few-shot learning
+desired_indices: null # Desired indices to use, e.g. [0, 1, 2, 3, 4]. 'null' means all indices
+reasoning_method: "" # two-step, one-step, cot
+num_paths: 30        # Number of different plans to generate (default: 3)
+
+# Plan generation settings
+api_key: ""  # Primary API key of Azure OpenAI, set to empty string if using managed identity below
+max_retries: 15 # Maximum number of retries
+test_delay: 1 # Delay between test cases in seconds
+num_processes: 80 # Number of parallel processes
+
+# Plan generation settings
+plan_model: ""  # Model for plan generation, e.g. gpt-4
+plan_temp: 1      # Temperature for plan generation (default: 1.0)
+
+# Code generation settings
+code_model: ""  # Model for code generation and fixing, e.g. gpt-4
+code_temp: 0 # Temperature for code generation
+max_repairs: 3 # Maximum number of syntax error fixes
+
+# === AZURE GPT-4 SETTINGS (FOR PLAN GENERATION) ===
+azure_endpoint: ""
+azure_deployment: "" # 
+azure_managed_identity_client_id: ""

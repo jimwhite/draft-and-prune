@@ -15,8 +15,6 @@ class ReasonerConfig:
                  model: str = "gemini-2.5-flash-preview-04-17",  # Backward compatibility
                  plan_model: str = None,  # New: Model for plan generation
                  code_model: str = None,  # New: Model for code generation
-                 fix_model: str = None,   # Backward compatibility
-                 fix_api_key: str = None,
                  code_temp: float = 0.6, 
                  max_repairs: int = 3,
                  max_retries: int = 10,
@@ -43,7 +41,6 @@ class ReasonerConfig:
             dataset: Dataset name to use
             test_file: Test file to use
             model: Primary model name
-            fix_model: Model name for fixing/repair operations
             code_temp: code_temp for model generation
             max_repairs: Maximum number of repair attempts
             max_retries: Maximum number of LLM requests
@@ -65,8 +62,6 @@ class ReasonerConfig:
         self.model = model  # Backward compatibility
         self.plan_model = plan_model
         self.code_model = code_model
-        self.fix_model = fix_model  # Backward compatibility
-        self.fix_api_key = fix_api_key
         self.code_temp = code_temp
         self.max_repairs = max_repairs
         self.max_retries = max_retries
@@ -127,14 +122,8 @@ class ReasonerConfig:
             
         if 'code_model' in config_data:
             instance.code_model = config_data['code_model']
-            instance.fix_model = config_data['code_model']  # For backward compatibility
-        elif config_data.get('fix_model'):
-            instance.fix_model = config_data['fix_model']
-            instance.code_model = instance.fix_model
         else:
             instance.code_model = instance.plan_model  # Default to same as plan model
-        if config_data.get('fix_api_key'):
-            instance.fix_api_key = config_data['fix_api_key']
         instance.code_temp = config_data['code_temp']
         instance.max_repairs = config_data['max_repairs']
         if config_data.get('max_retries'):
@@ -168,10 +157,6 @@ class ReasonerConfig:
             raise TypeError("dataset must be a string")
         if not isinstance(self.model, str):
             raise TypeError("model must be a string")
-        if not isinstance(self.fix_model, str):
-            raise TypeError("fix_model must be a string")
-        if self.fix_api_key is not None and not isinstance(self.fix_api_key, str):
-            raise TypeError("fix_api_key must be a string")
         if not isinstance(self.code_temp, (int, float)) or self.code_temp < 0:
             raise ValueError("code_temp must be a non-negative number")
         if not isinstance(self.max_repairs, int) or self.max_repairs < 0:
@@ -212,11 +197,9 @@ class ReasonerConfig:
             'api_key': self.api_key,
             # New model field names (preferred)
             'plan_model': getattr(self, 'plan_model', self.model),
-            'code_model': getattr(self, 'code_model', getattr(self, 'fix_model', self.model)),
+            'code_model': getattr(self, 'code_model', self.model),
             # Legacy field names (for backward compatibility)
             'model': self.model,
-            'fix_model': self.fix_model if self.fix_model is not None else None,
-            'fix_api_key': self.fix_api_key if self.fix_api_key is not None else None,
             'code_temp': self.code_temp,
             'max_repairs': self.max_repairs,
             'max_retries': self.max_retries,
