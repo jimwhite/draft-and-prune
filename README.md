@@ -103,6 +103,49 @@ results/results_{timestamp}/
     └── temp_cache_dir/                 # Temporary Pyke cache (if using Pyke solver)
 ```
 
+### Path-Level Analysis Script
+
+The repository includes a comprehensive analysis script for processing experiment results:
+
+#### **Usage**
+```bash
+# Basic path-level analysis
+python path_level_analysis.py <results_directory> --expected-paths 30
+
+# Include CoT results and add CoT correctness column
+python path_level_analysis.py <results_directory> --expected-paths 30 --cot-summary path/to/cot_summary.txt
+
+# Force reprocessing of individual result files
+python path_level_analysis.py <results_directory> --expected-paths 30 --force-merge
+```
+
+#### **Features**
+- **Path-level Analysis**: Creates detailed dataframe with individual path information
+- **Automatic Result Merging**: Processes individual JSON files from `summary/` folder if `summary.txt` doesn't exist
+- **Correctness Evaluation**: Parses solver outputs and compares with ground truth labels
+- **Pruning Analysis**: Tracks paths pruned by existence and uniqueness constraints
+- **Multiple Output Formats**: Generates both CSV and XLSX files
+- **CoT Integration**: Optional, adds CoT correctness column
+
+#### **Output Metrics**
+- **Path-level Statistics**: Individual path correctness and syntax error rates
+- **Pruning Statistics**: Tracks how many paths are filtered out
+- **One-path Accuracy**: Performance using the first generated path only
+- **Sample-level Analysis**: Aggregated results per problem sample
+
+#### **Command Options**
+- `--expected-paths N`: Number of paths per sample (default: 5, commonly 30 for two-step)
+- `--output-format`: Choose 'csv', 'xlsx', or 'both' (default: both)
+- `--force-merge`: Reprocess individual result files even if summary.txt exists
+- `--cot-summary`: Path to CoT summary file for comparison analysis
+- `--cot-backup`: Use CoT results as backup for syntax error cases
+
+#### **Generated Files**
+- `{experiment_name}_path_level.csv` - Detailed path-level data
+- `{experiment_name}_path_level.xlsx` - Excel format with formatting
+- Console output with comprehensive statistics
+
+
 ## Supported Datasets
 
 | Dataset | Description | Source |

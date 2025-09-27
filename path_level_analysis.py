@@ -14,14 +14,8 @@ The script processes experiment results and generates a comprehensive path-level
 It can automatically merge individual result files from a summary/ subdirectory if summary.txt is not found.
 
 Usage:
-    python path_level_analysis.py <results_directory>
-    python path_level_analysis.py <results_directory> --output-format xlsx
     python path_level_analysis.py <results_directory> --expected-paths 5
-    python path_level_analysis.py <results_directory> --force-merge
-
-Examples:
-    python path_level_analysis.py results/two-step-AR-LSAT-plan-with-gpt-4-code-with-gpt-4-two_shot_CoT/
-    python path_level_analysis.py results/experiment_folder/ --force-merge --expected-paths 30
+    python path_level_analysis.py results/experiment_folder/ --expected-paths 5 --cot-summary path/to/cot_summary.txt
 """
 
 import json
@@ -136,12 +130,6 @@ def parse_solver_output(output_str, dataset=None, problem_answers=None):
                                     if item.strip().lower() == answer.strip().lower():
                                         mapped_indices.append(i)
                                         break
-                                else:
-                                    # Try partial match if exact match fails
-                                    for i, answer in enumerate(problem_answers):
-                                        if (item.strip().lower() in answer.strip().lower()) or (answer.strip().lower() in item.strip().lower()):
-                                            mapped_indices.append(i)
-                                            break
                             
                             # If we successfully mapped all items, return the indices
                             if len(mapped_indices) == len(parsed):
@@ -595,11 +583,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    python path_level_analysis.py results/experiment_folder/
     python path_level_analysis.py results/experiment_folder/ --expected-paths 5
-    python path_level_analysis.py results/experiment_folder/ --output-format xlsx
-    python path_level_analysis.py results/experiment_folder/ --force-merge --expected-paths 30
-    python path_level_analysis.py results/experiment_folder/ --cot-summary path/to/cot_summary.txt
+    python path_level_analysis.py results/experiment_folder/ --expected-paths 5 --cot-summary path/to/cot_summary.txt
         """
     )
     
