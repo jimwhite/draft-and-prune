@@ -84,315 +84,108 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
         print(f"End working on {problem_name}")
 
 
-class Reasoner(ABC):
-    """Base class for different reasoning approaches"""
+class DatasetConfig:
+    """Configuration for dataset-specific operations"""
     
-    def __init__(self, 
-                 config: ReasonerConfig,
-                 data_loader: DataLoader,
-                 answer_extractor: AnswerExtractor):
-        """Initialize the reasoner with the given components"""
-        
-        self.config = config
-        self.data_loader = data_loader
-        self.results_folder = self.create_results_folder()
-        self.answer_extractor = answer_extractor
-        
-        self.summary_folder = os.path.join(self.results_folder, "summary")
-        self.log_folder = os.path.join(self.results_folder, "log")
-        os.makedirs(self.summary_folder, exist_ok=True)
-        os.makedirs(self.log_folder, exist_ok=True)
-        
-        # Initialize temp cache directory for PyKe
-        self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
-        if os.path.exists("./compiled_krb"):
-            print('removing compiled_krb')
-            os.system(f'rm -rf ./compiled_krb')
-
-        if config.reasoning_method == "cot" or config.reasoning_method == "one-step":
-            model = getattr(config, 'model', None)
-            api_config = APIConfig(
-            model_name=model,
-            temperature=config.temperature,
-            max_retries=config.max_retries,
-            inter_test_case_delay=config.test_delay
-            )
-
-            self.api_client = self.initialize_api_client(model, api_config)
-
-        # Initialize code_api_client if needed for code generation
-        if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
-            plan_model = getattr(config, 'plan_model', None)  # Use plan_model if available, fallback to model
-            print(f"Plan model: {plan_model}")
-            if plan_model is None:
-                raise ValueError("plan_model is not set")
-            api_config = APIConfig(
-                model_name=plan_model,
-                temperature=config.plan_temp,
-                max_retries=config.max_retries,
-                inter_test_case_delay=config.test_delay
-            )
-            self.api_client = self.initialize_api_client(plan_model, api_config)
-
-            code_model = getattr(config, 'code_model', None)  # Use code_model if available, raise an error if not set
-            print(f"Code model: {code_model}")
-            if code_model is None:
-                raise ValueError("code_model is not set")
-            fix_api_config = APIConfig(
-                model_name=code_model,
-                temperature=config.code_temp,
-                max_retries=config.max_retries,
-                inter_test_case_delay=config.test_delay
-            )
-            
-            self.code_api_client = self.initialize_api_client(code_model, fix_api_config)
-
-    def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
-        """Initialize the API client for the given model name and API configuration"""
-        client_params = {}
-        if 'gpt' in model_name.lower():
-            api_config.provider = "azure-openai"
-            client_params = {
-                'endpoint': self.config.azure_endpoint,
-                'deployment': self.config.azure_deployment,
-                'managed_identity_client_id': self.config.azure_managed_identity_client_id
-            }
-            # For Azure, api_key in config is not used for client init directly
-        elif 'gemini' in model_name.lower():
-            api_config.provider = "gemini"
-            # Use multiple API keys if available, otherwise single key
-            if self.config.gemini_api_keys:
-                client_params = {'api_keys': self.config.gemini_api_keys}
-                print(f"Initialized Gemini client with {len(self.config.gemini_api_keys)} API keys for rotation")
-            else:
-                client_params = {'api_key': self.config.gemini_api_key}
-        else:
-            raise ValueError(f"Unsupported plan model: {model_name}")
-        
-        api_client = get_api_client(api_config.provider, api_config, **client_params)
-        return api_client
+    DATASET_SOLVER_MAP = {
+        'ar-lsat': 'z3',
+        'proofwriter': 'pyke', 
+        'folio': 'prover9',
+        'prontoqa': 'pyke',
+        'logicaldeduction': 'pythonconstraint'
+    }
     
-    def save_prompts_folder(self) -> None:
-        """
-        Copy the prompts folder to the results directory to preserve exact prompts used
-        """
-        if not os.path.exists(self.config.prompt_path):
-            print(f"Warning: Prompt path {self.config.prompt_path} does not exist, skipping prompt folder copy")
-            return
-            
-        # Create prompts folder in results directory
-        prompts_dest = os.path.join(self.results_folder, "prompts")
-        
-        try:
-            if os.path.exists(prompts_dest):
-                print(f"Prompts folder already exists at {prompts_dest}, removing old copy...")
-                shutil.rmtree(prompts_dest)
-            
-            # Copy the entire prompts folder
-            shutil.copytree(self.config.prompt_path, prompts_dest)
-            print(f"✅ Prompts folder copied to: {prompts_dest}")
-            
-            # Also create a metadata file about the prompts
-            prompt_metadata = {
-                "original_prompt_path": self.config.prompt_path,
-                "copied_at": datetime.now().isoformat(),
-                "reasoning_method": self.config.reasoning_method,
-                "dataset": self.config.dataset,
-                "shots": self.config.shots
-            }
-            
-            metadata_path = os.path.join(prompts_dest, "prompt_metadata.json")
-            with open(metadata_path, 'w') as f:
-                json.dump(prompt_metadata, f, indent=2)
-            
-            print(f"✅ Prompt metadata saved to: {metadata_path}")
-            
-        except Exception as e:
-            print(f"❌ Error copying prompts folder: {e}")
-            print(f"   Source: {self.config.prompt_path}")
-            print(f"   Destination: {prompts_dest}")
-
-    @abstractmethod
-    def reason(self, test_case: Dict) -> Dict:
-        """Implement the reasoning strategy"""
-        pass
-
-    def create_results_folder(self) -> None:
-        """Create results folder based on model name
-        
-        Args:
-            model_name (str): The name of the model to use for the results folder.
-
-        Returns:
-            The results folder name.
-        """
-        # append uuid to the results folder
-        # Create results folder name using new model field names
-        # if plan_model is not set, raise an error
-        plan_model_name = getattr(self.config, 'plan_model', None)
-        if plan_model_name is None:
-            raise ValueError("plan_model is not set")
-        code_model_name = getattr(self.config, 'code_model', None)
-        if code_model_name is None:
-            raise ValueError("code_model is not set")
-        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
-        print(f"Results folder: {self.results_folder}")
-        
-        if os.path.exists(self.results_folder):
-            print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
-            # return self.results_folder
-            # exit()
-        else:
-            print("No existing results found, starting fresh")
-            os.makedirs(self.results_folder)
-        return self.results_folder
-
-    def _call_api(self, prompt: str) -> str:
-        """Common method to call the API using the modular client"""
-        return self.api_client.call(prompt)
+    DATASET_IMPORTS = {
+        'ar-lsat': 'from z3 import *',
+        'logicaldeduction': 'from constraint import *'
+    }
     
-    def _call_fix_api(self, prompt: str) -> str:
-        """Common method to call the API using the modular client"""
-        return self.code_api_client.call(prompt)
+    @classmethod
+    def get_solver(cls, dataset: str) -> str:
+        """Get the solver name for a dataset"""
+        return cls.DATASET_SOLVER_MAP.get(dataset.lower())
     
-    def interpret_results(self, response_text: str) -> Tuple[bool, str, Optional[str]]:
-        """Interpret the results from the reasoning"""
-        return True, "Model passed the test.", response_text
+    @classmethod
+    def get_required_import(cls, dataset: str) -> Optional[str]:
+        """Get the required import statement for a dataset"""
+        return cls.DATASET_IMPORTS.get(dataset.lower())
 
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        """Process the results of a single test case"""
-        pass
 
-    def run_all_tests(self) -> None:
-        """Run reasoning on all test cases in the file with optional limit"""
-        start_time_total = time.time()
-        processed_count = 0
-        for i, batch in enumerate(self.data_loader):
-            # Apply reasoning
-            reasoning_result = self.reason(batch[0])
-            
-            self._process_results(batch[0], reasoning_result, 0.0, str(uuid.uuid4()), None)
-
-            # Increment counter and delay before next test
-            processed_count += 1
-            if processed_count < len(self.data_loader):  # Avoid delay after the last item
-                print(f"Waiting {self.config.test_delay}s before next test case...")
-                time.sleep(self.config.test_delay)
-
-        # Calculate total execution time
-        total_execution_time = time.time() - start_time_total
-        print(f"\nTotal execution time: {total_execution_time:.2f}s")
-        
-        
-    def run_all_tests_parallel(self, num_processes: int=10) -> None:
-        """
-        Use multiple processes to run all test cases in parallel
-
-        Args:
-            num_processes (int): The number of processes to use for parallel execution
-        """
-        print(f"Start parallel testing, using {num_processes} processes...")
-        print(f"Please visit the {self.log_folder} to view the real-time output log")
-
-        start_time_total = time.time()
-        
-        mp_lock = mp.Lock()
-        all_tasks = [(self, batch[0], mp_lock, idx) for idx, batch in enumerate(self.data_loader)]
-        processes = []
-        try:
-            for task in all_tasks:
-                while len(processes) >= num_processes:
-                    processes = [p for p in processes if p.is_alive()]
-                    time.sleep(0.1)
-                p = mp.Process(target=_parallel_worker, args=(task,))
-                p.start()
-                processes.append(p)
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt received! Terminating all processes...")
-            for p in processes:
-                if p.is_alive():
-                    p.terminate()
-        finally:
-            for p in processes:
-                p.join()
-            print("All processes joined.")
-
-        total_execution_time = time.time() - start_time_total
-        print(f"\nTotal execution time: {total_execution_time:.2f}s")
-        # save the total execution time to the results folder
-        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w") as f:
-            f.write(f"{total_execution_time:.2f}s")
+class PromptHandler:
+    """Handles prompt generation for different datasets and reasoning methods"""
     
-    def clean_code(self, code_text: str) -> str:
-        """Clean the code from the model output which have '```python' or '```' fences (not counted as syntax errors)"""
-        if self.config.dataset.lower() == 'ar-lsat':
-            # Clean potential markdown fences (though the prompt requests raw code)
-            cleaned_code = code_text
-            if "```python" in cleaned_code :
-                match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
-                if match:
-                    cleaned_code = match.group(1).strip()
-            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
-                cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
-                cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
-                cleaned_code = cleaned_code.strip()
-
-            # Basic check for Z3 import
-            if not cleaned_code.strip().startswith("from z3 import *"):
-                # If import is missing, prepend it. Add a newline for separation.
-                print("Warning: 'from z3 import *' missing from generated code. Prepending it.")
-                cleaned_code = "from z3 import *\n\n" + cleaned_code
-
-            return cleaned_code
+    def __init__(self, prompt_path: str, dataset: str):
+        self.prompt_path = prompt_path
+        self.dataset = dataset.lower()
+    
+    def _load_template(self, template_name: str) -> str:
+        """Load a prompt template from file"""
+        template_path = os.path.join(self.prompt_path, template_name)
+        with open(template_path, "r") as file:
+            return file.read()
+    
+    def _format_prompt(self, template: str, test_case: Dict, **kwargs) -> str:
+        """Format a prompt template with test case data"""
+        prompt = template
         
-        # Leave it to be processed at execution time
-        elif self.config.dataset.lower() == 'proofwriter':
-            return code_text
+        # Common replacements for all datasets
+        if 'context' in test_case:
+            prompt = prompt.replace("{context}", test_case["context"])
+        if 'question' in test_case:
+            prompt = prompt.replace("{question}", test_case["question"])
         
-        elif self.config.dataset.lower() == 'folio':
-            matches = re.search(r"```prover9\n(.*?)```", code_text, re.DOTALL)
-            if matches:
-                return matches.group(1)
-            else:
-                print("Warning: No ```prover9 code block found in the output text.")
-                return code_text
+        # Dataset-specific replacements
+        if self.dataset == "ar-lsat" and 'answers' in test_case:
+            prompt = prompt.replace("{answers}", str(test_case["answers"]))
+        elif self.dataset in ["proofwriter", "folio", "prontoqa"] and 'options' in test_case:
+            prompt = prompt.replace("{options}", str(test_case["options"]))
+        elif self.dataset == 'logicaldeduction':
+            if 'options' in test_case:
+                prompt = prompt.replace("{options}", str(test_case["options"]))
         
-        elif self.config.dataset.lower() == 'prontoqa':
-            return code_text
-
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            # Clean potential markdown fences (though the prompt requests raw code)
-            cleaned_code = code_text
-            if "```python" in cleaned_code :
-                match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
-                if match:
-                    cleaned_code = match.group(1).strip()
-            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
-                cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
-                cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
-                cleaned_code = cleaned_code.strip()
-
-            # Basic check for CSP import
-            if not cleaned_code.strip().startswith("from constraint import"):
-                # If import is missing, prepend it. Add a newline for separation.
-                print("Warning: 'from constraint import' missing from generated code. Prepending it.")
-                cleaned_code = "from constraint import *\n\n" + cleaned_code
-
-            return cleaned_code
+        # Additional replacements from kwargs
+        for key, value in kwargs.items():
+            placeholder = "{" + key + "}"
+            if placeholder in prompt:
+                prompt = prompt.replace(placeholder, str(value))
         
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for Reasoner clean_code.")
+        return prompt
+    
+    def get_plan_prompt(self, test_case: Dict, feedback: Optional[str] = None) -> str:
+        """Generate plan generation prompt"""
+        template = self._load_template("plan.txt")
+        return self._format_prompt(template, test_case)
+    
+    def get_code_prompt(self, test_case: Dict, plan: str, feedback: Optional[str] = None) -> str:
+        """Generate code generation prompt"""
+        template = self._load_template("code.txt")
+        return self._format_prompt(template, test_case, plan=plan)
+    
+    def get_direct_prompt(self, test_case: Dict, feedback: Optional[str] = None) -> str:
+        """Generate direct code generation prompt"""
+        template = self._load_template("prompt.txt")
+        return self._format_prompt(template, test_case)
+    
+    def get_cot_prompt(self, test_case: Dict) -> str:
+        """Generate Chain-of-Thought prompt"""
+        template = self._load_template("prompt.txt")
+        return self._format_prompt(template, test_case)
+    
+    def get_fix_syntax_error_prompt(self, test_case: Dict, code: str, syntax_error: str) -> str:
+        """Generate syntax error fix prompt"""
+        template = self._load_template("fix_syntax_errors.txt")
+        kwargs = {"code": code, "syntax_error": syntax_error}
+        return self._format_prompt(template, test_case, **kwargs)
+
+
+class CodeExecutor:
+    """Handles code execution for different solvers"""
+    
+    def __init__(self, temp_cache_dir: str):
+        self.temp_cache_dir = temp_cache_dir
     
     def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
-        """Execute the Python Z3 code and return the results.
-        
-        Args:
-            z3_code (str): The Z3 code to execute.
-
-        Returns:
-            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output of the code execution.
-        """
-        # Identical to the original script's implementation
+        """Execute the Python Z3 code and return the results."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
             tmp.write(z3_code)
@@ -401,41 +194,29 @@ class Reasoner(ABC):
             env = os.environ.copy()
             env["PYTHONIOENCODING"] = "utf-8"
             result = subprocess.run(['python3', tmp_filename],
-                                   capture_output=True, text=True, timeout=30, # Reduced timeout slightly
+                                   capture_output=True, text=True, timeout=30,
                                    env=env)
             os.unlink(tmp_filename)
 
             if result.returncode != 0:
-                # Include stderr and stdout for better debugging
                 error_details = f"Stderr: {result.stderr}\nStdout: {result.stdout}"
                 return False, f"Z3 execution error (return code {result.returncode}).\n{error_details}"
 
-            output = result.stdout.strip() # Strip whitespace from output
-            # Check common Z3 error indicators even if return code is 0
+            output = result.stdout.strip()
             if "error" in output.lower() or "exception" in output.lower() or "traceback" in output.lower():
                  return False, f"Z3 execution potentially failed:\nOutput:\n```\n{output}\n```\nStderr:\n```\n{result.stderr}\n```"
 
-            # If return code is 0 and no obvious errors in output, assume success for execution step
             return True, output
         except subprocess.TimeoutExpired:
             os.unlink(tmp_filename)
             return False, "Timeout (30s) while running Z3 code. The problem or generated code may be too complex or incorrect."
         except Exception as e:
-             # Clean up even if other exceptions occur
             if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
                  os.unlink(tmp_filename)
             return False, f"Error executing Z3 code: {str(e)}"
         
     def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
-        """Execute the PyKe code and return the results.
-        
-        Args:
-            pyke_code (str): The PyKe code to execute.
-
-        Returns:
-            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the PyKe code.
-        """
-        # Execute PyKe code
+        """Execute the PyKe code and return the results."""
         try:
             facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
             rules = re.search(r"```rules\n(.*?)```", pyke_code, re.DOTALL).group(1)
@@ -483,89 +264,8 @@ class Reasoner(ABC):
                 print('removing compiled_krb')
                 os.system(f'rm -rf compiled_krb/*')
     
-    # def execute_prover9_code(self, prover9_code: str) -> Tuple[bool, str]:
-    #     """Execute the Prover9 code and return the results.
-        
-    #     Args:
-    #         prover9_code (str): The Prover9 code to execute.
-
-    #     Returns:
-    #         Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the Prover9 code.
-    #     """
-    #     # Execute Prover9 code
-    #     def negate_prover9_goal(prover9_input: str) -> str:
-    #         """
-    #         Extract the formulas(goals) block from the Prover9 input,
-    #         negate the formula inside it, and replace the original goal
-    #         with the negated formula. Returns the modified input string.
-    #         """
-    #         goal_match = re.search(
-    #             # r"formulas\(goals\)\.\s*(.*?)\s*\.\s*end_of_list\.",
-    #             r"formulas\(goals\)\.\s*(.*?)\s*\.",
-    #             prover9_input,
-    #             re.DOTALL
-    #         )
-    #         if not goal_match:
-    #             raise ValueError("formulas(goals) block not found or improperly formatted.")
-            
-    #         goal_formula = goal_match.group(1).strip()
-    #         negated_goal = f"-({goal_formula})"
-    #         new_goal_block = f"formulas(goals).\n  {negated_goal}.\nend_of_list."
-    #         new_input = re.sub(
-    #             r"formulas\(goals\)\.\s*.*?\s*end_of_list\.",
-    #             new_goal_block,
-    #             prover9_input,
-    #             flags=re.DOTALL
-    #         )
-    #         return new_input
-    
-    #     try:
-    #         PROVER9_BIN = "../Prover9/bin/prover9"
-    #         TIMEOUT = 10
-    #         pos_result = subprocess.run(
-    #             [PROVER9_BIN],
-    #             input = prover9_code,
-    #             stdout = subprocess.PIPE,
-    #             stderr = subprocess.PIPE,
-    #             timeout = TIMEOUT,
-    #             text = True
-    #         )
-            
-    #         negate_prover9_code = negate_prover9_goal(prover9_code)
-    #         neg_result = subprocess.run(
-    #             [PROVER9_BIN],
-    #             input = negate_prover9_code,
-    #             stdout = subprocess.PIPE,
-    #             stderr = subprocess.PIPE,
-    #             timeout = TIMEOUT,
-    #             text = True
-    #         )
-            
-    #         if "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" not in neg_result.stdout:
-    #             return True, "True"
-    #         elif "THEOREM PROVED" not in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
-    #             return True, "False"
-    #         elif "THEOREM PROVED" in pos_result.stdout and "THEOREM PROVED" in neg_result.stdout:
-    #             return True, "multiple answers"
-    #         elif "SEARCH FAILED" in pos_result.stdout and "SEARCH FAILED" in neg_result.stdout:
-    #             return True, "Unknown"
-    #         else:
-    #             return False, pos_result.stderr
-            
-    #     except Exception as e:
-    #         return False, f"Error executing Prover9 Program: {str(e)}"      
-    
     def execute_csp_code(self, csp_code: str) -> Tuple[bool, str]:
-        """Execute the Python CSP code and return the results.
-        
-        Args:
-            csp_code (str): The CSP code to execute.
-
-        Returns:
-            Tuple[bool, str]: A tuple containing a boolean indicating success or failure and the output given by the CSP code.
-        """
-        # Execute CSP code
-        # Identical to the original script's implementation
+        """Execute the Python CSP code and return the results."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
             tmp.write(csp_code)
@@ -574,266 +274,396 @@ class Reasoner(ABC):
             env = os.environ.copy()
             env["PYTHONIOENCODING"] = "utf-8"
             result = subprocess.run(['python3', tmp_filename],
-                                   capture_output=True, text=True, timeout=20, # Reduced timeout slightly
+                                   capture_output=True, text=True, timeout=20,
                                    env=env)
             os.unlink(tmp_filename)
 
             if result.returncode != 0:
-                # Include stderr and stdout for better debugging
                 error_details = f"Stderr: {result.stderr}\nStdout: {result.stdout}"
                 return False, f"CSP execution error (return code {result.returncode}).\n{error_details}"
 
-            output = result.stdout.strip() # Strip whitespace from output
-            # Check common CSP error indicators even if return code is 0
+            output = result.stdout.strip()
             if "error" in output.lower() or "exception" in output.lower() or "traceback" in output.lower():
                  return False, f"CSP execution potentially failed:\nOutput:\n```\n{output}\n```\nStderr:\n```\n{result.stderr}\n```"
 
-            # If return code is 0 and no obvious errors in output, assume success for execution step
             return True, output
         except subprocess.TimeoutExpired:
             os.unlink(tmp_filename)
             return False, "Timeout (30s) while running CSP code. The problem or generated code may be too complex or incorrect."
         except Exception as e:
-             # Clean up even if other exceptions occur
             if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
                  os.unlink(tmp_filename)
             return False, f"Error executing CSP code: {str(e)}"
-
     
-class TwoStepReasoner(Reasoner):
-    """Two-step reasoning approach"""
+    def get_execute_function(self, solver_name: str) -> Callable[[str], Tuple[bool, str]]:
+        """Get the execution function for a solver"""
+        solver_map = {
+            'z3': self.execute_z3_code,
+            'pyke': self.execute_pyke_code,
+            'pythonconstraint': self.execute_csp_code
+        }
+        return solver_map.get(solver_name)
 
+
+class CodeCleaner:
+    """Handles code cleaning for different datasets"""
+    
+    @staticmethod
+    def clean_code(code_text: str, dataset: str) -> str:
+        """Clean the code from the model output which have '```python' or '```' fences"""
+        dataset = dataset.lower()
+        
+        if dataset in ['ar-lsat', 'logicaldeduction']:
+            # Clean potential markdown fences
+            cleaned_code = code_text
+            if "```python" in cleaned_code:
+                match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
+                if match:
+                    cleaned_code = match.group(1).strip()
+            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
+                cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
+                cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
+                cleaned_code = cleaned_code.strip()
+
+            # Add required import if missing
+            required_import = DatasetConfig.get_required_import(dataset)
+            if required_import and not cleaned_code.strip().startswith(required_import):
+                print(f"Warning: '{required_import}' missing from generated code. Prepending it.")
+                cleaned_code = required_import + "\n\n" + cleaned_code
+
+            return cleaned_code
+        
+        elif dataset == 'proofwriter':
+            return code_text
+        
+        elif dataset == 'folio':
+            matches = re.search(r"```prover9\n(.*?)```", code_text, re.DOTALL)
+            if matches:
+                return matches.group(1)
+            else:
+                print("Warning: No ```prover9 code block found in the output text.")
+                return code_text
+        
+        elif dataset == 'prontoqa':
+            return code_text
+        
+        else:
+            raise ValueError(f"Dataset {dataset} not configured for code cleaning.")
+
+
+class Reasoner(ABC):
+    """Base class for different reasoning approaches"""
+    
     def __init__(self, 
                  config: ReasonerConfig,
                  data_loader: DataLoader,
                  answer_extractor: AnswerExtractor):
-        super().__init__(config, data_loader, answer_extractor)
-
-    def get_plan_prompt(self, test_case, feedback=None):
-        """Get the plan generation prompt with the given inputs."""
-        # load the plan generation prompt
+        """Initialize the reasoner with the given components"""
         
-        base_prompt_path = os.path.join(self.config.prompt_path, "plan.txt")
-        with open(base_prompt_path, "r") as file:
-            PLAN_GENERATION_PROMPT = file.read()
-
-        # Pre-format the answers with json.dumps
-        if self.config.dataset.lower() == "ar-lsat":
-            context = test_case["context"]
-            question = test_case["question"]
-            answers = test_case["answers"]
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{answers}", str(answers))
-            
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = PLAN_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))
-            
-        else:
-            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
-
-        return prompt
+        self.config = config
+        self.data_loader = data_loader
+        self.results_folder = self.create_results_folder()
+        self.answer_extractor = answer_extractor
         
-    def get_code_prompt(self, test_case, plan, feedback=None):
-        """Get the code generation prompt with the given inputs."""
-        # load the code generation prompt
+        self.summary_folder = os.path.join(self.results_folder, "summary")
+        self.log_folder = os.path.join(self.results_folder, "log")
+        os.makedirs(self.summary_folder, exist_ok=True)
+        os.makedirs(self.log_folder, exist_ok=True)
         
-        base_prompt_path = os.path.join(self.config.prompt_path, "code.txt")
-        with open(base_prompt_path, "r") as file:
-            CODE_GENERATION_PROMPT = file.read()
-        
-        # Pre-format the answers with json.dumps
-        if self.config.dataset.lower() == "ar-lsat":
-            context = test_case["context"]
-            question = test_case["question"]
-            answers = test_case["answers"]
-            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{answers}", str(answers))
-            prompt = prompt.replace("{plan}", plan)
-            
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            context = test_case["context"]
-            question = test_case["question"]
+        # Initialize temp cache directory for PyKe
+        self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
+        if os.path.exists("./compiled_krb"):
+            print('removing compiled_krb')
+            os.system(f'rm -rf ./compiled_krb')
 
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{plan}", plan)    
-            
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = CODE_GENERATION_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{plan}", plan)
-            prompt = prompt.replace("{options}", str(options))
+        # Initialize helper classes
+        self.prompt_handler = PromptHandler(config.prompt_path, config.dataset)
+        self.code_executor = CodeExecutor(self.temp_cache_dir)
         
-        else:
-            # Fallback or error for unsupported datasets
-            raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner prompts.")
-        
-        return prompt 
-
-    def get_fix_syntax_error_prompt(self, test_case, plan, code, syntax_error):
-        """Get the fix generation prompt with the given inputs."""
-        # load the fix generation prompt
-        base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
-        with open(base_prompt_path, "r") as file:
-            FIX_GENERATION_PROMPT = file.read()
-            
-        if self.config.dataset.lower() == "ar-lsat":
-            prompt = FIX_GENERATION_PROMPT.format(
-                code=code,
-                syntax_error=syntax_error
+        # Initialize API clients based on reasoning method
+        if config.reasoning_method == "cot" or config.reasoning_method == "one-step":
+            model = getattr(config, 'model', None)
+            api_config = APIConfig(
+                model_name=model,
+                temperature=config.temperature,
+                max_retries=config.max_retries,
+                inter_test_case_delay=config.test_delay
             )
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa": 
-            prompt = FIX_GENERATION_PROMPT.format(
-                code=code,
-                syntax_error=syntax_error
-            )
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            prompt = FIX_GENERATION_PROMPT.format(
-                code=code,
-                syntax_error=syntax_error
-            )
-        else:
-            raise ValueError(f"Unsupported dataset: {self.config.dataset}")
-        
-        return prompt
+            self.api_client = self.initialize_api_client(model, api_config)
 
+        # Initialize code_api_client if needed for code generation
+        if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
+            plan_model = getattr(config, 'plan_model', None)
+            print(f"Plan model: {plan_model}")
+            if plan_model is None:
+                raise ValueError("plan_model is not set")
+            api_config = APIConfig(
+                model_name=plan_model,
+                temperature=config.plan_temp,
+                max_retries=config.max_retries,
+                inter_test_case_delay=config.test_delay
+            )
+            self.api_client = self.initialize_api_client(plan_model, api_config)
+
+            code_model = getattr(config, 'code_model', None)
+            print(f"Code model: {code_model}")
+            if code_model is None:
+                raise ValueError("code_model is not set")
+            fix_api_config = APIConfig(
+                model_name=code_model,
+                temperature=config.code_temp,
+                max_retries=config.max_retries,
+                inter_test_case_delay=config.test_delay
+            )
+            
+            self.code_api_client = self.initialize_api_client(code_model, fix_api_config)
+
+    def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
+        """Initialize the API client for the given model name and API configuration"""
+        client_params = {}
+        if 'gpt' in model_name.lower():
+            api_config.provider = "azure-openai"
+            client_params = {
+                'endpoint': self.config.azure_endpoint,
+                'deployment': self.config.azure_deployment,
+                'managed_identity_client_id': self.config.azure_managed_identity_client_id
+            }
+        elif 'gemini' in model_name.lower():
+            api_config.provider = "gemini"
+            if self.config.gemini_api_keys:
+                client_params = {'api_keys': self.config.gemini_api_keys}
+                print(f"Initialized Gemini client with {len(self.config.gemini_api_keys)} API keys for rotation")
+            else:
+                client_params = {'api_key': self.config.gemini_api_key}
+        else:
+            raise ValueError(f"Unsupported plan model: {model_name}")
+        
+        api_client = get_api_client(api_config.provider, api_config, **client_params)
+        return api_client
+    
+    def save_prompts_folder(self) -> None:
+        """Copy the prompts folder to the results directory to preserve exact prompts used"""
+        if not os.path.exists(self.config.prompt_path):
+            print(f"Warning: Prompt path {self.config.prompt_path} does not exist, skipping prompt folder copy")
+            return
+            
+        prompts_dest = os.path.join(self.results_folder, "prompts")
+        
+        try:
+            if os.path.exists(prompts_dest):
+                print(f"Prompts folder already exists at {prompts_dest}, removing old copy...")
+                shutil.rmtree(prompts_dest)
+            
+            shutil.copytree(self.config.prompt_path, prompts_dest)
+            print(f"✅ Prompts folder copied to: {prompts_dest}")
+            
+            prompt_metadata = {
+                "original_prompt_path": self.config.prompt_path,
+                "copied_at": datetime.now().isoformat(),
+                "reasoning_method": self.config.reasoning_method,
+                "dataset": self.config.dataset,
+                "shots": self.config.shots
+            }
+            
+            metadata_path = os.path.join(prompts_dest, "prompt_metadata.json")
+            with open(metadata_path, 'w') as f:
+                json.dump(prompt_metadata, f, indent=2)
+            
+            print(f"✅ Prompt metadata saved to: {metadata_path}")
+            
+        except Exception as e:
+            print(f"❌ Error copying prompts folder: {e}")
+            print(f"   Source: {self.config.prompt_path}")
+            print(f"   Destination: {prompts_dest}")
+
+    @abstractmethod
+    def reason(self, test_case: Dict) -> Dict:
+        """Implement the reasoning strategy"""
+        pass
+
+    def create_results_folder(self) -> None:
+        """Create results folder based on model name"""
+        plan_model_name = getattr(self.config, 'plan_model', None)
+        if plan_model_name is None:
+            raise ValueError("plan_model is not set")
+        code_model_name = getattr(self.config, 'code_model', None)
+        if code_model_name is None:
+            raise ValueError("code_model is not set")
+        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
+        print(f"Results folder: {self.results_folder}")
+        
+        if os.path.exists(self.results_folder):
+            print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
+        else:
+            print("No existing results found, starting fresh")
+            os.makedirs(self.results_folder)
+        return self.results_folder
+
+    def _call_api(self, prompt: str) -> str:
+        """Common method to call the API using the modular client"""
+        return self.api_client.call(prompt)
+    
+    def _call_fix_api(self, prompt: str) -> str:
+        """Common method to call the API using the modular client"""
+        return self.code_api_client.call(prompt)
+    
+    def interpret_results(self, response_text: str) -> Tuple[bool, str, Optional[str]]:
+        """Interpret the results from the reasoning"""
+        return True, "Model passed the test.", response_text
+
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
+        """Process the results of a single test case"""
+        pass
+
+    def run_all_tests(self) -> None:
+        """Run reasoning on all test cases in the file with optional limit"""
+        start_time_total = time.time()
+        processed_count = 0
+        for i, batch in enumerate(self.data_loader):
+            reasoning_result = self.reason(batch[0])
+            self._process_results(batch[0], reasoning_result, 0.0, str(uuid.uuid4()), None)
+
+            processed_count += 1
+            if processed_count < len(self.data_loader):
+                print(f"Waiting {self.config.test_delay}s before next test case...")
+                time.sleep(self.config.test_delay)
+
+        total_execution_time = time.time() - start_time_total
+        print(f"\nTotal execution time: {total_execution_time:.2f}s")
+        
+    def run_all_tests_parallel(self, num_processes: int=10) -> None:
+        """Use multiple processes to run all test cases in parallel"""
+        print(f"Start parallel testing, using {num_processes} processes...")
+        print(f"Please visit the {self.log_folder} to view the real-time output log")
+
+        start_time_total = time.time()
+        
+        mp_lock = mp.Lock()
+        all_tasks = [(self, batch[0], mp_lock, idx) for idx, batch in enumerate(self.data_loader)]
+        processes = []
+        try:
+            for task in all_tasks:
+                while len(processes) >= num_processes:
+                    processes = [p for p in processes if p.is_alive()]
+                    time.sleep(0.1)
+                p = mp.Process(target=_parallel_worker, args=(task,))
+                p.start()
+                processes.append(p)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt received! Terminating all processes...")
+            for p in processes:
+                if p.is_alive():
+                    p.terminate()
+        finally:
+            for p in processes:
+                p.join()
+            print("All processes joined.")
+
+        total_execution_time = time.time() - start_time_total
+        print(f"\nTotal execution time: {total_execution_time:.2f}s")
+        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w") as f:
+            f.write(f"{total_execution_time:.2f}s")
+
+
+class CodeBasedReasoner(Reasoner):
+    """Base class for reasoners that generate and execute code"""
+    
     def reason_code_diversity(self, 
                               test_case: dict,
-                              solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
-                              execute_func: Callable[[str], Tuple[bool, Any]],
+                              solver_name: str,
                               mp_lock: Optional[Any] = None) -> dict:
-        """Inference code with diversity parameters
+        """Generate and execute code with diversity parameters"""
+        execute_func = self.code_executor.get_execute_function(solver_name)
+        if execute_func is None:
+            raise ValueError(f"Unsupported solver: {solver_name}")
         
-        Args:
-            test_case (dict): The test case to reason about.
-            solver_name (Literal["z3", "pyke", "prover9", "pythonconstraint"]): The name of the solver to use.
-            execute_func (Callable[[str], Tuple[bool, Any]]): The function to execute the code.
-            mp_lock (Optional[Any]): The multiprocessing lock to use.
+        return self._generate_and_execute_code(test_case, solver_name, execute_func, mp_lock)
+    
+    @abstractmethod
+    def _generate_and_execute_code(self, test_case: dict, solver_name: str, execute_func: Callable, mp_lock: Optional[Any] = None) -> dict:
+        """Generate and execute code - to be implemented by subclasses"""
+        pass
+    
+    def _execute_with_repair(self, test_case: dict, code: str, execute_func: Callable, 
+                           mp_lock: Optional[Any], identifier: str) -> Tuple[str, str, bool]:
+        """Execute code with repair attempts"""
+        temp_code = code
+        temp_solver_output = None
+        is_valid = False
+        
+        for iteration in range(self.config.max_repairs):
+            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for {identifier}")
+            
+            if mp_lock is not None:
+                with mp_lock:
+                    is_valid, temp_solver_output = execute_func(temp_code)
+            else:
+                is_valid, temp_solver_output = execute_func(temp_code)
+                
+            if not is_valid and iteration < self.config.max_repairs - 1:
+                print(f"Code execution failed for {identifier}. Error: {temp_solver_output}")
+                fix_prompt = self.prompt_handler.get_fix_syntax_error_prompt(test_case, temp_code, temp_solver_output)
+                fix_response = self._call_fix_api(fix_prompt) if hasattr(self, 'code_api_client') else self._call_api(fix_prompt)
+                temp_code = CodeCleaner.clean_code(fix_response, self.config.dataset)
+            else:
+                if is_valid:
+                    print(f"Code execution succeeded for {identifier}.")
+                break
+        
+        return temp_code, temp_solver_output, is_valid
+    
+    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
+        """Main reasoning entry point"""
+        solver_name = DatasetConfig.get_solver(self.config.dataset)
+        if solver_name is None:
+            raise ValueError(f"Dataset {self.config.dataset} not configured for reasoning.")
+        return self.reason_code_diversity(test_case, solver_name, mp_lock)
 
-        Returns:
-            dict: Sketched Plans and their corresponding codes with their execution results.
-        """
-        plan_feedback = None
-        code_feedback = None
 
-        # Enhanced plan generation configurations with diverse parameters
-        # Use config values for number of paths and temperature
-        plan_configs = [
-            {"temperature": self.config.plan_temp}
-            for _ in range(self.config.num_paths)
-        ]
+class TwoStepReasoner(CodeBasedReasoner):
+    """Two-step reasoning approach"""
 
+    def _generate_and_execute_code(self, test_case: dict, solver_name: str, execute_func: Callable, mp_lock: Optional[Any] = None) -> dict:
+        """Generate plans and codes with diversity parameters"""
+        plan_configs = [{"temperature": self.config.plan_temp} for _ in range(self.config.num_paths)]
         all_plan_results = []
+        
         for plan_config_idx, plan_config in enumerate(plan_configs):
             print(f"Generating plan {plan_config_idx + 1}/{len(plan_configs)}...")
-            # Set generation parameters for plan generation
             self.api_client.temperature = plan_config["temperature"]
-            # print api client name
-            print(f"Generating plan with API client name: {self.api_client}")
-
+            
             # Generate plan
-            plan_prompt = self.get_plan_prompt(test_case, feedback=plan_feedback)
+            plan_prompt = self.prompt_handler.get_plan_prompt(test_case)
             current_plan_response = self._call_api(plan_prompt)
             current_plan = current_plan_response if isinstance(current_plan_response, str) else current_plan_response[0]
             
-            # print(f"\nGenerated plan (config={plan_config}):")
-            # print("=" * 80)
-            # print(current_plan)
-            # print("=" * 80)
-
-            # Enhanced code generation with batch generation
-            code_configs = [
-                {"temperature": self.config.code_temp},
-            ]
-            
+            # Generate code
+            code_configs = [{"temperature": self.config.code_temp}]
             plan_code_results = []
-            code_gen_idx = 1
-            for code_config in code_configs:
-                # Set generation parameters for code generation
+            
+            for code_gen_idx, code_config in enumerate(code_configs, 1):
                 self.code_api_client.temperature = code_config["temperature"]
-                # print api client name
-                print(f"Generating code with API client name: {self.code_api_client}")
-
-                code_prompt = self.get_code_prompt(test_case, current_plan, feedback=code_feedback)
-                temp_code_response = self._call_api(code_prompt)
                 
-                # Since we simplified the API to always return a single response
-                temp_code = temp_code_response
-                temp_code = self.clean_code(temp_code)
+                code_prompt = self.prompt_handler.get_code_prompt(test_case, current_plan)
+                temp_code_response = self._call_fix_api(code_prompt)
+                temp_code = CodeCleaner.clean_code(temp_code_response, self.config.dataset)
                 
-                # print(f"\nGenerated {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}/{total_codes_for_plan}):")
-                # print("=" * 50)
-                # print(temp_code)
-                # print("=" * 50)
+                # Execute with repair loop
+                identifier = f"plan={plan_config_idx + 1}, code={code_gen_idx}"
+                temp_code, temp_solver_output, is_valid = self._execute_with_repair(
+                    test_case, temp_code, execute_func, mp_lock, identifier
+                )
                 
-                # Execute the code to check solver output
-                for iteration in range(self.config.max_repairs):
-                    print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for plan={plan_config_idx + 1}, code={code_gen_idx}")
-                    # Execute code
-                    if mp_lock is not None:
-                        with mp_lock:
-                            is_valid, temp_solver_output = execute_func(temp_code)
-                    else:
-                        is_valid, temp_solver_output = execute_func(temp_code)
-                    if not is_valid:
-                        print(f"\n{solver_name} code execution failed for plan={plan_config_idx + 1}, code={code_gen_idx}. Error type: {temp_solver_output}")
-                    
-                        if iteration < self.config.max_repairs - 1:
-                            # Generate fix using single generation
-                            fix_prompt = self.get_fix_syntax_error_prompt(test_case, current_plan, temp_code, temp_solver_output)
-                            # print("Attempting to fix syntax errors...")
-                            print(f"Syntax error fix with API client name: {self.code_api_client}")
-
-                            fix_response = self._call_api(fix_prompt)
-                            temp_code = fix_response  # API now always returns a single string
-                            temp_code = self.clean_code(temp_code)
-                            # print(f"\nFixed {solver_name} code (plan={plan_config_idx + 1}, code={code_gen_idx}):")
-                            # print("=" * 50)
-                            # print(temp_code)
-                            # print("=" * 50)
-                    else:
-                        print(f"{solver_name} code execution succeeded for plan={plan_config_idx + 1}, code={code_gen_idx}.")
-                        break
-                
-                # Store this code generation's results
                 code_result = {
                     "plan_idx": plan_config_idx + 1,
                     "code_idx": code_gen_idx,
                     "code": temp_code,
                     "solver_output": temp_solver_output,
-                    "is_valid": temp_solver_output is not None and is_valid,
-                    "code generation_config": code_config.copy()
+                    "is_valid": is_valid,
+                    "code_generation_config": code_config.copy()
                 }
                 plan_code_results.append(code_result)
-                
-                # print(f"Plan {plan_config_idx + 1} - Code {code_gen_idx} solver output: {temp_solver_output}")
-                code_gen_idx += 1
             
-            # Store this plan's results
             plan_result = {
                 "plan_idx": plan_config_idx + 1,
                 "plan_config": plan_config.copy(),
@@ -842,432 +672,140 @@ class TwoStepReasoner(Reasoner):
             }
             all_plan_results.append(plan_result)
         
-        return {
-            "all_plan_results": all_plan_results
-        }
-    
-    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
-        """Generate formal code directly in two step and execute it"""
-        if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code, mp_lock)
-        elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
-        elif self.config.dataset.lower() == "folio":
-            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code, mp_lock)
-        elif self.config.dataset.lower() == 'prontoqa':
-            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            return self.reason_code_diversity(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for TwoStepReasoner reasoning.")
-                
-    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        """Save the "plan" and "code" to the results_folder"""
-        # save the "plan" and "code" to the results_folder
+        return {"all_plan_results": all_plan_results}
+
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
+        """Save the plans, codes and results to the results_folder"""
         plan_folder = os.path.join(self.results_folder, "plan")
         code_folder = os.path.join(self.results_folder, "code")
-        if not os.path.exists(plan_folder):
-            os.makedirs(plan_folder)
-        if not os.path.exists(code_folder):
-            os.makedirs(code_folder)
+        os.makedirs(plan_folder, exist_ok=True)
+        os.makedirs(code_folder, exist_ok=True)
 
-        # get the problem name from the id_string if it exists, otherwise use the id_string
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Process all plan results and collect solver outputs for 
         all_plan_results = reasoning_result.get("all_plan_results", [])
-        total_code_count = 0
-        plan_summaries = []
-        all_solver_outputs = []  # Collect all valid solver outputs for 
+        all_solver_outputs = []
         
         for plan_result in all_plan_results:
             plan_idx = plan_result["plan_idx"]
             plan_config = plan_result["plan_config"]
-            plan_temp = plan_config["temperature"]  # Extract temperature from config
+            plan_temp = plan_config["temperature"]
             
-            # Save the plan with config info
+            # Save plan
             plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-temp{plan_temp}.txt")
             with open(plan_filepath, "w") as f:
                 f.write(f"Plan Config: {plan_config}\n\n")
                 f.write(plan_result["plan"])
             
-            # Process codes for this plan
-            code_results = plan_result.get("code_results", [])
-            plan_code_results = []
-            
-            for code_result in code_results:
+            # Save codes
+            for code_result in plan_result.get("code_results", []):
                 code_idx = code_result["code_idx"]
                 code_generation_config = code_result.get("code_generation_config", {})
                 
-                # Save each code with generation config info
                 code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-code{code_idx}.py")
                 with open(code_filepath, "w") as f:
                     f.write(f"# Plan Config: {plan_config}\n")
                     f.write(f"# Generation Config: {code_generation_config}\n\n")
                     f.write(code_result["code"])
                 
-                # Collect solver outputs for  (include all outputs, even failed ones)
                 solver_output = code_result["solver_output"]
                 if solver_output is not None:
                     all_solver_outputs.append(solver_output)
-                
-                total_code_count += 1
-                
-                code_eval_result = {
-                    "plan_idx": plan_idx,
-                    "code_idx": code_idx,
-                    "solver_output": solver_output,
-                    "is_valid": code_result["is_valid"],
-                    "code_generation_config": code_generation_config
-                }
-                plan_code_results.append(code_eval_result)
-                
-                # print(f"Plan {plan_idx} - Code {code_idx}: {'VALID' if code_result['is_valid'] else 'INVALID'} (Output: {solver_output})")
-            
-            plan_summaries.append({
-                "plan_idx": plan_idx,
-                "plan_config": plan_config,
-                "total_codes": len(code_results),
-                "code_results": plan_code_results
-            })
             
         results = {
             "problem": test_case,
             "timing": case_time,
-            "all_solver_outputs": all_solver_outputs}
+            "all_solver_outputs": all_solver_outputs
+        }
 
-        # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
-            json.dump(results, f, indent=2, ensure_ascii=False)        
-
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
+            json.dump(results, f, indent=2, ensure_ascii=False)
 
 
-class DirectReasoner(Reasoner):
+class DirectReasoner(CodeBasedReasoner):
     """Direct reasoning approach - generates formal code in one step"""
 
-    def __init__(self, 
-                 config: ReasonerConfig,
-                 data_loader: DataLoader,
-                 answer_extractor: AnswerExtractor):
-        super().__init__(config, data_loader, answer_extractor)
-
-    def get_direct_prompt(self, test_case, feedback=None):
-        """Get the direct code generation prompt with the given inputs.
-        
-        Args:
-            test_case (dict): The test case to reason about.
-            feedback (Optional[str]): The feedback to use for the prompt.
-
-        Returns:
-            str: The direct code generation prompt.
-        """
-        # Load the direct prompt from the specified path
-        prompt_path = os.path.join(self.config.prompt_path, "prompt.txt")
-        
-        with open(prompt_path, "r") as file:
-            DIRECT_PROMPT = file.read()
-
-        # Pre-format the answers with json.dumps
-        if self.config.dataset.lower() == "ar-lsat":
-            context = test_case["context"]
-            question = test_case["question"]
-            answers = test_case["answers"]
-            
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = DIRECT_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{answers}", str(answers))
-            
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            context = test_case["context"]
-            question = test_case["question"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = DIRECT_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = DIRECT_PROMPT.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))
-        
-        else:
-            # Fallback or error for unsupported datasets
-            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner prompts.")
-        
-        return prompt
-
-    def get_fix_syntax_error_prompt(self, test_case, code, syntax_error):
-        """Get the fix generation prompt with the given inputs."""
-        # load the fix generation prompt
-        base_prompt_path = os.path.join(self.config.prompt_path, "fix_syntax_errors.txt")
-        with open(base_prompt_path, "r") as file:
-            FIX_GENERATION_PROMPT = file.read()
-
-        if self.config.dataset.lower() == "ar-lsat":
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
-            prompt = prompt.replace("{syntax_error}", syntax_error)
-        
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
-            prompt = prompt.replace("{syntax_error}", syntax_error)
-            
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = FIX_GENERATION_PROMPT.replace("{code}", code)
-            prompt = prompt.replace("{syntax_error}", syntax_error)
-            
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner fix_syntax_errors.")
-        
-        return prompt
-
-    def reason_code_diversity(self, 
-                              test_case: dict,
-                              solver_name: Literal["z3", "pyke", "prover9", "pythonconstraint"],
-                              execute_func: Callable[[str], Tuple[bool, Any]],
-                              mp_lock: Optional[Any] = None) -> dict:
-        """Generate multiple code variants with diverse parameters for DirectReasoner"""
-        code_feedback = None
-
-        # Enhanced code generation configurations with diverse parameters
-        # Use config values for number of paths and temperature
-        code_configs = [
-            {"temperature": self.config.temperature}
-            for _ in range(self.config.num_paths)
-        ]
-        
+    def _generate_and_execute_code(self, test_case: dict, solver_name: str, execute_func: Callable, mp_lock: Optional[Any] = None) -> dict:
+        """Generate multiple code variants with diverse parameters"""
+        code_configs = [{"temperature": self.config.temperature} for _ in range(self.config.num_paths)]
         all_code_results = []
-        
-        # Store original parameters
         original_temp = self.api_client.temperature
         
         for code_config_idx, code_config in enumerate(code_configs):
             print(f"Generating code {code_config_idx + 1}/{len(code_configs)}...")
-            
-            # Set generation parameters for code generation
             self.api_client.temperature = code_config["temperature"]
             
             # Generate code directly
-            direct_prompt = self.get_direct_prompt(test_case, feedback=code_feedback)
+            direct_prompt = self.prompt_handler.get_direct_prompt(test_case)
             current_code_response = self._call_api(direct_prompt)
             current_code = current_code_response if isinstance(current_code_response, str) else current_code_response[0]
-            current_code = self.clean_code(current_code)
+            current_code = CodeCleaner.clean_code(current_code, self.config.dataset)
             
-            # print(f"\nGenerated {solver_name} code (config={code_config}):")
-            # print("=" * 80)
-            # print(current_code)
-            # print("=" * 80)
-
-            # Execute the code to check solver output
-            syntax_errors = []
-            temp_solver_output = None
-            for iteration in range(self.config.max_repairs):
-                print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for code {code_config_idx + 1}")
-                # Execute code
-                if mp_lock is not None:
-                    with mp_lock:
-                        is_valid, temp_solver_output = execute_func(current_code)
-                else:
-                    is_valid, temp_solver_output = execute_func(current_code)
-                    
-                if not is_valid:
-                    print(f"\n{solver_name} code execution failed for code {code_config_idx + 1}. Error type: {temp_solver_output}")
-                    syntax_errors.append(temp_solver_output)
-                    
-                    if iteration < self.config.max_repairs - 1:
-                        # Generate fix
-                        fix_prompt = self.get_fix_syntax_error_prompt(test_case, current_code, temp_solver_output)
-                        print("Attempting to fix syntax errors...")
-                        fix_response = self._call_api(fix_prompt)
-                        current_code = fix_response if isinstance(fix_response, str) else fix_response[0]
-                        current_code = self.clean_code(current_code)
-                        # print(f"\nFixed {solver_name} code (code {code_config_idx + 1}):")
-                        # print("=" * 80)
-                        # print(current_code)
-                        # print("=" * 80)
-                else:
-                    print(f"{solver_name} code execution succeeded for code {code_config_idx + 1}.")
-                    break
+            # Execute with repair loop
+            identifier = f"code {code_config_idx + 1}"
+            current_code, temp_solver_output, is_valid = self._execute_with_repair(
+                test_case, current_code, execute_func, mp_lock, identifier
+            )
             
-            # Store this code generation's results
             code_result = {
                 "code_idx": code_config_idx + 1,
                 "code": current_code,
                 "solver_output": temp_solver_output,
-                "is_valid": temp_solver_output is not None and is_valid,
-                "generation_config": code_config.copy(),
-                "syntax_errors": syntax_errors
+                "is_valid": is_valid,
+                "generation_config": code_config.copy()
             }
             all_code_results.append(code_result)
-            
-            # print(f"Code {code_config_idx + 1} solver output: {temp_solver_output}")
         
-        # Restore original parameters
         self.api_client.temperature = original_temp
-        
-        return {
-            "all_code_results": all_code_results
-        }
-    
-    def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
-        """Generate formal code directly in one step and execute it"""
-        if self.config.dataset.lower() == "ar-lsat":
-            return self.reason_code_diversity(test_case, "z3", self.execute_z3_code, mp_lock)
-        elif self.config.dataset.lower() == "proofwriter":
-            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
-        elif self.config.dataset.lower() == "folio":
-            return self.reason_code_diversity(test_case, "prover9", self.execute_prover9_code, mp_lock)
-        elif self.config.dataset.lower() == 'prontoqa':
-            return self.reason_code_diversity(test_case, "pyke", self.execute_pyke_code, mp_lock)
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            return self.reason_code_diversity(test_case, "pythonconstraint", self.execute_csp_code, mp_lock)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for DirectReasoner reasoning.")
-        
-    def _process_results_diversity(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # save the "code" to the results_folder
-        code_folder = os.path.join(self.results_folder, "code")
-        if not os.path.exists(code_folder):
-            os.makedirs(code_folder)
+        return {"all_code_results": all_code_results}
 
-        # get the problem name from the id_string if it exists, otherwise use the id_string
+    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
+        """Save the codes and results to the results_folder"""
+        code_folder = os.path.join(self.results_folder, "code")
+        os.makedirs(code_folder, exist_ok=True)
+
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
-        
-        # Process all code results and collect solver outputs for 
         all_code_results = reasoning_result.get("all_code_results", [])
-        total_code_count = 0
-        code_summaries = []
-        all_solver_outputs = []  # Collect all valid solver outputs for 
+        all_solver_outputs = []
         
         for code_result in all_code_results:
             code_idx = code_result["code_idx"]
-            code_generation_config = code_result.get("code_generation_config", {})
+            code_generation_config = code_result.get("generation_config", {})
             
-            # Save each code with generation config info
             code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-code{code_idx}.py")
             with open(code_filepath, "w") as f:
                 f.write(f"# Generation Config: {code_generation_config}\n\n")
                 f.write(code_result["code"])
             
-            # Collect solver outputs for  (include all outputs, even failed ones)
             solver_output = code_result["solver_output"]
             if solver_output is not None:
                 all_solver_outputs.append(solver_output)
             
-            total_code_count += 1
-            
-            code_eval_result = {
-                "code_idx": code_idx,
-                "solver_output": solver_output,
-                "is_valid": code_result["is_valid"],
-                "code_generation_config": code_generation_config
-            }
-            code_summaries.append(code_eval_result)
-            
-        # Record result with essential information only
         results = {
             "problem": test_case,
             "timing": case_time,
-            "all_solver_outputs": all_solver_outputs            }
-        # Save result
+            "all_solver_outputs": all_solver_outputs
+        }
+        
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
-        
-    def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        return self._process_results_diversity(test_case, reasoning_result, case_time, unique_id, timing_data)
     
+
 class CoTReasoner(Reasoner):
     """Chain-of-Thought reasoning approach"""
 
-    def __init__(self,
-                 config: ReasonerConfig,
-                 data_loader: DataLoader,
-                 answer_extractor: AnswerExtractor):
-        super().__init__(config, data_loader, answer_extractor)
-
-    def get_cot_prompt(self, test_case: Dict) -> str:
-        """Get the CoT prompt with the given inputs."""
-        # Load the CoT prompt from the specified path
-        # Assuming the prompt path is relative to the project root or a known directory
-        # For example, using the path provided in the context
-        prompt_path = os.path.join(self.config.prompt_path, "prompt.txt")
-        
-        with open(prompt_path, "r") as file:
-            COT_PROMPT_TEMPLATE = file.read()
-
-        if self.config.dataset.lower() == "ar-lsat":
-            context = test_case["context"]
-            question = test_case["question"]
-            answers = test_case["answers"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{answers}", str(answers))
-            
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))
-            
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            context = test_case["context"]
-            question = test_case["question"]
-            options = test_case["options"]
-
-            # Use string replacement instead of .format() to avoid curly brace issues
-            prompt = COT_PROMPT_TEMPLATE.replace("{context}", context)
-            prompt = prompt.replace("{question}", question)
-            prompt = prompt.replace("{options}", str(options))
-        
-        else:
-            # Fallback or error for unsupported datasets
-            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner prompts.")
-        
-        return prompt
-
     def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Generate reasoning using the CoT prompt"""
-        cot_prompt = self.get_cot_prompt(test_case)
-        
+        cot_prompt = self.prompt_handler.get_cot_prompt(test_case)
         print("\nGenerating CoT reasoning:")
-        # print("=" * 80)
-        # print(cot_prompt) # Optional: print the prompt for debugging
-        # print("=" * 80)
-
         reasoning_output = self._call_api(cot_prompt)
-        
-        # print("\nGenerated CoT Output:")
-        # print("=" * 80)
-        # print(reasoning_output)
-        # print("=" * 80)
-        
-        return {
-            "reasoning_output": reasoning_output
-        }
+        return {"reasoning_output": reasoning_output}
 
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        # Save the "reasoning_output" to the results_folder
+        """Save the reasoning output and extract answers"""
         reasoning_folder = os.path.join(self.results_folder, "reasoning")
-        if not os.path.exists(reasoning_folder):
-            os.makedirs(reasoning_folder)
+        os.makedirs(reasoning_folder, exist_ok=True)
 
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         
@@ -1278,41 +816,36 @@ class CoTReasoner(Reasoner):
                 reasoning_output = "[ERROR: No reasoning output generated]"
             f.write(reasoning_output)
 
-        # Handle case where reasoning output is None (API failure)
+        # Extract answer from reasoning output
         reasoning_output_for_extraction = reasoning_result.get("reasoning_output", "")
         if reasoning_output_for_extraction is None:
             reasoning_output_for_extraction = ""
         
-        # Extract the answer from the reasoning output, only for CoTReasoner
+        # Dataset-specific answer extraction
         if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == "proofwriter" or self.config.dataset.lower() == "folio" or self.config.dataset.lower() == "prontoqa":
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
-        elif self.config.dataset.lower() == 'logicaldeduction':
-            is_correct, error_type = self.answer_extractor.extract_answer(reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
+            is_correct, error_type = self.answer_extractor.extract_answer(
+                reasoning_output_for_extraction, test_case["label"], test_case["answers"], self.config.reasoning_method)
+        elif self.config.dataset.lower() in ["proofwriter", "folio", "prontoqa", "logicaldeduction"]:
+            is_correct, error_type = self.answer_extractor.extract_answer(
+                reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
         else:
             raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
         
-        # If reasoning output was None, override the error type
+        # Handle API failure case
         if reasoning_result.get("reasoning_output") is None:
             is_correct = False
             error_type = "API failure - no output generated"
         
-        if is_correct:
-            print(f"\nReasoning PASSED. Error type: {error_type}")
-        else:
-            print(f"\nReasoning FAILED. Error type: {error_type}")
+        print(f"\nReasoning {'PASSED' if is_correct else 'FAILED'}. Error type: {error_type}")
 
-        # CoTReasoner uses a different format - not compatible with multi-path analysis
         results = {
             "problem": test_case,
             "timing": case_time,
             "reasoning_output": reasoning_result["reasoning_output"],
             "error_type": error_type,
-            "success": is_correct        }
+            "success": is_correct
+        }
         
-        # Save result
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
         with open(summary_filepath, "w") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
-        
