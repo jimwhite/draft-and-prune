@@ -385,7 +385,7 @@ class Reasoner(ABC):
             model = getattr(config, 'model', None)
             api_config = APIConfig(
                 model_name=model,
-                temperature=config.temperature,
+                temperature=config.code_temp,
                 max_retries=config.max_retries,
                 inter_test_case_delay=config.test_delay
             )
@@ -727,7 +727,7 @@ class DirectReasoner(CodeBasedReasoner):
 
     def _generate_and_execute_code(self, test_case: dict, solver_name: str, execute_func: Callable, mp_lock: Optional[Any] = None) -> dict:
         """Generate multiple code variants with diverse parameters"""
-        code_configs = [{"temperature": self.config.temperature} for _ in range(self.config.num_paths)]
+        code_configs = [{"temperature": self.config.code_temp} for _ in range(self.config.num_paths)]
         all_code_results = []
         original_temp = self.api_client.temperature
         

@@ -2,7 +2,7 @@
 # import argparse
 # from datetime import datetime
 from config import ReasonerConfig
-from reasoners_refactored import CoTReasoner, TwoStepReasoner, DirectReasoner
+from reasoners import CoTReasoner, TwoStepReasoner, DirectReasoner
 from data_loaders import DataLoader, Sampler, JSON_Dataset
 from answer_extractors import (AR_LSAT_AnswerExtractor, 
                                ProofWriter_AnswerExtractor,
