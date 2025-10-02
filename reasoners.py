@@ -589,6 +589,7 @@ class CodeBasedReasoner(Reasoner):
         """Execute code with repair attempts"""
         temp_solver_output = None
         is_valid = False
+        temp_code = code
         
         for iteration in range(self.config.max_repairs):
             print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for {identifier}")
