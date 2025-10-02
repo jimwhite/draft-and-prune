@@ -591,10 +591,10 @@ Examples:
     parser.add_argument('results_directory', 
                        help='Path to the experiment results directory')
     
-    parser.add_argument('--expected-paths', type=int, default=5,
+    parser.add_argument('--expected-paths', type=int, default=1,
                        help='Expected number of paths per sample (default: 5)')
     
-    parser.add_argument('--output-format', choices=['csv', 'xlsx', 'both'], default='both',
+    parser.add_argument('--output-format', choices=['csv', 'xlsx', 'both'], default='csv',
                        help='Output format (default: both)')
     
     parser.add_argument('--force-merge', action='store_true',

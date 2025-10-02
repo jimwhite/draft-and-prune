@@ -587,7 +587,6 @@ class CodeBasedReasoner(Reasoner):
     def _execute_with_repair(self, test_case: dict, code: str, execute_func: Callable, 
                            mp_lock: Optional[Any], identifier: str) -> Tuple[str, str, bool]:
         """Execute code with repair attempts"""
-        temp_code = code
         temp_solver_output = None
         is_valid = False
         
@@ -693,7 +692,7 @@ class TwoStepReasoner(CodeBasedReasoner):
             # Save plan
             plan_filepath = os.path.join(plan_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-temp{plan_temp}.txt")
             with open(plan_filepath, "w") as f:
-                f.write(f"Plan Config: {plan_config}\n\n")
+                # f.write(f"Plan Config: {plan_config}\n\n")
                 f.write(plan_result["plan"])
             
             # Save codes
@@ -703,8 +702,8 @@ class TwoStepReasoner(CodeBasedReasoner):
                 
                 code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-plan{plan_idx}-code{code_idx}.py")
                 with open(code_filepath, "w") as f:
-                    f.write(f"# Plan Config: {plan_config}\n")
-                    f.write(f"# Generation Config: {code_generation_config}\n\n")
+                    # f.write(f"# Plan Config: {plan_config}\n")
+                    # f.write(f"# Generation Config: {code_generation_config}\n\n")
                     f.write(code_result["code"])
                 
                 solver_output = code_result["solver_output"]
@@ -774,7 +773,7 @@ class DirectReasoner(CodeBasedReasoner):
             
             code_filepath = os.path.join(code_folder, f"{problem_name}-{unique_id}-code{code_idx}.py")
             with open(code_filepath, "w") as f:
-                f.write(f"# Generation Config: {code_generation_config}\n\n")
+                # f.write(f"# Generation Config: {code_generation_config}\n\n")
                 f.write(code_result["code"])
             
             solver_output = code_result["solver_output"]

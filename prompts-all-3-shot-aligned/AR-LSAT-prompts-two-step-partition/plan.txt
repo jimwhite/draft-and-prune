@@ -1,5 +1,5 @@
 You are an expert in logical reasoning and SMT Z3 solver.
-Your goal is to create a DETAILED, STEP-BY-STEP PLAN to translate the given natural language problem into Z3 constraints.
+Your goal is to create a DETAILED, STEP-BY-STEP PLAN to solve the given problem in Python Z3.
 Remember to only output the raw plan.
 
 Problem:
@@ -10,16 +10,21 @@ Choices:
 ["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
 Plan:
 "
-1. Enumerate the five possible foods and give them integer codes.  
-2. Create four `Int` variables for Vladimir (breakfast, lunch, dinner, snack) and four for Wendy.  
-3. Add **domain constraints** for each variable, reflecting the menu for that meal.  
-4. Constrain Wendy's lunch variable to the code for *omelet*.  
-5. Add **no-repeat** constraints: all four foods chosen by Vladimir are pairwise different; same for Wendy.  
-6. Add **no-same-meal** constraints: for every meal index m, `V[m] != W[m]`.  
-7. Define a answer index list []. 
-8. For every food in the choices list,
+1. Enumerate the five possible foods and assign them integer codes.  
+2. Create integer variables for Vladimir and Wendy's meals (breakfast, lunch, dinner, snack).  
+3. Add **domain constraints** for each meal variable based on available menu options:  
+    - Breakfast: hot cakes, poached eggs, or omelet.  
+    - Lunch and dinner: fish, hot cakes, macaroni, or omelet.  
+    - Snack: fish or omelet.
+4. Add **fixed constraint**: Wendy eats omelet for lunch.  
+5. Add **no-repeat constraints**: each person eats different foods at each meal.  
+    - Vladimir's four meals must be pairwise different.  
+    - Wendy's four meals must be pairwise different.  
+6. Add **no-same-meal constraints**: Vladimir and Wendy eat different foods at each meal.  
+7. Translate the answer choices into food indices.
+8. Define a answer index list 'answer_index_list' []. Use proof by contradiction to find forced foods for Vladimir:
     - Clone the base constraints into a fresh solver.  
-    - Assert that Vladimir never eats that food anywhere.  
+    - Assert that Vladimir never eats a specific food at any meal.  
     - If this assumption makes the model UNSAT, then that food is **forced**; append the food index to the answer index list.  
 9. Print the answer index list.
 "
@@ -32,20 +37,21 @@ Choices:
 ["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
 Plan:
 "
-1. List the six technicians and the three machine types {R,T,V}.  
-2. For every technician i and type j create a Boolean `t[i][j]` meaning 'tech i repairs type j'.  
-3. **At-least-one** constraint: for every technician, `R or T or V`.  
-4. Radio rule: set `t[Xena][R] = True`; constrain `Σ_{i} t[i][R] = 4` (Xena plus exactly three others).  
-5. Yolanda: force `T = True` and `V = True`.  
-6. Stacy avoids all Yolanda types: set `t[Stacy][T] = False`, `t[Stacy][V] = False`.  
-7. Zane repairs **more types** than Yolanda: `count(Zane) > count(Yolanda)`.  
-8. Wim shares **no** type with Stacy: for each j, `t[Stacy][j] → ¬t[Wim][j]`.  
-9. Urma repairs **exactly two** types: `count(Urma) = 2`.  
-10. Define a answer index list [].
-11. For every answer choice (ordered list of pairs):  
-    a. Clone the base constraints into a fresh solver.  
-    b. Add `t[i][j] == t[k][j]` for all three j so the two named technicians have identical type sets.  
-    c. Check SAT; if SAT, append the answer index to the answer index list.
+1. Enumerate the six technicians and give them integer indices.  
+2. Create Boolean variables `t[i][j]` for each technician i and machine type j (Radio, Television, VCR).  
+3. Add **at-least-one** constraint: each technician repairs at least one machine type.  
+    - For each technician, at least one of Radio, Television, or VCR must be true.  
+4. Add **radio constraint**: Xena repairs radios, and exactly 4 technicians total repair radios.  
+5. Add **Yolanda constraint**: repairs both televisions and VCRs.  
+6. Add **Stacy constraint**: does not repair televisions or VCRs (opposite of Yolanda).  
+7. Add **Zane constraint**: repairs more machine types than Yolanda does.  
+8. Add **Wim constraint**: shares no machine types with Stacy.  
+9. Add **Urma constraint**: repairs exactly 2 machine types.  
+10. Translate the answer choices into technician pairs.
+11. Define a answer index list 'answer_index_list' []. For every pair in the answer choices:
+    - Clone the base constraints into a fresh solver.  
+    - Add constraint that both technicians repair identical machine types for all three types.  
+    - If the model is SAT, then this pair is possible; append the pair index to the answer index list.  
 12. Print the answer index list.
 "
 
@@ -57,18 +63,20 @@ Choices:
 ["H", "I", "K", "N", "O"]
 Plan:
 "
-1. Enumerate the eight valves; create an `Int` variable `pos_V` for each, representing its opening position 1‥8.  
-2. Constrain all positions to be in 1‥8 and pairwise `Distinct`.  
-3. Encode the ordering rules:  
-    • `pos_K < pos_H`, `pos_P < pos_H`, `pos_N < pos_H`  
-    • `pos_H < pos_O < pos_L`  
-    • `pos_G < pos_L`  
-    • `pos_K < pos_I`  
-4. Define a answer index list [].
-5. For every candidate valve v in the answer list:  
-    a. Clone the base constraints.  
-    b. Add `pos_v == 5`.  
-    c. If the model is UNSAT, then v **cannot** be fifth → that is the required 'EXCEPT' answer, append the valve index to the answer index list.
+1. Enumerate the eight valves and create integer variables for their opening positions.  
+2. Add **domain constraints**: each valve position must be between 1 and 8.  
+    - All positions must be distinct (each valve opened exactly once).  
+3. Add **ordering constraints** based on the given conditions:  
+    - K and P are opened before H: `pos_K < pos_H` and `pos_P < pos_H`.  
+    - N is opened before H: `pos_N < pos_H`.  
+    - O is opened after H but before L: `pos_H < pos_O < pos_L`.  
+    - L is opened after G: `pos_G < pos_L`.  
+    - I is opened after K: `pos_K < pos_I`.  
+4. Translate the answer choices into valve indices.
+5. Define a answer index list 'answer_index_list' []. For every candidate valve in the answer choices:
+    - Clone the base constraints into a fresh solver.  
+    - Add constraint that the valve is opened fifth: `pos_valve == 5`.  
+    - If the model is UNSAT, then this valve **cannot** be fifth; append the valve index to the answer index list.  
 6. Print the answer index list.
 "
 
