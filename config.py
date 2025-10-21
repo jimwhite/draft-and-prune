@@ -167,8 +167,8 @@ class ReasonerConfig:
             raise ValueError("num_processes must be a positive integer")
         if not isinstance(self.test_delay, int) or self.test_delay < 0:
             raise ValueError("test_delay must be a non-negative integer")
-        if not isinstance(self.shots, str) or self.shots not in ['zero', 'one', 'two', 'three']:
-            raise ValueError("shots must be a string in ['zero', 'one', 'two', 'three']")
+        if not isinstance(self.shots, str) or self.shots not in ['zero', 'one', 'two', 'three', 'six', 'nine']:
+            raise ValueError("shots must be a string in ['zero', 'one', 'two', 'three', 'six', 'nine']")
         if self.desired_indices is not None and not isinstance(self.desired_indices, list):
             raise TypeError("desired_indices must be a list or None")
         if self.azure_endpoint is not None and not isinstance(self.azure_endpoint, str):
