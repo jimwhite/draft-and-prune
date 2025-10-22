@@ -299,7 +299,7 @@ class CodeCleaner:
                 match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
                 if match:
                     cleaned_code = match.group(1).strip()
-            elif cleaned_code.strip().startswith("```") or cleaned_code.strip().endswith("```"):
+            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
                 # Remove opening fence (``` optionally followed by language identifier and newline)
                 cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
                 # Remove closing fence (``` optionally followed by language identifier and newline)
@@ -385,14 +385,13 @@ class Reasoner(ABC):
             print(f"Code model: {code_model}")
             if code_model is None:
                 raise ValueError("code_model is not set")
-            fix_api_config = APIConfig(
+            code_api_config = APIConfig(
                 model_name=code_model,
                 temperature=config.code_temp,
                 max_retries=config.max_retries,
                 inter_test_case_delay=config.test_delay
             )
-            
-            self.code_api_client = self.initialize_api_client(code_model, fix_api_config)
+            self.code_api_client = self.initialize_api_client(code_model, code_api_config)
 
     def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
         """Initialize the API client for the given model name and API configuration"""
@@ -431,7 +430,7 @@ class Reasoner(ABC):
                 shutil.rmtree(prompts_dest)
             
             shutil.copytree(self.config.prompt_path, prompts_dest)
-            print(f"✅ Prompts folder copied to: {prompts_dest}")
+            print(f"Prompts folder copied to: {prompts_dest}")
             
             prompt_metadata = {
                 "original_prompt_path": self.config.prompt_path,
@@ -445,10 +444,10 @@ class Reasoner(ABC):
             with open(metadata_path, 'w') as f:
                 json.dump(prompt_metadata, f, indent=2)
             
-            print(f"✅ Prompt metadata saved to: {metadata_path}")
+            print(f"Prompt metadata saved to: {metadata_path}")
             
         except Exception as e:
-            print(f"❌ Error copying prompts folder: {e}")
+            print(f"Error copying prompts folder: {e}")
             print(f"   Source: {self.config.prompt_path}")
             print(f"   Destination: {prompts_dest}")
 
