@@ -47,6 +47,7 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
                 print(f"Start Time: {datetime.fromtimestamp(start_process_time).strftime('%Y-%m-%d %H:%M:%S')}")
                 print("-" * 30 + "\n")
 
+                # Note: We use multiple API keys for Gemini to avoid rate limiting. 
                 # Assign API key based on sample index for batch-based key distribution
                 if hasattr(test_runner_instance.config, 'gemini_api_keys') and test_runner_instance.config.gemini_api_keys:
                     num_keys = len(test_runner_instance.config.gemini_api_keys)
@@ -95,21 +96,11 @@ class DatasetConfig:
         'logicaldeduction': 'pythonconstraint'
     }
     
-    DATASET_IMPORTS = {
-        'ar-lsat': 'from z3 import *',
-        'logicaldeduction': 'from constraint import *'
-    }
-    
     @classmethod
     def get_solver(cls, dataset: str) -> str:
         """Get the solver name for a dataset"""
         return cls.DATASET_SOLVER_MAP.get(dataset.lower())
     
-    @classmethod
-    def get_required_import(cls, dataset: str) -> Optional[str]:
-        """Get the required import statement for a dataset"""
-        return cls.DATASET_IMPORTS.get(dataset.lower())
-
 
 class PromptHandler:
     """Handles prompt generation for different datasets and reasoning methods"""
@@ -143,7 +134,7 @@ class PromptHandler:
             if 'options' in test_case:
                 prompt = prompt.replace("{options}", str(test_case["options"]))
         
-        # Additional replacements from kwargs
+        # Additional replacements from kwargs: plan, code, syntax_error
         for key, value in kwargs.items():
             placeholder = "{" + key + "}"
             if placeholder in prompt:
@@ -151,17 +142,17 @@ class PromptHandler:
         
         return prompt
     
-    def get_plan_prompt(self, test_case: Dict, feedback: Optional[str] = None) -> str:
+    def get_plan_prompt(self, test_case: Dict) -> str:
         """Generate plan generation prompt"""
         template = self._load_template("plan.txt")
         return self._format_prompt(template, test_case)
     
-    def get_code_prompt(self, test_case: Dict, plan: str, feedback: Optional[str] = None) -> str:
+    def get_code_prompt(self, test_case: Dict, plan: str) -> str:
         """Generate code generation prompt"""
         template = self._load_template("code.txt")
         return self._format_prompt(template, test_case, plan=plan)
     
-    def get_direct_prompt(self, test_case: Dict, feedback: Optional[str] = None) -> str:
+    def get_direct_prompt(self, test_case: Dict) -> str:
         """Generate direct code generation prompt"""
         template = self._load_template("prompt.txt")
         return self._format_prompt(template, test_case)
@@ -184,36 +175,48 @@ class CodeExecutor:
     def __init__(self, temp_cache_dir: str):
         self.temp_cache_dir = temp_cache_dir
     
-    def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
-        """Execute the Python Z3 code and return the results."""
+    def execute_python_code(self, code: str, code_type: str = "Python", timeout: int = 30) -> Tuple[bool, str]:
+        """Execute Python code and return the results.
+        
+        Args:
+            code: The Python code to execute
+            code_type: Type of code for error messages (e.g., "Z3", "CSP")
+            timeout: Timeout in seconds
+        """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
             tmp_filename = tmp.name
-            tmp.write(z3_code)
+            tmp.write(code)
 
         try:
             env = os.environ.copy()
             env["PYTHONIOENCODING"] = "utf-8"
             result = subprocess.run(['python3', tmp_filename],
-                                   capture_output=True, text=True, timeout=30,
+                                   capture_output=True, text=True, timeout=timeout,
                                    env=env)
             os.unlink(tmp_filename)
-
+            
             if result.returncode != 0:
                 error_details = f"Stderr: {result.stderr}\nStdout: {result.stdout}"
-                return False, f"Z3 execution error (return code {result.returncode}).\n{error_details}"
+                return False, f"{code_type} execution error (return code {result.returncode}).\n{error_details}"
 
             output = result.stdout.strip()
-            if "error" in output.lower() or "exception" in output.lower() or "traceback" in output.lower():
-                 return False, f"Z3 execution potentially failed:\nOutput:\n```\n{output}\n```\nStderr:\n```\n{result.stderr}\n```"
+            
+            # Optional error checking in output
+            # if check_output_errors and ("error" in output.lower() or "exception" in output.lower() or "traceback" in output.lower()):
+                # return False, f"{code_type} execution potentially failed:\nOutput:\n```\n{output}\n```\nStderr:\n```\n{result.stderr}\n```"
 
             return True, output
         except subprocess.TimeoutExpired:
             os.unlink(tmp_filename)
-            return False, "Timeout (30s) while running Z3 code. The problem or generated code may be too complex or incorrect."
+            return False, f"Timeout ({timeout}s) while running {code_type} code. The problem or generated code may be too complex or incorrect."
         except Exception as e:
             if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
                  os.unlink(tmp_filename)
-            return False, f"Error executing Z3 code: {str(e)}"
+            return False, f"Error executing {code_type} code: {str(e)}"
+
+    def execute_z3_code(self, z3_code: str) -> Tuple[bool, str]:
+        """Execute the Python Z3 code and return the results."""
+        return self.execute_python_code(z3_code, "Z3", timeout=30)
         
     def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
         """Execute the PyKe code and return the results."""
@@ -266,34 +269,7 @@ class CodeExecutor:
     
     def execute_csp_code(self, csp_code: str) -> Tuple[bool, str]:
         """Execute the Python CSP code and return the results."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp:
-            tmp_filename = tmp.name
-            tmp.write(csp_code)
-
-        try:
-            env = os.environ.copy()
-            env["PYTHONIOENCODING"] = "utf-8"
-            result = subprocess.run(['python3', tmp_filename],
-                                   capture_output=True, text=True, timeout=20,
-                                   env=env)
-            os.unlink(tmp_filename)
-
-            if result.returncode != 0:
-                error_details = f"Stderr: {result.stderr}\nStdout: {result.stdout}"
-                return False, f"CSP execution error (return code {result.returncode}).\n{error_details}"
-
-            output = result.stdout.strip()
-            if "error" in output.lower() or "exception" in output.lower() or "traceback" in output.lower():
-                 return False, f"CSP execution potentially failed:\nOutput:\n```\n{output}\n```\nStderr:\n```\n{result.stderr}\n```"
-
-            return True, output
-        except subprocess.TimeoutExpired:
-            os.unlink(tmp_filename)
-            return False, "Timeout (30s) while running CSP code. The problem or generated code may be too complex or incorrect."
-        except Exception as e:
-            if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
-                 os.unlink(tmp_filename)
-            return False, f"Error executing CSP code: {str(e)}"
+        return self.execute_python_code(csp_code, "CSP", timeout=20)
     
     def get_execute_function(self, solver_name: str) -> Callable[[str], Tuple[bool, str]]:
         """Get the execution function for a solver"""
@@ -306,7 +282,10 @@ class CodeExecutor:
 
 
 class CodeCleaner:
-    """Handles code cleaning for different datasets"""
+    """Handles code cleaning for different datasets
+    Note: This is not counted as syntax errors.
+    The code cleaning is used to remove the markdown fences and the code blocks from the model output.
+    """
     
     @staticmethod
     def clean_code(code_text: str, dataset: str) -> str:
@@ -320,16 +299,13 @@ class CodeCleaner:
                 match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
                 if match:
                     cleaned_code = match.group(1).strip()
-            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
+            elif cleaned_code.strip().startswith("```") or cleaned_code.strip().endswith("```"):
+                # Remove opening fence (``` optionally followed by language identifier and newline)
                 cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
+                # Remove closing fence (``` optionally followed by language identifier and newline)
                 cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
+                # Remove any remaining whitespace
                 cleaned_code = cleaned_code.strip()
-
-            # Add required import if missing
-            required_import = DatasetConfig.get_required_import(dataset)
-            if required_import and not cleaned_code.strip().startswith(required_import):
-                print(f"Warning: '{required_import}' missing from generated code. Prepending it.")
-                cleaned_code = required_import + "\n\n" + cleaned_code
 
             return cleaned_code
         
