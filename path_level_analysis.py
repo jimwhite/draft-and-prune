@@ -1,21 +1,11 @@
 #!/usr/bin/env python3
 """
-Path-level analysis script for neural-symbolic reasoning experiments.
+Path-level analysis script for Sketch-and-Prune: Well-definedness Pruning and Majority Voting.
 
 This script creates a detailed dataframe with path-level information including:
-- Sample ID and Path ID for each individual path
-- LLM API parameters (shots in ICL, ICL samples source)
-- Correctness evaluation (parse solver output and compare with label)
-- Pruning status (pruned by existence, pruned by uniqueness)
-- Pruning results (None if pruned, otherwise original output)
-- Combined existence & uniqueness pruning results
-
-The script processes experiment results and generates a comprehensive path-level CSV/XLSX file.
-It can automatically merge individual result files from a summary/ subdirectory if summary.txt is not found.
-
-Usage:
-    python path_level_analysis.py <results_directory> --expected-paths 5
-    python path_level_analysis.py results/experiment_folder/ --expected-paths 5 --cot-summary path/to/cot_summary.txt
+[dataset, sample_id, path_index, experiment_id, shots_in_icl, icl_sample_source, sketch_gen_model, code_gen_model, 
+has_sketch, raw_output, parsed_output, true_label, is_correct, is_syntax_error, pruned_by_existence, 
+existence_pruning_result, pruned_by_uniqueness, uniqueness_pruning_result, existence_uniqueness_pruning_result, cot_correctness(optional)]
 """
 
 import json
@@ -66,138 +56,108 @@ def _flatten(nested_list):
 
 def parse_solver_output(output_str, dataset=None, problem_answers=None):
     """Parse solver output string to extract list of answers based on dataset format.
-    
-    For AR-LSAT dataset, handles multiple formats:
-    1. Python literals: "[2]", "[]", "[0, 1, 2]"
-    2. Answer choice matching: matches output against problem's answer choices
-    3. Word numbers: "four", "three", "two" -> [4], [3], [2]
-    
     Args:
         output_str: The solver output string to parse
         dataset: Dataset name (e.g., 'ar-lsat', 'proofwriter', etc.)
         problem_answers: List of answer choices for the problem (optional)
     
     Returns:
-        List of parsed answers or 'syntax error' if parsing fails
+        List of parsed answers or 'syntax error'
     """
     try:
         # Check for syntax error pattern first
-        if isinstance(output_str, str) and "error" in output_str.lower():
-            return 'syntax error'
+        if isinstance(output_str, str):
+            if "error" in output_str.lower() or 'timeout' in output_str.lower():
+                return 'syntax error'
         
         # Handle different dataset formats
-        if dataset and dataset.lower() in ['proofwriter', 'folio', 'prontoqa']:
+        if dataset and dataset.lower() in ['proofwriter', 'prontoqa']:
             # Boolean-based datasets: True, False, Unknown
             if isinstance(output_str, str):
                 output_clean = output_str.strip()
-                if output_clean in ['True', 'False', 'Unknown']:
+                # cope with multiple answers pattern
+                if 'multiple answers' in output_clean:
+                    return ['True', 'False'] # follow the logic in reasoners.py: execute_pyke_code()
+                elif output_clean in ['True', 'False', 'Unknown']:
                     return [output_clean]
                 else:
                     return []
-            return []
         
         elif dataset and dataset.lower() == 'logicaldeduction':
             # Letter-based dataset: A, B, C, D, E, F, G
+            # Examples: 'E', 'E\nA\nE', 'E) Dan finished last'
             if isinstance(output_str, str):
                 output_clean = output_str.strip()
                 valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+                
+                # Case 1: Single valid letter
                 if output_clean in valid_letters:
                     return [output_clean]
-                else:
-                    # Try to extract from lines
-                    lines = [line.strip() for line in output_clean.split('\n') if line.strip()]
-                    unique_lines = list(set(lines))
-                    if len(unique_lines) == 1 and unique_lines[0] in valid_letters:
-                        return [unique_lines[0]]
+                
+                # Case 2: Extract all valid letters from the output (preserving order)
+                # This handles: 'E\nA\nE', 'E) Dan finished last', etc.
+                
+                extracted_letters = []
+                lines = output_clean.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    # Try exact match first
+                    if line in valid_letters:
+                        extracted_letters.append(line)
                     else:
-                        return []
+                        # Try to extract letter from start of line (e.g., 'E) Dan finished last')
+                        for letter in valid_letters:
+                            if line.startswith(letter):
+                                extracted_letters.append(letter)
+                                break
+                # Remove duplicates
+                extracted_letters = list(set(extracted_letters))
+
+                return extracted_letters
             return []
         
         elif dataset and dataset.lower() == 'ar-lsat':
-            # AR-LSAT format: Handle string representations of lists like "[2]", "[]", etc.
-            # Also handle option strings like "four", "three", etc.
             if isinstance(output_str, str):
-                # Try to parse as Python literal first (existing logic)
+                # Try to parse as Python literal first
                 try:
                     parsed = ast.literal_eval(output_str)
-                    if isinstance(parsed, list):
-                        # Check if this is a list of strings that need to be mapped to indices
-                        if problem_answers and all(isinstance(item, str) for item in parsed):
+                    # Case 0: parsed is a integer, return the integer as a list
+                    if isinstance(parsed, int):
+                        return [parsed]
+                    elif isinstance(parsed, list):
+                        # Case 1: if all items in the list are numbers, return the list as is
+                        if all(isinstance(item, int) for item in parsed):
+                            return parsed
+                        # Case 2: if all items in the list are strings, map them to the problem answers
+                        # Example: ["Image's voicemail target", "Solide's website target", "Truvest's website target"] -> [0, 1, 2]
+                        elif problem_answers and all(isinstance(item, str) for item in parsed):
                             mapped_indices = []
                             for item in parsed:
                                 # Try exact match first
                                 for i, answer in enumerate(problem_answers):
                                     if item.strip().lower() == answer.strip().lower():
                                         mapped_indices.append(i)
-                                        break
                             
-                            # If we successfully mapped all items, return the indices
-                            if len(mapped_indices) == len(parsed):
-                                return mapped_indices
-                            # If some items couldn't be mapped, return the original parsed list
-                            else:
-                                return parsed
+                            return mapped_indices
                         else:
-                            # If not all strings or no problem_answers, return parsed as-is
-                            return parsed
+                            return []
                     else:
+                        # Case 3: Empty list or None
                         return [parsed] if parsed is not None else []
                 except:
-                    # If literal_eval fails, try answer matching first if provided
-                    if problem_answers:
-                        # Clean the output string for comparison
+                    # If literal_eval fails, try string matching                    
+                    if problem_answers and isinstance(output_str, str):
                         clean_output = output_str.strip()
-                        
-                        # Try exact match first
+                        # Case 4: Single string exact match
+                        # Example: "one" -> [1]
                         for i, answer in enumerate(problem_answers):
                             if clean_output.lower() == answer.lower():
                                 return [i]
-                        
-                        # Try partial match (output contained in answer or vice versa)
-                        for i, answer in enumerate(problem_answers):
-                            if (clean_output.lower() in answer.lower()) or (answer.lower() in clean_output.lower()):
-                                return [i]
-                    
-                    # If no answer match, check if it's a word number that needs to be converted to option index
-                    word_to_option = {
-                        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
-                        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10
-                    }
-                    
-                    # Clean the string and check if it's a word number
-                    clean_str = output_str.strip().lower()
-                    if clean_str in word_to_option:
-                        return [word_to_option[clean_str]]
                     
                     # If no match found, treat as empty list
                     return []
-            elif isinstance(output_str, list):
-                # Handle list of strings that might need to be mapped to option indices
-                if problem_answers and all(isinstance(item, str) for item in output_str):
-                    # Try to map each string in the list to its corresponding option index
-                    mapped_indices = []
-                    for item in output_str:
-                        # Try exact match first
-                        for i, answer in enumerate(problem_answers):
-                            if item.strip().lower() == answer.strip().lower():
-                                mapped_indices.append(i)
-                                break
-                        else:
-                            # Try partial match if exact match fails
-                            for i, answer in enumerate(problem_answers):
-                                if (item.strip().lower() in answer.strip().lower()) or (answer.strip().lower() in item.strip().lower()):
-                                    mapped_indices.append(i)
-                                    break
-                    
-                    # If we successfully mapped all items, return the indices
-                    if len(mapped_indices) == len(output_str):
-                        return mapped_indices
-                    # If some items couldn't be mapped, return the original list
-                    else:
-                        return output_str
-                else:
-                    # If not all strings or no problem_answers, return as-is
-                    return output_str
             else:
                 return []
         else:
@@ -215,7 +175,8 @@ def extract_config_info(config, exp_id):
         'two': 2,
         'three': 3,
         'four': 4,
-        'five': 5
+        'five': 5,
+        'six': 6
     }
     shots_str = config.get('shots', 'zero')
     shots = shots_mapping.get(shots_str, 0)
@@ -256,7 +217,7 @@ def extract_config_info(config, exp_id):
 
 def is_correct_path(parsed_output, true_label, dataset):
     """Determine if a parsed output is correct by comparing with true label."""
-    if parsed_output == 'syntax error':
+    if parsed_output is None or parsed_output == 'syntax error':
         return False
     
     flat_output = list(_flatten(parsed_output))
@@ -309,24 +270,7 @@ def is_pruned_by_uniqueness(parsed_output):
     return len(flat_output) > 1  # Pruned if multiple answers (length > 1)
 
 
-def load_results_from_directory(summary_directory):
-    """Load all JSON results from a directory and merge them."""
-    json_files = glob.glob(os.path.join(summary_directory, "*.json"))
-    all_results = []
-    
-    for json_file in json_files:
-        try:
-            with open(json_file, 'r') as f:
-                data = json.load(f)
-                all_results.append(data)
-        except Exception as e:
-            print(f"Error loading {json_file}: {e}")
-            continue
-    
-    return all_results
-
-
-def merge_summary(results_directory):
+def merge_result_files(results_directory):
     """Merge individual result files into summary.txt."""
     summary_directory = os.path.join(results_directory, "summary")
     
@@ -335,7 +279,18 @@ def merge_summary(results_directory):
         return False
     
     # Load all results
-    results = load_results_from_directory(summary_directory)
+    # results = load_results_from_directory(summary_directory)
+    json_files = glob.glob(os.path.join(summary_directory, "*.json"))
+    results = []
+    
+    for json_file in json_files:
+        try:
+            with open(json_file, 'r') as f:
+                data = json.load(f)
+                results.append(data)
+        except Exception as e:
+            print(f"Error loading {json_file}: {e}")
+            continue
     
     if not results:
         print("No valid result files found in summary directory.")
@@ -350,13 +305,6 @@ def merge_summary(results_directory):
     
     print(f"Merged {len(results)} result files into: {summary_file}")
     print(f"Total samples: {len(results)}")
-    
-    # Basic statistics
-    if results:
-        total_time = sum(r.get("timing", 0) for r in results)
-        avg_time = total_time / len(results) if results else 0
-        print(f"Average time per sample: {avg_time:.2f} seconds")
-        print(f"Total time: {total_time:.2f} seconds")
     
     return True
 
@@ -387,7 +335,7 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
         
         # Process each path (up to expected_paths_per_sample)
         for path_idx in range(expected_paths_per_sample):
-            path_id = f"{path_idx+1}"
+            # path_id = f"{path_idx+1}"
             
             # Check if this path exists
             if path_idx < len(all_solver_outputs):
@@ -400,6 +348,8 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
             
             # Parse the output with problem answers for better matching
             parsed_output = parse_solver_output(output_str, dataset, problem_answers)
+            # if parsed_output is None:
+                # import pdb; pdb.set_trace()
             # Determine correctness
             is_correct = is_correct_path(parsed_output, true_label, dataset)
             
@@ -550,18 +500,18 @@ def add_cot_correctness_column(df, cot_summary_file):
         print(f"Error loading CoT summary: {e}")
         return df
     
-    # Create mapping from id_string to success
+    # Create mapping from id_string to success using cot summary file
     id_to_success = {}
     for result in cot_results:
         if 'problem' in result and 'id_string' in result['problem']:
             id_string = result['problem']['id_string']
-            success = result.get('success', False)
+            success = result.get('success', False) # get cot correctness from cot summary file
             id_to_success[id_string] = success
     
     print(f"Loaded {len(id_to_success)} CoT results")
     
     # Add cot_correctness column to dataframe
-    df['cot_correctness'] = df['sample_id'].map(id_to_success)
+    df['cot_correctness'] = df['sample_id'].map(id_to_success) # map sample_id to cot correctness
     
     # Report mapping statistics
     mapped_count = df['cot_correctness'].notna().sum()
@@ -577,7 +527,90 @@ def add_cot_correctness_column(df, cot_summary_file):
     return df
 
 
+def merge_and_create_summary_file(results_dir):
+    """Find or create summary.txt file in results directory."""
+    summary_file = os.path.join(results_dir, 'summary.txt')
+    
+    if not os.path.exists(summary_file):
+        print(f"summary.txt not found at {summary_file}")
+        print("Attempting to merge individual result files...")
+        
+        merge_success = merge_result_files(results_dir)
+        
+        if not merge_success or not os.path.exists(summary_file):
+            print(f"Error: summary.txt not found at {summary_file}")
+            print("Also failed to merge individual result files.")
+            sys.exit(1)
+    
+    return summary_file
+
+def print_path_statistics(df):
+    """Print statistics for path-level analysis."""
+    total_paths = len(df)
+    correct_paths = df['is_correct'].sum()
+    syntax_error_paths = df['is_syntax_error'].sum()
+    
+    print(f"\nPath-level Statistics:")
+    print(f"Total paths: {total_paths}")
+    print(f"Correct paths: {correct_paths} ({correct_paths/total_paths*100:.2f}%)")
+    print(f"Syntax error paths: {syntax_error_paths} ({syntax_error_paths/total_paths*100:.2f}%)")
+
+
+def print_pruning_statistics(df):
+    """Print pruning statistics."""
+    total_paths = len(df)
+    pruned_existence = df['pruned_by_existence'].sum()
+    pruned_uniqueness = df['pruned_by_uniqueness'].sum()
+    
+    print(f"\nPruning Statistics (Existence and Uniqueness):")
+    print(f"Pruned by existence: {pruned_existence} ({pruned_existence/total_paths*100:.2f}%)")
+    print(f"Pruned by uniqueness: {pruned_uniqueness} ({pruned_uniqueness/total_paths*100:.2f}%)")
+
+
+def print_first_path_accuracy(df, use_cot_backup=False):
+    """Calculate and print first-path accuracy analysis."""
+    print(f"\n" + "="*60)
+    print("FIRST-PATH ACCURACY ANALYSIS (First Path Only)")
+    print("="*60)
+    
+    first_path_results = calculate_one_path_accuracy(df, use_cot_backup=use_cot_backup)
+    print(f"Total samples: {first_path_results['total_samples']}")
+    print(f"Correct samples: {first_path_results['correct_samples']}")
+    print(f"Overall accuracy: {first_path_results['accuracy']:.4f} ({first_path_results['accuracy']*100:.2f}%)")
+    print(f"Syntax error samples: {first_path_results['syntax_error_samples']}")
+    print(f"Syntax error rate: {first_path_results['syntax_error_rate']:.4f} ({first_path_results['syntax_error_rate']*100:.2f}%)")
+    print(f"Valid samples (excluding syntax errors): {first_path_results['valid_samples']}")
+    print(f"Accuracy on valid samples only: {first_path_results['valid_accuracy']:.4f} ({first_path_results['valid_accuracy']*100:.2f}%)")
+    
+    # Show CoT backup statistics if enabled
+    if use_cot_backup:
+        print(f"CoT backup used: {first_path_results['cot_backup_used']} samples")
+        print(f"CoT backup correct: {first_path_results['cot_backup_correct']} samples")
+        if first_path_results['cot_backup_used'] > 0:
+            backup_accuracy = first_path_results['cot_backup_correct'] / first_path_results['cot_backup_used']
+            print(f"CoT backup accuracy: {backup_accuracy:.4f} ({backup_accuracy*100:.2f}%)")
+
+
+def save_dataframe(df, results_dir, output_format):
+    """Save dataframe to CSV and/or XLSX files in the results directory."""
+    base_filename = "path_level_analysis"
+    
+    if output_format in ['csv', 'both']:
+        csv_output_file = os.path.join(results_dir, f"{base_filename}.csv")
+        df.to_csv(csv_output_file, index=False)
+        print(f"\nCSV saved to: {csv_output_file}")
+    
+    if output_format in ['xlsx', 'both']:
+        xlsx_output_file = os.path.join(results_dir, f"{base_filename}.xlsx")
+        try:
+            df.to_excel(xlsx_output_file, index=False, engine='openpyxl')
+            print(f"XLSX saved to: {xlsx_output_file}")
+        except ImportError:
+            print("Warning: openpyxl not installed. XLSX file not saved. Install with: pip install openpyxl")
+
+
 def main():
+    # Parse command line arguments
     parser = argparse.ArgumentParser(
         description='Create path-level analysis dataframe for neural-symbolic reasoning experiments.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -590,55 +623,25 @@ Examples:
     
     parser.add_argument('results_directory', 
                        help='Path to the experiment results directory')
-    
     parser.add_argument('--expected-paths', type=int, default=1,
-                       help='Expected number of paths per sample (default: 5)')
-    
+                       help='Expected number of paths per sample (default: 1)')
     parser.add_argument('--output-format', choices=['csv', 'xlsx', 'both'], default='csv',
-                       help='Output format (default: both)')
-    
-    parser.add_argument('--force-merge', action='store_true',
-                       help='Force merge individual result files even if summary.txt exists')
-    
+                       help='Output format (default: csv)')
     parser.add_argument('--cot-summary', type=str,
                        help='Path to CoT summary.txt file to add cot_correctness column')
-    
     parser.add_argument('--cot-backup', action='store_true',
                        help='Use CoT as backup for syntax errors in first path accuracy calculation')
     
     args = parser.parse_args()
     
+    # Prepare results directory path
     results_dir = args.results_directory
-    # If relative path, make it absolute
     if not os.path.isabs(results_dir):
         results_dir = os.path.abspath(results_dir)
     
-    # Try to merge summary files first if summary.txt doesn't exist
-    summary_file = os.path.join(results_dir, 'summary.txt')
+    # Find summary and config files
+    summary_file = merge_and_create_summary_file(results_dir)
     config_file = os.path.join(results_dir, 'config.yaml')
-    
-    # Check if summary.txt exists, or if force-merge is requested
-    if not os.path.exists(summary_file) or args.force_merge:
-        if args.force_merge:
-            print(f"Force merge requested, merging individual result files...")
-        else:
-            print(f"summary.txt not found at {summary_file}")
-            print("Attempting to merge individual result files...")
-        
-        merge_success = merge_summary(results_dir)
-        
-        if not merge_success or not os.path.exists(summary_file):
-            # Try alternative summary subdirectory location
-            summary_file_alt = os.path.join(results_dir, 'summary', 'summary.txt')
-            if os.path.exists(summary_file_alt):
-                summary_file = summary_file_alt
-                print(f"Using summary file from subdirectory: {summary_file}")
-            else:
-                print(f"Error: summary.txt not found at {summary_file} or {summary_file_alt}")
-                print("Also failed to merge individual result files.")
-                sys.exit(1)
-    else:
-        print(f"Found existing summary.txt at: {summary_file}")
     
     if not os.path.exists(config_file):
         print(f"Error: config.yaml not found at {config_file}")
@@ -661,81 +664,19 @@ Examples:
     # Create path-level dataframe
     print("Creating path-level dataframe...")
     df = create_path_level_dataframe(results, config, dataset, exp_id, args.expected_paths)
-    
     print(f"Created dataframe with {len(df)} rows (paths)")
     
     # Add CoT correctness column if specified
     if args.cot_summary:
         df = add_cot_correctness_column(df, args.cot_summary)
     
-    # Summary statistics
-    total_paths = len(df)
-    correct_paths = df['is_correct'].sum()
-    syntax_error_paths = df['is_syntax_error'].sum()
-    # missing_paths = df['is_missing_path'].sum()
-    
-    print(f"\nSummary Statistics:")
-    print(f"Total paths: {total_paths}")
-    print(f"Correct paths: {correct_paths} ({correct_paths/total_paths*100:.2f}%)")
-    print(f"Syntax error paths: {syntax_error_paths} ({syntax_error_paths/total_paths*100:.2f}%)")
-    # print(f"Missing paths: {missing_paths} ({missing_paths/total_paths*100:.2f}%)")
-    
-    # Pruning statistics
-    pruned_existence = df['pruned_by_existence'].sum()
-    pruned_uniqueness = df['pruned_by_uniqueness'].sum()
-    # pruned_semantic = df['pruned_by_semantic'].sum()
-    
-    print(f"\nPruning Statistics:")
-    print(f"Pruned by existence: {pruned_existence} ({pruned_existence/total_paths*100:.2f}%)")
-    print(f"Pruned by uniqueness: {pruned_uniqueness} ({pruned_uniqueness/total_paths*100:.2f}%)")
-    # print(f"Pruned by semantic: {pruned_semantic} ({pruned_semantic/total_paths*100:.2f}%)")
-    
-    # Calculate one-path accuracy (first path only)
-    print(f"\n" + "="*60)
-    print("ONE-PATH ACCURACY ANALYSIS (First Path Only, without pruning)")
-    print("="*60)
-    
-    one_path_results = calculate_one_path_accuracy(df, use_cot_backup=args.cot_backup)
-    print(f"Total samples: {one_path_results['total_samples']}")
-    print(f"Correct samples: {one_path_results['correct_samples']}")
-    print(f"Overall accuracy: {one_path_results['accuracy']:.4f} ({one_path_results['accuracy']*100:.2f}%)")
-    print(f"Syntax error samples: {one_path_results['syntax_error_samples']}")
-    print(f"Syntax error rate: {one_path_results['syntax_error_rate']:.4f} ({one_path_results['syntax_error_rate']*100:.2f}%)")
-    print(f"Valid samples (excluding syntax errors): {one_path_results['valid_samples']}")
-    print(f"Accuracy on valid samples only: {one_path_results['valid_accuracy']:.4f} ({one_path_results['valid_accuracy']*100:.2f}%)")
-    
-    # Show CoT backup statistics if enabled
-    if args.cot_backup:
-        print(f"CoT backup used: {one_path_results['cot_backup_used']} samples")
-        print(f"CoT backup correct: {one_path_results['cot_backup_correct']} samples")
-        if one_path_results['cot_backup_used'] > 0:
-            backup_accuracy = one_path_results['cot_backup_correct'] / one_path_results['cot_backup_used']
-            print(f"CoT backup accuracy: {backup_accuracy:.4f} ({backup_accuracy*100:.2f}%)")
-    
+    # Print all statistics
+    print_path_statistics(df)
+    print_pruning_statistics(df)
+    print_first_path_accuracy(df, use_cot_backup=args.cot_backup)
     
     # Save results
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, 'path-level-analysis')
-    os.makedirs(output_dir, exist_ok=True)
-    
-    base_filename = f"{exp_id}_path_level"
-    
-    if args.output_format in ['csv', 'both']:
-        csv_output_file = os.path.join(output_dir, f"{base_filename}.csv")
-        df.to_csv(csv_output_file, index=False)
-        print(f"\nCSV saved to: {csv_output_file}")
-    
-    if args.output_format in ['xlsx', 'both']:
-        xlsx_output_file = os.path.join(output_dir, f"{base_filename}.xlsx")
-        try:
-            df.to_excel(xlsx_output_file, index=False, engine='openpyxl')
-            print(f"XLSX saved to: {xlsx_output_file}")
-        except ImportError:
-            print("Warning: openpyxl not installed. XLSX file not saved. Install with: pip install openpyxl")
-    
-    # Display sample of the dataframe
-    # print(f"\nSample of the dataframe (first 5 rows):")
-    # print(df.head().to_string(index=False))
+    save_dataframe(df, results_dir, args.output_format)
     
     return df
 
