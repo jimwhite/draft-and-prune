@@ -771,54 +771,86 @@ class CoTReasoner(Reasoner):
     """Chain-of-Thought reasoning approach"""
 
     def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
-        """Generate reasoning using the CoT prompt"""
-        cot_prompt = self.prompt_handler.get_cot_prompt(test_case)
-        print("\nGenerating CoT reasoning:")
-        reasoning_output = self._call_api(cot_prompt)
-        return {"reasoning_output": reasoning_output}
+        """Generate multiple reasoning outputs using the CoT prompt with diverse parameters"""
+        cot_configs = [{"temperature": self.config.code_temp} for _ in range(self.config.num_paths)]
+        all_reasoning_results = []
+        
+        for cot_config_idx, cot_config in enumerate(cot_configs):
+            print(f"\nGenerating CoT reasoning {cot_config_idx + 1}/{len(cot_configs)}...")
+            self.api_client.temperature = cot_config["temperature"]
+            
+            # Generate CoT reasoning
+            cot_prompt = self.prompt_handler.get_cot_prompt(test_case)
+            current_reasoning_response = self._call_api(cot_prompt)
+            current_reasoning = current_reasoning_response if isinstance(current_reasoning_response, str) else current_reasoning_response[0]
+            
+            reasoning_result = {
+                "reasoning_idx": cot_config_idx + 1,
+                "reasoning_output": current_reasoning,
+                "generation_config": cot_config.copy()
+            }
+            all_reasoning_results.append(reasoning_result)
+        
+        return {"all_reasoning_results": all_reasoning_results}
 
     def _process_results(self, test_case: Dict, reasoning_result: Dict, case_time: float, unique_id: str="", timing_data: Optional[Dict] = None) -> None:
-        """Save the reasoning output and extract answers"""
+        """Save the reasoning outputs and extract answers from all paths"""
         reasoning_folder = os.path.join(self.results_folder, "reasoning")
         os.makedirs(reasoning_folder, exist_ok=True)
 
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
+        all_reasoning_results = reasoning_result.get("all_reasoning_results", [])
+        all_reasoning_outputs = []
+        all_solver_outputs = []
         
-        reasoning_filepath = os.path.join(reasoning_folder, f"{problem_name}-{unique_id}.txt")
-        with open(reasoning_filepath, "w") as f:
-            reasoning_output = reasoning_result.get("reasoning_output", "")
+        for reasoning_result_item in all_reasoning_results:
+            reasoning_idx = reasoning_result_item["reasoning_idx"]
+            reasoning_output = reasoning_result_item.get("reasoning_output", "")
             if reasoning_output is None:
                 reasoning_output = "[ERROR: No reasoning output generated]"
-            f.write(reasoning_output)
-
-        # Extract answer from reasoning output
-        reasoning_output_for_extraction = reasoning_result.get("reasoning_output", "")
-        if reasoning_output_for_extraction is None:
-            reasoning_output_for_extraction = ""
-        
-        # Dataset-specific answer extraction
-        if self.config.dataset.lower() == "ar-lsat":
-            is_correct, error_type = self.answer_extractor.extract_answer(
-                reasoning_output_for_extraction, test_case["label"], test_case["answers"], self.config.reasoning_method)
-        elif self.config.dataset.lower() in ["proofwriter", "folio", "prontoqa", "logicaldeduction"]:
-            is_correct, error_type = self.answer_extractor.extract_answer(
-                reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
-        else:
-            raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
-        
-        # Handle API failure case
-        if reasoning_result.get("reasoning_output") is None:
-            is_correct = False
-            error_type = "API failure - no output generated"
-        
-        print(f"\nReasoning {'PASSED' if is_correct else 'FAILED'}. Error type: {error_type}")
+            
+            # Save each reasoning output to a separate file
+            reasoning_filepath = os.path.join(reasoning_folder, f"{problem_name}-{unique_id}-reasoning{reasoning_idx}.txt")
+            with open(reasoning_filepath, "w") as f:
+                f.write(reasoning_output)
+            
+            # Extract answer from this reasoning output
+            reasoning_output_for_extraction = reasoning_output if reasoning_output != "[ERROR: No reasoning output generated]" else ""
+            
+            # Dataset-specific answer extraction for correctness check and answer index
+            if self.config.dataset.lower() == "ar-lsat":
+                is_correct, extracted_answer_index, error_type = self.answer_extractor.extract_answer(
+                    reasoning_output_for_extraction, test_case["label"], self.config.reasoning_method)
+            elif self.config.dataset.lower() in ["proofwriter", "folio", "prontoqa", "logicaldeduction"]:
+                is_correct, extracted_answer_index, error_type = self.answer_extractor.extract_answer(
+                    reasoning_output_for_extraction, test_case["answer"], self.config.reasoning_method)
+            else:
+                raise ValueError(f"Dataset {self.config.dataset} not configured for CoTReasoner AnswerExtractor.")
+            
+            # Handle API failure case
+            if reasoning_output == "[ERROR: No reasoning output generated]":
+                is_correct = False
+                error_type = "API failure - no output generated"
+                extracted_answer_index = "[]"
+            
+            # Add extracted answer index to all_solver_outputs
+            all_solver_outputs.append(extracted_answer_index)
+            
+            all_reasoning_outputs.append({
+                "reasoning_idx": reasoning_idx,
+                "reasoning_output": reasoning_output,
+                "error_type": error_type,
+                "success": is_correct,
+                "generation_config": reasoning_result_item.get("generation_config", {})
+            })
+            
+            print(f"\nReasoning {reasoning_idx} {'PASSED' if is_correct else 'FAILED'}. Error type: {error_type}")
 
         results = {
             "problem": test_case,
             "timing": case_time,
-            "reasoning_output": reasoning_result["reasoning_output"],
-            "error_type": error_type,
-            "success": is_correct
+            "all_reasoning_outputs": all_reasoning_outputs,
+            "all_solver_outputs": all_solver_outputs,
         }
         
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
