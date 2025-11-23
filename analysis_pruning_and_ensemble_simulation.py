@@ -157,15 +157,39 @@ def simulate_majority_voting(
     df: pd.DataFrame,
     k_paths: int,
     simulation: int,
-    use_pruning: bool,
+    pruning_mode: str,
     dataset: str
 ) -> dict:
-    """Simulate majority voting for a given k_paths and simulation number."""
+    """Simulate majority voting for a given k_paths and simulation number.
+    
+    Args:
+        df: DataFrame with path-level results
+        k_paths: Number of paths to sample
+        simulation: Simulation number for seed
+        pruning_mode: One of ['no_pruning', 'existence', 'uniqueness', 'both']
+        dataset: Dataset name
+    
+    Returns:
+        Dictionary with simulation results
+    """
     # Group by sample_id
     grouped = df.groupby('sample_id')
     
     total_samples = 0
     correct_samples = 0
+    
+    # Map pruning mode to column name
+    pruning_column_map = {
+        'no_pruning': 'parsed_output',
+        'existence': 'existence_pruning_result',
+        'uniqueness': 'uniqueness_pruning_result',
+        'both': 'existence_uniqueness_pruning_result'
+    }
+    
+    if pruning_mode not in pruning_column_map:
+        raise ValueError(f"Invalid pruning_mode: {pruning_mode}. Must be one of {list(pruning_column_map.keys())}")
+    
+    result_column = pruning_column_map[pruning_mode]
     
     for sample_id, group in grouped:
         # Get all paths for this sample
@@ -191,19 +215,11 @@ def simulate_majority_voting(
         sample_seed = (simulation * 1000000 + k_paths * 1000 + sample_id_hash) % (2**31)
         sampled_paths = paths.sample(n=k, random_state=sample_seed)
         
-        # Collect outputs
-        if use_pruning:
-            # Use existence_uniqueness_pruning_result
-            outputs = [
-                parse_output_string(str(row['existence_uniqueness_pruning_result']))
-                for _, row in sampled_paths.iterrows()
-            ]
-        else:
-            # Use parsed_output
-            outputs = [
-                parse_output_string(str(row['parsed_output']))
-                for _, row in sampled_paths.iterrows()
-            ]
+        # Collect outputs from the appropriate column
+        outputs = [
+            parse_output_string(str(row[result_column]))
+            for _, row in sampled_paths.iterrows()
+        ]
         
         # Filter out None values (pruned paths)
         outputs = [out for out in outputs if out is not None]
@@ -225,7 +241,7 @@ def simulate_majority_voting(
         'accuracy': accuracy,
         'total_samples': total_samples,
         'correct_samples': correct_samples,
-        'cot_backup_used': 0  # Not used in this simulation
+        'pruning_mode': pruning_mode
     }
 
 
@@ -243,10 +259,11 @@ def main():
                        help='Maximum number of paths to simulate (default: 20)')
     parser.add_argument('--num-simulations', type=int, default=10,
                        help='Number of simulations per k_paths (default: 10)')
-    parser.add_argument('--with-pruning', action='store_true',
-                       help='Calculate accuracy with pruning (default: without pruning)')
-    parser.add_argument('--both', action='store_true',
-                       help='Calculate both with and without pruning (saves two files)')
+    parser.add_argument('--pruning-mode', type=str, 
+                       choices=['no_pruning', 'existence', 'uniqueness', 'both', 'all'],
+                       default='no_pruning',
+                       help='Pruning mode: no_pruning, existence, uniqueness, both, or all (default: no_pruning). '
+                            'Use "all" to run all four modes.')
     
     args = parser.parse_args()
     
@@ -264,21 +281,16 @@ def main():
     print(f"Max available paths per sample: {max_available_paths}")
     print(f"Simulating up to {max_paths} paths")
     
-    # Determine what to calculate
-    if args.both:
-        pruning_modes = [False, True]
-        mode_names = ['no_pruning', 'existence_uniqueness_pruning']
-    elif args.with_pruning:
-        pruning_modes = [True]
-        mode_names = ['existence_uniqueness_pruning']
+    # Determine which pruning modes to run
+    if args.pruning_mode == 'all':
+        pruning_modes = ['no_pruning', 'existence', 'uniqueness', 'both']
     else:
-        pruning_modes = [False]
-        mode_names = ['no_pruning']
+        pruning_modes = [args.pruning_mode]
     
-    # Run simulations
-    for use_pruning, mode_name in zip(pruning_modes, mode_names):
+    # Run simulations for each pruning mode
+    for pruning_mode in pruning_modes:
         print(f"\n{'='*60}")
-        print(f"Simulating majority voting: {mode_name}")
+        print(f"Simulating majority voting: {pruning_mode}")
         print(f"{'='*60}")
         
         results = []
@@ -287,7 +299,7 @@ def main():
             for sim in range(args.num_simulations):
                 print(f"k_paths={k}, simulation={sim}...", end='\r')
                 result = simulate_majority_voting(
-                    df, k, sim, use_pruning, dataset
+                    df, k, sim, pruning_mode, dataset
                 )
                 results.append(result)
         
@@ -307,17 +319,16 @@ def main():
         
         # Determine output file
         if args.output_csv:
-            if args.both:
-                # Add suffix for pruning mode
-                base_name = args.output_csv.rsplit('.', 1)[0]
-                output_file = f"{base_name}_{mode_name}.xlsx"
+            # Add suffix for pruning mode if running multiple modes
+            base_name = args.output_csv.rsplit('.', 1)[0]
+            if len(pruning_modes) > 1:
+                output_file = f"{base_name}_{pruning_mode}.xlsx"
             else:
-                base_name = args.output_csv.rsplit('.', 1)[0]
                 output_file = f"{base_name}.xlsx"
         else:
             # Generate output filename from input
             base_name = args.input_csv.rsplit('.', 1)[0]
-            output_file = f"{base_name}_simulation_{mode_name}.xlsx"
+            output_file = f"{base_name}_simulation_{pruning_mode}.xlsx"
         
         # Save results to Excel with multiple sheets
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
