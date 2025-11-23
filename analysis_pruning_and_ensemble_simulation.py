@@ -12,6 +12,7 @@ import ast
 import random
 from collections import Counter
 from typing import List, Any, Optional
+import os
 
 
 def _flatten(nested_list):
@@ -295,30 +296,46 @@ def main():
         # Create results DataFrame
         results_df = pd.DataFrame(results)
         
+        # Calculate summary statistics
+        summary = results_df.groupby('k_paths')['accuracy'].agg(['mean', 'std', 'min', 'max']).reset_index()
+        # Format the mean±std column
+        summary['mean±std'] = summary.apply(
+            lambda row: f"{row['mean']:.4f}±{row['std']:.4f}", axis=1
+        )
+        # Reorder columns
+        summary = summary[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        
         # Determine output file
         if args.output_csv:
             if args.both:
                 # Add suffix for pruning mode
                 base_name = args.output_csv.rsplit('.', 1)[0]
-                ext = args.output_csv.rsplit('.', 1)[1] if '.' in args.output_csv else 'csv'
-                output_file = f"{base_name}_{mode_name}.{ext}"
+                output_file = f"{base_name}_{mode_name}.xlsx"
             else:
-                output_file = args.output_csv
+                base_name = args.output_csv.rsplit('.', 1)[0]
+                output_file = f"{base_name}.xlsx"
         else:
             # Generate output filename from input
             base_name = args.input_csv.rsplit('.', 1)[0]
-            ext = args.input_csv.rsplit('.', 1)[1] if '.' in args.input_csv else 'csv'
-            output_file = f"{base_name}_simulation_{mode_name}.{ext}"
+            output_file = f"{base_name}_simulation_{mode_name}.xlsx"
         
-        # Save results
-        results_df.to_csv(output_file, index=False)
+        # Save results to Excel with multiple sheets
+        with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+            results_df.to_excel(writer, sheet_name='Raw Results', index=False)
+            summary.to_excel(writer, sheet_name='Statistics', index=False)
+        
         print(f"\nResults saved to: {output_file}")
-        print(f"Total rows: {len(results_df)}")
+        print(f"  - Sheet 'Raw Results': {len(results_df)} rows")
+        print(f"  - Sheet 'Statistics': {len(summary)} rows")
         
         # Print summary statistics
-        summary = results_df.groupby('k_paths')['accuracy'].agg(['mean', 'std', 'min', 'max'])
         print(f"\nSummary by k_paths:")
-        print(summary)
+        print(summary.to_string(index=False))
+        
+        # Also save CSV version for backward compatibility
+        csv_output_file = output_file.replace('.xlsx', '.csv')
+        results_df.to_csv(csv_output_file, index=False)
+        print(f"\nCSV version also saved to: {csv_output_file}")
     
     print("\nDone!")
 
