@@ -55,14 +55,18 @@ def extract_answer_from_output(parsed_output: Any, dataset: str) -> Optional[Any
     """Extract answer from parsed output for comparison.
     
     Returns a hashable tuple representation of the answer(s).
+    Empty lists [] are represented as empty tuples () to participate in voting.
     """
     if parsed_output is None or parsed_output == 'syntax error':
         return None
     
     try:
         flat_output = list(_flatten(parsed_output))
+        
+        # Allow empty lists to participate in voting (represented as empty tuple)
+        # This is important for uniqueness pruning where [] is a valid output
         if len(flat_output) == 0:
-            return None
+            return tuple()  # Return empty tuple instead of None
         
         # Check if all elements are hashable
         for item in flat_output:
@@ -91,7 +95,7 @@ def is_voting_result_correct(voting_result: Any, true_label: str, dataset: str) 
         if isinstance(voting_result, tuple):
             voting_result = list(voting_result)
         
-        # If voting_result is a list with multiple items, check if true_label is in it
+        # voting_result must be a list with a single item
         if isinstance(voting_result, list):
             if len(voting_result) != 1:
                 return False
@@ -135,8 +139,6 @@ def majority_vote(outputs: List[Any], dataset: str) -> Optional[Any]:
     # Extract answers from each output
     answers = []
     for output in outputs:
-        if output is None or output == 'syntax error':
-            continue  # Skip None and syntax errors
         answer = extract_answer_from_output(output, dataset)
         if answer is not None:
             answers.append(answer)
