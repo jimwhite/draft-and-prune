@@ -73,6 +73,7 @@ def parse_solver_output(output_str, dataset=None, problem_answers=None):
         # Handle different dataset formats
         if dataset and dataset.lower() in ['proofwriter', 'prontoqa']:
             # Boolean-based datasets: True, False, Unknown
+            # Also handle CoT outputs which are in letter format: A, B, C, [A], [B], [C]
             if isinstance(output_str, str):
                 output_clean = output_str.strip()
                 # cope with multiple answers pattern
@@ -80,6 +81,12 @@ def parse_solver_output(output_str, dataset=None, problem_answers=None):
                     return ['True', 'False'] # follow the logic in reasoners.py: execute_pyke_code()
                 elif output_clean in ['True', 'False', 'Unknown']:
                     return [output_clean]
+                # Handle CoT letter outputs: A, B, C (for ProofWriter with Unknown option)
+                elif output_clean in ['A', 'B', 'C']:
+                    return [output_clean]
+                # Handle bracketed CoT outputs: [A], [B], [C]
+                elif output_clean in ['[A]', '[B]', '[C]']:
+                    return [output_clean[1]]  # Extract letter from brackets
                 else:
                     return []
         
@@ -235,11 +242,17 @@ def is_correct_path(parsed_output, true_label, dataset):
             return path_answer == true_label_int
         elif dataset and dataset.lower() in ['proofwriter', 'folio']:
             # ProofWriter/FOLIO: mapping between boolean and letters
+            # Also handle direct letter comparison for CoT outputs
+            if path_answer in ['A', 'B', 'C']:
+                return path_answer == true_label
             return (path_answer == "True" and true_label == "A") or \
                    (path_answer == "False" and true_label == "B") or \
                    (path_answer == "Unknown" and true_label == "C")
         elif dataset and dataset.lower() == 'prontoqa':
             # ProntoQA: mapping between boolean and letters
+            # Also handle direct letter comparison for CoT outputs
+            if path_answer in ['A', 'B']:
+                return path_answer == true_label
             return (path_answer == "True" and true_label == "A") or \
                    (path_answer == "False" and true_label == "B")
         elif dataset and dataset.lower() == 'logicaldeduction':
