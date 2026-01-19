@@ -131,24 +131,14 @@ def is_voting_result_correct(voting_result: Any, true_label: str, dataset: str) 
         return False
 
 
-def majority_vote(outputs: List[Any], dataset: str) -> Optional[Any]:
+def majority_vote(candidates: List[Any]) -> Optional[Any]:
     """Perform majority voting on a list of outputs.
     
     Returns the most frequent output (as a tuple for hashability).
     """
-    # Extract answers from each output
-    answers = []
-    for output in outputs:
-        answer = extract_answer_from_output(output, dataset)
-        if answer is not None:
-            answers.append(answer)
-    
-    if len(answers) == 0:
-        return None
-    
+    # ass
     # Count occurrences (answers are tuples, so they're hashable)
-    counter = Counter(answers)
-    
+    counter = Counter(candidates)
     # Get the most common answer (returns tuple)
     most_common = counter.most_common(1)[0]
     
@@ -160,7 +150,8 @@ def simulate_majority_voting(
     k_paths: int,
     simulation: int,
     pruning_mode: str,
-    dataset: str
+    dataset: str,
+    use_cot_backup: bool = False
 ) -> dict:
     """Simulate majority voting for a given k_paths and simulation number.
     
@@ -170,6 +161,7 @@ def simulate_majority_voting(
         simulation: Simulation number for seed
         pruning_mode: One of ['no_pruning', 'existence', 'uniqueness', 'both']
         dataset: Dataset name
+        use_cot_backup: If True, use CoT correctness as backup when no valid output
     
     Returns:
         Dictionary with simulation results
@@ -179,6 +171,9 @@ def simulate_majority_voting(
     
     total_samples = 0
     correct_samples = 0
+    exec_samples = 0  # samples with len(answers) != 0
+    exec_correct = 0  # samples with len(answers) != 0 AND is_correct
+    hit_samples = 0   # samples with at least one correct path among k paths
     
     # Map pruning mode to column name
     pruning_column_map = {
@@ -217,6 +212,10 @@ def simulate_majority_voting(
         sample_seed = (simulation * 1000000 + k_paths * 1000 + sample_id_hash) % (2**31)
         sampled_paths = paths.sample(n=k, random_state=sample_seed)
         
+        # Calculate hit rate: check if any sampled path is correct
+        if sampled_paths['is_correct'].any():
+            hit_samples += 1
+        
         # Collect outputs from the appropriate column
         outputs = [
             parse_output_string(str(row[result_column]))
@@ -225,17 +224,37 @@ def simulate_majority_voting(
         
         # Filter out None values (pruned paths)
         outputs = [out for out in outputs if out is not None]
+
+        # Extract answers from each output
+        answers = []
+        for output in outputs:
+            answer = extract_answer_from_output(output, dataset)
+            if answer is not None:
+                answers.append(answer)
         
-        # Perform majority voting
-        voting_result = majority_vote(outputs, dataset)
-        
-        # Check correctness
-        is_correct = is_voting_result_correct(voting_result, true_label, dataset)
+        if len(answers) == 0:
+            if use_cot_backup:
+                cot_is_correct = paths.iloc[0]['cot_is_correct']
+                is_correct = bool(cot_is_correct)
+            else:
+                is_correct = False
+            # exec_samples stays the same (not incremented)
+        else:
+            # Perform majority voting
+            voting_result = majority_vote(candidates=answers)
+            is_correct = is_voting_result_correct(voting_result, true_label, dataset)
+            # Track exec metrics (without CoT backup)
+            exec_samples += 1
+            if is_correct:
+                exec_correct += 1
         
         if is_correct:
             correct_samples += 1
     
     accuracy = correct_samples / total_samples if total_samples > 0 else 0.0
+    exec_rate = exec_samples / total_samples if total_samples > 0 else 0.0
+    exec_acc = exec_correct / exec_samples if exec_samples > 0 else 0.0
+    hit_rate = hit_samples / total_samples if total_samples > 0 else 0.0
     
     return {
         'k_paths': k_paths,
@@ -243,6 +262,12 @@ def simulate_majority_voting(
         'accuracy': accuracy,
         'total_samples': total_samples,
         'correct_samples': correct_samples,
+        'exec_samples': exec_samples,
+        'exec_correct': exec_correct,
+        'exec_rate': exec_rate,
+        'exec_acc': exec_acc,
+        'hit_samples': hit_samples,
+        'hit_rate': hit_rate,
         'pruning_mode': pruning_mode
     }
 
@@ -266,6 +291,8 @@ def main():
                        default='no_pruning',
                        help='Pruning mode: no_pruning, existence, uniqueness, both, or all (default: no_pruning). '
                             'Use "all" to run all four modes.')
+    parser.add_argument('--cot-backup', action='store_true',
+                       help='Use CoT correctness as backup when no valid symbolic output')
     
     args = parser.parse_args()
     
@@ -293,6 +320,8 @@ def main():
     for pruning_mode in pruning_modes:
         print(f"\n{'='*60}")
         print(f"Simulating majority voting: {pruning_mode}")
+        if args.cot_backup:
+            print(f"CoT backup: enabled")
         print(f"{'='*60}")
         
         results = []
@@ -301,7 +330,7 @@ def main():
             for sim in range(args.num_simulations):
                 print(f"k_paths={k}, simulation={sim}...", end='\r')
                 result = simulate_majority_voting(
-                    df, k, sim, pruning_mode, dataset
+                    df, k, sim, pruning_mode, dataset, args.cot_backup
                 )
                 results.append(result)
         
@@ -310,40 +339,75 @@ def main():
         # Create results DataFrame
         results_df = pd.DataFrame(results)
         
-        # Calculate summary statistics
-        summary = results_df.groupby('k_paths')['accuracy'].agg(['mean', 'std', 'min', 'max']).reset_index()
-        # Format the mean±std column
-        summary['mean±std'] = summary.apply(
+        # Calculate summary statistics for accuracy
+        summary_acc = results_df.groupby('k_paths')['accuracy'].agg(['mean', 'std', 'min', 'max']).reset_index()
+        summary_acc['mean±std'] = summary_acc.apply(
             lambda row: f"{row['mean']:.4f}±{row['std']:.4f}", axis=1
         )
-        # Reorder columns
-        summary = summary[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        summary_acc = summary_acc[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        
+        # Calculate summary statistics for exec_rate
+        summary_exec_rate = results_df.groupby('k_paths')['exec_rate'].agg(['mean', 'std', 'min', 'max']).reset_index()
+        summary_exec_rate['mean±std'] = summary_exec_rate.apply(
+            lambda row: f"{row['mean']:.4f}±{row['std']:.4f}", axis=1
+        )
+        summary_exec_rate = summary_exec_rate[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        
+        # Calculate summary statistics for exec_acc
+        summary_exec_acc = results_df.groupby('k_paths')['exec_acc'].agg(['mean', 'std', 'min', 'max']).reset_index()
+        summary_exec_acc['mean±std'] = summary_exec_acc.apply(
+            lambda row: f"{row['mean']:.4f}±{row['std']:.4f}", axis=1
+        )
+        summary_exec_acc = summary_exec_acc[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        
+        # Calculate summary statistics for hit_rate
+        summary_hit_rate = results_df.groupby('k_paths')['hit_rate'].agg(['mean', 'std', 'min', 'max']).reset_index()
+        summary_hit_rate['mean±std'] = summary_hit_rate.apply(
+            lambda row: f"{row['mean']:.4f}±{row['std']:.4f}", axis=1
+        )
+        summary_hit_rate = summary_hit_rate[['k_paths', 'mean', 'std', 'mean±std', 'min', 'max']]
+        
+        # Keep summary as alias for backward compatibility
+        summary = summary_acc
         
         # Determine output file
+        cot_suffix = "_cot_backup" if args.cot_backup else ""
         if args.output_csv:
             # Add suffix for pruning mode if running multiple modes
             base_name = args.output_csv.rsplit('.', 1)[0]
             if len(pruning_modes) > 1:
-                output_file = f"{base_name}_{pruning_mode}.xlsx"
+                output_file = f"{base_name}_{pruning_mode}{cot_suffix}.xlsx"
             else:
-                output_file = f"{base_name}.xlsx"
+                output_file = f"{base_name}{cot_suffix}.xlsx"
         else:
             # Generate output filename from input
             base_name = args.input_csv.rsplit('.', 1)[0]
-            output_file = f"{base_name}_simulation_{pruning_mode}.xlsx"
+            output_file = f"{base_name}_simulation_{pruning_mode}{cot_suffix}.xlsx"
         
         # Save results to Excel with multiple sheets
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
             results_df.to_excel(writer, sheet_name='Raw Results', index=False)
-            summary.to_excel(writer, sheet_name='Statistics', index=False)
+            summary_acc.to_excel(writer, sheet_name='Accuracy', index=False)
+            summary_exec_rate.to_excel(writer, sheet_name='Exec Rate', index=False)
+            summary_exec_acc.to_excel(writer, sheet_name='Exec Acc', index=False)
+            summary_hit_rate.to_excel(writer, sheet_name='Hit Rate', index=False)
         
         print(f"\nResults saved to: {output_file}")
         print(f"  - Sheet 'Raw Results': {len(results_df)} rows")
-        print(f"  - Sheet 'Statistics': {len(summary)} rows")
+        print(f"  - Sheet 'Accuracy': {len(summary_acc)} rows")
+        print(f"  - Sheet 'Exec Rate': {len(summary_exec_rate)} rows")
+        print(f"  - Sheet 'Exec Acc': {len(summary_exec_acc)} rows")
+        print(f"  - Sheet 'Hit Rate': {len(summary_hit_rate)} rows")
         
         # Print summary statistics
-        print(f"\nSummary by k_paths:")
-        print(summary.to_string(index=False))
+        print(f"\nAccuracy by k_paths:")
+        print(summary_acc.to_string(index=False))
+        print(f"\nExec Rate by k_paths:")
+        print(summary_exec_rate.to_string(index=False))
+        print(f"\nExec Acc by k_paths:")
+        print(summary_exec_acc.to_string(index=False))
+        print(f"\nHit Rate by k_paths:")
+        print(summary_hit_rate.to_string(index=False))
         
         # Also save CSV version for backward compatibility
         csv_output_file = output_file.replace('.xlsx', '.csv')
