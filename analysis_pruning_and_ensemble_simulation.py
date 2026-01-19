@@ -234,8 +234,8 @@ def simulate_majority_voting(
         
         if len(answers) == 0:
             if use_cot_backup:
-                cot_is_correct = paths.iloc[0]['cot_is_correct']
-                is_correct = bool(cot_is_correct)
+                cot_correctness = paths.iloc[0]['cot_correctness']
+                is_correct = bool(cot_correctness)
             else:
                 is_correct = False
             # exec_samples stays the same (not incremented)
