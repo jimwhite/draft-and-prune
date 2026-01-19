@@ -92,10 +92,16 @@ def parse_solver_output(output_str, dataset=None, problem_answers=None):
         
         elif dataset and dataset.lower() == 'logicaldeduction':
             # Letter-based dataset: A, B, C, D, E, F, G
-            # Examples: 'E', 'E\nA\nE', 'E) Dan finished last'
+            # Examples: 'E', 'E\nA\nE', 'E) Dan finished last', '[A]', '[D]'
             if isinstance(output_str, str):
                 output_clean = output_str.strip()
                 valid_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+                
+                # Case 0: Handle bracketed CoT outputs: [A], [B], [C], [D], [E], [F], [G]
+                if output_clean.startswith('[') and output_clean.endswith(']'):
+                    letter = output_clean[1:-1]  # Extract letter from brackets
+                    if letter in valid_letters:
+                        return [letter]
                 
                 # Case 1: Single valid letter
                 if output_clean in valid_letters:
@@ -346,6 +352,13 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
         all_solver_outputs = item.get('all_solver_outputs', [])
         problem_answers = item['problem'].get('answers', None)  # Get answer choices for this problem
         
+        # Handle CoT results of LogicalDeduction, ProofWriter, ProntoQA: they have 'reasoning_output' and 'success' instead of 'all_solver_outputs'
+        is_cot_result = 'reasoning_output' in item and 'success' in item and not all_solver_outputs
+        if is_cot_result:
+            # For CoT results, use the success field directly for correctness
+            # Create a single "path" for CoT with the answer extracted from reasoning_output or success status
+            all_solver_outputs = [item.get('reasoning_output', '')]
+        
         # Process each path (up to expected_paths_per_sample)
         for path_idx in range(expected_paths_per_sample):
             # path_id = f"{path_idx+1}"
@@ -360,15 +373,24 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
                 # is_missing_path = True
             
             # Parse the output with problem answers for better matching
+            # TBD: The parsed_output logic of CoT is wrong, need to fix it. So we use the 'success' field directly below.
             parsed_output = parse_solver_output(output_str, dataset, problem_answers)
-            # if parsed_output is None:
-                # import pdb; pdb.set_trace()
+
             # Determine correctness
-            is_correct = is_correct_path(parsed_output, true_label, dataset)
+            # For CoT results, use the 'success' field directly, parsed_output is not used.
+            if is_cot_result and path_idx == 0:
+                is_correct = item.get('success', False)
+            else:
+                is_correct = is_correct_path(parsed_output, true_label, dataset)
             
             # Determine pruning status
-            pruned_by_existence = is_pruned_by_existence(parsed_output)
-            pruned_by_uniqueness = is_pruned_by_uniqueness(parsed_output)
+            # For CoT results, pruning doesn't apply (single reasoning path)
+            if is_cot_result:
+                pruned_by_existence = False
+                pruned_by_uniqueness = False
+            else:
+                pruned_by_existence = is_pruned_by_existence(parsed_output)
+                pruned_by_uniqueness = is_pruned_by_uniqueness(parsed_output)
             
             # Determine if it's a syntax error
             is_syntax_error = (parsed_output == 'syntax error')
