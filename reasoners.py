@@ -67,10 +67,12 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
                             test_runner_instance.code_api_client.api_key = assigned_key
                             print(f"Fix API client also updated with key #{assigned_key_index + 1}")
 
-            # Call the instance's reason method
+            # Call the instance's reason method and record per-instance inference time
+            case_start_time = time.time()
             reasoning_result = test_runner_instance.reason(test_case, mp_lock)
+            case_time = time.time() - case_start_time
             
-            test_runner_instance._process_results(test_case, reasoning_result, 0.0, unique_id, None)
+            test_runner_instance._process_results(test_case, reasoning_result, case_time, unique_id, None)
 
             print(f"\n" + "-" * 30)
             print(f"Task finished.")
@@ -464,14 +466,19 @@ class Reasoner(ABC):
         code_model_name = getattr(self.config, 'code_model', None)
         if code_model_name is None:
             raise ValueError("code_model is not set")
-        self.results_folder = f"./results/results_{datetime.now().strftime('%Y-%m-%d')}/{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}/"
+        results_root = getattr(self.config, "results_root", "./results")
+        self.results_folder = os.path.join(
+            results_root,
+            f"results_{datetime.now().strftime('%Y-%m-%d')}",
+            f"{self.config.reasoning_method}-{self.config.dataset}-plan-with-{plan_model_name}-code-with-{code_model_name}-{self.config.shots}_shot_CoT-{str(uuid.uuid4())}"
+        )
         print(f"Results folder: {self.results_folder}")
         
         if os.path.exists(self.results_folder):
             print(f"The results folder {self.results_folder} already exists, check whether you want to continue")
         else:
             print("No existing results found, starting fresh")
-            os.makedirs(self.results_folder)
+            os.makedirs(self.results_folder, exist_ok=True)
         return self.results_folder
 
     def _call_api(self, prompt: str) -> str:
@@ -490,13 +497,166 @@ class Reasoner(ABC):
         """Process the results of a single test case"""
         pass
 
+    @staticmethod
+    def _zero_token_usage() -> Dict[str, int]:
+        """Create a zeroed token usage dict."""
+        return {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+        }
+
+    @classmethod
+    def _normalize_token_usage(cls, usage: Optional[Dict[str, Any]]) -> Dict[str, int]:
+        """Normalize possibly-null token usage into integer totals."""
+        if not isinstance(usage, dict):
+            return cls._zero_token_usage()
+        return {
+            "prompt_tokens": int(usage.get("prompt_tokens") or 0),
+            "completion_tokens": int(usage.get("completion_tokens") or 0),
+            "total_tokens": int(usage.get("total_tokens") or 0),
+        }
+
+    @classmethod
+    def _add_token_usage(cls, accum: Dict[str, int], usage: Optional[Dict[str, Any]]) -> Dict[str, int]:
+        """Add token usage into an accumulator and return the updated dict."""
+        normalized = cls._normalize_token_usage(usage)
+        return {
+            "prompt_tokens": accum["prompt_tokens"] + normalized["prompt_tokens"],
+            "completion_tokens": accum["completion_tokens"] + normalized["completion_tokens"],
+            "total_tokens": accum["total_tokens"] + normalized["total_tokens"],
+        }
+
+    @classmethod
+    def _sum_token_usages(cls, usage_items: List[Optional[Dict[str, Any]]]) -> Dict[str, int]:
+        """Sum a list of token usage dicts."""
+        total = cls._zero_token_usage()
+        for usage in usage_items:
+            total = cls._add_token_usage(total, usage)
+        return total
+
+    @staticmethod
+    def _zero_api_time() -> float:
+        """Create a zero value for api_time_only (seconds)."""
+        return 0.0
+
+    @staticmethod
+    def _zero_solver_time() -> float:
+        """Create a zero value for solver_time_only (seconds)."""
+        return 0.0
+
+    @classmethod
+    def _normalize_api_time(cls, api_time_only: Optional[Any]) -> float:
+        """Normalize api_time_only to a non-negative float."""
+        try:
+            value = float(api_time_only)
+            return value if value >= 0 else 0.0
+        except Exception:
+            return 0.0
+
+    @classmethod
+    def _sum_api_times(cls, api_times: List[Optional[Any]]) -> float:
+        """Sum a list of api_time_only values."""
+        total = 0.0
+        for api_time in api_times:
+            total += cls._normalize_api_time(api_time)
+        return total
+
+    @classmethod
+    def _normalize_solver_time(cls, solver_time_only: Optional[Any]) -> float:
+        """Normalize solver_time_only to a non-negative float."""
+        return cls._normalize_api_time(solver_time_only)
+
+    @classmethod
+    def _sum_solver_times(cls, solver_times: List[Optional[Any]]) -> float:
+        """Sum a list of solver_time_only values."""
+        total = 0.0
+        for solver_time in solver_times:
+            total += cls._normalize_solver_time(solver_time)
+        return total
+
+    def _extract_usage(self, client: APIClient) -> Dict[str, Optional[int]]:
+        """Get normalized token usage fields from the latest API call metadata."""
+        metadata = client.get_last_call_metadata() if hasattr(client, "get_last_call_metadata") else {}
+        usage = metadata.get("usage") if isinstance(metadata, dict) else None
+        if not isinstance(usage, dict):
+            return {
+                "prompt_tokens": None,
+                "completion_tokens": None,
+                "total_tokens": None,
+            }
+        return {
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "completion_tokens": usage.get("completion_tokens"),
+            "total_tokens": usage.get("total_tokens"),
+        }
+
+    def _extract_api_time(self, client: APIClient) -> float:
+        """Get api_time_only (seconds) from the latest API call metadata."""
+        metadata = client.get_last_call_metadata() if hasattr(client, "get_last_call_metadata") else {}
+        timing = metadata.get("timing") if isinstance(metadata, dict) else None
+        if not isinstance(timing, dict):
+            return 0.0
+        return self._normalize_api_time(timing.get("api_time_only_sec"))
+
+    def _write_run_token_usage_summary(self) -> None:
+        """Aggregate token totals across all per-sample summaries for this run."""
+        if not os.path.exists(self.summary_folder):
+            return
+
+        total_usage = self._zero_token_usage()
+        total_api_time_only = self._zero_api_time()
+        total_solver_time_only = self._zero_solver_time()
+        samples_with_usage = 0
+        samples_with_api_time = 0
+        samples_with_solver_time = 0
+        total_samples = 0
+
+        for filename in os.listdir(self.summary_folder):
+            if not filename.endswith(".json"):
+                continue
+            total_samples += 1
+            summary_path = os.path.join(self.summary_folder, filename)
+            try:
+                with open(summary_path, "r", encoding="utf-8") as f:
+                    summary_data = json.load(f)
+            except Exception:
+                continue
+
+            sample_usage = summary_data.get("token_usage_total")
+            if sample_usage is not None:
+                samples_with_usage += 1
+            total_usage = self._add_token_usage(total_usage, sample_usage)
+            sample_api_time = summary_data.get("api_time_only_total")
+            if sample_api_time is not None:
+                samples_with_api_time += 1
+            total_api_time_only += self._normalize_api_time(sample_api_time)
+            sample_solver_time = summary_data.get("solver_time_only_total")
+            if sample_solver_time is not None:
+                samples_with_solver_time += 1
+            total_solver_time_only += self._normalize_solver_time(sample_solver_time)
+
+        output_path = os.path.join(self.results_folder, "token_usage_summary.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "total_samples": total_samples,
+                "samples_with_usage": samples_with_usage,
+                "token_usage_total": total_usage,
+                "samples_with_api_time_only": samples_with_api_time,
+                "api_time_only_total": total_api_time_only,
+                "samples_with_solver_time_only": samples_with_solver_time,
+                "solver_time_only_total": total_solver_time_only,
+            }, f, indent=2, ensure_ascii=False)
+
     def run_all_tests(self) -> None:
         """Run reasoning on all test cases in the file with optional limit"""
         start_time_total = time.time()
         processed_count = 0
         for i, batch in enumerate(self.data_loader):
+            case_start_time = time.time()
             reasoning_result = self.reason(batch[0])
-            self._process_results(batch[0], reasoning_result, 0.0, str(uuid.uuid4()), None)
+            case_time = time.time() - case_start_time
+            self._process_results(batch[0], reasoning_result, case_time, str(uuid.uuid4()), None)
 
             processed_count += 1
             if processed_count < len(self.data_loader):
@@ -505,6 +665,9 @@ class Reasoner(ABC):
 
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
+        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w", encoding="utf-8") as f:
+            f.write(f"{total_execution_time:.2f}s")
+        self._write_run_token_usage_summary()
         
     def run_all_tests_parallel(self, num_processes: int=10) -> None:
         """Use multiple processes to run all test cases in parallel"""
@@ -536,8 +699,9 @@ class Reasoner(ABC):
 
         total_execution_time = time.time() - start_time_total
         print(f"\nTotal execution time: {total_execution_time:.2f}s")
-        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w") as f:
+        with open(os.path.join(self.results_folder, "total_execution_time.txt"), "w", encoding="utf-8") as f:
             f.write(f"{total_execution_time:.2f}s")
+        self._write_run_token_usage_summary()
 
 
 class CodeBasedReasoner(Reasoner):
@@ -558,34 +722,103 @@ class CodeBasedReasoner(Reasoner):
     def _generate_and_execute_code(self, test_case: dict, solver_name: str, execute_func: Callable, mp_lock: Optional[Any] = None) -> dict:
         """Generate and execute code - to be implemented by subclasses"""
         pass
+
+    def _execute_code(self, execute_func: Callable, code: str, mp_lock: Optional[Any]) -> Tuple[bool, str, float]:
+        """Execute solver code with optional multiprocessing lock."""
+        if mp_lock is not None:
+            with mp_lock:
+                solver_start_time = time.time()
+                is_valid, solver_output = execute_func(code)
+                solver_time_only = time.time() - solver_start_time
+                return is_valid, solver_output, solver_time_only
+        solver_start_time = time.time()
+        is_valid, solver_output = execute_func(code)
+        solver_time_only = time.time() - solver_start_time
+        return is_valid, solver_output, solver_time_only
+
+    @staticmethod
+    def _classify_solver_error(output: Any) -> Optional[str]:
+        """Classify solver failures into syntax_error, solver_timeout, or runtime_error."""
+        if output is None:
+            return None
+        if not isinstance(output, str):
+            return "runtime_error"
+
+        lower = output.lower()
+        if "timeout" in lower:
+            return "solver_timeout"
+
+        syntax_markers = [
+            "syntaxerror",
+            "indentationerror",
+            "taberror",
+            "invalid syntax",
+            "eol while scanning string literal",
+            "unexpected eof while parsing",
+        ]
+        if any(marker in lower for marker in syntax_markers):
+            return "syntax_error"
+
+        if "error" in lower or "exception" in lower or "traceback" in lower:
+            return "runtime_error"
+
+        return None
     
-    def _execute_with_repair(self, test_case: dict, code: str, execute_func: Callable, 
-                           mp_lock: Optional[Any], identifier: str) -> Tuple[str, str, bool]:
+    def _execute_with_repair(self, test_case: dict, code: str, execute_func: Callable,
+                           mp_lock: Optional[Any], identifier: str) -> Tuple[str, str, bool, List[Dict[str, Any]], Optional[str], float]:
         """Execute code with repair attempts"""
-        temp_solver_output = None
-        is_valid = False
         temp_code = code
-        
-        for iteration in range(self.config.max_repairs):
-            print(f"Starting syntax error iteration {iteration + 1}/{self.config.max_repairs} for {identifier}")
-            
-            if mp_lock is not None:
-                with mp_lock:
-                    is_valid, temp_solver_output = execute_func(temp_code)
-            else:
-                is_valid, temp_solver_output = execute_func(temp_code)
-                
-            if not is_valid and iteration < self.config.max_repairs - 1:
-                print(f"Code execution failed for {identifier}. Error: {temp_solver_output}")
-                fix_prompt = self.prompt_handler.get_fix_syntax_error_prompt(test_case, temp_code, temp_solver_output)
-                fix_response = self._call_fix_api(fix_prompt) if hasattr(self, 'code_api_client') else self._call_api(fix_prompt)
-                temp_code = CodeCleaner.clean_code(fix_response, self.config.dataset)
-            else:
-                if is_valid:
-                    print(f"Code execution succeeded for {identifier}.")
+        repair_round_logs: List[Dict[str, Any]] = []
+        solver_time_only_total = self._zero_solver_time()
+
+        print(f"Starting syntax error iteration 1/{self.config.max_repairs} for {identifier}")
+        is_valid, temp_solver_output, initial_solver_time_only = self._execute_code(execute_func, temp_code, mp_lock)
+        solver_time_only_total += initial_solver_time_only
+
+        # Keep existing behavior: max_repair loop allows up to (max_repairs - 1) repair attempts.
+        for repair_round in range(1, self.config.max_repairs):
+            if is_valid:
+                print(f"Code execution succeeded for {identifier}.")
                 break
-        
-        return temp_code, temp_solver_output, is_valid
+
+            print(f"Code execution failed for {identifier}. Error: {temp_solver_output}")
+            fix_prompt = self.prompt_handler.get_fix_syntax_error_prompt(test_case, temp_code, temp_solver_output)
+
+            if hasattr(self, 'code_api_client'):
+                fix_response = self._call_fix_api(fix_prompt)
+                usage = self._extract_usage(self.code_api_client)
+                api_time_only = self._extract_api_time(self.code_api_client)
+            else:
+                fix_response = self._call_api(fix_prompt)
+                usage = self._extract_usage(self.api_client)
+                api_time_only = self._extract_api_time(self.api_client)
+
+            repaired_code = CodeCleaner.clean_code(fix_response, self.config.dataset)
+
+            print(f"Starting syntax error iteration {repair_round + 1}/{self.config.max_repairs} for {identifier}")
+            is_valid, temp_solver_output, solver_time_only = self._execute_code(execute_func, repaired_code, mp_lock)
+            solver_time_only_total += solver_time_only
+
+            error_type = None if is_valid else self._classify_solver_error(temp_solver_output)
+            repair_round_logs.append({
+                "round_index": repair_round,
+                "input_code": temp_code,
+                "repair_prompt": fix_prompt,
+                "repaired_code": repaired_code,
+                "syntax_check_result": {
+                    "is_valid": is_valid,
+                    "solver_output_or_error": temp_solver_output,
+                    "error_type": error_type,
+                },
+                "usage": usage,
+                "api_time_only": api_time_only,
+                "solver_time_only": solver_time_only,
+            })
+
+            temp_code = repaired_code
+
+        final_error_type = None if is_valid else self._classify_solver_error(temp_solver_output)
+        return temp_code, temp_solver_output, is_valid, repair_round_logs, final_error_type, solver_time_only_total
     
     def reason(self, test_case: Dict, mp_lock: Optional[Any]=None) -> Dict:
         """Main reasoning entry point"""
@@ -611,6 +844,8 @@ class TwoStepReasoner(CodeBasedReasoner):
             plan_prompt = self.prompt_handler.get_plan_prompt(test_case)
             current_plan_response = self._call_api(plan_prompt)
             current_plan = current_plan_response if isinstance(current_plan_response, str) else current_plan_response[0]
+            plan_usage = self._extract_usage(self.api_client)
+            plan_api_time_only = self._extract_api_time(self.api_client)
             
             # Generate code
             code_configs = [{"temperature": self.config.code_temp}]
@@ -621,13 +856,19 @@ class TwoStepReasoner(CodeBasedReasoner):
                 
                 code_prompt = self.prompt_handler.get_code_prompt(test_case, current_plan)
                 temp_code_response = self._call_fix_api(code_prompt)
+                code_generation_usage = self._extract_usage(self.code_api_client)
+                code_generation_api_time_only = self._extract_api_time(self.code_api_client)
                 temp_code = CodeCleaner.clean_code(temp_code_response, self.config.dataset)
                 
                 # Execute with repair loop
                 identifier = f"plan={plan_config_idx + 1}, code={code_gen_idx}"
-                temp_code, temp_solver_output, is_valid = self._execute_with_repair(
+                temp_code, temp_solver_output, is_valid, repair_round_logs, final_error_type, solver_time_only = self._execute_with_repair(
                     test_case, temp_code, execute_func, mp_lock, identifier
                 )
+                repair_usage_total = self._sum_token_usages([log.get("usage") for log in repair_round_logs])
+                repair_api_time_only_total = self._sum_api_times([log.get("api_time_only") for log in repair_round_logs])
+                path_usage_total = self._sum_token_usages([plan_usage, code_generation_usage, repair_usage_total])
+                path_api_time_only = self._sum_api_times([plan_api_time_only, code_generation_api_time_only, repair_api_time_only_total])
                 
                 code_result = {
                     "plan_idx": plan_config_idx + 1,
@@ -635,7 +876,18 @@ class TwoStepReasoner(CodeBasedReasoner):
                     "code": temp_code,
                     "solver_output": temp_solver_output,
                     "is_valid": is_valid,
-                    "code_generation_config": code_config.copy()
+                    "code_generation_config": code_config.copy(),
+                    "plan_generation_usage": plan_usage,
+                    "plan_generation_api_time_only": plan_api_time_only,
+                    "code_generation_usage": code_generation_usage,
+                    "code_generation_api_time_only": code_generation_api_time_only,
+                    "repair_usage_total": repair_usage_total,
+                    "repair_api_time_only_total": repair_api_time_only_total,
+                    "path_usage_total": path_usage_total,
+                    "path_api_time_only": path_api_time_only,
+                    "solver_time_only": solver_time_only,
+                    "repair_round_logs": repair_round_logs,
+                    "solver_error_type": final_error_type,
                 }
                 plan_code_results.append(code_result)
             
@@ -643,6 +895,8 @@ class TwoStepReasoner(CodeBasedReasoner):
                 "plan_idx": plan_config_idx + 1,
                 "plan_config": plan_config.copy(),
                 "plan": current_plan,
+                "plan_generation_usage": plan_usage,
+                "plan_generation_api_time_only": plan_api_time_only,
                 "code_results": plan_code_results
             }
             all_plan_results.append(plan_result)
@@ -659,6 +913,12 @@ class TwoStepReasoner(CodeBasedReasoner):
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         all_plan_results = reasoning_result.get("all_plan_results", [])
         all_solver_outputs = []
+        all_solver_error_types = []
+        path_token_usage = []
+        token_usage_total = self._zero_token_usage()
+        api_time_only_total = self._zero_api_time()
+        solver_time_only_total = self._zero_solver_time()
+        repair_logs = []
         
         for plan_result in all_plan_results:
             plan_idx = plan_result["plan_idx"]
@@ -685,11 +945,42 @@ class TwoStepReasoner(CodeBasedReasoner):
                 solver_output = code_result["solver_output"]
                 if solver_output is not None:
                     all_solver_outputs.append(solver_output)
+                    all_solver_error_types.append(code_result.get("solver_error_type"))
+                path_usage_total = self._normalize_token_usage(code_result.get("path_usage_total"))
+                token_usage_total = self._add_token_usage(token_usage_total, path_usage_total)
+                path_api_time_only = self._normalize_api_time(code_result.get("path_api_time_only"))
+                api_time_only_total += path_api_time_only
+                path_solver_time_only = self._normalize_solver_time(code_result.get("solver_time_only"))
+                solver_time_only_total += path_solver_time_only
+                path_token_usage.append({
+                    "plan_idx": plan_idx,
+                    "code_idx": code_idx,
+                    "plan_generation_usage": self._normalize_token_usage(code_result.get("plan_generation_usage")),
+                    "plan_generation_api_time_only": self._normalize_api_time(code_result.get("plan_generation_api_time_only")),
+                    "code_generation_usage": self._normalize_token_usage(code_result.get("code_generation_usage")),
+                    "code_generation_api_time_only": self._normalize_api_time(code_result.get("code_generation_api_time_only")),
+                    "repair_usage_total": self._normalize_token_usage(code_result.get("repair_usage_total")),
+                    "repair_api_time_only_total": self._normalize_api_time(code_result.get("repair_api_time_only_total")),
+                    "path_usage_total": path_usage_total,
+                    "path_api_time_only": path_api_time_only,
+                    "solver_time_only": path_solver_time_only,
+                })
+                repair_logs.append({
+                    "plan_idx": plan_idx,
+                    "code_idx": code_idx,
+                    "repair_round_logs": code_result.get("repair_round_logs", [])
+                })
             
         results = {
             "problem": test_case,
             "timing": case_time,
-            "all_solver_outputs": all_solver_outputs
+            "all_solver_outputs": all_solver_outputs,
+            "all_solver_error_types": all_solver_error_types,
+            "path_token_usage": path_token_usage,
+            "token_usage_total": token_usage_total,
+            "api_time_only_total": api_time_only_total,
+            "solver_time_only_total": solver_time_only_total,
+            "repair_logs": repair_logs,
         }
 
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
@@ -713,21 +1004,36 @@ class DirectReasoner(CodeBasedReasoner):
             # Generate code directly
             direct_prompt = self.prompt_handler.get_direct_prompt(test_case)
             current_code_response = self._call_api(direct_prompt)
+            code_generation_usage = self._extract_usage(self.api_client)
+            code_generation_api_time_only = self._extract_api_time(self.api_client)
             current_code = current_code_response if isinstance(current_code_response, str) else current_code_response[0]
             current_code = CodeCleaner.clean_code(current_code, self.config.dataset)
             
             # Execute with repair loop
             identifier = f"code {code_config_idx + 1}"
-            current_code, temp_solver_output, is_valid = self._execute_with_repair(
+            current_code, temp_solver_output, is_valid, repair_round_logs, final_error_type, solver_time_only = self._execute_with_repair(
                 test_case, current_code, execute_func, mp_lock, identifier
             )
+            repair_usage_total = self._sum_token_usages([log.get("usage") for log in repair_round_logs])
+            repair_api_time_only_total = self._sum_api_times([log.get("api_time_only") for log in repair_round_logs])
+            path_usage_total = self._sum_token_usages([code_generation_usage, repair_usage_total])
+            path_api_time_only = self._sum_api_times([code_generation_api_time_only, repair_api_time_only_total])
             
             code_result = {
                 "code_idx": code_config_idx + 1,
                 "code": current_code,
                 "solver_output": temp_solver_output,
                 "is_valid": is_valid,
-                "generation_config": code_config.copy()
+                "generation_config": code_config.copy(),
+                "code_generation_usage": code_generation_usage,
+                "code_generation_api_time_only": code_generation_api_time_only,
+                "repair_usage_total": repair_usage_total,
+                "repair_api_time_only_total": repair_api_time_only_total,
+                "path_usage_total": path_usage_total,
+                "path_api_time_only": path_api_time_only,
+                "solver_time_only": solver_time_only,
+                "repair_round_logs": repair_round_logs,
+                "solver_error_type": final_error_type,
             }
             all_code_results.append(code_result)
         
@@ -742,6 +1048,12 @@ class DirectReasoner(CodeBasedReasoner):
         problem_name = test_case['id_string'] if 'id_string' in test_case else test_case['id']
         all_code_results = reasoning_result.get("all_code_results", [])
         all_solver_outputs = []
+        all_solver_error_types = []
+        path_token_usage = []
+        token_usage_total = self._zero_token_usage()
+        api_time_only_total = self._zero_api_time()
+        solver_time_only_total = self._zero_solver_time()
+        repair_logs = []
         
         for code_result in all_code_results:
             code_idx = code_result["code_idx"]
@@ -755,11 +1067,38 @@ class DirectReasoner(CodeBasedReasoner):
             solver_output = code_result["solver_output"]
             if solver_output is not None:
                 all_solver_outputs.append(solver_output)
+                all_solver_error_types.append(code_result.get("solver_error_type"))
+            path_usage_total = self._normalize_token_usage(code_result.get("path_usage_total"))
+            token_usage_total = self._add_token_usage(token_usage_total, path_usage_total)
+            path_api_time_only = self._normalize_api_time(code_result.get("path_api_time_only"))
+            api_time_only_total += path_api_time_only
+            path_solver_time_only = self._normalize_solver_time(code_result.get("solver_time_only"))
+            solver_time_only_total += path_solver_time_only
+            path_token_usage.append({
+                "code_idx": code_idx,
+                "code_generation_usage": self._normalize_token_usage(code_result.get("code_generation_usage")),
+                "code_generation_api_time_only": self._normalize_api_time(code_result.get("code_generation_api_time_only")),
+                "repair_usage_total": self._normalize_token_usage(code_result.get("repair_usage_total")),
+                "repair_api_time_only_total": self._normalize_api_time(code_result.get("repair_api_time_only_total")),
+                "path_usage_total": path_usage_total,
+                "path_api_time_only": path_api_time_only,
+                "solver_time_only": path_solver_time_only,
+            })
+            repair_logs.append({
+                "code_idx": code_idx,
+                "repair_round_logs": code_result.get("repair_round_logs", [])
+            })
             
         results = {
             "problem": test_case,
             "timing": case_time,
-            "all_solver_outputs": all_solver_outputs
+            "all_solver_outputs": all_solver_outputs,
+            "all_solver_error_types": all_solver_error_types,
+            "path_token_usage": path_token_usage,
+            "token_usage_total": token_usage_total,
+            "api_time_only_total": api_time_only_total,
+            "solver_time_only_total": solver_time_only_total,
+            "repair_logs": repair_logs,
         }
         
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")
@@ -783,10 +1122,14 @@ class CoTReasoner(Reasoner):
             cot_prompt = self.prompt_handler.get_cot_prompt(test_case)
             current_reasoning_response = self._call_api(cot_prompt)
             current_reasoning = current_reasoning_response if isinstance(current_reasoning_response, str) else current_reasoning_response[0]
+            cot_usage = self._extract_usage(self.api_client)
+            cot_api_time_only = self._extract_api_time(self.api_client)
             
             reasoning_result = {
                 "reasoning_idx": cot_config_idx + 1,
                 "reasoning_output": current_reasoning,
+                "usage": cot_usage,
+                "api_time_only": cot_api_time_only,
                 "generation_config": cot_config.copy()
             }
             all_reasoning_results.append(reasoning_result)
@@ -802,6 +1145,10 @@ class CoTReasoner(Reasoner):
         all_reasoning_results = reasoning_result.get("all_reasoning_results", [])
         all_reasoning_outputs = []
         all_solver_outputs = []
+        path_token_usage = []
+        token_usage_total = self._zero_token_usage()
+        api_time_only_total = self._zero_api_time()
+        solver_time_only_total = self._zero_solver_time()
         
         for reasoning_result_item in all_reasoning_results:
             reasoning_idx = reasoning_result_item["reasoning_idx"]
@@ -841,7 +1188,19 @@ class CoTReasoner(Reasoner):
                 "reasoning_output": reasoning_output,
                 "error_type": error_type,
                 "success": is_correct,
+                "usage": self._normalize_token_usage(reasoning_result_item.get("usage")),
+                "api_time_only": self._normalize_api_time(reasoning_result_item.get("api_time_only")),
                 "generation_config": reasoning_result_item.get("generation_config", {})
+            })
+            path_usage_total = self._normalize_token_usage(reasoning_result_item.get("usage"))
+            token_usage_total = self._add_token_usage(token_usage_total, path_usage_total)
+            path_api_time_only = self._normalize_api_time(reasoning_result_item.get("api_time_only"))
+            api_time_only_total += path_api_time_only
+            path_token_usage.append({
+                "reasoning_idx": reasoning_idx,
+                "path_usage_total": path_usage_total,
+                "path_api_time_only": path_api_time_only,
+                "solver_time_only": self._zero_solver_time(),
             })
             
             print(f"\nReasoning {reasoning_idx} {'PASSED' if is_correct else 'FAILED'}. Error type: {error_type}")
@@ -851,6 +1210,10 @@ class CoTReasoner(Reasoner):
             "timing": case_time,
             "all_reasoning_outputs": all_reasoning_outputs,
             "all_solver_outputs": all_solver_outputs,
+            "path_token_usage": path_token_usage,
+            "token_usage_total": token_usage_total,
+            "api_time_only_total": api_time_only_total,
+            "solver_time_only_total": solver_time_only_total,
         }
         
         summary_filepath = os.path.join(self.summary_folder, f"{problem_name}-{unique_id}.json")

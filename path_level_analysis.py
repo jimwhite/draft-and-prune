@@ -54,6 +54,32 @@ def _flatten(nested_list):
             yield item
 
 
+def infer_solver_error_type(output_str):
+    """Infer solver error category from raw output text."""
+    if not isinstance(output_str, str):
+        return None
+
+    lower = output_str.lower()
+    if "timeout" in lower:
+        return "solver_timeout"
+
+    syntax_markers = [
+        "syntaxerror",
+        "indentationerror",
+        "taberror",
+        "invalid syntax",
+        "eol while scanning string literal",
+        "unexpected eof while parsing",
+    ]
+    if any(marker in lower for marker in syntax_markers):
+        return "syntax_error"
+
+    if "error" in lower or "exception" in lower or "traceback" in lower:
+        return "runtime_error"
+
+    return None
+
+
 def parse_solver_output(output_str, dataset=None, problem_answers=None):
     """Parse solver output string to extract list of answers based on dataset format.
     Args:
@@ -350,6 +376,7 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
         
         sample_id = item['problem'].get('id_string', item['problem'].get('id', f'unknown_sample'))
         all_solver_outputs = item.get('all_solver_outputs', [])
+        all_solver_error_types = item.get('all_solver_error_types', [])
         problem_answers = item['problem'].get('answers', None)  # Get answer choices for this problem
         
         # Handle CoT results of LogicalDeduction, ProofWriter, ProntoQA: they have 'reasoning_output' and 'success' instead of 'all_solver_outputs'
@@ -367,10 +394,12 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
             if path_idx < len(all_solver_outputs):
                 output_str = all_solver_outputs[path_idx]
                 # is_missing_path = False
+                explicit_error_type = all_solver_error_types[path_idx] if path_idx < len(all_solver_error_types) else None
             else:
                 # Missing path - treat as syntax error
                 output_str = "missing path"
                 # is_missing_path = True
+                explicit_error_type = "runtime_error"
             
             # Parse the output with problem answers for better matching
             # TBD: The parsed_output logic of CoT is wrong, need to fix it. So we use the 'success' field directly below.
@@ -394,6 +423,7 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
             
             # Determine if it's a syntax error
             is_syntax_error = (parsed_output == 'syntax error')
+            solver_error_type = explicit_error_type if explicit_error_type in {"syntax_error", "solver_timeout", "runtime_error"} else infer_solver_error_type(output_str)
             
             # Calculate pruning results: None if pruned, otherwise keep original output
             existence_pruning_result = None if pruned_by_existence else (str(parsed_output) if parsed_output != 'syntax error' else 'syntax error')
@@ -427,6 +457,10 @@ def create_path_level_dataframe(results, config, dataset, exp_id, expected_paths
                 'true_label': true_label,
                 'is_correct': is_correct,
                 'is_syntax_error': is_syntax_error,
+                'solver_error_type': solver_error_type,
+                'is_solver_timeout': solver_error_type == 'solver_timeout',
+                'is_runtime_error': solver_error_type == 'runtime_error',
+                'is_syntax_parse_error': solver_error_type == 'syntax_error',
                 # 'is_missing_path': is_missing_path,
                 'pruned_by_existence': pruned_by_existence,
                 'existence_pruning_result': existence_pruning_result,
@@ -584,11 +618,17 @@ def print_path_statistics(df):
     total_paths = len(df)
     correct_paths = df['is_correct'].sum()
     syntax_error_paths = df['is_syntax_error'].sum()
+    timeout_paths = df['is_solver_timeout'].sum() if 'is_solver_timeout' in df.columns else 0
+    runtime_error_paths = df['is_runtime_error'].sum() if 'is_runtime_error' in df.columns else 0
+    syntax_parse_error_paths = df['is_syntax_parse_error'].sum() if 'is_syntax_parse_error' in df.columns else 0
     
     print(f"\nPath-level Statistics:")
     print(f"Total paths: {total_paths}")
     print(f"Correct paths: {correct_paths} ({correct_paths/total_paths*100:.2f}%)")
     print(f"Syntax error paths: {syntax_error_paths} ({syntax_error_paths/total_paths*100:.2f}%)")
+    print(f"  - Solver timeout paths: {timeout_paths} ({timeout_paths/total_paths*100:.2f}%)")
+    print(f"  - Runtime error paths: {runtime_error_paths} ({runtime_error_paths/total_paths*100:.2f}%)")
+    print(f"  - Syntax parse error paths: {syntax_parse_error_paths} ({syntax_parse_error_paths/total_paths*100:.2f}%)")
 
 
 def print_pruning_statistics(df):

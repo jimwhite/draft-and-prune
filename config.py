@@ -31,7 +31,9 @@ class ReasonerConfig:
                  gemini_api_keys: list = None,
                  # Plan generation parameters
                  num_paths: int = 3,
-                 plan_temp: float = 1.0):
+                 plan_temp: float = 1.0,
+                 # Result storage
+                 results_root: str = "./results"):
         """
         Initialize configuration either from parameters or will be loaded from YAML
         
@@ -54,6 +56,7 @@ class ReasonerConfig:
             azure_managed_identity_client_id: Azure managed identity client ID
             num_paths: Number of different plans to generate
             plan_temp: code_temp for plan generation
+            results_root: Root directory for experiment outputs
         """
         self.dataset = dataset
         self.test_file = test_file
@@ -76,6 +79,7 @@ class ReasonerConfig:
         self.gemini_api_keys = gemini_api_keys
         self.num_paths = num_paths
         self.plan_temp = plan_temp
+        self.results_root = results_root
     
     @classmethod
     def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
@@ -144,6 +148,8 @@ class ReasonerConfig:
         # Plan generation parameters with defaults
         instance.num_paths = config_data.get('num_paths', 3)
         instance.plan_temp = config_data.get('plan_temp', 1.0)
+        # Results root with default
+        instance.results_root = config_data.get('results_root', "./results")
         instance._validate_config()
         return instance
     
@@ -181,6 +187,8 @@ class ReasonerConfig:
             raise ValueError("num_paths must be a positive integer")
         if not isinstance(self.plan_temp, (int, float)) or self.plan_temp < 0:
             raise ValueError("plan_temp must be a non-negative number")
+        if not isinstance(self.results_root, str) or not self.results_root.strip():
+            raise ValueError("results_root must be a non-empty string")
     
     def save_to_yaml(self, yaml_path: str) -> None:
         """
@@ -215,7 +223,9 @@ class ReasonerConfig:
             'gemini_api_keys': getattr(self, 'gemini_api_keys', None),
             # Plan generation parameters
             'num_paths': getattr(self, 'num_paths', 3),
-            'plan_temp': getattr(self, 'plan_temp', 1.0)
+            'plan_temp': getattr(self, 'plan_temp', 1.0),
+            # Result storage
+            'results_root': getattr(self, 'results_root', "./results")
         }
         
         try:
@@ -231,4 +241,3 @@ class ReasonerConfig:
     def __repr__(self) -> str:
         """Detailed string representation of the configuration"""
         return self.__str__()
-

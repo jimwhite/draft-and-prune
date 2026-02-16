@@ -27,6 +27,7 @@ class APIClient(ABC):
     """Base class for API clients"""
     def __init__(self, config: APIConfig):
         self.config = config
+        self.last_call_metadata: Dict[str, Any] = {}
     
     @property
     def temperature(self) -> float:
@@ -37,6 +38,45 @@ class APIClient(ABC):
     def temperature(self, value: float):
         """Set the temperature setting"""
         self.config.temperature = value
+
+    def _clear_last_call_metadata(self) -> None:
+        """Clear metadata from the previous API call."""
+        self.last_call_metadata = {}
+
+    def _set_last_call_usage(self, usage_obj: Any) -> None:
+        """Store token usage metadata from provider response objects."""
+        existing_timing = self.last_call_metadata.get("timing")
+        if usage_obj is None:
+            self.last_call_metadata = {"usage": None}
+            if existing_timing is not None:
+                self.last_call_metadata["timing"] = existing_timing
+            return
+
+        self.last_call_metadata = {
+            "usage": {
+                "prompt_tokens": getattr(usage_obj, "prompt_tokens", None),
+                "completion_tokens": getattr(usage_obj, "completion_tokens", None),
+                "total_tokens": getattr(usage_obj, "total_tokens", None),
+            }
+        }
+        if existing_timing is not None:
+            self.last_call_metadata["timing"] = existing_timing
+
+    def _set_last_call_timing(self, api_time_only_sec: float, attempt_count: int) -> None:
+        """Store API-only timing for the latest call."""
+        existing_usage = self.last_call_metadata.get("usage")
+        self.last_call_metadata = {
+            "timing": {
+                "api_time_only_sec": float(api_time_only_sec),
+                "attempt_count": int(attempt_count),
+            }
+        }
+        if existing_usage is not None:
+            self.last_call_metadata["usage"] = existing_usage
+
+    def get_last_call_metadata(self) -> Dict[str, Any]:
+        """Return a shallow copy of metadata for the latest API call."""
+        return dict(self.last_call_metadata)
     
     @abstractmethod
     def call(self, prompt: str) -> str:
@@ -72,6 +112,9 @@ class GeminiClient(APIClient):
     
     def call(self, prompt: str) -> str:
         """Call the Gemini API with error handling and retries"""
+        self._clear_last_call_metadata()
+        api_time_only_sec = 0.0
+        attempt_count = 0
         # Initialize the model
         client = genai
         model = client.GenerativeModel(self.config.model_name)
@@ -93,13 +136,28 @@ class GeminiClient(APIClient):
         # Try multiple times in case of errors
         for attempt in range(self.config.max_retries):
             try:
+                attempt_count += 1
+                api_call_start = time.time()
                 response = model.generate_content(
                     contents=prompt,
                     generation_config=generation_config,
                     safety_settings=safety_settings
                 )
+                api_time_only_sec += time.time() - api_call_start
 
                 if response.parts:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    usage_metadata = getattr(response, "usage_metadata", None)
+                    if usage_metadata is None:
+                        self._set_last_call_usage(None)
+                    else:
+                        self._set_last_call_usage(
+                            type("UsageObj", (), {
+                                "prompt_tokens": getattr(usage_metadata, "prompt_token_count", None),
+                                "completion_tokens": getattr(usage_metadata, "candidates_token_count", None),
+                                "total_tokens": getattr(usage_metadata, "total_token_count", None),
+                            })()
+                        )
                     return response.text
                 else:
                     block_reason = response.prompt_feedback.block_reason if response.prompt_feedback else 'Unknown'
@@ -108,9 +166,13 @@ class GeminiClient(APIClient):
                         print(f"Retrying due to block reason: {block_reason}")
                         time.sleep(self.config.inter_test_case_delay**(attempt+1))  # Exponential backoff
                         continue
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
                     return f"Generation failed. Reason: {block_reason}"
 
             except Exception as e:
+                if 'api_call_start' in locals():
+                    api_time_only_sec += time.time() - api_call_start
                 error_str = str(e)
                 print(f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {error_str}")
                 
@@ -122,6 +184,8 @@ class GeminiClient(APIClient):
                         continue
                 
                 if attempt == self.config.max_retries - 1:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
                     return f"API call failed after {self.config.max_retries} attempts: {error_str}"
                 print(f"Waiting {self.config.inter_test_case_delay**(attempt+1)} seconds before retry...")
                 time.sleep(self.config.inter_test_case_delay**(attempt+1))
@@ -129,24 +193,34 @@ class GeminiClient(APIClient):
                 # Basic rate limiting delay
                 time.sleep(1.1)
 
+        self._set_last_call_timing(api_time_only_sec, attempt_count)
+        self._set_last_call_usage(None)
         return "Max retries reached for API call."
 
 class GPTClient(APIClient):
     """Client for OpenAI's GPT API"""
     def call(self, prompt: str) -> str:
         """Call the GPT API with error handling and retries"""
+        self._clear_last_call_metadata()
+        api_time_only_sec = 0.0
+        attempt_count = 0
         last_error = None
         for attempt in range(self.config.max_retries):
             try:
+                attempt_count += 1
+                api_call_start = time.time()
                 response = openai.chat.completions.create(
                     model=self.config.model_name,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=self.config.temperature,
                     n=1,
                 )
+                api_time_only_sec += time.time() - api_call_start
                 # Extract the content from the choices
                 if response.choices and len(response.choices) > 0:
                     if response.choices[0].message:
+                        self._set_last_call_timing(api_time_only_sec, attempt_count)
+                        self._set_last_call_usage(getattr(response, "usage", None))
                         return response.choices[0].message.content
                     else:
                         error_message = "GPT response was empty."
@@ -159,16 +233,22 @@ class GPTClient(APIClient):
                     last_error = error_message
                     continue # Retry
             except Exception as e:
+                if 'api_call_start' in locals():
+                    api_time_only_sec += time.time() - api_call_start
                 error_message = f"Error in API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
                 print(error_message)
                 last_error = error_message
                 if attempt == self.config.max_retries - 1:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
                     return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
                 random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
                 print(f"Waiting {random_sleep} seconds before retry...")
                 time.sleep(random_sleep) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
+        self._set_last_call_timing(api_time_only_sec, attempt_count)
+        self._set_last_call_usage(None)
         return f"API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
 class AzureOpenAIClient(APIClient):
@@ -199,25 +279,43 @@ class AzureOpenAIClient(APIClient):
             azure_ad_token_provider=token_provider,
             api_version=api_version,
         )
+
+    def _use_max_completion_tokens(self) -> bool:
+        """GPT-5.* deployments require max_completion_tokens instead of max_tokens."""
+        name = (self.deployment or self.config.model_name or "").lower()
+        return name.startswith("gpt-5") or name.startswith("gpt5")
     
     def call(self, prompt: str) -> str:
         """Call the Azure OpenAI API with error handling and retries"""
+        self._clear_last_call_metadata()
+        api_time_only_sec = 0.0
+        attempt_count = 0
         last_error = None
         for attempt in range(self.config.max_retries):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.deployment,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=self.config.temperature,
-                    max_tokens=2048,
-                    n=1,
-                    stop=None,
-                    stream=False
-                )
+                request_args = {
+                    "model": self.deployment,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": self.config.temperature,
+                    "n": 1,
+                    "stop": None,
+                    "stream": False,
+                }
+                if self._use_max_completion_tokens():
+                    request_args["max_completion_tokens"] = 2048
+                else:
+                    request_args["max_tokens"] = 2048
+
+                attempt_count += 1
+                api_call_start = time.time()
+                response = self.client.chat.completions.create(**request_args)
+                api_time_only_sec += time.time() - api_call_start
                 
                 # Extract the content from the choices
                 if response.choices and len(response.choices) > 0:
                     if response.choices[0].message:
+                        self._set_last_call_timing(api_time_only_sec, attempt_count)
+                        self._set_last_call_usage(getattr(response, "usage", None))
                         return response.choices[0].message.content
                     else:
                         error_message = "Azure OpenAI response was empty."
@@ -230,16 +328,22 @@ class AzureOpenAIClient(APIClient):
                     last_error = error_message
                     continue # Retry
             except Exception as e:
+                if 'api_call_start' in locals():
+                    api_time_only_sec += time.time() - api_call_start
                 error_message = f"Error in Azure OpenAI API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
                 print(error_message)
                 last_error = error_message
                 if attempt == self.config.max_retries - 1:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
                     return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
                 random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
                 print(f"Waiting {random_sleep} seconds before retry...")
                 time.sleep(random_sleep) # Exponential backoff
             finally:
                 time.sleep(1.1) # Rate limiting delay
+        self._set_last_call_timing(api_time_only_sec, attempt_count)
+        self._set_last_call_usage(None)
         return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
 def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
