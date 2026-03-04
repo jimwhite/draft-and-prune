@@ -12,6 +12,8 @@ class ReasonerConfig:
                  test_file: str = None,
                  reasoning_method: str = None,
                  api_key: str = None,
+                 provider: str = None,
+                 model_providers: Dict[str, str] = None,
                  model: str = "gemini-2.5-flash-preview-04-17",  # Backward compatibility
                  plan_model: str = None,  # New: Model for plan generation
                  code_model: str = None,  # New: Model for code generation
@@ -27,8 +29,16 @@ class ReasonerConfig:
                  azure_endpoint: str = None,
                  azure_deployment: str = None,
                  azure_managed_identity_client_id: str = None,
+                 gemini_api_key: str = None,
                  # Gemini multiple API keys
                  gemini_api_keys: list = None,
+                 gemini_thinking_budget: int = 0,
+                 gemini_thinking_level: str = None,
+                 # OpenAI-compatible provider settings
+                 openai_compatible_base_url: str = None,
+                 openai_compatible_api_key: str = None,
+                 openai_compatible_default_extra_body: Dict[str, Any] = None,
+                 openai_compatible_extra_body: Dict[str, Dict[str, Any]] = None,
                  # Plan generation parameters
                  num_paths: int = 3,
                  plan_temp: float = 1.0,
@@ -62,6 +72,8 @@ class ReasonerConfig:
         self.test_file = test_file
         self.reasoning_method = reasoning_method
         self.api_key = api_key
+        self.provider = provider
+        self.model_providers = model_providers
         self.model = model  # Backward compatibility
         self.plan_model = plan_model
         self.code_model = code_model
@@ -76,11 +88,25 @@ class ReasonerConfig:
         self.azure_endpoint = azure_endpoint
         self.azure_deployment = azure_deployment
         self.azure_managed_identity_client_id = azure_managed_identity_client_id
+        self.gemini_api_key = gemini_api_key
         self.gemini_api_keys = gemini_api_keys
+        self.gemini_thinking_budget = gemini_thinking_budget
+        self.gemini_thinking_level = gemini_thinking_level
+        self.openai_compatible_base_url = openai_compatible_base_url
+        self.openai_compatible_api_key = openai_compatible_api_key
+        self.openai_compatible_default_extra_body = openai_compatible_default_extra_body
+        self.openai_compatible_extra_body = openai_compatible_extra_body
         self.num_paths = num_paths
         self.plan_temp = plan_temp
         self.results_root = results_root
     
+    @classmethod
+    def _resolve_env_value(cls, value: Any) -> Any:
+        """Resolve ${ENV_VAR} style placeholders in string values."""
+        if isinstance(value, str):
+            return os.path.expandvars(value)
+        return value
+
     @classmethod
     def from_yaml(cls, yaml_path: str) -> 'ReasonerConfig':
         """
@@ -114,7 +140,9 @@ class ReasonerConfig:
         instance.dataset = config_data['dataset']
         instance.test_file = config_data['test_file']
         instance.reasoning_method = config_data['reasoning_method']
-        instance.api_key = config_data['api_key']
+        instance.api_key = cls._resolve_env_value(config_data['api_key'])
+        instance.provider = config_data.get('provider')
+        instance.model_providers = config_data.get('model_providers')
         
         # Handle new model field names with backward compatibility
         if 'plan_model' in config_data:
@@ -144,7 +172,20 @@ class ReasonerConfig:
         instance.azure_deployment = config_data.get('azure_deployment')
         instance.azure_managed_identity_client_id = config_data.get('azure_managed_identity_client_id')
         # Gemini multiple API keys are optional
-        instance.gemini_api_keys = config_data.get('gemini_api_keys')
+        gemini_api_key = config_data.get('gemini_api_key') or config_data.get('api_key')
+        instance.gemini_api_key = cls._resolve_env_value(gemini_api_key)
+        raw_gemini_keys = config_data.get('gemini_api_keys')
+        if isinstance(raw_gemini_keys, list):
+            instance.gemini_api_keys = [cls._resolve_env_value(k) for k in raw_gemini_keys]
+        else:
+            instance.gemini_api_keys = raw_gemini_keys
+        instance.gemini_thinking_budget = config_data.get('gemini_thinking_budget', 0)
+        instance.gemini_thinking_level = config_data.get('gemini_thinking_level')
+        instance.openai_compatible_base_url = config_data.get('openai_compatible_base_url')
+        openai_compatible_api_key = config_data.get('openai_compatible_api_key')
+        instance.openai_compatible_api_key = cls._resolve_env_value(openai_compatible_api_key)
+        instance.openai_compatible_default_extra_body = config_data.get('openai_compatible_default_extra_body')
+        instance.openai_compatible_extra_body = config_data.get('openai_compatible_extra_body')
         # Plan generation parameters with defaults
         instance.num_paths = config_data.get('num_paths', 3)
         instance.plan_temp = config_data.get('plan_temp', 1.0)
@@ -155,10 +196,25 @@ class ReasonerConfig:
     
     def _validate_config(self) -> None:
         """Validate configuration values and types"""
+        allowed_providers = {"gemini", "azure-openai", "openai-compatible", "azure", "openai_compatible"}
         if not isinstance(self.reasoning_method, str):
             raise TypeError("reasoning_method must be a string")
         if not isinstance(self.api_key, str):
             raise TypeError("api_key must be a string")
+        if self.provider is not None and not isinstance(self.provider, str):
+            raise TypeError("provider must be a string or None")
+        if isinstance(self.provider, str) and self.provider.lower() not in allowed_providers:
+            raise ValueError("provider must be one of: gemini, azure-openai, openai-compatible")
+        if self.model_providers is not None:
+            if not isinstance(self.model_providers, dict):
+                raise TypeError("model_providers must be a dictionary or None")
+            for model_name, provider_name in self.model_providers.items():
+                if not isinstance(model_name, str) or not isinstance(provider_name, str):
+                    raise TypeError("model_providers keys and values must be strings")
+                if provider_name.lower() not in allowed_providers:
+                    raise ValueError(
+                        f"model_providers['{model_name}'] must be one of: gemini, azure-openai, openai-compatible"
+                    )
         if not isinstance(self.dataset, str):
             raise TypeError("dataset must be a string")
         if not isinstance(self.model, str):
@@ -183,6 +239,35 @@ class ReasonerConfig:
             raise TypeError("azure_deployment must be a string or None")
         if self.azure_managed_identity_client_id is not None and not isinstance(self.azure_managed_identity_client_id, str):
             raise TypeError("azure_managed_identity_client_id must be a string or None")
+        if self.gemini_api_key is not None and not isinstance(self.gemini_api_key, str):
+            raise TypeError("gemini_api_key must be a string or None")
+        if self.gemini_thinking_budget is not None:
+            if not isinstance(self.gemini_thinking_budget, int):
+                raise TypeError("gemini_thinking_budget must be an integer or None")
+            if self.gemini_thinking_budget < 0:
+                raise ValueError("gemini_thinking_budget must be >= 0")
+        if self.gemini_thinking_level is not None:
+            if not isinstance(self.gemini_thinking_level, str):
+                raise TypeError("gemini_thinking_level must be a string or None")
+            if self.gemini_thinking_level.lower() not in {"minimal", "low", "medium", "high"}:
+                raise ValueError("gemini_thinking_level must be one of: minimal, low, medium, high")
+        if self.gemini_thinking_level is not None and self.gemini_thinking_budget not in (None, 0):
+            raise ValueError("Set only one of gemini_thinking_level or gemini_thinking_budget (non-zero)")
+        if self.openai_compatible_base_url is not None and not isinstance(self.openai_compatible_base_url, str):
+            raise TypeError("openai_compatible_base_url must be a string or None")
+        if self.openai_compatible_api_key is not None and not isinstance(self.openai_compatible_api_key, str):
+            raise TypeError("openai_compatible_api_key must be a string or None")
+        if self.openai_compatible_default_extra_body is not None:
+            if not isinstance(self.openai_compatible_default_extra_body, dict):
+                raise TypeError("openai_compatible_default_extra_body must be a dictionary or None")
+        if self.openai_compatible_extra_body is not None:
+            if not isinstance(self.openai_compatible_extra_body, dict):
+                raise TypeError("openai_compatible_extra_body must be a dictionary or None")
+            for model_name, extra_body in self.openai_compatible_extra_body.items():
+                if not isinstance(model_name, str):
+                    raise TypeError("openai_compatible_extra_body keys must be model name strings")
+                if not isinstance(extra_body, dict):
+                    raise TypeError("openai_compatible_extra_body values must be dictionaries")
         if not isinstance(self.num_paths, int) or self.num_paths <= 0:
             raise ValueError("num_paths must be a positive integer")
         if not isinstance(self.plan_temp, (int, float)) or self.plan_temp < 0:
@@ -203,6 +288,8 @@ class ReasonerConfig:
             'test_file': self.test_file,
             'reasoning_method': self.reasoning_method,
             'api_key': self.api_key,
+            'provider': getattr(self, 'provider', None),
+            'model_providers': getattr(self, 'model_providers', None),
             # New model field names (preferred)
             'plan_model': getattr(self, 'plan_model', self.model),
             'code_model': getattr(self, 'code_model', self.model),
@@ -219,8 +306,15 @@ class ReasonerConfig:
             'azure_endpoint': self.azure_endpoint,
             'azure_deployment': self.azure_deployment,
             'azure_managed_identity_client_id': self.azure_managed_identity_client_id,
+            'gemini_api_key': getattr(self, 'gemini_api_key', None),
             # Multiple Gemini API keys for batch distribution
             'gemini_api_keys': getattr(self, 'gemini_api_keys', None),
+            'gemini_thinking_budget': getattr(self, 'gemini_thinking_budget', 0),
+            'gemini_thinking_level': getattr(self, 'gemini_thinking_level', None),
+            'openai_compatible_base_url': getattr(self, 'openai_compatible_base_url', None),
+            'openai_compatible_api_key': getattr(self, 'openai_compatible_api_key', None),
+            'openai_compatible_default_extra_body': getattr(self, 'openai_compatible_default_extra_body', None),
+            'openai_compatible_extra_body': getattr(self, 'openai_compatible_extra_body', None),
             # Plan generation parameters
             'num_paths': getattr(self, 'num_paths', 3),
             'plan_temp': getattr(self, 'plan_temp', 1.0),

@@ -5,7 +5,7 @@ import os
 from typing import Optional, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 import openai
-import google.generativeai as genai
+from google import genai
 from openai import AzureOpenAI
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 
@@ -15,11 +15,17 @@ class APIConfig:
         self,
         model_name: str,
         temperature: float = 0.0,
+        gemini_thinking_budget: Optional[int] = None,
+        gemini_thinking_level: Optional[str] = None,
+        openai_compatible_extra_body: Optional[Dict[str, Any]] = None,
         max_retries: int = 10,
         inter_test_case_delay: float = 2.0
     ):
         self.model_name = model_name
         self.temperature = temperature
+        self.gemini_thinking_budget = gemini_thinking_budget
+        self.gemini_thinking_level = gemini_thinking_level
+        self.openai_compatible_extra_body = openai_compatible_extra_body
         self.max_retries = max_retries
         self.inter_test_case_delay = inter_test_case_delay
 
@@ -84,91 +90,117 @@ class APIClient(ABC):
         pass
 
 class GeminiClient(APIClient):
-    """Client for Google's Gemini API with multiple key support"""
+    """Client for Gemini API using the official google-genai SDK."""
     def __init__(self, config: APIConfig, api_key: str = None, api_keys: list = None):
         super().__init__(config)
-        # Support both single key and multiple keys
         if api_keys and isinstance(api_keys, list):
-            self.api_keys = api_keys
-            self.current_key_index = 0
-            self.api_key = self.api_keys[0]
+            self.api_keys = [k for k in api_keys if k]
         else:
             self.api_keys = [api_key] if api_key else []
-            self.current_key_index = 0
-            self.api_key = api_key
-        
+        self.current_key_index = 0
+        self.api_key = self.api_keys[0] if self.api_keys else api_key
+        self.client = None
+        self.set_api_key(self.api_key)
+
+    def set_api_key(self, api_key: Optional[str]) -> None:
+        """Update API key and reconfigure SDK client."""
+        self.api_key = api_key
         if self.api_key:
-            genai.configure(api_key=self.api_key)
-    
+            self.client = genai.Client(api_key=self.api_key)
+        else:
+            self.client = genai.Client()
+
     def rotate_api_key(self):
         """Rotate to the next API key if multiple keys are available"""
         if len(self.api_keys) > 1:
             self.current_key_index = (self.current_key_index + 1) % len(self.api_keys)
-            self.api_key = self.api_keys[self.current_key_index]
-            genai.configure(api_key=self.api_key)
+            self.set_api_key(self.api_keys[self.current_key_index])
             print(f"Rotated to API key #{self.current_key_index + 1}")
             return True
         return False
+
+    @staticmethod
+    def _build_usage_obj(usage_metadata: Any) -> Any:
+        """Normalize provider usage objects to a common schema."""
+        return type("UsageObj", (), {
+            "prompt_tokens": getattr(usage_metadata, "prompt_token_count", None),
+            "completion_tokens": getattr(usage_metadata, "candidates_token_count", None),
+            "total_tokens": getattr(usage_metadata, "total_token_count", None),
+        })()
+
+    @staticmethod
+    def _extract_text_from_new_response(response: Any) -> Optional[str]:
+        """Extract only text parts from google-genai response objects.
+
+        Avoids accessing `response.text`, which can emit warnings when the
+        response includes non-text parts such as `thought_signature`.
+        """
+        candidates = getattr(response, "candidates", None) or []
+        for candidate in candidates:
+            content = getattr(candidate, "content", None)
+            parts = getattr(content, "parts", None) or []
+            extracted = []
+            for part in parts:
+                part_text = getattr(part, "text", None)
+                if part_text:
+                    extracted.append(part_text)
+            if extracted:
+                return "".join(extracted)
+        return None
     
     def call(self, prompt: str) -> str:
         """Call the Gemini API with error handling and retries"""
         self._clear_last_call_metadata()
         api_time_only_sec = 0.0
         attempt_count = 0
-        # Initialize the model
-        client = genai
-        model = client.GenerativeModel(self.config.model_name)
-    
-        # Configure the generation parameters
-        generation_config = genai.types.GenerationConfig(
-            temperature=self.config.temperature,
-            candidate_count=1  # Single generation only
-        )
-        
-        # Using less restrictive safety settings
-        safety_settings = {
-            "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
-            "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
-            "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
-            "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE"
-        }
 
         # Try multiple times in case of errors
         for attempt in range(self.config.max_retries):
             try:
                 attempt_count += 1
                 api_call_start = time.time()
-                response = model.generate_content(
+                generation_config: Dict[str, Any] = {
+                    "temperature": self.config.temperature,
+                }
+                if self.config.gemini_thinking_level is not None:
+                    generation_config["thinking_config"] = {
+                        "thinking_level": self.config.gemini_thinking_level,
+                        "include_thoughts": False,
+                    }
+                elif self.config.gemini_thinking_budget is not None:
+                    generation_config["thinking_config"] = {
+                        "thinking_budget": self.config.gemini_thinking_budget,
+                        "include_thoughts": False,
+                    }
+                response = self.client.models.generate_content(
+                    model=self.config.model_name,
                     contents=prompt,
-                    generation_config=generation_config,
-                    safety_settings=safety_settings
+                    config=generation_config,
                 )
                 api_time_only_sec += time.time() - api_call_start
 
-                if response.parts:
+                response_text = self._extract_text_from_new_response(response)
+
+                if response_text:
                     self._set_last_call_timing(api_time_only_sec, attempt_count)
                     usage_metadata = getattr(response, "usage_metadata", None)
                     if usage_metadata is None:
                         self._set_last_call_usage(None)
                     else:
-                        self._set_last_call_usage(
-                            type("UsageObj", (), {
-                                "prompt_tokens": getattr(usage_metadata, "prompt_token_count", None),
-                                "completion_tokens": getattr(usage_metadata, "candidates_token_count", None),
-                                "total_tokens": getattr(usage_metadata, "total_token_count", None),
-                            })()
-                        )
-                    return response.text
-                else:
-                    block_reason = response.prompt_feedback.block_reason if response.prompt_feedback else 'Unknown'
-                    print(f"Warning: Model response was empty or blocked (Attempt {attempt+1}/{self.config.max_retries}). Reason: {block_reason}")
-                    if block_reason != 'Unknown' and attempt < self.config.max_retries - 1:
-                        print(f"Retrying due to block reason: {block_reason}")
-                        time.sleep(self.config.inter_test_case_delay**(attempt+1))  # Exponential backoff
-                        continue
-                    self._set_last_call_timing(api_time_only_sec, attempt_count)
-                    self._set_last_call_usage(None)
-                    return f"Generation failed. Reason: {block_reason}"
+                        self._set_last_call_usage(self._build_usage_obj(usage_metadata))
+                    return response_text
+
+                block_reason = "Unknown"
+                prompt_feedback = getattr(response, "prompt_feedback", None)
+                block_reason = getattr(prompt_feedback, "block_reason", "Unknown") if prompt_feedback else "Unknown"
+                print(f"Warning: Model response was empty or blocked (Attempt {attempt+1}/{self.config.max_retries}). Reason: {block_reason}")
+                if block_reason != 'Unknown' and attempt < self.config.max_retries - 1:
+                    print(f"Retrying due to block reason: {block_reason}")
+                    time.sleep(self.config.inter_test_case_delay**(attempt+1))  # Exponential backoff
+                    continue
+                self._set_last_call_timing(api_time_only_sec, attempt_count)
+                self._set_last_call_usage(None)
+                return f"Generation failed. Reason: {block_reason}"
 
             except Exception as e:
                 if 'api_call_start' in locals():
@@ -346,6 +378,65 @@ class AzureOpenAIClient(APIClient):
         self._set_last_call_usage(None)
         return f"Azure OpenAI API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
+class OpenAICompatibleClient(APIClient):
+    """Client for OpenAI-compatible chat completion endpoints."""
+    def __init__(self, config: APIConfig, api_key: str = None, base_url: str = None):
+        super().__init__(config)
+        if base_url:
+            self.client = openai.OpenAI(api_key=api_key, base_url=base_url)
+        else:
+            self.client = openai.OpenAI(api_key=api_key)
+
+    def call(self, prompt: str) -> str:
+        """Call an OpenAI-compatible chat endpoint with retries."""
+        self._clear_last_call_metadata()
+        api_time_only_sec = 0.0
+        attempt_count = 0
+        last_error = None
+
+        for attempt in range(self.config.max_retries):
+            try:
+                attempt_count += 1
+                request_args: Dict[str, Any] = {
+                    "model": self.config.model_name,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": self.config.temperature,
+                    "n": 1,
+                }
+                if isinstance(self.config.openai_compatible_extra_body, dict) and self.config.openai_compatible_extra_body:
+                    request_args["extra_body"] = self.config.openai_compatible_extra_body
+
+                api_call_start = time.time()
+                response = self.client.chat.completions.create(**request_args)
+                api_time_only_sec += time.time() - api_call_start
+
+                if response.choices and len(response.choices) > 0 and response.choices[0].message:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(getattr(response, "usage", None))
+                    return response.choices[0].message.content
+
+                last_error = "OpenAI-compatible response was empty."
+                print(f"Warning: {last_error}")
+
+            except Exception as e:
+                if 'api_call_start' in locals():
+                    api_time_only_sec += time.time() - api_call_start
+                last_error = f"Error in OpenAI-compatible API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
+                print(last_error)
+                if attempt == self.config.max_retries - 1:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
+                    return f"OpenAI-compatible API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
+                random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
+                print(f"Waiting {random_sleep} seconds before retry...")
+                time.sleep(random_sleep)
+            finally:
+                time.sleep(1.1)
+
+        self._set_last_call_timing(api_time_only_sec, attempt_count)
+        self._set_last_call_usage(None)
+        return f"OpenAI-compatible API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
+
 def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
     """Factory function to get the appropriate API client based on provider"""
     if provider.lower() == "gemini":
@@ -360,5 +451,9 @@ def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
         deployment = kwargs.get('deployment')
         managed_identity_client_id = kwargs.get('managed_identity_client_id')
         return AzureOpenAIClient(config, endpoint, deployment, managed_identity_client_id)
+    elif provider.lower() in ("openai-compatible", "openai_compatible"):
+        api_key = kwargs.get('api_key')
+        base_url = kwargs.get('base_url')
+        return OpenAICompatibleClient(config, api_key=api_key, base_url=base_url)
     else:
         raise ValueError(f"Unsupported API provider: {provider}") 

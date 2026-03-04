@@ -11,13 +11,12 @@ import tempfile
 import traceback
 import subprocess
 import multiprocessing as mp
-import google.generativeai as genai
 
 from datetime import datetime
 from contextlib import redirect_stdout
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Optional, Any, Union, Literal, Callable
-from pyke import knowledge_engine
+# from pyke import knowledge_engine
 
 from config import ReasonerConfig
 from data_loaders import DataLoader
@@ -56,16 +55,20 @@ def _parallel_worker(args: Tuple[Any, Dict, Any, int]) -> None:
                     print(f"Sample {sample_index}: Assigned API Key #{assigned_key_index + 1} ({assigned_key[:20]}...)")
                     
                     # Update both main API client and fix API client with the assigned key
-                    if hasattr(test_runner_instance.api_client, 'api_key'):
-                        import google.generativeai as genai
-                        genai.configure(api_key=assigned_key)
+                    if hasattr(test_runner_instance.api_client, 'set_api_key'):
+                        test_runner_instance.api_client.set_api_key(assigned_key)
+                        print(f"Main API client updated with key #{assigned_key_index + 1}")
+                    elif hasattr(test_runner_instance.api_client, 'api_key'):
                         test_runner_instance.api_client.api_key = assigned_key
                         print(f"Main API client updated with key #{assigned_key_index + 1}")
-                        
-                        # Also update fix API client if it exists
-                        if hasattr(test_runner_instance, 'code_api_client') and hasattr(test_runner_instance.code_api_client, 'api_key'):
-                            test_runner_instance.code_api_client.api_key = assigned_key
-                            print(f"Fix API client also updated with key #{assigned_key_index + 1}")
+
+                    # Also update fix API client if it exists
+                    if hasattr(test_runner_instance, 'code_api_client') and hasattr(test_runner_instance.code_api_client, 'set_api_key'):
+                        test_runner_instance.code_api_client.set_api_key(assigned_key)
+                        print(f"Fix API client also updated with key #{assigned_key_index + 1}")
+                    elif hasattr(test_runner_instance, 'code_api_client') and hasattr(test_runner_instance.code_api_client, 'api_key'):
+                        test_runner_instance.code_api_client.api_key = assigned_key
+                        print(f"Fix API client also updated with key #{assigned_key_index + 1}")
 
             # Call the instance's reason method and record per-instance inference time
             case_start_time = time.time()
@@ -357,63 +360,147 @@ class Reasoner(ABC):
         # Initialize helper classes
         self.prompt_handler = PromptHandler(config.prompt_path, config.dataset)
         self.code_executor = CodeExecutor(self.temp_cache_dir)
-        
-        # Initialize API clients based on reasoning method
-        if config.reasoning_method == "cot" or config.reasoning_method == "one-step":
-            model = getattr(config, 'model', None)
+        self._initialize_api_clients()
+
+    def __getstate__(self) -> Dict[str, Any]:
+        """Drop non-picklable API clients when multiprocessing uses spawn."""
+        state = self.__dict__.copy()
+        state.pop("api_client", None)
+        state.pop("code_api_client", None)
+        return state
+
+    def __setstate__(self, state: Dict[str, Any]) -> None:
+        """Restore state and recreate API clients inside worker processes."""
+        self.__dict__.update(state)
+        self._initialize_api_clients()
+
+    def _initialize_api_clients(self) -> None:
+        """Initialize API clients based on reasoning method."""
+        # Reset to avoid stale references when rehydrating from pickle.
+        self.api_client = None
+        self.code_api_client = None
+
+        if self.config.reasoning_method in ("cot", "one-step"):
+            model = getattr(self.config, "model", None)
             api_config = APIConfig(
                 model_name=model,
-                temperature=config.code_temp,
-                max_retries=config.max_retries,
-                inter_test_case_delay=config.test_delay
+                temperature=self.config.code_temp,
+                gemini_thinking_budget=getattr(self.config, "gemini_thinking_budget", 0),
+                gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
+                openai_compatible_extra_body=self._get_openai_compatible_extra_body(model),
+                max_retries=self.config.max_retries,
+                inter_test_case_delay=self.config.test_delay
             )
             self.api_client = self.initialize_api_client(model, api_config)
+            return
 
-        # Initialize code_api_client if needed for code generation
-        if config.reasoning_method == "two-step" or config.reasoning_method == "three-step":
-            plan_model = getattr(config, 'plan_model', None)
+        if self.config.reasoning_method in ("two-step", "three-step"):
+            plan_model = getattr(self.config, "plan_model", None)
             print(f"Plan model: {plan_model}")
             if plan_model is None:
                 raise ValueError("plan_model is not set")
-            api_config = APIConfig(
+            plan_api_config = APIConfig(
                 model_name=plan_model,
-                temperature=config.plan_temp,
-                max_retries=config.max_retries,
-                inter_test_case_delay=config.test_delay
+                temperature=self.config.plan_temp,
+                gemini_thinking_budget=getattr(self.config, "gemini_thinking_budget", 0),
+                gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
+                openai_compatible_extra_body=self._get_openai_compatible_extra_body(plan_model),
+                max_retries=self.config.max_retries,
+                inter_test_case_delay=self.config.test_delay
             )
-            self.api_client = self.initialize_api_client(plan_model, api_config)
+            self.api_client = self.initialize_api_client(plan_model, plan_api_config)
 
-            code_model = getattr(config, 'code_model', None)
+            code_model = getattr(self.config, "code_model", None)
             print(f"Code model: {code_model}")
             if code_model is None:
                 raise ValueError("code_model is not set")
             code_api_config = APIConfig(
                 model_name=code_model,
-                temperature=config.code_temp,
-                max_retries=config.max_retries,
-                inter_test_case_delay=config.test_delay
+                temperature=self.config.code_temp,
+                gemini_thinking_budget=getattr(self.config, "gemini_thinking_budget", 0),
+                gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
+                openai_compatible_extra_body=self._get_openai_compatible_extra_body(code_model),
+                max_retries=self.config.max_retries,
+                inter_test_case_delay=self.config.test_delay
             )
             self.code_api_client = self.initialize_api_client(code_model, code_api_config)
+
+    @staticmethod
+    def _normalize_provider_name(provider_name: Optional[str]) -> Optional[str]:
+        """Normalize provider aliases to canonical names."""
+        if provider_name is None:
+            return None
+        normalized = provider_name.strip().lower().replace("_", "-")
+        if normalized in ("azure", "azure-openai"):
+            return "azure-openai"
+        if normalized == "gemini":
+            return "gemini"
+        if normalized == "openai-compatible":
+            return "openai-compatible"
+        return normalized
+
+    def _resolve_provider_for_model(self, model_name: str) -> str:
+        """Resolve provider by model override, then global provider, then legacy auto-detection."""
+        model_providers = getattr(self.config, "model_providers", None)
+        if isinstance(model_providers, dict) and model_name in model_providers:
+            provider = self._normalize_provider_name(model_providers[model_name])
+            if provider:
+                return provider
+
+        global_provider = self._normalize_provider_name(getattr(self.config, "provider", None))
+        if global_provider:
+            return global_provider
+
+        model_name_lower = model_name.lower()
+        if 'gpt' in model_name_lower:
+            return "azure-openai"
+        if 'gemini' in model_name_lower:
+            return "gemini"
+        raise ValueError(
+            f"Unable to auto-detect provider for model '{model_name}'. "
+            "Set config.provider or config.model_providers in YAML."
+        )
+
+    def _get_openai_compatible_extra_body(self, model_name: str) -> Optional[Dict[str, Any]]:
+        """Fetch per-model OpenAI-compatible extra_body from config."""
+        per_model = getattr(self.config, "openai_compatible_extra_body", None)
+        if isinstance(per_model, dict):
+            model_extra_body = per_model.get(model_name)
+            if isinstance(model_extra_body, dict):
+                return model_extra_body
+
+        default_extra_body = getattr(self.config, "openai_compatible_default_extra_body", None)
+        if isinstance(default_extra_body, dict):
+            return default_extra_body
+        return None
 
     def initialize_api_client(self, model_name: str, api_config: APIConfig) -> APIClient:
         """Initialize the API client for the given model name and API configuration"""
         client_params = {}
-        if 'gpt' in model_name.lower():
-            api_config.provider = "azure-openai"
+        provider = self._resolve_provider_for_model(model_name)
+        api_config.provider = provider
+
+        if provider == "azure-openai":
             client_params = {
                 'endpoint': self.config.azure_endpoint,
                 'deployment': self.config.azure_deployment,
                 'managed_identity_client_id': self.config.azure_managed_identity_client_id
             }
-        elif 'gemini' in model_name.lower():
-            api_config.provider = "gemini"
+        elif provider == "gemini":
             if self.config.gemini_api_keys:
                 client_params = {'api_keys': self.config.gemini_api_keys}
                 print(f"Initialized Gemini client with {len(self.config.gemini_api_keys)} API keys for rotation")
             else:
-                client_params = {'api_key': self.config.gemini_api_key}
+                single_key = getattr(self.config, "gemini_api_key", None) or getattr(self.config, "api_key", None)
+                client_params = {'api_key': single_key}
+        elif provider == "openai-compatible":
+            openai_compatible_api_key = getattr(self.config, "openai_compatible_api_key", None) or getattr(self.config, "api_key", None)
+            client_params = {
+                'api_key': openai_compatible_api_key,
+                'base_url': getattr(self.config, "openai_compatible_base_url", None),
+            }
         else:
-            raise ValueError(f"Unsupported plan model: {model_name}")
+            raise ValueError(f"Unsupported provider '{provider}' for model '{model_name}'")
         
         api_client = get_api_client(api_config.provider, api_config, **client_params)
         return api_client
