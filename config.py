@@ -196,7 +196,7 @@ class ReasonerConfig:
     
     def _validate_config(self) -> None:
         """Validate configuration values and types"""
-        allowed_providers = {"gemini", "azure-openai", "openai-compatible", "azure", "openai_compatible"}
+        allowed_providers = {"gemini", "azure-openai", "openai-compatible", "azure", "openai_compatible", "anthropic", "claude"}
         if not isinstance(self.reasoning_method, str):
             raise TypeError("reasoning_method must be a string")
         if not isinstance(self.api_key, str):
@@ -204,7 +204,7 @@ class ReasonerConfig:
         if self.provider is not None and not isinstance(self.provider, str):
             raise TypeError("provider must be a string or None")
         if isinstance(self.provider, str) and self.provider.lower() not in allowed_providers:
-            raise ValueError("provider must be one of: gemini, azure-openai, openai-compatible")
+            raise ValueError("provider must be one of: gemini, azure-openai, openai-compatible, anthropic")
         if self.model_providers is not None:
             if not isinstance(self.model_providers, dict):
                 raise TypeError("model_providers must be a dictionary or None")
@@ -213,7 +213,7 @@ class ReasonerConfig:
                     raise TypeError("model_providers keys and values must be strings")
                 if provider_name.lower() not in allowed_providers:
                     raise ValueError(
-                        f"model_providers['{model_name}'] must be one of: gemini, azure-openai, openai-compatible"
+                        f"model_providers['{model_name}'] must be one of: gemini, azure-openai, openai-compatible, anthropic"
                     )
         if not isinstance(self.dataset, str):
             raise TypeError("dataset must be a string")

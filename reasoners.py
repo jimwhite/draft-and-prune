@@ -437,6 +437,8 @@ class Reasoner(ABC):
             return "gemini"
         if normalized == "openai-compatible":
             return "openai-compatible"
+        if normalized in ("anthropic", "claude"):
+            return "anthropic"
         return normalized
 
     def _resolve_provider_for_model(self, model_name: str) -> str:
@@ -456,6 +458,8 @@ class Reasoner(ABC):
             return "azure-openai"
         if 'gemini' in model_name_lower:
             return "gemini"
+        if 'claude' in model_name_lower:
+            return "anthropic"
         raise ValueError(
             f"Unable to auto-detect provider for model '{model_name}'. "
             "Set config.provider or config.model_providers in YAML."
@@ -498,6 +502,12 @@ class Reasoner(ABC):
             client_params = {
                 'api_key': openai_compatible_api_key,
                 'base_url': getattr(self.config, "openai_compatible_base_url", None),
+            }
+        elif provider == "anthropic":
+            anthropic_api_key = getattr(self.config, "anthropic_api_key", None) or getattr(self.config, "api_key", None)
+            client_params = {
+                'api_key': anthropic_api_key,
+                'base_url': getattr(self.config, "anthropic_base_url", None),
             }
         else:
             raise ValueError(f"Unsupported provider '{provider}' for model '{model_name}'")

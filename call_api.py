@@ -2,6 +2,7 @@
 import time
 import random
 import os
+import requests
 from typing import Optional, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 import openai
@@ -437,6 +438,100 @@ class OpenAICompatibleClient(APIClient):
         self._set_last_call_usage(None)
         return f"OpenAI-compatible API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
 
+class AnthropicClient(APIClient):
+    """Client for Anthropic Messages API."""
+    def __init__(self, config: APIConfig, api_key: str = None, base_url: str = None):
+        super().__init__(config)
+        self.api_key = api_key
+        self.base_url = (base_url or "https://api.anthropic.com/v1").rstrip("/")
+
+    def _build_usage_obj(self, usage: Dict[str, Any]):
+        input_tokens = usage.get("input_tokens")
+        output_tokens = usage.get("output_tokens")
+        total_tokens = None
+        if isinstance(input_tokens, int) and isinstance(output_tokens, int):
+            total_tokens = input_tokens + output_tokens
+        return type("UsageObj", (), {
+            "prompt_tokens": input_tokens,
+            "completion_tokens": output_tokens,
+            "total_tokens": total_tokens,
+        })()
+
+    def call(self, prompt: str) -> str:
+        """Call Anthropic Messages API with retries."""
+        self._clear_last_call_metadata()
+        api_time_only_sec = 0.0
+        attempt_count = 0
+        last_error = None
+
+        if not self.api_key:
+            self._set_last_call_timing(api_time_only_sec, attempt_count)
+            self._set_last_call_usage(None)
+            return "Anthropic API key is missing."
+
+        for attempt in range(self.config.max_retries):
+            try:
+                attempt_count += 1
+                headers = {
+                    "x-api-key": self.api_key,
+                    "anthropic-version": "2023-06-01",
+                    "content-type": "application/json",
+                }
+                payload = {
+                    "model": self.config.model_name,
+                    "max_tokens": 2048,
+                    "temperature": self.config.temperature,
+                    "messages": [{"role": "user", "content": prompt}],
+                }
+
+                api_call_start = time.time()
+                response = requests.post(
+                    f"{self.base_url}/messages",
+                    headers=headers,
+                    json=payload,
+                    timeout=180,
+                )
+                api_time_only_sec += time.time() - api_call_start
+
+                if response.status_code >= 400:
+                    raise RuntimeError(f"HTTP {response.status_code}: {response.text}")
+
+                body = response.json()
+                content = body.get("content", [])
+                text_parts = [
+                    block.get("text", "")
+                    for block in content
+                    if isinstance(block, dict) and block.get("type") == "text"
+                ]
+                text = "".join(text_parts).strip()
+                if text:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    usage = body.get("usage") or {}
+                    self._set_last_call_usage(self._build_usage_obj(usage))
+                    return text
+
+                last_error = "Anthropic response was empty."
+                print(f"Warning: {last_error}")
+
+            except Exception as e:
+                if 'api_call_start' in locals():
+                    api_time_only_sec += time.time() - api_call_start
+                last_error = f"Error in Anthropic API call (attempt {attempt+1}/{self.config.max_retries}): {str(e)}"
+                print(last_error)
+                if attempt == self.config.max_retries - 1:
+                    self._set_last_call_timing(api_time_only_sec, attempt_count)
+                    self._set_last_call_usage(None)
+                    return f"Anthropic API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
+                random_sleep = random.uniform(2 ** attempt, 2 ** (attempt + 1))
+                print(f"Waiting {random_sleep} seconds before retry...")
+                time.sleep(random_sleep)
+            finally:
+                time.sleep(1.1)
+
+        self._set_last_call_timing(api_time_only_sec, attempt_count)
+        self._set_last_call_usage(None)
+        return f"Anthropic API call failed after {self.config.max_retries} attempts. Last error: {last_error}"
+
 def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
     """Factory function to get the appropriate API client based on provider"""
     if provider.lower() == "gemini":
@@ -455,5 +550,9 @@ def get_api_client(provider: str, config: APIConfig, **kwargs) -> APIClient:
         api_key = kwargs.get('api_key')
         base_url = kwargs.get('base_url')
         return OpenAICompatibleClient(config, api_key=api_key, base_url=base_url)
+    elif provider.lower() in ("anthropic", "claude"):
+        api_key = kwargs.get('api_key')
+        base_url = kwargs.get('base_url')
+        return AnthropicClient(config, api_key=api_key, base_url=base_url)
     else:
         raise ValueError(f"Unsupported API provider: {provider}") 
