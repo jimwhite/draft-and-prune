@@ -1,12 +1,12 @@
-# Sketch-and-Prune
+# Draft-and-Prune
 
 A neuro-symbolic tool that combines LLMs with symbolic solvers for logical reasoning using multi-path ensemble with sketched planning, code generation, and path pruning.
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/zyni2001/Partitioned-Neural-Symbolic-Reasoning.git
-cd Partitioned-Neural-Symbolic-Reasoning
+git clone https://github.com/zyni2001/draft-and-prune.git
+cd draft-and-prune
 pip install -r requirements.txt
 
 # Run experiment with a provider-specific template
