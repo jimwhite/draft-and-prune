@@ -1,0 +1,33 @@
+# OpenAI-compatible Configuration
+# Use for OpenAI-compatible providers such as OpenAI API, SiliconFlow, OpenRouter, DeepSeek API, etc.
+
+# Required fields
+provider: "openai-compatible"
+dataset: "" # AR-LSAT, ProofWriter, ProntoQA, LogicalDeduction, FOLIO
+model: "" # Backward-compatible single-model setting for CoT / one-step
+plan_model: "" # Required for two-step / three-step
+code_model: "" # Required for two-step / three-step
+test_file: "" # Path to the dataset file
+prompt_path: "" # Path to prompt templates
+reasoning_method: "" # cot, one-step, two-step, three-step
+shots: "three"
+desired_indices: null
+num_paths: 30
+
+# API / runtime settings
+api_key: "" # Optional fallback; prefer openai_compatible_api_key below
+openai_compatible_api_key: ""
+openai_compatible_base_url: "" # e.g. https://api.openai.com/v1
+openai_compatible_default_extra_body: null
+openai_compatible_extra_body: null
+max_retries: 15
+test_delay: 1
+num_processes: 8
+
+# Generation settings
+plan_temp: 1
+code_temp: 0
+max_repairs: 3
+
+# Output
+results_root: "./results"

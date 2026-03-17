@@ -1,0 +1,30 @@
+# Anthropic Configuration
+
+# Required fields
+provider: "anthropic"
+dataset: "" # AR-LSAT, ProofWriter, ProntoQA, LogicalDeduction, FOLIO
+model: "" # Backward-compatible single-model setting for CoT / one-step
+plan_model: "" # Required for two-step / three-step
+code_model: "" # Required for two-step / three-step
+test_file: ""
+prompt_path: ""
+reasoning_method: "" # cot, one-step, two-step, three-step
+shots: "three"
+desired_indices: null
+num_paths: 30
+
+# API / runtime settings
+api_key: "" # Optional fallback; prefer anthropic_api_key below
+anthropic_api_key: ""
+anthropic_base_url: "https://api.anthropic.com/v1"
+max_retries: 15
+test_delay: 1
+num_processes: 8
+
+# Generation settings
+plan_temp: 1
+code_temp: 0
+max_repairs: 3
+
+# Output
+results_root: "./results"

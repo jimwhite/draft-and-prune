@@ -1,0 +1,32 @@
+# Gemini Configuration
+
+# Required fields
+provider: "gemini"
+dataset: "" # AR-LSAT, ProofWriter, ProntoQA, LogicalDeduction, FOLIO
+model: "" # Backward-compatible single-model setting for CoT / one-step
+plan_model: "" # Required for two-step / three-step
+code_model: "" # Required for two-step / three-step
+test_file: ""
+prompt_path: ""
+reasoning_method: "" # cot, one-step, two-step, three-step
+shots: "three"
+desired_indices: null
+num_paths: 30
+
+# API / runtime settings
+api_key: "" # Optional fallback; prefer gemini_api_key / gemini_api_keys below
+gemini_api_key: ""
+gemini_api_keys: null # Optional list for key rotation in parallel runs
+gemini_thinking_budget: 0 # Set either thinking_budget or thinking_level
+gemini_thinking_level: null # minimal, low, medium, high
+max_retries: 15
+test_delay: 1
+num_processes: 8
+
+# Generation settings
+plan_temp: 1
+code_temp: 0
+max_repairs: 3
+
+# Output
+results_root: "./results"

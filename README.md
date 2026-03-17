@@ -5,13 +5,15 @@ A neuro-symbolic tool that combines LLMs with symbolic solvers for logical reaso
 ## Quick Start
 
 ```bash
-git clone https://github.com/yourusername/Partitioned-Neural-Symbolic-Reasoning.git
+git clone https://github.com/zyni2001/Partitioned-Neural-Symbolic-Reasoning.git
 cd Partitioned-Neural-Symbolic-Reasoning
 pip install -r requirements.txt
 
-# Run experiment
-python main.py config_gpt.yaml
+# Run experiment with a provider-specific template
+python main.py configs/azure-openai/config_azure_openai.yaml
 ```
+
+The old root-level `config_gpt.yaml` was an Azure OpenAI template. Provider-specific templates now live under `configs/`.
 
 ## Project Structure
 
@@ -19,10 +21,17 @@ python main.py config_gpt.yaml
 ├── main.py                     # Main entry point
 ├── config.py                   # Configuration parsing
 ├── reasoners.py                # Reasoning logic (CoT, two-step, one-step)
+├── answer_extractors.py        # Dataset-specific answer extraction for CoT runs
 ├── call_api.py                 # API clients (GPT-4, Gemini)
 ├── data_loaders.py             # Dataset loading
 ├── path_level_analysis.py      # Path-level analysis
 ├── analysis_pruning_and_ensemble_simulation.py  # Majority voting simulation
+│
+├── configs/
+│   ├── azure-openai/           # Azure OpenAI templates
+│   ├── openai-compatible/      # OpenAI-compatible templates
+│   ├── gemini/                 # Gemini templates
+│   └── anthropic/              # Anthropic templates
 │
 ├── prompts-all-3-shot-aligned/ # Prompt templates
 │   └── {Dataset}-prompts-{method}/  # CoT, one-step, two-step-partition
@@ -35,7 +44,7 @@ python main.py config_gpt.yaml
 
 ```
 Step 1: Run Experiment
-  python main.py config_gpt.yaml
+  python main.py configs/azure-openai/config_azure_openai.yaml
   → results/{experiment}/summary/*.json
 
 Step 2: Path-Level Analysis
@@ -61,6 +70,7 @@ python path_level_analysis.py <results_dir> --expected-paths 20 \
 ```
 
 **Options:**
+
 - `--expected-paths N`: Paths per sample (default: 1)
 - `--output-format`: csv, xlsx, or both (default: csv)
 - `--cot-summary`: Add `cot_correctness` column from CoT results
@@ -81,6 +91,7 @@ python analysis_pruning_and_ensemble_simulation.py input.csv --pruning-mode both
 ```
 
 **Options:**
+
 - `--pruning-mode`: `no_pruning`, `existence`, `uniqueness`, `both`, or `all`
 - `--cot-backup`: Use CoT result when no valid symbolic output
 - `--max-paths`: Maximum k value (default: 20)
@@ -88,23 +99,36 @@ python analysis_pruning_and_ensemble_simulation.py input.csv --pruning-mode both
 
 **Output Metrics:**
 
-| Metric | Formula | Description |
-|--------|---------|-------------|
-| `accuracy` | correct / total | Overall accuracy |
-| `exec_rate` | exec_samples / total | Fraction with valid outputs |
-| `exec_acc` | exec_correct / exec_samples | Accuracy among executable |
-| `hit_rate` | hit_samples / total | Fraction with ≥1 correct path |
+
+| Metric      | Formula                     | Description                   |
+| ----------- | --------------------------- | ----------------------------- |
+| `accuracy`  | correct / total             | Overall accuracy              |
+| `exec_rate` | exec_samples / total        | Fraction with valid outputs   |
+| `exec_acc`  | exec_correct / exec_samples | Accuracy among executable     |
+| `hit_rate`  | hit_samples / total         | Fraction with ≥1 correct path |
+
 
 ---
 
 ## Supported Datasets
 
-| Dataset | Source |
-|---------|--------|
-| AR-LSAT | [HuggingFace](https://huggingface.co/datasets/tasksource/lsat-ar) |
-| ProofWriter | [HuggingFace](https://huggingface.co/datasets/tasksource/proofwriter) |
-| ProntoQA | [HuggingFace](https://huggingface.co/datasets/renma/ProntoQA) |
-| LogicalDeduction | [HuggingFace](https://huggingface.co/datasets/maveriq/bigbenchhard) |
+
+| Dataset                                | Source                                                                             |
+| -------------------------------------- | ---------------------------------------------------------------------------------- |
+| AR-LSAT                                | [HuggingFace](https://huggingface.co/datasets/tasksource/lsat-ar)                  |
+| AR-LSAT (corrected 229-sample variant) | [HuggingFace](https://huggingface.co/datasets/anonymous-ar-lsat/ar-lsat-fixed-229) |
+| ProofWriter                            | [HuggingFace](https://huggingface.co/datasets/tasksource/proofwriter)              |
+| ProntoQA                               | [HuggingFace](https://huggingface.co/datasets/renma/ProntoQA)                      |
+| LogicalDeduction                       | [HuggingFace](https://huggingface.co/datasets/maveriq/bigbenchhard)                |
+
+
+## Config Templates
+
+- Azure OpenAI: `configs/azure-openai/config_azure_openai.yaml`
+- OpenAI-compatible: `configs/openai-compatible/config_openai_compatible.yaml`
+- Gemini: `configs/gemini/config_gemini.yaml`
+- Anthropic: `configs/anthropic/config_anthropic.yaml`
+
 
 ## License
 
