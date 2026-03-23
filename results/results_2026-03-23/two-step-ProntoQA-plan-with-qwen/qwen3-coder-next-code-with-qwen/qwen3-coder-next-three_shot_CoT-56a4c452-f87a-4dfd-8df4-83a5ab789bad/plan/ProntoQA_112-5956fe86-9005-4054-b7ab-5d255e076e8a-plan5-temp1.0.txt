@@ -1,0 +1,27 @@
+1.  Identify all entities and types: Max, rompus, numpus, wumpus, tumpus, dumpus, jompus, zumpus, yumpus.  
+2.  Identify all properties: large, fruity, metallic, cold, brown, sweet.  
+3.  Represent "Max is a numpus" as a base fact: `is_a("Max", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+      - Each rompus is not large.  
+      - Every rompus is a numpus.  
+      - Every numpus is fruity.  
+      - Numpuses are wumpuses.  
+      - Wumpuses are not metallic.  
+      - Wumpuses are tumpuses.  
+      - Tumpuses are cold.  
+      - Dumpuses are not brown.  
+      - Tumpuses are jompuses.  
+      - Each jompus is sweet.  
+      - Jompuses are zumpuses.  
+      - Each zumpus is brown.  
+      - Every zumpus is a yumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence. Pay special attention to negated properties (e.g., `is_large(X, False)`, `is_brown(X, True)` for zumpuses).  
+6.  Derive properties for Max step-by-step:  
+      - From `is_a(Max, numpus)`, infer `is_fruity(Max)` (rule 3).  
+      - From numpus → wumpus, infer `is_a(Max, wumpus)`.  
+      - From wumpus → tumpus, infer `is_a(Max, tumpus)`.  
+      - From tumpus → jompus, infer `is_a(Max, jompus)`.  
+      - From jompus → zumpus, infer `is_a(Max, zumpus)`.  
+      - From zumpus → brown (explicit: "Each zumpus is brown"), infer `is_brown(Max, True)`.  
+7.  The query tests if "Max is not brown" is provable; since `is_brown(Max, True)` is derivable, "Max is not brown" is false.  
+    → Use `facts.is_brown("Max", False)`.

@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the tournament ranking puzzle.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven golfers as variables: `"Mel"`, `"Rob"`, `"Eli"`, `"Dan"`, `"Ana"`, `"Ada"`, and `"Mya"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (highest)** and **7 = last place (lowest)**.  
+   * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add `AllDifferentConstraint()` to ensure each golfer has a unique finishing position.  
+   * Translate each statement into constraints:  
+     - "Ana finished last" → `Ana == 7`  
+     - "Rob finished fourth" → `Rob == 4`  
+     - "Eli finished second" → `Eli == 2`  
+     - "Mya finished above Rob" → `Mya < Rob` (since lower rank number = better position)  
+     - "Dan finished above Mya" → `Dan < Mya`  
+     - "Mel finished above Ada" → `Mel < Ada`
+
+4. **Solve for the Complete Ranking:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (the problem is well-determined, so exactly one solution exists).
+
+5. **Identify the True Statement:**  
+   * The question asks which golfer finished **third**, i.e., position `3`.  
+   * Create a dictionary mapping choice letters (`'A'` to `'G'`) to their corresponding golfers:  
+     `{'A': 'Mel', 'B': 'Rob', 'C': 'Eli', 'D': 'Dan', 'E': 'Ana', 'F': 'Ada', 'G': 'Mya'}`  
+   * In the solution, find which golfer has position `3`.  
+   * Output the corresponding choice letter.

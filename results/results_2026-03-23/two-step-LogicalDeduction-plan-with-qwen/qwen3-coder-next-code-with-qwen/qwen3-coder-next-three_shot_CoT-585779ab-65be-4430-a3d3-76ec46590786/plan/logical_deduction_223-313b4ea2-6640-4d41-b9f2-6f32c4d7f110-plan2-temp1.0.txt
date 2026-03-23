@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"hummingbird"`, `"cardinal"`, `"blue jay"`, `"owl"`, `"raven"`, `"quail"`, `"robin"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven bird variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.  
+   * Translate each statement into a constraint using lambda functions:  
+        - *"The hummingbird is to the left of the quail"* → `hummingbird < quail`  
+        - *"The robin is to the left of the cardinal"* → `robin < cardinal`  
+        - *"The blue jay is the leftmost"* → `blue_jay == 1`  
+        - *"The cardinal is the fourth from the left"* → `cardinal == 4`  
+        - *"The raven is the third from the right"* → In a 7-position list, third from the right = position `7 - 3 + 1 = 5` → `raven == 5`  
+        - *"The owl is the third from the left"* → `owl == 3`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (only one should exist due to the constraints).
+
+5. **Identify the Correct Answer:**  
+   * The question asks which bird is leftmost, i.e., has position **1**.  
+   * Create a mapping from choice letters to bird names: `{"A": "hummingbird", "B": "cardinal", "C": "blue jay", "D": "owl", "E": "raven", "F": "quail", "G": "robin"}`  
+   * From the solved solution, find which bird has position 1.  
+   * Return the corresponding choice letter as the answer.

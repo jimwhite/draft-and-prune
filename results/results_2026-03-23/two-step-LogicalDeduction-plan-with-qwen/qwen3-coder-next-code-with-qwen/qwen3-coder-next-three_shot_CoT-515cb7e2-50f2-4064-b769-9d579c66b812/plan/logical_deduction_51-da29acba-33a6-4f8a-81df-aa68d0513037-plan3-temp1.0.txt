@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the five vehicle variables: `"minivan"`, `"hatchback"`, `"bus"`, `"convertible"`, and `"motorcycle"` (note: correct spelling of "motorcyle" to "motorcycle").  
+    * Assign a numerical rank domain from 1 to 5, where **1 = oldest**, **5 = newest**.  
+    * Add these variables with domain `{1, 2, 3, 4, 5}` to the problem instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add `AllDifferentConstraint()` to ensure each vehicle has a unique rank.  
+    * Encode the statements as constraints using lambda functions:  
+        - "The hatchback is newer than the convertible" → `hatchback < convertible` (since newer = higher rank number, wait—correction: *newer* means larger age value if 1=oldest. Actually: if 1 is oldest and 5 newest, then newer = larger number. So hatchback > convertible.  
+        - Correction: re-evaluate semantics:  
+            * If rank 1 = oldest, rank 5 = newest, then "X is newer than Y" ⇔ rank(X) > rank(Y).  
+            * So:  
+                - "hatchback is newer than convertible" ⇒ `hatchback > convertible`  
+                - "bus is newer than hatchback" ⇒ `bus > hatchback`  
+                - "bus is older than motorcycle" ⇒ bus < motorcycle  
+                - "minivan is the newest" ⇒ minivan == 5  
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Extract the unique solution (expected single solution due to determinacy).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" with all options stating which vehicle is newest (i.e., rank == 5).  
+    * Since one of the premises explicitly says "The minivan is the newest", and constraints are consistent, the solution must have `minivan == 5`.  
+    * Map choices: A → minivan, B → hatchback, C → bus, D → convertible, E → motorcycle.  
+    * Find the vehicle with rank 5 in the solution and select the corresponding letter (A).  
+    * Output A as the answer.

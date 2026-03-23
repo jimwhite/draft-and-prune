@@ -1,0 +1,24 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables as the three fruits: `"kiwis"`, `"oranges"`, and `"watermelons"`.
+    * Define the domain using integers from 1 to 3, where **1 represents the cheapest** and **3 represents the most expensive**.
+    * Add these variables with their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Convert each rule into a constraint using `lambda` functions:
+        * "The oranges are more expensive than the kiwis" translates to `kiwis < oranges` (since lower number = cheaper).
+        * "The oranges are less expensive than the watermelons" translates to `oranges < watermelons`.
+
+4.  **Solve for the Price Order:**
+    * Call `getSolutions()` to find all valid price assignments.
+    * Extract the unique solution from the list of results.
+
+5.  **Identify the Correct Choice:**
+    * The question asks which fruit is the cheapest (rank 1).
+    * Map the choice letters ("A", "B", "C") to their respective fruits: A → "kiwis", B → "oranges", C → "watermelons".
+    * Find the fruit with rank 1 in the solution.
+    * Return the choice letter corresponding to that fruit.

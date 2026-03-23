@@ -1,0 +1,21 @@
+1. Enumerate the six bands and assign each an integer index (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer variables `pos[b]` for each band `b`, representing its slot position (1 to 6).  
+3. Add **all-different constraint**: all six positions must be distinct integers in [1,6].  
+4. Add **original constraints**:  
+   - Vegemite before Zircon: `pos_Vegemite < pos_Zircon`  
+   - Wellspring before Xpert and Zircon before Xpert: `pos_Wellspring < pos_Xpert` ∧ `pos_Zircon < pos_Xpert`  
+   - Uneasy in last three slots: `pos_Uneasy ∈ {4,5,6}`  
+   - Yardsign in first three slots: `pos_Yardsign ∈ {1,2,3}`  
+5. For each answer choice, parse its logical meaning into constraints over `pos[·]`:  
+   - Option A: "Only Uneasy can perform in a later slot than Xpert" ⇒ `pos_Xpert < pos_Uneasy` and for all other bands B ∉ {Uneasy}, `pos_B < pos_Xpert`.  
+   - Option B: "Vegemite before Wellspring, which before Zircon" ⇒ `pos_Vegemite < pos_Wellspring ∧ pos_Wellspring < pos_Zircon`.  
+   - Option C: "Vegemite and Wellspring each before Xpert" ⇒ `pos_Vegemite < pos_Xpert ∧ pos_Wellspring < pos_Xpert`.  
+   - Option D: "Xpert immediately before or after Uneasy" ⇒ `|pos_Xpert − pos_Uneasy| = 1`.  
+   - Option E: "Xpert in slot five or six" ⇒ `pos_Xpert ∈ {5,6}`.  
+6. For each answer choice, clone the base solver (original constraints) and extend it with the candidate’s constraint.  
+7. Check if the extended solver is **satisfiable** AND whether the candidate’s constraint **logically entails** the original "Wellspring and Zircon before Xpert" under all models of the full constraints (i.e., verify that *in every* satisfying assignment of the original constraints, if the candidate constraint holds, then Wellspring and Zircon are both before Xpert — or equivalently, that adding the candidate constraint plus *negating* `pos_Wellspring < pos_Xpert ∨ pos_Zircon < pos_Xpert` yields UNSAT).  
+   - Simpler approach: For each candidate, verify two conditions using Z3:  
+     (a) The candidate constraint is **compatible** with the original constraints (SAT).  
+     (b) In *all* models of the original constraints extended with the candidate, `pos_Wellspring < pos_Xpert` and `pos_Zircon < pos_Xpert` hold (i.e., add candidate + original + ¬(Wellspring<Xpert ∨ Zircon<Xpert); check UNSAT).  
+8. The candidate for which both (a) and (b) hold is the correct answer; record its index.  
+9. Return the index of the unique candidate satisfying both conditions.

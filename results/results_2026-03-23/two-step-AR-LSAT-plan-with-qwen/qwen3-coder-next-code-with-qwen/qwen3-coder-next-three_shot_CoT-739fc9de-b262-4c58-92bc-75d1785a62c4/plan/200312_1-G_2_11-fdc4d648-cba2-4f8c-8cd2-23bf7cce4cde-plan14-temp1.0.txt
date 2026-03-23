@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign integer indices (0–5).  
+2. Create integer variables `pos[type]` for the bay number (1–6) each cargo type occupies.  
+3. Add **domain constraints**: all `pos[type]` must be integers in [1,6], and pairwise distinct (each bay holds exactly one cargo type).  
+4. Add **base ordering constraints** from problem statements:  
+   - grain > livestock > textiles ⇒ `pos[grain] > pos[livestock]`, `pos[livestock] > pos[-produce]` (correction: livestock > textiles)  
+   - produce > fuel ⇒ `pos[produce] > pos[fuel]`  
+   - textiles adjacent to produce ⇒ `|pos[textiles] - pos[produce]| == 1`  
+5. Add **hypothetical constraint**: produce is next to livestock ⇒ `|pos[produce] - pos[livestock]| == 1`.  
+6. Translate the answer choices into structural constraints:  
+   - "Bay 2 is holding fuel" ⇒ `pos[fuel] == 2`  
+   - "Bay 4 is holding produce" ⇒ `pos[produce] == 4`  
+   - "Bay 4 is holding textiles" ⇒ `pos[textiles] == 4`  
+   - "Bay 5 is holding grain" ⇒ `pos[grain] == 5`  
+   - "Bay 5 is holding machinery" ⇒ `pos[machinery] == 5`  
+7. Define answer index list `answer_index_list = []`. For each choice (indexed 0 to 4):  
+   - Clone base + hypothetical constraints into a fresh solver.  
+   - Assert the specific bay assignment for that choice (e.g., `pos[fuel] == 2`).  
+   - Check satisfiability.  
+   - If UNSAT, then this choice **cannot** be true under the condition; it is the "EXCEPT" candidate, so append its index to `answer_index_list`.  
+8. After checking all five choices, the result is the list of indices for which the assignment is impossible (should be exactly one such index per EXCEPT logic).

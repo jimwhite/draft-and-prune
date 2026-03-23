@@ -1,0 +1,27 @@
+1. Identify all entities: Bob, Charlie, Dave, Erin.
+2. Encode all explicit factual statements using ternary predicates of the form predicate(entity, True) (since properties are unary, object is always True).
+   - is_big("Bob", True), is_nice("Bob", True), is_smart("Bob", True)
+   - is_nice("Charlie", True), is_nice("Dave", True)
+   - is_big("Erin", True), is_blue("Erin", True), is_furry("Erin", True), is_quiet("Erin", True), is_round("Erin", True), is_smart("Erin", True)
+3. Translate all universal conditionals into rules:
+   • All nice things are big.
+   • All furry things are blue.
+   • Blue and furry things are quiet.
+   • If something is round and nice → it is blue.
+   • If Bob is round → Bob is blue.
+   • Big and quiet things are furry.
+   • If something is blue and furry → it is smart.
+   • If Charlie is nice and Charlie is big → Charlie is quiet.
+4. For each rule, write a `foreach` block capturing the antecedent conditions and an `assert` clause for the consequent property.
+5. Note: The query asks whether Charlie is blue, i.e., `facts.is_blue("Charlie", True)`. Since no direct fact about Charlie’s color is given, and the only rule producing blue involves round & nice or blue & furry → smart (which doesn’t help), we must infer whether Charlie inherits blueness via the rules.
+6. First, check if Charlie is nice and big (from rule: nice → big? Actually, "All nice things are big" is present — so Charlie must be big if nice). So:
+   - From fact: `is_nice("Charlie", True)`
+   - Rule: All nice things are big ⇒ `foreach is_nice(X, True) assert is_big(X, True)` → so `is_big("Charlie", True)` holds.
+   - But roundness of Charlie is unknown (no fact), so the rule "if round and nice → blue" does not fire for Charlie.
+   - To get blue via other paths: need either (blue & furry → smart doesn’t give blue), or (furry → blue): so if Charlie were furry, then Charlie would be blue. But is Charlie furry? No fact or rule gives furry for Charlie.
+   - Check if any rules yield furry: only "big and quiet → furry" could apply, but is Charlie quiet? Not known. Rule: nice & big → quiet only applies to Charlie if we can confirm quiet — but that rule is conditional on nice & big ⇒ quiet only for Charlie (explicit). Wait: the rule states: “If Charlie is nice and Charlie is big then Charlie is quiet.” Since both are true (nice from fact, big via nice→big), this rule fires ⇒ `is_quiet("Charlie", True)`.
+   - Now: Charlie is nice, big, quiet. So “big and quiet → furry” applies ⇒ `is_furry("Charlie", True)`.
+   - Then: “all furry things are blue” ⇒ `is_blue("Charlie", True)`.
+7. Therefore, although not directly stated, Charlie is blue by chaining rules.
+8. In PyKe plan: define all facts first; encode all 7 rules as `foreach` + `assert`; after reasoning, assert `is_blue("Charlie", True)` will be derivable.
+9. Query: use `facts.is_blue("Charlie", True)`.

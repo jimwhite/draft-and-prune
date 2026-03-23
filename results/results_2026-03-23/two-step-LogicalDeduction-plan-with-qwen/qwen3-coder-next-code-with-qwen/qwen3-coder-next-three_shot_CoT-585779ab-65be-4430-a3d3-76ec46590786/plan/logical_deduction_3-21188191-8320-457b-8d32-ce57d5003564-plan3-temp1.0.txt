@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five fruits: `"watermelons"`, `"plums"`, `"apples"`, `"peaches"`, and `"kiwis"`.  
+   * Define the domain as integers from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**.  
+   * Add all variables with domain {1,2,3,4,5} to the problem.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert each statement into a constraint using lambda functions:  
+     - "The apples are less expensive than the peaches" → `apples < peaches`  
+     - "The plums are the cheapest" → `plums == 1`  
+     - "The kiwis are the second-cheapest" → `kiwis == 2`  
+     - "The watermelons are more expensive than the peaches" → `peaches < watermelons`
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the single solution (since the constraints uniquely determine the arrangement).
+
+5. **Identify the Correct Answer:**  
+   * Determine which fruit has rank 5 (most expensive).  
+   * Map the choice letters to fruits: A→watermelons, B→plums, C→apples, D→peaches, E→kiwis.  
+   * Find the fruit with position 5 in the solution and output its corresponding choice letter.

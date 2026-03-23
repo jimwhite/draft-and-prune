@@ -1,0 +1,19 @@
+1. Enumerate the six singers: assign indices 0–5 to Kammer, Lugo, Trillo, Waite, Yoshida, Zinn.  
+2. Define integer variables `pos[0]` to `pos[5]` for their audition positions (1–6, inclusive).  
+3. Add **all-distinct constraints**: `pos[i] != pos[j]` for all i < j.  
+4. Add **domain constraints**: `1 <= pos[i] <= 6` for all i.  
+5. Add **recorded-audition constraints**: Kammer (0) and Lugo (1) are recorded; others are not.  
+6. Add **position constraints for recorded auditions**:  
+    - Fourth audition is *not* recorded ⇒ position 4 must be assigned to a non-recorded singer (i.e., Trillo=2, Waite=3, Yoshida=4, Zinn=5).  
+    - Fifth audition *must* be recorded ⇒ position 5 must be assigned to either Kammer or Lugo.  
+7. Add **Waite constraint**: Waite (3) must be earlier than *both* recorded auditions ⇒ `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+8. Add **Kammer–Trillo constraint**: `pos[0] < pos[2]`.  
+9. Add **Zinn–Yoshida constraint**: `pos[5] < pos[4]`.  
+10. For each answer choice (list of singer names in order):  
+    - Compute the implied position mapping: e.g., for `['Kammer', 'Trillo', ...]`, Kammer=1, Trillo=2, etc.  
+    - Convert each singer name to its index (0–5).  
+    - Build a fresh solver, clone all base constraints.  
+    - Assert equality of positions: for each singer s at position i in the list, set `pos[s_index] == i`.  
+    - Check satisfiability with Z3.  
+11. Identify which answer choice yields SAT; return its index (or full list) as the correct option.  
+12. Output only the *index* (0-based) of the first/only SAT choice if multiple, but standard LSAT-style implies exactly one valid.

@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign integer indices (0=Peters, 1=Quinn, 2=Rovero, 3=Stanton, 4=Tao, 5=Villas, 6=White).  
+2. Create integer variables for recruitment positions (1 to 7) for each accomplice, ensuring all positions are distinct.  
+3. Add **fixed constraint**: Peters is fourth → pos_Peters == 4.  
+4. Add **Villas-White constraint**: Villas is immediately before White → pos_White == pos_Villas + 1.  
+5. Add **Quinn-Rovero constraint (premise)**: Quinn is immediately before Rovero → pos_Rovero == pos_Quinn + 1.  
+6. Add **Stanton-Tao constraint (base)**: Stanton is neither immediately before nor after Tao → |pos_Stanton - pos_Tao| != 1.  
+7. Note: All constraints must hold simultaneously under the premise (Quinn immediately before Rovero).  
+8. Translate answer choices into position values: ["first", "second", "third", "fifth", "seventh"] → positions [1, 2, 3, 5, 7].  
+9. Define answer index list 'answer_index_list' []. For each candidate position p in [1,2,3,5,7]:  
+    - Clone base constraints (including Peters=4, Villas-White adjacency, Quinn-Rovero adjacency).  
+    - Add constraint pos_Stanton == p.  
+    - Check satisfiability with Z3.  
+    - If UNSAT, then Stanton **cannot** be recruited at position p → append index (0 for "first", 1 for "second", etc.) to answer_index_list.  
+10. Print answer_index_list.

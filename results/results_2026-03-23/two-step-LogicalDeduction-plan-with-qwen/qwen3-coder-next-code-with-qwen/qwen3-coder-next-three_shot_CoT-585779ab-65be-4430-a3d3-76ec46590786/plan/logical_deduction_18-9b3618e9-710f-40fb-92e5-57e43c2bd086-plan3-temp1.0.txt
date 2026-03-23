@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.  
+
+2. **Define Variables and Domain:**  
+   * Identify the five bird types as variables: `"hawk"`, `"raven"`, `"robin"`, `"hummingbird"`, and `"crow"`.  
+   * Define the domain as integers 1 to 5, where **1 = leftmost**, **2 = second from left**, ..., **5 = rightmost**.  
+   * Add all five variables to the problem with domain {1, 2, 3, 4, 5}.  
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+   * Translate each statement into a constraint:  
+     - "The robin is the leftmost" → `robin == 1`  
+     - "The raven is the second from the left" → `raven == 2`  
+     - "The hawk is the second from the right" → `hawk == 4` (since position 5 is rightmost, second from right is 4)  
+     - "The crow is the third from the left" → `crow == 3`  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Use `getSolutions()` to compute all valid assignments.  
+   * Given the problem constraints, exactly one solution will exist (the remaining bird—`hummingbird`—must occupy the only unassigned position, 5).  
+
+5. **Verify and Select the Correct Choice:**  
+   * The question asks which statement is true; note all statements are given as facts, so the task is to identify which option repeats a true fact (which must match one of the constraints used).  
+   * The four explicit statements already include: robin=1, raven=2, hawk=4, crow=3.  
+   * Choice **A** is "The hawk is the second from the right." → This matches `hawk == 4`, which we enforced as a constraint.  
+   * Since the model satisfies this, and it is literally one of the input statements, choice A is confirmed true.  
+   * Return or select "A" as the answer.

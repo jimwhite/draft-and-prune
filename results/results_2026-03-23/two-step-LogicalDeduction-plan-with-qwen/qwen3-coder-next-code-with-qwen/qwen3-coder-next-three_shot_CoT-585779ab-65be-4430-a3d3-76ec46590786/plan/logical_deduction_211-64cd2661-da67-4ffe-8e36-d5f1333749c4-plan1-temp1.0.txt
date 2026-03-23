@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * List the seven golfers as variables: `["mya", "eli", "ana", "amy", "mel", "dan", "joe"]`.  
+    * Define the domain as integers from 1 to 7, where **1 = first place (leftmost/earliest)** and **7 = last place (rightmost/latest)**.  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure no two golfers share the same finish position.  
+    * Add constraints using lambda functions for each statement:  
+        - "Amy finished below Joe" → Amy's position number > Joe's position number (`amy > joe`).  
+        - "Dan finished above Mya" → Dan's position number < Mya's position number (`dan < mya`).  
+        - "Eli finished third" → `eli == 3`.  
+        - "Ana finished first" → `ana == 1`.  
+        - "Amy finished second-to-last" → `amy == 6` (since 7 is last, 6 is second-to-last).  
+        - "Mya finished fourth" → `mya == 4`.
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments.  
+    * Since the problem is deterministic, expect exactly one solution; extract it (e.g., `solutions[0]`).
+
+5.  **Determine Third-to-Last Position and Match Choices:**  
+    * Third-to-last in a 7-person field corresponds to position **5** (since positions: 1=1st, 2=2nd, ..., 5=5th=third-to-last, 6=second-to-last, 7=last).  
+    * Map the answer choices to golfers:  
+        A → "mya", B → "eli", C → "ana", D → "amy", E → "mel", F → "dan", G → "joe".  
+    * In the solution dictionary, find which golfer has position 5.  
+    * Return the corresponding choice letter (A–G) as the answer.

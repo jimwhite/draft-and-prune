@@ -1,0 +1,21 @@
+1. Enumerate the eight students and assign integer indices.  
+2. Define Boolean variables for each student-day-session combination (e.g., `report[student][day][session]`), where session ∈ {morning, afternoon}, and day ∈ {Monday, Tuesday, Wednesday}.  
+3. Add **exactly six reporters constraint**: sum of all report variables = 6.  
+4. Add **exactly two reports per day constraint**: for each day, exactly two sessions (morning + afternoon) have report = true.  
+5. Add ** George constraint**: can only give a report on Tuesday (any session).  
+6. Add **Olivia/Robert afternoon constraint**: neither Olivia nor Robert can give an afternoon report → `report[Olivia][day][afternoon] = false`, same for Robert.  
+7. Add **Nina conditional constraint**: if Nina reports on Monday → Helen & Irving must report Tuesday; if Nina reports on Tuesday → Helen & Irving must report Wednesday; Nina cannot report on Wednesday with violation (i.e., if Nina reports on Wednesday, the condition is vacuously false → no constraint, but problem says “unless Nina’s report is on Wednesday”, so the implication only applies if day ≠ Wednesday). Formally:  
+   - If `report[Nina][Monday][session]` for any session, then `report[Helen][Tuesday][morning] ∧ report[Helen][Tuesday][afternoon]` must hold? Wait—no: exactly two reports per day, but condition says “Helen and Irving must both give reports” on the next day—so they each must be scheduled (in *some* session) on that day. Since only two reports per day, and both Helen and Irving must report, that forces Tuesday’s two slots to be Helen & Irving (any order). Similarly for Tuesday→Wednesday.  
+   So: For Monday Nina → Tuesday must contain *exactly* Helen and Irving (i.e., `report[Helen][Tue][s1] ∧ report[Irving][Tue][s2]` for some sessions s1,s2 ∈ {m,a}, distinct).  
+   Encode via: `report[Nina][Monday][morning] ∨ report[Nina][Monday][afternoon]` → `(report[Helen][Tue][morning] ∨ report[Helen][Tue][afternoon]) ∧ (report[Irving][Tue][morning] ∨ report[Irving][Tue][afternoon])`  
+   Similarly for Nina on Tuesday: implication to Helen & Irving on Wednesday.  
+   Nina on Wednesday: no constraint (implication does not apply).  
+8. Add **Kyle & Lenore do not report constraint**: `report[Kyle][d][s] = false` and `report[Lenore][d][s] = false` for all d,s.  
+9. So now, remaining potential reporters are: George, Helen, Irving, Nina, Olivia, Robert (exactly six needed → must be these six).  
+10. Add **每人 exactly one report constraint**: each reporter can give only one report → for each student, sum over d,s of `report[student][d][s]` ≤ 1. (Given "exactly six will give... individual oral reports", and one per person, so =1 for the six.)  
+11. For each answer choice (a triple: [Mon_morning, Tue_morning, Wed_morning]):  
+    - Extract the three students.  
+    - Add constraints that they give morning reports on their respective days: e.g., `report[student1][Monday][morning] = true`, etc.  
+    - Add constraints that the *afternoon* reports on those days are filled by two other students from remaining pool (George, Helen, Irving, Nina, Olivia, Robert minus those already used), satisfying all constraints.  
+    - Check feasibility with solver: if SAT, the triple is possible; record it as candidate.  
+12. Since question asks “could be”, collect all valid choices; but the format expects one answer index (as per plan structure), so build list of indices for which model is SAT.

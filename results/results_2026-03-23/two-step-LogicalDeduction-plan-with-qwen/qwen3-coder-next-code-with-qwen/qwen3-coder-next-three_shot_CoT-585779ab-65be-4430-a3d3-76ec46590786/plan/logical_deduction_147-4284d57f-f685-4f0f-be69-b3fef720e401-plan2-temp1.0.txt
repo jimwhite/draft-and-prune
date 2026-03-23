@@ -1,0 +1,31 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven books as variables: `"brown"`, `"yellow"`, `"black"`, `"white"`, `"green"`, `"orange"`, `"purple"`.
+    * Define the domain as integers from 1 to 7, where position 1 is leftmost and position 7 is rightmost.
+    * Add all variables to the problem with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Add constraint: `"purple" == 7` (rightmost).
+    * Add constraint: `"yellow" == 1` (leftmost).
+    * Add constraint: `"orange" == 6` (second from the right → position 6).
+    * Add constraint: `"brown" < "green"` (brown is to the left of green).
+    * Add constraint: `"black" < "brown"` (brown is to the right of black → black is left of brown).
+    * Add constraint: `"white" == 4` (fourth from the left → position 4).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the unique solution dictionary.
+
+5.  **Determine the Third-from-the-Right Position:**
+    * In a 7-position shelf, third from the right is position 5 (since 7 = rightmost, 6 = second-right, 5 = third-right).
+    * For the solution dictionary, find which book is assigned position 5.
+
+6.  **Match to the Correct Choice:**
+    * Create a mapping from choice letters (A–G) to book names:
+        A → "brown", B → "yellow", C → "black", D → "white", E → "green", F → "orange", G → "purple".
+    * Identify the choice letter corresponding to the book found at position 5.
+    * Output that letter as the answer.

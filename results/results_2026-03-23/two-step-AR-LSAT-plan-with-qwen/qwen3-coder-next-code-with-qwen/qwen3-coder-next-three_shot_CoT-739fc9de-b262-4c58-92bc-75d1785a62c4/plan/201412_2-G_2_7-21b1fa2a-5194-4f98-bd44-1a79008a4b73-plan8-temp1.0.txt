@@ -1,0 +1,19 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and four topics (lithographs, oil paintings, sculptures, watercolors), assigning integer indices 0–3 to each.  
+2. Create two sets of integer variables: `hist[i]` for the lecture position (1–4) of historian i, and `topic[j]` for the lecture position of topic j.  
+3. Add **bijective mapping constraints**: each historian gives exactly one lecture (so `hist` is a permutation of 1–4), and each topic is covered exactly once (so `topic` is a permutation of 1–4).  
+4. Add **cross-mapping constraints**: since each historian gives a lecture on exactly one topic, define binary decision variables `assigned[h][t]` (or use functional mapping via permutation composition): for each historian h and topic t, `assigned[h][t] = True` iff historian h gives the lecture on topic t. Then enforce that for each h, exactly one `assigned[h][t]` is true, and for each t, exactly one `assigned[h][t]` is true.  
+5. Relate position variables via assignment: for all h, t, `hist[h] == topic[t]` if and only if `assigned[h][t]` is true.  
+6. Add **ordering constraints** based on the problem:  
+   - Oil paintings and watercolors lectures are both earlier than lithographs: `topic[oil] < topic[litho]` and `topic[water] < topic[litho]`.  
+   - Farley’s lecture is earlier than oil paintings: `hist[Farley] < topic[oil]`.  
+   - Holden’s lecture is earlier than both Garcia’s and Jiang’s: `hist[Holden] < hist[Garcia]` and `hist[Holden] < hist[Jiang]`.  
+7. Translate the five answer choices into logical statements about lecture orderings:  
+   - (A) `hist[Farley] < topic[sculptures]`  
+   - (B) `hist[Holden] < topic[litho]`  
+   - (C) `topic[sculptures] < hist[Garcia]`  
+   - (D) `topic[sculptures] < hist[Jiang]`  
+   - (E) `topic[watercolors] < hist[Garcia]`  
+8. For each choice, create a fresh solver with all base constraints and the additional constraint asserting that the statement is **false**.  
+9. If a choice’s negated statement leads to UNSAT, then the original statement **must be true**; record that choice index.  
+10. Since only one answer must be correct, select the choice with recorded must-be-true status (exactly one should satisfy UNSAT under negation).  
+11. Return the index of the one must-be-true choice as final answer.

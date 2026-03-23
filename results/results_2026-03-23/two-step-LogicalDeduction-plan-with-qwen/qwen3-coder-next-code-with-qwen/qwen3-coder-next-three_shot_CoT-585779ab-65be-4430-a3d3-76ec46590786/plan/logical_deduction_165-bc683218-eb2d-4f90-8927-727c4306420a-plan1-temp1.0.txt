@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as string variables: `"orange"`, `"red"`, `"brown"`, `"blue"`, `"black"`, `"gray"`, `"white"`.  
+   * Define the domain as integers 1 through 7, where position 1 = leftmost and position 7 = rightmost.  
+   * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a constraint:  
+     - "The white book is the leftmost" → `white == 1`  
+     - "The red book is to the right of the blue book" → `blue < red`  
+     - "The orange book is the second from the right" → `orange == 6`  
+     - "The gray book is the fourth from the left" → `gray == 4`  
+     - "The black book is the rightmost" → `black == 7`  
+     - "The gray book is to the right of the red book" → `red < gray` (note: since gray = 4, this implies `red < 4`)  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Since the constraints fully determine positions (except possibly for the brown book), retrieve the unique solution (or list of solutions if multiple) and verify consistency.
+
+5. **Determine the Correct Answer:**  
+   * The question asks: Which book is fourth from the left (i.e., at position 4)?  
+   * From constraint #4, `gray == 4` is explicitly given — so gray is fourth from the left.  
+   * Map this to the choices: Choice **F)** states "The gray book is the fourth from the left."  
+   * Verify no contradiction: all constraints must hold (already enforced), and indeed gray = 4 satisfies "gray is fourth from left" and `"red < gray"` (so red ∈ {1,2,3}; white = 1 fixes red ≠ 1, so red ∈ {2,3}).  
+   * Return **F** as the correct answer.

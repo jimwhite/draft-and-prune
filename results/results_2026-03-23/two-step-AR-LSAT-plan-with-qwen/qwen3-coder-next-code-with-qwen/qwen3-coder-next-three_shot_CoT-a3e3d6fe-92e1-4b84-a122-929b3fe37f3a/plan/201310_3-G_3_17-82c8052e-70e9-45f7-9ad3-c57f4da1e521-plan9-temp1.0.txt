@@ -1,0 +1,36 @@
+1. Enumerate the five movies and assign them integer codes: horror=0, mystery=1, romance=2, sci-fi=3, western=4.  
+2. Enumerate the three screens: screen1=0, screen2=1, screen3=2.  
+3. Create integer variables for start times: 7 P.M. = 0, 8 P.M. = 1, 9 P.M. = 2 (where higher integer means later time).  
+4. Create Boolean/integer variables:  
+   - `screen[i] ∈ {0,1,2}` for each movie i (which screen it’s on),  
+   - `time[i] ∈ {0,1,2}` for each movie i (start time),  
+   - (Optional but helpful) introduce auxiliary variables `slot[i] = 2*screen[i] + time[i]` to encode a unique global ordering if needed, though explicit constraints may be clearer.  
+5. Add **screen capacity constraints**:  
+   - Screen 0 (screen1) must have exactly 2 movies: `sum_{i} [screen[i]==0] == 2`,  
+   - Screen 1 (screen2) must have exactly 2 movies: `sum_{i} [screen[i]==1] == 2`,  
+   - Screen 2 (screen3) must have exactly 1 movie: `sum_{i} [screen[i]==2] == 1`.  
+6. Add **time consistency with screen assignments**:  
+   - Movies on screen0 (screen1) must be at time 0 or 2 → `screen[i]==0 ⇒ time[i] ∈ {0,2}`,  
+   - Movie on screen2 (screen3) must be at time 1 → `screen[i]==2 ⇒ time[i]==1`,  
+   - Movies on screen1 (screen2) must be at time 0 or 2 → `screen[i]==1 ⇒ time[i] ∈ {0,2}`,  
+   - Additionally enforce uniqueness: no two movies share both screen and time. So for all i≠j, if `screen[i]==screen[j]`, then `time[i] != time[j]`.  
+7. Add **global ordering constraints from conditions**:  
+   - “The western begins at some time before the horror film” → `time[western] < time[horror]`.  
+   - “The sci-fi film is not shown on screen 3” → `screen[sci-fi] != 2`.  
+   - “The romance is not shown on screen 2” → `screen[romance] != 1`.  
+   - “The horror film and the mystery are shown on different screens” → `screen[horror] != screen[mystery]`.  
+8. Translate answer choices into pairs (movie1, movie2) representing the two movies on screen 1 in order:  
+   - Choice0: (sci-fi, horror) → both on screen 1, time[sci-fi]=0 (7PM), time[horror]=2 (9PM).  
+   - Choice1: (sci-fi, mystery) → sci-fi at 0, mystery at 2.  
+   - Choice2: (western, horror) → western at 0, horror at 2.  
+   - Choice3: (western, mystery) → western at 0, mystery at 2.  
+   - Choice4: (western, sci-fi) → western at 0, sci-fi at 2.  
+9. For each answer choice j (0 to 4), do:  
+   a. Clone base solver.  
+   b. Assert that exactly those two movies are on screen 1 (screen = 0), and they occupy distinct times:  
+      - Let A be first movie, B second movie. Assert `screen[A]==0`, `screen[B]==0`, `time[A] == 0`, `time[B] == 2`.  
+   c. Assert that no other movie is on screen 1: for all i ∉ {A,B}, `screen[i] != 0`.  
+   d. Also enforce the core constraints (steps 5–7).  
+   e. Check satisfiability. If UNSAT, then choice j is impossible (CANNOT be accurate).  
+10. Collect indices of choices that are UNSAT (i.e., impossible), and only one such index should exist — output that choice as the answer.  
+11. Return the index of the impossible list (i.e., the choice that CANNOT be accurate).

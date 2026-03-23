@@ -1,0 +1,15 @@
+1. Enumerate the six singers: assign indices (0=Kammer, 1=Lugo, 2=Trillo, 3=Waite, 4=Yoshida, 5=Zinn).  
+2. Create integer position variables `pos[0]` through `pos[5]`, each ranging from 1 to 6.  
+3. Add **distinctness constraint**: all positions must be pairwise distinct (one-to-one mapping).  
+4. Add **recording constraints**:  
+    - Recorded auditions must be positions 4 and 5 → exactly two recorded, but the problem states: "The fourth audition cannot be recorded. The fifth audition must be recorded." and only Kammer & Lugo are recorded → so Kammer and Lugo occupy positions 5 and *one other* recorded position, but the only possible recorded positions are position 5 (required) and possibly others? Wait — re-read: "Kammer's audition and Lugo's audition will be recorded; the other four will not be." So *only* Kammer and Lugo are recorded. And: "The fourth audition cannot be recorded" → so position 4 ≠ Kammer, ≠ Lugo. "The fifth audition must be recorded" → so position 5 must be either Kammer or Lugo.  
+    → Therefore: `pos_Kammer == 5 XOR pos_Lugo == 5`, and neither Kammer nor Lugo is at position 4.  
+    More precisely: `{pos_Kammer, pos_Lugo} ∩ {4} = ∅` and `5 ∈ {pos_Kammer, pos_Lugo}`.  
+5. Add **Waite constraint**: Waite's audition must take place earlier than the *two* recorded auditions → `pos_Waite < pos_Kammer` AND `pos_Waite < pos_Lugo`.  
+6. Add **Kammer-Trillo constraint**: `pos_Kammer < pos_Trillo`.  
+7. Add **Zinn-Yoshida constraint**: `pos_Zinn < pos_Yoshida`.  
+8. Pre-process each answer choice string: split into ordered list of singer names, map to indices, extract their assumed positions (1-indexed), and translate into a substitution (e.g., for choice A: position 1→Kammer, 2→Trillo, ..., 6→Yoshida).  
+9. For each choice, create a fresh solver, add all base constraints from steps 2–7, and also assert equality of positions per the choice (i.e., for singer i at position p in the list, assert `pos[i] == p`).  
+10. Check SAT for each choice; if SAT, that order is possible. The question asks "which one could be", so collect indices of choices where SAT is true.  
+11. Output the index (0-based or 1-based?) — but since it's multiple choice, we identify which letter/option is valid. In the plan, just record which index (0 to 4) yields SAT.  
+12. Print the valid choice index list (should be exactly one).

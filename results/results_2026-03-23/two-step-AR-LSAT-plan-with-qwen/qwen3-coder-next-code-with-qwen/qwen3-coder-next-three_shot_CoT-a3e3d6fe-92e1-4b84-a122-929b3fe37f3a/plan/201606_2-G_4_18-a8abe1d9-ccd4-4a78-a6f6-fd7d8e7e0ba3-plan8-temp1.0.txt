@@ -1,0 +1,17 @@
+1. Enumerate the six singers and assign each a unique integer index: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer position variables `pos[i]` for each singer i, representing their audition slot (1 to 6).  
+3. Add **domain and uniqueness constraints**: all `pos[i]` ∈ {1,2,3,4,5,6} and pairwise distinct (bijection).  
+4. Add **recorded audition constraints**: Kammer and Lugo are recorded; others are not.  
+    - Constraint 1: The fourth audition cannot be recorded → `pos[0] != 4` and `pos[1] != 4`.  
+    - Constraint 2: The fifth audition must be recorded → exactly one of `pos[0] == 5` or `pos[1] == 5` must hold.  
+5. Add **order constraints**:  
+    - Waite’s audition is earlier than *both* recorded auditions → `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+    - Kammer’s audition is earlier than Trillo’s → `pos[0] < pos[2]`.  
+    - Zinn’s audition is earlier than Yoshida’s → `pos[5] < pos[4]`.  
+6. For each answer choice, parse the proposed order (e.g., “Kammer, Trillo, Zinn, Waite, Lugo, Yoshida”) into a sequence of singer indices: [0,2,5,3,1,4].  
+7. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that the i-th singer in the sequence occupies position i (i.e., `pos[singer_index] == position_index+1`).  
+    - Check satisfiability.  
+8. Select the choice(s) for which the model is SAT as possible correct orders. Since only one answer is allowed, return the first (or only) SAT choice.  
+9. Output the index of the correct choice from the list (0-indexed).

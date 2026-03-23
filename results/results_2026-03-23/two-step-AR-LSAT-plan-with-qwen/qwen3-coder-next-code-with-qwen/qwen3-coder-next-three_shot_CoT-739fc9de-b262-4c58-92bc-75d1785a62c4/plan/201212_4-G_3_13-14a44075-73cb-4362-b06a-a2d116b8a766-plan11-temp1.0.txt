@@ -1,0 +1,13 @@
+1. Enumerate the six targets: Image_website (IW), Image_voicemail (IV), Solide_website (SW), Solide_voicemail (SV), Truvest_website (TW), Truvest_voicemail (TV); assign integer codes 0–5.  
+2. Assign integer variables for each target’s value: take values in {1, 2, 3} (days).  
+3. Add **target-domain constraints**: each of IW, IV, SW, SV, TW, TV ∈ {1, 2, 3}.  
+4. Add **website ≤ voicemail constraints per client**: IW ≤ IV; SW ≤ SV; TW ≤ TV.  
+5. Add **Image voicemail constraint**: IV < SV and IV < TV (strictly shorter than the other two clients’ voicemail targets).  
+6. Add **Solide–Truvest website constraint**: SW < TW.  
+7. Add the given condition: IW = 2.  
+8. Translate each answer choice into a target index (e.g., IV → index 1, SW → index 2, etc.).  
+9. For each answer choice target T (except the known IW=2), perform proof by contradiction:  
+    - Clone base constraints into a fresh solver.  
+    - Assert T ≠ 2.  
+    - Check satisfiability: if UNSAT, then T **must** be 2; record its index.  
+10. Output the list of indices where the target must be 2 days.

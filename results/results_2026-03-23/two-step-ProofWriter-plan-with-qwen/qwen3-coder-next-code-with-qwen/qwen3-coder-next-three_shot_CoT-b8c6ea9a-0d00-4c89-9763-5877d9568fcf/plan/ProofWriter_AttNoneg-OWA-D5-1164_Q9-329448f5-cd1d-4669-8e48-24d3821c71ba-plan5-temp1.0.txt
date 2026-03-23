@@ -1,0 +1,14 @@
+1. Identify all individuals: Bob, Dave, Fiona, Harry.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_big("Bob", True), is_blue("Fiona", True), etc.).
+3. Translate each conditional and universal rule into PyKe `foreach` + `assert` format:
+   • If someone is blue → they are cold.
+   • If someone is big → they are white.
+   • If Bob is rough and Bob is blue → Bob is big. (special-case ground fact, can be encoded as a rule with specific subject "Bob")
+   • All blue and smart people are big → use `foreach` over x where is_blue(x, True) and is_smart(x, True), assert is_big(x, True).
+   • If someone is blue and rough → they are quiet.
+   • All smart people are blue → `foreach` x: is_smart(x, True) → assert is_blue(x, True).
+   • Cold people are rough → `foreach` x: is_cold(x, True) → assert is_rough(x, True).
+   • If someone is quiet → they are big.
+4. Ensure consistency: note that multiple rules may fire in sequence; rely on PyKe’s forward chaining.
+5. The query tests whether Fiona is big:
+   → Use facts.is_big("Fiona", True).

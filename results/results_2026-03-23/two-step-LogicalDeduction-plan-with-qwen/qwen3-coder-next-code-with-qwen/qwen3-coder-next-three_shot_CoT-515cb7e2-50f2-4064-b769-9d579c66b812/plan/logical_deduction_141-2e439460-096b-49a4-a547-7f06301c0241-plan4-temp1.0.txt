@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven golfers as variables: `"Joe"`, `"Rob"`, `"Eli"`, `"Dan"`, `"Mya"`, `"Ada"`, and `"Ana"`.
+    * Define the domain as integers from 1 to 7, where **1 represents first place (topmost/lowest rank number)** and **7 represents last place (bottommost/highest rank number)**.
+    * Add all seven golfers and their domain (1–7) to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct placements.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "Joe finished above Ana" means Joe’s placement number is less than Ana’s (`Joe < Ana`).
+        * "Ana finished second-to-last" means her placement is position 6 (since last place is 7).
+        * "Mya finished fourth" means her placement is position 4.
+        * "Dan finished third" means his placement is position 3.
+        * "Ada finished second" means her placement is position 2.
+        * "Eli finished third-to-last" means his placement is position 5 (positions from the end: last=7, second-to-last=6, third-to-last=5).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid placements satisfying all constraints.
+    * Extract the unique solution (as the problem is well-constrained).
+
+5.  **Identify the Last Place Golfer:**
+    * The question asks who finished last, i.e., has placement = 7.
+    * Create a dictionary mapping the choice letters (`"A"` through `"G"`) to their corresponding golfer names (Joe, Rob, Eli, Dan, Mya, Ada, Ana).
+    * Iterate through the choices and check which golfer has placement 7 in the solution.
+    * Return (or print) the letter corresponding to that golfer as the correct answer.

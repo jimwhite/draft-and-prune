@@ -1,0 +1,25 @@
+1. Enumerate the four art historians and assign them integer codes (0: Farley, 1: Garcia, 2: Holden, 3: Jiang).  
+2. Enumerate the four topics and assign them integer codes (0: lithographs, 1: oil paintings, 2: sculptures, 3: watercolors).  
+3. Create integer variables `h[i]` for each historian i (0–3) representing their lecture position (1 to 4, all distinct).  
+4. Create integer variables `t[j]` for each topic j (0–3) representing the lecture position of that topic (1 to 4, all distinct).  
+5. Add **bijective mapping constraints**: each historian gives exactly one topic lecture, and each topic is given by exactly one historian — i.e., define a permutation mapping `assign[i] = j` where historian i gives topic j; or equivalently, enforce a one-to-one correspondence via auxiliary binary variables `x[i][j]` (historian i gives topic j) with row/column sum = 1.  
+6. Add **ordering constraints from the problem**:  
+    - Oil paintings (topic 1) and watercolors (topic 3) both earlier than lithographs (topic 0): `t[1] < t[0]` and `t[3] < t[0]`.  
+    - Farley's lecture earlier than oil paintings: `h[0] < t[1]`.  
+    - Holden's lecture earlier than Garcia's and Jiang's: `h[2] < h[1]` and `h[2] < h[3]`.  
+7. Additionally, enforce the mapping between historian positions and topic positions via `x[i][j]`:  
+    - If historian i gives topic j, then `h[i] == t[j]`. This can be encoded as: for all i,j, `x[i][j] → (h[i] == t[j])`, with `x[i][j]` binary and exactly one `x[i][j]` per i/j.  
+8. Alternatively, simplify by noting that topic position and historian position are linked: define variable `pos[i]` = position of historian i’s lecture; define `topic_of[i]` = topic given by historian i (0–3), all distinct. Then `pos_topic[j]` is implicitly the position of the historian who gives topic j — i.e., for each j, there exists unique i with `topic_of[i] == j`, and then `pos_topic[j] = pos[i]`. Enforce this with global constraints or via permutation encoding.  
+9. To answer the question, evaluate each choice to see if it **must** be true across all satisfying assignments:  
+    - For each option (a statement about relative orderings), create a fresh solver with all base constraints, and add the negation of the statement.  
+    - If UNSAT, then the statement **must** be true; collect all such statements.  
+10. Specifically:  
+    - Option A: "Farley earlier than sculptures" → check if `pos[0] < pos_of_sculpture` always holds.  
+    - Option B: "Holden earlier than lithographs" → check if `pos[2] < pos_of_lithographs` always holds.  
+    - Option C: "sculptures earlier than Garcia" → check if `pos_of_sculpture < pos[1]` always holds.  
+    - Option D: "sculptures earlier than Jiang" → check if `pos_of_sculpture < pos[3]` always holds.  
+    - Option E: "watercolors earlier than Garcia" → check if `pos_of_watercolors < pos[1]` always holds.  
+11. For each option, encode `pos_of_sculpture`, `pos_of_lithographs`, `pos_of_watercolors` as the position of the historian assigned to that topic, using `x[i][j]`.  
+12. Use Z3’s solver with incremental solving: add base constraints once, then for each option, push a new assumption (negation), check UNSAT, and pop.  
+13. Collect all options for which the negation leads to UNSAT — those are the statements that must be true.  
+14. Since exactly one choice is correct, return the single forced option index or verify uniqueness.

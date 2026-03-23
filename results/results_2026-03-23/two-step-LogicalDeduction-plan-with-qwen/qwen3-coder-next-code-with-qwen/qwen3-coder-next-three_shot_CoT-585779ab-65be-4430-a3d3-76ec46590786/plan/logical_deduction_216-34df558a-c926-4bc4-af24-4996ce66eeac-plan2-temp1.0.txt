@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Define variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (since "second-most expensive" implies 6, "third-cheapest" implies 3, etc.).
+    * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique price ranks for each fruit.
+    * Translate each statement into a constraint:
+        * "The oranges are more expensive than the peaches" → `oranges < peaches` (since lower rank = cheaper, so oranges being more expensive means smaller numeric rank).
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.
+        * "The pears are less expensive than the cantaloupes" → `cantaloupes < pears`.
+        * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6).
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3`.
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (since constraints are consistent and sufficient for uniqueness).
+
+5.  **Determine the Second-Cheapest Fruit:**
+    * The second-cheapest corresponds to rank **2**.
+    * Create a mapping from choice letters ('A'–'G') to fruit names as given in the choices.
+    * In the solution dictionary, find which fruit has rank 2.
+    * Return the letter corresponding to that fruit as the correct answer.

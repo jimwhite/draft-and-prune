@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign each an integer index (0: Myers, 1: Ortega, 2: Paine, 3: Schmidt, 4: Thomson, 5: Wong, 6: Yoder, 7: Zayre).  
+2. Create Boolean variables `m[i]` for each employee i indicating whether they are selected for the team.  
+3. Add **team-size constraint**: at least 4 employees must be selected (`sum(m[i] for i in range(8)) >= 4`).  
+4. Add **fixed constraint**: Yoder is not on the team (`m[6] == False`).  
+5. Add **conditional constraints**:  
+    - If Myers is selected, neither Ortega nor Paine can be: `m[0] => (not m[1]) and (not m[2])`, equivalently `m[0] == True implies m[1] == False and m[2] == False`.  
+    - If Schmidt is selected, both Paine and Thomson must be: `m[3] => (m[2] and m[4])`.  
+    - If Wong is selected, both Myers and Yoder must be: `m[5] => (m[0] and m[6])`; but since Yoder is excluded (`m[6] == False`), this implies `m[5] == False` (i.e., Wong cannot be selected). Add this as derived constraint or directly encode the implication with Yoder’s exclusion.  
+6. Translate the answer choices into employee indices: ['Zayre', 'Thomson', 'Paine', 'Ortega', 'Myers'] → [7, 4, 2, 1, 0].  
+7. Define an answer index list `answer_index_list = []`. For each candidate employee e in [7, 4, 2, 1, 0]:  
+    - Clone the current base constraints (including `m[6] == False` and derived Wong constraint) into a fresh solver.  
+    - Assert that employee e *must* be on the team: `m[e] == True`.  
+    - Check satisfiability. If a satisfying assignment exists, then e *could* be on the team (i.e., is allowed under the EXCEPT condition), so do *not* add to `answer_index_list`.  
+    - If the model is UNSAT, then e *cannot* be on the team when Yoder is excluded; thus e is the exception. Append index e to `answer_index_list`.  
+8. Since the question asks for the *exception* (the one that CANNOT be on the team when Yoder is excluded), `answer_index_list` should contain exactly one index—the correct answer. Print that list.

@@ -1,0 +1,12 @@
+1. Enumerate the six photographers and assign them integer indices (0:Frost, 1:Gonzalez, 2:Heideck, 3:Knutson, 4:Lai, 5:Mays).  
+2. Create Boolean decision variables for each photographer and ceremony: `S[i]` = True if photographer i is assigned to Silva, `T[i]` = True if assigned to Thorne.  
+3. Enforce mutual exclusivity: For each photographer i, `S[i] == not T[i]`.  
+4. Enforce at-least-two constraint per ceremony: `S[Frost]+S[Gonzalez]+S[Heideck]+S[Knutson]+S[Lai]+S[Mays] >= 2` and same for T-side (but implicitly satisfied by exclusivity if Silva has ≥2, Thorne automatically gets remaining; better to enforce `sum(S[i]) >= 2 and sum(T[i]) >= 2`).  
+5. Add constraint: Frost and Heideck must be assigned together to the same ceremony → `S[0] == S[2]` and (by exclusivity) this implies they are both on Silva or both on Thorne.  
+6. Add constraint: If Lai and Mays are both assigned, they must be on different ceremonies → `(Lai_assigned and Mays_assigned) => (S[4] != S[5])`, encoded as `not (S[4] == S[5] and S[4] and S[5])`.  
+7. Add constraint: If Gonzalez is on Silva, then Lai must be on Thorne → `S[1] => not S[4]` (i.e., `not S[1] or not S[4]`).  
+8. Add constraint: If Knutson is NOT on Thorne, then both Heideck and Mays must be on Thorne. Equivalently: `not T[3] => (T[0] and T[5])`. Using exclusivity (`T[i] = not S[i]`), rewrite as: `S[3] => (not S[0] and not S[5])`.  
+9. For each answer choice, parse the assignment: mark `S[i]` and `T[i]` accordingly for all photographers.  
+10. For each choice, clone the base constraints into a fresh solver and assert the fixed Boolean assignments for all six photographers (e.g., if choice says Silva: Gonzalez, Lai → set `S[1]=True`, `S[4]=True`, and for others not listed, set their S/T accordingly—implicitly those not assigned are False on both sides).  
+11. Check satisfiability: If UNSAT, the choice is invalid; if SAT and all assignments consistent with constraints (including ensuring at least two per ceremony), the choice is acceptable.  
+12. Collect indices of all satisfiable choices and output the corresponding string(s).

@@ -1,0 +1,34 @@
+1.  **Initialize the Constraint Satisfaction Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the CSP solver.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven books as variables: `"orange"`, `"red"`, `"green"`, `"white"`, `"purple"`, `"brown"`, and `"yellow"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost position** and **7 = rightmost position**.  
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**  
+    * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into a Positional Constraint (using lambda functions or custom constraints):**  
+    * "The green book is to the left of the purple book" → `green < purple`  
+    * "The white book is to the right of the orange book" → `white > orange`  
+    * "The green book is to the right of the brown book" → `green > brown`  
+    * "The yellow book is to the right of the white book" → `yellow > white`  
+    * "The red book is to the right of the yellow book" → `red > yellow`  
+    * "The brown book is to the right of the red book" → `brown > red`  
+
+5.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all solutions. Given the logical consistency, expect a unique solution (or very few), but retain full generality.
+
+6.  **Identify the Second-from-the-Left Book (i.e., position 2):**  
+    * For each solution (typically only one), iterate through the variable-value pairs to find which book has position 2.  
+    * Map this book name to the corresponding choice letter:  
+        - `"orange"` → A  
+        - `"red"` → B  
+        - `"green"` → C  
+        - `"white"` → D  
+        - `"purple"` → E  
+        - `"brown"` → F  
+        - `"yellow"` → G  
+    * Return the letter of the choice matching the book at position 2.

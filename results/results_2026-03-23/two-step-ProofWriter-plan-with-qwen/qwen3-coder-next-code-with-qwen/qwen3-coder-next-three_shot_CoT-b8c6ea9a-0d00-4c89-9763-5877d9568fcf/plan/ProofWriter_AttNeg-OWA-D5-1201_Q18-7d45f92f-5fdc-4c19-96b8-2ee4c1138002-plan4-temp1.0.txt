@@ -1,0 +1,18 @@
+1. Identify all entities involved: Anne, Bob, Gary, Harry.
+2. Encode all explicitly stated properties and relations using ternary predicates of the form predicate(entity, True) for unary properties or predicate(subject, object, True) for binary relations.
+   - Unary predicates: is_furry, is_blue, is_cold, is_quiet, is_round, is_young, is_rough.
+   - Record direct facts: is_furry("Anne", True), is_furry("Bob", True), is_blue("Gary", True), is_cold("Gary", True), is_quiet("Gary", True), is_round("Gary", True), is_blue("Harry", True), is_cold("Harry", True), is_quiet("Harry", True), is_round("Harry", True), is_young("Harry", True).
+3. Encode each conditional rule in PyKe using `foreach` blocks for conditions and `assert` clauses for conclusions:
+   • Cold ∧ blue → quiet.
+   • Round ∧ furry → quiet.
+   • (Bob is blue ∧ Bob is round) → Bob is young.
+   • Round → blue.
+   • Young ∧ round → blue.
+   • (Harry is quiet ∧ Harry is furry) → Harry is blue.
+   • Furry → cold.
+   • Cold → round.
+   • Young ∧ furry → rough.
+4. Implement each rule with appropriate `foreach` patterns, ensuring variables are correctly scoped and logical conjunctions expressed via comma-separated conditions in the `foreach` body.
+5. The query asks whether “Harry is furry” holds.
+   → Assert the negation for contradiction: facts.is_furry("Harry", True), or equivalently use `facts.is_furry("Harry", True)` directly as the query target.
+6. Determine truth value: Since “furry” is not explicitly stated for Harry and the rules do not directly imply it (e.g., cold → round, round → blue, but furry is only given for Anne and Bob explicitly), verify whether any rule chain can derive is_furry("Harry", True). If no derivation is possible, the statement is unknown. PyKe will attempt to prove the assertion; if it fails and no contradiction arises, classify as unknown.

@@ -1,0 +1,22 @@
+1. Enumerate the six bands and assign integer indices: Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5.  
+2. Create integer variables `pos[b]` for each band b ∈ {0..5}, representing the slot number (1 to 6).  
+3. Add **distinctness constraint**: all `pos[b]` are pairwise distinct (use `Distinct(pos)`).  
+4. Add **original constraints**:  
+   - Vegemite before Zircon: `pos[1] < pos[5]`.  
+   - Wellspring and Zircon before Xpert: `pos[2] < pos[3]` and `pos[5] < pos[3]`.  
+   - Uneasy in last three slots: `pos[0] ≥ 4` (i.e., pos[0] ∈ {4,5,6}).  
+   - Yardsign in first three slots: `pos[4] ≤ 3`.  
+5. For each answer choice, translate it into logical constraints and check if adding the new constraint (instead of the original Wellspring/Zircon-before-Xpert constraint) preserves the *same set of valid orders*—i.e., whether the constraints are logically equivalent in effect.  
+6. Since equivalence is hard to check directly, verify that the *new constraint set implies and is implied by* the original Wellspring/Zircon-before-Xpert condition *under the other constraints*.  
+   - For each choice:  
+     a. Clone base constraints (distinctness, Vegemite < Zircon, Uneasy ≥4, Yardsign ≤3).  
+     b. Add the candidate new constraint *instead of* `pos[2] < pos[3] ∧ pos[5] < pos[3]`.  
+     c. Check whether the new system **implies** the original constraint:  
+        - Add negation of `pos[2] < pos[3] ∧ pos[5] < pos[3]` (i.e., `pos[2] ≥ pos[3] ∨ pos[5] ≥ pos[3]`).  
+        - If UNSAT, then new constraint implies original.  
+     d. Check whether the original constraints **imply** the candidate constraint:  
+        - Add negation of the candidate constraint.  
+        - If UNSAT, then original constraints imply candidate.  
+     e. If both (c) and (d) hold, the candidate is logically equivalent under the fixed constraints.  
+7. Collect indices of choices where equivalence holds (both implications verified).  
+8. Output the index of the correct choice from the list: ['Only Uneasy can perform in a later slot than Xpert.', 'Vegemite performs in an earlier slot than Wellspring, which performs in an earlier slot than Zircon.', 'Vegemite and Wellspring each perform in an earlier slot than Xpert.', 'Xpert performs either immediately before or immediately after Uneasy.', 'Xpert performs in either slot five or slot six.'].

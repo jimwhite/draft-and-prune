@@ -1,0 +1,29 @@
+1. Enumerate the five solos (positions 1 to 5) and create integer variables for pianist: `p[i] = 0` for Wayne, `1` for Zara.  
+2. Create Boolean variables for piece type: `m[i] = True` if modern, `False` if traditional.  
+3. Add **domain constraints**:  
+   - Each `p[i] ∈ {0, 1}` (Wayne or Zara).  
+   - Each `m[i] ∈ {True, False}`.  
+4. Add **fixed constraint**: third solo is traditional → `m[2] = False`.  
+5. Add **exactly two consecutive traditional pieces**:  
+   - Exactly one pair of adjacent solos (i, i+1) where both are traditional:  
+     `(m[0] ∧ m[1]) ∨ (m[1] ∧ m[2]) ∨ (m[2] ∧ m[3]) ∨ (m[3] ∧ m[4])`,  
+     and no other adjacent traditional pair exists → at most one such pair.  
+6. Add **fourth solo constraint**:  
+   - Either Wayne performs traditional piece OR Zara performs modern piece:  
+     `(p[3] = 0 ∧ m[3] = False) ∨ (p[3] = 1 ∧ m[3] = True)`.  
+7. Add **second and fifth constraint**: the pianist of solo 2 ≠ pianist of solo 5: `p[1] ≠ p[4]`.  
+8. Add **no traditional before Wayne modern**:  
+   - Let `wayne_modern_pos` be the smallest index where `p[i] = 0 ∧ m[i] = True`;  
+   - Then for all j < `wayne_modern_pos`, `m[j] = True`.  
+   - Implement via auxiliary integer variable or logical implication:  
+     `∀j, if m[j] = False then ∃k ≤ j such that p[k] = 0 ∧ m[k] = True`.  
+     Simpler: if any solo before position i is traditional (`m[i-1] = False`), then Wayne must have performed a modern piece earlier: ` (∃k < i, p[k] = 0 ∧ m[k] = True) `. Use big-M or enumerate implications for small i (i=1..4).  
+9. Add **hypothesis**: fifth solo is Wayne + traditional: `p[4] = 0 ∧ m[4] = False`.  
+10. For each answer choice:  
+    - **"Zara performs the first solo."** → assert `p[0] = 1`.  
+    - **"Wayne performs the second solo."** → assert `p[1] = 0`.  
+    - **"Zara performs the third solo."** → assert `p[2] = 1`.  
+    - **"The second solo is a modern piece."** → assert `m[1] = True`.  
+    - **"The fourth solo is a traditional piece."** → assert `m[3] = False`.  
+11. For each choice, clone the base + hypothesis solver, add choice constraint, and check SAT.  
+12. Collect all indices of choices for which the instance is SAT — those are possible. Output list of such indices (only one will be correct per LSAT-style logic).

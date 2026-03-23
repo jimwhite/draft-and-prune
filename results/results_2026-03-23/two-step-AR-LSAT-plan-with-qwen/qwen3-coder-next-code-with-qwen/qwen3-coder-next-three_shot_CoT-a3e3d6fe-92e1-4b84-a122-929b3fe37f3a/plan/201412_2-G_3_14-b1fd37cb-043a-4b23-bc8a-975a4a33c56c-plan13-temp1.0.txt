@@ -1,0 +1,21 @@
+1. Enumerate the six available colors: forest, olive, peach, turquoise, white, yellow → assign integer indices 0–5.  
+2. Since exactly five colors are used, define a Boolean variable `use[c]` for each color c indicating whether it is used. Add constraint: exactly five of the six `use[c]` are true.  
+3. Define variables for each of the three rugs: let `rug_r` be a set (represented as a bitmask or list of used colors) for rug r ∈ {0,1,2}. Since each color is used in at most one rug, ensure the three rugs’ color sets are pairwise disjoint and their union is exactly the set of five used colors.  
+4. Introduce Boolean variables `solid[r]` for whether rug r is solid (i.e., contains exactly one color). Add constraint: exactly two rugs are solid → `sum(solid[r] for r in 0..2) == 2`.  
+5. Add **solid-rug size constraints**: if `solid[r]` is true, then `|rug_r| == 1`; if false, then `|rug_r| >= 2`.  
+6. Add **rule constraints** per rug (applied only if the relevant colors are present in that rug):  
+   - If white ∈ rug_r, then exactly two other colors ∈ rug_r (i.e., |rug_r| == 3).  
+   - If olive ∈ rug_r, then peach ∈ rug_r.  
+   - Forest and turquoise cannot both appear in same rug: ¬(forest ∈ rug_r ∧ turquoise ∈ rug_r).  
+   - Peach and turquoise cannot both appear in same rug: ¬(peach ∈ rug_r ∧ turquoise ∈ rug_r).  
+   - Peach and yellow cannot both appear in same rug: ¬(peach ∈ rug_r ∧ yellow ∈ rug_r).  
+7. Translate each answer choice into a pair of colors (e.g., ‘forest and peach’ → colors 0 and 2). For each such pair, form a hypothesis: *the two solid rugs are exactly those two colors*.  
+   - This means: there exist exactly two rugs, each containing precisely one of the pair (i.e., solid rugs have those single colors), and the third rug uses the remaining three used colors (since total 5 colors used).  
+8. For each answer choice:  
+   - Clone base constraints into a fresh solver.  
+   - Assert that two solid rugs exist with the given pair as their single colors.  
+     - Assign `solid[r0] = true`, `rug_r0 = {color1}`, `solid[r1] = true`, `rug_r1 = {color2}`, for some distinct r0, r1 ∈ {0,1,2}. (By symmetry, try all 6 assignments of the two colors to rugs, but Z3 can handle disjunction via multiple queries or enumeration.)  
+   - Enforce that total used colors = 5, i.e., `use[c]` true for color1, color2, and exactly three other colors used in the third (multicolored) rug.  
+   - Enforce all earlier rules and disjointness/uniqueness constraints.  
+   - Query SAT: if UNSAT, then this pair of solid rugs is **impossible** → candidate for answer.  
+9. Collect all such impossible pairs into `answer_index_list`. Since only one choice is correct, the list should contain exactly one index corresponding to the required answer.

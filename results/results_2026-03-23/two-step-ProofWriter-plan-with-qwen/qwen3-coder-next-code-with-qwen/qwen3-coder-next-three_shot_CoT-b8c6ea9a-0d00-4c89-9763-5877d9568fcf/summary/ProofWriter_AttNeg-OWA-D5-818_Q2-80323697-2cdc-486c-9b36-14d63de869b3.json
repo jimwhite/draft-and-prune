@@ -1,0 +1,394 @@
+{
+  "problem": {
+    "id": "ProofWriter_AttNeg-OWA-D5-818_Q2",
+    "context": "Charlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.",
+    "question": "Based on the above information, is the following statement true, false, or unknown? Fiona is not white.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Unknown"
+    ],
+    "answer": "B"
+  },
+  "timing": 433.81918931007385,
+  "all_solver_outputs": [
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined"
+  ],
+  "all_solver_error_types": [
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error"
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1358,
+        "completion_tokens": 1027,
+        "total_tokens": 2385
+      },
+      "plan_generation_api_time_only": 27.995842456817627,
+      "code_generation_usage": {
+        "prompt_tokens": 4172,
+        "completion_tokens": 83,
+        "total_tokens": 4255
+      },
+      "code_generation_api_time_only": 4.632306814193726,
+      "repair_usage_total": {
+        "prompt_tokens": 1338,
+        "completion_tokens": 2008,
+        "total_tokens": 3346
+      },
+      "repair_api_time_only_total": 50.93474340438843,
+      "path_usage_total": {
+        "prompt_tokens": 6868,
+        "completion_tokens": 3118,
+        "total_tokens": 9986
+      },
+      "path_api_time_only": 83.56289267539978,
+      "solver_time_only": 0.004200458526611328
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1358,
+        "completion_tokens": 560,
+        "total_tokens": 1918
+      },
+      "plan_generation_api_time_only": 14.69911813735962,
+      "code_generation_usage": {
+        "prompt_tokens": 3705,
+        "completion_tokens": 83,
+        "total_tokens": 3788
+      },
+      "code_generation_api_time_only": 4.251526117324829,
+      "repair_usage_total": {
+        "prompt_tokens": 1329,
+        "completion_tokens": 1912,
+        "total_tokens": 3241
+      },
+      "repair_api_time_only_total": 50.82156252861023,
+      "path_usage_total": {
+        "prompt_tokens": 6392,
+        "completion_tokens": 2555,
+        "total_tokens": 8947
+      },
+      "path_api_time_only": 69.77220678329468,
+      "solver_time_only": 0.001787424087524414
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1358,
+        "completion_tokens": 428,
+        "total_tokens": 1786
+      },
+      "plan_generation_api_time_only": 11.77174973487854,
+      "code_generation_usage": {
+        "prompt_tokens": 3573,
+        "completion_tokens": 561,
+        "total_tokens": 4134
+      },
+      "code_generation_api_time_only": 15.905735969543457,
+      "repair_usage_total": {
+        "prompt_tokens": 2244,
+        "completion_tokens": 2982,
+        "total_tokens": 5226
+      },
+      "repair_api_time_only_total": 76.74383425712585,
+      "path_usage_total": {
+        "prompt_tokens": 7175,
+        "completion_tokens": 3971,
+        "total_tokens": 11146
+      },
+      "path_api_time_only": 104.42131996154785,
+      "solver_time_only": 0.0038101673126220703
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1358,
+        "completion_tokens": 586,
+        "total_tokens": 1944
+      },
+      "plan_generation_api_time_only": 15.888263940811157,
+      "code_generation_usage": {
+        "prompt_tokens": 3731,
+        "completion_tokens": 84,
+        "total_tokens": 3815
+      },
+      "code_generation_api_time_only": 4.35888934135437,
+      "repair_usage_total": {
+        "prompt_tokens": 1288,
+        "completion_tokens": 2201,
+        "total_tokens": 3489
+      },
+      "repair_api_time_only_total": 60.676676988601685,
+      "path_usage_total": {
+        "prompt_tokens": 6377,
+        "completion_tokens": 2871,
+        "total_tokens": 9248
+      },
+      "path_api_time_only": 80.92383027076721,
+      "solver_time_only": 0.0036344528198242188
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1358,
+        "completion_tokens": 443,
+        "total_tokens": 1801
+      },
+      "plan_generation_api_time_only": 12.297462940216064,
+      "code_generation_usage": {
+        "prompt_tokens": 3588,
+        "completion_tokens": 83,
+        "total_tokens": 3671
+      },
+      "code_generation_api_time_only": 3.8681704998016357,
+      "repair_usage_total": {
+        "prompt_tokens": 1338,
+        "completion_tokens": 2182,
+        "total_tokens": 3520
+      },
+      "repair_api_time_only_total": 56.82174515724182,
+      "path_usage_total": {
+        "prompt_tokens": 6284,
+        "completion_tokens": 2708,
+        "total_tokens": 8992
+      },
+      "path_api_time_only": 72.98737859725952,
+      "solver_time_only": 0.0036134719848632812
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 33096,
+    "completion_tokens": 15223,
+    "total_tokens": 48319
+  },
+  "api_time_only_total": 411.66762828826904,
+  "solver_time_only_total": 0.017045974731445312,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 505,
+            "completion_tokens": 440,
+            "total_tokens": 945
+          },
+          "api_time_only": 10.546557426452637,
+          "solver_time_only": 0.0020294189453125
+        },
+        {
+          "round_index": 2,
+          "input_code": "# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts:\nengine.add_case_fact('kb', ('is_young', 'Charlie', True))\nengine.add_case_fact('kb', ('is_blue', 'Erin', True))\nengine.add_case_fact('kb', ('is_kind', 'Erin', False))\nengine.add_case_fact('kb', ('is_blue', 'Fiona', True))\nengine.add_case_fact('kb', ('is_white', 'Fiona', True))\nengine.add_case_fact('kb', ('is_blue', 'Gary', True))\nengine.add_case_fact('kb', ('is_kind', 'Gary', True))\n\n# Rules:\n# Furry, nice things are white.\nengine.add_rule('kb', \n    ('is_furry', '?x', True),\n    ('is_nice', '?x', True),\n    ('is_white', '?x', True))\n\n# If something is young and blue then it is smart.\nengine.add_rule('kb',\n    ('is_young', '?x', True),\n    ('is_blue', '?x', True),\n    ('is_smart', '?x', True))\n\n# All blue, smart things are furry.\nengine.add_rule('kb',\n    ('is_blue', '?x', True),\n    ('is_smart', '?x', True),\n    ('is_furry', '?x', True))\n\n# All smart, white things are furry.\nengine.add_rule('kb',\n    ('is_smart', '?x', True),\n    ('is_white', '?x', True),\n    ('is_furry', '?x', True))\n\n# Young things are nice.\nengine.add_rule('kb',\n    ('is_young', '?x', True),\n    ('is_nice', '?x', True))\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nengine.add_rule('kb',\n    ('is_smart', 'Fiona', True),\n    ('is_young', 'Fiona', True),\n    ('is_furry', 'Fiona', False))\n\n# If Erin is kind then Erin is furry.\nengine.add_rule('kb',\n    ('is_kind', 'Erin', True),\n    ('is_furry', 'Erin', True))\n\n# If Gary is smart and Gary is white then Gary is not kind.\nengine.add_rule('kb',\n    ('is_smart', 'Gary', True),\n    ('is_white', 'Gary', True),\n    ('is_kind', 'Gary', False))\n\n# If something is nice then it is blue.\nengine.add_rule('kb',\n    ('is_nice', '?x', True),\n    ('is_blue', '?x', True))\n\n# Query:\nresult = engine.prove_1('kb', ('is_white', 'Fiona', False), 1)\nprint(\"Query: Fiona is not white\")\nif result:\n    print(\"False - Fiona IS white (so 'Fiona is not white' is false)\")\nelse:\n    print(\"Unknown or False - Fiona is not white cannot be proven\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 833,
+            "completion_tokens": 1568,
+            "total_tokens": 2401
+          },
+          "api_time_only": 40.38818597793579,
+          "solver_time_only": 0.001527547836303711
+        }
+      ]
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# --- Facts ---\nfacts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# --- Rules ---\nrules:\n# Furry, nice things are white.\nforeach\n    $x is furry($x)\n    $x is nice($x)\nassert\n    $x is white($x)\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young($x)\n    $x is blue($x)\nassert\n    $x is smart($x)\n\n# All blue, smart things are furry.\nforeach\n    $x is blue($x)\n    $x is smart($x)\nassert\n    $x is furry($x)\n\n# All smart, white things are furry.\nforeach\n    $x is smart($x)\n    $x is white($x)\nassert\n    $x is furry($x)\n\n# Young things are nice.\nforeach\n    $x is young($x)\nassert\n    $x is nice($x)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart(\"Fiona\")\n    \"Fiona\" is young(\"Fiona\")\nassert\n    not_furry(\"Fiona\")\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind(\"Erin\")\nassert\n    \"Erin\" is furry(\"Erin\")\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart(\"Gary\")\n    \"Gary\" is white(\"Gary\")\nassert\n    not_kind(\"Gary\")\n\n# If something is nice then it is blue.\nforeach\n    $x is nice($x)\nassert\n    $x is blue($x)\n\n# --- Query ---\nquery:\nnot_white(\"Fiona\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "PyKe parse error: Boolean value for the query target not found. The generated code must contain True or False in the query section.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 505,
+            "completion_tokens": 419,
+            "total_tokens": 924
+          },
+          "api_time_only": 11.282768249511719,
+          "solver_time_only": 0.00024509429931640625
+        },
+        {
+          "round_index": 2,
+          "input_code": "# --- Facts ---\nfacts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# --- Rules ---\nrules:\n# Furry, nice things are white.\nforeach\n    $x is furry($x)\n    $x is nice($x)\nassert\n    $x is white($x)\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young($x)\n    $x is blue($x)\nassert\n    $x is smart($x)\n\n# All blue, smart things are furry.\nforeach\n    $x is blue($x)\n    $x is smart($x)\nassert\n    $x is furry($x)\n\n# All smart, white things are furry.\nforeach\n    $x is smart($x)\n    $x is white($x)\nassert\n    $x is furry($x)\n\n# Young things are nice.\nforeach\n    $x is young($x)\nassert\n    $x is nice($x)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart(\"Fiona\")\n    \"Fiona\" is young(\"Fiona\")\nassert\n    not_furry(\"Fiona\")\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind(\"Erin\")\nassert\n    \"Erin\" is furry(\"Erin\")\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart(\"Gary\")\n    \"Gary\" is white(\"Gary\")\nassert\n    not_kind(\"Gary\")\n\n# If something is nice then it is blue.\nforeach\n    $x is nice($x)\nassert\n    $x is blue($x)\n\n# --- Query ---\nquery:\nnot_white(\"Fiona\")",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts ---\nfacts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# --- Rules ---\nrules:\n# Furry, nice things are white.\nforeach\n    $x is furry($x)\n    $x is nice($x)\nassert\n    $x is white($x)\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young($x)\n    $x is blue($x)\nassert\n    $x is smart($x)\n\n# All blue, smart things are furry.\nforeach\n    $x is blue($x)\n    $x is smart($x)\nassert\n    $x is furry($x)\n\n# All smart, white things are furry.\nforeach\n    $x is smart($x)\n    $x is white($x)\nassert\n    $x is furry($x)\n\n# Young things are nice.\nforeach\n    $x is young($x)\nassert\n    $x is nice($x)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart(\"Fiona\")\n    \"Fiona\" is young(\"Fiona\")\nassert\n    not_furry(\"Fiona\")\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind(\"Erin\")\nassert\n    \"Erin\" is furry(\"Erin\")\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart(\"Gary\")\n    \"Gary\" is white(\"Gary\")\nassert\n    not_kind(\"Gary\")\n\n# If something is nice then it is blue.\nforeach\n    $x is nice($x)\nassert\n    $x is blue($x)\n\n# --- Query ---\nquery:\nnot_white(\"Fiona\")\n\n## Error message from solver\nPyKe parse error: Boolean value for the query target not found. The generated code must contain True or False in the query section.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# --- Facts ---\nfacts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# --- Rules ---\nrules:\n# Furry, nice things are white.\nforeach\n    $x is furry($x)\n    $x is nice($x)\nassert\n    $x is white($x)\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young($x)\n    $x is blue($x)\nassert\n    $x is smart($x)\n\n# All blue, smart things are furry.\nforeach\n    $x is blue($x)\n    $x is smart($x)\nassert\n    $x is furry($x)\n\n# All smart, white things are furry.\nforeach\n    $x is smart($x)\n    $x is white($x)\nassert\n    $x is furry($x)\n\n# Young things are nice.\nforeach\n    $x is young($x)\nassert\n    $x is nice($x)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    $x == \"Fiona\"\n    $x is smart($x)\n    $x is young($x)\nassert\n    not_furry($x)\n\n# If Erin is kind then Erin is furry.\nforeach\n    $x == \"Erin\"\n    $x is kind($x)\nassert\n    $x is furry($x)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    $x == \"Gary\"\n    $x is smart($x)\n    $x is white($x)\nassert\n    not_kind($x)\n\n# If something is nice then it is blue.\nforeach\n    $x is nice($x)\nassert\n    $x is blue($x)\n\n# --- Query ---\nquery:\nis_white(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 824,
+            "completion_tokens": 1493,
+            "total_tokens": 2317
+          },
+          "api_time_only": 39.53879427909851,
+          "solver_time_only": 0.0013413429260253906
+        }
+      ]
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n```\n\n```rules\n# Rule: Furry, nice things are white.\nfurry_and_nice_are_white\n    foreach\n        facts.is_furry($thing, True)\n        facts.is_nice($thing, True)\n    assert\n        facts.is_white($thing, True)\n\n# Rule: If something is young and blue then it is smart.\nyoung_and_blue_are_smart\n    foreach\n        facts.is_young($thing, True)\n        facts.is_blue($thing, True)\n    assert\n        facts.is_smart($thing, True)\n\n# Rule: All blue, smart things are furry.\nblue_and_smart_are_furry\n    foreach\n        facts.is_blue($thing, True)\n        facts.is_smart($thing, True)\n    assert\n        facts.is_furry($thing, True)\n\n# Rule: All smart, white things are furry.\nsmart_and_white_are_furry\n    foreach\n        facts.is_smart($thing, True)\n        facts.is_white($thing, True)\n    assert\n        facts.is_furry($thing, True)\n\n# Rule: Young things are nice.\nyoung_are_nice\n    foreach\n        facts.is_young($thing, True)\n    assert\n        facts.is_nice($thing, True)\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\nfiona_smart_and_young_not_furry\n    foreach\n        facts.is_smart(\"Fiona\", True)\n        facts.is_young(\"Fiona\", True)\n    assert\n        facts.is_furry(\"Fiona\", False)\n\n# Rule: If Erin is kind then Erin is furry.\nerin_kind_is_furry\n    foreach\n        facts.is_kind(\"Erin\", True)\n    assert\n        facts.is_furry(\"Erin\", True)\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\ngary_smart_and_white_not_kind\n    foreach\n        facts.is_smart(\"Gary\", True)\n        facts.is_white(\"Gary\", True)\n    assert\n        facts.is_kind(\"Gary\", False)\n\n# Rule: If something is nice then it is blue.\nnice_are_blue\n    foreach\n        facts.is_nice($thing, True)\n    assert\n        facts.is_blue($thing, True)\n```\n\n```query\nfacts.is_white(\"Fiona\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n```facts\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n```\n\n```rules\n# Rule: Furry, nice things are white.\nfurry_and_nice_are_white\n    foreach\n        facts.is_furry($thing, True)\n        facts.is_nice($thing, True)\n    assert\n        facts.is_white($thing, True)\n\n# Rule: If something is young and blue then it is smart.\nyoung_and_blue_are_smart\n    foreach\n        facts.is_young($thing, True)\n        facts.is_blue($thing, True)\n    assert\n        facts.is_smart($thing, True)\n\n# Rule: All blue, smart things are furry.\nblue_and_smart_are_furry\n    foreach\n        facts.is_blue($thing, True)\n        facts.is_smart($thing, True)\n    assert\n        facts.is_furry($thing, True)\n\n# Rule: All smart, white things are furry.\nsmart_and_white_are_furry\n    foreach\n        facts.is_smart($thing, True)\n        facts.is_white($thing, True)\n    assert\n        facts.is_furry($thing, True)\n\n# Rule: Young things are nice.\nyoung_are_nice\n    foreach\n        facts.is_young($thing, True)\n    assert\n        facts.is_nice($thing, True)\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\nfiona_smart_and_young_not_furry\n    foreach\n        facts.is_smart(\"Fiona\", True)\n        facts.is_young(\"Fiona\", True)\n    assert\n        facts.is_furry(\"Fiona\", False)\n\n# Rule: If Erin is kind then Erin is furry.\nerin_kind_is_furry\n    foreach\n        facts.is_kind(\"Erin\", True)\n    assert\n        facts.is_furry(\"Erin\", True)\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\ngary_smart_and_white_not_kind\n    foreach\n        facts.is_smart(\"Gary\", True)\n        facts.is_white(\"Gary\", True)\n    assert\n        facts.is_kind(\"Gary\", False)\n\n# Rule: If something is nice then it is blue.\nnice_are_blue\n    foreach\n        facts.is_nice($thing, True)\n    assert\n        facts.is_blue($thing, True)\n```\n\n```query\nfacts.is_white(\"Fiona\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine, facts, rules\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__name__)\n\n# --- Facts ---\nengine.add_case_fact('facts', ('is_young', 'Charlie', True))\nengine.add_case_fact('facts', ('is_blue', 'Erin', True))\nengine.add_case_fact('facts', ('is_kind', 'Erin', False))\nengine.add_case_fact('facts', ('is_blue', 'Fiona', True))\nengine.add_case_fact('facts', ('is_white', 'Fiona', True))\nengine.add_case_fact('facts', ('is_blue', 'Gary', True))\nengine.add_case_fact('facts', ('is_kind', 'Gary', True))\n\n# --- Rules ---\n\n# Rule: Furry, nice things are white.\n@engine.rule('furry_and_nice_are_white')\ndef furry_and_nice_are_white(engine, thing):\n    if engine.check_fact(('facts', 'is_furry', thing, True)) and \\\n       engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_white', thing, True)]\n\n# Rule: If something is young and blue then it is smart.\n@engine.rule('young_and_blue_are_smart')\ndef young_and_blue_are_smart(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)) and \\\n       engine.check_fact(('facts', 'is_blue', thing, True)):\n        return [('facts', 'is_smart', thing, True)]\n\n# Rule: All blue, smart things are furry.\n@engine.rule('blue_and_smart_are_furry')\ndef blue_and_smart_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_blue', thing, True)) and \\\n       engine.check_fact(('facts', 'is_smart', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: All smart, white things are furry.\n@engine.rule('smart_and_white_are_furry')\ndef smart_and_white_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_smart', thing, True)) and \\\n       engine.check_fact(('facts', 'is_white', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: Young things are nice.\n@engine.rule('young_are_nice')\ndef young_are_nice(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)):\n        return [('facts', 'is_nice', thing, True)]\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\n@engine.rule('fiona_smart_and_young_not_furry')\ndef fiona_smart_and_young_not_furry(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Fiona', True)) and \\\n       engine.check_fact(('facts', 'is_young', 'Fiona', True)):\n        return [('facts', 'is_furry', 'Fiona', False)]\n\n# Rule: If Erin is kind then Erin is furry.\n@engine.rule('erin_kind_is_furry')\ndef erin_kind_is_furry(engine):\n    if engine.check_fact(('facts', 'is_kind', 'Erin', True)):\n        return [('facts', 'is_furry', 'Erin', True)]\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\n@engine.rule('gary_smart_and_white_not_kind')\ndef gary_smart_and_white_not_kind(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Gary', True)) and \\\n       engine.check_fact(('facts', 'is_white', 'Gary', True)):\n        return [('facts', 'is_kind', 'Gary', False)]\n\n# Rule: If something is nice then it is blue.\n@engine.rule('nice_are_blue')\ndef nice_are_blue(engine, thing):\n    if engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_blue', thing, True)]\n\n# --- Query ---\nquery = ('facts', 'is_white', 'Fiona', False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 960,
+            "completion_tokens": 1860,
+            "total_tokens": 2820
+          },
+          "api_time_only": 47.143561363220215,
+          "solver_time_only": 0.00022673606872558594
+        },
+        {
+          "round_index": 2,
+          "input_code": "from pyke import knowledge_engine, facts, rules\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__name__)\n\n# --- Facts ---\nengine.add_case_fact('facts', ('is_young', 'Charlie', True))\nengine.add_case_fact('facts', ('is_blue', 'Erin', True))\nengine.add_case_fact('facts', ('is_kind', 'Erin', False))\nengine.add_case_fact('facts', ('is_blue', 'Fiona', True))\nengine.add_case_fact('facts', ('is_white', 'Fiona', True))\nengine.add_case_fact('facts', ('is_blue', 'Gary', True))\nengine.add_case_fact('facts', ('is_kind', 'Gary', True))\n\n# --- Rules ---\n\n# Rule: Furry, nice things are white.\n@engine.rule('furry_and_nice_are_white')\ndef furry_and_nice_are_white(engine, thing):\n    if engine.check_fact(('facts', 'is_furry', thing, True)) and \\\n       engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_white', thing, True)]\n\n# Rule: If something is young and blue then it is smart.\n@engine.rule('young_and_blue_are_smart')\ndef young_and_blue_are_smart(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)) and \\\n       engine.check_fact(('facts', 'is_blue', thing, True)):\n        return [('facts', 'is_smart', thing, True)]\n\n# Rule: All blue, smart things are furry.\n@engine.rule('blue_and_smart_are_furry')\ndef blue_and_smart_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_blue', thing, True)) and \\\n       engine.check_fact(('facts', 'is_smart', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: All smart, white things are furry.\n@engine.rule('smart_and_white_are_furry')\ndef smart_and_white_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_smart', thing, True)) and \\\n       engine.check_fact(('facts', 'is_white', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: Young things are nice.\n@engine.rule('young_are_nice')\ndef young_are_nice(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)):\n        return [('facts', 'is_nice', thing, True)]\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\n@engine.rule('fiona_smart_and_young_not_furry')\ndef fiona_smart_and_young_not_furry(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Fiona', True)) and \\\n       engine.check_fact(('facts', 'is_young', 'Fiona', True)):\n        return [('facts', 'is_furry', 'Fiona', False)]\n\n# Rule: If Erin is kind then Erin is furry.\n@engine.rule('erin_kind_is_furry')\ndef erin_kind_is_furry(engine):\n    if engine.check_fact(('facts', 'is_kind', 'Erin', True)):\n        return [('facts', 'is_furry', 'Erin', True)]\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\n@engine.rule('gary_smart_and_white_not_kind')\ndef gary_smart_and_white_not_kind(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Gary', True)) and \\\n       engine.check_fact(('facts', 'is_white', 'Gary', True)):\n        return [('facts', 'is_kind', 'Gary', False)]\n\n# Rule: If something is nice then it is blue.\n@engine.rule('nice_are_blue')\ndef nice_are_blue(engine, thing):\n    if engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_blue', thing, True)]\n\n# --- Query ---\nquery = ('facts', 'is_white', 'Fiona', False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\nfrom pyke import knowledge_engine, facts, rules\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__name__)\n\n# --- Facts ---\nengine.add_case_fact('facts', ('is_young', 'Charlie', True))\nengine.add_case_fact('facts', ('is_blue', 'Erin', True))\nengine.add_case_fact('facts', ('is_kind', 'Erin', False))\nengine.add_case_fact('facts', ('is_blue', 'Fiona', True))\nengine.add_case_fact('facts', ('is_white', 'Fiona', True))\nengine.add_case_fact('facts', ('is_blue', 'Gary', True))\nengine.add_case_fact('facts', ('is_kind', 'Gary', True))\n\n# --- Rules ---\n\n# Rule: Furry, nice things are white.\n@engine.rule('furry_and_nice_are_white')\ndef furry_and_nice_are_white(engine, thing):\n    if engine.check_fact(('facts', 'is_furry', thing, True)) and \\\n       engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_white', thing, True)]\n\n# Rule: If something is young and blue then it is smart.\n@engine.rule('young_and_blue_are_smart')\ndef young_and_blue_are_smart(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)) and \\\n       engine.check_fact(('facts', 'is_blue', thing, True)):\n        return [('facts', 'is_smart', thing, True)]\n\n# Rule: All blue, smart things are furry.\n@engine.rule('blue_and_smart_are_furry')\ndef blue_and_smart_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_blue', thing, True)) and \\\n       engine.check_fact(('facts', 'is_smart', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: All smart, white things are furry.\n@engine.rule('smart_and_white_are_furry')\ndef smart_and_white_are_furry(engine, thing):\n    if engine.check_fact(('facts', 'is_smart', thing, True)) and \\\n       engine.check_fact(('facts', 'is_white', thing, True)):\n        return [('facts', 'is_furry', thing, True)]\n\n# Rule: Young things are nice.\n@engine.rule('young_are_nice')\ndef young_are_nice(engine, thing):\n    if engine.check_fact(('facts', 'is_young', thing, True)):\n        return [('facts', 'is_nice', thing, True)]\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\n@engine.rule('fiona_smart_and_young_not_furry')\ndef fiona_smart_and_young_not_furry(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Fiona', True)) and \\\n       engine.check_fact(('facts', 'is_young', 'Fiona', True)):\n        return [('facts', 'is_furry', 'Fiona', False)]\n\n# Rule: If Erin is kind then Erin is furry.\n@engine.rule('erin_kind_is_furry')\ndef erin_kind_is_furry(engine):\n    if engine.check_fact(('facts', 'is_kind', 'Erin', True)):\n        return [('facts', 'is_furry', 'Erin', True)]\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\n@engine.rule('gary_smart_and_white_not_kind')\ndef gary_smart_and_white_not_kind(engine):\n    if engine.check_fact(('facts', 'is_smart', 'Gary', True)) and \\\n       engine.check_fact(('facts', 'is_white', 'Gary', True)):\n        return [('facts', 'is_kind', 'Gary', False)]\n\n# Rule: If something is nice then it is blue.\n@engine.rule('nice_are_blue')\ndef nice_are_blue(engine, thing):\n    if engine.check_fact(('facts', 'is_nice', thing, True)):\n        return [('facts', 'is_blue', thing, True)]\n\n# --- Query ---\nquery = ('facts', 'is_white', 'Fiona', False)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Facts:\nFacts:\n    is_young(Charlie, True)\n    is_blue(Erin, True)\n    is_kind(Erin, False)\n    is_blue(Fiona, True)\n    is_white(Fiona, True)\n    is_blue(Gary, True)\n    is_kind(Gary, True)\n\n# Rules:\nRules:\n\n# Rule: Furry, nice things are white.\n    foreach\n        is_furry(?thing, True)\n        is_nice(?thing, True)\n    assert\n        is_white(?thing, True)\n\n# Rule: If something is young and blue then it is smart.\n    foreach\n        is_young(?thing, True)\n        is_blue(?thing, True)\n    assert\n        is_smart(?thing, True)\n\n# Rule: All blue, smart things are furry.\n    foreach\n        is_blue(?thing, True)\n        is_smart(?thing, True)\n    assert\n        is_furry(?thing, True)\n\n# Rule: All smart, white things are furry.\n    foreach\n        is_smart(?thing, True)\n        is_white(?thing, True)\n    assert\n        is_furry(?thing, True)\n\n# Rule: Young things are nice.\n    foreach\n        is_young(?thing, True)\n    assert\n        is_nice(?thing, True)\n\n# Rule: If Fiona is smart and Fiona is young then Fiona is not furry.\n    foreach\n        is_smart(Fiona, True)\n        is_young(Fiona, True)\n    assert\n        is_furry(Fiona, False)\n\n# Rule: If Erin is kind then Erin is furry.\n    foreach\n        is_kind(Erin, True)\n    assert\n        is_furry(Erin, True)\n\n# Rule: If Gary is smart and Gary is white then Gary is not kind.\n    foreach\n        is_smart(Gary, True)\n        is_white(Gary, True)\n    assert\n        is_kind(Gary, False)\n\n# Rule: If something is nice then it is blue.\n    foreach\n        is_nice(?thing, True)\n    assert\n        is_blue(?thing, True)\n\n# Query:\nQuery:\n    is_white(Fiona, False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 1284,
+            "completion_tokens": 1122,
+            "total_tokens": 2406
+          },
+          "api_time_only": 29.60027289390564,
+          "solver_time_only": 0.002110004425048828
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_not_kind(\"Erin\", True)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_not_kind(\"Erin\", True)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_not_kind(\"Erin\", True)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\nRules:\n# Furry, nice things are white.\nforeach\n    $x is furry and $x is nice\nthen\n    assert(is_white($x, True))\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young and $x is blue\nthen\n    assert(is_smart($x, True))\n\n# All blue, smart things are furry.\nforeach\n    $x is blue and $x is smart\nthen\n    assert(is_furry($x, True))\n\n# All smart, white things are furry.\nforeach\n    $x is smart and $x is white\nthen\n    assert(is_furry($x, True))\n\n# Young things are nice.\nforeach\n    $x is young\nthen\n    assert(is_nice($x, True))\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart and \"Fiona\" is young\nthen\n    assert(is_not_furry(\"Fiona\", True))\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind\nthen\n    assert(is_furry(\"Erin\", True))\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart and \"Gary\" is white\nthen\n    assert(is_not_kind(\"Gary\", True))\n\n# If something is nice then it is blue.\nforeach\n    $x is nice\nthen\n    assert(is_blue($x, True))\n\nQuery:\nis_white(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 506,
+            "completion_tokens": 561,
+            "total_tokens": 1067
+          },
+          "api_time_only": 15.813203573226929,
+          "solver_time_only": 0.001802682876586914
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_not_kind(\"Erin\", True)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\nRules:\n# Furry, nice things are white.\nforeach\n    $x is furry and $x is nice\nthen\n    assert(is_white($x, True))\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young and $x is blue\nthen\n    assert(is_smart($x, True))\n\n# All blue, smart things are furry.\nforeach\n    $x is blue and $x is smart\nthen\n    assert(is_furry($x, True))\n\n# All smart, white things are furry.\nforeach\n    $x is smart and $x is white\nthen\n    assert(is_furry($x, True))\n\n# Young things are nice.\nforeach\n    $x is young\nthen\n    assert(is_nice($x, True))\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart and \"Fiona\" is young\nthen\n    assert(is_not_furry(\"Fiona\", True))\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind\nthen\n    assert(is_furry(\"Erin\", True))\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart and \"Gary\" is white\nthen\n    assert(is_not_kind(\"Gary\", True))\n\n# If something is nice then it is blue.\nforeach\n    $x is nice\nthen\n    assert(is_blue($x, True))\n\nQuery:\nis_white(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\nFacts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_not_kind(\"Erin\", True)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\nRules:\n# Furry, nice things are white.\nforeach\n    $x is furry and $x is nice\nthen\n    assert(is_white($x, True))\n\n# If something is young and blue then it is smart.\nforeach\n    $x is young and $x is blue\nthen\n    assert(is_smart($x, True))\n\n# All blue, smart things are furry.\nforeach\n    $x is blue and $x is smart\nthen\n    assert(is_furry($x, True))\n\n# All smart, white things are furry.\nforeach\n    $x is smart and $x is white\nthen\n    assert(is_furry($x, True))\n\n# Young things are nice.\nforeach\n    $x is young\nthen\n    assert(is_nice($x, True))\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach\n    \"Fiona\" is smart and \"Fiona\" is young\nthen\n    assert(is_not_furry(\"Fiona\", True))\n\n# If Erin is kind then Erin is furry.\nforeach\n    \"Erin\" is kind\nthen\n    assert(is_furry(\"Erin\", True))\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach\n    \"Gary\" is smart and \"Gary\" is white\nthen\n    assert(is_not_kind(\"Gary\", True))\n\n# If something is nice then it is blue.\nforeach\n    $x is nice\nthen\n    assert(is_blue($x, True))\n\nQuery:\nis_white(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts\nengine.add_predicate('is_young', 'Charlie', True)\nengine.add_predicate('is_blue', 'Erin', True)\nengine.add_predicate('is_kind', 'Erin', False)  # Erin is not kind\nengine.add_predicate('is_blue', 'Fiona', True)\nengine.add_predicate('is_white', 'Fiona', True)\nengine.add_predicate('is_blue', 'Gary', True)\nengine.add_predicate('is_kind', 'Gary', True)\n\n# Rules\n@engine.rule\ndef young_and_blue_to_smart($x):\n    if engine.query('is_young', $x, True) and engine.query('is_blue', $x, True):\n        return [('is_smart', $x, True)]\n\n@engine.rule\ndef blue_and_smart_to_furry($x):\n    if engine.query('is_blue', $x, True) and engine.query('is_smart', $x, True):\n        return [('is_furry', $x, True)]\n\n@engine.rule\ndef smart_and_white_to_furry($x):\n    if engine.query('is_smart', $x, True) and engine.query('is_white', $x, True):\n        return [('is_furry', $x, True)]\n\n@engine.rule\ndef young_to_nice($x):\n    if engine.query('is_young', $x, True):\n        return [('is_nice', $x, True)]\n\n@engine.rule\ndef nice_to_blue($x):\n    if engine.query('is_nice', $x, True):\n        return [('is_blue', $x, True)]\n\n@engine.rule\ndef furry_and_nice_to_white($x):\n    if engine.query('is_furry', $x, True) and engine.query('is_nice', $x, True):\n        return [('is_white', $x, True)]\n\n# Special cases\n@engine.rule\ndef fiona_smart_and_young_to_not_furry():\n    if engine.query('is_smart', 'Fiona', True) and engine.query('is_young', 'Fiona', True):\n        return [('is_furry', 'Fiona', False)]\n\n@engine.rule\ndef erin_kind_to_furry():\n    if engine.query('is_kind', 'Erin', True):\n        return [('is_furry', 'Erin', True)]\n\n@engine.rule\ndef gary_smart_and_white_to_not_kind():\n    if engine.query('is_smart', 'Gary', True) and engine.query('is_white', 'Gary', True):\n        return [('is_kind', 'Gary', False)]\n\n# Query\nresult = engine.query('is_white', 'Fiona', False)\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 782,
+            "completion_tokens": 1640,
+            "total_tokens": 2422
+          },
+          "api_time_only": 44.863473415374756,
+          "solver_time_only": 0.0014545917510986328
+        }
+      ]
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Charlie ---\nis_young(\"Charlie\", True)\n\n# --- Facts about Erin ---\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\n\n# --- Facts about Fiona ---\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\n\n# --- Facts about Gary ---\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 505,
+            "completion_tokens": 440,
+            "total_tokens": 945
+          },
+          "api_time_only": 12.162367820739746,
+          "solver_time_only": 0.001733541488647461
+        },
+        {
+          "round_index": 2,
+          "input_code": "# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nCharlie is young. Erin is blue. Erin is not kind. Fiona is blue. Fiona is white. Gary is blue. Gary is kind. Furry, nice things are white. If something is young and blue then it is smart. All blue, smart things are furry. All smart, white things are furry. Young things are nice. If Fiona is smart and Fiona is young then Fiona is not furry. If Erin is kind then Erin is furry. If Gary is smart and Gary is white then Gary is not kind. If something is nice then it is blue.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not white.\nPlan:\n{plan}\n\n## Original Code\n# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nforeach:\n    ?x\n    is_furry(?x, True)\n    is_nice(?x, True)\nassert:\n    is_white(?x, True)\n\n# If something is young and blue then it is smart.\nforeach:\n    ?x\n    is_young(?x, True)\n    is_blue(?x, True)\nassert:\n    is_smart(?x, True)\n\n# All blue, smart things are furry.\nforeach:\n    ?x\n    is_blue(?x, True)\n    is_smart(?x, True)\nassert:\n    is_furry(?x, True)\n\n# All smart, white things are furry.\nforeach:\n    ?x\n    is_smart(?x, True)\n    is_white(?x, True)\nassert:\n    is_furry(?x, True)\n\n# Young things are nice.\nforeach:\n    ?x\n    is_young(?x, True)\nassert:\n    is_nice(?x, True)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nforeach:\n    is_smart(\"Fiona\", True)\n    is_young(\"Fiona\", True)\nassert:\n    is_furry(\"Fiona\", False)\n\n# If Erin is kind then Erin is furry.\nforeach:\n    is_kind(\"Erin\", True)\nassert:\n    is_furry(\"Erin\", True)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nforeach:\n    is_smart(\"Gary\", True)\n    is_white(\"Gary\", True)\nassert:\n    is_kind(\"Gary\", False)\n\n# If something is nice then it is blue.\nforeach:\n    ?x\n    is_nice(?x, True)\nassert:\n    is_blue(?x, True)\n\n# Query:\nis_white(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Facts:\nis_young(\"Charlie\", True)\nis_blue(\"Erin\", True)\nis_kind(\"Erin\", False)\nis_blue(\"Fiona\", True)\nis_white(\"Fiona\", True)\nis_blue(\"Gary\", True)\nis_kind(\"Gary\", True)\n\n# Rules:\n# Furry, nice things are white.\nrule1 = (\n    (lambda x: is_furry(x, True) and is_nice(x, True)),\n    lambda x: is_white(x, True)\n)\n\n# If something is young and blue then it is smart.\nrule2 = (\n    (lambda x: is_young(x, True) and is_blue(x, True)),\n    lambda x: is_smart(x, True)\n)\n\n# All blue, smart things are furry.\nrule3 = (\n    (lambda x: is_blue(x, True) and is_smart(x, True)),\n    lambda x: is_furry(x, True)\n)\n\n# All smart, white things are furry.\nrule4 = (\n    (lambda x: is_smart(x, True) and is_white(x, True)),\n    lambda x: is_furry(x, True)\n)\n\n# Young things are nice.\nrule5 = (\n    (lambda x: is_young(x, True)),\n    lambda x: is_nice(x, True)\n)\n\n# If Fiona is smart and Fiona is young then Fiona is not furry.\nrule6 = (\n    (lambda: is_smart(\"Fiona\", True) and is_young(\"Fiona\", True)),\n    lambda: is_furry(\"Fiona\", False)\n)\n\n# If Erin is kind then Erin is furry.\nrule7 = (\n    (lambda: is_kind(\"Erin\", True)),\n    lambda: is_furry(\"Erin\", True)\n)\n\n# If Gary is smart and Gary is white then Gary is not kind.\nrule8 = (\n    (lambda: is_smart(\"Gary\", True) and is_white(\"Gary\", True)),\n    lambda: is_kind(\"Gary\", False)\n)\n\n# If something is nice then it is blue.\nrule9 = (\n    (lambda x: is_nice(x, True)),\n    lambda x: is_blue(x, True)\n)\n\n# Query:\nis_white(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 833,
+            "completion_tokens": 1742,
+            "total_tokens": 2575
+          },
+          "api_time_only": 44.659377336502075,
+          "solver_time_only": 0.0016255378723144531
+        }
+      ]
+    }
+  ]
+}

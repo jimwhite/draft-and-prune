@@ -1,0 +1,18 @@
+1. Enumerate the six lab assistants and assign them integer codes (e.g., Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5).  
+2. Enumerate the six sessions (Wed AM=0, Wed PM=1, Thu AM=2, Thu PM=3, Fri AM=4, Fri PM=5) and create integer variables `assign[i]` for each session i, indicating which assistant (0–5) leads it.  
+3. Add **injectivity constraint**: each assistant leads exactly one session ⇒ all `assign[i]` values must be distinct and cover 0–5.  
+4. Add **day mapping**: define a helper function `day(session_index)` returning 0 (Wed), 1 (Thu), or 2 (Fri) based on session index.  
+5. Add **session type constraint**: define `is_afternoon(session_index)` as True for indices 1,3,5 (PM sessions).  
+6. Add **Kevin & Rebecca same day constraint**: `day(assign_inv[1]) == day(assign_inv[5])`, where `assign_inv` is the inverse assignment (assistant → session). Alternatively, directly state: if assistant X leads session s and Y leads session t, then `assign[s]==X ∧ assign[t]==Y ⇒ day(s)==day(t)`. Use auxiliary Boolean variables or logical equivalence for clarity.  
+7. Add **Lan & Olivia different day constraint**: `day(session_of(Lan)) ≠ day(session_of(Olivia))`.  
+8. Add **Nessa afternoon constraint**: `is_afternoon(session_of(Nessa)) == True`.  
+9. Add **Julio earlier day than Olivia**: `day(session_of(Julio)) < day(session_of(Olivia))`.  
+10. Add **premise constraint**: Lan does *not* lead a Wednesday session ⇒ `day(session_of(Lan)) ≠ 0`.  
+11. For each assistant in the answer choices (Rebecca, Olivia, Nessa, Kevin, Julio), create a fresh solver and add the base constraints plus the premise constraint.  
+12. For each candidate assistant A, add the assumption `day(session_of(A)) == 1` (i.e., A leads a Thursday session) and check if the model is SAT.  
+13. Compute for each assistant A whether *every* satisfying assignment (under the premise) forces `day(session_of(A)) == 1`. To do this:  
+    - Clone base+premise constraints into solver S.  
+    - Add `day(session_of(A)) ≠ 1`.  
+    - If S is UNSAT, then A *must* be on Thursday; record index of A as forced.  
+14. Collect all assistants that must lead a Thursday session (i.e., whose absence from Thursday makes the problem UNSAT).  
+15. Return the list of such assistants (should be exactly one); output its name.

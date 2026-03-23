@@ -1,0 +1,82 @@
+1. Identify all entities: bald_eagle, cat, cow, squirrel.
+2. Encode direct facts using ternary predicates:
+   - is_big("bald_eagle", True)
+   - is_cold("bald_eagle", True)
+   - is_young("bald_eagle", True)
+   - is_kind("cat", False) → encoded as NOT(is_kind("cat", True)), but PyKe uses positive assertions; handle via negation-as-failure or explicit false facts if needed. Since PyKe typically reasons with positive literals only, model "not kind" as absence of is_kind("cat", True) *unless* negative facts are explicitly asserted—however, standard PyKe doesn’t support explicit false predicates natively; instead, we must rely on the rule system to derive contradictions or use guarded negation. But per instructions, only encode explicit positive facts as `facts.pred(subj, obj, True)`. Thus, for "The cat is not kind", do NOT assert `is_kind("cat", True)`, and ensure no rule derives it.
+   - is_red("cow", True)
+   - likes("cow", "bald_eagle", True)
+   - visits("squirrel", "bald_eagle", True)
+
+3. Translate each rule into PyKe `foreach` + `assert` blocks:
+   - If something likes the cow → the cow likes the squirrel.
+   - All big things are cold. (i.e., if X is big → X is cold)
+   - If squirrel is red → squirrel is young.
+   - If something likes the squirrel → squirrel is red.
+   - If something is young → it likes the cow.
+   - If (squirrel likes cat) AND NOT(chase("cow", "squirrel", True)) → cat likes cow.
+   - If something visits squirrel AND squirrel is big → it does NOT like squirrel. (Handle as: if condition holds, then NOT likes(X, squirrel) — but again, PyKe reasons with positives only. To express negation in conclusion, must derive a contradiction or use a separate predicate like `does_not_like`. However, problem states to use ternary predicates of form `predicate(subject, object, True)`, implying only positive facts. Therefore, interpret "does not like" as absence of `likes(X, squirrel, True)`. But rules must be encoded as positive assertions. So: cannot directly assert "NOT likes". In PyKe (the SMT-based solver), we can model negation via a separate predicate like `neg_likes(X, squirrel)` and encode rules accordingly — but the prompt specifies *only* ternary predicates with boolean object. Reconcile: since "The cat is not kind" was handled by *not asserting* `is_kind("cat", True)`, similarly for "does not like" — we do NOT assert `likes(X, squirrel, True)` when a rule would derive its negation. However, PyKe rules *assert* facts; they cannot retract or assert falsity. So we must avoid modeling negated conclusions via rules unless we introduce complementary predicates (e.g., `neg_likes(X, Y)`). Given the constraints of the problem format and the earlier examples (e.g., Problem 2 had "not big" implicitly), we conclude:
+     - For negative conclusions, use a predicate `neg_X` or encode as facts with `False`, but the instruction says: "predicate(subject, object, True)" — meaning object is boolean; so e.g., `likes("X", "squirrel", False)` is allowed if the object can be `False`. However, earlier examples used only `True` facts; but Problem 2's "Erin is smart" query used `facts.is_smart("Erin", True)`, implying the predicate can accept `False` too. So adopt:
+       • For all predicates, allow third argument = True or False.
+       • Explicitly state positive and negative facts when given (e.g., `is_kind("cat", False)`)
+   - So adapt:
+       • For "The cat is not kind" → `facts.is_kind("cat", False)`
+       • For rules with negative conclusion: assert the false version.
+         e.g., "it does not like the squirrel" → `likes(X, squirrel, False)`
+         e.g., "the squirrel does not visit the bald eagle" → `visits("squirrel", "bald_eagle", False)`
+
+   Therefore, revise rule translations to allow `False` facts in assertion:
+     - Rule: If something likes the cow → cow likes squirrel:  
+       `foreach likes(X, "cow", True) assert likes("cow", "squirrel", True)`
+     - All big things are cold:  
+       `foreach is_big(X, True) assert is_cold(X, True)`
+     - If squirrel is red → squirrel is young:  
+       `foreach is_red("squirrel", True) assert is_young("squirrel", True)`
+     - If X likes squirrel → squirrel is red:  
+       `foreach likes(X, "squirrel", True) assert is_red("squirrel", True)`
+     - If X is young → X likes cow:  
+       `foreach is_young(X, True) assert likes(X, "cow", True)`
+     - If (squirrel likes cat AND NOT cow chases squirrel) → cat likes cow:  
+       `foreach likes("squirrel", "cat", True), NOT(chase("cow", "squirrel", True)) assert likes("cat", "cow", True)`  
+       → In PyKe SMT rules, can use `if` with logical constraints; assume `NOT(p)` is supported in pattern.
+     - If X visits squirrel AND squirrel is big → NOT(X likes squirrel):  
+       `foreach visits(X, "squirrel", True), is_big("squirrel", True) assert likes(X, "squirrel", False)`
+     - If X is big → X visits cow:  
+       `foreach is_big(X, True) assert visits(X, "cow", True)`
+     - If X visits squirrel AND NOT X is red → squirrel does NOT visit bald eagle:  
+       `foreach visits(X, "squirrel", True), NOT(is_red(X, True)) assert visits("squirrel", "bald_eagle", False)`
+
+4. Ensure all direct facts (explicitly stated as positive or negative) are encoded:
+   - `is_big("bald_eagle", True)`
+   - `is_cold("bald_eagle", True)`
+   - `is_young("bald_eagle", True)`
+   - `is_kind("cat", False)`
+   - `is_red("cow", True)`  // so the query "cow is not red" will be `is_red("cow", False)` — but since we assert `is_red("cow", True)`, the query will be refutable
+   - `likes("cow", "bald_eagle", True)`
+   - `visits("squirrel", "bald_eagle", True)`
+
+5. Query: "The cow is not red" → `is_red("cow", False)`
+
+Note: Since we have an explicit fact `is_red("cow", True)`, and no rule can revoke it (rules only assert), the query should be false — but we follow plan, not answer.
+
+Plan:
+1. Identify all entities: bald_eagle, cat, cow, squirrel.
+2. Encode explicit positive and negative facts using ternary predicates with boolean values:  
+   - `facts.is_big("bald_eagle", True)`  
+   - `facts.is_cold("bald_eagle", True)`  
+   - `facts.is_young("bald_eagle", True)`  
+   - `facts.is_kind("cat", False)`  
+   - `facts.is_red("cow", True)`  
+   - `facts.likes("cow", "bald_eagle", True)`  
+   - `facts.visits("squirrel", "bald_eagle", True)`
+3. Encode rules as PyKe `foreach` + `assert` blocks, allowing assertions of both `True` and `False` facts in conclusions:  
+   - Rule 1: If X likes the cow → cow likes squirrel  
+   - Rule 2: All big things are cold  
+   - Rule 3: If squirrel is red → squirrel is young  
+   - Rule 4: If X likes squirrel → squirrel is red  
+   - Rule 5: If X is young → X likes cow  
+   - Rule 6: If squirrel likes cat and NOT cow chases squirrel → cat likes cow  
+   - Rule 7: If X visits squirrel and squirrel is big → X does NOT like squirrel (i.e., `likes(X, "squirrel", False)`)  
+   - Rule 8: If X is big → X visits cow  
+   - Rule 9: If X visits squirrel and NOT X is red → squirrel does NOT visit bald eagle (i.e., `visits("squirrel", "bald_eagle", False)`)
+4. The query checks whether `is_red("cow", False)` holds.

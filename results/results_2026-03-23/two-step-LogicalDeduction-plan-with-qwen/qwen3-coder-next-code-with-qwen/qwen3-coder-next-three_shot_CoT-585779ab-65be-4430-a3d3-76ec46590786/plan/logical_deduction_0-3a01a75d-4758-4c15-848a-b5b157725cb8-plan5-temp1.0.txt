@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * The variables are the five books: `"green"`, `"blue"`, `"white"`, `"purple"`, and `"yellow"`.  
+   * The domain is the integer positions 1 to 5, where **1 = leftmost**, **2 = second from left**, ..., **5 = rightmost**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add `AllDifferentConstraint()` to ensure each book occupies a unique position.  
+   * Translate statements into lambda constraints:  
+     - "The blue book is to the right of the yellow book" → `blue > yellow`  
+     - "The white book is to the left of the yellow book" → `white < yellow`  
+     - "The blue book is the second from the right" → `blue == 4` (since position 5 is rightmost, second from right = 4)  
+     - "The purple book is the second from the left" → `purple == 2`
+
+4. **Solve for the Arrangement:**  
+   * Use `problem.getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (only one satisfies all constraints).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is second from the left (i.e., position = 2).  
+   * Create a mapping of choice letters to book names:  
+     - `"A"` → `"green"`, `"B"` → `"blue"`, `"C"` → `"white"`, `"D"` → `"purple"`, `"E"` → `"yellow"`  
+   * Check which book in the solution has position 2.  
+   * Return the corresponding choice letter.

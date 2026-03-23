@@ -1,0 +1,15 @@
+1. Enumerate the six employees and assign them integer indices (e.g., 0: Robertson, 1: Souza, 2: Togowa, 3: Vaughn, 4: Xu, 5: Young).  
+2. Create integer variables for each employee's parking space position (1 through 6), ensuring all positions are distinct.  
+3. Add **domain constraints**: each employee's space variable ∈ {1, 2, 3, 4, 5, 6}, and all six space variables are pairwise distinct.  
+4. Add **basic ordering constraints** from the rules:  
+    - Young > Togowa (`pos_Young > pos_Togowa`)  
+    - Xu > Souza (`pos_Xu > pos_Souza`)  
+    - Robertson > Young (`pos_Robertson > pos_Young`)  
+    - Robertson ∈ {1, 2, 3, 4} (i.e., `pos_Robertson <= 4`)  
+5. Add the **conditional assumption** for the scenario: Young > Souza (`pos_Young > pos_Souza`).  
+6. For each choice in the answer list:  
+    - Clone the base constraints (including the Young > Souza condition) into a fresh solver.  
+    - Assert the specific assignment described in the choice (e.g., for 'Togowa is assigned parking space #1', assert `pos_Togowa == 1`).  
+    - Check satisfiability: if SAT, the choice **could be true**; otherwise, it cannot.  
+7. Collect all indices of choices for which the modified solver returns SAT.  
+8. Return the list of valid choice indices (or directly identify the correct answer).

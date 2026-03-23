@@ -1,0 +1,40 @@
+1. Identify all entities: bald_eagle, bear, dog, lion.
+2. Encode all explicitly stated facts using ternary predicates:
+   - Direct properties (e.g., is_blue("bald_eagle", True), is_red("bald_eagle", True), is_not_blue("bear", True), is_nice("bear", True))
+   - Relations (e.g., likes("bald_eagle", "lion", True), needs("bald_eagle", "bear", True), chases("dog", "bald_eagle", True))
+   - Negative facts (e.g., is_not_blue("bear", True) — but note: PyKe uses ternary predicates with boolean object, so represent as facts.is_blue("bear", False); similarly for others: needs("dog", "bear", False), likes("lion", "bear", False))
+3. Explicitly add facts:
+   - is_blue("bald_eagle", True)
+   - is_red("bald_eagle", True)
+   - likes("bald_eagle", "lion", True)
+   - needs("bald_eagle", "bear", True)
+   - needs("bald_eagle", "dog", True)
+   - is_blue("bear", False)  # since “The bear is not blue”
+   - is_nice("bear", True)
+   - needs("bear", "dog", True)
+   - chases("dog", "bald_eagle", True)
+   - is_red("dog", True)
+   - needs("dog", "bear", False)  # “The dog does not need the bear”
+   - likes("lion", "bear", False)  # “The lion does not like the bear”
+4. Translate conditional rules into PyKe `foreach` + `assert`:
+   • If X likes the lion and X is not red → X chases the lion.  
+     → foreach: likes(X, "lion", True), is_red(X, False) ⇒ chases(X, "lion", True)
+   • If X is red and X needs the bald eagle → the bald eagle needs X.  
+     → foreach: is_red(X, True), needs(X, "bald_eagle", True) ⇒ needs("bald_eagle", X, True)
+   • If X is round → X does not like the dog.  
+     → foreach: is_round(X, True) ⇒ likes(X, "dog", False)
+   • If the bald eagle needs the dog → the dog is round.  
+     → foreach: needs("bald_eagle", "dog", True) ⇒ is_round("dog", True)
+   • If X likes the dog → X likes the bald eagle.  
+     → foreach: likes(X, "dog", True) ⇒ likes(X, "bald_eagle", True)
+   • If X chases the lion and the lion likes the dog → the dog does not like the lion.  
+     → foreach: chases(X, "lion", True), likes("lion", "dog", True) ⇒ likes("dog", "lion", False)
+   • If the bear likes the lion → the lion likes the dog.  
+     → foreach: likes("bear", "lion", True) ⇒ likes("lion", "dog", True)
+   • If X likes the bear → the bear likes the lion.  
+     → foreach: likes(X, "bear", True) ⇒ likes("bear", "lion", True)
+   • If X is round → X likes the bear.  
+     → foreach: is_round(X, True) ⇒ likes(X, "bear", True)
+5. Note: Some rules involve derived predicates like is_not_red — but PyKe only supports ternary boolean relations, so always use `is_red(X, False)` instead of a separate predicate.
+6. The query is: “The dog does not need the dog.”  
+   → Use facts.needs("dog", "dog", False)

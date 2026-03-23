@@ -1,0 +1,18 @@
+1. Enumerate the eight employees and assign them integer indices.  
+2. Create Boolean variables for each employee indicating whether they are selected (True) or not (False).  
+3. Add the **global constraint**: at least 4 employees must be selected (sum of Boolean variables ≥ 4).  
+4. Add **conditional constraints** based on the problem:  
+    - If Myers is selected, then Ortega and Paine must both be unselected: `Myers → (¬Ortega ∧ ¬Paine)`.  
+    - If Schmidt is selected, then both Paine and Thomson must be selected: `Schmidt → (Paine ∧ Thomson)`.  
+    - If Wong is selected, then both Myers and Yoder must be selected: `Wong → (Myers ∧ Yoder)`.  
+5. Add the **assumption**: Yoder is NOT selected (`¬Yoder`).  
+6. For each answer choice, determine which employee the option corresponds to; for that employee *X*, check whether *X* can possibly be on the team under all constraints (including Yoder excluded).  
+   - Since the question asks: “...EXCEPT”, meaning only one option **cannot** be on the team (i.e., leads to UNSAT when forced in), proceed as follows for each candidate employee X ∈ {Zayre, Thomson, Paine, Ortega, Myers}:  
+     a. Clone the current constraints (including Yoder excluded) into a fresh solver.  
+     b. Assert that employee X is selected (`X = True`).  
+     c. Check satisfiability:  
+        - If SAT → X *could* be on the team (i.e., not the answer).  
+        - If UNSAT → X *cannot* be on the team (i.e., this is the required EXCEPT case).  
+7. Collect indices of employees for whom the model is UNSAT (i.e., cannot be on team when Yoder excluded).  
+8. The answer corresponds to the employee index that produces UNSAT; since only one such employee exists per question structure, append its integer index to `answer_index_list`.  
+9. Print the final answer (the name corresponding to the single index in `answer_index_list`).

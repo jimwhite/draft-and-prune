@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the five books as variables: `"green"`, `"orange"`, `"gray"`, `"yellow"`, `"purple"`.  
+   * Define the domain as integers 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint:  
+     - "The green book is the rightmost" → `green == 5`  
+     - "The gray book is to the right of the orange book" → `gray > orange`  
+     - "The purple book is to the left of the yellow book" → `purple < yellow`  
+     - "The purple book is to the right of the gray book" → `purple > gray`  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (as implied by consistency).
+
+5. **Determine Which Book Is Second From the Left:**  
+   * The question asks which book is at **position 2**.  
+   * Create a mapping from choice letters (`"A"`→`"green"`, `"B"`→`"orange"`, etc.).  
+   * Iterate through the solution dictionary to find which book has value `2`.  
+   * Return the corresponding choice letter.

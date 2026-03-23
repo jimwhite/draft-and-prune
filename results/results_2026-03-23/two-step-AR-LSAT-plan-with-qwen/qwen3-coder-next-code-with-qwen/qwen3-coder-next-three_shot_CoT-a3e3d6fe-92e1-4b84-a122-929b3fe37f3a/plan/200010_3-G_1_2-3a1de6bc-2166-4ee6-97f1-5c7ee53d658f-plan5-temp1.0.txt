@@ -1,0 +1,17 @@
+1. Enumerate the eight students and assign each an integer index.  
+2. Define Boolean decision variables for each student-day-time slot (e.g., `report[s][d][t]`, where `s ∈ {0..7}`, `d ∈ {Mon=0, Tue=1, Wed=2}`, `t ∈ {morning=0, afternoon=1}`), indicating whether student *s* gives a report at day *d*, time *t*.  
+3. Add **exactly-six-reports constraint**: exactly six of the 8 × 3 × 2 = 48 variables are true.  
+4. Add **two-reports-per-day constraint**: for each day *d*, exactly two of the four time slots (morning/afternoon on that day) are true.  
+5. Add **George-only-on-Tuesday constraint**: `report[George][Mon][*] = false`, `report[George][Wed][*] = false`.  
+6. Add **Olivia/Robert-no-afternoon constraint**: `report[Olivia][*][1] = false`, `report[Robert][*][1] = false`.  
+7. Add **Nina conditional constraint**:  
+   - If `report[Nina][d][t]` is true and *d* = Mon or Tue, then `report[Helen][d+1][0] ∧ report[Irving][d+1][0]` must hold (i.e., next day both morning slots for Helen and Irving must be filled).  
+   - Implement via implication: `report[Nina][d][t] → (d == Wed ∨ (report[Helen][d+1][0] ∧ report[Irving][d+1][0]))`.  
+8. Add **Kyle and Lenore do not give reports**: set all their variables to false for all days/times.  
+9. For each answer choice (a triple of students for Monday morning, Tuesday morning, Wednesday morning), do the following:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert that the specified student is assigned to the specified morning slot: e.g., for choice ['Helen, George, and Nina'], set `report[Helen][Mon][0] = true`, `report[George][Tue][0] = true`, `report[Nina][Wed][0] = true`.  
+   - Add that no other report is given at those same slots (i.e., only one person per slot — but that’s already enforced by “exactly two reports per day” and distinctness of students).  
+   - If the model is SAT, then this triple is possible; record the index of the choice as valid.  
+10. Collect all indices of answer choices that yield SAT models; only one such choice is expected as the correct answer.  
+11. Output the index of the valid choice(s) (implicitly unique per problem design).

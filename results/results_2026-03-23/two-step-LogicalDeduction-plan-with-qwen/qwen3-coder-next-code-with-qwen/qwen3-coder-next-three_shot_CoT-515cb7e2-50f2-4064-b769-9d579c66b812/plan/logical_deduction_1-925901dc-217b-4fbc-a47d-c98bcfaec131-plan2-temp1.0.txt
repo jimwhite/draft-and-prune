@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the five vehicles as variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+    * Define the domain for positions using integers 1 to 5, where **1 = oldest** and **5 = newest**.  
+    * Add all five vehicle variables to the `Problem`, each with domain `{1, 2, 3, 4, 5}`.  
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Add constraints using lambda functions (or direct equality/inequality via `addConstraint`):  
+        * "The tractor is newer than the minivan" → `tractor > minivan` (since newer means higher rank number).  
+        * "The tractor is older than the limousine" → `tractor < limousine` (older means lower rank number).  
+        * "The convertible is older than the sedan" → `convertible < sedan`.  
+        * "The convertible is the second-newest" → `convertible == 4` (newest = 5, so second-newest = 4).  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments satisfying all constraints.  
+    * Since the problem is uniquely determined, extract the single solution (or iterate through solutions if multiple, but uniqueness is expected).  
+
+5.  **Identify the Correct Answer:**  
+    * Note: Choice A states "The convertible is the second-newest." — this is directly given in the problem and encoded as `convertible == 4`.  
+    * However, verify consistency: with `convertible = 4`, and constraints `tractor > minivan`, `tractor < limousine`, and `convertible < sedan` → sedan must be 5 (newest).  
+    * This leaves ranks 1,2,3 for minivan, tractor, limousine with `minivan < tractor < limousine`, so possible assignment: minivan=1, tractor=2, limousine=3 (valid).  
+    * All constraints satisfied; thus choice A is confirmed true.  
+    * Since the question asks "Which of the following is true?" and choice A directly matches a premise (and is consistent), select "A".  
+    * Output the letter `"A"` as the final answer.

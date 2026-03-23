@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the five vehicles: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+    * Assign a numerical domain of integers from **1 to 5**, where **1 = oldest** and **5 = newest** (as age increases toward newer vehicles).  
+    * Add all variables to the problem with their domain (1–5).
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Convert each statement into a constraint using `lambda` functions or direct value assignments:  
+        - "The tractor is newer than the minivan" → `tractor > minivan` (since newer = higher rank number).  
+        - "The tractor is older than the limousine" → `tractor < limousine`.  
+        - "The convertible is older than the sedan" → `convertible < sedan`.  
+        - "The convertible is the second-newest" → assign fixed value: `convertible == 4`.
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Since the problem is well-constrained, expect exactly one solution; extract it (e.g., `solutions[0]`).
+
+5.  **Verify and Match Against Choices:**  
+    * Note that Choice A states "The convertible is the second-newest." — this directly matches the given statement and the constraint `convertible == 4`.  
+    * In fact, since this is an explicit fact in the problem and the constraints are consistent, the correct answer must be A.  
+    * However, to follow the plan rigorously: confirm in the solution that `convertible` has rank 4 (second-newest), and map this to choice A using the provided choices list.  
+    * Return 'A' as the answer.

@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Their Domain:**
+    * Define the variables as the three fruits: `"peaches"`, `"pears"`, and `"mangoes"`.
+    * Define the domain as integers from 1 to 3, where **1 represents cheapest** and **3 represents most expensive**.
+    * Add the variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate the statements into constraints:
+        * "The peaches are the cheapest" means peach's rank is 1.
+        * "The mangoes are less expensive than the pears" means mango's rank < pear's rank.
+
+4.  **Solve for the Unique Solution:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the single solution (since it is uniquely determined).
+
+5.  **Identify the Correct Answer:**
+    * The question asks which is true, and one of the choices directly states "The peaches are the cheapest", which matches the given constraint.
+    * Verify in the solution that peaches have rank 1 (cheapest).
+    * Return choice 'A' as the correct answer, since it matches the condition derived from the problem statement and confirmed by the solution.

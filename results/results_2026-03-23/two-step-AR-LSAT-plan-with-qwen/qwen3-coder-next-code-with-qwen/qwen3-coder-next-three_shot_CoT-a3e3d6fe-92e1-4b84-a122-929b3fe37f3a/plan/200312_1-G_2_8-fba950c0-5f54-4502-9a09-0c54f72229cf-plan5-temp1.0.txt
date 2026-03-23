@@ -1,0 +1,13 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles and assign them integer codes (0–5).  
+2. Create integer variables `bay[0]` to `bay[5]`, where `bay[i]` is the bay number (1–6) for cargo type i.  
+3. Add **domain constraints**: `bay[i] ∈ {1,2,3,4,5,6}` and all `bay[i]` are distinct (a permutation).  
+4. Add **ordering constraints** from statements:  
+   - grain > livestock (bay[grain] > bay[livestock])  
+   - livestock > textiles (bay[livestock] > bay[textiles])  
+   - produce > fuel (bay[produce] > bay[fuel])  
+   - textiles and produce are adjacent: |bay[textiles] − bay[produce]| = 1  
+5. Add **auxiliary constraint** for the conditional: exactly one bay between machinery and grain → |bay[machinery] − bay[grain]| = 2.  
+6. Enumerate all permutations of bay numbers satisfying constraints (or use Z3 to find all models).  
+7. For each model, identify which cargo types have uniquely determined bays (i.e., same bay number across *all* satisfying assignments).  
+8. Count the number of cargo types whose bay is fixed across all solutions.  
+9. Determine the count (must be one of {2,3,4,5,6}) and return it.

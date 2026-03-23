@@ -1,0 +1,16 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign each a unique position variable (1 to 7).  
+2. Create integer variables for positions: `pos_G`, `pos_H`, `pos_J`, `pos_Q`, `pos_R`, `pos_S`, `pos_Y`.  
+3. Add **domain constraints**: all positions are integers in [1,7] and pairwise distinct (all-different constraint).  
+4. Add **topic group constraints**: Identify topic groups—Finance: {G, H, J}, Nutrition: {Q, R, S}, Wildlife: {Y}.  
+5. Add **no consecutive same-topic constraint**: For every pair of articles from the same topic group, ensure their positions are not consecutive (i.e., |pos_a - pos_b| ≠ 1 for any two same-topic articles).  
+6. Add **S before Q iff Q is third constraint**:  
+   - `S < Q → Q == 3` (equivalently: if Q ≠ 3, then S > Q).  
+7. Add **S before Y constraint**: `pos_S < pos_Y`.  
+8. Add **J < G < R chain constraint**: `pos_J < pos_G` and `pos_G < pos_R`.  
+9. Translate the five answer choices into partial assignments (e.g., "H is fourth" → `pos_H == 4`, etc.).  
+10. For each answer choice, clone the base constraints and add the proposed condition (e.g., `pos_H == 4`).  
+11. Check if the resulting system has **exactly one model** (i.e., only one valid ordering satisfies all constraints).  
+    - To do this: after confirming SAT, enumerate all solutions (e.g., by iteratively blocking found models and re-solving) and count total models.  
+    - If the number of solutions is exactly 1, then that choice fully determines the order.  
+12. Identify which answer choice yields exactly one valid ordering and return its index in the choices list as the final result.  
+13. Store only that choice’s index in `answer_index_list` and output it.

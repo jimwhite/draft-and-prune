@@ -1,0 +1,15 @@
+1. Enumerate the six band members and assign them integer indices: guitar=0, keyboard=1, percussion=2, saxophone=3, trumpet=4, violin=5.  
+2. Create integer variables `pos[m]` for each member `m`, representing their solo position (1 to 6).  
+3. Add **domain constraints**: each `pos[m] ∈ {1,2,3,4,5,6}`, and all positions are distinct (using `Distinct`).  
+4. Add **guitarist constraint**: guitarist does not perform fourth solo → `pos[guitar] != 4`.  
+5. Add **percussion < keyboard constraint**: `pos[percussion] < pos[keyboard]`.  
+6. Add **violinist < keyboard < guitarist constraints**: `pos[ violin] < pos[keyboard]` and `pos[keyboard] < pos[guitar]`.  
+7. Add **saxophonist XOR constraint**: saxophonist performs after *exactly one* of percussion or trumpeter.  
+    - Define boolean flags: `after_per = pos[saxophone] > pos[percussion]`, `after_tru = pos[saxophone] > pos[trumpet]`.  
+    - Enforce `after_per != after_tru` (i.e., XOR).  
+8. Translate answer choices into member indices: guitarist=0, keyboard=1, saxophone=3, trumpet=4, violinist=5 (exclude percussion as not in choices).  
+9. Define `answer_index_list = []`. For each candidate member in the choices:  
+    - Clone base constraints into a fresh solver.  
+    - Assert `pos[member] == 3`.  
+    - If UNSAT, append member index to `answer_index_list`.  
+10. Return the list of indices (corresponding to members who cannot be third).

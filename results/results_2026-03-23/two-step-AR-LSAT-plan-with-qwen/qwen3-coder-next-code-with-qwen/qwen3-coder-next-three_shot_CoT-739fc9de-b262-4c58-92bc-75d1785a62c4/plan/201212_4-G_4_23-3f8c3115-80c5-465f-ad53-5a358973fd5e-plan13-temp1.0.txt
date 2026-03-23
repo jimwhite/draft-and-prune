@@ -1,0 +1,15 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign integer indices.  
+2. Create permutation variables for article positions: seven distinct integer variables `pos[0]` to `pos[6]`, each in 1..7, all-different.  
+3. Precompute article-topic mapping: G=finance, H=nutrition, J=finance, Q=nutrition, R=nutrition, S=nutrition, Y=wildlife.  
+4. Add **topic-consecutive constraint**: For all i from 1 to 6, topic of article at position i ≠ topic at position i+1.  
+5. Add **S-before-Q conditional constraint**: If S is before Q, then Q must be third; equivalently: `pos_S < pos_Q → pos_Q == 3`.  
+6. Add **S-before-Y constraint**: `pos_S < pos_Y`.  
+7. Add **J-G-R chain constraint**: `pos_J < pos_G < pos_R`.  
+8. Note: The question asks which single condition (from the choices) *fully determines* the edit order — i.e., makes exactly one satisfying permutation exist.  
+9. Define `answer_index_list = []`. For each choice (e.g., “H is fourth”):
+    - Clone the base solver (with all constraints from steps 4–7).
+    - Add constraint that H is fourth: `pos[H] == 4`.
+    - Enumerate all satisfying assignments (using solver.check() + model extraction or incremental solving to check uniqueness).
+        - To check uniqueness: after finding one solution, add constraint blocking it, re-check. If UNSAT on second check, only one model exists.
+    - If exactly one satisfying assignment exists, append this choice’s index to `answer_index_list`.
+10. Print `answer_index_list`.

@@ -1,0 +1,19 @@
+1. Identify all entities: bald_eagle, cat, lion, mouse.  
+2. Encode all explicitly stated facts using ternary predicates:  
+   - Relations like chases, eats, sees use another entity as the object (e.g., chases("bald_eagle", "cat", True)).  
+   - Properties like is_young, is_rough use boolean as object (e.g., is_rough("cat", True)).  
+   - Explicit negations (e.g., “does not chase”) are encoded as facts with False: chases("bald_eagle", "mouse", False), etc.  
+3. Translate each conditional rule into PyKe’s `foreach` + `assert` form:  
+   • If something is kind → it is round.  
+   • If something chases the bald eagle → it is round.  
+   • If something is round → it sees the bald eagle.  
+   • If something chases the cat and the cat chases the bald eagle → it eats the bald eagle.  
+   • If something chases the cat → the cat sees the lion.  
+   • If something sees the cat → it chases the bald eagle.  
+   • If bald_eagle is young AND bald_eagle chases lion → bald_eagle sees lion.  
+   • If mouse eats cat AND mouse eats bald_eagle → bald_eagle eats cat.  
+   • If something sees bald_eagle AND it chases cat → bald_eagle sees cat.  
+4. For each rule, construct a `foreach` block capturing the conjunction of conditions (including explicit constants and negated facts where needed), followed by an `assert` clause for the conclusion.  
+5. Note: The negated facts (e.g., cat does not chase bald_eagle, cat does not eat bald_eagle) are encoded directly as False facts and used in rule matching by requiring absence of True or presence of False via PyKe’s negation handling (e.g., `~facts.chases("cat", "bald_eagle", True)` or equivalently checking that `chases("cat", "bald_eagle", False)` holds).  
+6. The query checks whether cat sees lion:  
+   → Use facts.sees("cat", "lion", True)

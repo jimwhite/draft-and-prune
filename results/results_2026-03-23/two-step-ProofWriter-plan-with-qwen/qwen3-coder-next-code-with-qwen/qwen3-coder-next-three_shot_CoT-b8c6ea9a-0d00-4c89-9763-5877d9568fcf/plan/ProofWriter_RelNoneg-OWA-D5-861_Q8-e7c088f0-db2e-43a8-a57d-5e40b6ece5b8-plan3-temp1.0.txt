@@ -1,0 +1,23 @@
+1. Identify all entities: cat, dog, rabbit, tiger.
+2. Encode all explicitly stated facts as ternary predicates:
+   - needs("cat", "dog", True)
+   - is_kind("dog", True)
+   - needs("dog", "rabbit", True)
+   - eats("rabbit", "dog", True)
+   - is_green("rabbit", True)
+   - chases("tiger", "rabbit", True)
+   - is_big("tiger", True)
+3. Translate all context rules into PyKe `foreach` → `assert` rules:
+   • If X is nice and eats the tiger → X needs the dog.
+   • If X chases the cat → X eats the cat.
+   • If the dog chases the tiger → the tiger needs the rabbit.
+   • If the rabbit chases the tiger → the rabbit chases the cat.
+   • If X chases the cat → the cat is kind.
+   • If X eats the dog → X chases the cat.
+   • If X is rough → X eats the dog.
+   • If X is kind → X is rough.
+   • If X eats the rabbit and the rabbit is big → X is kind.
+4. For implications with specific subjects (e.g., "the dog chases the tiger"), encode as standalone rules using concrete entities ("dog", "tiger").
+5. Derive all possible conclusions via forward chaining (e.g., is_kind("dog", True) → is_rough("dog", True) via rule 8; then is_rough("dog", True) → eats("dog", "dog", True)? Wait: rule says *if rough then eats the dog*, i.e., eats("X", "dog", True). So eat("dog","dog",True) if dog is rough. But note: no fact asserts X eats "self" unless derived, and not obviously problematic).
+6. The query is: “The cat is not rough” → i.e., is_rough("cat", False).
+7. Thus, assert query: facts.is_rough("cat", False).

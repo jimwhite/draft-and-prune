@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the seven birds as variables: `"blue jay"`, `"owl"`, `"falcon"`, `"hawk"`, `"raven"`, `"crow"`, and `"hummingbird"`.
+    * Define the domain as integers from 1 to 7, where 1 = leftmost position and 7 = rightmost.
+    * Add all seven bird variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Formulate and Add All Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+    * Add constraints derived from the problem statements:
+        * "The falcon is the second from the left" → `falcon == 2`.
+        * "The crow is the rightmost" → `crow == 7`.
+        * "The hummingbird is to the right of the blue jay" → `blue_jay < hummingbird`.
+        * "The hawk is to the right of the hummingbird" → `hummingbird < hawk`.
+        * "The blue jay is to the right of the owl" → `owl < blue_jay`.
+        * "The raven is to the left of the falcon" → `raven < falcon` (and since falcon = 2, this implies raven ∈ {1}).
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (since the problem is deterministic), typically by taking `solutions[0]`.
+
+5.  **Determine the Leftmost Bird:**
+    * The leftmost position corresponds to value 1.
+    * Scan the solution dictionary (mapping bird names to positions) to identify which bird has position = 1.
+    * Map the identified bird to its corresponding choice letter using the provided choices list:
+        * "The blue jay is the leftmost." → A
+        * "The owl is the leftmost." → B
+        * "The falcon is the leftmost." → C (but falcon = 2, so this is impossible)
+        * "The hawk is the leftmost." → D
+        * "The raven is the leftmost." → E (and given falcon = 2 and raven < falcon, raven must be 1 — so this is likely true)
+        * "The crow is the leftmost." → F (impossible, since crow = 7)
+        * "The hummingbird is the leftmost." → G
+    * Output the letter (e.g., "E") corresponding to the bird found at position 1.

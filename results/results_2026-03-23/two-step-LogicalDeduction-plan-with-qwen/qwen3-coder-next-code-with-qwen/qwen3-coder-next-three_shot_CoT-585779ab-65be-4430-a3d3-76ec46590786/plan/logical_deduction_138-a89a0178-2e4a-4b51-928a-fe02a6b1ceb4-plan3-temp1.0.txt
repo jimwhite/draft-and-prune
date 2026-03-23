@@ -1,0 +1,36 @@
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the logical puzzle.
+
+2.  **Define Variables and Domain:**
+    * List the seven birds as string variables: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, `"raven"`.
+    * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each bird occupies a unique position using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The falcon is to the right of the quail" → `falcon > quail`
+    * "The robin is to the right of the hummingbird" → `robin > hummingbird`
+    * "The raven is to the left of the quail" → `raven < quail`
+    * "The blue jay is the second from the left" → `blue jay == 2`
+    * "The robin is the third from the left" → `robin == 3`
+    * "The cardinal is the third from the right" → In a 7-position line, the third from the right corresponds to position **5** (since positions from left: 1,2,3,4,**5**,6,7 → rightmost is 7, second right is 6, third right is 5) → `cardinal == 5`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid arrangements.
+    * Since the constraints are sufficient for uniqueness, extract the single solution.
+
+6.  **Identify the Correct Choice:**
+    * The question asks: "Which bird is the second from the right?" → This corresponds to **position 6** (since position 7 is rightmost, so position 6 is second from right).
+    * Create a mapping from choice letters ("A" to "G") to bird names:
+        - A → `"cardinal"`
+        - B → `"blue jay"`
+        - C → `"robin"`
+        - D → `"falcon"`
+        - E → `"quail"`
+        - F → `"hummingbird"`
+        - G → `"raven"`
+    * Iterate through the choices, check which bird in the solution has position **6**.
+    * Return the corresponding choice letter as the answer.

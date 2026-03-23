@@ -1,0 +1,16 @@
+1. Enumerate the eight students and assign them integer indices.  
+2. Represent each report slot (6 total: Mon AM, Mon PM, Tue AM, Tue PM, Wed AM, Wed PM) as a variable assigned to one student; use 0-based or 1-based slot indexing for clarity.  
+3. Enforce **exactly six students report**, meaning two students are excluded; define binary exclusion variables or simply enforce that only 6 distinct students appear in the report slots.  
+4. Add **slot-count constraints**: exactly two reports per day (Mon: slots 0,1; Tue: 2,3; Wed: 4,5).  
+5. Add **Tuesday-only constraint for George**: if George reports, his slot must be Tuesday (i.e., slot 2 or 3).  
+6. Add **afternoon-report constraints for Olivia and Robert**: they cannot be in PM slots (i.e., slots 1,3,5).  
+7. Add **Nina conditional constraint**: if Nina reports on Monday or Tuesday, then the next day both Helen and Irving must report (one each), but if Nina reports on Wednesday, no such requirement.  
+8. Add **Kyle and Lenore do not report** constraint (i.e., exclude Kyle and Lenore from the six reporters).  
+9. For each answer choice (a triple: Mon AM, Tue AM, Wed AM), check consistency:  
+   - Extract the three students for Mon AM, Tue AM, Wed AM positions.  
+   - For each choice, create a fresh solver with base constraints + fix those three AM slots to the proposed students.  
+   - Also, enforce that each of the six report slots is filled with distinct students from the allowed set (excluding Kyle, Lenore), respecting all earlier constraints.  
+   - If the model is SAT for a choice, then it is possible; collect all satisfying choices.  
+10. Among the answer options, determine which ones are feasible (SAT). Since the question asks "could be", we only need to identify valid options — but note: the prompt says “Could be... respectively”, and asks which *could* be; however, final answer format expects the list of valid indices.  
+11. Define `answer_index_list = []`. For each choice index i (0 to 4), if the constrained solver returns SAT, append i.  
+12. Output `answer_index_list`.

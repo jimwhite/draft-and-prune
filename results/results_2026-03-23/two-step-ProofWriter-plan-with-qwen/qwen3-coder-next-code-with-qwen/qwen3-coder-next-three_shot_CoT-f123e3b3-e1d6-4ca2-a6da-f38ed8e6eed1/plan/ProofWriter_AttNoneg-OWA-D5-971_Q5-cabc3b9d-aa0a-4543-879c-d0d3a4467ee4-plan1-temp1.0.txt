@@ -1,0 +1,21 @@
+1. Identify all entities: Charlie, Erin, Fiona, Gary.  
+2. Encode all explicitly stated facts as ternary predicates of the form `predicate(subject, object, True)` or `predicate(subject, boolean, True)` for unary properties:  
+   - is_green("Charlie", True), is_kind("Charlie", True)  
+   - is_blue("Erin", True), is_kind("Erin", True)  
+   - is_green("Fiona", True)  
+   - is_blue("Gary", True), is_furry("Gary", True), is_green("Gary", True), is_kind("Gary", True), is_round("Gary", True)  
+3. Encode the explicit fact "Fiona is green" as `facts.is_green("Fiona", True)`.  
+4. Translate each conditional rule into PyKe `foreach`-`assert` format:  
+   • If someone is round and kind → they are green.  
+   • All green, round people → blue.  
+   • Round people → big.  
+   • Kind people → furry.  
+   • Blue people → kind.  
+   • Green people → big.  
+   • If Erin is cold and green → Erin is blue.  
+   • Cold, blue people → kind.  
+   • All green, big people → round.  
+5. For each rule, implement a `foreach` block matching the antecedent conditions and an `assert` statement for the consequent.  
+6. Since "Fiona is green" is given, use it as a starting fact to trigger applicable rules (e.g., green → big, and potentially others if Fiona’s other properties become deducible).  
+7. The query checks whether Fiona is round:  
+   → Use `facts.is_round("Fiona", True)` to verify if it can be deduced, or expect `unknown` if neither the fact nor its negation is derivable.

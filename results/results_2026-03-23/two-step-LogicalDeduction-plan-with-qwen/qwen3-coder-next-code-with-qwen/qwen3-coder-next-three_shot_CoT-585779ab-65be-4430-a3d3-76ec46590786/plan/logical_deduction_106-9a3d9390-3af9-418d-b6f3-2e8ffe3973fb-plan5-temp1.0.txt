@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the seven fruit types as variables: `"watermelons"`, `"cantaloupes"`, `"pears"`, `"peaches"`, `"mangoes"`, `"kiwis"`, and `"oranges"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all seven fruit variables with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that all fruits have distinct price rankings by adding an `AllDifferentConstraint` over the seven variables.
+
+4.  **Translate Statements into Constraints:**
+    * "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`
+    * "The pears are less expensive than the kiwis" → `pears < kiwis`
+    * "The kiwis are the fourth-most expensive" → `kiwis == 4` (since most expensive = highest number, i.e., rank 7 is most expensive; thus "fourth-most expensive" = position 4 in descending order of price, which corresponds to **rank 4** where 1=cheapest, 7=most expensive — confirming: rank 7 > rank 6 > ... > rank 1, so fourth-most expensive = rank 4)
+    * "The mangoes are less expensive than the pears" → `mangoes < pears`
+    * "The peaches are the cheapest" → `peaches == 1`
+    * "The cantaloupes are more expensive than the watermelons" → `cantaloupes > watermelons`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Extract the unique solution (assuming uniqueness as implied by problem context).
+
+6.  **Identify the Correct Answer:**
+    * The question asks which fruit is fourth-most expensive, i.e., has rank **4**.
+    * Note: The given choice F) explicitly states "The kiwis are the fourth-most expensive", which directly matches constraint `kiwis == 4`.
+    * However, to be thorough: verify the solution — though logically, since `kiwis == 4` is a hard constraint and all constraints are consistent, kiwis *must* be at rank 4 in any solution.
+    * Create a mapping from choice letters to fruit names:  
+        `'A' → "watermelons"`, `'B' → "cantaloupes"`, `'C' → "pears"`, `'D' → "peaches"`, `'E' → "mangoes"`, `'F' → "kiwis"`, `'G' → "oranges"`
+    * Locate which fruit has rank 4 in the solution.
+    * Return the corresponding choice letter — here, it is **F**, as confirmed by constraint.

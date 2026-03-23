@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * Define variables as the five vehicle names: `"station_wagon"`, `"sedan"`, `"tractor"`, `"motorcyle"`, and `"limousine"`.  
+    * Define the domain as integers 1 to 5, where **1 = oldest** and **5 = newest**.  
+    * Add the variables and their domain to the problem.
+
+3.  **Add Constraints:**  
+    * Add `AllDifferentConstraint()` to enforce uniqueness of ranks.  
+    * Translate each statement into constraints:  
+        - "The tractor is newer than the motorcyle" → `tractor > motorcyle`  
+        - "The motorcyle is newer than the sedan" → `motorcyle > sedan`  
+        - "The limousine is the oldest" → `limousine == 1`  
+        - "The station wagon is the newest" → `station_wagon == 5`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution from the list.
+
+5.  **Identify the Correct Choice:**  
+    * The question asks which vehicle is the oldest (i.e., rank 1).  
+    * Create a mapping from choice letters to vehicle names:  
+        `{"A": "station_wagon", "B": "sedan", "C": "tractor", "D": "motorcyle", "E": "limousine"}`  
+    * Find which vehicle has rank 1 in the solution.  
+    * Return the corresponding choice letter.

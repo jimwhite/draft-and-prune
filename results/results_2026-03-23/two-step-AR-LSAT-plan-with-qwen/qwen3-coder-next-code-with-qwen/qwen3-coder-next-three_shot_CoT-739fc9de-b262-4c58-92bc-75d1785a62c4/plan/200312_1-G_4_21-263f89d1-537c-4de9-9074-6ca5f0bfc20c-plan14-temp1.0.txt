@@ -1,0 +1,22 @@
+1. Enumerate the five students and assign them integer indices: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `r[s][p]` for student s and play p, indicating whether student s reviews play p.  
+4. Add **at-least-one** constraint for each student: each student reviews at least one play.  
+5. Add **Kramer/Lopez constraint**: Kramer and Lopez each review fewer plays than Megregian.  
+    - Let count(s) = r[s][0] + r[s][1] + r[s][2]; then count(Kramer) < count(Megregian), count(Lopez) < count(Megregian).  
+6. Add **exclusion constraint**: Lopez and Megregian review no plays that Jiang reviews.  
+    - For each play p, if r[Jiang][p] is true then r[Lopez][p] = false and r[Megregian][p] = false.  
+7. Add **Kramer/O'Neill constraint**: both review Tamerlane (play 1): r[Kramer][1] = true, r[O'Neill][1] = true.  
+8. Add **exactly-two-students-identical constraint**: exactly two students have identical review sets (i.e., for some pair (a,b), r[a][p] == r[b][p] for all p, and no other pair does).  
+    - Use auxiliary Boolean variables to indicate equality of review sets for each unordered pair (i,j), i<j.  
+    - Exactly one of these equality variables is true.  
+9. Add **given condition**: exactly three students review Undulation (play 2): sum over s of r[s][2] = 3.  
+10. Translate each answer choice into a logical condition:  
+    - A) Megregian does not review Undulation → r[3][2] = false  
+    - B) O'Neill does not review Undulation → r[4][2] = false  
+    - C) Jiang reviews Undulation → r[0][2] = true  
+    - D) Lopez reviews Tamerlane → r[2][1] = true  
+    - E) O'Neill reviews Sunset → r[4][0] = true  
+11. For each answer choice condition, clone the base constraints into a fresh solver, add the condition, and check satisfiability.  
+12. Collect indices of answer choices for which the modified solver returns SAT (i.e., the condition *could* be true under all constraints).  
+13. Return the list of SAT condition indices (0–4) as possible true statements.

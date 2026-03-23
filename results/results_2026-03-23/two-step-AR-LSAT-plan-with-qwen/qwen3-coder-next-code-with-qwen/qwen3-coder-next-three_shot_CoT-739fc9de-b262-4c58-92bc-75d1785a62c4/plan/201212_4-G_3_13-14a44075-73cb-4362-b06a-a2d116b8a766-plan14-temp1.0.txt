@@ -1,0 +1,15 @@
+1. Enumerate the six service targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV). Assign them integer variables constrained to {1, 2, 3} (representing 1-day, 2-day, 3-day).  
+2. Add **domain constraints**: all six variables ∈ {1, 2, 3}.  
+3. Add **website ≤ voicemail constraints** for each client:  
+    - IW ≤ IV  
+    - SW ≤ SV  
+    - TW ≤ TV  
+4. Add **Image voicemail constraint**: IV is strictly less than both SV and TV (since Image’s voicemail target must be shorter than the other clients’ voicemail targets).  
+5. Add **Solide–Truvest website constraint**: SW < TW (strictly shorter, as “must be shorter” implies strict inequality).  
+6. Add the **given condition**: IW = 2.  
+7. We are to find which target *must* be 2 days under these constraints. For each choice (IV, SW, SV, TW, TV):  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that the candidate target ≠ 2 (i.e., it is 1 or 3).  
+    - Add the known condition IW = 2 and all prior constraints.  
+    - If UNSAT, then the candidate *must* be 2; record its index in answer_index_list.  
+8. Return the list of forced targets (should be exactly one).

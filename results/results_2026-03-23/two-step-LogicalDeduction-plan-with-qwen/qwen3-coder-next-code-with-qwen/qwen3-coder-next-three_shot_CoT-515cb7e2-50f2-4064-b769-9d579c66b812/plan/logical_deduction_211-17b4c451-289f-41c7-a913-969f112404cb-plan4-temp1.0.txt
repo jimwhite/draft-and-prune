@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the golf tournament ordering puzzle.
+
+2.  **Define Variables and Domain:**
+    * List the seven golfers as string variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"Joe"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (best/earliest finish)** and **7 = last place (worst/latest finish)**.
+    * Add all seven golfers as variables to the problem, each with domain {1,2,3,4,5,6,7}.
+
+3.  **Translate Statements into Formal Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Convert each statement:
+        * "Amy finished below Joe" → Amy's position number > Joe's position number (since lower number = better rank).
+        * "Dan finished above Mya" → Dan's position number < Mya's position number.
+        * "Eli finished third" → Eli's position = 3.
+        * "Ana finished first" → Ana's position = 1.
+        * "Amy finished second-to-last" → Amy's position = 6 (since there are 7 golfers, positions 1–7; second-to-last = position 6).
+        * "Mya finished fourth" → Mya's position = 4.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Invoke `getSolutions()` to find all valid assignments of positions satisfying all constraints.
+    * Since the puzzle is deterministic and consistent, extract the unique solution from the returned list.
+
+5.  **Identify Which Golfer Is Third-to-Last:**
+    * Compute the third-to-last position: for 7 golfers, this is position = 7 − 2 = **5**.
+    * Create a mapping from choice letters to golfer names: 
+        `{'A': 'mya', 'B': 'eli', 'C': 'ana', 'D': 'amy', 'E': 'mel', 'F': 'dan', 'G': 'Joe'}`.
+    * In the solution dictionary, locate the golfer assigned to position 5.
+    * Return the choice letter (key) corresponding to that golfer as the final answer.

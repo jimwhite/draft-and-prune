@@ -1,0 +1,24 @@
+1. Identify all entities and types: Wren, tumpus, impus, yumpus, zumpus, rompus, numpus, dumpus, wumpus, vumpus, jompus.  
+2. Identify all properties: temperate, orange, shy, bright, opaque, small, floral, aggressive, not_floral, not_opaque.  
+3. Represent "Wren is a zumpus" as a base fact: `is_a("Wren", "zumpus", True)`.  
+4. Translate all class properties and subclass relationships into logical rules:  
+   - Tumpuses are temperate → `foreach t: is_a(t, "tumpus", True) ⇒ is_temperate(t, True)`  
+   - Tumpuses are impuses → `foreach t: is_a(t, "tumpus", True) ⇒ is_a(t, "impus", True)`  
+   - Every impus is orange → `foreach i: is_a(i, "impus", True) ⇒ is_orange(i, True)`  
+   - Impuses are yumpuses → `foreach i: is_a(i, "impus", True) ⇒ is_a(i, "yumpus", True)`  
+   - Each yumpus is shy → `foreach y: is_a(y, "yumpus", True) ⇒ is_shy(y, True)`  
+   - Yumpuses are zumpuses → `foreach y: is_a(y, "yumpus", True) ⇒ is_a(y, "zumpus", True)`  
+   - Zumpuses are bright → `foreach z: is_a(z, "zumpus", True) ⇒ is_bright(z, True)`  
+   - Every zumpus is a rompus → `foreach z: is_a(z, "zumpus", True) ⇒ is_a(z, "rompus", True)`  
+   - Every numpus is opaque → `foreach n: is_a(n, "numpus", True) ⇒ is_opaque(n, True)`  
+   - Rompuses are small → `foreach r: is_a(r, "rompus", True) ⇒ is_small(r, True)`  
+   - Every rompus is a dumpus → `foreach r: is_a(r, "rompus", True) ⇒ is_a(r, "dumpus", True)`  
+   - Dumpuses are not floral → `foreach d: is_a(d, "dumpus", True) ⇒ is_floral(d, False)`  
+   - Each dumpus is a wumpus → `foreach d: is_a(d, "dumpus", True) ⇒ is_a(d, "wumpus", True)`  
+   - Each wumpus is aggressive → `foreach w: is_a(w, "wumpus", True) ⇒ is_aggressive(w, True)`  
+   - Wumpuses are vumpuses → `foreach w: is_a(w, "wumpus", True) ⇒ is_a(w, "vumpus", True)`  
+   - Each vumpus is not opaque → `foreach v: is_a(v, "vumpus", True) ⇒ is_opaque(v, False)`  
+   - Every vumpus is a jompus → `foreach v: is_a(v, "vumpus", True) ⇒ is_a(v, "jompus", True)`  
+5. Implement each rule using `foreach` for the premise and `assert` for the conclusion in PyKe syntax.  
+6. The query tests whether "Wren is opaque" is provable (i.e., `is_opaque("Wren", True)`), or equivalently whether its negation ("Wren is not opaque") is provable; however, the question asks specifically about truth of "Wren is opaque", so:  
+   → Use `facts.is_opaque("Wren", True)`.

@@ -1,0 +1,21 @@
+1. Enumerate the six students and assign integer indices: Louis (0), Mollie (1), Onyx (2), Ryan (3), Tiffany (4), Yoshio (5).  
+2. Create integer variables `year[s]` for each student s, where `year[s] ∈ {1921, 1922, 1923, 1924}` or equivalently use indices 0–3 (for years), with actual year = base + index.  
+3. Add **assignment constraints**: exactly four distinct students are assigned (i.e., the other two have no assignment); model using auxiliary boolean `assigned[s] ∈ {true, false}` and enforce exactly four true. Alternatively, enforce that only students with defined `year[s]` are used and ensure uniqueness across assigned ones. Use a bijection: select 4 of 6 students and assign each a unique year (1–4).  
+   - Better: Define variables `pos[y] ∈ {0..5}` for year y (y=0→1921, ..., 3→1924), indicating which student is assigned to year y. Then `pos[0], pos[1], pos[2], pos[3]` are distinct integers in 0..5.  
+4. Add **fixed assignment constraint**: both Ryan (index=3) and Yoshio (index=5) are assigned → so they must appear in `{pos[0], pos[1], pos[2], pos[3]}`.  
+5. Add **1923 constraint**: only Louis (0) or Tiffany (4) may be assigned to year 1923 (i.e., `pos[2] ∈ {0, 4}`).  
+6. Add **Mollie conditional constraint**: if Mollie (1) is assigned (i.e., appears in `pos`), then she must be assigned to 1921 or 1922 (i.e., `pos[y] = 1 → y ∈ {0,1}`).  
+7. Add **Tiffany conditional constraint**: if Tiffany (4) is assigned (`pos[y] = 4` for some y), then Ryan (3) must be assigned (`∃y: pos[y] = 3`). Given we assume both Ryan and Yoshio are assigned, this implication is automatically satisfied.  
+8. Add **Ryan-Onyx conditional constraint**: if Ryan (3) is assigned, then Onyx (2) must be assigned to the year *immediately before* Ryan's. So if `pos[yr_ryan] = 3`, then `pos[yr_ryan - 1] = 2`, and yr_ryan must be ≥ 1 (i.e., not 1921).  
+9. Translate answer choices into conditions on the assignment:  
+   - A: Louis assigned to 1923 → `pos[2] = 0`  
+   - B: Mollie assigned to 1921 → `pos[0] = 1`  
+   - C: Onyx assigned to 1922 → `pos[1] = 2`  
+   - D: Tiffany assigned to 1924 → `pos[3] = 4`  
+   - E: Yoshio assigned to 1922 → `pos[1] = 5`  
+10. Since the question asks “which one of the following **could** be true” given Ryan and Yoshio are assigned, use SAT solving:  
+    - For each choice, clone the base constraints (including Ryan & Yoshio assigned).  
+    - Add the specific condition for that choice.  
+    - Check if model is SAT.  
+11. Collect indices of choices for which the model is SAT — those are possible; however, question implies exactly one could be true, so answer index list will have size 1.  
+12. Return the choice string corresponding to the SAT-true index.

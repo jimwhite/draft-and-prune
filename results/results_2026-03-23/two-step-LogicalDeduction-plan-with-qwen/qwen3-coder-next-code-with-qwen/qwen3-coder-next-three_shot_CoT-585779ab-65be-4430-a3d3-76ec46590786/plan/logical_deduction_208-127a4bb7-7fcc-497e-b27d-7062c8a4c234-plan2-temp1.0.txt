@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven fruits as variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, to reflect price ranking.
+    * Add all fruit variables with domain {1, 2, ..., 7} to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique price ranks.
+    * Convert each statement into a constraint:
+        * "The oranges are more expensive than the peaches" → `oranges < peaches` (since lower number = cheaper, more expensive means higher rank value: `oranges > peaches` is incorrect; correct mapping: price rank increases with cost, so *more expensive* → larger number. Thus: `peaches < oranges`).
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (less expensive = smaller rank number).
+        * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6).
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest=1, second-cheapest=2, third-cheapest=3).
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to compute all valid solutions.
+    * Extract the single solution from the list (the constraints should yield exactly one assignment).
+
+5.  **Identify the Correct Answer:**
+    * The question asks for which fruit is the **third-most expensive**. Since 7 = most expensive, third-most expensive corresponds to rank = **5**.
+    * Map choice letters ("A" through "G") to their respective fruits:
+        - A → `"watermelons"`
+        - B → `"mangoes"`
+        - C → `"kiwis"`
+        - D → `"pears"`
+        - E → `"cantaloupes"`
+        - F → `"oranges"`
+        - G → `"peaches"`
+    * In the solution dictionary, find which fruit has value `5`.
+    * Return the corresponding choice letter (e.g., if `"watermelons" == 5`, output `'A'`).

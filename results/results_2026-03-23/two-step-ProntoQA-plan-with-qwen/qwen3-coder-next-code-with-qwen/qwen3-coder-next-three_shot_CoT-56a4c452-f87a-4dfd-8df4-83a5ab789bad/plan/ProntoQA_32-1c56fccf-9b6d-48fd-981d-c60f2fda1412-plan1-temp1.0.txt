@@ -1,0 +1,30 @@
+1. Identify all entities and types: Sally, numpus, vumpus, tumpus, dumpus, wumpus, jompus, zumpus, impus, yumpus, rompus.  
+2. Identify all properties: earthy, transparent, small, aggressive, wooden, nervous, temperate, blue.  
+3. Represent "Sally is a numpus" as a base fact: `is_a("Sally", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Numpuses are earthy.  
+   - Numpuses are vumpuses.  
+   - Vumpuses are transparent.  
+   - Each vumpus is a tumpus.  
+   - Tumpuses are small.  
+   - Tumpuses are dumpuses.  
+   - Each dumpus is not aggressive.  
+   - Dumpuses are wumpuses.  
+   - Every wumpus is not wooden.  
+   - Every wumpus is a jompus.  
+   - Jompuses are not nervous.  
+   - Each jompus is a zumpus.  
+   - Each zumpus is temperate.  
+   - Rompuses are wooden. *(Note: This fact alone does not affect Sally unless Sally is linked to rompuses, but no such link exists via the chain.)*  
+   - Zumpuses are impuses.  
+   - Each impus is blue.  
+   - Impuses are yumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (e.g., `foreach X: is_a(X, "numpus") => is_property(X, "earthy", True)`, etc.).  
+6. Derive the chain of classification for Sally:  
+   - Sally is a numpus → Sally is a vumpus (from rule "Numpuses are vumpuses")  
+   - Sally is a vumpus → Sally is a tumpus (from "Each vumpus is a tumpus")  
+   - Sally is a tumpus → Sally is a dumpus (from "Tumpuses are dumpuses")  
+   - Sally is a dumpus → Sally is a wumpus (from "Dumpuses are wumpuses")  
+   - Sally is a wumpus → Sally is not wooden (from "Every wumpus is not wooden")  
+7. The query tests if the statement "Sally is not wooden" is provable:  
+   → Use `facts.is_wooden("Sally", False)`.

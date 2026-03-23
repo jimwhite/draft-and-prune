@@ -1,0 +1,40 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruits as variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, `"pears"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (i.e., higher rank means more expensive).  
+    * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Add AllDifferentConstraint:**  
+    * Enforce that all fruit prices (ranks) are distinct using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**  
+    * "The pears are more expensive than the kiwis" → `kiwis < pears` (since lower number = cheaper).  
+    * "The watermelons are less expensive than the peaches" → `watermelons < peaches`.  
+    * "The mangoes are the third-cheapest" → `mangoes == 3`.  
+    * "The watermelons are the third-most expensive" → Since 7 is most expensive, third-most expensive = position `5` (7 - 3 + 1 = 5) → `watermelons == 5`.  
+    * "The plums are the second-most expensive" → `plums == 6`.  
+    * "The loquats are the second-cheapest" → `loquats == 2`.
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all satisfying assignments.  
+    * Extract the unique solution (a dictionary mapping fruit names to ranks).
+
+6.  **Identify Which Fruit Is Third-Cheapest (Rank = 3):**  
+    * Note: The problem explicitly states `"The mangoes are the third-cheapest"` as a given fact, so rank 3 is assigned to `"mangoes"`.  
+    * However, the question asks: *"Which of the following is true?"* and provides multiple-choice options listing who occupies rank 3. Since we already have `"mangoes" == 3`, the correct choice is the one identifying mangoes as third-cheapest.  
+    * Map each choice letter to its fruit:  
+        - A → loquats  
+        - B → peaches  
+        - C → watermelons  
+        - D → plums  
+        - E → kiwis  
+        - F → mangoes  
+        - G → pears  
+    * Confirm which choice corresponds to `"mangoes"`.  
+    * The correct answer is **F**.
+
+7.  **Output the Final Answer Letter:**  
+    * Return `'F'` as the answer.

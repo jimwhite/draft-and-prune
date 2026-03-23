@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Declare the variables as the five vehicles: `"convertible"`, `"truck"`, `"bus"`, `"sedan"`, and `"motorcyle"`.  
+   * Define the domain as integers from 1 to 5, where **1 = oldest** and **5 = newest**, consistent with standard age ranking conventions for chronological ordering.  
+   * Add all variables and their shared domain to the problem.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Convert each statement into a lambda constraint:  
+     - "The bus is newer than the truck" → `bus > truck` (since higher number = newer).  
+     - "The truck is newer than the convertible" → `truck > convertible`.  
+     - "The sedan is the second-oldest" → `sedan == 2`.  
+     - "The motorcyle is newer than the bus" → `motorcyle > bus`.  
+   * Combine the first two constraints implicitly via transitivity (`convertible < truck < bus < motorcyle`), but express them as separate explicit constraints.
+
+4. **Solve the Problem:**  
+   * Invoke `getSolutions()` to compute all valid assignments of ranks satisfying the constraints.  
+   * Extract the unique solution from the result list (since the problem is fully constrained, only one solution exists).
+
+5. **Determine the Newest Vehicle and Select the Correct Choice:**  
+   * The question asks which vehicle is **newest**, i.e., has rank **5**.  
+   * Map the choice letters to vehicle names: `"A" → "convertible"`, `"B" → "truck"`, `"C" → "bus"`, `"D" → "sedan"`, `"E" → "motorcyle"`.  
+   * Inspect the solution dictionary to find which vehicle’s rank equals 5.  
+   * Return the corresponding choice letter as the final answer.

@@ -1,0 +1,15 @@
+1. Enumerate the six targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV); assign integer indices 0–5.  
+2. Create integer variables for each target, constrained to {1, 2, 3} (days).  
+3. Add **domain constraints**: all six variables ∈ {1,2,3}.  
+4. Add **website ≤ voicemail constraints**: IW ≤ IV, SW ≤ SV, TW ≤ TV.  
+5. Add **Image voicemail constraint**: IV < SV and IV < TV (strictly shorter than both other clients’ voicemail targets).  
+6. Add **Solide–Truvest website constraint**: SW < TW (strictly shorter).  
+7. Add **given condition**: IW = 2.  
+8. For each answer choice (a specific target), assume it equals 2 and check consistency:  
+   - Clone base constraints into fresh solver.  
+   - Assert the target variable = 2.  
+   - Check SAT.  
+9. However, the question asks which target **must** be 2 (i.e., in *all* satisfying assignments under the given condition IW=2). So instead:  
+   - For each target t in answer choices, assume t ≠ 2 (i.e., t = 1 or t = 3) and check feasibility.  
+   - If UNSAT for all assignments where t ≠ 2, then t **must** be 2; add its index to answer_index_list.  
+10. Return the answer corresponding to the index in answer_index_list (single item expected).

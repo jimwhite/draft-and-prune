@@ -1,0 +1,19 @@
+1. Enumerate the eight students and assign integer indices to them.  
+2. Define Boolean variables for each student-day-slot combination (e.g., `g_m_Mon`, `h_a_Tue`, etc.), indicating whether a given student gives a report in a specific slot (morning/afternoon on Monday/Tuesday/Wednesday).  
+3. Add **exactly-six-reporters constraint**: exactly six students are assigned to a slot (i.e., sum of all student-slot Boolean variables = 6).  
+4. Add **two-reports-per-day constraint**: for each day, exactly two slots (morning + afternoon) are assigned to distinct students.  
+5. Add **slot uniqueness per student**: no student gives more than one report (i.e., at most one of their 6 possible slot variables is true).  
+6. Add **Tuesday-only-for-George constraint**: George can only give a report on Tuesday; i.e., all his Monday/Wednesday slot variables are false.  
+7. Add **no-afternoon-for-Olivia-and-Robert constraint**: Olivia and Robert cannot give afternoon reports on any day.  
+8. Add **Nina conditional constraint**: if Nina gives a report on Monday or Tuesday, then Helen and Irving must both give reports the next day; if Nina gives a report on Wednesday, no further condition applies.  
+9. Add **given assignments as constraints**: Kyle gives the afternoon report on Tuesday (`k_a_Tue = true`), and Helen gives the afternoon report on Wednesday (`h_a_Wed = true`).  
+10. For each choice in the answer options:  
+    - Parse the morning-report students for Monday, Tuesday, Wednesday (one each day).  
+    - Add constraints that those specific students occupy the morning slots of their respective days.  
+    - Ensure consistency: e.g., Tuesday morning ≠ Kyle (since Kyle is already assigned to Tuesday afternoon), and George can only be in Tuesday slots.  
+    - Also ensure no student appears twice across all slots, and all slot assignments respect prior constraints (e.g., Olivia/Robert not in afternoon).  
+11. For each option:  
+    - Clone the full solver (base constraints + given assignments).  
+    - Add constraints for that option’s morning reports.  
+    - If the model is SAT (i.e., a complete assignment satisfying all constraints exists with those morning reports), then the option is possible; record its index.  
+12. Output the list of indices for feasible options (one correct answer expected).

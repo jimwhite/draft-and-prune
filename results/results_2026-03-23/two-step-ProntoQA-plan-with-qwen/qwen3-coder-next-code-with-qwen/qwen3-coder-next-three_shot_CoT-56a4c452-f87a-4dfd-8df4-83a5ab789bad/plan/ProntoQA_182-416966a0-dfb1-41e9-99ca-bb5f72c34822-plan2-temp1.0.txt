@@ -1,0 +1,24 @@
+1. Identify all entities and types: Sam, tumpus, dumpus, numpus, jompus, wumpus, vumpus, yumpus, rompus, zumpus, impus.  
+2. Identify all properties: fruity, liquid, sour, cold, brown, happy, large, mean.  
+3. Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4. Translate all class properties and subclass relationships into rules:  
+   - Tumpuses are fruity.  
+   - Tumpuses are dumpuses.  
+   - Each dumpus is liquid.  
+   - Each dumpus is a numpus.  
+   - Numpuses are sour.  
+   - Numpuses are jompuses.  
+   - Jompuses are not cold.  
+   - Jompuses are wumpuses.  
+   - Wumpuses are brown.  
+   - Wumpuses are vumpuses.  
+   - Vumpuses are happy.  
+   - Each vumpus is a yumpus.  
+   - Each yumpus is large.  
+   - Each yumpus is a rompus.  
+   - Rompuses are not mean.  
+   - Every rompus is a zumpus.  
+   - Each impus is not large.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Sam is large" is provable:  
+   → Use `facts.is_large("Sam", True)`.

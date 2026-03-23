@@ -1,0 +1,16 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign each an integer index.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign each an integer index.  
+3. Create Boolean variables `assign[i][t]` indicating whether art historian i gives the lecture on topic t.  
+4. Add **one-lecture-per-historian** constraints: each historian gives exactly one lecture (sum over t of `assign[i][t]` = 1 for each i).  
+5. Add **one-lecture-per-topic** constraints: each topic is given by exactly one historian (sum over i of `assign[i][t]` = 1 for each t).  
+6. Introduce position variables `pos_t` (integer, 1–4) for each topic t to represent order of lectures.  
+7. Link assignment variables to position variables: for each historian i and topic t, if `assign[i][t]` is true then the position of topic t equals the position of historian i's lecture. Since each historian gives exactly one lecture, `pos_historian[i]` (1–4) can be defined as the unique t such that `assign[i][t]` is true, and then map topic order: `pos_topic[t] = pos_historian[i]` where `assign[i][t]` holds. Alternatively, directly define `pos_t` as integer variables and add constraint that all `pos_t` are distinct 1–4, then enforce mapping via `assign[i][t] => (pos_t = pos_historian_i)`. Simpler: define `pos_h[i]` for historian i (1–4), all distinct. Then each topic assigned to a historian gets that historian's position as its lecture time. So: for each i and t, `assign[i][t] => pos_t == pos_h[i]`.  
+8. Add **order constraints** using `pos_t`:  
+    - oil paintings < lithographs and watercolors < lithographs.  
+    - Farley’s lecture (pos_h[F]) < oil paintings lecture (pos_oil).  
+    - Holden’s lecture (pos_h[Ho]) < Garcia’s (pos_h[G]) and < Jiang’s (pos_h[J]).  
+9. Enumerate the five answer choices; each is a statement about temporal order (e.g., "Farley < sculptures"). Interpret each as a condition:  
+    - Let `cond_j` be the logical formula for choice j (e.g., `pos_h[F] < pos_topic[sculptures]`).  
+10. For each choice j, clone the base constraints and add `¬cond_j` (i.e., assume the statement is false).  
+11. If the resulting system is UNSAT, then choice j **must be true** (its negation leads to contradiction). Collect the index of such j.  
+12. The answer is the unique choice index for which UNSAT occurs (as only one must be true).

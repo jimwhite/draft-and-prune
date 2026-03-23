@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Set up variables for the three birds: `"bluejay"`, `"cardinal"`, and `"quail"`.
+    * Define the domain as integers 1 to 3, where 1 represents the leftmost position and 3 represents the rightmost.
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Add Constraints Based on Statements:**
+    * Add an `AllDifferentConstraint` to ensure unique positions.
+    * Translate "The cardinal is to the right of the quail" into `cardinal > quail`.
+    * Translate "The quail is to the right of the blue jay" into `quail > bluejay`.
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to compute all valid arrangements.
+    * Extract the single solution (since the constraints yield a unique ordering).
+
+5.  **Determine the Leftmost Bird:**
+    * Identify which bird occupies position 1 (leftmost) from the solution dictionary.
+    * Map the identified bird to the corresponding choice letter:
+        - bluejay → A
+        - cardinal → B
+        - quail → C
+    * Return the correct choice letter as the answer.

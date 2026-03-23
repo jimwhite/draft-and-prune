@@ -1,0 +1,45 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the optimization puzzle.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"cantaloupes"`, `"plums"`, `"mangoes"`, `"apples"`, `"loquats"`, `"pears"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit (i.e., rank 1 = lowest price, rank 7 = highest price).
+    * Add all fruit variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that each fruit has a unique price rank using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The apples are less expensive than the cantaloupes" → `apples < cantaloupes` (since lower rank = cheaper).
+    * "The apples are more expensive than the peaches" → `peaches < apples`.
+    * "The mangoes are the fourth-most expensive" → `mangoes == 4`.
+    * "The peaches are more expensive than the plums" → `plums < peaches`.
+    * "The pears are the third-most expensive" → `pears == 5` (because 7 - 3 + 1 = 5; 1=cheapest, so rank 5 is third most expensive: ranks 5,6,7 are 3rd, 2nd, 1st most expensive).
+        * Clarification: "k-th most expensive" = rank `8 - k`. So:
+            - 1st most expensive → rank 7
+            - 2nd most expensive → rank 6
+            - **3rd most expensive → rank 5**
+    * "The loquats are the third-cheapest" → `loquats == 3` (since "k-th cheapest" = rank k: cheapest=1, 2nd-cheapest=2, **third-cheapest=3**).
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the unique solution (since constraints fix many values, only few permutations remain; typically one or few solutions).
+
+6.  **Interpret "Second-Most Expensive":**
+    * Based on the ranking system (1=cheapest, 7=most expensive):
+        - Most expensive = rank 7
+        - **Second-most expensive = rank 6**
+    * So identify the fruit with position/rank value 6 in the solution.
+
+7.  **Map Solution to Answer Choices:**
+    * Create a mapping from choice letter ("A", "B", ..., "G") to fruit name:
+        - "A" → "cantaloupes"
+        - "B" → "plums"
+        - "C" → "mangoes"
+        - "D" → "apples"
+        - "E" → "loquats"
+        - "F" → "pears"
+        - "G" → "peaches"
+    * Find the fruit in the solution with rank 6.
+    * Return the corresponding choice letter.

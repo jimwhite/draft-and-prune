@@ -1,0 +1,34 @@
+1. **Set Up the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate a new `Problem` object to hold variables and constraints for the 7-bird arrangement.
+
+2. **Define Variables and Domain:**
+   * Define the seven bird variables as strings: `"hawk"`, `"crow"`, `"owl"`, `"raven"`, `"falcon"`, `"quail"`, `"hummingbird"`.
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, **7 = rightmost**.
+   * Add all variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Add All-Different Constraint:**
+   * Enforce that each bird occupies a unique position using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Formal Constraints:**
+   * "The hummingbird is the second from the left" → `hummingbird == 2`
+   * "The raven is the fourth from the left" → `raven == 4`
+   * "The raven is to the right of the hawk" → `hawk < raven` (i.e., `hawk < 4`)
+   * "The owl is to the right of the crow" → `crow < owl`
+   * "The falcon is the rightmost" → `falcon == 7`
+   * "The hawk is to the right of the hummingbird" → `hummingbird < hawk` (i.e., `2 < hawk`)
+   * "The quail is the second from the right" → `quail == 6`
+
+5. **Solve the Constraint Satisfaction Problem:**
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.
+   * Extract the unique solution (since the problem states consistency and fixed order, expect one valid arrangement).
+
+6. **Interpret the Question and Match Against Choices:**
+   * The question asks: “Which of the following is true?” where each choice asserts a bird is *second from the right* (i.e., position 6).
+   * From constraints, we already have `quail == 6`, so choice **F)** "The quail is the second from the right." must be true.
+   * Build a mapping: `{"A": "hawk", "B": "crow", "C": "owl", "D": "raven", "E": "falcon", "F": "quail", "G": "hummingbird"}`
+   * Alternatively, verify directly: after solving, check which bird has position 6.
+   * Confirm only one bird satisfies `position == 6`, and that matches choice F.
+
+7. **Output the Final Answer:**
+   * Return "F" as the correct choice letter.

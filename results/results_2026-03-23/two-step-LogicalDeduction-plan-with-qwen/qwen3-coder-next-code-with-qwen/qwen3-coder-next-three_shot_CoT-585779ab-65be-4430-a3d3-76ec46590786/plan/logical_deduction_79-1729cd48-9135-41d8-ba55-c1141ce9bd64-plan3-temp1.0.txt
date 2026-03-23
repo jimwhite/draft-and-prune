@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to define and solve the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Create a list of the five bird names as string variables: `"cardinal"`, `"hawk"`, `"hummingbird"`, `"raven"`, and `"owl"`.  
+    * Define the domain as integers 1 through 5, where **1 = leftmost position** and **5 = rightmost position**.  
+    * Add all five variables to the `Problem` with this domain.  
+
+3.  **Encode Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each natural-language statement into a constraint:  
+        - "The raven is to the left of the hummingbird" → `raven < hummingbird`  
+        - "The hawk is to the left of the owl" → `hawk < owl`  
+        - "The cardinal is to the left of the hawk" → `cardinal < hawk`  
+        - "The raven is the second from the right" → `raven == 4` (since position 5 is rightmost, so second-right = 4)  
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments of positions.  
+    * Extract the unique solution (as the problem guarantees consistency and uniqueness).  
+
+5.  **Evaluate the Answer Choices:**  
+    * The question asks which bird is **second from the left**, i.e., position = 2.  
+    * Create a mapping: `"A"` → `"cardinal"`, `"B"` → `"hawk"`, `"C"` → `"hummingbird"`, `"D"` → `"raven"`, `"E"` → `"owl"`.  
+    * In the solved assignment, find which variable has value 2.  
+    * Return the corresponding letter from the mapping as the correct choice.

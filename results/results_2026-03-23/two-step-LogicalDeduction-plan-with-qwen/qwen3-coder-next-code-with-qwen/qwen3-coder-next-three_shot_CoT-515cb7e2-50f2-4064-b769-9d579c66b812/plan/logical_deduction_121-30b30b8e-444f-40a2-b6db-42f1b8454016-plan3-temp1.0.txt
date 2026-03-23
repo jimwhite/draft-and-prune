@@ -1,0 +1,41 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.  
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruits as string variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, `"pears"`.  
+   * Assign integer positions to represent cost ranking: **1 = cheapest**, **2 = second-cheapest**, ..., **7 = most expensive**.  
+   * Add all variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.  
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that each fruit has a unique cost rank using `AllDifferentConstraint`.  
+
+4. **Translate Statements into Explicit and Relative Constraints:**  
+   * "The pears are more expensive than the kiwis" → `kiwis < pears` (lower rank number = cheaper).  
+   * "The watermelons are less expensive than the peaches" → `watermelons > peaches` (less expensive = higher rank number).  
+   * "The mangoes are the third-cheapest" → `mangoes == 3`.  
+   * "The watermelons are the third-most expensive" → Since there are 7 items, third-most expensive = rank 5 (positions: 1=cheapest, 7=most expensive → most expensive=7, second-most=6, third-most=5). So `watermelons == 5`.  
+   * "The plums are the second-most expensive" → `plums == 6`.  
+   * "The loquats are the second-cheapest" → `loquats == 2`.  
+
+5. **Validate Consistency and Add Redundant/Implicit Constraints (if needed):**  
+   * Note: "The watermelons are the third-most expensive" gives `watermelons == 5`.  
+   * "The watermelons are less expensive than the peaches" → `watermelons > peaches` ⇒ `peaches < 5`.  
+   * Combined with `mangoes == 3` and `loquats == 2`, possible ranks left: 1, 4, 6, 7 (but 6 is taken by plums). So available: 1, 4, 7 for peaches, kiwis, pears.  
+   * Use `kiwis < pears` (so kiwis must be cheaper = lower number).  
+
+6. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments. Given the constraints, there should be a unique solution.  
+   * Extract the first (and only) solution dictionary mapping fruit names to their rank numbers.  
+
+7. **Identify Which Option States the Correct Fact About Third-Cheapest:**  
+   * The question is: "Which of the following is true?" and lists seven choices, each claiming a fruit *is* the third-cheapest (rank 3).  
+   * From constraint, `mangoes == 3` directly tells us mangoes are third-cheapest.  
+   * Verify: Among the choices, only **F)** "The mangoes are the third-cheapest." matches this.  
+   * Construct a mapping from choice letters to fruit names:  
+     - A → "loquats", B → "peaches", C → "watermelons", D → "plums", E → "kiwis", F → "mangoes", G → "pears".  
+   * For the solved solution, check which fruit has rank 3 (or simply recall that constraint enforces `mangoes == 3`).  
+   * Return choice letter **"F"**.  
+
+8. **Output the Final Answer:**  
+   * The correct answer is **F**, since mangoes are explicitly constrained to be rank 3 (third-cheapest).

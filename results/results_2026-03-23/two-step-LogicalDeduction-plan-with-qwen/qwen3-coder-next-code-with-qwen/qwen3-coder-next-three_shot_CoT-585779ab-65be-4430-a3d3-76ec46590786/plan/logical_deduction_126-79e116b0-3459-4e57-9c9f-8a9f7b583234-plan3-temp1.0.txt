@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven vehicle variables: `"bus"`, `"motorcycle"`, `"hatchback"`, `"station_wagon"`, `"minivan"`, `"truck"`, and `"limousine"`.  
+    * Assign a numerical rank domain from 1 to 7, where **1 = oldest** and **7 = newest**.  
+    * Add all vehicle variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Add All-Different Constraint:**  
+    * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique rank (no ties).
+
+4.  **Translate Each Statement into Constraints:**  
+    * "The station wagon is the fourth-newest" → rank 4 (since fourth-newest means three vehicles are newer: positions 5,6,7 → station_wagon = 4).  
+    * "The motorcycle is newer than the truck" → motorcycle rank < truck rank (i.e., `motorcycle < truck`).  
+    * "The station wagon is older than the hatchback" → station_wagon rank < hatchback rank (i.e., `station_wagon < hatchback`).  
+    * "The minivan is newer than the hatchback" → minivan rank < hatchback rank (i.e., `minivan < hatchback`).  
+    * "The bus is newer than the minivan" → bus rank < minivan rank (i.e., `bus < minivan`).  
+    * "The truck is newer than the limousine" → truck rank < limousine rank (i.e., `truck < limousine`).
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the (unique) solution dictionary containing vehicle → rank mappings.
+
+6.  **Identify the Second-Newest Vehicle:**  
+    * The question asks for the vehicle that is the **second-newest**, which corresponds to rank **6** (since 7 = newest, 6 = second-newest).  
+    * Create a mapping from choice letters to vehicle names:  
+        `{"A": "bus", "B": "motorcycle", "C": "hatchback", "D": "station_wagon", "E": "minivan", "F": "truck", "G": "limousine"}`.  
+    * Iterate over the choices, check which vehicle in the solution has rank `6`.  
+    * Return the corresponding choice letter as the answer.

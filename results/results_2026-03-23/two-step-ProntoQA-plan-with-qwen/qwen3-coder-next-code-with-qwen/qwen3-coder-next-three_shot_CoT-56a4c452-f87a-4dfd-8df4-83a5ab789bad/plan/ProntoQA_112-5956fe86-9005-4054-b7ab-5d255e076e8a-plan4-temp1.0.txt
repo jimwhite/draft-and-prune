@@ -1,0 +1,21 @@
+1.  Identify all entities and types: Max, rompus, numpus, wumpus, tumpus, dumpus, jompus, zumpus, yumpus.  
+2.  Identify all properties: large, fruity, metallic, cold, brown, sweet.  
+3.  Represent "Max is a numpus" as a base fact: `is_a("Max", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+      * Each rompus is not large.  
+      * Every rompus is a numpus.  
+      * Every numpus is fruity.  
+      * Numpuses are wumpuses.  
+      * Wumpuses are not metallic.  
+      * Wumpuses are tumpuses.  
+      * Tumpuses are cold.  
+      * Dumpuses are not brown.  
+      * Tumpuses are jompuses.  
+      * Each jompus is sweet.  
+      * Jompuses are zumpuses.  
+      * Each zumpus is brown.  
+      * Every zumpus is a yumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  The query tests if the statement "Max is not brown" is provable:  
+    → Since Max is a numpus, he is a wumpus (by subclass), then a tumpus, then a jompus, then a zumpus; and every zumpus is brown ⇒ Max is brown. Therefore, "Max is not brown" is false and unprovable.  
+    → Use `facts.is_brown("Max", False)`.

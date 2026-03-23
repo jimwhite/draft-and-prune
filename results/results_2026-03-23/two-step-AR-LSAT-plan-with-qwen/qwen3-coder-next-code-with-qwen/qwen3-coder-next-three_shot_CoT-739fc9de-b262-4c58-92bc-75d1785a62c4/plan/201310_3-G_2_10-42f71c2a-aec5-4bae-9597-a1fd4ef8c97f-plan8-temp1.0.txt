@@ -1,0 +1,14 @@
+1. Enumerate the eight employees and assign them integer indices (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables `team[i]` for each employee i, indicating whether they are selected for the team.  
+3. Add **at-least-four** constraint: sum of all `team[i]` ≥ 4.  
+4. Add **Myers constraint**: If Myers is selected, then Ortega and Paine are not: `team[0] → (¬team[1] ∧ ¬team[2])`.  
+5. Add **Schmidt constraint**: If Schmidt is selected, then Paine and Thomson are both selected: `team[3] → (team[2] ∧ team[4])`.  
+6. Add **Wong constraint**: If Wong is selected, then Myers and Yoder are both selected: `team[5] → (team[0] ∧ team[6])`.  
+7. Add **Yoder-not-on-team constraint**: `¬team[6]` (Yoder is excluded).  
+8. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+9. Define an answer index list `answer_index_list = []`. For each candidate employee in the choices:  
+   - Clone the base constraints (including Yoder exclusion) into a fresh solver.  
+   - Assert that this employee is selected: `team[idx] == True`.  
+   - Check satisfiability. If SAT, this employee *could* be on the team; if UNSAT, they *cannot*—so this is an EXCEPT candidate.  
+10. Since the question asks for the employee who **cannot** be on the team (i.e., the one that makes UNSAT), append the index of each candidate for which the model is **UNSAT** to `answer_index_list`.  
+11. Return the corresponding employee name(s) from the indices in `answer_index_list` (typically one answer).

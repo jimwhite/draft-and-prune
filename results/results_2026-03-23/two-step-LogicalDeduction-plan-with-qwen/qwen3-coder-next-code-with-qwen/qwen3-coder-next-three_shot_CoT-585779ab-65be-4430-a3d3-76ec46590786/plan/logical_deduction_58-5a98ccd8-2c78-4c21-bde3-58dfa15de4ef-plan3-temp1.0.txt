@@ -1,0 +1,30 @@
+1. **Initialize the Constraint Satisfaction Problem:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**
+   * List the five books as variables: `"brown"`, `"orange"`, `"red"`, `"purple"`, and `"black"`.
+   * Define the domain as integers 1 to 5, where 1 = leftmost and 5 = rightmost.
+   * Add all variables with their domain to the `Problem` instance.
+
+3. **Add Constraints Based on Statements:**
+   * Add an `AllDifferentConstraint` to ensure uniqueness of positions.
+   * Add constraint for "The purple book is to the left of the black book": `purple < black`.
+   * Add constraint for "The red book is to the right of the brown book": `brown < red`.
+   * Add constraint for "The orange book is the second from the left": `orange == 2`.
+   * Add constraint for "The black book is the third from the left": `black == 3`.
+
+4. **Solve the Problem:**
+   * Call `getSolutions()` to obtain all valid assignments.
+   * Since the constraints uniquely determine the arrangement, extract the single solution.
+
+5. **Determine Which Choice is True:**
+   * The question asks which book is the second from the left (i.e., position 2).
+   * From the solution, find which book has value 2.
+   * Map that book to the corresponding choice letter:
+     - A) brown → position 2?
+     - B) orange → position 2? (explicitly stated, so this must be true)
+     - C) red → position 2?
+     - D) purple → position 2?
+     - E) black → position 2?
+   * Print the correct choice letter (B, as per statement "The orange book is the second from the left").

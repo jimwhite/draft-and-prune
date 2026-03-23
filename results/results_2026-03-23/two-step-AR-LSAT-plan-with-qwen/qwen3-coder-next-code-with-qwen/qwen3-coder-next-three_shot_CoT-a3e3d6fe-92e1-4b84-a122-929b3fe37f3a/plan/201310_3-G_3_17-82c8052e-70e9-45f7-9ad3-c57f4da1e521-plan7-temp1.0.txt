@@ -1,0 +1,40 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign integer codes.  
+2. Enumerate the three screens (1, 2, 3) and represent each movie by a tuple `(screen, time_slot)` where `time_slot ∈ {7, 8, 9}` (with only screens 1 and 2 having both slots, screen 3 only has 8).  
+   - Screen 1: (1,7), (1,9)  
+   - Screen 2: (2,7), (2,9)  
+   - Screen 3: (3,8)  
+3. Create integer variables `slot[i] ∈ {1,2,3,4,5}` for movie order (7P=1, 9P on S1=2, 8P on S3=3, 7P on S2=4, 9P on S2=5) OR use position variables `pos[move] ∈ {1..5}` with precedence logic — but better to assign each movie a `(screen, time)` variable directly.  
+4. Prefer direct assignment: create integer variables `screen[m] ∈ {1,2,3}` and `time[m] ∈ {7,8,9}`, where time is only valid on screen:  
+   - If `screen[m] == 1 or 2`, then `time[m] ∈ {7,9}`  
+   - If `screen[m] == 3`, then `time[m] = 8`  
+5. Add **uniqueness constraints**: no two movies share both screen and time; total of 5 distinct (screen,time) combinations used from the 5 available slots:  
+   - Valid slots = [(1,7), (1,9), (2,7), (2,9), (3,8)]  
+   - Use permutation encoding: assign each movie a unique slot index s ∈ {0..4}, and map to actual (screen, time) via lookup table.  
+6. Simpler: enumerate the 5 valid (screen, time) slots as positions, and assign each movie to a unique slot using integer variables `pos[m] ∈ {0..4}` (injective). Define mapping:  
+   - slot 0: screen 1, 7P  
+   - slot 1: screen 1, 9P  
+   - slot 2: screen 3, 8P  
+   - slot 3: screen 2, 7P  
+   - slot 4: screen 2, 9P  
+7. Add **global ordering constraint** from "western before horror": translate slot positions to actual times:  
+   - time_value(slot) = [7,9,8,7,9]  
+   - Then require: `time_value[pos[western]] < time_value[pos[h horror]]`  
+8. Add **screen/time constraints**:  
+   - sci-fi ≠ screen 3 ⇒ `screen[sci-fi] ≠ 3` ⇒ `pos[sci-fi] ∉ {2}`  
+   - romance ≠ screen 2 ⇒ `screen[romance] ≠ 2` ⇒ `pos[romance] ∉ {3,4}`  
+   - horror and mystery on different screens ⇒ `screen[h] ≠ screen[m]`  
+9. Note: question asks for SCREEN 1 LIST — which is two movies, at 7P (slot0) and 9P (slot1). So screen1 = {movies assigned to slot0, slot1}.  
+   - For each choice (a candidate ordered list for screen 1), interpret as:  
+     - Choice = [first_movie, second_movie] → assign first_movie to slot0, second_movie to slot1.  
+     - Then constrain: `pos[first] == 0`, `pos[second] == 1`.  
+   - Then check consistency of remaining assignments under all constraints.  
+10. For each choice in order:  
+    - Clone base solver with current constraints (steps 1–8).  
+    - Add `pos[choice[0]] == 0` and `pos[choice[1]] == 1`.  
+    - Add injectivity of remaining 3 movies into slots {2,3,4}.  
+    - Solve: if UNSAT → this choice CANNOT be accurate; keep track.  
+11. The question asks: "Which one CANNOT be an accurate list" — so the answer is the unique UNSAT case.  
+12. Define `answer_index_list = []`. For i from 0 to 4:  
+    - Try assignment of i-th choice to screen1 (slots 0 and 1).  
+    - If UNSAT, append i (or choice string) to `answer_index_list`.  
+13. Print the one index/choice that fails — note only one should fail.

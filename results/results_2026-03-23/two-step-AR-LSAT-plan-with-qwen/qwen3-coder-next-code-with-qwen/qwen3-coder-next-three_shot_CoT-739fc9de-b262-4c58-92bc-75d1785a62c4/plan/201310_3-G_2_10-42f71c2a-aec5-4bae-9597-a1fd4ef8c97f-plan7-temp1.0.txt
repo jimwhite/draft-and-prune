@@ -1,0 +1,21 @@
+1. Enumerate the eight employees and assign them integer indices (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables `t[i]` for each employee i, where `t[i] = True` means employee i is selected.  
+3. Add **team-size constraint**: at least four employees must be selected: `sum(t) >= 4`.  
+4. Add **conditional constraints**:  
+    - If Myers is selected, neither Ortega nor Paine can be: `t[0] => (~t[1] & ~t[2])`.  
+    - If Schmidt is selected, both Paine and Thomson must be: `t[3] => (t[2] & t[4])`.  
+    - If Wong is selected, both Myers and Yoder must be: `t[5] => (t[0] & t[6])`.  
+5. Add **given condition**: Yoder is *not* on the team: `~t[6]`.  
+6. Simplify constraints under `~t[6]`:  
+    - From Wong’s condition: `t[5] => (t[0] & True)` becomes `t[5] => t[0]`; but since Yoder is excluded, selecting Wong forces Myers, which then forbids Ortega and Paine.  
+7. Translate answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+8. Define a list of **candidate indices** = [7, 4, 2, 1, 0] (in order of choices).  
+9. Define `excluded_candidates = []`. For each candidate index `c` in order:  
+    - Clone the base solver (with team-size and conditional constraints + `~t[6]`).  
+    - Assert that this candidate *is* selected: `t[c] == True`.  
+    - Check SAT. If SAT, the candidate *could* be on the team (so it is not the EXCEPT answer).  
+    - If UNSAT, then under Yoder-not-on-team, this candidate cannot be selected—so it is the EXCEPT answer; record its index in `excluded_candidates`.  
+10. However, note the question asks: “If Yoder is not on the team, then **any of the following could be on the team EXCEPT**”, i.e., find the *one* candidate that **cannot possibly be on the team** under the condition.  
+11. So iterate each candidate again (in choice order) and find which one is UNSAT when forced to be selected; append that candidate’s *index* or more precisely its position in the choice list (0-based) to `answer_index_list`.  
+12. Since only one answer is correct, `answer_index_list` will contain exactly one index—the position (0 to 4) of the impossible candidate in the given choices list.  
+13. Print `answer_index_list`.

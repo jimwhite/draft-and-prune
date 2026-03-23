@@ -1,0 +1,32 @@
+1. Enumerate the three sections (Lifestyle, Metro, Sports) and three photographers (Fuentes, Gagnon, Hue), assigning integer indices.  
+2. Create integer variables `L_F`, `L_G`, `L_H` for number of Fuentes, Gagnon, Hue photos in Lifestyle (nonnegative integers); similarly `M_F`, `M_G`, `M_H` for Metro; `S_F`, `S_G`, `S_H` for Sports.  
+3. Add **section size constraints**: each section has exactly two photos: `L_F + L_G + L_H = 2`, `M_F + M_G + M_H = 2`, `S_F + S_G + S_H = 2`.  
+4. Add **global photographer count constraints**: for each photographer, total photos ∈ {1,2,3}:  
+   - `1 ≤ L_F + M_F + S_F ≤ 3`  
+   - `1 ≤ L_G + M_G + S_G ≤ 3`  
+   - `1 ≤ L_H + M_H + S_H ≤ 3`.  
+5. Add **at-least-one-Metro-co photographer-in-Lifestyle constraint**: there exists a photographer X such that X has ≥1 photo in Lifestyle and ≥1 photo in Metro. Express via disjunction:  
+   `(L_F > 0 ∧ M_F > 0) ∨ (L_G > 0 ∧ M_G > 0) ∨ (L_H > 0 ∧ M_H > 0)`. Use auxiliary Boolean variables to encode each conjunction and enforce at least one true.  
+6. Add **Lifestyle-Fuentes-Sports-Hue equality constraint**: `L_H == S_F`.  
+7. Add **Gagnon-no-Sports constraint**: `S_G == 0`.  
+8. Add **given conditional premise**: in Lifestyle, exactly one Fuentes and one Hue: `L_F == 1`, `L_H == 1` ⇒ then `L_G == 0`.  
+9. Simplify constraints under the premise:  
+   - Lifestyle: `L_F = 1`, `L_H = 1`, `L_G = 0`.  
+   - From step 6: `S_F == L_H == 1` ⇒ `S_F = 1`.  
+   - Sports total: `S_F + S_G + S_H = 2`, with `S_G = 0`, `S_F = 1` ⇒ `S_H = 1`.  
+   - So Sports: `S_F = 1`, `S_G = 0`, `S_H = 1`.  
+   - Total Fuentes: `F_total = L_F + M_F + S_F = 1 + M_F + 1 = M_F + 2`. Must satisfy `1 ≤ F_total ≤ 3` ⇒ `M_F ∈ {0,1}`.  
+   - Total Hue: `H_total = L_H + M_H + S_H = 1 + M_H + 1 = M_H + 2`. Must satisfy `1 ≤ H_total ≤ 3` ⇒ `M_H ∈ {0,1}`.  
+   - Total Gagnon: `G_total = L_G + M_G + S_G = 0 + M_G + 0 = M_G`. Must satisfy `1 ≤ G_total ≤ 3` ⇒ `M_G ∈ {1,2}`.  
+   - Metro total: `M_F + M_G + M_H = 2`. With `M_G ≥ 1`, possibilities:  
+     - `M_G = 1` ⇒ `M_F + M_H = 1`, and each ∈ {0,1} (from step above).  
+     - `M_G = 2` ⇒ `M_F = M_H = 0`.  
+10. Enumerate feasible integer assignments for `(M_F, M_G, M_H)` satisfying all derived constraints.  
+11. For each answer choice, translate into a condition on `(M_F, M_G, M_H)` and check consistency with feasible assignments:  
+    - Choice 0 ("Both Metro Fuentes"): `M_F = 2` → incompatible (max `M_F = 1`)  
+    - Choice 1 ("Both Metro Gagnon"): `M_G = 2`, `M_F = M_H = 0` → feasible (see step 9)  
+    - Choice 2 ("Exactly one Metro Hue"): `M_H = 1` → possible only if `M_G = 1`, `M_F = 0`  
+    - Choice 3 ("Both Sports Hue"): requires `S_H = 2`, but we have forced `S_H = 1` → impossible  
+    - Choice 4 ("Neither Sports Hue"): requires `S_H = 0`, contradicts forced `S_H = 1`  
+12. Identify which answer choices admit at least one feasible assignment under the premise — these are the possible (could be true) options.  
+13. Select all answer indices corresponding to feasible choices and output the list.

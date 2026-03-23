@@ -1,0 +1,22 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the three books: `"gray"`, `"orange"`, and `"brown"`.  
+   * Define the domain as integer positions 1 to 3, where **1 = leftmost**, **2 = middle**, **3 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate "The orange book is the leftmost" into a constraint: `orange == 1`.  
+   * Translate "The gray book is to the right of the brown book" into a constraint: `brown < gray`.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to retrieve all valid assignments.  
+   * Extract the single (or first) solution, as the constraints uniquely determine the arrangement.
+
+5. **Identify the Correct Answer:**  
+   * Determine which book occupies position 3 (rightmost) in the solution.  
+   * Map the rightmost book to the corresponding choice: `"gray"` → A, `"orange"` → B, `"brown"` → C.  
+   * Output the letter (e.g., "A") corresponding to the correct choice.

@@ -1,0 +1,38 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the seven fruit variables: `"kiwis"`, `"plums"`, `"mangoes"`, `"watermelons"`, `"pears"`, `"peaches"`, `"oranges"`.
+    * Assign integer ranks to represent price order, where **1 = cheapest** and **7 = most expensive**.
+    * Add all seven variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Add AllDifferentConstraint:**
+    * Add an `AllDifferentConstraint` to enforce that each fruit has a unique price rank.
+
+4.  **Translate Given Statements into Constraints:**
+    * "The pears are the third-cheapest" → `pears == 3`.
+    * "The kiwis are the second-most expensive" → `kiwis == 6` (since most expensive is 7, second-most is 6).
+    * "The pears are more expensive than the plums" → `plums < pears` (i.e., `plums < 3`).
+    * "The oranges are less expensive than the kiwis" → `oranges > kiwis` (i.e., `oranges > 6` ⇒ `oranges == 7`).
+    * "The mangoes are the third-most expensive" → `mangoes == 5` (7 - 3 + 1 = 5).
+    * "The peaches are the second-cheapest" → `peaches == 2`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (since constraints fully determine positions).
+
+6.  **Identify the Cheapest Fruit:**
+    * The cheapest fruit has rank `1`.
+    * Iterate through the solution dictionary to find which fruit maps to rank `1`.
+
+7.  **Map to Answer Choice:**
+    * Create a mapping from choice letters to fruits:
+        - A → "kiwis"
+        - B → "plums"
+        - C → "mangoes"
+        - D → "watermelons"
+        - E → "pears"
+        - F → "peaches"
+        - G → "oranges"
+    * Return the choice letter corresponding to the fruit found in step 6.

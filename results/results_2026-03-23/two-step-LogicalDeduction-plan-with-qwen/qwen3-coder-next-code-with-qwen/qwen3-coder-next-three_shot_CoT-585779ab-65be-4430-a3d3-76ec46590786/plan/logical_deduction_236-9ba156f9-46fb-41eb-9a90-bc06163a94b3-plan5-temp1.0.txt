@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the seven golfers as string variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, `"joe"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest rank)** and **7 = seventh place (lowest rank)**.  
+    * Add all variables with domain {1, 2, ..., 7} to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique placements for all golfers.  
+    * Convert each statement into a constraint:  
+        * "Amy finished below Joe" → Amy’s position number > Joe’s (`amy > joe`).  
+        * "Dan finished above Mya" → Dan’s position number < Mya’s (`dan < mya`).  
+        * "Eli finished third" → `eli == 3`.  
+        * "Ana finished first" → `ana == 1`.  
+        * "Amy finished second-to-last" → In a 7-golfer field, this is position 6 (`amy == 6`).  
+        * "Mya finished fourth" → `mya == 4`.
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to find all valid solutions.  
+    * Extract the (unique) solution dictionary.
+
+5.  **Determine Who Finished Second:**  
+    * In our ranking, second place corresponds to position number 2.  
+    * Loop through the solution dictionary to find which golfer has value `2`.  
+    * Map that golfer’s name to the correct choice letter using:  
+        - `"mya"` → "A"  
+        - `"eli"` → "B"  
+        - `"ana"` → "C"  
+        - `"amy"` → "D"  
+        - `"mel"` → "E"  
+        - `"dan"` → "F"  
+        - `"joe"` → "G"  
+    * Return the corresponding letter.

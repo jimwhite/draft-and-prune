@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruit variables: `"apples"`, `"pears"`, `"mangoes"`, `"oranges"`, `"watermelons"`, `"peaches"`, and `"cantaloupes"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (i.e., ascending order by price: lower number = cheaper).  
+    * Add all variables and the domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into constraints using `lambda` functions or direct assignment:  
+        - "The pears are more expensive than the oranges" → `pears > oranges`  
+        - "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`  
+        - "The peaches are less expensive than the cantaloupes" → `peaches < cantaloupes`  
+        - "The apples are the third-cheapest" → `apples == 3`  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6)  
+        - "The mangoes are the fourth-most expensive" → `mangoes == 4` (since 1=cheapest, 4th-most expensive = rank 4)  
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments of price ranks.  
+    * Extract the unique solution (as the constraints fully determine a single ordering).
+
+5.  **Identify the Second-Cheapest Fruit:**  
+    * The question asks which fruit is the **second-cheapest**, i.e., rank **2**.  
+    * Build a mapping from choice letters (`"A"` through `"G"`) to the corresponding fruit names:  
+        `{"A": "apples", "B": "pears", "C": "mangoes", "D": "oranges", "E": "watermelons", "F": "peaches", "G": "cantaloupes"}`  
+    * Iterate through the solution dictionary to find which fruit has rank `2`.  
+    * Find and return the choice letter (e.g., `"B"`) corresponding to that fruit.

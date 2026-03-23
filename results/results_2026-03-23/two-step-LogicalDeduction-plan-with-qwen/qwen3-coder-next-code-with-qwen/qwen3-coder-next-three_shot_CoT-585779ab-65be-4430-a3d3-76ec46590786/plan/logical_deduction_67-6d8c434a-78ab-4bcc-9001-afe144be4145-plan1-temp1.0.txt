@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to create a constraint satisfaction problem solver.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five birds as variables: `"cardinal"`, `"hawk"`, `"hummingbird"`, `"raven"`, and `"owl"`.  
+    * Define the domain for each variable as positions 1 to 5 (inclusive), where **1 = leftmost** and **5 = rightmost**.  
+    * Add all five variables to the problem with their shared domain [1, 2, 3, 4, 5].
+
+3.  **Add All-Different Constraint:**  
+    * Add an `AllDifferentConstraint()` to enforce that each bird occupies a unique position.
+
+4.  **Translate and Add Logical Constraints:**  
+    * "The raven is to the left of the hummingbird" → `raven < hummingbird` (use a lambda constraint: `lambda r, h: r < h`).  
+    * "The hawk is to the left of the owl" → `hawk < owl` (use a lambda constraint: `lambda hk, ow: hk < ow`).  
+    * "The cardinal is to the left of the hawk" → `cardinal < hawk` (use a lambda constraint: `lambda c, hk: c < hk`).  
+    * "The raven is the second from the right" → position = 4 (since positions are 1-based left-to-right, second from right is index 4 in [1..5]). Add constraint: `raven == 4`.
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments satisfying all constraints.  
+    * Since the problem is deterministic, extract the first (and only) solution from the list.
+
+6.  **Interpret the Question and Evaluate Choices:**  
+    * The question asks which bird is "the third from the left", i.e., position 3.  
+    * Create a mapping from choice letters to birds:  
+        `'A': 'cardinal'`, `'B': 'hawk'`, `'C': 'hummingbird'`, `'D': 'raven'`, `'E': 'owl'`.  
+    * For each choice, check if the bird’s position in the solution equals 3.  
+    * Return the letter (A–E) of the first (and only) choice where this condition holds.

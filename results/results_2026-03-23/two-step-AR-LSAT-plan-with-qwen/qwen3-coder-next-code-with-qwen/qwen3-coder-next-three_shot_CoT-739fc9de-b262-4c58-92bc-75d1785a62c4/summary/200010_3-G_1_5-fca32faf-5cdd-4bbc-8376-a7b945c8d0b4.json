@@ -1,0 +1,609 @@
+{
+  "problem": {
+    "context": "Of the eight students—George, Helen, Irving, Kyle, Lenore, Nina, Olivia, and Robert—in a seminar, exactly six will give individual oral reports during three consecutive days—Monday, Tuesday, and Wednesday. Exactly two reports will be given each day—one in the morning and one in the afternoon—according to the following conditions: Tuesday is the only day on which George can give a report. Neither Olivia nor Robert can give an afternoon report. If Nina gives a report, then on the next day Helen and Irving must both give reports, unless Nina's report is given on Wednesday.",
+    "question": "If Kyle gives the afternoon report on Tuesday, and Helen gives the afternoon report on Wednesday, which one of the following could be the list of the students who give the morning reports on Monday, Tuesday, and Wednesday, respectively?",
+    "answers": [
+      "Irving, Lenore, and Nina",
+      "Lenore, George, and Irving",
+      "Nina, Irving, and Lenore",
+      "Robert, George, and Irving",
+      "Robert, Irving, and Lenore"
+    ],
+    "label": 3,
+    "id_string": "200010_3-G_1_5"
+  },
+  "timing": 1060.8614344596863,
+  "all_solver_outputs": [
+    "[3]",
+    "[3]",
+    "[3]",
+    "[3]",
+    "[3]",
+    "[0, 1, 3, 4]",
+    "[0, 1, 3, 4]",
+    "[3]",
+    "[3]",
+    "[3]",
+    "[0, 1, 3, 4]",
+    "[3]",
+    "[3]",
+    "[0, 1, 3, 4]",
+    "[]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 848,
+        "total_tokens": 2535
+      },
+      "plan_generation_api_time_only": 25.934086084365845,
+      "code_generation_usage": {
+        "prompt_tokens": 3905,
+        "completion_tokens": 1377,
+        "total_tokens": 5282
+      },
+      "code_generation_api_time_only": 42.30579662322998,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5592,
+        "completion_tokens": 2225,
+        "total_tokens": 7817
+      },
+      "path_api_time_only": 68.23988270759583,
+      "solver_time_only": 0.09679245948791504
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 903,
+        "total_tokens": 2590
+      },
+      "plan_generation_api_time_only": 26.16533660888672,
+      "code_generation_usage": {
+        "prompt_tokens": 3960,
+        "completion_tokens": 1474,
+        "total_tokens": 5434
+      },
+      "code_generation_api_time_only": 40.907231092453,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5647,
+        "completion_tokens": 2377,
+        "total_tokens": 8024
+      },
+      "path_api_time_only": 67.07256770133972,
+      "solver_time_only": 0.09546637535095215
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 705,
+        "total_tokens": 2392
+      },
+      "plan_generation_api_time_only": 19.281206130981445,
+      "code_generation_usage": {
+        "prompt_tokens": 3762,
+        "completion_tokens": 1405,
+        "total_tokens": 5167
+      },
+      "code_generation_api_time_only": 41.37831783294678,
+      "repair_usage_total": {
+        "prompt_tokens": 1654,
+        "completion_tokens": 1425,
+        "total_tokens": 3079
+      },
+      "repair_api_time_only_total": 40.86121392250061,
+      "path_usage_total": {
+        "prompt_tokens": 7103,
+        "completion_tokens": 3535,
+        "total_tokens": 10638
+      },
+      "path_api_time_only": 101.52073788642883,
+      "solver_time_only": 0.1732161045074463
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 520,
+        "total_tokens": 2207
+      },
+      "plan_generation_api_time_only": 17.209794282913208,
+      "code_generation_usage": {
+        "prompt_tokens": 3577,
+        "completion_tokens": 1189,
+        "total_tokens": 4766
+      },
+      "code_generation_api_time_only": 33.407533168792725,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5264,
+        "completion_tokens": 1709,
+        "total_tokens": 6973
+      },
+      "path_api_time_only": 50.61732745170593,
+      "solver_time_only": 0.09024405479431152
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 834,
+        "total_tokens": 2521
+      },
+      "plan_generation_api_time_only": 23.6611750125885,
+      "code_generation_usage": {
+        "prompt_tokens": 3891,
+        "completion_tokens": 1247,
+        "total_tokens": 5138
+      },
+      "code_generation_api_time_only": 36.41522026062012,
+      "repair_usage_total": {
+        "prompt_tokens": 1390,
+        "completion_tokens": 1207,
+        "total_tokens": 2597
+      },
+      "repair_api_time_only_total": 33.31860971450806,
+      "path_usage_total": {
+        "prompt_tokens": 6968,
+        "completion_tokens": 3288,
+        "total_tokens": 10256
+      },
+      "path_api_time_only": 93.39500498771667,
+      "solver_time_only": 0.12849688529968262
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 948,
+        "total_tokens": 2635
+      },
+      "plan_generation_api_time_only": 28.612274885177612,
+      "code_generation_usage": {
+        "prompt_tokens": 4005,
+        "completion_tokens": 970,
+        "total_tokens": 4975
+      },
+      "code_generation_api_time_only": 29.82687520980835,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5692,
+        "completion_tokens": 1918,
+        "total_tokens": 7610
+      },
+      "path_api_time_only": 58.43915009498596,
+      "solver_time_only": 0.10180997848510742
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 731,
+        "total_tokens": 2418
+      },
+      "plan_generation_api_time_only": 19.73712182044983,
+      "code_generation_usage": {
+        "prompt_tokens": 3788,
+        "completion_tokens": 798,
+        "total_tokens": 4586
+      },
+      "code_generation_api_time_only": 23.601025342941284,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5475,
+        "completion_tokens": 1529,
+        "total_tokens": 7004
+      },
+      "path_api_time_only": 43.33814716339111,
+      "solver_time_only": 0.09477519989013672
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 582,
+        "total_tokens": 2269
+      },
+      "plan_generation_api_time_only": 16.862035274505615,
+      "code_generation_usage": {
+        "prompt_tokens": 3639,
+        "completion_tokens": 1059,
+        "total_tokens": 4698
+      },
+      "code_generation_api_time_only": 30.15764832496643,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5326,
+        "completion_tokens": 1641,
+        "total_tokens": 6967
+      },
+      "path_api_time_only": 47.019683599472046,
+      "solver_time_only": 0.08797526359558105
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 1357,
+        "total_tokens": 3044
+      },
+      "plan_generation_api_time_only": 38.49424505233765,
+      "code_generation_usage": {
+        "prompt_tokens": 4414,
+        "completion_tokens": 1065,
+        "total_tokens": 5479
+      },
+      "code_generation_api_time_only": 31.637399673461914,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6101,
+        "completion_tokens": 2422,
+        "total_tokens": 8523
+      },
+      "path_api_time_only": 70.13164472579956,
+      "solver_time_only": 0.08026480674743652
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 1426,
+        "total_tokens": 3113
+      },
+      "plan_generation_api_time_only": 40.26517844200134,
+      "code_generation_usage": {
+        "prompt_tokens": 4483,
+        "completion_tokens": 1261,
+        "total_tokens": 5744
+      },
+      "code_generation_api_time_only": 36.264254093170166,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6170,
+        "completion_tokens": 2687,
+        "total_tokens": 8857
+      },
+      "path_api_time_only": 76.52943253517151,
+      "solver_time_only": 0.08129525184631348
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 1477,
+        "total_tokens": 3164
+      },
+      "plan_generation_api_time_only": 43.19613814353943,
+      "code_generation_usage": {
+        "prompt_tokens": 4534,
+        "completion_tokens": 1066,
+        "total_tokens": 5600
+      },
+      "code_generation_api_time_only": 33.145411252975464,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6221,
+        "completion_tokens": 2543,
+        "total_tokens": 8764
+      },
+      "path_api_time_only": 76.34154939651489,
+      "solver_time_only": 0.11710405349731445
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 675,
+        "total_tokens": 2362
+      },
+      "plan_generation_api_time_only": 17.762062549591064,
+      "code_generation_usage": {
+        "prompt_tokens": 3732,
+        "completion_tokens": 1422,
+        "total_tokens": 5154
+      },
+      "code_generation_api_time_only": 42.70278859138489,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5419,
+        "completion_tokens": 2097,
+        "total_tokens": 7516
+      },
+      "path_api_time_only": 60.46485114097595,
+      "solver_time_only": 0.09204459190368652
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 1294,
+        "total_tokens": 2981
+      },
+      "plan_generation_api_time_only": 35.04065418243408,
+      "code_generation_usage": {
+        "prompt_tokens": 4351,
+        "completion_tokens": 1028,
+        "total_tokens": 5379
+      },
+      "code_generation_api_time_only": 29.93077278137207,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6038,
+        "completion_tokens": 2322,
+        "total_tokens": 8360
+      },
+      "path_api_time_only": 64.97142696380615,
+      "solver_time_only": 0.06102919578552246
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 592,
+        "total_tokens": 2279
+      },
+      "plan_generation_api_time_only": 18.376387119293213,
+      "code_generation_usage": {
+        "prompt_tokens": 3649,
+        "completion_tokens": 1053,
+        "total_tokens": 4702
+      },
+      "code_generation_api_time_only": 23.669423818588257,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5336,
+        "completion_tokens": 1645,
+        "total_tokens": 6981
+      },
+      "path_api_time_only": 42.04581093788147,
+      "solver_time_only": 0.09545016288757324
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1687,
+        "completion_tokens": 936,
+        "total_tokens": 2623
+      },
+      "plan_generation_api_time_only": 26.661267280578613,
+      "code_generation_usage": {
+        "prompt_tokens": 3993,
+        "completion_tokens": 1136,
+        "total_tokens": 5129
+      },
+      "code_generation_api_time_only": 33.53311800956726,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5680,
+        "completion_tokens": 2072,
+        "total_tokens": 7752
+      },
+      "path_api_time_only": 60.194385290145874,
+      "solver_time_only": 0.07616353034973145
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 88032,
+    "completion_tokens": 34010,
+    "total_tokens": 122042
+  },
+  "api_time_only_total": 980.3216025829315,
+  "solver_time_only_total": 1.472127914428711,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7\nstudents = [\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"]\nstudent_idx = {s: i for i, s in enumerate(students)}\n\n# Days: 0=Monday, 1=Tuesday, 2=Wednesday\ndays = range(3)\n\n# Variables: Morning[d][s] and Afternoon[d][s] are Booleans\nMorning = [[Bool(f\"Morning_{d}_{s}\") for s in range(8)] for d in days]\nAfternoon = [[Bool(f\"Afternoon_{d}_{s}\") for s in range(8)] for d in days]\n\nsolver = Solver()\n\n# Exactly six reports total\nreports = []\nfor d in days:\n    for s in range(8):\n        reports.append(Morning[d][s])\n        reports.append(Afternoon[d][s])\nsolver.add(Sum([If(r, 1, 0) for r in reports]) == 6)\n\n# One report per time slot each day\nfor d in days:\n    solver.add(Sum([If(Morning[d][s], 1, 0) for s in range(8)]) == 1)\n    solver.add(Sum([If(Afternoon[d][s], 1, 0) for s in range(8)]) == 1)\n\n# No student reports more than once\nfor s in range(8):\n    assignments = []\n    for d in days:\n        assignments.append(Morning[d][s])\n        assignments.append(Afternoon[d][s])\n    solver.add(Sum([If(a, 1, 0) for a in assignments]) <= 1)\n\n# Tuesday is the only day George can give a report\nfor d in days:\n    if d != 1:  # not Tuesday\n        solver.add(Not(Morning[d][student_idx[\"George\"]]))\n        solver.add(Not(Afternoon[d][student_idx[\"George\"]]))\n\n# Olivia and Robert cannot give afternoon reports\nfor s in [student_idx[\"Olivia\"], student_idx[\"Robert\"]]:\n    for d in days:\n        solver.add(Not(Afternoon[d][s]))\n\n# Nina conditional constraint\nnina_mon = Morning[0][student_idx[\"Nina\"]] or Afternoon[0][student_idx[\"Nina\"]]\nnina_tue = Morning[1][student_idx[\"Nina\"]] or Afternoon[1][student_idx[\"Nina\"]]\nnina_wed = Morning[2][student_idx[\"Nina\"]] or Afternoon[2][student_idx[\"Nina\"]]\n\n# If Nina reports on Monday, then Helen and Irving must both report on Tuesday\nsolver.add(Implies(nina_mon, \n    (Morning[1][student_idx[\"Helen\"]] or Afternoon[1][student_idx[\"Helen\"]]) and \n    (Morning[1][student_idx[\"Irving\"]] or Afternoon[1][student_idx[\"Irving\"]])))\n\n# If Nina reports on Tuesday, then Helen and Irving must both report on Wednesday\nsolver.add(Implies(nina_tue,\n    (Morning[2][student_idx[\"Helen\"]] or Afternoon[2][student_idx[\"Helen\"]]) and \n    (Morning[2][student_idx[\"Irving\"]] or Afternoon[2][student_idx[\"Irving\"]])))\n\n# If Nina reports on Wednesday, no constraint (vacuously satisfied)\n\n# Given assumptions\nsolver.add(Afternoon[1][student_idx[\"Kyle\"]] == True)  # Kyle gives afternoon report on Tuesday\nsolver.add(Afternoon[2][student_idx[\"Helen\"]] == True)  # Helen gives afternoon report on Wednesday\n\n# Answer choices: morning reports for Mon, Tue, Wed\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add morning report assignments for the choice\n    mon_morning = student_idx[choice[0]]\n    tue_morning = student_idx[choice[1]]\n    wed_morning = student_idx[choice[2]]\n    \n    s_chk.add(Morning[0][mon_morning] == True)\n    s_chk.add(Morning[1][tue_morning] == True)\n    s_chk.add(Morning[2][wed_morning] == True)\n    \n    # Ensure no other assignments for these students on those days\n    for s in [mon_morning, tue_morning, wed_morning]:\n        # Morning assignments already set for specific days\n        if s == mon_morning:\n            for d in days:\n                if d != 0:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == tue_morning:\n            for d in days:\n                if d != 1:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == wed_morning:\n            for d in days:\n                if d != 2:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n    \n    # Also ensure Kyle and Helen are only assigned where specified\n    s_chk.add(Afternoon[1][student_idx[\"Kyle\"]] == True)\n    s_chk.add(Not(Morning[1][student_idx[\"Kyle\"]]))\n    for d in days:\n        if d != 1:\n            s_chk.add(Not(Morning[d][student_idx[\"Kyle\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Kyle\"]]))\n    \n    s_chk.add(Afternoon[2][student_idx[\"Helen\"]] == True)\n    s_chk.add(Not(Morning[2][student_idx[\"Helen\"]]))\n    for d in days:\n        if d != 2:\n            s_chk.add(Not(Morning[d][student_idx[\"Helen\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Helen\"]]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7\nstudents = [\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"]\nstudent_idx = {s: i for i, s in enumerate(students)}\n\n# Days: 0=Monday, 1=Tuesday, 2=Wednesday\ndays = range(3)\n\n# Variables: Morning[d][s] and Afternoon[d][s] are Booleans\nMorning = [[Bool(f\"Morning_{d}_{s}\") for s in range(8)] for d in days]\nAfternoon = [[Bool(f\"Afternoon_{d}_{s}\") for s in range(8)] for d in days]\n\nsolver = Solver()\n\n# Exactly six reports total\nreports = []\nfor d in days:\n    for s in range(8):\n        reports.append(Morning[d][s])\n        reports.append(Afternoon[d][s])\nsolver.add(Sum([If(r, 1, 0) for r in reports]) == 6)\n\n# One report per time slot each day\nfor d in days:\n    solver.add(Sum([If(Morning[d][s], 1, 0) for s in range(8)]) == 1)\n    solver.add(Sum([If(Afternoon[d][s], 1, 0) for s in range(8)]) == 1)\n\n# No student reports more than once\nfor s in range(8):\n    assignments = []\n    for d in days:\n        assignments.append(Morning[d][s])\n        assignments.append(Afternoon[d][s])\n    solver.add(Sum([If(a, 1, 0) for a in assignments]) <= 1)\n\n# Tuesday is the only day George can give a report\nfor d in days:\n    if d != 1:  # not Tuesday\n        solver.add(Not(Morning[d][student_idx[\"George\"]]))\n        solver.add(Not(Afternoon[d][student_idx[\"George\"]]))\n\n# Olivia and Robert cannot give afternoon reports\nfor s in [student_idx[\"Olivia\"], student_idx[\"Robert\"]]:\n    for d in days:\n        solver.add(Not(Afternoon[d][s]))\n\n# Nina conditional constraint\nnina_mon = Morning[0][student_idx[\"Nina\"]] or Afternoon[0][student_idx[\"Nina\"]]\nnina_tue = Morning[1][student_idx[\"Nina\"]] or Afternoon[1][student_idx[\"Nina\"]]\nnina_wed = Morning[2][student_idx[\"Nina\"]] or Afternoon[2][student_idx[\"Nina\"]]\n\n# If Nina reports on Monday, then Helen and Irving must both report on Tuesday\nsolver.add(Implies(nina_mon, \n    (Morning[1][student_idx[\"Helen\"]] or Afternoon[1][student_idx[\"Helen\"]]) and \n    (Morning[1][student_idx[\"Irving\"]] or Afternoon[1][student_idx[\"Irving\"]])))\n\n# If Nina reports on Tuesday, then Helen and Irving must both report on Wednesday\nsolver.add(Implies(nina_tue,\n    (Morning[2][student_idx[\"Helen\"]] or Afternoon[2][student_idx[\"Helen\"]]) and \n    (Morning[2][student_idx[\"Irving\"]] or Afternoon[2][student_idx[\"Irving\"]])))\n\n# If Nina reports on Wednesday, no constraint (vacuously satisfied)\n\n# Given assumptions\nsolver.add(Afternoon[1][student_idx[\"Kyle\"]] == True)  # Kyle gives afternoon report on Tuesday\nsolver.add(Afternoon[2][student_idx[\"Helen\"]] == True)  # Helen gives afternoon report on Wednesday\n\n# Answer choices: morning reports for Mon, Tue, Wed\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add morning report assignments for the choice\n    mon_morning = student_idx[choice[0]]\n    tue_morning = student_idx[choice[1]]\n    wed_morning = student_idx[choice[2]]\n    \n    s_chk.add(Morning[0][mon_morning] == True)\n    s_chk.add(Morning[1][tue_morning] == True)\n    s_chk.add(Morning[2][wed_morning] == True)\n    \n    # Ensure no other assignments for these students on those days\n    for s in [mon_morning, tue_morning, wed_morning]:\n        # Morning assignments already set for specific days\n        if s == mon_morning:\n            for d in days:\n                if d != 0:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == tue_morning:\n            for d in days:\n                if d != 1:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == wed_morning:\n            for d in days:\n                if d != 2:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n    \n    # Also ensure Kyle and Helen are only assigned where specified\n    s_chk.add(Afternoon[1][student_idx[\"Kyle\"]] == True)\n    s_chk.add(Not(Morning[1][student_idx[\"Kyle\"]]))\n    for d in days:\n        if d != 1:\n            s_chk.add(Not(Morning[d][student_idx[\"Kyle\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Kyle\"]]))\n    \n    s_chk.add(Afternoon[2][student_idx[\"Helen\"]] == True)\n    s_chk.add(Not(Morning[2][student_idx[\"Helen\"]]))\n    for d in days:\n        if d != 2:\n            s_chk.add(Not(Morning[d][student_idx[\"Helen\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Helen\"]]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp8i9qovml.py\", line 49, in <module>\n    nina_mon = Morning[0][student_idx[\"Nina\"]] or Afternoon[0][student_idx[\"Nina\"]]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7\nstudents = [\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"]\nstudent_idx = {s: i for i, s in enumerate(students)}\n\n# Days: 0=Monday, 1=Tuesday, 2=Wednesday\ndays = range(3)\n\n# Variables: Morning[d][s] and Afternoon[d][s] are Booleans\nMorning = [[Bool(f\"Morning_{d}_{s}\") for s in range(8)] for d in days]\nAfternoon = [[Bool(f\"Afternoon_{d}_{s}\") for s in range(8)] for d in days]\n\nsolver = Solver()\n\n# Exactly six reports total\nreports = []\nfor d in days:\n    for s in range(8):\n        reports.append(Morning[d][s])\n        reports.append(Afternoon[d][s])\nsolver.add(Sum([If(r, 1, 0) for r in reports]) == 6)\n\n# One report per time slot each day\nfor d in days:\n    solver.add(Sum([If(Morning[d][s], 1, 0) for s in range(8)]) == 1)\n    solver.add(Sum([If(Afternoon[d][s], 1, 0) for s in range(8)]) == 1)\n\n# No student reports more than once\nfor s in range(8):\n    assignments = []\n    for d in days:\n        assignments.append(Morning[d][s])\n        assignments.append(Afternoon[d][s])\n    solver.add(Sum([If(a, 1, 0) for a in assignments]) <= 1)\n\n# Tuesday is the only day George can give a report\nfor d in days:\n    if d != 1:  # not Tuesday\n        solver.add(Not(Morning[d][student_idx[\"George\"]]))\n        solver.add(Not(Afternoon[d][student_idx[\"George\"]]))\n\n# Olivia and Robert cannot give afternoon reports\nfor s in [student_idx[\"Olivia\"], student_idx[\"Robert\"]]:\n    for d in days:\n        solver.add(Not(Afternoon[d][s]))\n\n# Nina conditional constraint\nnina_mon = Or(Morning[0][student_idx[\"Nina\"]], Afternoon[0][student_idx[\"Nina\"]])\nnina_tue = Or(Morning[1][student_idx[\"Nina\"]], Afternoon[1][student_idx[\"Nina\"]])\nnina_wed = Or(Morning[2][student_idx[\"Nina\"]], Afternoon[2][student_idx[\"Nina\"]])\n\n# If Nina reports on Monday, then Helen and Irving must both report on Tuesday\nsolver.add(Implies(nina_mon, \n    And(\n        Or(Morning[1][student_idx[\"Helen\"]], Afternoon[1][student_idx[\"Helen\"]]), \n        Or(Morning[1][student_idx[\"Irving\"]], Afternoon[1][student_idx[\"Irving\"]])\n    )))\n\n# If Nina reports on Tuesday, then Helen and Irving must both report on Wednesday\nsolver.add(Implies(nina_tue,\n    And(\n        Or(Morning[2][student_idx[\"Helen\"]], Afternoon[2][student_idx[\"Helen\"]]), \n        Or(Morning[2][student_idx[\"Irving\"]], Afternoon[2][student_idx[\"Irving\"]])\n    )))\n\n# If Nina reports on Wednesday, no constraint (vacuously satisfied)\n\n# Given assumptions\nsolver.add(Afternoon[1][student_idx[\"Kyle\"]] == True)  # Kyle gives afternoon report on Tuesday\nsolver.add(Afternoon[2][student_idx[\"Helen\"]] == True)  # Helen gives afternoon report on Wednesday\n\n# Answer choices: morning reports for Mon, Tue, Wed\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add morning report assignments for the choice\n    mon_morning = student_idx[choice[0]]\n    tue_morning = student_idx[choice[1]]\n    wed_morning = student_idx[choice[2]]\n    \n    s_chk.add(Morning[0][mon_morning] == True)\n    s_chk.add(Morning[1][tue_morning] == True)\n    s_chk.add(Morning[2][wed_morning] == True)\n    \n    # Ensure no other assignments for these students on those days\n    for s in [mon_morning, tue_morning, wed_morning]:\n        # Morning assignments already set for specific days\n        if s == mon_morning:\n            for d in days:\n                if d != 0:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == tue_morning:\n            for d in days:\n                if d != 1:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n        if s == wed_morning:\n            for d in days:\n                if d != 2:\n                    s_chk.add(Not(Morning[d][s]))\n                    s_chk.add(Not(Afternoon[d][s]))\n    \n    # Also ensure Kyle and Helen are only assigned where specified\n    s_chk.add(Afternoon[1][student_idx[\"Kyle\"]] == True)\n    s_chk.add(Not(Morning[1][student_idx[\"Kyle\"]]))\n    for d in days:\n        if d != 1:\n            s_chk.add(Not(Morning[d][student_idx[\"Kyle\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Kyle\"]]))\n    \n    s_chk.add(Afternoon[2][student_idx[\"Helen\"]] == True)\n    s_chk.add(Not(Morning[2][student_idx[\"Helen\"]]))\n    for d in days:\n        if d != 2:\n            s_chk.add(Not(Morning[d][student_idx[\"Helen\"]]))\n            s_chk.add(Not(Afternoon[d][student_idx[\"Helen\"]]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[3]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1654,
+            "completion_tokens": 1425,
+            "total_tokens": 3079
+          },
+          "api_time_only": 40.86121392250061,
+          "solver_time_only": 0.08680343627929688
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices\n(STUDENTS, idx_map) = ([\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"], {})\nfor i, s in enumerate(STUDENTS):\n    idx_map[s] = i\n\n# Days: 0-Monday, 1-Tuesday, 2-Wednesday\nDAYS = 3\n# Times: 0-morning, 1-afternoon\nTIMES = 2\n\n# slot[s][d][t] = True if student s gives report on day d at time t\nslot = [[[Bool(f\"slot_{s}_{d}_{t}\") for t in range(TIMES)] for d in range(DAYS)] for s in range(len(STUDENTS))]\n\n# Base solver\nsolver = Solver()\n\n# Total reports constraint: exactly six students give reports (each gives exactly one report)\ntotal_reports = []\nfor s in range(len(STUDENTS)):\n    reports_for_s = Or([slot[s][d][t] for d in range(DAYS) for t in range(TIMES)])\n    total_reports.append(reports_for_s)\nsolver.add(Sum([If(r, 1, 0) for r in total_reports]) == 6)\n\n# Each slot can have at most one student\nfor d in range(DAYS):\n    for t in range(TIMES):\n        # Exactly one student per slot\n        students_in_slot = []\n        for s in range(len(STUDENTS)):\n            students_in_slot.append(slot[s][d][t])\n        # At least one student per slot (since exactly 2 reports per day, and 3 days => 6 slots filled)\n        solver.add(Or(*students_in_slot))\n        # At most one student per slot\n        for i in range(len(STUDENTS)):\n            for j in range(i + 1, len(STUDENTS)):\n                solver.add(Not(And(students_in_slot[i], students_in_slot[j])))\n\n# Exactly two reports per day (already enforced by slot constraints above, but we ensure consistency)\nfor d in range(DAYS):\n    for t in range(TIMES):\n        # Already handled above\n\n# George only on Tuesday\nfor t in range(TIMES):\n    solver.add(Not(slot[idx_map[\"George\"]][0][t]))  # Monday\n    solver.add(Not(slot[idx_map[\"George\"]][2][t]))  # Wednesday\n\n# Olivia and Robert cannot give afternoon reports\nfor d in range(DAYS):\n    solver.add(Not(slot[idx_map[\"Olivia\"]][d][1]))\n    solver.add(Not(slot[idx_map[\"Robert\"]][d][1]))\n\n# Nina conditional constraint\n# If Nina reports on Monday, then Helen and Irving must report on Tuesday\nnina_monday = slot[idx_map[\"Nina\"]][0][0] or slot[idx_map[\"Nina\"]][0][1]\nhelen_tue = Or(slot[idx_map[\"Helen\"]][1][0], slot[idx_map[\"Helen\"]][1][1])\nirving_tue = Or(slot[idx_map[\"Irving\"]][1][0], slot[idx_map[\"Irving\"]][1][1])\nsolver.add(Implies(nina_monday, And(helen_tue, irving_tue)))\n\n# If Nina reports on Tuesday, then Helen and Irving must report on Wednesday\nnina_tue = slot[idx_map[\"Nina\"]][1][0] or slot[idx_map[\"Nina\"]][1][1]\nhelen_wed = Or(slot[idx_map[\"Helen\"]][2][0], slot[idx_map[\"Helen\"]][2][1])\nirving_wed = Or(slot[idx_map[\"Irving\"]][2][0], slot[idx_map[\"Irving\"]][2][1])\nsolver.add(Implies(nina_tue, And(helen_wed, irving_wed)))\n\n# Given scenario constraints\n# Kyle gives afternoon report on Tuesday\nsolver.add(slot[idx_map[\"Kyle\"]][1][1] == True)\n# Helen gives afternoon report on Wednesday\nsolver.add(slot[idx_map[\"Helen\"]][2][1] == True)\n\n# Answer choices: each is a list of [Monday_morning, Tuesday_morning, Wednesday_morning]\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add fixed morning reports\n    # Monday morning: choice[0]\n    s_chk.add(slot[idx_map[choice[0]]][0][0] == True)\n    # Tuesday morning: choice[1]\n    s_chk.add(slot[idx_map[choice[1]]][1][0] == True)\n    # Wednesday morning: choice[2]\n    s_chk.add(slot[idx_map[choice[2]]][2][0] == True)\n    \n    # Ensure no student is assigned to both morning and afternoon on same day\n    for s in range(len(STUDENTS)):\n        for d in range(DAYS):\n            s_chk.add(Not(And(slot[s][d][0], slot[s][d][1])))\n    \n    # Ensure Kyle is only assigned to Tuesday afternoon (not morning) and Helen only Wednesday afternoon\n    s_chk.add(Not(slot[idx_map[\"Kyle\"]][1][0]))  # Kyle not Tuesday morning\n    s_chk.add(Not(slot[idx_map[\"Helen\"]][2][0]))  # Helen not Wednesday morning\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices\n(STUDENTS, idx_map) = ([\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"], {})\nfor i, s in enumerate(STUDENTS):\n    idx_map[s] = i\n\n# Days: 0-Monday, 1-Tuesday, 2-Wednesday\nDAYS = 3\n# Times: 0-morning, 1-afternoon\nTIMES = 2\n\n# slot[s][d][t] = True if student s gives report on day d at time t\nslot = [[[Bool(f\"slot_{s}_{d}_{t}\") for t in range(TIMES)] for d in range(DAYS)] for s in range(len(STUDENTS))]\n\n# Base solver\nsolver = Solver()\n\n# Total reports constraint: exactly six students give reports (each gives exactly one report)\ntotal_reports = []\nfor s in range(len(STUDENTS)):\n    reports_for_s = Or([slot[s][d][t] for d in range(DAYS) for t in range(TIMES)])\n    total_reports.append(reports_for_s)\nsolver.add(Sum([If(r, 1, 0) for r in total_reports]) == 6)\n\n# Each slot can have at most one student\nfor d in range(DAYS):\n    for t in range(TIMES):\n        # Exactly one student per slot\n        students_in_slot = []\n        for s in range(len(STUDENTS)):\n            students_in_slot.append(slot[s][d][t])\n        # At least one student per slot (since exactly 2 reports per day, and 3 days => 6 slots filled)\n        solver.add(Or(*students_in_slot))\n        # At most one student per slot\n        for i in range(len(STUDENTS)):\n            for j in range(i + 1, len(STUDENTS)):\n                solver.add(Not(And(students_in_slot[i], students_in_slot[j])))\n\n# Exactly two reports per day (already enforced by slot constraints above, but we ensure consistency)\nfor d in range(DAYS):\n    for t in range(TIMES):\n        # Already handled above\n\n# George only on Tuesday\nfor t in range(TIMES):\n    solver.add(Not(slot[idx_map[\"George\"]][0][t]))  # Monday\n    solver.add(Not(slot[idx_map[\"George\"]][2][t]))  # Wednesday\n\n# Olivia and Robert cannot give afternoon reports\nfor d in range(DAYS):\n    solver.add(Not(slot[idx_map[\"Olivia\"]][d][1]))\n    solver.add(Not(slot[idx_map[\"Robert\"]][d][1]))\n\n# Nina conditional constraint\n# If Nina reports on Monday, then Helen and Irving must report on Tuesday\nnina_monday = slot[idx_map[\"Nina\"]][0][0] or slot[idx_map[\"Nina\"]][0][1]\nhelen_tue = Or(slot[idx_map[\"Helen\"]][1][0], slot[idx_map[\"Helen\"]][1][1])\nirving_tue = Or(slot[idx_map[\"Irving\"]][1][0], slot[idx_map[\"Irving\"]][1][1])\nsolver.add(Implies(nina_monday, And(helen_tue, irving_tue)))\n\n# If Nina reports on Tuesday, then Helen and Irving must report on Wednesday\nnina_tue = slot[idx_map[\"Nina\"]][1][0] or slot[idx_map[\"Nina\"]][1][1]\nhelen_wed = Or(slot[idx_map[\"Helen\"]][2][0], slot[idx_map[\"Helen\"]][2][1])\nirving_wed = Or(slot[idx_map[\"Irving\"]][2][0], slot[idx_map[\"Irving\"]][2][1])\nsolver.add(Implies(nina_tue, And(helen_wed, irving_wed)))\n\n# Given scenario constraints\n# Kyle gives afternoon report on Tuesday\nsolver.add(slot[idx_map[\"Kyle\"]][1][1] == True)\n# Helen gives afternoon report on Wednesday\nsolver.add(slot[idx_map[\"Helen\"]][2][1] == True)\n\n# Answer choices: each is a list of [Monday_morning, Tuesday_morning, Wednesday_morning]\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add fixed morning reports\n    # Monday morning: choice[0]\n    s_chk.add(slot[idx_map[choice[0]]][0][0] == True)\n    # Tuesday morning: choice[1]\n    s_chk.add(slot[idx_map[choice[1]]][1][0] == True)\n    # Wednesday morning: choice[2]\n    s_chk.add(slot[idx_map[choice[2]]][2][0] == True)\n    \n    # Ensure no student is assigned to both morning and afternoon on same day\n    for s in range(len(STUDENTS)):\n        for d in range(DAYS):\n            s_chk.add(Not(And(slot[s][d][0], slot[s][d][1])))\n    \n    # Ensure Kyle is only assigned to Tuesday afternoon (not morning) and Helen only Wednesday afternoon\n    s_chk.add(Not(slot[idx_map[\"Kyle\"]][1][0]))  # Kyle not Tuesday morning\n    s_chk.add(Not(slot[idx_map[\"Helen\"]][2][0]))  # Helen not Wednesday morning\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr:   File \"/tmp/tmp2nnixg94.py\", line 46\n    for t in range(TIMES):\nIndentationError: expected an indented block after 'for' statement on line 42\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices\n(STUDENTS, idx_map) = ([\"George\", \"Helen\", \"Irving\", \"Kyle\", \"Lenore\", \"Nina\", \"Olivia\", \"Robert\"], {})\nfor i, s in enumerate(STUDENTS):\n    idx_map[s] = i\n\n# Days: 0-Monday, 1-Tuesday, 2-Wednesday\nDAYS = 3\n# Times: 0-morning, 1-afternoon\nTIMES = 2\n\n# slot[s][d][t] = True if student s gives report on day d at time t\nslot = [[[Bool(f\"slot_{s}_{d}_{t}\") for t in range(TIMES)] for d in range(DAYS)] for s in range(len(STUDENTS))]\n\n# Base solver\nsolver = Solver()\n\n# Total reports constraint: exactly six students give reports (each gives exactly one report)\ntotal_reports = []\nfor s in range(len(STUDENTS)):\n    reports_for_s = Or([slot[s][d][t] for d in range(DAYS) for t in range(TIMES)])\n    total_reports.append(reports_for_s)\nsolver.add(Sum([If(r, 1, 0) for r in total_reports]) == 6)\n\n# Each slot can have at most one student\nfor d in range(DAYS):\n    for t in range(TIMES):\n        # Exactly one student per slot\n        students_in_slot = []\n        for s in range(len(STUDENTS)):\n            students_in_slot.append(slot[s][d][t])\n        # At least one student per slot (since exactly 2 reports per day, and 3 days => 6 slots filled)\n        solver.add(Or(*students_in_slot))\n        # At most one student per slot\n        for i in range(len(STUDENTS)):\n            for j in range(i + 1, len(STUDENTS)):\n                solver.add(Not(And(students_in_slot[i], students_in_slot[j])))\n\n# George only on Tuesday\nfor t in range(TIMES):\n    solver.add(Not(slot[idx_map[\"George\"]][0][t]))  # Monday\n    solver.add(Not(slot[idx_map[\"George\"]][2][t]))  # Wednesday\n\n# Olivia and Robert cannot give afternoon reports\nfor d in range(DAYS):\n    solver.add(Not(slot[idx_map[\"Olivia\"]][d][1]))\n    solver.add(Not(slot[idx_map[\"Robert\"]][d][1]))\n\n# Nina conditional constraint\n# If Nina reports on Monday, then Helen and Irving must report on Tuesday\nnina_monday = Or(slot[idx_map[\"Nina\"]][0][0], slot[idx_map[\"Nina\"]][0][1])\nhelen_tue = Or(slot[idx_map[\"Helen\"]][1][0], slot[idx_map[\"Helen\"]][1][1])\nirving_tue = Or(slot[idx_map[\"Irving\"]][1][0], slot[idx_map[\"Irving\"]][1][1])\nsolver.add(Implies(nina_monday, And(helen_tue, irving_tue)))\n\n# If Nina reports on Tuesday, then Helen and Irving must report on Wednesday\nnina_tue = Or(slot[idx_map[\"Nina\"]][1][0], slot[idx_map[\"Nina\"]][1][1])\nhelen_wed = Or(slot[idx_map[\"Helen\"]][2][0], slot[idx_map[\"Helen\"]][2][1])\nirving_wed = Or(slot[idx_map[\"Irving\"]][2][0], slot[idx_map[\"Irving\"]][2][1])\nsolver.add(Implies(nina_tue, And(helen_wed, irving_wed)))\n\n# Given scenario constraints\n# Kyle gives afternoon report on Tuesday\nsolver.add(slot[idx_map[\"Kyle\"]][1][1] == True)\n# Helen gives afternoon report on Wednesday\nsolver.add(slot[idx_map[\"Helen\"]][2][1] == True)\n\n# Answer choices: each is a list of [Monday_morning, Tuesday_morning, Wednesday_morning]\nanswer_choices = [\n    [\"Irving\", \"Lenore\", \"Nina\"],\n    [\"Lenore\", \"George\", \"Irving\"],\n    [\"Nina\", \"Irving\", \"Lenore\"],\n    [\"Robert\", \"George\", \"Irving\"],\n    [\"Robert\", \"Irving\", \"Lenore\"]\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add fixed morning reports\n    # Monday morning: choice[0]\n    s_chk.add(slot[idx_map[choice[0]]][0][0] == True)\n    # Tuesday morning: choice[1]\n    s_chk.add(slot[idx_map[choice[1]]][1][0] == True)\n    # Wednesday morning: choice[2]\n    s_chk.add(slot[idx_map[choice[2]]][2][0] == True)\n    \n    # Ensure no student is assigned to both morning and afternoon on same day\n    for s in range(len(STUDENTS)):\n        for d in range(DAYS):\n            s_chk.add(Not(And(slot[s][d][0], slot[s][d][1])))\n    \n    # Ensure Kyle is only assigned to Tuesday afternoon (not morning) and Helen only Wednesday afternoon\n    s_chk.add(Not(slot[idx_map[\"Kyle\"]][1][0]))  # Kyle not Tuesday morning\n    s_chk.add(Not(slot[idx_map[\"Helen\"]][2][0]))  # Helen not Wednesday morning\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[3]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1390,
+            "completion_tokens": 1207,
+            "total_tokens": 2597
+          },
+          "api_time_only": 33.31860971450806,
+          "solver_time_only": 0.10403227806091309
+        }
+      ]
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

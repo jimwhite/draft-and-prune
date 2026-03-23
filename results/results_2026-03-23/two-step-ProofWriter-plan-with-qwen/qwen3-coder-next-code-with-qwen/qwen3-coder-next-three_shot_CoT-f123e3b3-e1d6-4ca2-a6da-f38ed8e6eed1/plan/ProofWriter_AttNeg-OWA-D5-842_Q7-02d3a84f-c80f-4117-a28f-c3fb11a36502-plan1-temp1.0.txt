@@ -1,0 +1,51 @@
+1. Identify all entities: Anne, Dave, Erin, Gary.
+2. Encode all explicit facts using ternary predicates (subject, boolean/object, True), e.g., is_big("Anne", True), is_cold("Dave", False), etc.
+3. Note that "furry" is a unary property and must be encoded as is_furry(subject, True).
+4. Translate each context rule into PyKe rules using `foreach` and `assert`, carefully handling negations (e.g., "not big" → is_big(X, False)) and conjunctions.
+5. Derive necessary intermediate facts using rules:
+   • From Anne is big → Anne is cold (already stated, but confirms consistency).
+   • Round things are big: foreach is_round(X, True) → assert is_big(X, True).
+   • Furry, round things are big: foreach and(is_furry(X, True), is_round(X, True)) → assert is_big(X, True).
+   • All cold things are furry: foreach is_cold(X, True) → assert is_furry(X, True).
+   • All furry, big things are young: foreach and(is_furry(X, True), is_big(X, True)) → assert is_young(X, True).
+   • White things are round: foreach is_white(X, True) → assert is_round(X, True).
+   • All white, young things are nice: foreach and(is_white(X, True), is_young(X, True)) → assert is_nice(X, True).
+6. Use known facts:
+   - Dave: is_round(True), is_white(True) → via white→round (already given), and white→round→big, so Dave is big.
+   - From round Dave → big (via "round things are big").
+   - Erin: is_cold(True), is_white(True), is_young(True) → cold→furry, so Erin is furry; white→round (already stated as round via fact or derived).
+   - Gary: is_cold(True), is_young(True) → cold→furry, so Gary is furry.
+7. Query: Check if Dave is furry → facts.is_furry("Dave", True). But to be furry, must be cold (via "all cold things are furry") or have other path. Dave is not stated as cold; only round, white.
+   - White→round (Dave already round), round→big → Dave big.
+   - But furry is not derivable from white/round/big alone; only via cold or furry&round→big (but that doesn’t give furry).
+   - No rule gives furry to non-cold entities unless already furry.
+   - Dave is not cold → so is_furry("Dave", True) does *not* follow.
+   - However, "furry" is not mentioned directly for Dave; only via cold→furry. Since Dave is not known to be cold, furry cannot be inferred.
+   - Therefore, query should attempt to prove is_furry("Dave", True), and if unsatisfiable (and no explicit fact states it), answer is false or unknown? Wait—PyKe uses closed-world for facts, so if not provable and no explicit fact asserts is_furry("Dave", True), then it is unknown. But note: the query is *is Dave furry?* We must test both is_furry("Dave", True) and not (prove False).
+   • However, PyKe query format: facts.is_furry("Dave", True). If this cannot be derived, result is unknown; if can be derived → true; if can derive False (via negation) → false. But PyKe does *not* support negative facts directly unless asserted.
+   • So: check if is_furry("Dave", True) can be inferred. Since no rule introduces furry unless cold (and Dave not cold), and no direct fact, it cannot be inferred → unknown.
+8. But plan must specify: after encoding facts and rules, run query: facts.is_furry("Dave", True). Then interpret result: true if provable, false if proven impossible (not the case here), unknown otherwise.
+9. Additional check: is there any indirect way? "Furry, round things are big" — this is *conditional*, not converse. So no furry from big/round.
+10. So final step: query is_furry("Dave", True) → result unknown.
+
+Plan:
+1. Identify all entities: Anne, Dave, Erin, Gary.
+2. Encode direct facts as ternary predicates: is_big("Anne", True), is_cold("Anne", True), is_young("Anne", True), is_round("Dave", True), is_white("Dave", True), is_cold("Erin", True), is_white("Erin", True), is_young("Erin", True), is_cold("Gary", True), is_young("Gary", True). Do *not* assume furry facts unless stated or derivable.
+3. For each rule, write `foreach` + `assert`:
+   • is_big(X, True) → is_cold(X, True)
+   • is_round(X, True) → is_big(X, True)
+   • and(is_furry(X, True), is_round(X, True)) → is_big(X, True)
+   • is_cold(X, True) → is_furry(X, True)
+   • and(is_round("Erin", True), is_young("Erin", False))? Wait—rule says "If Erin is round then Erin is young". Since Erin is already young, and roundness not yet known. But fact: Erin is white → white→round ⇒ Erin is round (via rule 8). Then from round(erin)→young(erin), which is already true → consistent.
+     So rule: if is_round("Erin", True) then assert is_young("Erin", True). (But already known, so trivial.)
+   • and(is_furry(X, True), is_big(X, True)) → is_young(X, True)
+   • is_white(X, True) → is_round(X, True)
+   • is_cold("Gary", True) → is_white("Gary", True)  [explicit implication]
+   • and(is_white(X, True), is_young(X, True)) → is_nice(X, True)
+4. Apply reasoning chain for Dave:
+   - is_white("Dave", True) → via rule 7: assert is_round("Dave", True) (but already fact).
+   - is_round("Dave", True) → via rule 2: assert is_big("Dave", True).
+   - But furry requires cold (rule 4) or explicit fact. Dave is not known to be cold → cannot derive furry.
+5. Query: facts.is_furry("Dave", True). Evaluate result in PyKe: if provable → true; else unknown.
+6. Since no derivation path for is_furry("Dave", True), and not explicitly stated, the answer is unknown.
+7. Final step: report query result for is_furry("Dave", True) as unknown.

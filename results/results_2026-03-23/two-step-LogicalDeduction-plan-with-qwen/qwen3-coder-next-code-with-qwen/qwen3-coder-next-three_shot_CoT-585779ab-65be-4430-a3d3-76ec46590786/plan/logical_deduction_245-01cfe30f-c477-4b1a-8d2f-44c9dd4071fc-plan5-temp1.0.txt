@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate the `Problem` class to begin modeling the puzzle.
+
+2. **Define Variables and Domain:**
+   * Identify the three books as variables: `"orange"`, `"yellow"`, and `"blue"`.
+   * Define the domain as integers 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.
+   * Add the variables and domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+   * Translate each statement into a constraint:
+     - "The blue book is to the right of the yellow book" → `yellow < blue` (position number constraint).
+     - "The orange book is the second from the left" → `orange == 2`.
+
+4. **Solve for Arrangements:**
+   * Call `getSolutions()` to obtain all valid position assignments.
+   * Extract the unique solution (a dictionary mapping book names to positions).
+
+5. **Determine Which Statement Is True:**
+   * Examine the solved position of each book:
+     - Rightmost = position 3.
+   * Check which bird (book) has position 3.
+   * Match the identified book to the corresponding choice:
+     - If blue is rightmost → 'C'
+     - If yellow is rightmost → 'B'
+     - If orange is rightmost → 'A' (but orange is fixed at 2, so this is impossible).
+   * Return the correct choice letter based on which book occupies position 3.

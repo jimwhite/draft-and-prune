@@ -1,0 +1,14 @@
+1. Identify all individuals: Anne, Fiona, Gary, Harry.
+2. Encode all explicit properties using ternary predicates of the form property(individual, True) or property(individual, False), e.g., is_blue("Anne", True), is_nice("Anne", True), etc.
+3. Encode all unconditional universal statements as rules using `foreach` over all individuals:
+   - All big people are rough: foreach(is_big(X, True)) → assert(is_rough(X, True))
+   - All blue, nice people are big: foreach(is_blue(X, True) ∧ is_nice(X, True)) → assert(is_big(X, True))
+   - If someone is rough then they are green: foreach(is_rough(X, True)) → assert(is_green(X, True))
+   - All nice people are big: foreach(is_nice(X, True)) → assert(is_big(X, True))
+   - Green people are blue: foreach(is_green(X, True)) → assert(is_blue(X, True))
+   - Rough, white people are nice: foreach(is_rough(X, True) ∧ is_white(X, True)) → assert(is_nice(X, True))
+   - White people are nice: foreach(is_white(X, True)) → assert(is_nice(X, True))
+   - Green people are nice: foreach(is_green(X, True)) → assert(is_nice(X, True))
+4. Encode negated facts as explicit false assertions where needed (e.g., if a property is not stated, it remains unknown unless deducible).
+5. The query tests whether Harry is *not* blue:
+   → Use facts.is_blue("Harry", False)

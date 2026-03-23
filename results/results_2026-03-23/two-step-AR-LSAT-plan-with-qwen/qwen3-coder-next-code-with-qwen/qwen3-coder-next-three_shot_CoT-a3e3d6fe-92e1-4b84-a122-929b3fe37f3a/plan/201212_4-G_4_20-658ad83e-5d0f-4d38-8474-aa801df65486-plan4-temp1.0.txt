@@ -1,0 +1,13 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign integer indices.  
+2. Create integer position variables `pos[article]` for each article (1 ≤ pos ≤ 7), all distinct.  
+3. Define a mapping from article to topic: finance (G,H,J), nutrition (Q,R,S), wildlife (Y).  
+4. Add **topic adjacency constraint**: for every pair of consecutive positions (i, i+1), the articles at those positions must have different topics.  
+5. Add **S–Q conditional constraint**: If S is earlier than Q, then Q must be third. Equivalently: (pos_S < pos_Q) → (pos_Q == 3).  
+6. Add **S–Y ordering constraint**: pos_S < pos_Y.  
+7. Add **J–G–R chaining constraint**: pos_J < pos_G < pos_R.  
+8. Translate each answer choice into a concrete position assignment: e.g., "G is second" → pos_G == 2.  
+9. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert the condition (e.g., pos_G == 2).  
+   - Check satisfiability: if SAT, the choice *could* be true; record its index.  
+10. Return the list of answer indices where the solver returns SAT.

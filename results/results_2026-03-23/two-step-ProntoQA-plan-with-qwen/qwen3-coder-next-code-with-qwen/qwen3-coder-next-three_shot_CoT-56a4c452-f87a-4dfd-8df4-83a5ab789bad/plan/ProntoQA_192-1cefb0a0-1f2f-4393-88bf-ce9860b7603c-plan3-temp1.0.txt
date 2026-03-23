@@ -1,0 +1,35 @@
+1. Identify all entities and types: Sam, numpus, wumpus, rompus, vumpus, jompus, yumpus, zumpus.  
+2. Identify all properties: wooden, small, floral, blue, dull.  
+3. Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4. Convert each class property and subclass relationship into a rule:  
+   - Numpuses are not wooden.  
+   - Numpuses are wumpuses.  
+   - Wumpuses are small.  
+   - Wumpuses are rompuses.  
+   - Rompuses are not floral.  
+   - Rompuses are vumpuses.  
+   - Each vumpus is blue.  
+   - Jompuses are not dull.  
+   - Each vumpus is a yumpus.  
+   - Each yumpus is dull.  
+   - Yumpuses are zumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+   - `foreach x: is_a(x, "numpus") → not(is_wooden(x))`.  
+   - `foreach x: is_a(x, "numpus") → is_a(x, "wumpus", True)`.  
+   - `foreach x: is_a(x, "wumpus") → is_small(x)`.  
+   - `foreach x: is_a(x, "wumpus") → is_a(x, "rompus", True)`.  
+   - `foreach x: is_a(x, "rompus") → not(is_floral(x))`.  
+   - `foreach x: is_a(x, "rompus") → is_a(x, "vumpus", True)`.  
+   - `foreach x: is_a(x, "vumpus") → is_blue(x)`.  
+   - `foreach x: is_a(x, "jompus") → not(is_dull(x))`.  
+   - `foreach x: is_a(x, "vumpus") → is_a(x, "yumpus", True)`.  
+   - `foreach x: is_a(x, "yumpus") → is_dull(x)`.  
+   - `foreach x: is_a(x, "yumpus") → is_a(x, "zumpus", True)`.  
+6. Derive consequences for Sam step-by-step:  
+   - From `is_a("Sam", "numpus")` and rule 2: `is_a("Sam", "wumpus")`.  
+   - From `is_a("Sam", "wumpus")` and rule 4: `is_a("Sam", "rompus")`.  
+   - From `is_a("Sam", "rompus")` and rule 6: `is_a("Sam", "vumpus")`.  
+   - From `is_a("Sam", "vumpus")` and rule 9: `is_a("Sam", "yumpus")`.  
+   - From `is_a("Sam", "yumpus")` and rule 10: `is_dull("Sam")`.  
+7. The query tests if "Sam is not dull" is provable: this requires `is_dull("Sam", False)` or equivalently, `not(is_dull("Sam"))`.  
+   → Use `facts.is_dull("Sam", False)`.

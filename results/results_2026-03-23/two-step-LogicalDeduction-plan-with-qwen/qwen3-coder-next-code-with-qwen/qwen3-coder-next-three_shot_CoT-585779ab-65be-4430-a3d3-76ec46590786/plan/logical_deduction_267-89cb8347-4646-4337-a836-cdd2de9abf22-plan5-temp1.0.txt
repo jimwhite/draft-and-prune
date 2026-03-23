@@ -1,0 +1,24 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin modeling the constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the three variables representing the fruits: `"kiwis"`, `"oranges"`, and `"watermelons"`.
+    * Define a domain of integers from 1 to 3, where **1 represents the cheapest** (lowest price) and **3 represents the most expensive**.
+    * Add these variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Convert the comparative statements into constraints using `lambda` functions:
+        * "The oranges are more expensive than the kiwis" means the orange rank is greater than the kiwi rank (`oranges > kiwis`).
+        * "The oranges are less expensive than the watermelons" means the orange rank is less than the watermelon rank (`oranges < watermelons`).
+
+4.  **Solve for the Price Ranking:**
+    * Use the `getSolutions()` method to find all valid solutions.
+    * Extract the unique solution, which will be a dictionary mapping each fruit to its price rank (1, 2, or 3).
+
+5.  **Identify the Cheapest Fruit and Match to Choice:**
+    * The question asks which fruit is the cheapest, i.e., has rank **1**.
+    * Create a mapping from choice letters ("A", "B", "C") to their respective fruits: A → "kiwis", B → "oranges", C → "watermelons".
+    * Check the solved solution for which fruit has value 1.
+    * Return the corresponding choice letter as the answer.

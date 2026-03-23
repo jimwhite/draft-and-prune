@@ -1,0 +1,18 @@
+1. Identify all individuals: Anne, Bob, Charlie, Fiona.
+2. Encode all directly stated atomic facts using ternary predicates (e.g., is_nice("Anne", True), is_big("Bob", True), is_blue("Bob", True), is_cold("Bob", True), etc.).
+3. Translate each universal conditional into PyKe rules:
+   • If someone is furry and nice → they are cold.
+   • If Bob is blue and big → Bob is cold. (Note: special case; treat as a ground fact or use a `foreach` with grounding condition on Bob.)
+   • All blue, cold people are big.
+   • If someone is nice → they are smart.
+   • All smart, big people are nice.
+   • All smart people are blue.
+   • Blue, smart people are furry.
+   • Furry, cold people are smart.
+   • Cold people are big.
+4. For rules with universal quantification over all individuals, use `foreach` blocks matching the premises and asserting the conclusion for the same subject.
+5. For conditional rules involving specific individuals (e.g., Bob), encode as a dedicated rule that triggers only when the subject is "Bob".
+6. For rules with compound antecedents, combine conditions within a single `foreach` (e.g., for “If someone is blue and cold”, use `forall x: is_blue(x, True), is_cold(x, True) → assert is_big(x, True)`).
+7. Ensure that negated facts (e.g., is_smart("Charlie", False)) are queried directly, since PyKe uses assertions and negation-as-failure or explicit `not` in queries depending on backend; here we rely on querying the negation.
+8. The query tests whether Charlie is *not* smart:
+   → Use facts.is_smart("Charlie", False)

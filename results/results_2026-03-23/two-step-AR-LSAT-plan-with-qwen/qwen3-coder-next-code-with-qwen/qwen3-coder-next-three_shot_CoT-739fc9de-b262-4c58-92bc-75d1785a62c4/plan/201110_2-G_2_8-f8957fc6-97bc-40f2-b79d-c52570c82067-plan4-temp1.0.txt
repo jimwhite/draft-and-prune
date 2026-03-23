@@ -1,0 +1,15 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign integer indices 0–4.  
+2. Create three Boolean decision variables per candidate: `j_ven`, `j_yem`, `j_zam` for Jaramillo; similarly for others—total 15 Boolean variables indicating assignment to each country.  
+3. Add **exactly-one-country-per-ambassador** constraints: for each candidate, at most one of their three assignment variables is true (since no ambassador serves more than one country).  
+4. Add **exactly-one-ambassador-per-country** constraints: for each country, exactly one candidate is assigned (i.e., sum of that country's assignment variables = 1).  
+5. Add **two-not-assigned constraint**: exactly two candidates receive no assignment → sum of all 15 assignment variables = 3, and the count of candidates with at least one true assignment variable = 3 (equivalently, number of candidates with all three variables false = 2).  
+6. Add **exclusive Kayne/Novetzke constraint**: exactly one of (Kayne assigned to any country) or (Novetzke assigned to any country) is true.  
+7. Add **Jaramillo ⇒ Kayne constraint**: if Jaramillo is assigned to any country, then Kayne must also be assigned to some country (i.e., if `j_ven ∨ j_yem ∨ j_zam` is true, then `k_any = k_ven ∨ k_yem ∨ k_zam` must be true).  
+8. Add **Ong→Venezuela ⇒ ¬Kayne→Yemen constraint**: if `o_ven` is true, then `k_yem` must be false.  
+9. Add **Landon ⇒ Zambia constraint**: if Landon is assigned to any country, then only `l_zam` can be true (i.e., `l_ven ∨ l_yem → l_zam`, equivalently: `l_ven = false`, `l_yem = false`).  
+10. Translate each answer choice pair into candidate indices: e.g., Jaramillo and Novetzke → [0, 3].  
+11. For each choice pair, define `answer_index_list = []`.  
+12. Clone the base solver into a fresh solver for each pair.  
+13. Add constraint that exactly those two candidates are unassigned: for the specified pair, set all their assignment variables to false; for the remaining three candidates, ensure each has at least one assignment variable true (i.e., assigned to some country).  
+14. Check satisfiability. If SAT, the pair is feasible; add its index to `answer_index_list`.  
+15. After checking all pairs, output the list of indices corresponding to feasible unassigned-pair options.

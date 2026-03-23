@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**
+   * Define the seven books as variables: `"brown"`, `"gray"`, `"orange"`, `"green"`, `"black"`, `"purple"`, and `"yellow"`.
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+   * Add all variables with domain [1,2,3,4,5,6,7] to the `Problem`.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.
+   * Translate each statement into constraints:
+     * "The purple book is the leftmost" → `purple == 1`
+     * "The brown book is to the right of the yellow book" → `brown > yellow`
+     * "The green book is to the left of the orange book" → `green < orange`
+     * "The orange book is to the left of the gray book" → `orange < gray`
+     * "The black book is the third from the left" → `black == 3`
+     * "The green book is the third from the right" → Since rightmost is 7, third from right = position `7 - 2 = 5` → `green == 5`
+
+4. **Solve the Problem:**
+   * Call `getSolutions()` to retrieve all valid assignments.
+   * Extract the (unique) solution dictionary.
+
+5. **Determine the Correct Answer:**
+   * Identify which book is at position 5 (third from the right), since all answer choices refer to this location.
+   * Create a mapping from choice letters (`'A'` through `'G'`) to book names as per the choices:
+     - `'A'`: brown, `'B'`: gray, `'C'`: orange, `'D'`: green, `'E'`: black, `'F'`: purple, `'G'`: yellow
+   * In the solution, find the book with position 5.
+   * Return the choice letter corresponding to that book.

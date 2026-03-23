@@ -1,0 +1,16 @@
+1. Enumerate the seven accomplices and assign them integer indices: Peters=0, Quinn=1, Rovero=2, Stanton=3, Tao=4, Villas=5, White=6.  
+2. Create integer variables `pos[0]` to `pos[6]` representing the recruitment position (1 through 7) for each accomplice.  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6,7}, and all positions are distinct (pairwise inequality).  
+4. Add **fixed constraint**: Peters is recruited fourth → `pos[0] == 4`.  
+5. Add **order constraints**:  
+   - Quinn before Rovero → `pos[1] < pos[2]`.  
+   - Villas immediately before White → `pos[5] + 1 == pos[6]`.  
+   - Stanton not adjacent to Tao → `|pos[3] - pos[4]| ≠ 1`.  
+6. Precompute the position of each accomplice in each answer choice string (split by comma, strip spaces, map names to indices).  
+7. For each answer choice, verify if all constraints hold:  
+   - Check Peters is at position 4.  
+   - Verify Quinn before Rovero.  
+   - Verify Villas and White are consecutive with Villas first.  
+   - Verify Stanton and Tao are not adjacent.  
+8. Among the five answer choices, identify which one(s) satisfy all constraints. The correct choice is the one that is feasible (only one will be SAT under all constraints).  
+9. Output the index of the correct answer choice (0-indexed) corresponding to the valid sequence.

@@ -1,0 +1,20 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign them integer indices.  
+2. Create integer variables `pos[article]` for the position (1 to 7) of each article.  
+3. Add **domain constraints**: all `pos` values are integers in [1,7] and pairwise distinct (a permutation).  
+4. Add **topic constraints**: group articles by topic—Finance: {G, H, J}, Nutrition: {Q, R, S}, Wildlife: {Y}.  
+5. Add **no consecutive same-topic constraint**: for all i in [1..6], `pos[article_i] + 1 != pos[article_j]` whenever topic(article_i) == topic(article_j).  
+6. Add **conditional S–Q constraint**: If `pos[S] < pos[Q]`, then `pos[Q] == 3`. Equivalently: `pos[S] < pos[Q] → pos[Q] == 3`, implemented as `¬(pos[S] < pos[Q]) ∨ (pos[Q] == 3)`.  
+7. Add **S before Y constraint**: `pos[S] < pos[Y]`.  
+8. Add **J–G–R chain constraint**: `pos[J] < pos[G]` and `pos[G] < pos[R]`.  
+9. Translate the answer choices into tuples (article, position):  
+    - "G is second" → `pos[G] == 2`  
+    - "H is second" → `pos[H] == 2`  
+    - "S is second" → `pos[S] == 2`  
+    - "R is third" → `pos[R] == 3`  
+    - "Y is third" → `pos[Y] == 3`  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the position constraint (e.g., `pos[G] == 2`).  
+    - Check satisfiability.  
+    - If SAT, this choice *could be true*; record it as a possible answer.  
+11. Return the index (or list) of choices for which the model is SAT.

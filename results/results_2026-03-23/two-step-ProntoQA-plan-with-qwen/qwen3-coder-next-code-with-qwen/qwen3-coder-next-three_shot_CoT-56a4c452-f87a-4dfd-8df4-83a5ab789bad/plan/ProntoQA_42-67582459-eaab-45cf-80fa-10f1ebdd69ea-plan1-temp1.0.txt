@@ -1,0 +1,25 @@
+1.  Identify all entities and types: Wren, tumpus, jompus, vumpus, dumpus, yumpus, numpus, zumpus, rompus, impus, wumpus.  
+2.  Identify all properties: dull, sour, feisty, cold, transparent, amenable, orange, earthy.  
+3.  Represent "Wren is a vumpus" as a base fact: `is_a("Wren", "vumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Tumpuses are dull.  
+    - Tumpuses are jompuses.  
+    - Jompuses are not sour.  
+    - Each jompus is a vumpus.  
+    - Vumpuses are feisty.  
+    - Vumpuses are dumpuses.  
+    - Dumpuses are cold.  
+    - Each dumpus is a yumpus.  
+    - Each yumpus is transparent.  
+    - Each yumpus is a numpus.  
+    - Numpuses are not amenable.  
+    - Numpuses are zumpuses.  
+    - Each zumpus is orange.  
+    - Each zumpus is a rompus.  
+    - Rompuses are earthy.  
+    - Each impus is not orange.  
+    - Rompuses are wumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert`/`neg_assert` clause for the consequence (e.g., `is_dull(X)`, `not(is_sour(X))`, `is_a(X, "vumpus")` → `is_a(X, "jompus")`, etc.).  
+6.  Derive Wren's membership: Since Wren is a vumpus, and vumpuses are dumpuses → Wren is a dumpus; dumpuses are yumpuses → Wren is a yumpus; yumpuses are numpuses → Wren is a numpus; numpuses are zumpuses → Wren is a zumpus.  
+7.  Since each zumpus is orange, we conclude Wren is orange; thus, "Wren is not orange" is false.  
+8.  The query tests if "Wren is not orange" is provable: Use `facts.is_orange("Wren", False)`.

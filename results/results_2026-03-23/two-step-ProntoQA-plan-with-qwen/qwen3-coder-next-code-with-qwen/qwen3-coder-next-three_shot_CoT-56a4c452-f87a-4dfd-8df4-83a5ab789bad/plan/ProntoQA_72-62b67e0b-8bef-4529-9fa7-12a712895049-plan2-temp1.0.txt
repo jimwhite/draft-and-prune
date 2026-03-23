@@ -1,0 +1,24 @@
+1.  Identify all entities and types: Sam, tumpus, yumpus, wumpus, jompus, vumpus, impus, zumpus, numpus, dumpus, rompus.  
+2.  Identify all properties: small, aggressive, bright, liquid, orange, transparent, fruity, sour.  
+3.  Represent "Sam is a wumpus" as a base fact: `is_a("Sam", "wumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Tumpuses are not small → `foreach t, if is_a(t, "tumpus", True), assert is_small(t, False)`.  
+    - Tumpuses are yumpuses → `foreach t, if is_a(t, "tumpus", True), assert is_a(t, "yumpus", True)`.  
+    - Every yumpus is aggressive → `foreach y, if is_a(y, "yumpus", True), assert is_aggressive(y, True)`.  
+    - Each yumpus is a wumpus → `foreach y, if is_a(y, "yumpus", True), assert is_a(y, "wumpus", True)`.  
+    - Every wumpus is bright → `foreach w, if is_a(w, "wumpus", True), assert is_bright(w, True)`.  
+    - Each wumpus is a jompus → `foreach w, if is_a(w, "wumpus", True), assert is_a(w, "jompus", True)`.  
+    - Jompuses are not liquid → `foreach j, if is_a(j, "jompus", True), assert is_liquid(j, False)`.  
+    - Every jompus is a vumpus → `foreach j, if is_a(j, "jompus", True), assert is_a(j, "vumpus", True)`.  
+    - Each vumpus is orange → `foreach v, if is_a(v, "vumpus", True), assert is_orange(v, True)`.  
+    - Every vumpus is an impus → `foreach v, if is_a(v, "vumpus", True), assert is_a(v, "impus", True)`.  
+    - Every impus is not transparent → `foreach i, if is_a(i, "impus", True), assert is_transparent(i, False)`.  
+    - Each impus is a zumpus → `foreach i, if is_a(i, "impus", True), assert is_a(i, "zumpus", True)`.  
+    - Every zumpus is fruity → `foreach z, if is_a(z, "zumpus", True), assert is_fruity(z, True)`.  
+    - Every zumpus is a numpus → `foreach z, if is_a(z, "zumpus", True), assert is_a(z, "numpus", True)`.  
+    - Every numpus is sour → `foreach n, if is_a(n, "numpus", True), assert is_sour(n, True)`.  
+    - Rompuses are not fruity → `foreach r, if is_a(r, "rompus", True), assert is_fruity(r, False)`.  
+    - Numpuses are dumpuses → `foreach n, if is_a(n, "numpus", True), assert is_a(n, "dumpus", True)`.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  The query tests if the statement "Sam is fruity" is provable:  
+    → Use `facts.is_fruity("Sam", True)`.

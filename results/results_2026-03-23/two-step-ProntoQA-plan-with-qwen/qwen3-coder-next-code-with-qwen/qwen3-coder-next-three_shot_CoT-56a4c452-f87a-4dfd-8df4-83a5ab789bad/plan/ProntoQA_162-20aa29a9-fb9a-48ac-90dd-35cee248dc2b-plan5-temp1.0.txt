@@ -1,0 +1,31 @@
+1. Identify all entities and types: Wren, dumpus, yumpus, rompus, vumpus, numpus, zumpus, tumpus, impus, wumpus, jompus.  
+2. Identify all properties: earthy, transparent, mean, brown, temperate, bitter, shy, wooden, mean (repeated), wumpus→mean conflict noted.  
+3. Represent "Wren is a numpus" as a base fact: `is_a("Wren", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules, carefully noting contradictions:  
+   - Dumpuses are not earthy.  
+   - Each dumpus is a yumpus.  
+   - Yumpuses are transparent.  
+   - Each rompus is not mean.  
+   - Yumpuses are vumpuses.  
+   - Vumpuses are not brown.  
+   - Vumpuses are numpuses.  
+   - Numpuses are not temperate.  
+   - Every numpus is a zumpus.  
+   - Each zumpus is bitter.  
+   - Zumpuses are tumpuses.  
+   - Tumpuses are shy.  
+   - Tumpuses are impuses.  
+   - Impuses are wooden.  
+   - Each impus is a wumpus.  
+   - Each wumpus is mean.  
+   - Every wumpus is a jompus.  
+5. Implement each rule using `foreach` for condition and `assert` for consequence; resolve the contradiction between "each rompus is not mean" and "each wumpus is mean" via class inclusion (wumpus→rompus? No explicit link; avoid conflict—only apply rules where chain justifies).  
+6. Derive Wren's classification chain:  
+   - Wren is a numpus (fact) →  
+     Wren is a zumpus (numpus→zumpus) →  
+     Wren is a tumpus (zumpus→tumpus) →  
+     Wren is an impus (tumpus→impus) →  
+     Wren is a wumpus (impus→wumpus) →  
+     Wren is mean (wumpus is mean).  
+7. Thus, "Wren is not mean" contradicts the chain; the statement is false.  
+8. Query to test if "Wren is not mean" holds: `facts.is_mean("Wren", False)`.

@@ -1,0 +1,14 @@
+1. Enumerate the seven days (1–7) and define integer variables for kitten breed and puppy breed per day.  
+2. Assign integer codes: kitten breeds = {0: Himalayan, 1: Manx, 2: Siamese}, puppy breeds = {0: Greyhound, 1: Newfoundland, 2: Rottweiler}.  
+3. Add **domain constraints**: for each day i, kitten[i] ∈ {0,1,2}, puppy[i] ∈ {0,1,2}.  
+4. Add **fixed constraint**: Greyhound on day 1 → puppy[0] = 0 (since days are 0-indexed in code, but constraints refer to day numbers 1–7).  
+5. Add **no-consecutive-days constraint**: for each i from 0 to 5, kitten[i] ≠ kitten[i+1] and puppy[i] ≠ puppy[i+1].  
+6. Add **day-7-exception constraint**: if a breed appears on day 1, it does not appear on day 7 → kitten[0] ≠ kitten[6], puppy[0] ≠ puppy[6].  
+7. Add **Himalayan constraint**: Himalayans appear on exactly three days, but *not* on day 1 → number of i where kitten[i] == 0 is exactly 3, and kitten[0] ≠ 0.  
+8. Add **Rottweiler constraint**: Rottweilers never appear on day 7, and not on any day with Himalayans → puppy[6] ≠ 2, and for all i, if kitten[i] == 0 then puppy[i] ≠ 2.  
+9. Add the problem-specific conditional assumption: *Himalayans are not featured on day 7* → kitten[6] ≠ 0.  
+10. Translate answer choices into day pairs (using 0-indexed indices: e.g., “day 1 and day 3” → days 0 and 2).  
+11. For each choice (pair of days d1, d2), define a fresh solver with the base + conditional constraints.  
+12. Add constraint that day d1 and day d2 have identical kitten breed AND identical puppy breed → kitten[d1] == kitten[d2] ∧ puppy[d1] == puppy[d2].  
+13. Check satisfiability: if UNSAT, the pair CANNOT match → record its index in answer_index_list.  
+14. Print answer_index_list.

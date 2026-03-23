@@ -1,0 +1,20 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign integer indices.  
+2. Create eight distinct integer position variables (1 to 8) for each composition, ensuring all positions are used exactly once (all-different constraint).  
+3. Add **T-F-R adjacency condition**: T is immediately before F OR immediately after R:  
+    - (pos_T + 1 == pos_F) ∨ (pos_R + 1 == pos_T).  
+4. Add **spacing condition for F and R**: At least two compositions between F and R:  
+    - |pos_F − pos_R| ≥ 3.  
+5. Add **O position constraint**: O is either first or fifth:  
+    - (pos_O == 1) ∨ (pos_O == 5).  
+6. Add **eighth position constraint**: Eighth composition is L or H:  
+    - (pos_L == 8) ∨ (pos_H == 8).  
+7. Add **P-before-S condition**: pos_P < pos_S.  
+8. Add **O-S separation condition**: At least one composition between O and S:  
+    - |pos_O − pos_S| ≥ 2.  
+9. Translate each answer choice into a list of positions by mapping sequence order to position indices (1st → 1, ..., 8th → 8).  
+10. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Add hard equalities linking each composition’s variable to its claimed position in the choice (e.g., if "L" is first, assert pos_L == 1).  
+    - Check satisfiability.  
+11. Record the index (0-based) of any choice that yields SAT as a valid order.  
+12. Output the list of indices for all valid choices — exactly one should be SAT per problem logic.

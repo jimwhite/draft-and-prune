@@ -1,0 +1,22 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the three vehicles as variables: `"tractor"`, `"truck"`, and `"minivan"`.  
+   * Define the domain for positions using integers from 1 to 3, where **1 = oldest**, **2 = second-oldest (i.e., second-newest)**, and **3 = newest**.  
+   * Add the variables to the problem with their domain (1–3).
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Translate "The minivan is newer than the truck" into a constraint: `minivan > truck` (since higher rank number means newer).  
+   * Translate "The tractor is older than the truck" into a constraint: `tractor < truck` (since lower rank number means older).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid arrangements.  
+   * Extract the single solution (as the problem is deterministic), which will map each vehicle to its rank.
+
+5. **Determine Which Choice Is True:**  
+   * The question asks which vehicle is the *second-newest*—this corresponds to rank **2** in our system.  
+   * Create a mapping from choice letters to vehicle names: `{'A': 'tractor', 'B': 'truck', 'C': 'minivan'}`.  
+   * Check which vehicle has rank 2 in the solution, and return the corresponding choice letter.

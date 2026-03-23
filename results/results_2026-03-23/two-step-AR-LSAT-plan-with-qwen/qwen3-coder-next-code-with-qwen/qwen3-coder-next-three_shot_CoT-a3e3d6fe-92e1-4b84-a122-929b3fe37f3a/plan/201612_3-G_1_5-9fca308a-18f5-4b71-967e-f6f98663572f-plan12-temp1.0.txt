@@ -1,0 +1,46 @@
+1. Enumerate the five students and assign integer codes: Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4.  
+2. Create Boolean variables for team assignment: `team[i] == 0` means student i is on green team, `team[i] == 1` means red team.  
+3. Add **team-size constraints**: exactly two students on green, three on red (or vice versa), but given Lateefah is on green and Mei *is* on green per the conditional, so green has at least 2; total sizes must be (2,3) — enforce `sum(team[i]==0 for i in range(5)) == 2` OR `==3`, but we’ll encode via counting and use the conditional to fix counts.  
+4. Add **given fixed constraints**:  
+   - Lateefah is on green: `team[2] == 0`.  
+   - Mei is assigned to green (conditional premise): `team[3] == 0`.  
+   - Juana is on different team than Olga: `team[0] != team[4]`.  
+   - Olga is a facilitator: so she must be on a team; facilitator assignment will handle this.  
+5. Add **team-size constraint under premise**: Since Lateefah and Mei are on green, green has ≥2. Possible green size: 2 or 3 (since total=5, other team must have 2 or 3). So green size = 2 (only Lateefah, Mei) OR green size = 3 (Lateefah, Mei, plus one more). Red team then has 3 or 2.  
+6. Create Boolean variables for facilitator status: `facilitator[i] == True` if student i is a facilitator.  
+7. Add **exactly-one-facilitator-per-team constraint**:  
+   - For green team: exactly one of the green members is facilitator.  
+   - For red team: exactly one of the red members is facilitator.  
+   → Express as: `(sum_{i in green} facilitator[i]) == 1` and `(sum_{i in red} facilitator[i]) == 1`.  
+8. Add **Olga is a facilitator**: `facilitator[4] == True`.  
+9. Add **Kelly is not a facilitator**: `facilitator[1] == False`.  
+10. Since Olga is a facilitator, she must be on her team *and* be the facilitator of that team — already enforced via (7) and `facilitator[4] == True`.  
+11. Encode facilitator count per team using conditional expressions or auxiliary variables:  
+    Let `green_members = [i for i in range(5) if team[i] == 0]`, `red_members = [i for i in range(5) if team[i] == 1]`.  
+    Add: `facilitator[0]*I(team[0]==0) + ... + facilitator[4]*I(team[4]==0) == 1`, but better to use linear constraints:  
+    - For each i, `facilitator[i] <= 1`, and `facilitator[i] == 0` if team assignment contradicts (but facilitator only applies to assigned team — already ensured since `team[i]` is binary and facilitator can be true only if assigned to a team; but per problem, every student is assigned, so facilitator[i] can be true regardless of team as long as count per team =1).  
+    Instead: enforce `sum_{i=0..4} (facilitator[i] * I(team[i]==0)) == 1` and `sum_{i=0..4} (facilitator[i] * I(team[i]==1)) == 1`. Use additional Boolean vars or Big-M: but Z3 supports piecewise linear via `If`. Use auxiliary:  
+    Let `gfac[i] = And(team[i]==0, facilitator[i])`, similarly `rfac[i] = And(team[i]==1, facilitator[i])`.  
+    Then: `AtLeast(And(gfac[0],...,gfac[4]))` → no, use `AtMostOne`? Better: define indicator:  
+    Add constraints:  
+    - `facilitator[i] => True` (no direct domain, but facilitator[i] is bool).  
+    - `(facilitator[0] if team[0]==0 else 0) + ... == 1` — implement via:  
+      For green facilitator count: `facilitator[0] * (1 if team[0]==0 else 0)` — not linear. Instead, split cases or use logical constraints:  
+      Add: `(facilitator[0] == True) => (team[0] == 0)`  
+      Similarly for all i: `facilitator[i] => (team[i] == team_of_i)` — but facilitator must be assigned to their own team, so yes: `facilitator[i] => (team[i] == team[i])` tautology. Actually: facilitator status is only defined for assigned members, and since all are assigned, facilitator[i] implies nothing about team beyond being in a team — but per rules, facilitator is *a member* of the team, so `facilitator[i]` only makes sense if i is on a team — which they all are. So we just enforce:  
+      `sum([If(team[i]==0, facilitator[i], 0) for i in range(5)]) == 1`  
+      Similarly for red: `sum([If(team[i]==1, facilitator[i], 0) for i in range(5)]) == 1`  
+      In Z3: use `Sum([If(team[i]==0, facilitator[i], 0) for i in range(5)]) == 1`.  
+12. Add the conditional premise: `team[3] == 0` (Mei on green).  
+13. Now, with fixed constraints (Lateefah=green, Mei=green), enumerate all models satisfying the rest.  
+14. For each of the five answer choices, express them as a Boolean condition on the variables and check if it holds in **all** satisfying assignments (i.e., must be true).  
+   - Choice A: `team[0] == 0` (Juana green)  
+   - Choice B: `team[1] == 1` (Kelly red)  
+   - Choice C: `team[4] == 0` (Olga green)  
+   - Choice D: `facilitator[2] == True` (Lateefah facilitator)  
+   - Choice E: `facilitator[3] == True` (Mei facilitator)  
+15. For each choice, using a separate solver clone: add base constraints (steps 2–13) and check if `Not(choice_condition)` is satisfiable.  
+    - If adding `Not(choice_condition)` yields UNSAT, then the choice **must** be true.  
+16. Collect all choices that are logically forced (i.e., UNSAT when negated).  
+17. Since only one answer is correct, the plan returns the index of the choice that must be true (the only one where negation makes UNSAT).  
+18. Output the forced choice by converting its index back to string using `['Juana is assigned to the green team.', 'Kelly is assigned to the red team.', 'Olga is assigned to the green team.', 'Lateefah is a facilitator.', 'Mei is a facilitator.'][index]`.

@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament rankings.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the three golfers: `"Ana"`, `"Dan"`, and `"Mel"`.  
+    * Define the domain as integers from 1 to 3, where **1 = first place**, **2 = second place**, and **3 = third place**.  
+    * Add these variables and domain to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.  
+    * Translate "Dan finished second" into a constraint: `Dan == 2`.  
+    * Translate "Mel finished first" into a constraint: `Mel == 1`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Since only one solution exists, extract it (e.g., the first element of the list).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which statement is true; specifically, it verifies who finished first.  
+    * From the solved solution, check the value of `Mel`. Since it is 1 (as per constraint), "Mel finished first" is true.  
+    * Map the correct choice letter: Choice C) corresponds to "Mel finished first."  
+    * Output "C" as the final answer.

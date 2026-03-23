@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the seven vehicle variables: `"limousine"`, `"sedan"`, `"tractor"`, `"motorcycle"`, `"minivan"`, `"hatchback"`, and `"truck"`.  
+   * Define a domain of integers from 1 to 7, where **1 = oldest**, and **7 = newest**.  
+   * Add all seven vehicle variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that all vehicles receive distinct age ranks by adding an `AllDifferentConstraint`.
+
+4. **Translate Each Rule into a Formal Constraint Using Lambda Functions:**  
+   * "The minivan is newer than the limousine" → `minivan > limousine`  
+   * "The tractor is the second-newest" → `tractor == 6` (since newest = 7, second-newest = 6)  
+   * "The truck is older than the sedan" → `truck < sedan`  
+   * "The minivan is older than the truck" → `minivan < truck`  
+   * "The hatchback is newer than the tractor" → `hatchback > tractor`  
+   * "The motorcycle is the fourth-newest" → `motorcycle == 4` (since: newest=7 → 3rd-newest=5, 2nd-newest=6, **4th-newest=4**)
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to compute all valid assignments. Given the consistency and specificity of constraints, expect a unique solution.
+
+6. **Interpret the Question and Identify Correct Answer:**  
+   * The question asks: "Which vehicle is the **third-oldest**?" → This corresponds to rank = 3 (since oldest=1, second-oldest=2, third-oldest=3).  
+   * Create a mapping from choice letters to vehicle names:  
+        `{"A": "limousine", "B": "sedan", "C": "tractor", "D": "motorcycle", "E": "minivan", "F": "hatchback", "G": "truck"}`  
+   * Iterate over the choices. For each choice letter, check if the corresponding vehicle’s rank in the solution equals 3.  
+   * Return (or output) the letter of the first matching choice — this is the correct answer.

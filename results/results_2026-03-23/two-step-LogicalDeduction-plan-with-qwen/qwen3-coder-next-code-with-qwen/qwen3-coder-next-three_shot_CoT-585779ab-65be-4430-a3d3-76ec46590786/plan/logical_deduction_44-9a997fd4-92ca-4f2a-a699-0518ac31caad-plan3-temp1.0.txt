@@ -1,0 +1,34 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Declare the variables as the five fruits: `"pears"`, `"mangoes"`, `"kiwis"`, `"oranges"`, and `"peaches"`.  
+    * Define a numerical domain for ranking by price. Use integers from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**, as "most expensive" implies highest rank value.  
+    * Add all fruit variables with the domain {1, 2, 3, 4, 5} to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Convert each statement into a constraint using `lambda` functions:  
+        - "The peaches are the most expensive" → `"peaches"`'s rank = 5.  
+        - "The pears are the most expensive" → `"pears"`'s rank = 5.  
+        *Note: This is a contradiction unless re-examined.*  
+        **Correction:** Re-read the problem. It says: "The pears are the most expensive." and separately "The peaches are more expensive than the mangoes."  
+        So *only* pears = 5. Peaches is not stated to be the most expensive.  
+        Re-analyze:  
+        - "The pears are the most expensive" → `"pears"` = 5.  
+        - "The peaches are more expensive than the mangoes" → `"peaches"` < `"mangoes"` (since lower rank = cheaper, higher price means *smaller* rank).  
+        - "The oranges are more expensive than the kiwis" → `"oranges"` < `"kiwis"`.  
+        - "The mangoes are more expensive than the oranges" → `"mangoes"` < `"oranges"`.  
+        *Note:* The chain becomes: pears = 5, and `"mangoes"` < `"oranges"` < `"kiwis"`, and `"peaches"` < `"mangoes"`. So overall ordering: pears (5) > mangoes > oranges > kiwis, and peaches < mangoes. Possible full ordering from most to least expensive: pears (5), then mangoes, peaches, oranges, kiwis (but need to verify consistency).  
+        **Key:** Since price increases as rank *decreases*, for "X is more expensive than Y", use constraint: `rank(X) < rank(Y)`.
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution (only one satisfying assignment expected given consistency).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks for the *second-cheapest* fruit. Cheapest = highest rank value (5), second-cheapest = rank 4.  
+    * Create a mapping from choice letters to fruit names: `"A" -> "pears"`, `"B" -> "mangoes"`, etc.  
+    * From the solution, find which fruit has rank 4 (second-cheapest).  
+    * Output the corresponding choice letter.

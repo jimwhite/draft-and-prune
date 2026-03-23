@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * The variables are the seven fruits: `"plums"`, `"kiwis"`, `"pears"`, `"mangoes"`, `"apples"`, `"oranges"`, and `"loquats"`.  
+   * Define the domain as integers from 1 to 7, where **1 represents the most expensive** and **7 represents the least expensive** (since “most expensive” is a natural ordering for expense, and phrases like “second-most expensive” imply descending order from left to right in value).  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique expense rank.  
+   * Translate each statement into a constraint using `lambda` functions:  
+     - "The pears are less expensive than the oranges" → `pears > oranges` (since higher number = less expensive).  
+     - "The mangoes are less expensive than the kiwis" → `mangoes > kiwis`.  
+     - "The plums are the second-most expensive" → `plums == 2` (1 = most expensive, so 2 = second-most expensive).  
+     - "The loquats are more expensive than the apples" → `loquats < apples`.  
+     - "The kiwis are less expensive than the apples" → `kiwis > apples`.  
+     - "The loquats are the fourth-most expensive" → `loquats == 4` (since 1 = most expensive, position 4 corresponds to fourth-most expensive).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` on the problem to retrieve all valid assignments.  
+   * Extract the unique solution (since constraints fully determine a single ordering).
+
+5. **Identify the Most Expensive Fruit and Match to Choice:**  
+   * The question asks which fruit is **most expensive**, i.e., rank = 1.  
+   * Create a mapping from choice letters (A–G) to fruit names: A→"plums", B→"kiwis", C→"pears", D→"mangoes", E→"apples", F→"oranges", G→"loquats".  
+   * In the solved solution, find the fruit whose rank value is 1.  
+   * Return the corresponding choice letter as the answer.

@@ -1,0 +1,13 @@
+1. Enumerate all nine scientists (F, G, H, K, L, M, P, Q, R) and assign each a boolean selection variable.  
+2. Create group membership: botanists = {F, G, H}, chemists = {K, L, M}, zoologists = {P, Q, R}.  
+3. Add **cardinality constraints**:  
+   - Exactly 5 scientists are selected (sum of all boolean variables = 5).  
+4. Add **type coverage constraint**: at least one botanist, at least one chemist, at least one zoologist.  
+5. Add **conditional constraint**: if ≥2 botanists are selected, then ≤1 zoologist is selected.  
+6. Add **mutual exclusion constraint**: F and K cannot both be selected (¬(F ∧ K)).  
+7. Add **mutual exclusion constraint**: K and M cannot both be selected (¬(K ∧ M)).  
+8. Add **implication constraint**: if M is selected, then both P and R must be selected (M → (P ∧ R)).  
+9. For each choice list, translate the candidate panel into a set of selected scientists.  
+10. Clone base constraints into a fresh solver for each choice, and add assertions that exactly those scientists in the choice are selected (others forced false).  
+11. Check satisfiability for each choice; collect indices of choices where the model is SAT (i.e., constraints are satisfied).  
+12. Output the index of the first (or only) SAT choice as the answer.

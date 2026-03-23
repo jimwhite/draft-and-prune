@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Set up variables representing the three vehicles: `"sedan"`, `"minivan"`, and `"motorcyle"`.
+    * Define the domain as integers from 1 to 3, where **1 = oldest**, **2 = second-newest (i.e., middle age)**, and **3 = newest**.
+    * Add the variables and their domain to the problem instance.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * "The motorcyle is the second-newest" translates to: `motorcyle == 2`.
+    * "The minivan is newer than the motorcyle" means minivan's rank is greater (i.e., younger), so: `minivan > motorcyle`. Since `motorcyle == 2`, this simplifies to `minivan == 3`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks to vehicles.
+    * Extract the unique solution (only one vehicle remains unassigned rank: sedan must be 1).
+
+5.  **Identify the Correct Answer:**
+    * The question asks which vehicle is second-newest (i.e., rank 2).
+    * According to the constraint, `motorcyle == 2`, so the motorcycle is second-newest.
+    * Match this to the choices: Choice C states "The motorcyle is the second-newest."
+    * Return choice letter **C** as the answer.

@@ -1,0 +1,20 @@
+1. Enumerate the eight compositions: F, H, L, O, P, R, S, T → assign integer indices 0 to 7.  
+2. Create integer variables `pos[c]` for each composition c ∈ {F,H,L,O,P,R,S,T}, denoting their position in the sequence (1 to 8).  
+3. Add **domain and uniqueness constraints**: `pos[c] ∈ [1,8]` for all c, and all `pos[c]` are pairwise distinct (use `Distinct(pos.values())`).  
+4. Add **ordering constraints** from the problem:  
+   - T is performed either immediately before F or immediately after R: `(pos_T == pos_F - 1) ∨ (pos_R == pos_T - 1)`.  
+   - At least two compositions between F and R: `|pos_F - pos_R| ≥ 3`.  
+   - O is first or fifth: `pos_O == 1 ∨ pos_O == 5`.  
+   - Eighth composition is L or H: `pos_L == 8 ∨ pos_H == 8`.  
+   - P before S: `pos_P < pos_S`.  
+   - At least one composition between O and S: `|pos_O - pos_S| ≥ 2`.  
+5. Add **additional condition from the hypothetical**: O is performed immediately after T → `pos_O == pos_T + 1`.  
+6. Combine with the main constraints (including step 4).  
+7. Determine possible values of `pos_F` by enumerating all SAT models (or via constraint solving with `model()`); collect all feasible values of `pos_F`.  
+8. Map each integer position (1–8) to the answer choice interval:  
+   - 1→"first", 2→"second", 3→"third", 4→"fourth", 5→"fifth", 6→"sixth", 7→"seventh", 8→"eighth".  
+9. Group the possible `pos_F` values into consecutive integer pairs and match with answer choices:  
+   - Check if possible positions are subset of {1,2}, {2,3}, {4,6}, {4,7}, or {6,7}.  
+10. Output the answer choice(s) whose interval fully contains all feasible `pos_F` values (and is minimal).  
+11. Since the question asks *“F must be performed either ___”*, find the exact choice whose interval matches the intersection of all possible F positions under the condition (i.e., minimal forced set = exact pair).  
+12. Return the correct choice string from the given list.

@@ -1,0 +1,18 @@
+1. Enumerate the eight compositions and assign each a unique integer index (e.g., F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7).  
+2. Create integer position variables `pos[c]` for each composition c ∈ {F,H,L,O,P,R,S,T}, denoting the 1-based performance slot (1 to 8).  
+3. Add **domain and permutation constraints**: `pos[c] ∈ {1,2,…,8}` for all c; and all `pos[c]` are pairwise distinct (using `Distinct(pos.values())`).  
+4. Translate each condition into constraints:  
+   a. **T-F-R adjacency**: (T immediately before F) OR (T immediately after R).  
+      → `(pos_T == pos_F - 1)` ∨ `(pos_T == pos_R + 1)`.  
+   b. **At least two compositions between F and R**: `|pos_F - pos_R| ≥ 3`.  
+   c. **O is first or fifth**: `pos_O == 1 ∨ pos_O == 5`.  
+   d. **Eighth composition is L or H**: `pos_L == 8 ∨ pos_H == 8`.  
+   e. **P before S**: `pos_P < pos_S`.  
+   f. **At least one composition between O and S**: `|pos_O - pos_S| ≥ 2`.  
+5. For each answer choice list (a candidate full ordering), verify whether it satisfies all constraints:  
+   - Extract the sequence order (e.g., for choice 1: ['L','P','S','R','O','T','F','H']).  
+   - For index i (0-based), assign `pos[c] = i+1` for each composition c at position i.  
+   - Build a fresh solver, add all base constraints (steps 2–4), and also assert the fixed positions from the candidate sequence.  
+   - If solver returns SAT, the choice is valid.  
+6. Identify and return the first (or only) candidate sequence that yields SAT.  
+7. Output the index of the valid choice (0-based), or output the actual list if multiple checks needed.

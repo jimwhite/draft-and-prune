@@ -1,0 +1,15 @@
+1. Enumerate the seven articles and assign each a unique index; group them by topic: finance (G, H, J), nutrition (Q, R, S), wildlife (Y).  
+2. Create integer variables `pos[article]` for each article’s editing position (1 to 7).  
+3. Add **domain constraints**: all `pos` values are integers in [1,7], and pairwise distinct (a permutation).  
+4. Add **topic-consecutive constraint**: for every pair of consecutive positions *i* and *i+1*, the topics of articles at those positions must differ. Implement by: for each position `k` from 1 to 6, if `pos_a == k` and `pos_b == k+1`, then `topic(a) ≠ topic(b)` — equivalently, enforce via implications or using a helper Boolean matrix, but more efficiently: for each adjacent position pair (k, k+1), ensure no two articles of same topic occupy them by asserting: for all pairs (a,b) with same topic, `¬(pos_a == k ∧ pos_b == k+1)` for each k ∈ [1,6].  
+5. Add **S-Q conditional constraint**: `S < Q → (Q == 3)` — i.e., if S comes before Q, then Q must be third. Encode as: `pos_S < pos_Q ⇒ pos_Q == 3`. This is equivalent to `(pos_S ≥ pos_Q) ∨ (pos_Q == 3)`.  
+6. Add **S-Y constraint**: `pos_S < pos_Y`.  
+7. Add **J-G-R chain constraint**: `pos_J < pos_G ∧ pos_G < pos_R`.  
+8. Translate the answer choices into test assertions: for each option (e.g., "H is fourth"), assert `pos_H == 4`, etc.  
+9. For each answer choice:  
+   - Clone the base solver (constraints 3–7).  
+   - Add the assertion for that choice.  
+   - Solve; if the solution is **unique** (i.e., only one satisfying assignment up to article ordering), then this choice fully determines the order. To check uniqueness: after finding one model, add a constraint that at least one position differs (e.g., `∨_{a} pos_a ≠ pos_a^*`), and re-solve. If UNSAT, then the solution is unique.  
+   - Alternatively, use `solver.check()` and if SAT, enumerate all solutions (via incremental blocking) to count whether exactly one exists.  
+10. Identify which answer choice yields a **unique** full ordering; that is the correct answer.  
+11. Return the index of the choice that makes the order fully determined.

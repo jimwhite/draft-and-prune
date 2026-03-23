@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven birds as string variables: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, and `"raven"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint using `lambda` functions:  
+     - "The falcon is to the right of the quail" → `quail < falcon`  
+     - "The robin is to the right of the hummingbird" → `hummingbird < robin`  
+     - "The raven is to the left of the quail" → `raven < quail`  
+     - "The blue jay is the second from the left" → `blue jay == 2`  
+     - "The robin is the third from the left" → `robin == 3`  
+     - "The cardinal is the third from the right" → `cardinal == 5` (since 7 - 3 + 1 = 5)  
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments of positions.  
+   * Since the problem is fully constrained and consistent, extract the unique solution (or any one solution if multiple exist).
+
+5. **Determine Which Bird Is Fourth from the Left:**  
+   * The question asks which bird occupies position **4**.  
+   * Create a mapping from choice letters (A–G) to bird names using the provided options.  
+   * From the solution dictionary, find which bird has position value 4.  
+   * Return (or print) the corresponding choice letter (e.g., "A", "B", ..., "G") for that bird.

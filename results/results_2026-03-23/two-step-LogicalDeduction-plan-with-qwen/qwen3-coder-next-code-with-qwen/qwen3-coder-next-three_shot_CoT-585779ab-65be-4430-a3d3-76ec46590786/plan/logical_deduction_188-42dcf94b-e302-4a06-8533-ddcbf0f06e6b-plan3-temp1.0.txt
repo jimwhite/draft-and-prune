@@ -1,0 +1,34 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven fruits as variables: `"mangoes"`, `"watermelons"`, `"peaches"`, `"kiwis"`, `"oranges"`, `"cantaloupes"`, and `"plums"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, reflecting a left-to-right increasing-cost ordering.
+    * Add all seven fruit variables to the `Problem`, each with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add the AllDifferent Constraint:**
+    * Enforce that all fruit prices are distinct by adding an `AllDifferentConstraint` over the seven variables.
+
+4.  **Translate Each Statement into a Formal Constraint:**
+    * "The watermelons are the cheapest" → `watermelons == 1`
+    * "The peaches are more expensive than the mangoes" → `peaches > mangoes`
+    * "The cantaloupes are the second-most expensive" → `cantaloupes == 6` (since 7 is most expensive)
+    * "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`
+    * "The peaches are less expensive than the plums" → `peaches < plums`
+    * "The kiwis are the third-cheapest" → `kiwis == 3`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to compute all valid assignments of prices (ranks) to the fruits.
+    * Since the problem is fully constrained, extract the unique solution (first element of the returned list).
+
+6.  **Identify the Second-Cheapest Fruit:**
+    * In our ranking, second-cheapest corresponds to position 2.
+    * Loop through the solution dictionary to find which fruit has rank == 2.
+
+7.  **Map the Result to the Correct Choice:**
+    * Create a dictionary mapping choice letters ("A", "B", ..., "G") to their respective fruit names:
+        * "A" → "mangoes", "B" → "watermelons", "C" → "peaches",
+        * "D" → "kiwis", "E" → "oranges", "F" → "cantaloupes", "G" → "plums"
+    * Match the fruit found in step 6 with its corresponding choice letter.
+    * Output (or return) that choice letter as the answer.

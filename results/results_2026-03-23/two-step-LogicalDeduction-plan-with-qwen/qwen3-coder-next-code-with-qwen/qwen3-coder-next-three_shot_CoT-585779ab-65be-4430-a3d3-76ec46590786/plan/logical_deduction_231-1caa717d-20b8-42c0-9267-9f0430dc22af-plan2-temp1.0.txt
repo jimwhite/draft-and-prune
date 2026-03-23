@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicles as string variables: `"station_wagon"`, `"sedan"`, `"bus"`, `"motorcyle"`, `"hatchback"`, `"tractor"`, and `"minivan"`.
+    * Assign a numerical domain of integers from 1 to 7, where **1 = oldest** and **7 = newest**, consistent with the ranking convention used in previous car-show problems.
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Convert each statement into an explicit constraint:
+        * "The sedan is the third-oldest" → `sedan == 3`
+        * "The tractor is newer than the motorcyle" → `tractor > motorcyle`
+        * "The bus is older than the motorcyle" → `bus < motorcyle`
+        * "The bus is newer than the hatchback" → `hatchback < bus` (equivalently, `bus > hatchback`)
+        * "The minivan is the newest" → `minivan == 7`
+        * "The station wagon is the oldest" → `station_wagon == 1`
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the (unique) solution dictionary.
+
+5.  **Determine the Second-Oldest Vehicle:**
+    * The second-oldest corresponds to rank 2 (since rank 1 is oldest).
+    * Create a mapping from choice letters (`['A','B','C','D','E','F','G']`) to vehicle names (`['station_wagon', 'sedan', 'bus', 'motorcyle', 'hatchback', 'tractor', 'minivan']`), matching the order in the choices list.
+    * Iterate over the solution dictionary to find which vehicle has rank 2.
+    * Identify and output the corresponding choice letter.

@@ -1,0 +1,27 @@
+1. Enumerate the five students: Jiang, Kramer, Lopez, Megregian, O'Neill → assign integer indices 0 to 4.  
+2. Enumerate the three plays: Sunset (S), Tamerlane (T), Undulation (U) → assign integer indices 0,1,2.  
+3. Create Boolean variables `review[i][p]` for each student i and play p, indicating if student i reviews play p.  
+4. Add **at-least-one-play** constraint: each student reviews at least one play (i.e., `review[i][0] ∨ review[i][1] ∨ review[i][2]` for all i).  
+5. Add **Kramer-Lopez-Megregian size constraints**:  
+   - Let `count[i] = review[i][0] + review[i][1] + review[i][2]` (as integers).  
+   - `count[Kramer] < count[Megregian]` and `count[Lopez] < count[Megregian]`.  
+6. Add **Jiang-Lopez/Megregian disjointness**:  
+   - Lopez does not review any play Jiang reviews: for each play p, `review[Lopez][p] → ¬review[Jiang][p]`.  
+   - Megregian does not review any play Jiang reviews: for each play p, `review[Megregian][p] → ¬review[Jiang][p]`.  
+7. Add **Kramer and O'Neill both review Tamerlane**: `review[Kramer][1] = True`, `review[O'Neill][1] = True`.  
+8. Add **exactly-two-students-identical-review-set** constraint:  
+   - For every unordered pair (i, j), i < j, define `same[i][j] = (review[i][0] == review[j][0]) ∧ (review[i][1] == review[j][1]) ∧ (review[i][2] == review[j][2])`.  
+   - Exactly one such `same[i][j]` is true (i.e., sum over all `same[i][j]` = 1).  
+9. Add **exactly-three-students-review-Undulation** assumption (this is the conditional premise):  
+   - `review[0][2] + review[1][2] + review[2][2] + review[3][2] + review[4][2] == 3`.  
+10. Translate each answer choice into a logical condition:  
+   - A. "Megregian does not review Undulation" → `¬review[Megregian][2]`.  
+   - B. "O'Neill does not review Undulation" → `¬review[O'Neill][2]`.  
+   - C. "Jiang reviews Undulation" → `review[Jiang][2]`.  
+   - D. "Lopez reviews Tamerlane" → `review[Lopez][1]`.  
+   - E. "O'Neill reviews Sunset" → `review[O'Neill][0]`.  
+11. For each choice, clone the full constraint set (including Undulation-count=3).  
+   - Temporarily add the choice’s condition.  
+   - Check satisfiability with Z3.  
+12. Collect all indices of choices for which the extended solver returns SAT; these are possible answers.  
+13. Return list of possible choice indices (based on the mapping above).

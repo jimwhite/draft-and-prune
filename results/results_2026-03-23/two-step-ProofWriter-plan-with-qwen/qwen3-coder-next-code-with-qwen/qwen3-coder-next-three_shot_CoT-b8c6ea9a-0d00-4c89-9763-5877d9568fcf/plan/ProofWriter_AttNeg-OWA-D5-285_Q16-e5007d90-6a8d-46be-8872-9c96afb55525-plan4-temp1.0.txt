@@ -1,0 +1,59 @@
+1. Identify all individuals: Bob, Fiona, Gary, Harry.
+2. Encode all explicit facts using ternary predicates:  
+   - is_big("Bob", True), is_cold("Bob", True), is_furry("Bob", True), is_smart("Bob", True)  
+   - is_cold("Fiona", True), is_green("Fiona", False), is_white("Fiona", True)  
+   - is_smart("Gary", True), is_big("Harry", True), is_cold("Harry", True), is_smart("Harry", True)  
+3. Translate all universal conditionals into PyKe rules using `foreach` and `assert`:  
+   • All green people are furry → If is_green(X, True) then is_furry(X, True)  
+   • If Gary is furry and not smart → Gary is white (note: only applies to Gary, so can be encoded as a direct fact or special rule; but since conditionals are general, check if it's universal: problem states “If Gary is furry...” — this is a *specific* conditional, so encode as: foreach(is_green(X, True), ...) does not apply; instead treat as a grounded implication for Gary only: assert(is_white("Gary", True)) only if premises hold; but in PyKe, implement as: foreach( is_furry("Gary", True), is_green("Gary", False), assert(is_white("Gary", True)) ) — however, note that "Smart people are green" implies is_smart("Gary", True) → is_green("Gary", True), and is_smart("Gary", True) is given, so is_green("Gary", True) will be derived, making the premise false. So rule won’t fire. Keep it as a general rule for any X: if is_furry(X, True) and is_smart(X, False), then is_white(X, True).  
+   • Smart people are green → foreach(is_smart(X, True), assert(is_green(X, True)))  
+   • If Bob is not green and not white → Bob is furry → specific to Bob: foreach( is_green("Bob", False), is_white("Bob", False), assert(is_furry("Bob", True)) ) — but Bob is already furry, so this may be redundant or inconsistent if later derived otherwise; still encode as rule.  
+   • Big people are cold → foreach(is_big(X, True), assert(is_cold(X, True)))  
+   • If someone is smart and furry → they are big → foreach(is_smart(X, True), is_furry(X, True), assert(is_big(X, True)))  
+   • If someone is white and not cold → they are not blue → foreach(is_white(X, True), is_cold(X, False), assert(is_blue(X, False)))  
+   • All cold people are not blue → foreach(is_cold(X, True), assert(is_blue(X, False)))  
+4. Note: The problem provides explicit is_green("Fiona", False), i.e., Fiona is *not* green. Represent as facts.is_green("Fiona", False) — but PyKe ternary predicates typically use True only. Therefore, for negative facts, we *do not assert* the positive predicate; or use a dedicated negation predicate like is_not_green(X, True). However, PyKe’s standard approach in these examples uses only positive facts and relies on rules to infer positives; negative information is implicit (closed world or explicit negation via absence). Since the problem explicitly states “Fiona is not green”, we must encode this as a *negative literal*, which in PyKe (BDD-based, Horn-style) cannot be directly expressed. But the earlier examples show binary properties encoded as ternary with True, so we assume only *positive* facts are asserted, and negative conclusions come from rule-based derivation or consistency. However, this problem includes explicit negatives ("not green", "not white" in conditionals). To handle this, rephrase:  
+   - Instead of asserting "is_green("Fiona", False)", we rely on rules that would derive is_green if possible. Since smart people are green, and Fiona’s smartness is *not stated*, we do not assume she is green. But the statement "Fiona is not green" must be encoded.  
+   → Strategy: Introduce a predicate `not_green(X)` for clarity, or use negation-as-failure if supported — but PyKe (classic) does *not* support negation. Since the provided plan format and examples only use positive ternary predicates (e.g., `facts.is_smart("Erin", True)`), we assume that *only positive facts* are to be asserted, and negatives like "Fiona is not green" must be handled as *grounded constraints* or via rule conclusions that forbid positivity. However, given the problem’s earlier solution plans used only positive assertions for explicit facts (e.g., `facts.is_smart("Erin", True)`), and "not green" is explicit, we must adapt:  
+   → Reinterpret: Treat "X is not P" as a separate predicate: `is_not_green(X, True)`. So add predicates: is_not_green, is_not_white, etc.  
+   Thus:  
+   - facts.is_not_green("Fiona", True)  
+   Similarly, for conditionals like “if X is not green and X is not white”, we use `is_not_green(X, True), is_not_white(X, True)` in the condition.  
+5. So revise step 2: Extend predicate set to include `is_not_green(X, True)`, `is_not_white(X, True)` for explicit negative statements:  
+   - is_cold("Fiona", True), is_not_green("Fiona", True), is_white("Fiona", True)  
+6. Rewrite all rules using positive and negative literals where needed:  
+   • All green people are furry: foreach( is_green(X, True), assert(is_furry(X, True)) )  
+   • If X is furry and not smart → X is white: foreach( is_furry(X, True), is_not_smart(X, True), assert(is_white(X, True)) )  
+     But "smart" is a predicate — no `is_not_smart` fact given. Since Bob, Fiona, Harry’s smartness is mixed: Bob/smart yes; Gary/smart yes; Harry/smart yes; Fiona/smart — not stated, so unknown. But "Smart people are green" implies non-smart may exist; still no `is_not_smart` facts. So this rule may not fire unless derived.  
+   • Smart people are green: foreach( is_smart(X, True), assert(is_green(X, True)) )  
+   • If Bob is not green and not white → Bob is furry: foreach( is_not_green("Bob", True), is_not_white("Bob", True), assert(is_furry("Bob", True)) )  
+   • Big people are cold: foreach( is_big(X, True), assert(is_cold(X, True)) )  
+   • Smart and furry → big: foreach( is_smart(X, True), is_furry(X, True), assert(is_big(X, True)) )  
+   • White and not cold → not blue: foreach( is_white(X, True), is_not_cold(X, True), assert(is_blue(X, False)) ) — but PyKe uses ternary with True; so define `is_not_cold(X, True)` similarly for negatives.  
+   However, the problem gives "Harry is cold", not "not cold". Since explicit negatives are only in conditionals and one fact ("Fiona is not green"), and to stay consistent with prior plans (which used only positive assertions), we assume:  
+   → The only explicit negative fact is "Fiona is not green", and it should be encoded as `is_not_green("Fiona", True)`.  
+   For other "not P" in conditions, we use `is_not_p(X, True)`.  
+7. So final predicate set includes:  
+   - Basic: is_big, is_cold, is_furry, is_smart, is_green, is_white, is_blue  
+   - Negations: is_not_green, is_not_smart, is_not_white, is_not_cold, is_not_blue  
+8. Encode facts explicitly:  
+   - is_big("Bob", True), is_cold("Bob", True), is_furry("Bob", True), is_smart("Bob", True)  
+   - is_cold("Fiona", True), is_not_green("Fiona", True), is_white("Fiona", True)  
+   - is_smart("Gary", True)  
+   - is_big("Harry", True), is_cold("Harry", True), is_smart("Harry", True)  
+9. Rules:  
+   • foreach( is_green(X, True), assert(is_furry(X, True)) )  
+   • foreach( is_furry(X, True), is_not_smart(X, True), assert(is_white(X, True)) )  
+   • foreach( is_smart(X, True), assert(is_green(X, True)) )  
+   • foreach( is_not_green("Bob", True), is_not_white("Bob", True), assert(is_furry("Bob", True)) )  
+   • foreach( is_big(X, True), assert(is_cold(X, True)) )  
+   • foreach( is_smart(X, True), is_furry(X, True), assert(is_big(X, True)) )  
+   • foreach( is_white(X, True), is_not_cold(X, True), assert(is_blue(X, False)) ) — but better to use `is_not_blue` predicate:  
+     → assert( is_not_blue(X, True) ) for the conclusion. So: foreach( is_white(X, True), is_not_cold(X, True), assert(is_not_blue(X, True)) )  
+   • Similarly, "All cold people are not blue": foreach( is_cold(X, True), assert(is_not_blue(X, True)) )  
+10. Query: Is "Bob is white" true? → Use facts.is_white("Bob", True)  
+    But note: we also have `is_not_green("Fiona", True)` and rule “Smart people are green” → since Gary is smart, he must be green. Fiona is not green, so by modus tollens (if smart → green), Fiona is *not* smart — but PyKe does not do backward chaining for negation unless rules are designed. However, in Horn logic (PyKe’s basis), we cannot infer negations from rule contraposition. So only positive inferences are made. Thus, the query is answered by checking if `is_white("Bob", True)` can be derived or contradicted.  
+11. Final plan for query:  
+    → Attempt to derive `facts.is_white("Bob", True)` and `facts.is_not_white("Bob", True)`. If one is derivable, answer true/false; if neither or both, unknown.  
+    But given the plan format in examples (only positive facts), output query as:  
+    → `facts.is_white("Bob", True)`

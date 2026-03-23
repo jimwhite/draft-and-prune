@@ -1,0 +1,16 @@
+1. Identify all entities involved: cat, cow, rabbit, squirrel.
+2. Define binary predicates as ternary with boolean object for unary properties (e.g., is_round, is_cold, is_green) and relational predicates as ternary with entity object (e.g., eats("cat", "squirrel", True), sees("cow", "cat", True)).
+3. Encode all explicitly stated facts as `facts.pred(subject, object, True)` for relations and `facts.is_prop(subject, True/False)` for unary properties.
+4. Translate each conditional statement into PyKe rules:
+   • If someone sees the cat and is not green → they see the cow.
+   • If the rabbit is kind and sees the squirrel → the squirrel needs the rabbit.
+   • Rough people are cold. (i.e., if rough then cold)
+   • If someone sees the rabbit → they are not round.
+   • If someone sees the squirrel and is not green → they need the squirrel.
+   • If someone eats the cow → they see the rabbit.
+   • If someone eats the squirrel → they are rough.
+   • If someone is cold → they eat the cow.
+5. For each rule, use `foreach` to bind variables and match conditions (including negations via `not facts.is_green(...)`), and `assert` for conclusions.
+6. Derive whether `is_round("cat")` holds using forward chaining from facts and rules.
+7. The query checks whether the cat is not round:
+   → Use `facts.is_round("cat", False)`

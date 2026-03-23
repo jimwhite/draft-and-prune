@@ -1,0 +1,20 @@
+1. Enumerate the three kitten breeds (Himalayan, Manx, Siamese) and three puppy breeds (Greyhound, Newfoundland, Rottweiler), assign each an integer code.  
+2. Create integer variables for kitten and puppy breeds on each of the 7 days (days 1 to 7), i.e., `kitten[i]`, `puppy[i]` for day i, each taking values in {0,1,2} representing the breed indices.  
+3. Add **domain constraints**: all `kitten[i]` ∈ {0,1,2} and `puppy[i]` ∈ {0,1,2}.  
+4. Add **exactly-one-per-day** and **distinctness**: no additional constraints needed beyond domains since each day has exactly one breed of each type.  
+5. Add **fixed constraint**: Greyhound on day 1 → `puppy[0] = 0` (assign 0 to Greyhound).  
+6. Add **no-consecutive-same-breeds** constraints:  
+    - For each day i from 1 to 6: `kitten[i-1] != kitten[i]` and `puppy[i-1] != puppy[i]`.  
+7. Add **day-1 ≠ day-7** constraint: `kitten[0] != kitten[6]` and `puppy[0] != puppy[6]`.  
+8. Add **Himalayan constraints**:  
+    - Himalayans are featured on exactly 3 days → count of `kitten[i] == 1` (assign 1 to Himalayan) over i=0..6 is exactly 3.  
+    - Not on day 1 → `kitten[0] != 1`.  
+    - *Additional conditional assumption for the question*: Himalayans are *not* featured on day 7 → `kitten[6] != 1`.  
+9. Add **Rottweiler constraints** (assign 2 to Rottweiler):  
+    - Not on day 7 → `puppy[6] != 2`.  
+    - Not on any day with Himalayan → for all i, if `kitten[i] == 1` then `puppy[i] != 2`.  
+10. Translate the five answer choices into day pairs: (1,3), (2,6), (3,5), (4,6), (5,7). For each pair (d1,d2):  
+    - Clone the base constraints + conditional assumption into a fresh solver.  
+    - Add constraint that both days have identical kitten and puppy breeds: `kitten[d1-1] == kitten[d2-1]` and `puppy[d1-1] == puppy[d2-1]`.  
+    - If the model is UNSAT, then this pair **cannot** be identical; record its index.  
+11. Return the list of indices (0-based) for which the pair is impossible.

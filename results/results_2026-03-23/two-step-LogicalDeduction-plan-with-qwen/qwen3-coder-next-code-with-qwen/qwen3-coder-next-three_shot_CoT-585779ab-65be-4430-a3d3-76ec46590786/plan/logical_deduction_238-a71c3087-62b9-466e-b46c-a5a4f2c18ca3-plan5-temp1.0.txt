@@ -1,0 +1,38 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * List the seven books as string variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, `"green"`.
+    * Define the domain as integers from 1 to 7, where position 1 = leftmost and position 7 = rightmost.
+    * Add all seven variables to the problem, each with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add AllDifferentConstraint:**
+    * Enforce that all books occupy distinct positions by adding an `AllDifferentConstraint` over the seven variables.
+
+4.  **Translate and Add Positional Constraints:**
+    * "The yellow book is the rightmost" → `yellow == 7`.
+    * "The black book is the fourth from the left" → `black == 4`.
+    * "The brown book is the third from the right" → Since 7 positions, third from right = position 5 (i.e., `brown == 5`).
+    * "The blue book is to the left of the orange book" → `blue < orange`.
+    * "The green book is to the right of the white book" → `white < green`.
+    * "The blue book is to the right of the green book" → `green < blue`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments satisfying all constraints.
+    * Extract the first (and expected unique) solution dictionary.
+
+6.  **Interpret and Verify the Third-from-Left Position:**
+    * The question asks which book is at position 3 (third from left).
+    * After solving, inspect the solution dictionary to find which book variable has value `3`.
+
+7.  **Map Answer to Given Choices:**
+    * Create a mapping from choice letters ('A' through 'G') to the book names as listed in the choices:
+        - A → "brown"
+        - B → "white"
+        - C → "black"
+        - D → "yellow"
+        - E → "orange"
+        - F → "blue"
+        - G → "green"
+    * Determine which choice corresponds to the book found at position 3 and output that letter.

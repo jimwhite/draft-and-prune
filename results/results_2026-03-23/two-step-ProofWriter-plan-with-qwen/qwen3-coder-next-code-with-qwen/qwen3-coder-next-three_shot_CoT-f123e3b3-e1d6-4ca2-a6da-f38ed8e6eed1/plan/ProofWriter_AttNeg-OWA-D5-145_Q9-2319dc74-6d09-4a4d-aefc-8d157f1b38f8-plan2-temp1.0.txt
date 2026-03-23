@@ -1,0 +1,19 @@
+1. Identify all individuals: Anne, Bob, Fiona, Gary.
+2. Encode explicitly stated facts using ternary predicates (e.g., is_kind("Anne", True), is_not_nice("Fiona", True) or equivalently use logical negation via facts.is_nice("Fiona", False)), etc.
+   - For atomic negative literals (e.g., "Fiona is not nice"), encode as facts.is_nice("Fiona", False).
+   - For relational facts, use predicate(subject, object, True) as needed (but here only unary predicates appear).
+3. Translate all conditional and universal rules into PyKe rules:
+   • If Bob is kind → Bob is smart.
+   • If something is kind and nice → it is smart.
+   • If something is nice and red → it is smart.
+   • If something is quiet and not nice → it is smart.
+   • All green things are kind. (i.e., if is_green(X) → is_kind(X))
+   • If Anne is quiet and white → Anne is kind.
+   • If Fiona is not nice → Fiona is green.
+   • All smart, kind things are white. (i.e., if is_smart(X) ∧ is_kind(X) → is_white(X))
+   • If something is kind and green → it is quiet.
+4. For each rule, use a `foreach` block to match premises and an `assert` to add the conclusion.
+   - For universal implications like “All X are Y”, use `foreach: is_X(X, True) → assert is_Y(X, True)`
+   - For conditionals with conjunctions in antecedent, use multiple premises inside `foreach`.
+5. The query tests whether Fiona is smart:
+   → Use facts.is_smart("Fiona", True)

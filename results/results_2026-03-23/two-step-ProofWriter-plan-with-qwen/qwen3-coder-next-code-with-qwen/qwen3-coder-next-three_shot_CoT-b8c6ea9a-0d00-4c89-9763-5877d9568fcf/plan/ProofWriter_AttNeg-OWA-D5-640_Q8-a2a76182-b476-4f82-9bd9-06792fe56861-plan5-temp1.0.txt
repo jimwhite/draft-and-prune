@@ -1,0 +1,15 @@
+1. Identify all entities: Bob, Dave, Fiona, Harry.  
+2. Encode all explicitly stated properties and relations as facts using ternary predicates: e.g., is_rough("Bob", True), is_furry("Dave", True), is_not_red("Dave", True), etc. Note: “not red”, “not rough” are encoded as separate unary predicates (e.g., is_not_red, is_not_rough) since PyKe uses ternary fact predicates where object is True/False and negation is represented via a distinct predicate.  
+3. Translate each conditional rule into PyKe `foreach`-`assert` form:  
+   • Smart things are green → foreach(?x, is_smart(?x, True), assert(is_green(?x, True)))  
+   • If something is nice and not rough → it is red → foreach(?x, (is_nice(?x, True), is_not_rough(?x, True)), assert(is_red(?x, True)))  
+   • If something is nice → it is smart → foreach(?x, is_nice(?x, True), assert(is_smart(?x, True)))  
+   • If something is rough → it is nice → foreach(?x, is_rough(?x, True), assert(is_nice(?x, True)))  
+   • If something is blue → it is furry → foreach(?x, is_blue(?x, True), assert(is_furry(?x, True)))  
+   • All blue, smart things are furry → foreach(?x, (is_blue(?x, True), is_smart(?x, True)), assert(is_furry(?x, True)))  
+   • If Bob is furry and Bob is not rough → Bob is green → foreach(?, (is_furry("Bob", True), is_not_rough("Bob", True)), assert(is_green("Bob", True))) (but note: this is a *specific* conditional for Bob, so may need hardcoded rule instead of foreach)  
+   • If something is green → it is blue → foreach(?x, is_green(?x, True), assert(is_blue(?x, True)))  
+   • If something is red and not nice → it is not blue → foreach(?x, (is_red(?x, True), is_not_nice(?x, True)), assert(is_not_blue(?x, True)))  
+4. Clarify handling of negated predicates: define is_not_red/ is_not_rough / is_not_blue / is_not_nice as distinct unary fact predicates; their truth values must be explicitly asserted or derived.  
+5. Use forward chaining to derive all consequences of the initial facts and rules.  
+6. The query: determine whether is_green("Bob", False) holds. Since the statement is “Bob is not green”, test facts.is_green("Bob", False). If derived as True, answer = true; if is_green("Bob", True) is derived, answer = false; otherwise unknown.

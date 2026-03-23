@@ -1,0 +1,25 @@
+1. Enumerate the six lab assistants and assign them integer indices.  
+2. Enumerate the six sessions: define session identifiers for each day and time slot: Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA).  
+3. Create integer variables `pos[assistant]` for the session index (0 to 5) each assistant leads.  
+4. Add **domain constraints**: `pos[assistant] ∈ {0,1,2,3,4,5}` and all `pos` values must be distinct (bijection).  
+5. Map session indices to day/time: e.g., WM=0, WA=1, TM=2, TA=3, FM=4, FA=5; define helper functions or constants for day (0=Wed, 1=Thu, 2=Fri) and time (0=morning, 1=afternoon).  
+6. Add **fixed constraint**: Julio leads Thursday afternoon → `pos[Julio] = 3`.  
+7. Add **Kevin & Rebecca same-day constraint**: `day(pos[Kevin]) == day(pos[Rebecca])`.  
+8. Add **Lan & Olivia different-day constraint**: `day(pos[Lan]) != day[pos[Olivia]]`.  
+9. Add **Nessa afternoon constraint**: `time(pos[Nessa]) == 1`.  
+10. Add **Julio before Olivia constraint**: `pos[Julio] < pos[Olivia]` → since Julio is at index 3, this implies `pos[Olivia] > 3`.  
+11. From the fixed assignment (Julio at TA=3), deduce remaining slots: 0,1,2,4,5 open.  
+12. Using logic (or Z3 for verification), determine which assistants have uniquely determined session(s) under the constraints:  
+    - Since Olivia must be after Julio (pos > 3), Olivia ∈ {4,5}.  
+    - Lan ≠ Olivia’s day → if Olivia is Friday (4 or 5), then Lan cannot be Friday; if Olivia is Thursday afternoon (already taken) → impossible, so Olivia ∈ {4(FM),5(FA)}.  
+    - Nessa must be afternoon → slots WA=1, TA=3 (taken), FA=5 ⇒ Nessa ∈ {1,5}.  
+    - Kevin & Rebecca same day: possible days are Wed (0,1), Thu (2,3—but 3 taken), Fri (4,5). So Kevin & Rebecca must be on Wed or Fri.  
+    - Consider cases:  
+        • If Olivia = 5 (FA), then Lan ∈ {0,1,2} (Wed or Thu morning/afternoon? but Thursday afternoon taken → Lan ∈ {0,1,2}).  
+        • If Olivia = 4 (FM), then Lan ∉ Friday → Lan ∈ {0,1,2}.  
+    - Try to see which assistants have only one possible session.  
+13. Enumerate all satisfying assignments with Z3 (using the constraints above, plus `pos[Julio]==3`) and collect all possible sessions for each assistant across models.  
+14. For each of the five other assistants (Kevin, Lan, Nessa, Olivia, Rebecca), count how many distinct sessions appear in the solution set. If only one session appears across all models, that assistant's session is fully determined.  
+15. Count the number of assistants whose session is uniquely determined (i.e., only one possible slot).  
+16. Map that count to the answer choice: 0→'one', 1→'two', etc., but note: the question asks for *how many of the other lab assistants* (so out of 5), so count is from 0 to 5.  
+17. Return the answer string corresponding to the count (e.g., if count = 3 → 'three').

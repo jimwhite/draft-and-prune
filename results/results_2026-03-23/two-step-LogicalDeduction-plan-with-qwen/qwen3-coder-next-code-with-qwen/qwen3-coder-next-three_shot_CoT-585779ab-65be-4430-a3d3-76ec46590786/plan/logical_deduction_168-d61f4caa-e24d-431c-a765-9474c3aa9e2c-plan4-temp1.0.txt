@@ -1,0 +1,31 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament ordering.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"Ada"`, `"Ana"`, `"Rob"`, `"Amy"`, `"Dan"`, `"Joe"`, `"Eli"`.  
+   * Define the domain as integers 1 through 7, where **1 = first (best, top)** and **7 = last (worst)** position.  
+   * Add all variables to the problem with this domain.
+
+3. **Add All-Different Constraint:**  
+   * Enforce `AllDifferentConstraint()` to ensure each golfer occupies a unique finishing position.
+
+4. **Translate Statements into Positional Constraints:**  
+   * "Eli finished below Amy" → Eli’s position number > Amy’s position number (`Eli > Amy`).  
+   * "Ada finished third" → Ada’s position = 3.  
+   * "Amy finished below Rob" → Amy’s position > Rob’s position (`Amy > Rob`).  
+   * "Dan finished last" → Dan’s position = 7.  
+   * "Rob finished second" → Rob’s position = 2.  
+   * "Ana finished fourth" → Ana’s position = 4.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments. Given the constraints, there will be exactly one solution.
+
+6. **Identify Who Finished Last (Position 7):**  
+   * The question asks which golfer finished last, i.e., has position 7.  
+   * From the problem statement, "Dan finished last" is explicitly stated → Dan’s position = 7.  
+   * Therefore, the correct choice is **E) Dan finished last.**  
+   * In code: Extract the solution dictionary, verify that `solution["Dan"] == 7`, and confirm choice E matches.
+
+7. **Map to the Correct Choice Letter:**  
+   * Since "Dan finished last" is directly given and consistent with all constraints, select option **E** without ambiguity.

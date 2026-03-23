@@ -1,0 +1,34 @@
+1.  Identify all entities and types: Polly, vumpus, zumpus, dumpus, impus, numpus, tumpus, jompus, yumpus, wumpus, rompus.  
+2.  Identify all properties: transparent, large, spicy, blue, temperate, happy, amenable, floral.  
+3.  Represent "Polly is a vumpus" as a base fact: `is_a("Polly", "vumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+      * Each vumpus is transparent.  
+      * Vumpuses are zumpuses.  
+      * Every zumpus is not large.  
+      * Zumpuses are dumpuses.  
+      * Every dumpus is spicy.  
+      * Each dumpus is a numpus.  
+      * Every impus is blue.  
+      * Numpuses are temperate.  
+      * Each numpus is a tumpus.  
+      * Tumpuses are not blue.  
+      * Tumpuses are jompuses.  
+      * Each jompus is happy.  
+      * Each jompus is a yumpus.  
+      * Each yumpus is not amenable.  
+      * Every yumpus is a wumpus.  
+      * Wumpuses are not floral.  
+      * Wumpuses are rompuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  Derive properties of Polly step-by-step using inheritance and direct facts:  
+      - Since `is_a(Polly, vumpus)`, and every vumpus is transparent → `transparent(Polly)`  
+      - Every vumpus is a zumpus → `is_a(Polly, zumpus)`  
+      - Every zumpus is not large → `not_large(Polly)`  
+      - Every zumpus is a dumpus → `is_a(Polly, dumpus)`  
+      - Every dumpus is spicy → `spicy(Polly)`  
+      - Every dumpus is a numpus → `is_a(Polly, numpus)`  
+      - Every numpus is temperate → `temperate(Polly)`  
+      - Every numpus is a tumpus → `is_a(Polly, tumpus)`  
+      - Every tumpus is not blue → `not_blue(Polly)`  
+7.  The query tests whether "Polly is not blue" is provable:  
+    → Use `facts.is_blue("Polly", False)`.

@@ -1,0 +1,24 @@
+1. Identify all entities and types: Polly, vumpus, zumpus, dumpus, impus, numpus, tumpus, jompus, yumpus, wumpus, rompus.  
+2. Identify all properties: transparent, large, spicy, blue, temperate, happy, amenable, floral.  
+3. Represent "Polly is a vumpus" as a base fact: `is_a("Polly", "vumpus", True)`.  
+4. Convert all class property and subclass relationships into logical rules:  
+   - Every vumpus is transparent.  
+   - Vumpuses are zumpuses.  
+   - Every zumpus is not large.  
+   - Zumpuses are dumpuses.  
+   - Every dumpus is spicy.  
+   - Each dumpus is a numpus.  
+   - Every impus is blue.  
+   - Numpuses are temperate.  
+   - Each numpus is a tumpus.  
+   - Tumpuses are not blue.  
+   - Tumpuses are jompuses.  
+   - Each jompus is happy.  
+   - Each jompus is a yumpus.  
+   - Every yumpus is not amenable.  
+   - Every yumpus is a wumpus.  
+   - Wumpuses are not floral.  
+   - Wumpuses are rompuses.  
+5. Implement each rule using a `foreach` clause (condition) followed by an `assert` clause (conclusion), ensuring proper use of negation for negative properties (e.g., `not_large`, `not_blue`).  
+6. Use transitive subclass reasoning: e.g., from `vumpus ⊆ zumpus ⊆ dumpus ⊆ numpus ⊆ tumpus`, derive that Polly is a tumpus, and since `tumpus ⊆ not_blue`, conclude Polly is not blue.  
+7. The query tests if "Polly is not blue" is provable: → Use `facts.is_blue("Polly", False)`.

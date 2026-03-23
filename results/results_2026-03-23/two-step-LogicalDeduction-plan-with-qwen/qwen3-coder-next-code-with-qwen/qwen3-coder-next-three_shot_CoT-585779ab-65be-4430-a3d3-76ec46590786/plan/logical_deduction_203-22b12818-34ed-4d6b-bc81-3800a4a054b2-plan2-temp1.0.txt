@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction model.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven golfers: `"Eli"`, `"Eve"`, `"Mel"`, `"Joe"`, `"Mya"`, `"Rob"`, and `"Ada"`.
+    * Define the domain as integers from 1 to 7, where **1 represents first place (highest/most upward)** and **7 represents last place (lowest/most downward)**. This reflects that "above" means a smaller rank number.
+    * Add all golfers as variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce that each golfer has a unique rank.
+    * Translate each statement into constraints using `lambda` functions:
+        * "Ada finished above Mya" → `"Ada"` rank < `"Mya"` rank.
+        * "Eli finished below Joe" → `"Joe"` rank < `"Eli"` rank.
+        * "Eli finished above Eve" → `"Eli"` rank < `"Eve"` rank.
+        * "Ada finished second-to-last" → `"Ada"` rank = 6 (since last is 7, second-to-last is 6).
+        * "Mel finished third" → `"Mel"` rank = 3.
+        * "Rob finished fourth" → `"Rob"` rank = 4.
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Extract the unique solution (or any one if multiple exist, though uniqueness is expected).
+
+5.  **Determine the Second-Place Golfer:**
+    * Identify the golfer whose rank is 2 (second place).
+    * Map the answer choices to golfers:  
+        A → "Eli", B → "Eve", C → "Mel", D → "Joe", E → "Mya", F → "Rob", G → "Ada".
+    * Check which golfer in the solution has rank 2.
+    * Return the corresponding letter (e.g., `'D'` if Joe has rank 2).

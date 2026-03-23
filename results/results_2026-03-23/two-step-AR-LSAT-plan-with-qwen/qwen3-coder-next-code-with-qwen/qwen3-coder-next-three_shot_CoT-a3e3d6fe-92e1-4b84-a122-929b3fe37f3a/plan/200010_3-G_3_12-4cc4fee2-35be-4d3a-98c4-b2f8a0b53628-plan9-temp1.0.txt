@@ -1,0 +1,15 @@
+1. Enumerate the eight compositions and create integer position variables (1 to 8) for each composition in the sequence.  
+2. Add **distinctness constraint**: all position variables must be pairwise distinct (since each composition is performed exactly once).  
+3. Add **ordering constraints** based on the given conditions:  
+   - T is performed either immediately before F or immediately after R: `(pos_T == pos_F - 1) OR (pos_T == pos_R + 1)`.  
+   - At least two compositions are performed either after F and before R, or after R and before F: `(pos_F + 2 <= pos_R) OR (pos_R + 2 <= pos_F)`.  
+   - O is performed either first or fifth: `pos_O == 1 OR pos_O == 5`.  
+   - The eighth composition is either L or H: `pos_L == 8 OR pos_H == 8`.  
+   - P is performed before S: `pos_P < pos_S`.  
+   - At least one composition is performed either after O and before S, or after S and before O: `(pos_O < pos_S - 1) OR (pos_S < pos_O - 1)`.  
+4. Translate the five answer choice sequences into expected position assignments for each composition (e.g., first → position 1, ..., eighth → position 8).  
+5. For each answer choice sequence:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert equality constraints matching the sequence (e.g., `pos_L == 1`, `pos_P == 2`, ..., `pos_H == 8`).  
+   - Check satisfiability: if SAT, the sequence is possible; record this choice as valid.  
+6. Among the recorded valid choices, select the one that is listed in the options and output its index (or directly identify it).

@@ -1,0 +1,16 @@
+1. Enumerate the seven accomplices and assign each a fixed index: Peters=3 (since he is fourth), Quinn, Rovero, Stanton, Tao, Villas, White.  
+2. Create integer variables `pos[accomplice]` for the recruitment position (1-indexed) of each accomplice.  
+3. Add **domain constraints**: each position must be an integer from 1 to 7, and all positions are distinct (using `Distinct` or permutation encoding).  
+4. Add **fixed constraint**: Peters is recruited fourth → `pos_Peters == 4`.  
+5. Add **ordering constraints**:  
+    - Quinn before Rovero: `pos_Quinn < pos_Rovero`.  
+6. Add **adjacency constraints**: Villas immediately before White → `pos_White == pos_Villas + 1`.  
+7. Add **non-adjacency constraint**: Stanton is neither immediately before nor after Tao → `|pos_Stanton - pos_Tao| != 1`.  
+8. For each answer choice (a candidate ordering from first to last), translate it into a list of names.  
+9. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that the position of each accomplice matches the order (e.g., first → position 1, second → position 2, ..., seventh → position 7).  
+    - Check satisfiability with `solver.check()`.  
+10. Collect all answer choices that yield SAT (i.e., are consistent with all constraints).  
+11. Since the question asks “Which one could be the order…”, select the first (or only) SAT-compatible choice and output its index or string.  
+12. Return the valid answer choice string.

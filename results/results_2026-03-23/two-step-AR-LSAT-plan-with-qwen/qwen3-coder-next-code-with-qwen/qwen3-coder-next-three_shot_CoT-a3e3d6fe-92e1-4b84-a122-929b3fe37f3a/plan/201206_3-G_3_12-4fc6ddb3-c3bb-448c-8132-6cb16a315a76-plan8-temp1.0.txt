@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables `zone[rep]` for each representative, ranging from 1 to 3 (Zone 1, Zone 2, Zone 3).  
+3. Add **mutual exclusion constraint**: Each representative is assigned exactly one zone (implicitly satisfied by single variable per rep).  
+4. Add **exactly-one constraints** for the disjunctive conditions:  
+    - Zone 1: Exactly one of Parra or Tiao is assigned to Zone 1.  
+    - Zone 2: Exactly one of Tiao or Udall is assigned to Zone 2.  
+5. Add **equivalence constraints** for paired groupings:  
+    - Parra and Quinn must be in the same zone: `zone[Parra] == zone[Quinn]`.  
+    - Stuckey and Udall must be in the same zone: `zone[Stuckey] == zone[Udall]`.  
+6. Add **size comparison constraint**: Number of representatives in Zone 3 > number in Zone 2.  
+    - Compute counts via integer arithmetic (sum of indicator booleans).  
+7. Pre-process each answer choice: parse the zones and representative assignments, then encode as equality constraints on `zone[rep]`.  
+8. For each answer choice:  
+    - Clone the base solver (with constraints 3–6).  
+    - Add constraints corresponding to the specific assignment in the choice.  
+    - Check satisfiability.  
+9. Collect all indices of answer choices that yield SAT models (i.e., satisfy all constraints).  
+10. Return the list of indices corresponding to valid assignments (the expected output is a single index, but since the prompt says “Which one… could be…” and provides options, we identify which option(s) are valid).

@@ -1,0 +1,16 @@
+1. Enumerate the seven recruits and assign each an integer index (0 to 6).  
+2. Create integer variables `pos[p]` for each person p, representing their recruitment position (1 to 7).  
+3. Add **domain constraints**: each `pos[p]` ∈ {1, 2, 3, 4, 5, 6, 7}, and all positions are distinct (using `Distinct` or pairwise inequalities).  
+4. Add **fixed constraint**: Peters is fourth → `pos[Peters] == 4`.  
+5. Add **Villas-White adjacency constraint**: Villas is immediately before White → `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero ordering constraint**: Quinn earlier than Rovero → `pos[Quinn] < pos[Rovero]`.  
+7. Add ** Stanton-Tao non-adjacency constraint**: `|pos[Stanton] - pos[Tao]| != 1`.  
+8. Now assume the additional condition: Quinn is immediately before Rovero → `pos[Quinn] + 1 == pos[Rovero]`.  
+9. Combine this with constraints from step 6 → this forces Quinn and Rovero to occupy consecutive positions, with Quinn first.  
+10. Enumerate the five answer options: `'first', 'second', 'third', 'fifth', 'seventh'` → map to positions 1,2,3,5,7.  
+11. For each position `p ∈ {1,2,3,5,7}` (i.e., each candidate position for Stanton):  
+    - Clone all current constraints into a fresh solver.  
+    - Add constraint `pos[Stanton] == p`.  
+    - Check satisfiability.  
+12. If a model is UNSAT under `pos[Stanton] == p`, then Stanton **cannot** be in position `p`; add the corresponding answer string (`'first'`, etc.) to the result list.  
+13. Return the list of impossible positions for Stanton under the given condition.

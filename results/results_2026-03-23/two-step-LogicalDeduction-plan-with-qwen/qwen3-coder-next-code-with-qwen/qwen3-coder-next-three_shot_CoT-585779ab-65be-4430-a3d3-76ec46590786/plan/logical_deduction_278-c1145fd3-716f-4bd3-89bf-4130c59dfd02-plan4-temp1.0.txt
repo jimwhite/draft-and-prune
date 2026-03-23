@@ -1,0 +1,24 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables: `"convertible"`, `"tractor"`, and `"hatchback"` (three vehicles).  
+    * Define the domain as integers from 1 to 3, where **1 = oldest** and **3 = newest** (since age ranking is used: smaller number = older).  
+    * Add the variables and their domain to the problem instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Translate statements into constraints using `lambda` functions:  
+        - "The hatchback is older than the convertible" → `hatchback < convertible`  
+        - "The tractor is the newest" → `tractor == 3`  
+
+4.  **Solve for the Arrangement:**  
+    * Use `getSolutions()` to find all valid assignments of ranks.  
+    * Since the solution is unique, extract the single solution (e.g., `solutions[0]`).  
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which vehicle is the "second-newest", i.e., rank **2** (since 3 = newest, 1 = oldest).  
+    * Map the choice letters to vehicles: `"A"` → `"convertible"`, `"B"` → `"tractor"`, `"C"` → `"hatchback"`.  
+    * For each choice, check if the corresponding vehicle’s rank in the solution equals 2.  
+    * Return the letter (e.g., `"A"` or `"B"` or `"C"`) of the choice where this condition holds.

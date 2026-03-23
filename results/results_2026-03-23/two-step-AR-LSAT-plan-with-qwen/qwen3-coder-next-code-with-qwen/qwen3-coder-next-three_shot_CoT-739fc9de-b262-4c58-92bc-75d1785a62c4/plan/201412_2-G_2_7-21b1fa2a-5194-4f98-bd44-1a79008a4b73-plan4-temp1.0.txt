@@ -1,0 +1,90 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices.  
+3. Create integer variables for the lecture order positions (1 to 4) and assign each historical-topic pair a unique position.  
+   - Introduce 16 Boolean variables `assigned[h][t]` indicating whether art historian h gives the lecture on topic t.  
+   - Add **one-topic-per-historian** constraints: each historian is assigned exactly one topic.  
+   - Add **one-historian-per-topic** constraints: each topic is assigned to exactly one historian.  
+   - Add **position assignment**: For each historian-topic pair, introduce position variable `pos[h][t] ∈ {1..4}` and enforce that exactly one topic per historian has position k for each k∈{1..4}, etc., or alternatively:  
+     - Introduce position variables `p0, p1, p2, p3` (positions 1–4) and assign each historian-topic pair to exactly one position.  
+     - Better: Use a single list of 4 positions for the 4 lectures, and define which (historian, topic) pair occupies each position.  
+   - Simpler: Introduce 4 position variables `pos1, pos2, pos3, pos4` where each `posk ∈ {0,1,2,3}` encodes the (historian, topic) pair at position k. But Z3 Python supports `Permutation` or use `IntVector`.  
+4. Alternative and more practical approach:  
+   - Use 16 Boolean variables `x[h][t][k]` meaning historian h gives topic t at position k.  
+   - Add constraints:  
+     - For each (h,t), exactly one k such that `x[h][t][k] = True`.  
+     - For each position k, exactly one (h,t) pair with `x[h][t][k] = True`.  
+     - For each historian h, exactly one topic t such that `x[h][t][k] = True` for some k (implied above).  
+     - For each topic t, exactly one historian h such that `x[h][t][k] = True` for some k (implied above).  
+5. Add ordering constraints using positions:  
+   - Let `pos(h,t)` be the unique k where `x[h][t][k] = True`.  
+   - Oil paintings (OP) and watercolors (WC) lectures are both earlier than lithographs (L):  
+     - `pos(Farley,OP) < pos(?, L)` and `pos(Garcia,OP)?` → Wait: topics are assigned to historians, not fixed.  
+     - Important: The topic *lecture* has a position — we need to refer to positions of topics, not historians.  
+   - Better: Let `pos_topic[t]` be the position of topic t (since each topic is taught once). Introduce 4 integer variables `pos_lith, pos_oil, pos_sculpture, pos_water` ∈ {1..4}, all distinct.  
+   - Also assign each topic to one historian: introduce Boolean variables `h_assign[t][h]` meaning historian h gives lecture on topic t.  
+   - Add: For each topic t, exactly one h with `h_assign[t][h] = True`.  
+   - Then constraints become:  
+     - `pos_oil < pos_lith` and `pos_water < pos_lith`.  
+     - Farley gives oil paintings lecture ⇒ if `h_assign[oil][Farley] = True`, then Farley’s position is `pos_oil`.  
+     - But we need: *Farley's lecture* (wherever it is) is earlier than the *oil paintings lecture*. So:  
+       Let `pos_Farley` be position where Farley lectures. Since Farley lectures on exactly one topic t, `pos_Farley = pos_topic[t]` for the unique t with `h_assign[t][Farley]`.  
+       So constraint: `pos_Farley < pos_oil`.  
+   - To avoid conditional positioning, introduce 4 position variables for historians: `pos_farley`, `pos_garcia`, `pos_holden`, `pos_jiang` ∈ {1..4}, all distinct.  
+   - Then relate topics to historians: Each historian gives exactly one topic, so for each historian h, there exists a unique topic t such that `h_assign[t][h] = True`, and then `pos_h = pos_topic[t]`.  
+   - This introduces coupling: `h_assign[li][Farley] ⇒ pos_farley = pos_lith`, etc.  
+   - In Z3, model as:  
+     - Variables: `pos_farley`, `pos_garcia`, `pos_holden`, `pos_jiang` ∈ Int, distinct.  
+     - Variables: `topic_farley`, `topic_garcia`, etc. ∈ {0,1,2,3} (indices for topics).  
+     - Constraint: `topic_farley ≠ topic_garcia`, etc.  
+     - Then map topic index to position: define a function `topic_pos[t]` where `t ∈ {0..3}` and `topic_pos` is a permutation of `{1,2,3,4}`.  
+       Or directly: `pos_farley = topic_pos[topic_farley]`, etc.  
+6. Use **derivation** instead:  
+   - Let `topic_order = [t1, t2, t3, t4]` be the topic sequence at positions 1 to 4 (each ti ∈ {0..3}, all distinct).  
+   - Let `historian_order = [h1, h2, h3, h4]` be the historian sequence at each position (each hi ∈ {0..3}, all distinct).  
+   - So `x[k] = (hi, ti)` at position k.  
+   - Add: each historian appears exactly once in `historian_order`, each topic appears exactly once in `topic_order`.  
+7. Add ordering constraints in terms of positions:  
+   - Let `pos(topic)` be the index k+1 where topic appears in `topic_order`.  
+   - So: `pos(oil) < pos(lith)` and `pos(water) < pos(lith)`.  
+   - Farley's lecture position: `pos(Farley)` = k+1 where historian `Farley` appears in `historian_order`.  
+     Constraint: `pos(Farley) < pos(oil)`.  
+   - Holden's lecture position < Garcia's and < Jiang's: `pos(Holden) < pos(Garcia)` and `pos(Holden) < pos(Jiang)`.  
+8. Enumerate all possible assignments satisfying constraints (Z3 will find models).  
+9. For each choice statement, check whether it is *true in every satisfying assignment* (must be true):  
+   - For each candidate statement, e.g., “Farley's lecture is earlier than the sculptures lecture”:  
+     - Let `sculpture_pos` be position of sculpture topic, i.e., k+1 where `topic_order[k] == sculpture`.  
+     - Add constraint to solver: `pos(Farley) >= sculpture_pos` and check UNSAT — if UNSAT, then the statement must hold.  
+10. Alternatively: For each answer choice, build solver with base constraints + negation of the statement (e.g., `pos(Farley) > sculpture_pos`).  
+    - If UNSAT, then the statement *must* be true — i.e., it is the correct answer.  
+11. Translate choices:  
+    - 0: Farley < Sculpture  
+    - 1: Holden < Lithographs  
+    - 2: Sculpture < Garcia  
+    - 3: Sculpture < Jiang  
+    - 4: Watercolors < Garcia  
+12. For each index i ∈ {0,1,2,3,4}, do:  
+    - Clone base solver.  
+    - Add negation of statement i (e.g., for i=0: `pos_farley >= sculpture_pos`).  
+    - If UNSAT, append i to answer_index_list.  
+13. Since exactly one answer must be correct (must be true), the list should have size 1.  
+14. Print answer_index_list (should be a single-element list).  
+
+Final implementation plan:  
+- Define topics: [lithographs, oil_paintings, sculptures, watercolors] → indices 0,1,2,3  
+- Define historians: [Farley, Garcia, Holden, Jiang] → indices 0,1,2,3  
+- Use `IntVector('pos_topic', 4)` for topic positions (1–4), with `Distinct(pos_topic)`.  
+- Use `IntVector('pos_hist', 4)` for historian positions (1–4), with `Distinct(pos_hist)`.  
+- Add constraints: For each historian h, there is exactly one topic t such that `pos_hist[h] == pos_topic[t]`.  
+    - This is tricky; use assignment variables `assign[h][t]` Boolean, with:  
+      - For each h: sum_t assign[h][t] = 1  
+      - For each t: sum_h assign[h][t] = 1  
+      - And for all h,t: `assign[h][t] ⇒ (pos_hist[h] == pos_topic[t])`  
+- Add ordering constraints:  
+    - `pos_topic[1] < pos_topic[0]` (oil < lith)  
+    - `pos_topic[3] < pos_topic[0]` (water < lith)  
+    - `pos_hist[0] < pos_topic[1]` (Farley < oil)  
+    - `pos_hist[2] < pos_hist[1]` and `pos_hist[2] < pos_hist[3]` (Holden < Garcia, Jiang)  
+- For each choice i, add negation of the statement and check unsatisfiability.  
+- Collect all i where UNSAT → must be true.
+
+**Note**: The plan is fully self-contained and ready for Z3 Python implementation.

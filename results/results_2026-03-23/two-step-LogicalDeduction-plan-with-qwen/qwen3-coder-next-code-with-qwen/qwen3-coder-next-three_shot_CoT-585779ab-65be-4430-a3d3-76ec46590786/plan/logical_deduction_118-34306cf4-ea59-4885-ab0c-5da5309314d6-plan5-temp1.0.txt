@@ -1,0 +1,30 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven golfers as string variables: `"Eli"`, `"Ada"`, `"Amy"`, `"Ana"`, `"Eve"`, `"Mel"`, and `"Dan"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (highest position)** and **7 = last place (lowest position)**.  
+   * Add all seven golfers as variables to the problem, each with domain {1, 2, ..., 7}.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique finishing positions for each golfer.  
+   * Translate each statement into a constraint using lambda functions or built-in comparison constraints:  
+     - "Ada finished above Mel" → Ada's position < Mel's position (`lambda a, m: a < m`).  
+     - "Dan finished above Ada" → Dan's position < Ada's position (`lambda d, a: d < a`).  
+     - "Amy finished last" → Amy's position = 7.  
+     - "Ana finished third-to-last" → third-to-last in a 7-person race is position 5 (since positions: 1st, 2nd, 3rd, **4th**, 5th (third-to-last), 6th, 7th). So Ana = 5.  
+     - "Dan finished below Eli" → Dan's position > Eli's position (`lambda d, e: d > e`).  
+     - "Eve finished third" → Eve = 3.
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to retrieve all possible assignments satisfying the constraints.  
+   * Since the problem is well-constrained, expect exactly one solution; extract it.
+
+5. **Determine Which Golfer Finished Third:**  
+   * The question asks: "Which of the following is true?" specifically regarding who finished **third** (position = 3).  
+   * Create a mapping from choice letters to golfer names:  
+        `'A'`: "Eli", `'B'`: "Ada", `'C'`: "Amy", `'D'`: "Ana", `'E'`: "Eve", `'F'`: "Mel", `'G'`: "Dan".  
+   * Retrieve the position of each golfer from the solution.  
+   * Find which golfer in the solution has position exactly 3.  
+   * Return the choice letter (e.g., `'E'`) corresponding to that golfer.

@@ -1,0 +1,15 @@
+1. Enumerate the six lab assistants and assign them integer indices.  
+2. Enumerate the six sessions: 3 days × 2 sessions/day → assign indices 0 to 5, where session index // 2 gives day (0=Wed, 1=Thu, 2=Fri), and session index % 2 gives period (0= morning, 1=afternoon).  
+3. Create integer variables `assign[i]` for each assistant i, indicating which session index (0–5) they lead.  
+4. Add **domain constraints**: each `assign[i]` ∈ {0,1,2,3,4,5}, and all `assign[i]` are pairwise distinct (bijection).  
+5. Add **Kevin–Rebecca same-day constraint**: `(assign[K] // 2) == (assign[R] // 2)`.  
+6. Add **Lan–Olivia different-day constraint**: `(assign[L] // 2) != (assign[O] // 2)`.  
+7. Add **Nessa afternoon constraint**: `assign[N] % 2 == 1`.  
+8. Add **Julio earlier day than Olivia**: `(assign[J] // 2) < (assign[O] // 2)`.  
+9. Add **conditional premise**: Lan does *not* lead a Wednesday session → `assign[L] // 2 != 0`.  
+10. Translate the answer choices into assistant indices (e.g., Rebecca=4, Olivia=3, etc.).  
+11. For each candidate assistant C in the answer choices:  
+    - Clone base constraints (including premise) into a fresh solver.  
+    - Add constraint that C does *not* lead any Thursday session: `(assign[C] // 2) != 1`.  
+    - If UNSAT, then C *must* lead a Thursday session under the premise; append C index to answer list.  
+12. Return the assistant (by index) corresponding to the single forced Thursday leader.

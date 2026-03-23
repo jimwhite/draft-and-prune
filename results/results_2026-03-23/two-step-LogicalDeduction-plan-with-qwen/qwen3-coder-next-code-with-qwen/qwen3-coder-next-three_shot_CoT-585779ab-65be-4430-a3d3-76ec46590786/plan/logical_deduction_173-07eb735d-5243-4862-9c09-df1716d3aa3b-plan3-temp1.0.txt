@@ -1,0 +1,31 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruit variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.  
+    * Define the domain for these variables as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (i.e., higher number = more expensive).  
+    * Add all seven fruit variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into a constraint using `lambda` functions or direct value assignment:  
+        - "The pears are more expensive than the kiwis" → `lambda k, p: p > k` (i.e., pears rank > kiwis rank).  
+        - "The watermelons are less expensive than the peaches" → `lambda w, pe: w < pe` (i.e., watermelons rank < peaches rank).  
+        - "The mangoes are the third-cheapest" → `mangoes == 3`.  
+        - "The watermelons are the third-most expensive" → Since most expensive = 7, third-most expensive = 7 − 2 = **5** → `watermelons == 5`.  
+        - "The plums are the second-most expensive" → second-most expensive = 7 − 1 = **6** → `plums == 6`.  
+        - "The loquats are the second-cheapest" → `loquats == 2`.
+
+4.  **Solve for the Full Assignment:**  
+    * Call `getSolutions()` on the `Problem` object to obtain all valid assignments.  
+    * Extract the unique solution (a dictionary mapping each fruit to its rank).
+
+5.  **Determine Which Choice Is True:**  
+    * The question asks which fruit is the **second-most expensive**, i.e., rank = 6.  
+    * Note: The statement "The plums are the second-most expensive" is explicitly given, so the answer should be **D**.  
+    * However, to follow the plan generically:  
+        - Create a mapping from choice letters to fruit names:  
+            `{"A": "loquats", "B": "peaches", "C": "watermelons", "D": "plums", "E": "kiwis", "F": "mangoes", "G": "pears"}`  
+        - Iterate over the choices, check if `solution[fruit] == 6`.  
+        - Return the letter of the fruit whose rank is 6.

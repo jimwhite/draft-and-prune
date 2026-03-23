@@ -1,0 +1,15 @@
+1. Enumerate the six roles and assign them integer indices: [guitarist, keyboard player, percussionist, saxophonist, trumpeter, violinist] → [0,1,2,3,4,5].  
+2. Create integer position variables `pos[0]` to `pos[5]`, each representing the solo order (1 through 6).  
+3. Add **domain constraints**: `pos[i] ∈ {1,2,3,4,5,6}` for all i.  
+4. Add **distinctness constraint**: All `pos[i]` must be pairwise distinct (use `Distinct(pos)` or explicit inequality constraints).  
+5. Add **guitarist constraint**: Guitarist (index 0) does not perform 4th solo → `pos[0] ≠ 4`.  
+6. Add **percussionist < keyboard player constraint**: `pos[2] < pos[1]`.  
+7. Add **violinist < keyboard player < guitarist constraints**: `pos[5] < pos[1]` and `pos[1] < pos[0]`.  
+8. Add **saxophonist exclusive-or constraint**: Saxophonist (index 3) performs after *exactly one* of percussionist or trumpeter:  
+    - `(pos[3] > pos[2]) + (pos[3] > pos[4]) == 1` (using arithmetic on Booleans).  
+9. Translate the answer choices into role indices: [guitarist=0, keyboard player=1, saxophonist=3, trumpeter=4, violinist=5].  
+10. Define an answer index list `impossible_third_list = []`. For each candidate role in the answer choices:  
+    - Clone the base solver into a fresh one.  
+    - Add constraint `pos[candidate] == 3`.  
+    - Check satisfiability: if UNSAT, then this role cannot be third → append the role index to `impossible_third_list`.  
+11. Return the list of impossible third roles as indices, then map back to role names for final answer.

@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven birds as variables: `"hawk"`, `"crow"`, `"owl"`, `"raven"`, `"falcon"`, `"quail"`, `"hummingbird"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, **7 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Translate Statements into Constraints:**  
+   * Add `AllDifferentConstraint` to ensure unique positions.  
+   * Convert each statement into a constraint using lambda functions:  
+     - "The hummingbird is the second from the left" → `hummingbird == 2`  
+     - "The raven is the fourth from the left" → `raven == 4`  
+     - "The raven is to the right of the hawk" → `hawk < raven`  
+     - "The owl is to the right of the crow" → `crow < owl`  
+     - "The falcon is the rightmost" → `falcon == 7`  
+     - "The hawk is to the right of the hummingbird" → `hummingbird < hawk`  
+     - "The quail is the second from the right" → `quail == 6`  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since the problem is fully constrained, there should be exactly one).
+
+5. **Identify the Correct Answer:**  
+   * Determine which bird occupies position 3 (third from left) in the solution.  
+   * Map the result to the corresponding choice letter using the mapping:  
+     - `"hawk"` → A, `"crow"` → B, `"owl"` → C, `"raven"` → D, `"falcon"` → E, `"quail"` → F, `"hummingbird"` → G  
+   * Return the letter corresponding to the bird at position 3.

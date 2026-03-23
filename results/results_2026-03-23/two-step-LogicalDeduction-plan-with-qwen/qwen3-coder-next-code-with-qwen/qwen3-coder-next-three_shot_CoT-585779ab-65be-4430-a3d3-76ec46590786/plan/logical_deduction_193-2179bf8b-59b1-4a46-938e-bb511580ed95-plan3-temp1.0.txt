@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven vehicles as variables: `"limousine"`, `"sedan"`, `"tractor"`, `"motorcycle"`, `"minivan"`, `"hatchback"`, and `"truck"` (note: correct spelling of "motorcyle" to `"motorcycle"`).  
+   * Define a domain of integers from 1 to 7, where **1 = oldest**, and **7 = newest**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Convert each statement into a constraint using `lambda` or direct value/relational constraints:  
+     * "The minivan is newer than the limousine" → `minivan > limousine`  
+     * "The tractor is the second-newest" → `tractor == 6` (since newest = 7, second-newest = 6)  
+     * "The truck is older than the sedan" → `truck < sedan`  
+     * "The minivan is older than the truck" → `minivan < truck`  
+     * "The hatchback is newer than the tractor" → `hatchback > tractor`  
+     * "The motorcyle is the fourth-newest" → `motorcycle == 4` (fourth-newest means: positions from newest = 7,6,5,4 → so rank 4)  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions satisfying the constraints.  
+   * Since the problem is well-constrained, extract the unique solution (or iterate through solutions if multiple exist—though uniqueness is expected here).
+
+5. **Identify the Correct Answer:**  
+   * The question asks which vehicle is the **second-newest**, i.e., position 6 (per our scheme: 7=newest, 6=second-newest).  
+   * Create a mapping from choice letters (`A` through `G`) to the corresponding vehicle names:  
+     * `"A" → "limousine"`, `"B" → "sedan"`, `"C" → "tractor"`, `"D" → "motorcycle"`, `"E" → "minivan"`, `"F" → "hatchback"`, `"G" → "truck"`  
+   * In the solution, find which vehicle has position `6`.  
+   * Return (or print) the choice letter corresponding to that vehicle as the answer.

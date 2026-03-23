@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven books as variables: `"purple"`, `"green"`, `"white"`, `"gray"`, `"red"`, `"black"`, `"brown"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all variables with domain `{1,2,3,4,5,6,7}` to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+    * Translate each statement into a constraint using `addConstraint` with appropriate lambda functions or direct value constraints:  
+        - "The gray book is to the left of the purple book" → `gray < purple`  
+        - "The white book is to the right of the brown book" → `brown < white`  
+        - "The black book is the third from the right" → `black == 5` (since position = 7 - 3 + 1 = 5)  
+        - "The purple book is to the left of the white book" → `purple < white`  
+        - "The white book is the second from the right" → `white == 6` (since position = 7 - 2 + 1 = 6)  
+        - "The gray book is the third from the left" → `gray == 3`  
+        - "The brown book is to the right of the green book" → `green < brown`  
+
+4.  **Solve for Valid Arrangements:**  
+    * Call `getSolutions()` to find all solutions satisfying the constraints.  
+    * Extract the (unique) solution dictionary mapping each book to its position.
+
+5.  **Determine Which Book is Second from the Right:**  
+    * The second-from-right position in a 7-book shelf is position **6**.  
+    * Identify the book assigned to position 6 in the solution dictionary.  
+    * Map this book to the corresponding choice letter:  
+        - `"purple"` → A, `"green"` → B, `"white"` → C, `"gray"` → D, `"red"` → E, `"black"` → F, `"brown"` → G  
+    * Output the letter corresponding to the book at position 6.

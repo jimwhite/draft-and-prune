@@ -1,0 +1,14 @@
+1. Enumerate the eight students and assign integer indices; create Boolean variables `report[student][day][slot]` indicating whether a student gives a report on a given day (Mon/Tue/Wed) in morning (0) or afternoon (1).  
+2. Add **exactly-six-reports constraint**: sum of all `report[s][d][slot]` over 8 students × 3 days × 2 slots = 6.  
+3. Add **two-reports-per-day constraint**: for each day d, sum over students and slots = 2.  
+4. Add **George-only-on-Tuesday constraint**: `report[George][Mon][slot] = false` and `report[George][Wed][slot] = false` for both slots.  
+5. Add **Olivia/Robert-no-afternoon constraint**: `report[Olivia][d][1] = false` and `report[Robert][d][1] = false` for all days d.  
+6. Add **Nina-implication constraint**: if Nina reports on Monday, then Helen and Irving must both report on Tuesday; if Nina reports on Tuesday, then Helen and Irving must both report on Wednesday; if Nina reports on Wednesday, no further constraint. Encode via logical implications using auxiliary Boolean variables or big-M style (e.g., `report[Nina][Mon][0] ∨ report[Nina][Mon][1] → (report[Helen][Tue][0] ∨ report[Helen][Tue][1]) ∧ (report[Irving][Tue][0] ∨ report[Irving][Tue][1])`, and similarly for Tuesday→Wednesday; if Nina reports on Wednesday, no additional requirement).  
+7. Add **Kyle and Lenore do not report constraint**: `report[Kyle][d][slot] = false` and `report[Lenore][d][slot] = false` for all d, slot.  
+8. Translate each answer choice into specific assignments: For a triple (X, Y, Z), require morning reports to be X on Mon, Y on Tue, Z on Wed (i.e., `report[X][Mon][0] = true`, `report[Y][Tue][0] = true`, `report[Z][Wed][0] = true`), and ensure no student is assigned to more than one slot (i.e., for each student, at most one report across all days/slots).  
+9. For each choice:  
+    - Clone the base constraints (steps 1–6 + Kyle/Lenore constraint).  
+    - Add the choice-specific morning assignment and ensure consistency (e.g., enforce uniqueness of reporters per slot).  
+    - Check satisfiability with Z3.  
+10. Collect all choices for which the model is SAT into `answer_index_list`.  
+11. Output the indices of satisfiable choices (or directly output the list of valid choices if textual mapping is used).

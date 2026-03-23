@@ -1,0 +1,19 @@
+1. Identify all entities: Bob, Dave, Fiona, Harry.  
+2. Encode explicit facts using ternary predicates (e.g., is_rough("Bob", True), is_furry("Dave", True), is_not_red("Dave", True), etc.). Note: negative facts like “not red”, “not rough” must be encoded with predicates such as is_red(X, False), is_rough(X, False).  
+3. Translate each conditional statement into a rule:  
+   • Smart things are green → foreach: is_smart(X, True) → assert: is_green(X, True).  
+   • If something is nice and not rough → it is red → foreach: is_nice(X, True) ∧ is_rough(X, False) → assert: is_red(X, True).  
+   • If something is nice → it is smart → foreach: is_nice(X, True) → assert: is_smart(X, True).  
+   • If something is rough → it is nice → foreach: is_rough(X, True) → assert: is_nice(X, True).  
+   • If something is blue → it is furry → foreach: is_blue(X, True) → assert: is_furry(X, True).  
+   • All blue, smart things are furry → foreach: is_blue(X, True) ∧ is_smart(X, True) → assert: is_furry(X, True).  
+   • If Bob is furry and Bob is not rough → Bob is green → foreach: is_furry("Bob", True) ∧ is_rough("Bob", False) → assert: is_green("Bob", True).  
+   • If something is green → it is blue → foreach: is_green(X, True) → assert: is_blue(X, True).  
+   • If something is red and not nice → it is not blue → foreach: is_red(X, True) ∧ is_nice(X, False) → assert: is_blue(X, False).  
+4. Use the fact database to store all initial explicit facts with truth values (including negatives via negated predicates).  
+5. Run the PyKe engine to derive all logical consequences from facts and rules.  
+6. Query whether Bob is not green by asserting the negated fact: check if facts.is_green("Bob", False) can be derived.  
+7. Determine the answer:  
+   • If facts.is_green("Bob", False) is provable → statement is true.  
+   • If facts.is_green("Bob", True) is provable (i.e., Bob is green) → statement is false.  
+   • If neither can be proven → statement is unknown.

@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * Create a list of the seven bird names as string variables: `"falcon"`, `"crow"`, `"hawk"`, `"hummingbird"`, `"bluejay"`, `"robin"`, and `"raven"`.
+   * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**, matching standard left-to-right ordering.
+   * Add all seven variables to the problem with this domain.
+
+3. **Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+   * Add constraints for each statement:
+     - "The blue jay is to the right of the robin" → `bluejay > robin`
+     - "The hawk is to the left of the hummingbird" → `hawk < hummingbird`
+     - "The robin is the second from the right" → `robin == 6` (since position 7 is rightmost)
+     - "The falcon is the third from the left" → `falcon == 3`
+     - "The crow is to the right of the hummingbird" → `crow > hummingbird`
+     - "The raven is the second from the left" → `raven == 2`
+
+4. **Solve the Problem:**
+   * Use the `getSolutions()` method to compute all valid assignments.
+   * Extract the unique solution (a dictionary mapping bird names to positions).
+
+5. **Evaluate the Question:**
+   * The question asks which bird is the **third from the right**, which corresponds to position `7 - 3 + 1 = 5`.
+   * Create a mapping from choice letters (`"A"` through `"G"`) to the corresponding bird names in order:  
+     `{"A": "falcon", "B": "crow", "C": "hawk", "D": "hummingbird", "E": "bluejay", "F": "robin", "G": "raven"}`.
+   * For each choice, check if the assigned position of its bird equals 5.
+   * Return (or record) the letter of the first (and only) matching choice.

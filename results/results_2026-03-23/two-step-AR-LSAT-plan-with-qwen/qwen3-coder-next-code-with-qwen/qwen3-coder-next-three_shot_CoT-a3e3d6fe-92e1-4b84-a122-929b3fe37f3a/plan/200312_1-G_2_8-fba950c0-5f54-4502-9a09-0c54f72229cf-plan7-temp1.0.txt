@@ -1,0 +1,18 @@
+1. Enumerate the six cargo types and assign each an integer code: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `bay[i]` for i in {0..5}, where `bay[type_index]` is the bay number (1–6) assigned to that cargo type.  
+3. Add **domain constraints**: each `bay[i]` ∈ {1,2,3,4,5,6}, and all `bay[i]` are pairwise distinct.  
+4. Add **ordering constraints** from the problem:  
+   - grain > livestock ⇒ `bay[grain] > bay[livestock]`  
+   - livestock > textiles ⇒ `bay[livestock] > bay[textiles]`  
+   - produce > fuel ⇒ `bay[produce] > bay[fuel]`  
+   - textiles and produce are adjacent ⇒ `|bay[produce] - bay[textiles]| == 1`  
+5. Add **extra condition** from the question: exactly one bay between machinery and grain ⇒ `|bay[grain] - bay[machinery]| == 2`.  
+6. Define a counter `count_solutions = 0` and a list `assignments_list = []`.  
+7. Use Z3 to find **all satisfying assignments** (i.e., all permutations of bay numbers consistent with the constraints).  
+   - For each model, record the full assignment `[(cargo_type, bay_number)]`.  
+8. For each assignment (solution), determine for how many bays the cargo type is uniquely determined across all solutions.  
+   - Build a mapping `bay_num → set(cargo_types)` over all solutions: for each bay number b, collect all cargo types assigned to it in any solution.  
+   - For bay b, if `|set_of_types_for_b| == 1`, then cargo at bay b is fixed across all solutions.  
+9. Compute the number of such uniquely determined bays for each solution (it will be identical across all solutions due to symmetry—verify this).  
+10. Return the count (integer) as the answer, then map it to the corresponding choice string from `['two', 'three', 'four', 'five', 'six']`.  
+11. Output only the final string answer (e.g., `'three'`).

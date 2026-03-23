@@ -1,0 +1,21 @@
+1. Identify all entities: bald_eagle, cow, dog, lion.  
+2. Encode directly stated facts using ternary predicates:  
+   - eats("bald_eagle", "cow", True), eats("bald_eagle", "dog", False), is_rough("bald_eagle", True)  
+   - is_round("cow", True), sees("cow", "bald_eagle", True), sees("cow", "dog", False)  
+   - visits("cow", "bald_eagle", True), visits("cow", "lion", True)  
+   - is_rough("dog", True), is_young("lion", True), sees("lion", "bald_eagle", False), sees("lion", "cow", True)  
+3. Translate all implications into PyKe rules using `foreach` blocks:  
+   - If someone is green and eats the bald eagle → bald_eagle is not rough.  
+   - If someone is big and does not see the bald eagle → bald_eagle is rough.  
+   - If someone is big → visits("someone", "dog", True).  
+   - If someone eats the lion and is big → eats("lion", "dog", True).  
+   - If someone visits the dog → eats("dog", "cow", True).  
+   - If someone is rough and eats the cow → is_young("someone", True).  
+   - If lion eats cow → visits("lion", "bald_eagle", True).  
+   - If someone is big and sees lion → is_green("someone", True).  
+   - If someone is young → is_big("someone", True).  
+4. Note: Explicit negative facts (e.g., eats("bald_eagle", "dog", False)) must be encoded explicitly and handled carefully; do *not* assume closed-world assumption.  
+5. Query: Check whether lion is big by asserting facts.is_big("lion", True) and see if it is provable.  
+6. Consider backward chaining: Since lion is known to be young (explicit fact), and the rule “if someone is young then they are big” applies, lion → big follows directly via modus ponens.  
+7. However, verify consistency: Ensure no rule or fact contradicts is_big("lion", True), especially any rule that might derive is_big("lion", False) or cause inconsistency.  
+8. Encode all rules with proper variable scoping and use PyKe’s `foreach` + `assert` syntax for each implication.

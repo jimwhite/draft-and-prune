@@ -1,0 +1,19 @@
+1. Enumerate the six lab assistants and assign integer codes (0: Julio, 1: Kevin, 2: Lan, 3: Nessa, 4: Olivia, 5: Rebecca).  
+2. Enumerate the six sessions as (day, period) pairs: Wednesday morning (0), Wednesday afternoon (1), Thursday morning (2), Thursday afternoon (3), Friday morning (4), Friday afternoon (5). Assign each session an integer index 0–5.  
+3. Create integer variables `assign[i]` for each assistant i, denoting the session index (0–5) they lead.  
+4. Add **domain constraints**: each `assign[i]` ∈ {0,1,2,3,4,5}, and all `assign[i]` are pairwise distinct (one session per assistant).  
+5. Add **session-to-day/period mapping constraints**:  
+    - Session 0 → Wednesday morning, session 1 → Wednesday afternoon  
+    - Session 2 → Thursday morning, session 3 → Thursday afternoon  
+    - Session 4 → Friday morning, session 5 → Friday afternoon  
+6. Add **Kevin & Rebecca same-day constraint**: `day(assign[1]) == day(assign[5])` (same day).  
+7. Add **Lan & Olivia different-day constraint**: `day(assign[2]) != day(assign[4])`.  
+8. Add **Nessa afternoon session constraint**: `assign[3] ∈ {1, 3, 5}` (afternoon sessions).  
+9. Add **Julio earlier day than Olivia constraint**: `day(assign[0]) < day(assign[4])`.  
+10. Add **premise constraint**: Lan does *not* lead a Wednesday session ⇒ `assign[2] ∉ {0, 1}`.  
+11. Translate the answer choices into assistant indices: [5 (Rebecca), 4 (Olivia), 3 (Nessa), 1 (Kevin), 0 (Julio)].  
+12. For each candidate assistant in the answer choices, test if they *must* lead a Thursday session (i.e., session index 2 or 3) under all satisfying assignments:  
+    - Clone the above constraints into a fresh solver.  
+    - Assert that the candidate assistant does *not* lead any Thursday session: `assign[candidate] ≠ 2 ∧ assign[candidate] ≠ 3`.  
+    - If UNSAT, then the candidate *must* lead a Thursday session; record its index in `answer_index_list`.  
+13. Return the list of assistant indices that must lead a Thursday session under the given premise.

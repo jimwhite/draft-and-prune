@@ -1,0 +1,23 @@
+1. Enumerate the six cargo types and assign integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `bay[i]` for each cargo type `i`, representing the bay number (1–6) where it is stored.  
+3. Add **domain constraints**: each `bay[i]` ∈ {1,2,3,4,5,6}, and all `bay[i]` are distinct (six bays, six cargo types).  
+4. Add **ordering constraints** from initial conditions:  
+    - grain > livestock: `bay[grain] > bay[livestock]`  
+    - livestock > textiles: `bay[livestock] > bay[textiles]`  
+    - produce > fuel: `bay[produce] > bay[fuel]`  
+    - textiles adjacent to produce: `abs(bay[textiles] - bay[produce]) == 1`  
+5. Add **hypothetical condition**: produce is next to livestock (given in the “if” clause): `abs(bay[produce] - bay[livestock]) == 1`.  
+6. Add implications from chained inequality: since livestock > textiles and produce > fuel, and with adjacency constraints, derive relative positions implicitly.  
+7. Translate the answer choices into logical assertions about bay numbers:  
+    - “Bay 2 is holding fuel” → `bay[fuel] == 2`  
+    - “Bay 4 is holding produce” → `bay[produce] == 4`  
+    - “Bay 4 is holding textiles” → `bay[textiles] == 4`  
+    - “Bay 5 is holding grain” → `bay[grain] == 5`  
+    - “Bay 5 is holding machinery” → `bay[machinery] == 5`  
+8. For each choice, check if it *could be true* under the constraints:  
+    - Clone base + condition into fresh solver.  
+    - Assert the choice’s bay assignment (e.g., `bay[fuel] == 2`).  
+    - If SAT → choice *could* be true; if UNSAT → choice *cannot* be true.  
+9. The EXCEPT question asks for the choice that **must be false** — i.e., the one that yields UNSAT.  
+10. Define `answer_index_list = []`. For each choice in order, if UNSAT → append its index to `answer_index_list`.  
+11. Output the single index corresponding to the EXCEPT answer (the only UNSAT case).

@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the seven variables representing the fruits: `"watermelons"`, `"cantaloupes"`, `"pears"`, `"peaches"`, `"mangoes"`, `"kiwis"`, and `"oranges"`.  
+    * Assign a numerical domain from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, since the statements describe relative *expensiveness*.  
+    * Add all variables and their domain (1–7) to the problem.
+
+3.  **Translate Rules into Constraints Using Lambda Functions:**  
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+    * "The oranges are more expensive than the cantaloupes" → `cantaloupes < oranges` (lower rank = cheaper).  
+    * "The pears are less expensive than the kiwis" → `pears < kiwis`.  
+    * "The kiwis are the fourth-most expensive" → Since 1=cheapest, 4th-most expensive = rank **4** (positions: 1=cheapest/7th, 2=6th, ..., 4=4th-most expensive). So `kiwis == 4`.  
+    * "The mangoes are less expensive than the pears" → `mangoes < pears`.  
+    * "The peaches are the cheapest" → `peaches == 1`.  
+    * "The cantaloupes are more expensive than the watermelons" → `watermelons < cantaloupes`.
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.  
+    * Extract the unique solution (the problem is well-posed and has one valid arrangement).
+
+5.  **Identify the Correct Answer from Choices:**  
+    * The question asks which fruit is the fourth-most expensive → i.e., rank **4** (as established in step 3).  
+    * Create a mapping from choice letters to fruit names: `"A"→"watermelons"`, `"B"→"cantaloupes"`, ..., `"F"→"kiwis"`, `"G"→"oranges"`.  
+    * In the solution, locate which fruit has rank 4.  
+    * Return the corresponding choice letter for that fruit.

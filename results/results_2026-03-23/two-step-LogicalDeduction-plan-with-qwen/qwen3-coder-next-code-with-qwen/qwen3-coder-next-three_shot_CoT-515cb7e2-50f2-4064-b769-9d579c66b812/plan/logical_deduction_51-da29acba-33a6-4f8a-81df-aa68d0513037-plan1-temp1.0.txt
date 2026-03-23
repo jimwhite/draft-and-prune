@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.  
+
+2. **Define Variables and Their Domain:**  
+   * Define variables for the five vehicles: `"minivan"`, `"hatchback"`, `"bus"`, `"convertible"`, and `"motorcycle"` (note: correct spelling of "motorcyle" to "motorcycle").  
+   * Define a numerical domain for age ranking: integers **1 (oldest)** to **5 (newest)**.  
+   * Add all variables and the domain [1, 2, 3, 4, 5] to the `Problem` instance.  
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure unique rankings.  
+   * Add constraints using lambda functions:  
+     - "The hatchback is newer than the convertible" → `hatchback < convertible` (smaller number = newer).  
+     - "The bus is newer than the hatchback" → `bus < hatchback`.  
+     - "The bus is older than the motorcycle" → `motorcycle < bus` (since motorcycle is older, it has a smaller rank).  
+     - "The minivan is the newest" → `minivan == 5`.  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (or first solution) from the returned list of dictionaries.  
+
+5. **Identify the Correct Answer:**  
+   * The question is a direct verification: which choice states a true fact?  
+   * Note that the given problem itself asserts "The minivan is the newest", and one of the choices is exactly that.  
+   * Confirm in the solution whether `minivan == 5`; if true (which it must be, per constraint), then choice **A** is correct.  
+   * Since choice A directly echoes the given premise (and it's consistent with all constraints), select **A**.  
+   * Print or return `"A"` as the final answer.

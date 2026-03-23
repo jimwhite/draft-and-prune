@@ -1,0 +1,37 @@
+1.  **Set Up the Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicles as string variables: `"limousine"`, `"truck"`, `"sedan"`, `"tractor"`, `"minivan"`, `"motorcycle"`, `"hatchback"` (note the typo "motorcyle" in problem statement; correct to `"motorcycle"` for consistency).
+    * Define the domain as integers 1 through 7, where **1 = oldest**, **7 = newest** (standard age ranking from earliest to latest).
+    * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem`.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all vehicles have distinct age ranks by adding an `AllDifferentConstraint` over the seven variables.
+
+4.  **Translate Statements into Constraints (using lambda):**
+    * "The minivan is older than the tractor" → `minivan < tractor`
+    * "The hatchback is older than the sedan" → `hatchback < sedan`
+    * "The truck is the third-newest" → Since newest = 7, third-newest = position 5 (7−3+1=5) → `truck == 5`
+    * "The hatchback is the second-newest" → Position = 6 (7−2+1=6) → `hatchback == 6`
+    * "The tractor is older than the limousine" → `tractor < limousine`
+    * "The motorcycle is newer than the limousine" → `limousine < motorcycle`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Extract the solution(s); uniqueness is implied by problem consistency.
+
+6.  **Interpret "fourth-newest":**
+    * "Fourth-newest" corresponds to position 4 in the newest-to-oldest sequence:  
+        - Newest = 7 → 1st-newest = 7  
+        - 2nd-newest = 6 (matches hatchback)  
+        - 3rd-newest = 5 (matches truck)  
+        - **4th-newest = 4**
+    * So, find which vehicle has rank `4` in the solution.
+
+7.  **Match Solution to Answer Choices:**
+    * Build a dictionary mapping choice letters `['A','B','C','D','E','F','G']` to the respective vehicle names in order:  
+        `{'A':'limousine', 'B':'truck', 'C':'sedan', 'D':'tractor', 'E':'minivan', 'F':'motorcycle', 'G':'hatchback'}`
+    * Iterate through choices: for each choice letter, check if the corresponding vehicle's position in the solution equals `4`.
+    * Return (or print) the first matching choice letter — since only one can satisfy the condition.

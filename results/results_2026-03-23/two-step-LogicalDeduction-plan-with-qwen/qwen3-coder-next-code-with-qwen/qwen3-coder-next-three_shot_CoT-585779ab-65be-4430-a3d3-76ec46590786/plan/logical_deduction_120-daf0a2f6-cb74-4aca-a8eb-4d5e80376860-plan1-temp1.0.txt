@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, reflecting increasing cost (so higher rank = more expensive).  
+   * Add all variables and assign them the domain {1, 2, ..., 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+   * Translate each statement into a constraint:  
+     - "The pears are more expensive than the kiwis" ⇒ `kiwis < pears` (since lower rank = cheaper).  
+     - "The watermelons are less expensive than the peaches" ⇒ `watermelons < peaches`.  
+     - "The mangoes are the third-cheapest" ⇒ `mangoes == 3`.  
+     - "The watermelons are the third-most expensive" ⇒ Since there are 7 fruits, third-most expensive = rank 5 (because most expensive = 7, second-most = 6, third-most = 5) ⇒ `watermelons == 5`.  
+     - "The plums are the second-most expensive" ⇒ `plums == 6`.  
+     - "The loquats are the second-cheapest" ⇒ `loquats == 2`.
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the sole solution (the problem has a unique assignment due to enough fixed ranks and relative constraints).
+
+5. **Determine the Fourth-Most Expensive Fruit:**  
+   * The fourth-most expensive corresponds to rank = 4 (since 7 is most, 6 second-most, 5 third-most, **4 fourth-most**).  
+   * Create a dictionary mapping choice letters ('A' to 'G') to fruit names from the choices.  
+   * Iterate through the solution: find which fruit has rank 4.  
+   * Return the choice letter associated with that fruit.

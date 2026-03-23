@@ -1,0 +1,17 @@
+1. Enumerate the eight compositions and create integer position variables for each (positions 1 to 8).  
+2. Add **domain and uniqueness constraints**: all position variables are distinct integers in [1, 8].  
+3. Add **O-position constraint**: O is either first or fifth: `pos_O == 1 ∨ pos_O == 5`.  
+4. Add **T-F-R adjacency constraint**: T is immediately before F (`pos_T + 1 == pos_F`) or immediately after R (`pos_R + 1 == pos_T`).  
+5. Add **L/H final position constraint**: eighth composition is L or H: `pos_L == 8 ∨ pos_H == 8`.  
+6. Add **P-before-S constraint**: `pos_P < pos_S`.  
+7. Add **at-least-two-between-F-and-R constraint**: `|pos_F - pos_R| ≥ 3`.  
+8. Add **at-least-one-between-O-and-S constraint**: `|pos_O - pos_S| ≥ 2`.  
+9. Add **assumed condition**: O is performed immediately after T: `pos_O == pos_T + 1`.  
+10. From the combined constraints (including step 9), derive possible positions for O: since `pos_O ∈ {1,5}` and `pos_O = pos_T + 1`, then `pos_T ∈ {0,4}` ⇒ only `pos_O = 5` and `pos_T = 4` is valid (as position 0 is invalid). Conclude: `pos_O = 5`, `pos_T = 4`.  
+11. With `pos_O = 5` and `pos_T = 4`, incorporate this into the solver: assert `pos_O == 5 ∧ pos_T == 4`.  
+12. Now query the possible positions for F under all remaining constraints (steps 3–8 plus step 10 assertions).  
+13. For each choice in the answer options, determine which F position ranges are possible:  
+    - Check feasibility for `pos_F == 1` and `2` (first or second),  
+    - then for `3` and `4`, etc., keeping in mind uniqueness and other ordering constraints (e.g., F–R spacing, L/H at 8, etc.).  
+14. Identify which intervals of F positions yield SAT models and which do not; the correct answer is the interval that F *must* fall into (i.e., where only values in that interval are SAT).  
+15. Map feasible F positions to the answer choice with matching position ranges and output that choice index.

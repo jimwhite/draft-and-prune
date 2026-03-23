@@ -1,0 +1,24 @@
+1. Enumerate the three cookie types (oatmeal, peanut butter, sugar) and assign integer codes.  
+2. Enumerate the five days (Monday–Friday) and assign integer codes (1–5).  
+3. Create integer variables `batch_o[i]` for i=1,2,3 denoting the day of each oatmeal batch (b1_o ≤ b2_o ≤ b3_o, all distinct), similarly `batch_p[j]` for peanut butter and `batch_s[k]` for sugar.  
+4. Add **distinctness constraints per type**: b1_o ≠ b2_o ≠ b3_o, and same for peanut butter and sugar.  
+5. Add **global constraints**:  
+   - At least one batch on Monday: min(all 9 batch days) = 1.  
+   - b2_o = b1_p (second oatmeal batch same day as first peanut butter batch).  
+   - b2_s = Thursday → day 4.  
+6. Translate the answer choices into logical statements about daily batch counts:  
+   - A: ∀d ∈ {Mon…Fri}, count(d) ≥ 1  
+   - B: count(Wed) ≥ 2  
+   - C: count(Mon) = 1  
+   - D: count(Tue) = 2  
+   - E: count(Fri) = 1  
+7. Introduce an extra Boolean flag variable `special_condition` asserting: ∃ type X, type Y (X ≠ Y), i ∈ {1}, j ∈ {3} such that b_i_X = b_j_Y. Enforce this with disjunctive constraints (use auxiliary Booleans per pair and day).  
+8. Build a base solver with all above constraints AND `special_condition = True`.  
+9. For each answer choice, create a fresh solver, add base constraints + `special_condition`, and also assert the *negation* of that choice’s statement:  
+   - For A: ∃d with count(d) = 0  
+   - For B: count(Wed) ≤ 1  
+   - For C: count(Mon) ≠ 1 (i.e., ≥2 or 0, but ≥1 always holds, so ≥2)  
+   - For D: count(Tue) ≠ 2 (i.e., ≤1 or ≥3)  
+   - For E: count(Fri) ≠ 1 (i.e., 0 or ≥2)  
+10. Check SAT for each negated-choice solver: if SAT, then the choice *could be false*; collect such indices.  
+11. Output list of indices corresponding to answer choices that could be false (one is expected).

@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the variables: `"tractor"`, `"station_wagon"`, `"minivan"`, `"sedan"`, and `"hatchback"`.
+    * Define the domain as integers 1 to 5, where **1 = oldest**, **2 = second-oldest**, ..., **5 = newest**.
+    * Add all five vehicle variables with the domain [1, 2, 3, 4, 5] to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Convert each statement into a constraint using `addConstraint` with lambda functions:
+        - "The minivan is older than the sedan" → `lambda m, s: m < s`
+        - "The tractor is older than the hatchback" → `lambda t, h: t < h`
+        - "The minivan is the third-newest" → `lambda m: m == 3` (since newest=5 ⇒ third-newest = position 3)
+        - "The station wagon is the second-newest" → `lambda sw: sw == 4` (second-newest = position 4)
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the single solution (the problem has a unique solution due to sufficient constraints).
+
+5.  **Determine Which Choice is True:**
+    * Note that the question asks which vehicle **is** the third-newest, i.e., rank = 3.
+    * Observe that "The minivan is the third-newest" is explicitly given as a constraint, so the solution will assign minivan = 3.
+    * Map the choices to vehicles:  
+        A) tractor → check if minivan == 3 (already known), but directly compare:  
+        B) station_wagon  
+        C) minivan  
+        D) sedan  
+        E) hatchback  
+    * Since the constraint enforces `minivan == 3`, choice **C** is true.
+    * Output "C" as the final answer.

@@ -1,0 +1,15 @@
+1. Identify all entities: Anne, Bob, Charlie, Fiona.
+2. Encode all explicitly stated facts as ternary predicates with boolean objects for unary properties (e.g., is_nice("Anne", True), is_big("Bob", True), etc.).
+3. Translate each universal conditional into a PyKe rule:
+   • If someone is furry and nice → they are cold.
+   • If Bob is blue and Bob is big → Bob is cold (note: this is a specific fact, but can be encoded as a rule for generality; however, since it involves concrete individuals, treat as facts or use conditional rules with equality constraints if needed—but in PyKe’s basic form, encode specific ground facts directly instead of rules for constants).
+   • All blue and cold people are big.
+   • If someone is nice → they are smart.
+   • All smart and big people are nice.
+   • All smart people are blue.
+   • Blue and smart people are furry.
+   • Furry and cold people are smart.
+   • Cold people are big.
+4. For each rule involving variables (not specific individuals), use `foreach` to express the antecedent and `assert` for the consequent.
+   - For rules with specific individuals (e.g., Bob’s properties), assert directly as facts or use conditional grounding if required, but standard practice is to encode ground facts separately.
+5. The query tests whether Charlie is *not* smart: → Use `facts.is_smart("Charlie", False)`.

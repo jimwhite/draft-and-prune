@@ -1,0 +1,25 @@
+1. Enumerate the eight students and assign them integer indices.  
+2. Create Boolean variables `given[i][d]` for each student i and day d ∈ {Monday, Tuesday, Wednesday} indicating whether the student gives a report on that day (note: each reporter gives exactly one report, either morning or afternoon).  
+3. Introduce Boolean variables `morning[i][d]` and `afternoon[i][d]`, with constraints:  
+    - `given[i][d] ↔ (morning[i][d] ∨ afternoon[i][d])`  
+    - `morning[i][d] ∧ afternoon[i][d] ↔ false` (a student cannot give both on the same day)  
+    - Each reporter gives exactly one report: ∑_{d} given[i][d] = 1 for each reporting student, and 0 for non-reporting students.  
+4. Add global constraints:  
+    - Exactly six students report (i.e., exactly six students have `given[i][*] = true`).  
+    - Exactly two reports per day: ∑_{i} (morning[i][d] + afternoon[i][d]) = 2 for each day d.  
+5. Add special-day constraints:  
+    - George can only report on Tuesday: `given[George][Monday] = false`, `given[George][Wednesday] = false`.  
+    - Olivia and Robert cannot give afternoon reports: `afternoon[Olivia][d] = false`, `afternoon[Robert][d] = false` for all d.  
+6. Add conditional constraint: If Nina reports on Monday or Tuesday, then Helen and Irving must report the next day (i.e., if `given[Nina][d] = true` and d ≠ Wednesday, then `morning[Helen][d+1] ∨ afternoon[Helen][d+1]` and similarly for Irving).  
+7. Add the premise: Kyle and Lenore do *not* give reports (`given[Kyle][d] = false`, `given[Lenore][d] = false` for all d).  
+8. The remaining potential reporters are: George, Helen, Irving, Nina, Olivia, Robert — exactly six — so all of them must report (since exactly six reports are given). Thus, `given[i][*] = true` for i ∈ {George, Helen, Irving, Nina, Olivia, Robert}, and each gives exactly one report.  
+9. Translate the answer choices into morning assignments: for each option, extract who gives Monday morning, Tuesday morning, and Wednesday morning.  
+10. For each option in the choices:  
+    - Clone the base constraints (from steps 1–7) into a fresh solver.  
+    - Assert that the specified students give morning reports on the specified days: e.g., for option 'Helen, George, and Nina', assert `morning[Helen][Monday] = true`, `morning[George][Tuesday] = true`, `morning[Nina][Wednesday] = true`.  
+    - Since each reporter must give exactly one report, and morning is fixed, infer that afternoon reports for those students on same day must be false (already enforced by `morning ∧ afternoon = false`).  
+    - For each day d, enforce exactly two reports: one morning (as specified for Monday/Tuesday/Wednesday in the option), and one afternoon — which must be filled by one of the remaining four students (e.g., for Monday, morning = Helen, so afternoon must be one of George, Irving, Nina, Olivia, Robert who is not assigned Monday morning).  
+    - Additionally, ensure that no afternoon constraints are violated (e.g., Olivia and Robert cannot be in any afternoon slot — so for Tuesday and Wednesday afternoons, only George, Helen, Irving, or Nina may be assigned; but George must report Tuesday, and if he's morning on Tuesday per some option, he can't be afternoon — but George *must* report Tuesday, so if option specifies George as *morning*, that's fine; if it had him afternoon, it'd be invalid, but all options specify morning positions).  
+    - Check feasibility: if the model is SAT, the option is possible; otherwise not.  
+11. Collect all options for which the model is SAT — those are valid answers. Since the question asks "could be", at least one may be valid; but we’ll record indices of options that pass.  
+12. Output the list of indices (0-based) of valid choices.

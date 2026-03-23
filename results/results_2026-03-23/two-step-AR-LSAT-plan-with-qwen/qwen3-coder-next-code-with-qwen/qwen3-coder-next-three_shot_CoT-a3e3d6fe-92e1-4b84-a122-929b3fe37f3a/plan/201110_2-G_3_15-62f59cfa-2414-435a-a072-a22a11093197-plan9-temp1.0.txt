@@ -1,0 +1,24 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean decision variables: `first[r][b]` and `second[r][b]`, where `r ∈ {0..3}`, `b ∈ {0..3}`; `first[r][b]` is True if rider r tests bicycle b on day 1, and similarly for `second`.  
+3. Add **day-1 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 1: for each r, `∑_{b} first[r][b] == 1`.  
+    - Each bicycle is tested by exactly one rider on day 1: for each b, `∑_{r} first[r][b] == 1`.  
+4. Add **day-2 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 2: for each r, `∑_{b} second[r][b] == 1`.  
+    - Each bicycle is tested by exactly one rider on day 2: for each b, `∑_{r} second[r][b] == 1`.  
+5. Add **problem-specific constraints**:  
+    - Reynaldo cannot test F on either day: `¬first[0][0]`, `¬second[0][0]`.  
+    - Yuki cannot test J on either day: `¬first[3][3]`, `¬second[3][3]`.  
+    - Theresa must test H on at least one day: `first[2][2] ∨ second[2][2]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all b, `first[3][b] → second[1][b]` (equivalently: `∑_{b} (first[3][b] ∧ second[1][b]) == 1`).  
+6. Translate each answer choice into a logical condition (as an assertion about the assignment), e.g.,  
+    - Choice 0: "Reynaldo tests J on day 1" → `first[0][3]`  
+    - Choice 1: "Reynaldo tests J on day 2" → `second[0][3]`  
+    - Choice 2: "Seamus tests H on day 1" → `first[1][2]`  
+    - Choice 3: "Yuki tests H on day 1" → `first[3][2]`  
+    - Choice 4: "Yuki tests H on day 2" → `second[3][2]`  
+7. Define `answer_index_list = []`. For each choice index i ∈ {0,1,2,3,4}:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the condition for that choice (e.g., `solver.add(first[0][3])` for i=0).  
+    - If the model is UNSAT, then this choice **cannot be true**; append i to `answer_index_list`.  
+8. Print `answer_index_list` (the index/indices of choices that *must* be false).

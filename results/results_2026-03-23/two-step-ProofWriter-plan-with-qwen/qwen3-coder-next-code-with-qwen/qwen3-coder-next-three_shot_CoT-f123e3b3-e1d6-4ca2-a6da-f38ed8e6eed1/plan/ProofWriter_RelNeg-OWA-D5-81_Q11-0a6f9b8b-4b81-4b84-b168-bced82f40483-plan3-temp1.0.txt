@@ -1,0 +1,22 @@
+1. Identify all entities involved: cat, cow, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates:
+   - eats("cat", "squirrel", True), sees("cat", "squirrel", True)
+   - eats("cow", "squirrel", True), sees("cow", "cat", True)
+   - is_round("rabbit", True), sees("rabbit", "cat", True)
+   - eats("squirrel", "rabbit", True), is_cold("squirrel", True)
+   - needs("squirrel", "rabbit", True), sees("squirrel", "cat", True)
+3. Translate each conditional statement into PyKe rules using `foreach` blocks:
+   - If someone sees the cat and they are not green → they see the cow.
+   - If the rabbit is kind and the rabbit sees the squirrel → the squirrel needs the rabbit.
+   - Rough people are cold: if someone is rough → they are cold. (Use symmetry for property transfer)
+   - If someone sees the rabbit → they are not round.
+   - If someone sees the squirrel and they are not green → they need the squirrel.
+   - If someone eats the cow → they see the rabbit.
+   - If someone eats the squirrel → they are rough.
+   - If someone is cold → they eat the cow.
+4. For each rule:
+   - Use `foreach` to match the antecedent conditions (including negated literals like "not green", "not round" via `~facts.is_green(...)`, etc.).
+   - Use `assert` to assert the consequent in the form predicate(subject, object, True) or property(subject, False).
+5. Note: The fact "green" is never stated, so "not green" must be handled via closed-world assumption—since no entity is asserted to be green, all entities can be assumed not green.
+6. Query: Check whether the cat is not round:
+   → Use facts.is_round("cat", False)

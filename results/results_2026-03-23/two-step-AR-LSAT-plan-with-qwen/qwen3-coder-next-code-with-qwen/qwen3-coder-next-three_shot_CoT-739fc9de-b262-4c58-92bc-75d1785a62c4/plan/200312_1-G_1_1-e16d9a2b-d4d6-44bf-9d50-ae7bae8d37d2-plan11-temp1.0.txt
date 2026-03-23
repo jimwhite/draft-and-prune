@@ -1,0 +1,23 @@
+1. Enumerate the 9 scientists with unique indices: botanists (F, G, H) → [0,1,2]; chemists (K, L, M) → [3,4,5]; zoologists (P, Q, R) → [6,7,8].  
+2. Create Boolean selection variables `s[i]` for each scientist i (0–8), indicating whether they are selected.  
+3. Add **panel size constraint**: exactly 5 scientists selected: `sum(s) == 5`.  
+4. Add **at-least-one-per-type constraints**:  
+    - Botanist: `s[0] + s[1] + s[2] >= 1`  
+    - Chemist: `s[3] + s[4] + s[5] >= 1`  
+    - Zoologist: `s[6] + s[7] + s[8] >= 1`  
+5. Add **if-more-than-one-botanist-then-at-most-one-zoologist** constraint: `(s[0]+s[1]+s[2] > 1) → (s[6]+s[7]+s[8] <= 1)`; encode as `(s[0]+s[1]+s[2] > 1) ⇒ (1 - (s[6]+s[7]+s[8]) >= 0)` → use implication via `((s[0]+s[1]+s[2] > 1) and (s[6]+s[7]+s[8] >= 2)) == False`.  
+6. Add **F and K incompatible**: `not (s[0] and s[3])` → `s[0] + s[3] <= 1`.  
+7. Add **K and M incompatible**: `s[3] + s[5] <= 1`.  
+8. Add **if M selected then P and R selected**: `s[5] → (s[6] and s[8])` → encode as `s[5] <= s[6]`, `s[5] <= s[8]`.  
+9. Define candidate selections as lists of scientist indices:  
+   - Choice 0: ['F','G','K','P','Q'] → [0,1,3,6,7]  
+   - Choice 1: ['G','H','K','L','M'] → [1,2,3,4,5]  
+   - Choice 2: ['G','H','K','L','R'] → [1,2,3,4,8]  
+   - Choice 3: ['H','K','M','P','R'] → [2,3,5,6,8]  
+   - Choice 4: ['H','L','M','P','Q'] → [2,4,5,6,7]  
+10. For each choice in order (index 0 to 4):  
+    - Clone base constraints into a fresh solver.  
+    - Assert exactly the scientists in the choice are selected: for each scientist i, `s[i] == True` if i in choice_indices else `s[i] == False`.  
+    - Evaluate satisfiability.  
+    - If SAT, record this choice index as acceptable and break early (only one correct answer expected).  
+11. Return the first acceptable choice index as the answer.

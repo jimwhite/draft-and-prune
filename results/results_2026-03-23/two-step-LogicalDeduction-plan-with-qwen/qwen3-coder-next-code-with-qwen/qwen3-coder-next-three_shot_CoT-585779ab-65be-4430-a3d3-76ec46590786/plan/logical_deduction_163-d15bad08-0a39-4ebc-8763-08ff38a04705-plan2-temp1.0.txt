@@ -1,0 +1,32 @@
+1.  **Initialize the Constraint Satisfaction Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven bird variables: `"raven"`, `"cardinal"`, `"falcon"`, `"owl"`, `"bluejay"`, `"quail"`, and `"robin"` (using `"bluejay"` without space to avoid parsing issues).  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Add Global Constraint for Uniqueness:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.
+
+4.  **Translate Each Statement into Formal Constraints:**  
+    * "The owl is the second from the right" → `owl == 6` (since position 7 is rightmost, second from right is 6).  
+    * "The cardinal is the fourth from the left" → `cardinal == 4`.  
+    * "The falcon is to the left of the blue jay" → `falcon < bluejay`.  
+    * "The quail is to the left of the falcon" → `quail < falcon`.  
+    * "The raven is the second from the left" → `raven == 2`.  
+    * "The robin is to the left of the quail" → `robin < quail`.
+
+5.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Since the problem is well-constrained, there will be exactly one solution; retrieve it.
+
+6.  **Identify the Leftmost Bird (Position 1):**  
+    * Examine the solution dictionary to find which bird has position value 1.  
+    * Create a mapping from choice letter to bird name:  
+        `{'A': 'raven', 'B': 'cardinal', 'C': 'falcon', 'D': 'owl', 'E': 'bluejay', 'F': 'quail', 'G': 'robin'}`  
+    * Determine which choice letter corresponds to the bird at position 1.
+
+7.  **Output the Final Answer:**  
+    * Return or record the letter (e.g., `'G'`) corresponding to the bird that is leftmost (position 1).

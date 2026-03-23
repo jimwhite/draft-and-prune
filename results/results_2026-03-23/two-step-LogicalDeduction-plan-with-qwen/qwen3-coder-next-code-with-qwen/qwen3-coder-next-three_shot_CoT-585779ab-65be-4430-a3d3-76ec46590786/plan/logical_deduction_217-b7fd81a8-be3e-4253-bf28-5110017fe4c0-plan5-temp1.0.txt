@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin modeling the puzzle.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the seven variables representing the fruits: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all variables with their domain (1–7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint using lambda functions:
+        * "The pears are more expensive than the kiwis" → `kiwis < pears`
+        * "The watermelons are less expensive than the peaches" → `watermelons < peaches`
+        * "The mangoes are the third-cheapest" → `mangoes == 3`
+        * "The watermelons are the third-most expensive" → In a 7-item ranking (1=cheapest, 7=most expensive), third-most expensive means position `7 - 3 + 1 = 5` → `watermelons == 5`
+        * "The plums are the second-most expensive" → `plums == 6` (since most expensive = 7, second-most = 6)
+        * "The loquats are the second-cheapest" → `loquats == 2`
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Extract the single solution (the problem has a unique solution given the fixed positions and relative constraints).
+
+5.  **Determine Which Fruit Is Most Expensive (Rank 7):**
+    * The question asks which fruit has rank **7** (most expensive).
+    * Create a mapping from choice letters to fruit names: `"A"→"loquats"`, `"B"→"peaches"`, `"C"→"watermelons"`, `"D"→"plums"`, `"E"→"kiwis"`, `"F"→"mangoes"`, `"G"→"pears"`.
+    * Iterate through the solution dictionary to find the fruit with value `7`.
+    * Identify and return the corresponding choice letter (e.g., `"B"` if `"peaches"` has rank `7`).

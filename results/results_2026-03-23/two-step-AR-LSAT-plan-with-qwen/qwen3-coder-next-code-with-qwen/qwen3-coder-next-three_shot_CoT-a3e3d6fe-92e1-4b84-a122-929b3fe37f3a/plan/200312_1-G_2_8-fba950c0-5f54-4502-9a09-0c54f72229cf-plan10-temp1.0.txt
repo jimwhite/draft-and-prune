@@ -1,0 +1,13 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign integer indices 0–5.  
+2. Create integer variables `pos[type]` for the bay position (1 to 6) of each cargo type.  
+3. Add **domain constraints**: all `pos[type]` are distinct integers in [1, 6].  
+4. Add **ordering constraints**:  
+    - grain > livestock > textiles: `pos[grain] > pos[livestock]`, `pos[livestock] > pos[ textiles ]`.  
+    - produce > fuel: `pos[produce] > pos[fuel]`.  
+5. Add **adjacency constraint**: textiles is next to produce: `|pos[produce] - pos[textiles]| == 1`.  
+6. Add the conditional constraint: exactly one bay between machinery and grain ⇒ `|pos[grain] - pos[machinery]| == 2`.  
+7. For each cargo type, collect all models satisfying the above constraints (using incremental solving or model counting).  
+8. For each cargo type, determine how many models assign it a unique position (i.e., same `pos[type]` across all satisfying assignments).  
+9. Count how many cargo types have *exactly one* possible position across all models.  
+10. Map that count to the answer string from the given choices (`'two'`, `'three'`, etc.).  
+11. Return that answer string as the final output.

@@ -1,0 +1,39 @@
+1.  Identify all entities and types: Stella, zumpus, wumpus, numpus, impus, rompus, vumpus, jompus, dumpus, yumpus, tumpus.  
+2.  Identify all properties: metallic, floral, happy, kind, large, opaque, cold, spicy.  
+3.  Represent "Stella is a numpus" as a base fact: `is_a("Stella", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Every zumpus is metallic.  
+    - Each zumpus is a wumpus.  
+    - Wumpuses are not floral.  
+    - Every wumpus is a numpus.  
+    - Numpuses are happy.  
+    - Each numpus is an impus.  
+    - Impuses are kind.  
+    - Every impus is a rompus.  
+    - Every rompus is large.  
+    - Vumpuses are opaque. *(Note: This only constrains vumpus-type entities; it does not directly affect Stella unless Stella is provably a vumpus.)*  
+    - Each rompus is a jompus.  
+    - Each jompus is cold.  
+    - Jompuses are dumpuses.  
+    - Each dumpus is not opaque.  
+    - Dumpuses are yumpuses.  
+    - Yumpuses are spicy.  
+    - Each yumpus is a tumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence, ensuring precise handling of negated properties (e.g., "Wumpuses are not floral" → `forall(x: is_a(x, "wumpus") => not is_floral(x))`).  
+6.  Derive the full type hierarchy and property assignments for Stella:  
+    - From `is_a(Stella, "numpus")` and rules, infer:  
+        - `is_a(Stella, "impus")`, `is_a(Stella, "rompus")`, `is_a(Stella, "jompus")`, `is_a(Stella, "dumpus")`, `is_a(Stella, "yumpus")`, `is_a(Stella, "tumpus")`.  
+        - Also, via wumpus chain: `is_a(Stella, "wumpus")` (since numpus → wumpus via rule? Wait: rule says "Every wumpus is a numpus", not conversely; but Stella is a numpus, and wumpuses ⊆ numpuses — this does *not* imply Stella is a wumpus unless injectivity or additional info. Re-express:  
+            - From "Each zumpus is a wumpus" and "Every wumpus is a numpus", but no reverse inclusion for wumpus → numpus uniqueness.  
+            - However, Stella is a numpus, and rules do *not* state all numpuses are wumpuses. So cannot assume Stella is a wumpus *unless* implied elsewhere — but numpus → impus → rompus → jompus → dumpus → yumpus → tumpus, and no path to wumpus for Stella.  
+    - Crucially: dumpuses are *not* opaque (`dumpus → not opaque`), and Stella is provably a dumpus (via numpus → wumpus? No — need to check chain:  
+        - Stella is a numpus.  
+        - Numpuses → impuses (rule: Each numpus is an impus)  
+        - Impuses → rompuses (rule: Every impus is a rompus)  
+        - Rompuses → jompuses (rule: Each rompus is a jompus)  
+        - Jompuses → dumpuses (rule: Jompuses are dumpuses)  
+        ⇒ Stella is a dumpus.  
+    - Dumpuses are *not* opaque (rule: Each dumpus is not opaque).  
+    - Therefore, `is_opaque(Stella, False)` holds.  
+7.  The query tests if "Stella is opaque" is provable: since we have derived `not opaque(Stella)`, the statement "Stella is opaque" is false.  
+    → Use `facts.is_opaque("Stella", True)` for the query.

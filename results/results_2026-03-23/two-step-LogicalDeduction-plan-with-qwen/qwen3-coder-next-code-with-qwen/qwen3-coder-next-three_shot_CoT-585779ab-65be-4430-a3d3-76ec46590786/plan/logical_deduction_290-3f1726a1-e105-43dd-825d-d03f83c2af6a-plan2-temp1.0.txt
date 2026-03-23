@@ -1,0 +1,22 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to hold the variables and constraints.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the three vehicles: `"tractor"`, `"convertible"`, and `"minivan"`.
+    * Define the domain as integers from 1 to 3, where **1 = oldest**, **2 = second-newest (middle)**, and **3 = newest**.
+    * Add these variables and domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique rank.
+    * Translate "The tractor is the second-newest" into a constraint: `tractor == 2`.
+    * Translate "The minivan is newer than the convertible" into a constraint: `minivan > convertible` (since higher numbers mean newer).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the single solution (the problem has a unique arrangement).
+
+5.  **Identify the Correct Choice:**
+    * Determine which vehicle has rank 3 (newest).
+    * Map choice letters to vehicles: 'A' → "tractor", 'B' → "convertible", 'C' → "minivan".
+    * Check which vehicle in the solution has position 3 and return its corresponding choice letter.

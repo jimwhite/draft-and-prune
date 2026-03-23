@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven golfers as variables: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, and `"Dan"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = first (highest rank)** and **7 = last (lowest rank)**.  
+   * Add all seven golfers as variables with domain {1, 2, ..., 7} to the `Problem`.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique finishing positions.  
+   * Add constraint: `"Rob finished first"` → `Rob == 1`.  
+   * Add constraint: `"Eve finished last"` → `Eve == 7`.  
+   * Add constraint: `"Dan finished above Ada"` → `Dan < Ada` (since lower number = better rank).  
+   * Add constraint: `"Mel finished above Mya"` → `Mel < Mya`.  
+   * Add constraint: `"Joe finished second-to-last"` → `Joe == 6` (since last = 7, second-to-last = 6).  
+   * Add constraint: `"Mya finished third"` → `Mya == 3`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions.  
+   * Since the constraints uniquely determine the order, extract the first (and only) solution.
+
+5. **Determine Which Choice Is True:**  
+   * The question asks: "Which golfer finished third?" → Identify the variable whose value (position) equals 3 in the solution.  
+   * Create a mapping from choice letters to golfer names:  
+        `{'A': 'Joe', 'B': 'Mel', 'C': 'Mya', 'D': 'Eve', 'E': 'Rob', 'F': 'Ada', 'G': 'Dan'}`  
+   * Compare the golfer at position 3 in the solution with each choice’s assigned golfer.  
+   * Return the letter corresponding to the golfer who has position 3.

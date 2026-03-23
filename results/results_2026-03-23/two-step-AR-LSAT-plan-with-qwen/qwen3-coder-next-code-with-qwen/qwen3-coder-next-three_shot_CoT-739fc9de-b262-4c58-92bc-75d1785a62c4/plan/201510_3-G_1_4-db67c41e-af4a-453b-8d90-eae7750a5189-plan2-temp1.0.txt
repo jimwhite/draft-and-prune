@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and create integer variables for their recruitment positions (1 to 7).  
+2. Add **domain constraints**: each position is an integer in [1,7], all positions distinct.  
+3. Add **fixed constraint**: Peters is recruited fourth → `pos_Peters == 4`.  
+4. Add **Villas-White adjacency constraint**: Villas immediately before White → `pos_White == pos_Villas + 1`.  
+5. Add **Quinn-Rovero precedence constraint**: Quinn earlier than Rovero → `pos_Quinn < pos_Rovero`.  
+6. Add **conditional constraint for the question**: assume Quinn immediately before Rovero → `pos_Rovero == pos_Quinn + 1`.  
+7. Add **Stanton-Tao non-adjacency constraint**: Stanton not immediately before or after Tao → `|pos_Stanton - pos_Tao| != 1`.  
+8. Translate the answer choices (positions: first=1, second=2, third=3, fifth=5, seventh=7) into integer target values.  
+9. For each candidate position in the answer choices:  
+    - Clone the base constraints (including the conditional “Quinn immediately before Rovero” assumption) into a fresh solver.  
+    - Assert that Stanton is recruited at the candidate position (e.g., `pos_Stanton == 1` for “first”).  
+    - If the model is UNSAT, then Stanton **cannot** be recruited at that position; record the candidate position index (e.g., 0 for first, 1 for second, etc.).  
+10. Return the list of positions (from choices) where Stanton CANNOT have been recruited, in order corresponding to the answer list.

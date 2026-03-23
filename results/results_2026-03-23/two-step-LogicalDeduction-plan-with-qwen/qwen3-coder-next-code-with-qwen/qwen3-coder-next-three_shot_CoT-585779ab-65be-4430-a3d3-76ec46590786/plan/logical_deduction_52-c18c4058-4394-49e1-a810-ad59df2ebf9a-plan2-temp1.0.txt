@@ -1,0 +1,25 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * List the five birds as string variables: `"cardinal"`, `"hawk"`, `"hummingbird"`, `"raven"`, and `"owl"`.  
+   * Define the domain as integers 1 to 5 (1 = leftmost, 5 = rightmost).  
+   * Add all variables to the `Problem` with this domain.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a lambda constraint:  
+     - "The raven is to the left of the hummingbird" → `lambda r, h: r < h` (raven position < hummingbird position)  
+     - "The hawk is to the left of the owl" → `lambda hk, ow: hk < ow`  
+     - "The cardinal is to the left of the hawk" → `lambda ca, hk: ca < hk`  
+     - "The raven is the second from the right" → `lambda r: r == 4` (since position 5 is rightmost, second from right is 4).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (since constraints yield exactly one arrangement).
+
+5. **Determine the Leftmost Bird and Match to Choices:**  
+   * Identify the bird with position value 1 (leftmost).  
+   * Map choice letters to birds: A→cardinal, B→hawk, C→hummingbird, D→raven, E→owl.  
+   * Find which choice corresponds to the bird at position 1 and return that letter.

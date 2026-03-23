@@ -1,0 +1,21 @@
+1. Identify all entities: Dave, Erin, Fiona, Gary.
+2. Encode explicit facts using ternary predicates:
+   - is_big("Dave", True)
+   - is_furry("Dave", True)
+   - is_blue("Erin", True)
+   - is_cold("Erin", True)
+   - is_round("Erin", True)
+   - is_quiet("Fiona", True)
+   - is_rough("Gary", True)
+3. Translate each conditional into PyKe rules:
+   • If something is rough and cold → it is furry.
+   • If something is quiet and big → it is not round (i.e., is_round(subject, False)).
+   • If Dave is blue → Dave is furry.
+   • All quiet and blue things are big (i.e., if is_quiet(X, True) and is_blue(X, True) then is_big(X, True)).
+   • If Fiona is furry → Fiona is blue.
+   • All quiet things are cold (i.e., if is_quiet(X, True) then is_cold(X, True)).
+   • All big things are cold (i.e., if is_big(X, True) then is_cold(X, True)).
+   • All blue and round things are not quiet (i.e., if is_blue(X, True) and is_round(X, True) then is_quiet(X, False)).
+   • All cold things are rough (i.e., if is_cold(X, True) then is_rough(X, True)).
+4. For each rule, use `foreach` blocks to match premises and `assert` clauses for conclusions.
+5. The query is: does Erin have the property of being furry? Use facts.is_furry("Erin", True) to test.

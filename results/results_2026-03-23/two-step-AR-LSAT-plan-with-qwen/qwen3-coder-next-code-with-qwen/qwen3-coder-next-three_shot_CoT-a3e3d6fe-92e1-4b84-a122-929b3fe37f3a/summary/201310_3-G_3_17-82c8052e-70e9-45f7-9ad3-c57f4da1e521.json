@@ -1,0 +1,646 @@
+{
+  "problem": {
+    "context": "Exactly five movies are showing at the repertory theater this evening: a horror film, a mystery, a romance, a sci-fi film, and a western. Each movie is shown exactly once, on one of the theater's three screens: screens 1, 2, and 3. Screens 1 and 2 show two movies each, one beginning at 7 P.M. and the other at 9 P.M.; screen 3 shows exactly one movie, at 8 P.M. The following conditions apply to this evening's schedule: The western begins at some time before the horror film does. The sci-fi film is not shown on screen 3. The romance is not shown on screen 2. The horror film and the mystery are shown on different screens.",
+    "question": "Which one of the following CANNOT be an accurate list of the movies scheduled to be shown on screen 1 this evening, listing the 7 P.M. movie first?",
+    "answers": [
+      "the sci-fi film, the horror film",
+      "the sci-fi film, the mystery",
+      "the western, the horror film",
+      "the western, the mystery",
+      "the western, the sci-fi film"
+    ],
+    "label": 4,
+    "id_string": "201310_3-G_3_17"
+  },
+  "timing": 884.2160289287567,
+  "all_solver_outputs": [
+    "[4]",
+    "[4]",
+    "[4]",
+    "[0, 1, 2, 3, 4]",
+    "4",
+    "[0, 4]",
+    "[4]",
+    "[0, 4]",
+    "[4]",
+    "[4]",
+    "[4]",
+    "[4]",
+    "[4]",
+    "[4]",
+    "[4]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 480,
+        "total_tokens": 2192
+      },
+      "plan_generation_api_time_only": 15.04293966293335,
+      "code_generation_usage": {
+        "prompt_tokens": 3562,
+        "completion_tokens": 1022,
+        "total_tokens": 4584
+      },
+      "code_generation_api_time_only": 29.557865619659424,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5274,
+        "completion_tokens": 1502,
+        "total_tokens": 6776
+      },
+      "path_api_time_only": 44.60080528259277,
+      "solver_time_only": 0.08691287040710449
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 656,
+        "total_tokens": 2368
+      },
+      "plan_generation_api_time_only": 20.132210969924927,
+      "code_generation_usage": {
+        "prompt_tokens": 3738,
+        "completion_tokens": 977,
+        "total_tokens": 4715
+      },
+      "code_generation_api_time_only": 26.50985050201416,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5450,
+        "completion_tokens": 1633,
+        "total_tokens": 7083
+      },
+      "path_api_time_only": 46.64206147193909,
+      "solver_time_only": 0.0902395248413086
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 700,
+        "total_tokens": 2412
+      },
+      "plan_generation_api_time_only": 20.135233402252197,
+      "code_generation_usage": {
+        "prompt_tokens": 3782,
+        "completion_tokens": 1460,
+        "total_tokens": 5242
+      },
+      "code_generation_api_time_only": 42.11462163925171,
+      "repair_usage_total": {
+        "prompt_tokens": 1724,
+        "completion_tokens": 1376,
+        "total_tokens": 3100
+      },
+      "repair_api_time_only_total": 38.63357186317444,
+      "path_usage_total": {
+        "prompt_tokens": 7218,
+        "completion_tokens": 3536,
+        "total_tokens": 10754
+      },
+      "path_api_time_only": 100.88342690467834,
+      "solver_time_only": 0.16050100326538086
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 507,
+        "total_tokens": 2219
+      },
+      "plan_generation_api_time_only": 14.587698698043823,
+      "code_generation_usage": {
+        "prompt_tokens": 3589,
+        "completion_tokens": 723,
+        "total_tokens": 4312
+      },
+      "code_generation_api_time_only": 19.71558451652527,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5301,
+        "completion_tokens": 1230,
+        "total_tokens": 6531
+      },
+      "path_api_time_only": 34.30328321456909,
+      "solver_time_only": 0.07074403762817383
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 710,
+        "total_tokens": 2422
+      },
+      "plan_generation_api_time_only": 22.009246826171875,
+      "code_generation_usage": {
+        "prompt_tokens": 3792,
+        "completion_tokens": 1230,
+        "total_tokens": 5022
+      },
+      "code_generation_api_time_only": 34.287193775177,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5504,
+        "completion_tokens": 1940,
+        "total_tokens": 7444
+      },
+      "path_api_time_only": 56.29644060134888,
+      "solver_time_only": 0.09327268600463867
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 705,
+        "total_tokens": 2417
+      },
+      "plan_generation_api_time_only": 22.148350715637207,
+      "code_generation_usage": {
+        "prompt_tokens": 3787,
+        "completion_tokens": 898,
+        "total_tokens": 4685
+      },
+      "code_generation_api_time_only": 28.06712055206299,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5499,
+        "completion_tokens": 1603,
+        "total_tokens": 7102
+      },
+      "path_api_time_only": 50.215471267700195,
+      "solver_time_only": 0.08309578895568848
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 1033,
+        "total_tokens": 2745
+      },
+      "plan_generation_api_time_only": 28.790659189224243,
+      "code_generation_usage": {
+        "prompt_tokens": 4115,
+        "completion_tokens": 669,
+        "total_tokens": 4784
+      },
+      "code_generation_api_time_only": 19.747007846832275,
+      "repair_usage_total": {
+        "prompt_tokens": 1755,
+        "completion_tokens": 1826,
+        "total_tokens": 3581
+      },
+      "repair_api_time_only_total": 48.97107172012329,
+      "path_usage_total": {
+        "prompt_tokens": 7582,
+        "completion_tokens": 3528,
+        "total_tokens": 11110
+      },
+      "path_api_time_only": 97.50873875617981,
+      "solver_time_only": 0.23104405403137207
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 744,
+        "total_tokens": 2456
+      },
+      "plan_generation_api_time_only": 21.13526225090027,
+      "code_generation_usage": {
+        "prompt_tokens": 3826,
+        "completion_tokens": 819,
+        "total_tokens": 4645
+      },
+      "code_generation_api_time_only": 21.774436950683594,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5538,
+        "completion_tokens": 1563,
+        "total_tokens": 7101
+      },
+      "path_api_time_only": 42.90969920158386,
+      "solver_time_only": 0.08204197883605957
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 960,
+        "total_tokens": 2672
+      },
+      "plan_generation_api_time_only": 30.503028869628906,
+      "code_generation_usage": {
+        "prompt_tokens": 4042,
+        "completion_tokens": 737,
+        "total_tokens": 4779
+      },
+      "code_generation_api_time_only": 22.625476121902466,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5754,
+        "completion_tokens": 1697,
+        "total_tokens": 7451
+      },
+      "path_api_time_only": 53.12850499153137,
+      "solver_time_only": 0.09055709838867188
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 792,
+        "total_tokens": 2504
+      },
+      "plan_generation_api_time_only": 24.023432970046997,
+      "code_generation_usage": {
+        "prompt_tokens": 3874,
+        "completion_tokens": 824,
+        "total_tokens": 4698
+      },
+      "code_generation_api_time_only": 24.245107173919678,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5586,
+        "completion_tokens": 1616,
+        "total_tokens": 7202
+      },
+      "path_api_time_only": 48.268540143966675,
+      "solver_time_only": 0.09926319122314453
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 849,
+        "total_tokens": 2561
+      },
+      "plan_generation_api_time_only": 25.95500159263611,
+      "code_generation_usage": {
+        "prompt_tokens": 3931,
+        "completion_tokens": 987,
+        "total_tokens": 4918
+      },
+      "code_generation_api_time_only": 26.163810968399048,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5643,
+        "completion_tokens": 1836,
+        "total_tokens": 7479
+      },
+      "path_api_time_only": 52.118812561035156,
+      "solver_time_only": 0.08582854270935059
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 1097,
+        "total_tokens": 2809
+      },
+      "plan_generation_api_time_only": 31.812856912612915,
+      "code_generation_usage": {
+        "prompt_tokens": 4179,
+        "completion_tokens": 1106,
+        "total_tokens": 5285
+      },
+      "code_generation_api_time_only": 31.934147834777832,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5891,
+        "completion_tokens": 2203,
+        "total_tokens": 8094
+      },
+      "path_api_time_only": 63.74700474739075,
+      "solver_time_only": 0.08837008476257324
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 703,
+        "total_tokens": 2415
+      },
+      "plan_generation_api_time_only": 20.42373251914978,
+      "code_generation_usage": {
+        "prompt_tokens": 3785,
+        "completion_tokens": 617,
+        "total_tokens": 4402
+      },
+      "code_generation_api_time_only": 19.388986110687256,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5497,
+        "completion_tokens": 1320,
+        "total_tokens": 6817
+      },
+      "path_api_time_only": 39.812718629837036,
+      "solver_time_only": 0.07566237449645996
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 880,
+        "total_tokens": 2592
+      },
+      "plan_generation_api_time_only": 23.902647733688354,
+      "code_generation_usage": {
+        "prompt_tokens": 3962,
+        "completion_tokens": 890,
+        "total_tokens": 4852
+      },
+      "code_generation_api_time_only": 26.65315318107605,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5674,
+        "completion_tokens": 1770,
+        "total_tokens": 7444
+      },
+      "path_api_time_only": 50.555800914764404,
+      "solver_time_only": 0.08967709541320801
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1712,
+        "completion_tokens": 356,
+        "total_tokens": 2068
+      },
+      "plan_generation_api_time_only": 11.116663932800293,
+      "code_generation_usage": {
+        "prompt_tokens": 3438,
+        "completion_tokens": 989,
+        "total_tokens": 4427
+      },
+      "code_generation_api_time_only": 28.49015760421753,
+      "repair_usage_total": {
+        "prompt_tokens": 1224,
+        "completion_tokens": 905,
+        "total_tokens": 2129
+      },
+      "repair_api_time_only_total": 24.449398040771484,
+      "path_usage_total": {
+        "prompt_tokens": 6374,
+        "completion_tokens": 2250,
+        "total_tokens": 8624
+      },
+      "path_api_time_only": 64.0562195777893,
+      "solver_time_only": 0.16420555114746094
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 87785,
+    "completion_tokens": 29227,
+    "total_tokens": 117012
+  },
+  "api_time_only_total": 845.0475282669067,
+  "solver_time_only_total": 1.5914158821105957,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Movie indices: horror=0, mystery=1, romance=2, sci-fi=3, western=4\nMOVIES = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\n(horror, mystery, romance, scifi, western) = range(5)\n\n# Screen variables for each movie\nscreen = [Int(f\"screen_{m}\") for m in range(5)]\n\n# Time slot variables: time[m] = absolute time (7, 8, or 9)\ntime = [Int(f\"time_{m}\") for m in range(5)]\n\n# Base solver\nsolver = Solver()\n\n# Screen assignment constraints\n# Each movie assigned to exactly one screen (1, 2, or 3)\nfor m in range(5):\n    solver.add(Or(screen[m] == 1, screen[m] == 2, screen[m] == 3))\n\n# Screen capacity constraints:\n# - Screen 1: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 1, 1, 0) for m in range(5)]) == 2)\n# - Screen 2: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 2, 1, 0) for m in range(5)]) == 2)\n# - Screen 3: exactly 1 movie\nsolver.add(Sum([If(screen[m] == 3, 1, 0) for m in range(5)]) == 2)\n\n# Time slot constraints:\n# Screen 1: one movie at 7PM, one at 9PM\n# Screen 2: one movie at 7PM, one at 9PM\n# Screen 3: one movie at 8PM\n\n# For screen 1 movies, assign times 7 and 9\ns1_movies = [m for m in range(5) if Or(*[And(screen[m] == 1, screen[k] != 1) for k in range(m)])]\n# Instead, use explicit time assignment logic:\n# We'll define which movies are on screen 1 and assign times accordingly.\n\n# Alternative approach: Define time slots explicitly\n# Create boolean variables for each movie at each time slot\nt7 = [Bool(f\"t7_{m}\") for m in range(5)]  # movie m at 7PM\nt8 = [Bool(f\"t8_{m}\") for m in range(5)]  # movie m at 8PM\nt9 = [Bool(f\"t9_{m}\") for m in range(5)]  # movie m at 9PM\n\n# Each movie assigned to exactly one time slot\nfor m in range(5):\n    solver.add(Or(t7[m], t8[m], t9[m]))\n    solver.add(Not(And(t7[m], t8[m])))\n    solver.add(Not(And(t7[m], t9[m])))\n    solver.add(Not(And(t8[m], t9[m])))\n\n# Time slot capacity constraints:\n# - 7PM: exactly two movies (screen1@7 and screen2@7)\nsolver.add(Sum([If(t7[m], 1, 0) for m in range(5)]) == 2)\n# - 8PM: exactly one movie (screen3@8)\nsolver.add(Sum([If(t8[m], 1, 0) for m in range(5)]) == 1)\n# - 9PM: exactly two movies (screen1@9 and screen2@9)\nsolver.add(Sum([If(t9[m], 1, 0) for m in range(5)]) == 2)\n\n# Link screen and time:\n# Screen1: movies at t7 or t9\n# Screen2: movies at t7 or t9\n# Screen3: movie at t8\n\nfor m in range(5):\n    # If movie is on screen3, it must be at 8PM\n    solver.add(Implies(screen[m] == 3, t8[m]))\n    # If movie is at 8PM, it must be on screen3\n    solver.add(Implies(t8[m], screen[m] == 3))\n    # If movie is on screen1 or screen2, it must be at 7PM or 9PM\n    solver.add(Implies(Or(screen[m] == 1, screen[m] == 2), Or(t7[m], t9[m])))\n\n# Screen-type constraints:\n# Sci-fi not shown on screen 3\nsolver.add(screen[scifi] != 3)\n# Romance not shown on screen 2\nsolver.add(screen[romance] != 2)\n\n# Relative timing constraint: western before horror\n# time(western) < time(horror)\nsolver.add(Or(\n    And(t7[western], Or(t8[horror], t9[horror])),\n    And(t8[western], t9[horror])\n))\n\n# Horror and mystery on different screens\nsolver.add(screen[horror] != screen[mystery])\n\n# Now check each answer choice for screen 1 (7PM, 9PM)\nanswer_choices = [\n    (\"sci-fi\", \"horror\"),   # index 0\n    (\"sci-fi\", \"mystery\"),  # index 1\n    (\"western\", \"horror\"),  # index 2\n    (\"western\", \"mystery\"), # index 3\n    (\"western\", \"sci-fi\")   # index 4\n]\n\n# Map choice strings to movie indices\nchoice_map = {\n    \"horror\": horror,\n    \"mystery\": mystery,\n    \"romance\": romance,\n    \"sci-fi\": scifi,\n    \"western\": western\n}\n\nforbidden_list_index = []\n\nfor idx, (first, second) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    \n    # Add screen 1 constraint: first movie at 7PM, second movie at 9PM\n    f_idx = choice_map[first]\n    s_idx = choice_map[second]\n    \n    # First movie must be on screen 1 and at 7PM\n    s_chk.add(screen[f_idx] == 1)\n    s_chk.add(t7[f_idx])\n    \n    # Second movie must be on screen 1 and at 9PM\n    s_chk.add(screen[s_idx] == 1)\n    s_chk.add(t9[s_idx])\n    \n    # Ensure no other movie is on screen 1\n    for m in range(5):\n        if m != f_idx and m != s_idx:\n            s_chk.add(screen[m] != 1)\n    \n    # Check if this configuration is possible\n    if s_chk.check() == unsat:\n        forbidden_list_index.append(idx)\n\nprint(forbidden_list_index)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Movie indices: horror=0, mystery=1, romance=2, sci-fi=3, western=4\nMOVIES = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\n(horror, mystery, romance, scifi, western) = range(5)\n\n# Screen variables for each movie\nscreen = [Int(f\"screen_{m}\") for m in range(5)]\n\n# Time slot variables: time[m] = absolute time (7, 8, or 9)\ntime = [Int(f\"time_{m}\") for m in range(5)]\n\n# Base solver\nsolver = Solver()\n\n# Screen assignment constraints\n# Each movie assigned to exactly one screen (1, 2, or 3)\nfor m in range(5):\n    solver.add(Or(screen[m] == 1, screen[m] == 2, screen[m] == 3))\n\n# Screen capacity constraints:\n# - Screen 1: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 1, 1, 0) for m in range(5)]) == 2)\n# - Screen 2: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 2, 1, 0) for m in range(5)]) == 2)\n# - Screen 3: exactly 1 movie\nsolver.add(Sum([If(screen[m] == 3, 1, 0) for m in range(5)]) == 2)\n\n# Time slot constraints:\n# Screen 1: one movie at 7PM, one at 9PM\n# Screen 2: one movie at 7PM, one at 9PM\n# Screen 3: one movie at 8PM\n\n# For screen 1 movies, assign times 7 and 9\ns1_movies = [m for m in range(5) if Or(*[And(screen[m] == 1, screen[k] != 1) for k in range(m)])]\n# Instead, use explicit time assignment logic:\n# We'll define which movies are on screen 1 and assign times accordingly.\n\n# Alternative approach: Define time slots explicitly\n# Create boolean variables for each movie at each time slot\nt7 = [Bool(f\"t7_{m}\") for m in range(5)]  # movie m at 7PM\nt8 = [Bool(f\"t8_{m}\") for m in range(5)]  # movie m at 8PM\nt9 = [Bool(f\"t9_{m}\") for m in range(5)]  # movie m at 9PM\n\n# Each movie assigned to exactly one time slot\nfor m in range(5):\n    solver.add(Or(t7[m], t8[m], t9[m]))\n    solver.add(Not(And(t7[m], t8[m])))\n    solver.add(Not(And(t7[m], t9[m])))\n    solver.add(Not(And(t8[m], t9[m])))\n\n# Time slot capacity constraints:\n# - 7PM: exactly two movies (screen1@7 and screen2@7)\nsolver.add(Sum([If(t7[m], 1, 0) for m in range(5)]) == 2)\n# - 8PM: exactly one movie (screen3@8)\nsolver.add(Sum([If(t8[m], 1, 0) for m in range(5)]) == 1)\n# - 9PM: exactly two movies (screen1@9 and screen2@9)\nsolver.add(Sum([If(t9[m], 1, 0) for m in range(5)]) == 2)\n\n# Link screen and time:\n# Screen1: movies at t7 or t9\n# Screen2: movies at t7 or t9\n# Screen3: movie at t8\n\nfor m in range(5):\n    # If movie is on screen3, it must be at 8PM\n    solver.add(Implies(screen[m] == 3, t8[m]))\n    # If movie is at 8PM, it must be on screen3\n    solver.add(Implies(t8[m], screen[m] == 3))\n    # If movie is on screen1 or screen2, it must be at 7PM or 9PM\n    solver.add(Implies(Or(screen[m] == 1, screen[m] == 2), Or(t7[m], t9[m])))\n\n# Screen-type constraints:\n# Sci-fi not shown on screen 3\nsolver.add(screen[scifi] != 3)\n# Romance not shown on screen 2\nsolver.add(screen[romance] != 2)\n\n# Relative timing constraint: western before horror\n# time(western) < time(horror)\nsolver.add(Or(\n    And(t7[western], Or(t8[horror], t9[horror])),\n    And(t8[western], t9[horror])\n))\n\n# Horror and mystery on different screens\nsolver.add(screen[horror] != screen[mystery])\n\n# Now check each answer choice for screen 1 (7PM, 9PM)\nanswer_choices = [\n    (\"sci-fi\", \"horror\"),   # index 0\n    (\"sci-fi\", \"mystery\"),  # index 1\n    (\"western\", \"horror\"),  # index 2\n    (\"western\", \"mystery\"), # index 3\n    (\"western\", \"sci-fi\")   # index 4\n]\n\n# Map choice strings to movie indices\nchoice_map = {\n    \"horror\": horror,\n    \"mystery\": mystery,\n    \"romance\": romance,\n    \"sci-fi\": scifi,\n    \"western\": western\n}\n\nforbidden_list_index = []\n\nfor idx, (first, second) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    \n    # Add screen 1 constraint: first movie at 7PM, second movie at 9PM\n    f_idx = choice_map[first]\n    s_idx = choice_map[second]\n    \n    # First movie must be on screen 1 and at 7PM\n    s_chk.add(screen[f_idx] == 1)\n    s_chk.add(t7[f_idx])\n    \n    # Second movie must be on screen 1 and at 9PM\n    s_chk.add(screen[s_idx] == 1)\n    s_chk.add(t9[s_idx])\n    \n    # Ensure no other movie is on screen 1\n    for m in range(5):\n        if m != f_idx and m != s_idx:\n            s_chk.add(screen[m] != 1)\n    \n    # Check if this configuration is possible\n    if s_chk.check() == unsat:\n        forbidden_list_index.append(idx)\n\nprint(forbidden_list_index)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpe36plbts.py\", line 35, in <module>\n    s1_movies = [m for m in range(5) if Or(*[And(screen[m] == 1, screen[k] != 1) for k in range(m)])]\n                                        ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Movie indices: horror=0, mystery=1, romance=2, sci-fi=3, western=4\nMOVIES = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\n(horror, mystery, romance, scifi, western) = range(5)\n\n# Screen variables for each movie\nscreen = [Int(f\"screen_{m}\") for m in range(5)]\n\n# Time slot variables: time[m] = absolute time (7, 8, or 9)\ntime = [Int(f\"time_{m}\") for m in range(5)]\n\n# Base solver\nsolver = Solver()\n\n# Screen assignment constraints\n# Each movie assigned to exactly one screen (1, 2, or 3)\nfor m in range(5):\n    solver.add(Or(screen[m] == 1, screen[m] == 2, screen[m] == 3))\n\n# Screen capacity constraints:\n# - Screen 1: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 1, 1, 0) for m in range(5)]) == 2)\n# - Screen 2: exactly 2 movies\nsolver.add(Sum([If(screen[m] == 2, 1, 0) for m in range(5)]) == 2)\n# - Screen 3: exactly 1 movie\nsolver.add(Sum([If(screen[m] == 3, 1, 0) for m in range(5)]) == 1)\n\n# Time slot constraints:\n# Screen 1: one movie at 7PM, one at 9PM\n# Screen 2: one movie at 7PM, one at 9PM\n# Screen 3: one movie at 8PM\n\n# Create boolean variables for each movie at each time slot\nt7 = [Bool(f\"t7_{m}\") for m in range(5)]  # movie m at 7PM\nt8 = [Bool(f\"t8_{m}\") for m in range(5)]  # movie m at 8PM\nt9 = [Bool(f\"t9_{m}\") for m in range(5)]  # movie m at 9PM\n\n# Each movie assigned to exactly one time slot\nfor m in range(5):\n    solver.add(Or(t7[m], t8[m], t9[m]))\n    solver.add(Not(And(t7[m], t8[m])))\n    solver.add(Not(And(t7[m], t9[m])))\n    solver.add(Not(And(t8[m], t9[m])))\n\n# Time slot capacity constraints:\n# - 7PM: exactly two movies (screen1@7 and screen2@7)\nsolver.add(Sum([If(t7[m], 1, 0) for m in range(5)]) == 2)\n# - 8PM: exactly one movie (screen3@8)\nsolver.add(Sum([If(t8[m], 1, 0) for m in range(5)]) == 1)\n# - 9PM: exactly two movies (screen1@9 and screen2@9)\nsolver.add(Sum([If(t9[m], 1, 0) for m in range(5)]) == 2)\n\n# Link screen and time:\n# Screen1: movies at t7 or t9\n# Screen2: movies at t7 or t9\n# Screen3: movie at t8\n\nfor m in range(5):\n    # If movie is on screen3, it must be at 8PM\n    solver.add(Implies(screen[m] == 3, t8[m]))\n    # If movie is at 8PM, it must be on screen3\n    solver.add(Implies(t8[m], screen[m] == 3))\n    # If movie is on screen1 or screen2, it must be at 7PM or 9PM\n    solver.add(Implies(Or(screen[m] == 1, screen[m] == 2), Or(t7[m], t9[m])))\n\n# Screen-type constraints:\n# Sci-fi not shown on screen 3\nsolver.add(screen[scifi] != 3)\n# Romance not shown on screen 2\nsolver.add(screen[romance] != 2)\n\n# Relative timing constraint: western before horror\n# time(western) < time(horror)\nsolver.add(Or(\n    And(t7[western], Or(t8[horror], t9[horror])),\n    And(t8[western], t9[horror])\n))\n\n# Horror and mystery on different screens\nsolver.add(screen[horror] != screen[mystery])\n\n# Now check each answer choice for screen 1 (7PM, 9PM)\nanswer_choices = [\n    (\"sci-fi\", \"horror\"),   # index 0\n    (\"sci-fi\", \"mystery\"),  # index 1\n    (\"western\", \"horror\"),  # index 2\n    (\"western\", \"mystery\"), # index 3\n    (\"western\", \"sci-fi\")   # index 4\n]\n\n# Map choice strings to movie indices\nchoice_map = {\n    \"horror\": horror,\n    \"mystery\": mystery,\n    \"romance\": romance,\n    \"sci-fi\": scifi,\n    \"western\": western\n}\n\nforbidden_list_index = []\n\nfor idx, (first, second) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    \n    # Add screen 1 constraint: first movie at 7PM, second movie at 9PM\n    f_idx = choice_map[first]\n    s_idx = choice_map[second]\n    \n    # First movie must be on screen 1 and at 7PM\n    s_chk.add(screen[f_idx] == 1)\n    s_chk.add(t7[f_idx])\n    \n    # Second movie must be on screen 1 and at 9PM\n    s_chk.add(screen[s_idx] == 1)\n    s_chk.add(t9[s_idx])\n    \n    # Ensure no other movie is on screen 1\n    for m in range(5):\n        if m != f_idx and m != s_idx:\n            s_chk.add(screen[m] != 1)\n    \n    # Check if this configuration is possible\n    if s_chk.check() == unsat:\n        forbidden_list_index.append(idx)\n\nprint(forbidden_list_index)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1724,
+            "completion_tokens": 1376,
+            "total_tokens": 3100
+          },
+          "api_time_only": 38.63357186317444,
+          "solver_time_only": 0.08295798301696777
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\nsolver.add(time_value[pos[4]] < time_value[pos[0]])\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nsolver.add(screen_value[pos[0]] != screen_value[pos[1]])\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\nsolver.add(time_value[pos[4]] < time_value[pos[0]])\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nsolver.add(screen_value[pos[0]] != screen_value[pos[1]])\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp4r054els.py\", line 27, in <module>\n    solver.add(time_value[pos[4]] < time_value[pos[0]])\n               ~~~~~~~~~~^^^^^^^^\nTypeError: list indices must be integers or slices, not ArithRef\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\ntime_western = Int('time_western')\ntime_horror = Int('time_horror')\nsolver.add(time_western == time_value[pos[4]])\nsolver.add(time_horror == time_value[pos[0]])\nsolver.add(time_western < time_horror)\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nscreen_horror = Int('screen_horror')\nscreen_mystery = Int('screen_mystery')\nsolver.add(screen_horror == screen_value[pos[0]])\nsolver.add(screen_mystery == screen_value[pos[1]])\nsolver.add(screen_horror != screen_mystery)\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Z3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpkna4kpby.py\", line 29, in <module>\n    solver.add(time_western == time_value[pos[4]])\n                               ~~~~~~~~~~^^^^^^^^\nTypeError: list indices must be integers or slices, not ArithRef\n\nStdout: ",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 838,
+            "completion_tokens": 755,
+            "total_tokens": 1593
+          },
+          "api_time_only": 20.420033931732178,
+          "solver_time_only": 0.06636881828308105
+        },
+        {
+          "round_index": 2,
+          "input_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\ntime_western = Int('time_western')\ntime_horror = Int('time_horror')\nsolver.add(time_western == time_value[pos[4]])\nsolver.add(time_horror == time_value[pos[0]])\nsolver.add(time_western < time_horror)\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nscreen_horror = Int('screen_horror')\nscreen_mystery = Int('screen_mystery')\nsolver.add(screen_horror == screen_value[pos[0]])\nsolver.add(screen_mystery == screen_value[pos[1]])\nsolver.add(screen_horror != screen_mystery)\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\ntime_western = Int('time_western')\ntime_horror = Int('time_horror')\nsolver.add(time_western == time_value[pos[4]])\nsolver.add(time_horror == time_value[pos[0]])\nsolver.add(time_western < time_horror)\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nscreen_horror = Int('screen_horror')\nscreen_mystery = Int('screen_mystery')\nsolver.add(screen_horror == screen_value[pos[0]])\nsolver.add(screen_mystery == screen_value[pos[1]])\nsolver.add(screen_horror != screen_mystery)\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpkna4kpby.py\", line 29, in <module>\n    solver.add(time_western == time_value[pos[4]])\n                               ~~~~~~~~~~^^^^^^^^\nTypeError: list indices must be integers or slices, not ArithRef\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\nmovies = [\"horror\", \"mystery\", \"romance\", \"sci-fi\", \"western\"]\nmovie_idx = {m: i for i, m in enumerate(movies)}\n\n# Slot mapping: 0=(1,7), 1=(1,9), 2=(3,8), 3=(2,7), 4=(2,9)\n# time_value[slot] = actual start time in hours\ntime_value = [7, 9, 8, 7, 9]\n# screen_value[slot] = screen number\nscreen_value = [1, 1, 3, 2, 2]\n\n# pos[m] = slot index (0-4) assigned to movie m\npos = [Int(f\"pos_{m}\") for m in movies]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each movie assigned to exactly one slot (0-4)\nfor p in pos:\n    solver.add(p >= 0, p <= 4)\n\n# Injectivity: all movies assigned to distinct slots\nsolver.add(Distinct(pos))\n\n# Western before horror (by actual time)\ntime_western = Int('time_western')\ntime_horror = Int('time_horror')\nsolver.add(And(pos[4] >= 0, pos[4] <= 4))\nsolver.add(And(pos[0] >= 0, pos[0] <= 4))\nsolver.add(time_western == If(pos[4] == 0, time_value[0],\n                              If(pos[4] == 1, time_value[1],\n                                 If(pos[4] == 2, time_value[2],\n                                    If(pos[4] == 3, time_value[3], time_value[4])))))\nsolver.add(time_horror == If(pos[0] == 0, time_value[0],\n                             If(pos[0] == 1, time_value[1],\n                                If(pos[0] == 2, time_value[2],\n                                   If(pos[0] == 3, time_value[3], time_value[4])))))\nsolver.add(time_western < time_horror)\n\n# Sci-fi not on screen 3 ⇒ slot ≠ 2\nsolver.add(pos[3] != 2)\n\n# Romance not on screen 2 ⇒ slot ∉ {3,4}\nsolver.add(pos[2] != 3)\nsolver.add(pos[2] != 4)\n\n# Horror and mystery on different screens\nscreen_horror = Int('screen_horror')\nscreen_mystery = Int('screen_mystery')\nsolver.add(And(pos[0] >= 0, pos[0] <= 4))\nsolver.add(And(pos[1] >= 0, pos[1] <= 4))\nsolver.add(screen_horror == If(pos[0] == 0, screen_value[0],\n                               If(pos[0] == 1, screen_value[1],\n                                  If(pos[0] == 2, screen_value[2],\n                                     If(pos[0] == 3, screen_value[3], screen_value[4])))))\nsolver.add(screen_mystery == If(pos[1] == 0, screen_value[0],\n                                If(pos[1] == 1, screen_value[1],\n                                   If(pos[1] == 2, screen_value[2],\n                                      If(pos[1] == 3, screen_value[3], screen_value[4])))))\nsolver.add(screen_horror != screen_mystery)\n\n# Answer choices (screen 1 list: [7PM movie, 9PM movie])\nanswer_choices = [\n    [\"sci-fi\", \"horror\"],\n    [\"sci-fi\", \"mystery\"],\n    [\"western\", \"horror\"],\n    [\"western\", \"mystery\"],\n    [\"western\", \"sci-fi\"]\n]\n\n# Check each choice\nanswer_index_list = []\nfor idx, (first_movie, second_movie) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Assign first_movie to slot 0 (7PM), second_movie to slot 1 (9PM)\n    s_chk.add(pos[movie_idx[first_movie]] == 0)\n    s_chk.add(pos[movie_idx[second_movie]] == 1)\n    \n    # Remaining movies must occupy slots {2,3,4} (injectively)\n    remaining_movies = [m for m in movies if m != first_movie and m != second_movie]\n    remaining_pos = [pos[movie_idx[m]] for m in remaining_movies]\n    \n    # Ensure remaining movies are assigned to distinct slots from {2,3,4}\n    s_chk.add(Distinct(remaining_pos))\n    for p in remaining_pos:\n        s_chk.add(Or(p == 2, p == 3, p == 4))\n    \n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 917,
+            "completion_tokens": 1071,
+            "total_tokens": 1988
+          },
+          "api_time_only": 28.551037788391113,
+          "solver_time_only": 0.09277582168579102
+        }
+      ]
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\n(HORROR, MYSTERY, ROMANCE, SCIFI, WESTERN) = range(5)\n\n# Variables: screen[i] = screen number (1,2,3), slot[i] = time slot (0=7pm, 1=8pm, 2=9pm)\nscreen = [Int(f\"screen_{i}\") for i in range(5)]\nslot = [Int(f\"slot_{i}\") for i in range(5)]\n\nsolver = Solver()\n\n# Domain constraints\nfor i in range(5):\n    solver.add(screen[i] >= 1, screen[i] <= 3)\n    solver.add(slot[i] >= 0, slot[i] <= 2)\n\n# Screen capacity constraints\n# Exactly two movies on screen 1, exactly two on screen 2, exactly one on screen 3\nscreen_counts = [Sum([If(screen[i] == s, 1, 0) for i in range(5)]) for s in [1, 2, 3]]\nsolver.add(screen_counts[0] == 2, screen_counts[1] == 2, screen_counts[2] == 1)\n\n# Screen 1 and 2 must have time slots {0,2} (7pm and 9pm), screen 3 has slot 1 (8pm)\n# For each movie on screen 1 or 2, slot must be 0 or 2\nfor i in range(5):\n    solver.add(Implies(screen[i] == 1, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 2, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 3, slot[i] == 1))\n\n# Within each screen, time slots must be distinct\nfor s in [1, 2]:\n    movies_on_screen = [i for i in range(5) if Or(*[screen[i] == s])]\n    # For screen 1: two movies must have different slots (0 and 2)\n    # For screen 2: two movies must have different slots (0 and 2)\n    # We'll enforce this by ensuring if two movies are on same screen, their slots differ\n    for i in range(5):\n        for j in range(i + 1, 5):\n            solver.add(Implies(And(screen[i] == screen[j], screen[i] != 3), slot[i] != slot[j]))\n\n# Ordering constraint: western begins before horror film\nsolver.add(Or(\n    And(slot[WESTERN] < slot[HORROR]),\n    And(slot[WESTERN] == slot[HORROR], screen[WESTERN] < screen[HORROR])\n))\n\n# Sci-fi film is not on screen 3\nsolver.add(screen[SCIFI] != 3)\n\n# Romance is not on screen 2\nsolver.add(screen[ROMANCE] != 2)\n\n# Horror and mystery are on different screens\nsolver.add(screen[HORROR] != screen[MYSTERY])\n\n# Answer choices for screen 1: [movie_at_7pm, movie_at_9pm]\nanswer_choices = [\n    (SCIFI, HORROR),   # 'the sci-fi film, the horror film'\n    (SCIFI, MYSTERY),  # 'the sci-fi film, the mystery'\n    (WESTERN, HORROR), # 'the western, the horror film'\n    (WESTERN, MYSTERY),# 'the western, the mystery'\n    (WESTERN, SCIFI)   # 'the western, the sci-fi film'\n]\n\nanswer_index_list = []\nfor idx, (movie0, movie1) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Screen 1 must have exactly these two movies at slots 0 and 2 respectively\n    s_chk.add(screen[movie0] == 1, slot[movie0] == 0)\n    s_chk.add(screen[movie1] == 1, slot[movie1] == 2)\n    \n    # Ensure no other movie is on screen 1\n    for i in range(5):\n        if i != movie0 and i != movie1:\n            s_chk.add(screen[i] != 1)\n    \n    # Check feasibility\n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\n(HORROR, MYSTERY, ROMANCE, SCIFI, WESTERN) = range(5)\n\n# Variables: screen[i] = screen number (1,2,3), slot[i] = time slot (0=7pm, 1=8pm, 2=9pm)\nscreen = [Int(f\"screen_{i}\") for i in range(5)]\nslot = [Int(f\"slot_{i}\") for i in range(5)]\n\nsolver = Solver()\n\n# Domain constraints\nfor i in range(5):\n    solver.add(screen[i] >= 1, screen[i] <= 3)\n    solver.add(slot[i] >= 0, slot[i] <= 2)\n\n# Screen capacity constraints\n# Exactly two movies on screen 1, exactly two on screen 2, exactly one on screen 3\nscreen_counts = [Sum([If(screen[i] == s, 1, 0) for i in range(5)]) for s in [1, 2, 3]]\nsolver.add(screen_counts[0] == 2, screen_counts[1] == 2, screen_counts[2] == 1)\n\n# Screen 1 and 2 must have time slots {0,2} (7pm and 9pm), screen 3 has slot 1 (8pm)\n# For each movie on screen 1 or 2, slot must be 0 or 2\nfor i in range(5):\n    solver.add(Implies(screen[i] == 1, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 2, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 3, slot[i] == 1))\n\n# Within each screen, time slots must be distinct\nfor s in [1, 2]:\n    movies_on_screen = [i for i in range(5) if Or(*[screen[i] == s])]\n    # For screen 1: two movies must have different slots (0 and 2)\n    # For screen 2: two movies must have different slots (0 and 2)\n    # We'll enforce this by ensuring if two movies are on same screen, their slots differ\n    for i in range(5):\n        for j in range(i + 1, 5):\n            solver.add(Implies(And(screen[i] == screen[j], screen[i] != 3), slot[i] != slot[j]))\n\n# Ordering constraint: western begins before horror film\nsolver.add(Or(\n    And(slot[WESTERN] < slot[HORROR]),\n    And(slot[WESTERN] == slot[HORROR], screen[WESTERN] < screen[HORROR])\n))\n\n# Sci-fi film is not on screen 3\nsolver.add(screen[SCIFI] != 3)\n\n# Romance is not on screen 2\nsolver.add(screen[ROMANCE] != 2)\n\n# Horror and mystery are on different screens\nsolver.add(screen[HORROR] != screen[MYSTERY])\n\n# Answer choices for screen 1: [movie_at_7pm, movie_at_9pm]\nanswer_choices = [\n    (SCIFI, HORROR),   # 'the sci-fi film, the horror film'\n    (SCIFI, MYSTERY),  # 'the sci-fi film, the mystery'\n    (WESTERN, HORROR), # 'the western, the horror film'\n    (WESTERN, MYSTERY),# 'the western, the mystery'\n    (WESTERN, SCIFI)   # 'the western, the sci-fi film'\n]\n\nanswer_index_list = []\nfor idx, (movie0, movie1) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Screen 1 must have exactly these two movies at slots 0 and 2 respectively\n    s_chk.add(screen[movie0] == 1, slot[movie0] == 0)\n    s_chk.add(screen[movie1] == 1, slot[movie1] == 2)\n    \n    # Ensure no other movie is on screen 1\n    for i in range(5):\n        if i != movie0 and i != movie1:\n            s_chk.add(screen[i] != 1)\n    \n    # Check feasibility\n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpecr0pfh5.py\", line 31, in <module>\n    movies_on_screen = [i for i in range(5) if Or(*[screen[i] == s])]\n                                               ~~^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Movie indices: 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western\n(HORROR, MYSTERY, ROMANCE, SCIFI, WESTERN) = range(5)\n\n# Variables: screen[i] = screen number (1,2,3), slot[i] = time slot (0=7pm, 1=8pm, 2=9pm)\nscreen = [Int(f\"screen_{i}\") for i in range(5)]\nslot = [Int(f\"slot_{i}\") for i in range(5)]\n\nsolver = Solver()\n\n# Domain constraints\nfor i in range(5):\n    solver.add(screen[i] >= 1, screen[i] <= 3)\n    solver.add(slot[i] >= 0, slot[i] <= 2)\n\n# Screen capacity constraints\n# Exactly two movies on screen 1, exactly two on screen 2, exactly one on screen 3\nscreen_counts = [Sum([If(screen[i] == s, 1, 0) for i in range(5)]) for s in [1, 2, 3]]\nsolver.add(screen_counts[0] == 2, screen_counts[1] == 2, screen_counts[2] == 1)\n\n# Screen 1 and 2 must have time slots {0,2} (7pm and 9pm), screen 3 has slot 1 (8pm)\n# For each movie on screen 1 or 2, slot must be 0 or 2\nfor i in range(5):\n    solver.add(Implies(screen[i] == 1, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 2, Or(slot[i] == 0, slot[i] == 2)))\n    solver.add(Implies(screen[i] == 3, slot[i] == 1))\n\n# Within each screen, time slots must be distinct\nfor s in [1, 2]:\n    for i in range(5):\n        for j in range(i + 1, 5):\n            solver.add(Implies(And(screen[i] == s, screen[j] == s), slot[i] != slot[j]))\n\n# Ordering constraint: western begins before horror film\nsolver.add(Or(\n    And(slot[WESTERN] < slot[HORROR]),\n    And(slot[WESTERN] == slot[HORROR], screen[WESTERN] < screen[HORROR])\n))\n\n# Sci-fi film is not on screen 3\nsolver.add(screen[SCIFI] != 3)\n\n# Romance is not on screen 2\nsolver.add(screen[ROMANCE] != 2)\n\n# Horror and mystery are on different screens\nsolver.add(screen[HORROR] != screen[MYSTERY])\n\n# Answer choices for screen 1: [movie_at_7pm, movie_at_9pm]\nanswer_choices = [\n    (SCIFI, HORROR),   # 'the sci-fi film, the horror film'\n    (SCIFI, MYSTERY),  # 'the sci-fi film, the mystery'\n    (WESTERN, HORROR), # 'the western, the horror film'\n    (WESTERN, MYSTERY),# 'the western, the mystery'\n    (WESTERN, SCIFI)   # 'the western, the sci-fi film'\n]\n\nanswer_index_list = []\nfor idx, (movie0, movie1) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Screen 1 must have exactly these two movies at slots 0 and 2 respectively\n    s_chk.add(screen[movie0] == 1, slot[movie0] == 0)\n    s_chk.add(screen[movie1] == 1, slot[movie1] == 2)\n    \n    # Ensure no other movie is on screen 1\n    for i in range(5):\n        if i != movie0 and i != movie1:\n            s_chk.add(screen[i] != 1)\n    \n    # Check feasibility\n    if s_chk.check() == unsat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1224,
+            "completion_tokens": 905,
+            "total_tokens": 2129
+          },
+          "api_time_only": 24.449398040771484,
+          "solver_time_only": 0.09161710739135742
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+1. Identify all entities involved: Bob, Dave, Fiona, Harry.
+2. Encode all explicitly stated atomic facts using ternary predicates (e.g., is_big("Bob", True), is_blue("Fiona", True), etc.), including all properties of Bob (big, blue, cold, quiet, rough, smart, white), and the unary facts about Dave (rough), Fiona (blue), Harry (big, cold).
+3. Translate each conditional statement into a PyKe rule using `foreach` blocks and `assert` conclusions:
+   • If someone is blue → they are cold.
+   • If someone is big → they are white.
+   • If Bob is rough and Bob is blue → Bob is big (note: this is a ground condition; can be encoded as a rule with specific subject "Bob").
+   • All blue, smart people are big → `foreach is_blue(X, True), is_smart(X, True) assert is_big(X, True)`
+   • If someone is blue and rough → they are quiet.
+   • All smart people are blue → `foreach is_smart(X, True) assert is_blue(X, True)`
+   • Cold people are rough → `foreach is_cold(X, True) assert is_rough(X, True)`
+   • If someone is quiet → they are big.
+4. For ground implications like “If Bob is rough and Bob is blue then Bob is big”, use `foreach` with concrete bindings (e.g., match `is_rough("Bob", True)` and `is_blue("Bob", True)`) to assert `is_big("Bob", True)`.
+5. Note that Bob already satisfies all the premises of many rules, but this may propagate new facts (e.g., from Bob being cold → rough, etc.), though the critical inference for Fiona is whether `is_blue("Fiona", True)` plus any additional required properties (e.g., smart) implies `is_big("Fiona", True)`.
+6. Query whether `is_big("Fiona", True)` holds by asserting `facts.is_big("Fiona", True)`.

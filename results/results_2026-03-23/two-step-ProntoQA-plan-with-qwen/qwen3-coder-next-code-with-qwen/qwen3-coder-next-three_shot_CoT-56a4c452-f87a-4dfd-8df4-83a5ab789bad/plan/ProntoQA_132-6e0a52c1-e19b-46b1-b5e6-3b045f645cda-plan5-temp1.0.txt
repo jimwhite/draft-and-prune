@@ -1,0 +1,25 @@
+1. Identify all entities and types: Polly, vumpus, zumpus, dumpus, impus, numpus, tumpus, jompus, yumpus, wumpus, rompus.  
+2. Identify all properties: transparent, large, spicy, blue, temperate, happy, amenable, floral.  
+3. Represent "Polly is a vumpus" as a base fact: `is_a("Polly", "vumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Each vumpus is transparent → `foreach v: is_a(v, "vumpus", True) → has_prop(v, "transparent", True)`  
+   - Vumpuses are zumpuses → `foreach v: is_a(v, "vumpus", True) → is_a(v, "zumpus", True)`  
+   - Every zumpus is not large → `foreach z: is_a(z, "zumpus", True) → has_prop(z, "large", False)`  
+   - Zumpuses are dumpuses → `foreach z: is_a(z, "zumpus", True) → is_a(z, "dumpus", True)`  
+   - Every dumpus is spicy → `foreach d: is_a(d, "dumpus", True) → has_prop(d, "spicy", True)`  
+   - Each dumpus is a numpus → `foreach d: is_a(d, "dumpus", True) → is_a(d, "numpus", True)`  
+   - Each impus is blue → `foreach i: is_a(i, "impus", True) → has_prop(i, "blue", True)`  
+   - Numpuses are temperate → `foreach n: is_a(n, "numpus", True) → has_prop(n, "temperate", True)`  
+   - Each numpus is a tumpus → `foreach n: is_a(n, "numpus", True) → is_a(n, "tumpus", True)`  
+   - Tumpuses are not blue → `foreach t: is_a(t, "tumpus", True) → has_prop(t, "blue", False)`  
+   - Tumpuses are jompuses → `foreach t: is_a(t, "tumpus", True) → is_a(t, "jompus", True)`  
+   - Each jompus is happy → `foreach j: is_a(j, "jompus", True) → has_prop(j, "happy", True)`  
+   - Each jompus is a yumpus → `foreach j: is_a(j, "jompus", True) → is_a(j, "yumpus", True)`  
+   - Each yumpus is not amenable → `foreach y: is_a(y, "yumpus", True) → has_prop(y, "amenable", False)`  
+   - Every yumpus is a wumpus → `foreach y: is_a(y, "yumpus", True) → is_a(y, "wumpus", True)`  
+   - Wumpuses are not floral → `foreach w: is_a(w, "wumpus", True) → has_prop(w, "floral", False)`  
+   - Wumpuses are rompuses → `foreach w: is_a(w, "wumpus", True) → is_a(w, "rompus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the conclusion (e.g., `foreach v in vumpuses: assert(is_a(v, zumpus))` or equivalent PyKe rule syntax).  
+6. The query tests if the statement "Polly is not blue" is provable:  
+   - Derive the chain: Polly ∈ vumpus → Polly ∈ zumpus → Polly ∈ dumpus → Polly ∈ numpus → Polly ∈ tumpus → tumpuses are not blue ⇒ Polly is not blue.  
+   - Use `facts.has_prop("Polly", "blue", False)` (or equivalent predicate for property negation as defined in the system).

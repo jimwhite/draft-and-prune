@@ -1,0 +1,14 @@
+1. Identify all individuals: Bob, Dave, Fiona, Harry.
+2. Encode all explicitly stated properties and relations using ternary predicates (e.g., is_rough("Bob", True), is_furry("Dave", True), etc.), preserving explicit negations (e.g., is_red("Dave", False)).
+3. Translate each conditional rule into a PyKe `foreach`-`assert` block:
+   • Smart things are green → foreach: is_smart(?x, True), assert: is_green(?x, True)
+   • If nice and not rough → red → foreach: is_nice(?x, True), is_rough(?x, False), assert: is_red(?x, True)
+   • If nice → smart → foreach: is_nice(?x, True), assert: is_smart(?x, True)
+   • If rough → nice → foreach: is_rough(?x, True), assert: is_nice(?x, True)
+   • If blue → furry → foreach: is_blue(?x, True), assert: is_furry(?x, True)
+   • All blue, smart things are furry → foreach: is_blue(?x, True), is_smart(?x, True), assert: is_furry(?x, True)
+   • If Bob is furry and not rough → green → foreach: is_furry("Bob", True), is_rough("Bob", False), assert: is_green("Bob", True)
+   • If green → blue → foreach: is_green(?x, True), assert: is_blue(?x, True)
+   • If red and not nice → not blue → foreach: is_red(?x, True), is_nice(?x, False), assert: is_blue(?x, False)
+4. Ensure consistency by allowing PyKe to infer new facts from the rules and initial facts.
+5. The query tests whether Bob is not green → Use facts.is_green("Bob", False)

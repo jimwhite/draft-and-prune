@@ -1,0 +1,24 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and assign integer indices 0,1,2 respectively.  
+2. Enumerate days (Monday to Friday) and assign integer indices 0–4 respectively.  
+3. Create integer variables for the day of each batch: for each cookie type c ∈ {0,1,2}, let `first[c]`, `second[c]`, `third[c]` be the day (0–4) on which the first, second, third batch of type c is baked.  
+4. Add **domain constraints**: all six variables (`first[c]`, `second[c]`, `third[c]` for c=0,1,2) must be in {0,1,2,3,4}.  
+5. Add **distinct-day-per-type constraint**: for each cookie type c, `first[c] < second[c] < third[c]` (strictly increasing days; ensures no two batches of same type on same day and respects ordering).  
+6. Add **fixed constraints from problem**:  
+    - `second[2] == 3` (sugar second batch is Thursday → index 3).  
+    - `second[0] == first[1]` (oatmeal second batch same day as peanut butter first batch).  
+    - At least one batch on Monday → `min(first[0], second[0], third[0], first[1], second[1], third[1], first[2], second[2], third[2]) == 0`.  
+7. Add **global constraint for the conditional scenario**: assume that there exists a pair of cookie types (c1 ≠ c2) and positions p1,p2 ∈ {1,2,3} such that `first[c1]` (p1=1), `second[c1]` (p1=2), or `third[c1]` (p1=3) equals `first[c2]` (p2=1), etc. Specifically, add disjunction:  
+    - `(first[0] == third[1]) ∨ (first[0] == third[2]) ∨ (first[1] == third[0]) ∨ (first[1] == third[2]) ∨ (first[2] == third[0]) ∨ (first[2] == third[1])`  
+    - and similarly include all cross-type combinations (e.g., second of one equals third of another is also possible, but problem says “first batch ... same day as another kind's third batch”, so only first = third).  
+    - So constrain: `∃c1 ≠ c2 : first[c1] == third[c2]`.  
+8. Translate each answer choice into a logical condition on the batch days:  
+    - A: “At least one batch on each day” ⇔ `∀d ∈ {0,…,4}, ∃batch b : batch_day[b] == d`.  
+    - B: “At least two batches on Wednesday (d=3)” ⇔ `count{b : batch_day[b] == 3} ≥ 2`.  
+    - C: “Exactly one batch on Monday” ⇔ `count{b : batch_day[b] == 0} == 1`.  
+    - D: “Exactly two batches on Tuesday (d=1)” ⇔ `count{b : batch_day[b] == 1} == 2`.  
+    - E: “Exactly one batch on Friday (d=4)” ⇔ `count{b : batch_day[b] == 4} == 1`.  
+9. Define answer index list `answer_index_list = []`. For each choice i ∈ {0,1,2,3,4} (corresponding to A–E):  
+    - Clone base constraints + conditional constraint into fresh solver S.  
+    - Add negation of choice i’s condition (e.g., for C, assert `count(day==0) != 1`).  
+    - If S is SAT (i.e., it's possible for the condition to be false under the scenario), then choice i **could be false**; append i to `answer_index_list`.  
+10. Output `answer_index_list` as the final answer indices (list of indices for choices that could be false under the given scenario).

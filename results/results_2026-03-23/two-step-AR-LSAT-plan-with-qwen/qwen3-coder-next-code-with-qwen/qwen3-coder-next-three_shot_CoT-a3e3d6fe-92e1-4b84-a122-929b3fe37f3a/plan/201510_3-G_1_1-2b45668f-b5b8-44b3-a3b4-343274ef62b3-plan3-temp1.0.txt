@@ -1,0 +1,16 @@
+1. Enumerate the seven accomplices and assign each a fixed index for comparison.  
+2. Create integer position variables `pos[accomplice]` for each accomplice, ranging from 1 to 7.  
+3. Add **distinctness constraint**: all positions must be pairwise distinct (a permutation of 1..7).  
+4. Add **fixed position constraint**: Peters is recruited fourth → `pos["Peters"] == 4`.  
+5. Add **Villas–White adjacency constraint**: Villas is immediately before White → `pos["Villas"] + 1 == pos["White"]`.  
+6. Add **Quinn–Rovero ordering constraint**: Quinn recruited earlier than Rovero → `pos["Quinn"] < pos["Rovero"]`.  
+7. Add **Stanton–Tao separation constraint**: Stanton is neither immediately before nor after Tao → `abs(pos["Stanton"] - pos["Tao"]) != 1`.  
+8. Translate each choice into a list of accomplice names in order, and extract implied positions: for the i-th name (0-indexed), its position is `i+1`.  
+9. For each choice, **validate** against all constraints:  
+   - Check if Peters is in position 4.  
+   - Check if Villas and White are consecutive with Villas before White.  
+   - Check if Quinn precedes Rovero.  
+   - Check if Stanton and Tao are not adjacent.  
+10. Collect all indices of choices that satisfy *all* constraints; these are valid possible orders.  
+11. The answer is the (single) choice in the list of valid options (as per problem, exactly one must be possible).  
+12. Since only one choice can be correct, return the index of the satisfying choice in the provided list of choices.

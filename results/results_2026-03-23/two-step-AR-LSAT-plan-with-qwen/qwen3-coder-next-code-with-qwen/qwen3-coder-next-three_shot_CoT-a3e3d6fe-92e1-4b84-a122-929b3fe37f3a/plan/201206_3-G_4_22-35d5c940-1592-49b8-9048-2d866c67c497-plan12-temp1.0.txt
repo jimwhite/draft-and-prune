@@ -1,0 +1,17 @@
+1. Enumerate the five solos (positions 1–5), two pianists (Wayne=0, Zara=1), and two piece types (modern=0, traditional=1).  
+2. Create integer variables for pianist_performed[i] ∈ {0,1} and piece_type[i] ∈ {0,1} for each solo i ∈ {1,2,3,4,5}.  
+3. Add **fixed constraint**: Solo 3 is traditional → piece_type[2] = 1 (0-indexed).  
+4. Add **exactly two consecutive traditional pieces**: Identify all possible disjoint adjacent pairs of positions where exactly two *consecutive* trad. pieces occur, and enforce that there is precisely one such adjacent pair and no othertrad. piece is adjacent to it (i.e., the trad. pieces form a single block of length 2, and no third trad. piece touches it).  
+5. Add **constraint for solo 4**: Either (Wayne performs and trad.) or (Zara performs and modern):  
+    - (pianist_performed[3] == 0 ∧ piece_type[3] == 1) ∨ (pianist_performed[3] == 1 ∧ piece_type[3] == 0).  
+6. Add **non-repetition across solos 2 and 5**: pianist_performed[1] ≠ pianist_performed[4].  
+7. Add **no trad. piece until Wayne performs at least one modern**: Let idx_W_modern = smallest i where pianist_performed[i]==0 ∧ piece_type[i]==0. Then for all j < idx_W_modern, piece_type[j] == 0. Equivalently: If any solo before the first Wayne-modern is traditional, UNSAT → enforce: for all j, if piece_type[j] == 1 then ∃k ≤ j such that pianist_performed[k]==0 ∧ piece_type[k]==0.  
+8. Add **assumption for conditional scenario**: In solo 5 (index 4), Wayne performs a traditional piece → pianist_performed[4] == 0 ∧ piece_type[4] == 1.  
+9. For each answer option (as a logical proposition), add it as an extra constraint and check SAT:  
+    - Option 0: Zara performs solo 1 → pianist_performed[0] == 1.  
+    - Option 1: Wayne performs solo 2 → pianist_performed[1] == 0.  
+    - Option 2: Zara performs solo 3 → pianist_performed[2] == 1.  
+    - Option 3: Solo 2 is modern → piece_type[1] == 0.  
+    - Option 4: Solo 4 is trad. → piece_type[3] == 1.  
+10. For each option, clone the solver with all base constraints + conditional (solo 5 = Wayne trad.), then add the option's proposition; record which options yield SAT.  
+11. Return the list of satisfiable option indices (as a single correct choice is expected).

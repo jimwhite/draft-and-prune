@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the pricing constraints.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the five fruits: `"mangoes"`, `"kiwis"`, `"watermelons"`, `"oranges"`, and `"apples"`.
+    * Define the domain as integers from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**.
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+    * Translate each statement into a constraint:
+        * "The oranges are the cheapest" → `oranges == 1`.
+        * "The kiwis are less expensive than the mangoes" → `kiwis < mangoes`.
+        * "The watermelons are more expensive than the apples" → `apples < watermelons`.
+        * "The watermelons are less expensive than the kiwis" → `watermelons < kiwis`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to compute all valid price-order assignments.
+    * Extract the unique solution (since the constraints fully determine the ordering).
+
+5.  **Identify the Second-Cheapest Fruit:**
+    * In our system, the second-cheapest fruit corresponds to rank **2**.
+    * Create a mapping from choice letters ("A"–"E") to fruit names using the answer choices.
+    * Inspect the solution dictionary to find which fruit has value 2.
+    * Return the letter corresponding to that fruit.

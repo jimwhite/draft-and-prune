@@ -1,0 +1,44 @@
+1. Enumerate the three sections (Lifestyle, Metro, Sports) and assign them integer indices 0, 1, 2.  
+2. Enumerate the three photographers (Fuentes, Gagnon, Hue) and assign them integer indices 0, 1, 2.  
+3. Create integer variables `L_f, L_g, L_h` for the number of Fuentes, Gagnon, Hue photos in Lifestyle (nonnegative integers summing to 2).  
+4. Create integer variables `M_f, M_g, M_h` for the number of Fuentes, Gagnon, Hue photos in Metro (nonnegative integers summing to 2).  
+5. Create integer variables `S_f, S_g, S_h` for the number of Fuentes, Gagnon, Hue photos in Sports (nonnegative integers summing to 2).  
+6. Add **per-section count constraints**: `L_f + L_g + L_h == 2`, `M_f + M_g + M_h == 2`, `S_f + S_g + S_h == 2`.  
+7. Add **per-photographer count constraints**:  
+    - `1 <= Fuentes_total = L_f + M_f + S_f <= 3`,  
+    - `1 <= Gagnon_total = L_g + M_g + S_g <= 3`,  
+    - `1 <= Hue_total = L_h + M_h + S_h <= 3`.  
+8. Add **Gagnon-in-Sports constraint**: `S_g == 0` (no Gagnon photos in Sports).  
+9. Add **cross-section constraint**: At least one photo in Lifestyle is by a photographer who appears in Metro.  
+    - This is equivalent to: `(L_f > 0 and M_f > 0) or (L_g > 0 and M_g > 0) or (L_h > 0 and M_h > 0)`.  
+    - Encode as Boolean OR of three conjunctions using Z3's `And`/`Or`.  
+10. Add **Lifestyle-Fuentes/Hue fixed premise**: `L_f == 1` and `L_h == 1` (implies `L_g == 0`).  
+11. Add **matching constraint**: Number of Hue photos in Lifestyle equals number of Fuentes photos in Sports: `L_h == S_f`. Since `L_h == 1`, deduce `S_f == 1`.  
+12. From step 5 and step 11: `S_f == 1`. Combined with `S_f + S_g + S_h == 2` and `S_g == 0`, deduce `S_h == 1`.  
+13. Now compute totals:  
+    - Fuentes_total = `L_f + M_f + S_f = 1 + M_f + 1 = M_f + 2`. Since max 3, `M_f <= 1`.  
+    - Hue_total = `L_h + M_h + S_h = 1 + M_h + 1 = M_h + 2`. Since max 3, `M_h <= 1`.  
+    - Gagnon_total = `L_g + M_g + S_g = 0 + M_g + 0 = M_g`. Must be ≥1 ⇒ `M_g >= 1`.  
+    - But Metro has exactly 2 photos: `M_f + M_g + M_h == 2`. With `M_g >= 1`, and `M_f <=1`, `M_h <=1`, possibilities:  
+        - `(M_f, M_g, M_h) = (0,2,0)` — violates `Gagnon_total <=3`? No, but 2 is okay. But check cross-section constraint: `L_g ==0`, so need `(L_f>0 and M_f>0)` or `(L_h>0 and M_h>0)`. Here `M_f=0`, `M_h=0`, so fails.  
+        - `(1,1,0)`: then Fuentes_total = 1+1+1=3 (OK), Hue_total =1+0+1=2 (OK), Gagnon_total=1 (OK). Cross-section: `L_f>0 & M_f>0` ⇒ true.  
+        - `(0,1,1)`: Fuentes_total=1+0+1=2, Hue_total=1+1+1=3 (OK), Gagnon_total=1. Cross-section: `L_h>0 & M_h>0` ⇒ true.  
+        - `(1,0,1)`: Gagnon_total=0 ❌ violates "at least one" for Gagnon.  
+        - `(0,2,0)`: cross-section fails as above.  
+        - So only valid distributions for Metro: `(M_f, M_g, M_h) = (1,1,0)` or `(0,1,1)`.  
+14. Consider each answer choice by translating it into constraints and checking satisfiability with all previous constraints:  
+    - Choice 0: "Both photos in Metro are by Fuentes" ⇒ `M_f = 2`, `M_g=0`, `M_h=0`.  
+        - Then Fuentes_total = 1+2+1 = 4 > 3 ⇒ UNSAT. Add constraint and check; expect UNSAT (so not possible).  
+    - Choice 1: "Both in Metro are by Gagnon" ⇒ `M_f=0`, `M_g=2`, `M_h=0`.  
+        - Fuentes_total = 1+0+1=2, Hue_total=1+0+1=2, Gagnon_total=2 (all in [1,3]).  
+        - Cross-section: `L_f>0 & M_f>0`? false. `L_g=0`. `L_h>0 & M_h>0`? false (M_h=0). ⇒ constraint fails. Add and check: UNSAT.  
+    - Choice 2: "Exactly one in Metro by Hue" ⇒ `M_h = 1`. Then since M_f + M_g + M_h =2, and from step 13 valid combos include `(0,1,1)`. So possible. Check all constraints:  
+        - Metro = (M_f=0, M_g=1, M_h=1).  
+        - Totals: Fuentes=2, Gagnon=1, Hue=3 — all within [1,3].  
+        - Cross-section: `L_h>0 & M_h>0` ⇒ true.  
+        - All other constraints satisfied (S_f=1, S_g=0, S_h=1).  
+        - This is satisfiable.  
+    - Choice 3: "Both in Sports by Hue" ⇒ `S_h =2`. But earlier we deduced `S_f=1`, `S_g=0`, so S_h must be 1 ⇒ contradiction. UNSAT.  
+    - Choice 4: "Neither in Sports by Hue" ⇒ `S_h=0`. But again, deduced S_h=1. UNSAT.  
+15. Define `answer_index_list = []`. For each choice (0 to 4), clone constraints, add the choice-specific equality, and if solver is SAT, append index to `answer_index_list`.  
+16. Print `answer_index_list` (should contain only index 2).

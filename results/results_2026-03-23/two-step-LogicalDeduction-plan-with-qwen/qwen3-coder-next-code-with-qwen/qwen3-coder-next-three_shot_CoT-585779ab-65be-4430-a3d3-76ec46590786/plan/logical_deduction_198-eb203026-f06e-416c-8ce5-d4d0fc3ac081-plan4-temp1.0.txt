@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven golfers as string variables: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, and `"Ana"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (leftmost / highest rank)** and **7 = last place (rightmost / lowest rank)**.
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique finishing positions for all golfers.
+    * Translate each statement into a constraint using lambda or direct equality/inequality:
+        * "Joe finished first" → `Joe == 1`.
+        * "Mel finished second-to-last" → `Mel == 6` (since positions are 1 to 7, second-to-last is position 6).
+        * "Rob finished above Eve" → `Rob < Eve` (lower numerical rank means better/more forward finish).
+        * "Mel finished above Eli" → `Mel < Eli`.
+        * "Rob finished below Ada" → `Ada < Rob` (since Ada is ranked better/faster).
+        * "Eve finished fourth" → `Eve == 4`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments satisfying all constraints.
+    * Extract the single (or first) solution dictionary since the problem is well-defined and consistent.
+
+5.  **Identify the Correct Answer:**
+    * The question asks who finished fourth → find the golfer whose position value is 4 in the solution.
+    * Map choice letters to golfers: A→Joe, B→Eli, C→Ada, D→Mel, E→Eve, F→Rob, G→Ana.
+    * Compare the golfer at position 4 with the list and select the corresponding letter.
+    * Output that letter as the final answer.

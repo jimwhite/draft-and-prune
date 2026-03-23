@@ -1,0 +1,27 @@
+1.  Identify all entities and types: Polly, vumpus, zumpus, dumpus, impus, numpus, tumpus, jompus, yumpus, wumpus, rompus.  
+2.  Identify all properties: transparent, large, spicy, blue, temperate, happy, amenable, floral.  
+3.  Represent "Polly is a vumpus" as a base fact: `is_a("Polly", "vumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Every vumpus is transparent.  
+    * Vumpuses are zumpuses.  
+    * Every zumpus is not large.  
+    * Zumpuses are dumpuses.  
+    * Every dumpus is spicy.  
+    * Each dumpus is a numpus.  
+    * Each impus is blue.  
+    * Numpuses are temperate.  
+    * Every numpus is a tumpus.  
+    * Tumpuses are not blue.  
+    * Tumpuses are jompuses.  
+    * Each jompus is happy.  
+    * Each jompus is a yumpus.  
+    * Each yumpus is not amenable.  
+    * Every yumpus is a wumpus.  
+    * Wumpuses are not floral.  
+    * Wumpuses are rompuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence, ensuring:  
+    * Subclass relationships (e.g., “Xs are Ys” → `forall x, is_a(x, X) -> is_a(x, Y)`) are encoded as implication rules.  
+    * Property assertions (e.g., “Xs are Y” or “Xs are not Y”) become property facts (e.g., `is_Y(x)` or `¬is_Y(x)`) derived via `foreach` over the appropriate class.  
+    * Critical note: Tumpuses are not blue (→ `forall t, is_tumpus(t) -> ¬is_blue(t)`) and tumpuses are jompuses (→ `forall t, is_tumpus(t) -> is_jompus(t)`), and jompuses are yumpuses (→ `forall j, is_jompus(j) -> is_yumpus(j)`), and yumpuses are wumpuses (→ `forall y, is_yumpus(y) -> is_wumpus(y)`), etc., form a chain. Since Polly is a vumpus, and vumpuses are zumpuses, zumpuses are dumpuses, dumpuses are numpuses, numpuses are tumpuses → Polly is a tumpus. Then from “tumpuses are not blue”, infer `¬is_blue(Polly)`.  
+6.  The query tests if the statement “Polly is not blue” is provable:  
+    → Use `facts.is_blue("Polly", False)`.

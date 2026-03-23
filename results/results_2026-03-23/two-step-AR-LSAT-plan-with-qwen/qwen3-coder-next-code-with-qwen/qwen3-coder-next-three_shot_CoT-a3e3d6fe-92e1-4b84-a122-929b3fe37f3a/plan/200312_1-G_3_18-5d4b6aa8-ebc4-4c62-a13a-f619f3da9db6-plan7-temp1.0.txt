@@ -1,0 +1,18 @@
+1. Enumerate cookie types: oatmeal (O), peanut butter (P), sugar (S); and days: Monday=0, Tuesday=1, Wednesday=2, Thursday=3, Friday=4.  
+2. Create integer variables `first_O`, `second_O`, `third_O`, `first_P`, `second_P`, `third_P`, `first_S`, `second_S`, `third_S` for the day each batch is made.  
+3. Add **domain constraints**: all variables ∈ {0,1,2,3,4}.  
+4. Add **per-type ordering constraints**: for each cookie type, `first < second < third`.  
+5. Add **no-same-day-for-same-type constraints**: no two batches of the same type on same day (already enforced by strict ordering).  
+6. Add **given fixed constraint**: `second_S == 3` (Thursday).  
+7. Add **at-least-one-on-Monday constraint**: at least one of all nine batch variables equals 0.  
+8. Add **cross-type constraint**: `second_O == first_P`.  
+9. Introduce an auxiliary condition: assume the premise holds — there exists some cookie type X and another type Y such that `first_X == third_Y`.  
+10. Encode this as a disjunctive constraint: `(first_O == third_P) ∨ (first_O == third_S) ∨ (first_P == third_O) ∨ (first_P == third_S) ∨ (first_S == third_O) ∨ (first_S == third_P)`.  
+11. For each answer choice, which is a statement about daily batch counts:  
+    - Define count variables per day: e.g., `cnt_Mon = If(v==0, 1, 0) + ...` over all nine batch variables.  
+    - For each choice:  
+        a. Clone base constraints + the premise constraint (step 9).  
+        b. Assert the negation of the choice statement (e.g., for "At least one batch on each day", assert `cnt_Mon == 0 ∨ cnt_Tue == 0 ∨ ... ∨ cnt_Fri == 0`).  
+        c. If this is SAT (i.e., model exists where premise holds but choice statement is false), then the choice *could be false*, so mark it as a candidate.  
+12. Among the choices, select those where the statement *could* be false under the premise — i.e., where adding the negation yields a satisfiable model.  
+13. Return the list of indices corresponding to such choices (the question asks which one *could* be false — implying exactly one, but the plan identifies all that qualify).

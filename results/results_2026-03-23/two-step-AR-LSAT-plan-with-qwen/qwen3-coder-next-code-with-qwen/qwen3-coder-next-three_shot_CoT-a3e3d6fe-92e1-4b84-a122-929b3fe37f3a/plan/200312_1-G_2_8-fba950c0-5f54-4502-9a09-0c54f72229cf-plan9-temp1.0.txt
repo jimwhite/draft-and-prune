@@ -1,0 +1,12 @@
+1. Enumerate the six cargo types and assign them integer codes (fuel, grain, livestock, machinery, produce, textiles → 0–5).  
+2. Create integer variables for bay positions of each cargo type: `pos_fuel`, `pos_grain`, `pos_livestock`, `pos_machinery`, `pos_produce`, `pos_textiles`, each ranging from 1 to 6.  
+3. Add **distinctness constraint**: all six position variables must be pairwise distinct (one cargo per bay).  
+4. Add **ordering constraints** from the problem:  
+   - `pos_grain > pos_livestock`  
+   - `pos_livestock > pos_textiles`  
+   - `pos_produce > pos_fuel`  
+   - Textiles and produce are adjacent: `abs(pos_textiles - pos_produce) == 1`  
+5. Add the conditional constraint: exactly one bay between machinery and grain → `abs(pos_machinery - pos_grain) == 2`.  
+6. Since the question asks for how many bays have *completely determined* cargo types (i.e., fixed positions across all solutions), enumerate all satisfying assignments (or use model counting with backtracking to collect all models).  
+7. For each bay position `i` (1 to 6), check across all solutions whether the cargo at bay `i` is always the same type. Count how many positions have a fixed cargo type in every solution.  
+8. Return the count (which will be one of: 2, 3, 4, 5, or 6).

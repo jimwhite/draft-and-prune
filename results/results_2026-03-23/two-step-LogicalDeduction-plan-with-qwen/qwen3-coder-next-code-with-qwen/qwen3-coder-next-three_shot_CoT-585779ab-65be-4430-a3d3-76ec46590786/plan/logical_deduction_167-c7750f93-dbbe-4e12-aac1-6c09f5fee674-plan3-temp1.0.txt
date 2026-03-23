@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven bird variables as strings: `"falcon"`, `"crow"`, `"hawk"`, `"hummingbird"`, `"bluejay"`, `"robin"`, and `"raven"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost** position.
+    * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.
+
+4.  **Translate Each Statement into Constraints Using Lambda Functions:**
+    * "The blue jay is to the right of the robin": `lambda robin, bluejay: bluejay > robin`
+    * "The hawk is to the left of the hummingbird": `lambda hawk, hummingbird: hawk < hummingbird`
+    * "The robin is the second from the right": `robin == 6` (since position 7 is rightmost, second from right = 6)
+    * "The falcon is the third from the left": `falcon == 3`
+    * "The crow is to the right of the hummingbird": `lambda hummingbird, crow: crow > hummingbird`
+    * "The raven is the second from the left": `raven == 2`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the unique solution from the returned list (since the problem is well-constrained, there should be exactly one).
+
+6.  **Analyze the Solution to Find the Third-from-the-Right Bird:**
+    * In the 1–7 scale, third from the right corresponds to position `5` (positions: left→right = 1,2,3,4,**5**,6,7←right).
+    * Iterate over the solved assignment (a dictionary mapping bird names to positions), and find which bird has position `5`.
+
+7.  **Map the Result to the Correct Choice Letter:**
+    * Create a mapping from choice letters (`'A'` through `'G'`) to the bird name specified in each option:
+        * `'A'`: `"falcon"`
+        * `'B'`: `"crow"`
+        * `'C'`: `"hawk"`
+        * `'D'`: `"hummingbird"`
+        * `'E'`: `"bluejay"`
+        * `'F'`: `"robin"`
+        * `'G'`: `"raven"`
+    * Determine which bird occupies position 5 in the solution.
+    * Return (or output) the corresponding choice letter.

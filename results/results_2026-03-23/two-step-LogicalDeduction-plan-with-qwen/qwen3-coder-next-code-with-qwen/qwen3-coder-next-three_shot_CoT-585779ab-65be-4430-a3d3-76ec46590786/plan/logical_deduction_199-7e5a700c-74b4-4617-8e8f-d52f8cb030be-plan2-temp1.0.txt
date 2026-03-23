@@ -1,0 +1,35 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction model.
+
+2.  **Define Variables and the Domain:**
+    * Identify the seven variables as the book titles: `"red"`, `"purple"`, `"green"`, `"white"`, `"orange"`, `"blue"`, and `"gray"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven book variables to the problem with this domain using `addVariable`.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions across all books.
+    * Translate each statement into a lambda-based constraint:
+        * "The green book is to the left of the white book" → `green < white`
+        * "The red book is to the left of the purple book" → `red < purple`
+        * "The red book is to the right of the orange book" → `orange < red`
+        * "The gray book is the second from the left" → `gray == 2`
+        * "The purple book is to the left of the green book" → `purple < green`
+        * "The blue book is the fourth from the left" → `blue == 4`
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid assignments of positions.
+    * Extract the first (and unique) solution dictionary.
+
+5.  **Determine the Correct Answer:**
+    * The question asks which book is **second from the left**, i.e., has position 2.
+    * Create a mapping from choice letters to book names:
+        - 'A' → "red"
+        - 'B' → "purple"
+        - 'C' → "green"
+        - 'D' → "white"
+        - 'E' → "orange"
+        - 'F' → "blue"
+        - 'G' → "gray"
+    * In the solved solution, find which book's assigned position equals 2.
+    * Return the corresponding choice letter.

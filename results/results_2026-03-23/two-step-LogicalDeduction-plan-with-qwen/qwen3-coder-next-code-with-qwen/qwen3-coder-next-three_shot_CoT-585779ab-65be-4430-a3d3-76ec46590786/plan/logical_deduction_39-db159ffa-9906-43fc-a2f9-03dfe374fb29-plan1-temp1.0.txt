@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to begin modeling the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the five books as variables: `"green"`, `"blue"`, `"brown"`, `"gray"`, `"red"`.  
+   * Define the domain for positions as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into constraints using lambda functions:  
+     - "The green book is to the left of the brown book" → `green < brown`  
+     - "The gray book is to the left of the blue book" → `gray < blue`  
+     - "The green book is to the right of the blue book" → `blue < green`  
+     - "The red book is the leftmost" → `red == 1`
+
+4. **Solve for All Valid Arrangements:**  
+   * Call `getSolutions()` to find all solutions satisfying the constraints.  
+   * Extract the unique solution (since the problem states statements are logically consistent, exactly one solution exists).
+
+5. **Determine Which Book Is Third from the Left:**  
+   * In our indexing, "third from the left" corresponds to position **3**.  
+   * Create a mapping from choice letters (`'A'` through `'E'`) to book names as per the choices:  
+     - `'A'`: `"green"`, `'B'`: `"blue"`, `'C'`: `"brown"`, `'D'`: `"gray"`, `'E'`: `"red"`  
+   * Examine the solution dictionary to find which book has position value 3.  
+   * Return the choice letter corresponding to that book as the answer.

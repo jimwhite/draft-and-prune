@@ -1,0 +1,31 @@
+1. Enumerate the six bands and assign each an integer index: Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5.  
+2. Create integer position variables `pos[0]` through `pos[5]`, each ranging from 1 to 6.  
+3. Add **all-different constraint**: positions must be a permutation of [1,2,3,4,5,6].  
+4. Add original constraints:  
+   - Vegemite before Zircon: `pos[1] < pos[5]`.  
+   - Wellspring and Zircon before Xpert: `pos[2] < pos[3]` and `pos[5] < pos[3]`.  
+   - Uneasy in last three slots: `pos[0] ∈ {4,5,6}`.  
+   - Yardsign in first three slots: `pos[4] ∈ {1,2,3}`.  
+5. For each answer choice, parse and formalize its logical constraint:  
+   - Choice A: “Only Uneasy can perform in a later slot than Xpert” → i.e., for all bands B ≠ Uneasy, `pos[B] < pos[Xpert]`, and `pos[Uneasy] > pos[Xpert]`.  
+   - Choice B: “Vegemite < Wellspring < Zircon” → `pos[1] < pos[2] < pos[5]`.  
+   - Choice C: “Vegemite and Wellspring each before Xpert” → `pos[1] < pos[3]` and `pos[2] < pos[3]`.  
+   - Choice D: “Xpert immediately before or after Uneasy” → `|pos[3] - pos[0]| = 1`.  
+   - Choice E: “Xpert in slot 5 or 6” → `pos[3] ∈ {5,6}`.  
+6. Define original_solver with base constraints (step 2–4). For each choice i:  
+   - Create new_solver.  
+   - Assert original constraints (step 4).  
+   - Assert the constraint for choice i.  
+   - Check satisfiability: if SAT, then choice i is *logically equivalent* to the original pair-of-conditions **only if** it preserves exactly the same set of valid orders.  
+7. To test logical equivalence (i.e., same constraint effect), we verify:  
+   a. Every model satisfying original constraints also satisfies the new constraint (new ⊇ original).  
+   b. Every model satisfying new constraint also satisfies original constraints (original ⊇ new).  
+   - So:  
+      i. Add original_solver + ¬(choice constraint), and check UNSAT → if SAT, choice is too weak (fails a).  
+      ii. Add new_solver + ¬(original constraint), and check UNSAT → if SAT, choice is too strong (fails b).  
+   - Equivalently: for each choice, build two checkers:  
+      - Solver1 = original_constraints ∪ {¬choice_constraint}; if SAT → choice insufficient (eliminate).  
+      - Solver2 = choice_constraints ∪ {¬original_constraint}; if SAT → choice too strong (eliminate).  
+   - Keep only choices where both Solver1 and Solver2 are UNSAT.  
+8. Among the answer choices, identify which one satisfies logical equivalence in both directions (i.e., neither solver produces a model violating the other).  
+9. Return the index of the choice(s) that are logically equivalent to “Wellspring < Xpert and Zircon < Xpert”.

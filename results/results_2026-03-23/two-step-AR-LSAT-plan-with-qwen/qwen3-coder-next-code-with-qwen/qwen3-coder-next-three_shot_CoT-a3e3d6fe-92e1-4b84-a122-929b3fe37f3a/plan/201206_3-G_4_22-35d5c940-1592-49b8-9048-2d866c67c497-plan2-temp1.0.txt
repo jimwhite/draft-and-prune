@@ -1,0 +1,19 @@
+1. Enumerate the five solos (positions 1 to 5) and assign each a pianist variable (Wayne or Zara) and a piece type variable (modern or traditional).  
+2. Create Boolean variables: `pianist[i]` (True = Wayne, False = Zara) and `type[i]` (True = traditional, False = modern) for each solo i ∈ {1,2,3,4,5}.  
+3. Add **fixed constraints** from the problem:  
+    - Solo 3 is traditional: `type[2] == True`.  
+    - Exactly two traditional pieces are performed consecutively → there exists exactly one pair of adjacent positions (i, i+1) where both `type[i-1]` and `type[i]` are True, and no other adjacent traditional pair (i.e., total number of adjacent true pairs = 1).  
+    - In solo 4: `pianist[3] == True ∧ type[3] == True` OR `pianist[3] == False ∧ type[3] == False`.  
+    - The pianist who performs solo 2 ≠ the pianist who performs solo 5: `pianist[1] != pianist[4]`.  
+    - No traditional piece is performed until Wayne performs at least one modern piece → let `first_Wayne_modern_pos` be the smallest i such that `pianist[i-1] == True ∧ type[i-1] == False`; then for all j < first_Wayne_modern_pos, `type[j-1] == False`.  
+4. Add **scenario assumption**: fifth solo is Wayne performing a traditional piece: `pianist[4] == True ∧ type[4] == True`.  
+5. Translate each answer choice into a constraint and test feasibility under the above fixed + scenario constraints:  
+    - Choice 0: Zara performs first solo → `pianist[0] == False`.  
+    - Choice 1: Wayne performs second solo → `pianist[1] == True`.  
+    - Choice 2: Zara performs third solo → `pianist[2] == False`.  
+    - Choice 3: Second solo is modern → `type[1] == False`.  
+    - Choice 4: Fourth solo is traditional → `type[3] == True`.  
+6. For each choice, clone the core constraints + scenario assumption, add the choice constraint, and check SAT.  
+7. Collect all choices for which the model is SAT into a list `possible_choices_indices`.  
+8. The question asks "which one *could* be true", so select the SAT options; output their indices (as per instructions: only raw plan, no actual code).  
+9. Print `possible_choices_indices`.

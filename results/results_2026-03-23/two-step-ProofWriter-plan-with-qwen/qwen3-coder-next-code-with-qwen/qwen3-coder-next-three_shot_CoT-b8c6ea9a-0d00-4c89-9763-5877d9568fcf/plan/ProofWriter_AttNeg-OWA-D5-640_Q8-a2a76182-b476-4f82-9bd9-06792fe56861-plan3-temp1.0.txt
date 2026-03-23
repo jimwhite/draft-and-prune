@@ -1,0 +1,17 @@
+1. Identify all entities involved: Bob, Dave, Fiona, Harry.
+2. Represent all explicit facts using ternary predicates of the form predicate(entity, boolean_value), where properties like is_rough, is_furry, is_nice, is_red, is_smart, is_green take boolean values.
+   - Examples: is_rough("Bob", True), is_furry("Dave", True), is_nice("Dave", True), is_red("Dave", False), etc.
+3. Encode all direct negated facts explicitly as predicate(entity, False) (e.g., is_red("Dave", False), is_red("Harry", False)).
+4. Translate all conditional and universal statements into PyKe rules using `foreach` for antecedent pattern matching and `assert` for consequent conclusions:
+   • Smart things are green: foreach is_smart(?x, True) → assert is_green(?x, True).
+   • If something is nice and not rough then it is red: foreach is_nice(?x, True), is_rough(?x, False) → assert is_red(?x, True).
+   • If something is nice then it is smart: foreach is_nice(?x, True) → assert is_smart(?x, True).
+   • If something is rough then it is nice: foreach is_rough(?x, True) → assert is_nice(?x, True).
+   • If something is blue then it is furry: foreach is_blue(?x, True) → assert is_furry(?x, True).
+   • All blue, smart things are furry: foreach is_blue(?x, True), is_smart(?x, True) → assert is_furry(?x, True).
+   • If Bob is furry and not rough then Bob is green: foreach is_furry("Bob", True), is_rough("Bob", False) → assert is_green("Bob", True).
+   • If something is green then it is blue: foreach is_green(?x, True) → assert is_blue(?x, True).
+   • If something is red and not nice then it is not blue: foreach is_red(?x, True), is_nice(?x, False) → assert is_blue(?x, False).
+5. For rules involving conjunctions of positive and negative literals (e.g., "is_rough(?x, False)"), ensure that the `foreach` clause includes both positive and negative tests using negation-as-failure or explicit Boolean comparison depending on PyKe syntax (but strictly follow ternary predicate encoding: use `is_rough(?x, False)` directly as a fact pattern match).
+6. The query tests whether Bob is *not* green:
+   → Use facts.is_green("Bob", False).

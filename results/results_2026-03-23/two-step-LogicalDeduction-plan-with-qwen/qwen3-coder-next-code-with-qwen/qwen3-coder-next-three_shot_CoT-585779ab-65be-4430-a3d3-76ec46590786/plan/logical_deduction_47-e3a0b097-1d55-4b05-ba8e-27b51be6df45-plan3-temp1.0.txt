@@ -1,0 +1,26 @@
+1.  **Initialize the Constraint Satisfaction Problem:**  
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+    * Create an instance of `Problem`.
+
+2.  **Define Variables and Domain:**  
+    * Define the five birds as variables: `"blue jay"`, `"robin"`, `"cardinal"`, `"hawk"`, `"falcon"`.  
+    * Define the domain as integers 1 to 5, where 1 = leftmost and 5 = rightmost.  
+    * Add all variables with domain {1,2,3,4,5} to the problem.
+
+3.  **Add Logical Constraints:**  
+    * Add `AllDifferentConstraint()` to enforce unique positions for each bird.  
+    * Translate statements:  
+        * "The blue jay is the rightmost" → `blue jay == 5`.  
+        * "The robin is to the right of the falcon" → `falcon < robin`.  
+        * "The cardinal is to the left of the hawk" → `cardinal < hawk`.  
+        * "The falcon is to the right of the hawk" → `hawk < falcon`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid assignments.  
+    * Extract the unique solution (if any) from the list of solutions.
+
+5.  **Identify the Correct Choice:**  
+    * The question asks which bird is rightmost (position 5).  
+    * Map choices: A→"blue jay", B→"robin", C→"cardinal", D→"hawk", E→"falcon".  
+    * In the solution, find which bird has position 5.  
+    * Output the corresponding choice letter (e.g., "A" if blue jay is at 5).

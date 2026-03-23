@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven bird variables: `"falcon"`, `"owl"`, `"quail"`, `"raven"`, `"hummingbird"`, `"blue_jay"`, and `"crow"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven birds as variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint using `lambda` or direct variable constraints:  
+     - "The quail is to the left of the owl" → `quail < owl`  
+     - "The owl is the second from the left" → `owl == 2`  
+     - "The crow is to the right of the falcon" → `falcon < crow`  
+     - "The blue jay is to the right of the hummingbird" → `hummingbird < blue_jay`  
+     - "The hummingbird is to the right of the raven" → `raven < hummingbird`  
+     - "The blue jay is to the left of the falcon" → `blue_jay < falcon`  
+   * Add all six constraints to the problem.
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Since the problem is well-constrained and consistent, extract the unique solution (e.g., `solutions[0]` or iterate to retrieve the single dictionary).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which bird is **leftmost**, i.e., has position value 1.  
+   * Create a mapping from choice letters (`"A"` through `"G"`) to their respective bird names:  
+     `{"A": "falcon", "B": "owl", "C": "quail", "D": "raven", "E": "hummingbird", "F": "blue_jay", "G": "crow"}`  
+   * Iterate through the mapping: for each choice letter, check if the corresponding bird's position in the solution equals 1.  
+   * Return the choice letter whose condition is satisfied as the final answer.

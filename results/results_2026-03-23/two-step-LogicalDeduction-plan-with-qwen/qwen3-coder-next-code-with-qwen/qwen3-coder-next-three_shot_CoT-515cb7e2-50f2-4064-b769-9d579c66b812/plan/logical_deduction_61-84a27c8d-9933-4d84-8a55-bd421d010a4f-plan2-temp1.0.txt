@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five books as variables: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.  
+    * Define the domain for positions as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+    * Add all five variables with domain `{1, 2, 3, 4, 5}` to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+    * Add constraints derived from each statement using lambda functions:  
+        - *"The red book is to the right of the gray book"* → `red > gray`  
+        - *"The black book is to the left of the blue book"* → `black < blue`  
+        - *"The blue book is to the left of the gray book"* → `blue < gray`  
+        - *"The purple book is the second from the right"* → `purple == 4` (since position 5 is rightmost, position 4 is second-rightmost)
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to compute all valid assignments satisfying all constraints.  
+    * Extract the single solution (since logically consistent implies uniqueness), which will be a dictionary mapping each book name to its position.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which statement about being "second from the right" is true. In our numbering, second-from-right = position 4.  
+    * Note that the purple book is already constrained to be at position 4, so option C must hold.  
+    * Verify this by checking the solution: find which book has position 4.  
+    * Map the correct choice letter to the verified bird/book (here, "purple book" maps to option C).  
+    * Return or output the correct choice letter: **C**.

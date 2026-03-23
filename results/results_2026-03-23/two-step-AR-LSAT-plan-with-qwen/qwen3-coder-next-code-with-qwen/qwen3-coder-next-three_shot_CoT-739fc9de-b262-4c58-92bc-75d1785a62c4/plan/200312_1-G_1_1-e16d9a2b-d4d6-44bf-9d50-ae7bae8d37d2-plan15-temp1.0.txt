@@ -1,0 +1,20 @@
+1. Enumerate the nine scientists: botanists [F, G, H], chemists [K, L, M], zoologists [P, Q, R] and assign each a unique integer index (0–8).  
+2. Create Boolean decision variables for each scientist being selected (e.g., `sel_F`, `sel_G`, ..., `sel_R`).  
+3. Add **panel-size constraint**: exactly five scientists are selected (`sum(sel_i for all i) == 5`).  
+4. Add **type-completeness constraint**: at least one botanist, one chemist, and one zoologist must be selected:  
+    - `sel_F or sel_G or sel_H`  
+    - `sel_K or sel_L or sel_M`  
+    - `sel_P or sel_Q or sel_R`  
+5. Add **botanist-zoologist constraint**: if more than one botanist is selected, then at most one zoologist is selected.  
+    - Introduce auxiliary Boolean `bot_count_gt1 = (sel_F + sel_G + sel_H >= 2)`  
+    - Implication: `bot_count_gt1 → (sel_P + sel_Q + sel_R <= 1)`  
+6. Add **F-K incompatibility**: `not (sel_F and sel_K)`  
+7. Add **K-M incompatibility**: `not (sel_K and sel_M)`  
+8. Add **M-implication constraint**: if M is selected, both P and R must be selected:  
+    - `sel_M → (sel_P and sel_R)`  
+9. Translate each answer choice into a conjunction of selections and negations (e.g., ['F, G, K, P, Q'] → `sel_F ∧ sel_G ∧ ¬sel_H ∧ sel_K ∧ sel_L? No — wait, must include exactly those five and exclude the other four`).  
+    - For each choice list: assert that the listed scientists are selected, and the remaining six (not in the list) are unselected.  
+10. For each answer choice, clone the base constraints and add the concrete selection pattern for that choice.  
+11. Check satisfiability with Z3 for each choice.  
+12. Collect indices of choices that yield SAT; exactly one will be satisfiable (as per LSAT-style logic).  
+13. Return the index of that choice as the solution.

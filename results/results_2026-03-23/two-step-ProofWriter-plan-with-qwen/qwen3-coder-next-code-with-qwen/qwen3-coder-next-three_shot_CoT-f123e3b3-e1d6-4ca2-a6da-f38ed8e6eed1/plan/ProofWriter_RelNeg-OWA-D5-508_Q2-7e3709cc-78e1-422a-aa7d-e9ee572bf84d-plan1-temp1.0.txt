@@ -1,0 +1,14 @@
+1. Identify all entities involved: bald_eagle, cat, cow, squirrel.
+2. Encode directly stated facts using ternary predicates: is_big("bald_eagle", True), is_cold("bald_eagle", True), is_young("bald_eagle", True), is_kind("cat", False), is_red("cow", True), likes("cow", "bald_eagle", True), visits("squirrel", "bald_eagle", True).
+3. Translate each conditional rule into PyKe `foreach` + `assert`:
+   • If something likes the cow → the cow likes the squirrel.
+   • All big things are cold: foreach thing is_big(thing, True) → assert is_cold(thing, True).
+   • If squirrel is red → squirrel is young: foreach condition squirrel is_red("squirrel", True) → assert is_young("squirrel", True).
+   • If something likes the squirrel → squirrel is red: foreach thing likes(thing, "squirrel", True) → assert is_red("squirrel", True).
+   • If something is young → it likes the cow: foreach thing is_young(thing, True) → assert likes(thing, "cow", True).
+   • If squirrel likes cat AND cow does NOT chase squirrel → cat likes cow: foreach condition likes("squirrel", "cat", True) AND NOT chases("cow", "squirrel", True) → assert likes("cat", "cow", True).
+   • If something visits the squirrel AND squirrel is big → it does NOT like the squirrel: foreach thing visits(thing, "squirrel", True) AND is_big("squirrel", True) → assert likes(thing, "squirrel", False).
+   • If something is big → it visits the cow: foreach thing is_big(thing, True) → assert visits(thing, "cow", True).
+   • If something visits the squirrel AND it is NOT red → squirrel does NOT visit bald_eagle: foreach thing visits(thing, "squirrel", True) AND is_red(thing, False) → assert visits("squirrel", "bald_eagle", False).
+4. Note: The fact `is_red("cow", True)` is explicitly given; hence the negated query "The cow is not red" corresponds to `is_red("cow", False)`.
+5. Query: Use facts.is_red("cow", False).

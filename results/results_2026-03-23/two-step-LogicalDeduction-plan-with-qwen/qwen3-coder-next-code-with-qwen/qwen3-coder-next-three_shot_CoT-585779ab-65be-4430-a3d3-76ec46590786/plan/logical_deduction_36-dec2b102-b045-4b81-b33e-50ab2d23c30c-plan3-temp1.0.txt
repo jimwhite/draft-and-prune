@@ -1,0 +1,26 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the golf tournament ranking constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five golfers: `"Dan"`, `"Amy"`, `"Eve"`, `"Ana"`, and `"Mya"`.  
+   * Define the domain as integers from 1 to 5, where **1 = highest rank (finished first)** and **5 = lowest rank (finished last)**.  
+   * Add all variables with this domain to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure no two golfers share the same rank.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - "Dan finished above Eve" → Dan’s rank < Eve’s rank (`lambda d, e: d < e`).  
+     - "Dan finished below Mya" → Mya’s rank < Dan’s rank (`lambda m, d: m < d`).  
+     - "Amy finished third" → Amy’s rank = 3 (`lambda a: a == 3`).  
+     - "Ana finished second-to-last" → Ana’s rank = 4 (since last is 5) (`lambda an: an == 4`).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid rank assignments.  
+   * Extract the unique solution (a dictionary mapping each golfer to their rank) from the result list.
+
+5. **Determine Which Golfer Finished Last (Rank 5):**  
+   * Examine the solution to find which golfer has rank 5 (last place).  
+   * Map this golfer to the correct choice letter by comparing against:  
+     - A → Dan, B → Amy, C → Eve, D → Ana, E → Mya.  
+   * Return the letter (A–E) corresponding to the golfer with rank 5 as the answer.

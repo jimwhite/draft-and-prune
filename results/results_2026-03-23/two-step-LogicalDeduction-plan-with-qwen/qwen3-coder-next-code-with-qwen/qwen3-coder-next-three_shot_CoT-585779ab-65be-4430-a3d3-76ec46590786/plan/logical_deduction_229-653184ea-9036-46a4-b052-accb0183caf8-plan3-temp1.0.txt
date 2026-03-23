@@ -1,0 +1,33 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"oranges"`, `"plums"`, `"loquats"`, `"apples"`, `"kiwis"`, `"cantaloupes"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, aligning with the phrasing "most expensive"/"cheapest".
+    * Add all seven fruit variables to the problem with this domain.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that all fruits have distinct prices/ranks by adding an `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The loquats are less expensive than the kiwis" → `loquats < kiwis`
+    * "The plums are the cheapest" → `plums == 1`
+    * "The loquats are the fourth-most expensive" → `loquats == 4` (since most expensive = highest rank, so fourth-most expensive is position 4 in ascending price order)
+    * "The peaches are less expensive than the oranges" → `peaches < oranges`
+    * "The peaches are more expensive than the kiwis" → `peaches > kiwis`
+    * "The apples are the second-cheapest" → `apples == 2`
+
+5.  **Solve the Constraint Problem:**
+    * Use `getSolutions()` to find all valid assignments of ranks to fruits.
+    * Since the problem is deterministic, there will be exactly one solution; extract it.
+
+6.  **Determine the Third-Most-Expensive Fruit:**
+    * The third-most-expensive corresponds to rank **5** in our system (1 = cheapest, 2 = second-cheapest, ..., 5 = third-most-expensive).
+    * Iterate through the solved dictionary to find which fruit has value `5`.
+
+7.  **Map to Answer Choice:**
+    * Create a mapping from choice letters `['A', 'B', 'C', 'D', 'E', 'F', 'G']` to fruit names:
+        * A → `"oranges"`, B → `"plums"`, C → `"loquats"`, D → `"apples"`, E → `"kiwis"`, F → `"cantaloupes"`, G → `"peaches"`
+    * Identify the letter corresponding to the fruit with rank 5.
+    * Return that letter as the final answer.

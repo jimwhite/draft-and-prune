@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven golfers as variables: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, `"Dan"`.
+    * Define the domain as integers from 1 to 7, where 1 represents first place (best) and 7 represents last place (worst).
+    * Add all seven golfers as variables to the problem, each with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce that no two golfers share the same finishing position.
+    * Translate each factual statement into a constraint using `addConstraint` with appropriate lambda functions:
+        * "Rob finished first" → Rob's position equals 1.
+        * "Eve finished last" → Eve's position equals 7.
+        * "Dan finished above Ada" → Dan's position number is less than Ada's (`Dan < Ada`).
+        * "Mel finished above Mya" → Mel's position number is less than Mya's (`Mel < Mya`).
+        * "Joe finished second-to-last" → Joe's position equals 6 (since last is 7).
+        * "Mya finished third" → Mya's position equals 3.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments of positions to golfers.
+    * Since the constraints uniquely determine the arrangement, extract the single solution from the returned list.
+
+5.  **Determine the Correct Answer:**
+    * Examine the question: identify which golfer finished third (position 3).
+    * Create a mapping from choice letters to golfers:
+        A → Joe, B → Mel, C → Mya, D → Eve, E → Rob, F → Ada, G → Dan.
+    * In the solved solution dictionary, find which golfer has position 3.
+    * Return the corresponding choice letter for that golfer.

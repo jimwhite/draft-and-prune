@@ -1,0 +1,22 @@
+1. Enumerate the six available colors: forest, olive, peach, turquoise, white, yellow (assign integer indices 0–5).  
+2. Since exactly five colors are used out of six, define a Boolean variable `used[c]` for each color c indicating if it is used. Add constraint: exactly five `used[c]` are true.  
+3. Define three rugs (R1, R2, R3). For each rug i and color c, define Boolean variable `in_rug[i][c]` indicating if color c is in rug i.  
+4. Add **color usage constraint**: each color used appears in exactly one rug: `used[c] ⇔ (in_rug[0][c] ∨ in_rug[1][c] ∨ in_rug[2][c])`.  
+5. Add **solid/multicolored constraint**: since there are exactly two solid rugs, one rug is multicolored. Represent “rug i is solid” by: exactly one color c such that `in_rug[i][c]` is true. Enforce: exactly two rugs have exactly one color, one rug has ≥2 colors.  
+6. Add **rule constraints for each rug**:  
+   - (R1) If white ∈ rug, then rug contains exactly two other colors → i.e., if `in_rug[i][white]` then rug has exactly 3 colors (since white + 2 others).  
+   - (R2) If olive ∈ rug, then peach ∈ rug.  
+   - (R3) Forest and turquoise cannot co-occur in same rug: ¬(`in_rug[i][forest] ∧ in_rug[i][turquoise]`) for each i.  
+   - (R4) Peach and turquoise cannot co-occur in same rug: ¬(`in_rug[i][peach] ∧ in_rug[i][turquoise]`).  
+   - (R5) Peach and yellow cannot co-occur in same rug: ¬(`in_rug[i][peach] ∧ in_rug[i][yellow]`).  
+7. Translate answer choices into pairs of colors (e.g., “forest and peach” → indices 0 and 2). For each choice, check whether it is *possible* for the two solid rugs to be those colors.  
+8. Define `answer_index_list = []`. For each choice index j (0 to 4), representing a forbidden pair:  
+   - Create fresh solver, copy base constraints.  
+   - Add constraint that rug1 is solid with color A and rug2 is solid with color B (or vice versa — try both assignments to cover all orderings). Specifically:  
+     - For assignment 1: `in_rug[0][A] = true`, all other `in_rug[0][c≠A] = false`; `in_rug[1][B] = true`, all other `in_rug[1][c≠B] = false`; rug2 (i=1) solid, rug0 (i=0) solid.  
+     - For assignment 2: swap rugs (rug0 gets B, rug1 gets A).  
+     - Add disjunction of the two assignments (using auxiliary variable or two solver clones).  
+   - Optionally, ensure remaining rug (i=2) is multicolored (≥2 colors).  
+   - Add constraints that remaining used colors match usage rules (already covered).  
+   - If both assignments yield UNSAT, then this pair **cannot** be the two solid rugs; append j to `answer_index_list`.  
+9. Output `answer_index_list` (indices of choices that are impossible).

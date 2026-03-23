@@ -1,0 +1,33 @@
+1.  Identify all entities and types: Wren, zumpus, dumpus, rompus, vumpus, numpus, wumpus, yumpus, tumpus, impus.  
+2.  Identify all properties: nervous, large, brown, transparent, bitter, floral, bright, and note that "not X" properties (e.g., not bitter, not transparent, not bright) are derived negated facts.  
+3.  Represent "Wren is a dumpus" as a base fact: `is_a("Wren", "dumpus", True)`.  
+4.  Convert all class-level universal statements and subclass relationships into logical rules:  
+    - Every zumpus is nervous.  
+    - Every zumpus is a dumpus.  
+    - Every dumpus is large.  
+    - Dumpuses are rompuses.  
+    - Every rompus is brown.  
+    - Vumpuses are transparent. *(Note: This applies to all vumpuses, but no individual is known to be a vumpus, so it won’t affect Wren.)*  
+    - Each rompus is a numpus.  
+    - Numpuses are not bitter.  
+    - Numpuses are wumpuses.  
+    - Each wumpus is floral.  
+    - Every wumpus is a yumpus.  
+    - Every yumpus is not transparent.  
+    - Yumpuses are tumpuses.  
+    - Tumpuses are not bright.  
+    - Every tumpus is an impus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (e.g., `foreach zumpus(z), is_a(z, "zumpus", True) => assert is_nervous(z, True)`).  
+6.  Derive Wren’s type chain step-by-step from the base fact:  
+    - `is_a("Wren", "dumpus", True)` (given)  
+    - ⇒ Wren is large (`foreach d, dumpus(d) => large(d)`),  
+    - ⇒ Wren is a rompus (`dumpus ⊆ rompus`),  
+    - ⇒ Wren is brown (`rompus ⊆ brown`),  
+    - ⇒ Wren is a numpus (`rompus ⊆ numpus`),  
+    - ⇒ Wren is not bitter (`numpus ⇒ ¬bitter`),  
+    - ⇒ Wren is a wumpus (`numpus ⊆ wumpus`),  
+    - ⇒ Wren is floral (`wumpus ⇒ floral`),  
+    - ⇒ Wren is a yumpus (`wumpus ⊆ yumpus`),  
+    - ⇒ Wren is not transparent (`yumpus ⇒ ¬transparent`).  
+7.  The query tests whether “Wren is not transparent” can be proven:  
+    → Use `facts.is_transparent("Wren", False)`.

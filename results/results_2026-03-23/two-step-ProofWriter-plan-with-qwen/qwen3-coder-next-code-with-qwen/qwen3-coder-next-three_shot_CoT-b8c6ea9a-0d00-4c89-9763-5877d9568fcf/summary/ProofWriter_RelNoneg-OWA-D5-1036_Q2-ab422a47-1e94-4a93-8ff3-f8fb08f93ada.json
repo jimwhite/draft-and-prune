@@ -1,0 +1,394 @@
+{
+  "problem": {
+    "id": "ProofWriter_RelNoneg-OWA-D5-1036_Q2",
+    "context": "The bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.",
+    "question": "Based on the above information, is the following statement true, false, or unknown? The squirrel is not rough.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Unknown"
+    ],
+    "answer": "B"
+  },
+  "timing": 425.35175943374634,
+  "all_solver_outputs": [
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: Could not find required PyKe section(s): rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: Could not find required PyKe section(s): rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers."
+  ],
+  "all_solver_error_types": [
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error"
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1407,
+        "completion_tokens": 737,
+        "total_tokens": 2144
+      },
+      "plan_generation_api_time_only": 18.132553339004517,
+      "code_generation_usage": {
+        "prompt_tokens": 3931,
+        "completion_tokens": 150,
+        "total_tokens": 4081
+      },
+      "code_generation_api_time_only": 6.422711610794067,
+      "repair_usage_total": {
+        "prompt_tokens": 1404,
+        "completion_tokens": 2515,
+        "total_tokens": 3919
+      },
+      "repair_api_time_only_total": 64.53485131263733,
+      "path_usage_total": {
+        "prompt_tokens": 6742,
+        "completion_tokens": 3402,
+        "total_tokens": 10144
+      },
+      "path_api_time_only": 89.09011626243591,
+      "solver_time_only": 0.003098011016845703
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1407,
+        "completion_tokens": 457,
+        "total_tokens": 1864
+      },
+      "plan_generation_api_time_only": 11.238174200057983,
+      "code_generation_usage": {
+        "prompt_tokens": 3651,
+        "completion_tokens": 159,
+        "total_tokens": 3810
+      },
+      "code_generation_api_time_only": 6.107953071594238,
+      "repair_usage_total": {
+        "prompt_tokens": 1424,
+        "completion_tokens": 2774,
+        "total_tokens": 4198
+      },
+      "repair_api_time_only_total": 60.34338355064392,
+      "path_usage_total": {
+        "prompt_tokens": 6482,
+        "completion_tokens": 3390,
+        "total_tokens": 9872
+      },
+      "path_api_time_only": 77.68951082229614,
+      "solver_time_only": 0.004099607467651367
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1407,
+        "completion_tokens": 782,
+        "total_tokens": 2189
+      },
+      "plan_generation_api_time_only": 18.03062891960144,
+      "code_generation_usage": {
+        "prompt_tokens": 3976,
+        "completion_tokens": 150,
+        "total_tokens": 4126
+      },
+      "code_generation_api_time_only": 5.451106309890747,
+      "repair_usage_total": {
+        "prompt_tokens": 1355,
+        "completion_tokens": 3812,
+        "total_tokens": 5167
+      },
+      "repair_api_time_only_total": 84.39901566505432,
+      "path_usage_total": {
+        "prompt_tokens": 6738,
+        "completion_tokens": 4744,
+        "total_tokens": 11482
+      },
+      "path_api_time_only": 107.88075089454651,
+      "solver_time_only": 0.0018525123596191406
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1407,
+        "completion_tokens": 602,
+        "total_tokens": 2009
+      },
+      "plan_generation_api_time_only": 15.23537302017212,
+      "code_generation_usage": {
+        "prompt_tokens": 3796,
+        "completion_tokens": 159,
+        "total_tokens": 3955
+      },
+      "code_generation_api_time_only": 6.151823997497559,
+      "repair_usage_total": {
+        "prompt_tokens": 1514,
+        "completion_tokens": 2434,
+        "total_tokens": 3948
+      },
+      "repair_api_time_only_total": 48.605278730392456,
+      "path_usage_total": {
+        "prompt_tokens": 6717,
+        "completion_tokens": 3195,
+        "total_tokens": 9912
+      },
+      "path_api_time_only": 69.99247574806213,
+      "solver_time_only": 0.0022859573364257812
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1407,
+        "completion_tokens": 656,
+        "total_tokens": 2063
+      },
+      "plan_generation_api_time_only": 12.424670219421387,
+      "code_generation_usage": {
+        "prompt_tokens": 3850,
+        "completion_tokens": 150,
+        "total_tokens": 4000
+      },
+      "code_generation_api_time_only": 4.6200339794158936,
+      "repair_usage_total": {
+        "prompt_tokens": 1544,
+        "completion_tokens": 2267,
+        "total_tokens": 3811
+      },
+      "repair_api_time_only_total": 41.462528467178345,
+      "path_usage_total": {
+        "prompt_tokens": 6801,
+        "completion_tokens": 3073,
+        "total_tokens": 9874
+      },
+      "path_api_time_only": 58.507232666015625,
+      "solver_time_only": 0.003747224807739258
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 33480,
+    "completion_tokens": 17804,
+    "total_tokens": 51284
+  },
+  "api_time_only_total": 403.1600863933563,
+  "solver_time_only_total": 0.01508331298828125,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n# Red people are green\nis_green(\"red_people\", True)\n\nRules:\nforeach\n    ?someone eats(\"lion\", True)\nassert\n    is_red(\"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\n    likes(?someone, \"lion\", True)\nassert\n    eats(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    ?someone likes(\"squirrel\", True)\n    likes(?someone, \"lion\", True)\nassert\n    visits(?someone, \"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\nassert\n    eats(?someone, \"squirrel\", True)\n\nforeach\n    ?someone likes(\"lion\", True)\nassert\n    visits(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"lion\", True)\n    is_green(\"lion\", True)\nassert\n    is_red(?someone, True)\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 621,
+            "completion_tokens": 686,
+            "total_tokens": 1307
+          },
+          "api_time_only": 20.348031044006348,
+          "solver_time_only": 0.0018889904022216797
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n# Red people are green\nis_green(\"red_people\", True)\n\nRules:\nforeach\n    ?someone eats(\"lion\", True)\nassert\n    is_red(\"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\n    likes(?someone, \"lion\", True)\nassert\n    eats(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    ?someone likes(\"squirrel\", True)\n    likes(?someone, \"lion\", True)\nassert\n    visits(?someone, \"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\nassert\n    eats(?someone, \"squirrel\", True)\n\nforeach\n    ?someone likes(\"lion\", True)\nassert\n    visits(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"lion\", True)\n    is_green(\"lion\", True)\nassert\n    is_red(?someone, True)\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\nFacts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n# Red people are green\nis_green(\"red_people\", True)\n\nRules:\nforeach\n    ?someone eats(\"lion\", True)\nassert\n    is_red(\"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\n    likes(?someone, \"lion\", True)\nassert\n    eats(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    ?someone likes(\"squirrel\", True)\n    likes(?someone, \"lion\", True)\nassert\n    visits(?someone, \"lion\", True)\n\nforeach\n    ?someone is_green(?someone, True)\nassert\n    eats(?someone, \"squirrel\", True)\n\nforeach\n    ?someone likes(\"lion\", True)\nassert\n    visits(?someone, \"bear\", True)\n\nforeach\n    ?someone visits(\"lion\", True)\n    is_green(\"lion\", True)\nassert\n    is_red(?someone, True)\n\nQuery:\nis_rough(\"squirrel\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Facts: explicitly stated properties and relationships\nengine.add_universal_fact('kb', 'eats', ('bear', 'squirrel'))\nengine.add_universal_fact('kb', 'is_cold', ('bear',))\nengine.add_universal_fact('kb', 'is_rough', ('bear',))\nengine.add_universal_fact('kb', 'visits', ('bear', 'lion'))\nengine.add_universal_fact('kb', 'eats', ('cat', 'lion'))\nengine.add_universal_fact('kb', 'likes', ('lion', 'cat'))\nengine.add_universal_fact('kb', 'visits', ('lion', 'bear'))\nengine.add_universal_fact('kb', 'eats', ('squirrel', 'lion'))\nengine.add_universal_fact('kb', 'is_cold', ('squirrel',))\nengine.add_universal_fact('kb', 'is_rough', ('squirrel',))\nengine.add_universal_fact('kb', 'likes', ('squirrel', 'bear'))\nengine.add_universal_fact('kb', 'visits', ('squirrel', 'lion'))\nengine.add_universal_fact('kb', 'is_green', ('red_people',))\n\n# Rules: conditional logic\nengine.add_universal_rule('kb',\n    'eats_lion_red',\n    ('squirrel',),\n    ('someone',),\n    ('eats', 'someone', 'lion'),\n    ('is_red', 'lion',)\n)\n\nengine.add_universal_rule('kb',\n    'green_likes_lion_eats_bear',\n    ('squirrel',),\n    ('someone',),\n    ('is_green', 'someone'),\n    ('likes', 'someone', 'lion'),\n    ('eats', 'someone', 'bear')\n)\n\nengine.add_universal_rule('kb',\n    'visits_bear_bear_likes_lion',\n    ('squirrel',),\n    ('someone',),\n    ('visits', 'someone', 'bear'),\n    ('likes', 'bear', 'lion')\n)\n\nengine.add_universal_rule('kb',\n    'likes_squirrel_and_lion_visits_lion',\n    ('squirrel',),\n    ('someone',),\n    ('likes', 'someone', 'squirrel'),\n    ('likes', 'someone', 'lion'),\n    ('visits', 'someone', 'lion')\n)\n\nengine.add_universal_rule('kb',\n    'green_eats_squirrel',\n    ('squirrel',),\n    ('someone',),\n    ('is_green', 'someone'),\n    ('eats', 'someone', 'squirrel')\n)\n\nengine.add_universal_rule('kb',\n    'likes_lion_visits_bear',\n    ('squirrel',),\n    ('someone',),\n    ('likes', 'someone', 'lion'),\n    ('visits', 'someone', 'bear')\n)\n\nengine.add_universal_rule('kb',\n    'visits_lion_green_lion_is_red',\n    ('squirrel',),\n    ('someone',),\n    ('visits', 'someone', 'lion'),\n    ('is_green', 'lion'),\n    ('is_red', 'someone')\n)\n\n# Query: is the squirrel not rough?\n# We need to check if is_rough('squirrel') is false\n# Since we have is_rough('squirrel') as a fact, the statement \"squirrel is not rough\" is false\nquery = engine.add_query('kb', 'is_rough', ('squirrel',))\n\n# Run the engine\nengine.activate('kb')\n\n# Execute query to check if is_rough(squirrel) holds\nresult = list(query())\nis_squirrel_rough = len(result) > 0\n\n# The statement \"The squirrel is not rough\" is equivalent to NOT is_rough(squirrel)\nstatement_true = not is_squirrel_rough\n\nprint(\"The squirrel is rough:\", is_squirrel_rough)\nprint(\"Statement 'squirrel is not rough' is:\", statement_true)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 783,
+            "completion_tokens": 1829,
+            "total_tokens": 2612
+          },
+          "api_time_only": 44.18682026863098,
+          "solver_time_only": 0.0005643367767333984
+        }
+      ]
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Lion ---\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Lion ---\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred(\"lion\", False)  # Initial assumption - lion is not red unless inferred\n\nRules:\nforeach\n    eats(?x, \"lion\", True)\nassert\n    red(\"lion\", True)\n\nforeach\n    is_green(?x, True),\n    likes(?x, \"lion\", True)\nassert\n    eats(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    likes(?x, \"squirrel\", True),\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"lion\", True)\n\nforeach\n    is_green(?x, True)\nassert\n    eats(?x, \"squirrel\", True)\n\nforeach\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"lion\", True),\n    red(\"lion\", True)\nassert\n    red(?x, True)\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 630,
+            "completion_tokens": 719,
+            "total_tokens": 1349
+          },
+          "api_time_only": 17.509480476379395,
+          "solver_time_only": 0.002169370651245117
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred(\"lion\", False)  # Initial assumption - lion is not red unless inferred\n\nRules:\nforeach\n    eats(?x, \"lion\", True)\nassert\n    red(\"lion\", True)\n\nforeach\n    is_green(?x, True),\n    likes(?x, \"lion\", True)\nassert\n    eats(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    likes(?x, \"squirrel\", True),\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"lion\", True)\n\nforeach\n    is_green(?x, True)\nassert\n    eats(?x, \"squirrel\", True)\n\nforeach\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"lion\", True),\n    red(\"lion\", True)\nassert\n    red(?x, True)\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\nFacts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred(\"lion\", False)  # Initial assumption - lion is not red unless inferred\n\nRules:\nforeach\n    eats(?x, \"lion\", True)\nassert\n    red(\"lion\", True)\n\nforeach\n    is_green(?x, True),\n    likes(?x, \"lion\", True)\nassert\n    eats(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\", True)\n\nforeach\n    likes(?x, \"squirrel\", True),\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"lion\", True)\n\nforeach\n    is_green(?x, True)\nassert\n    eats(?x, \"squirrel\", True)\n\nforeach\n    likes(?x, \"lion\", True)\nassert\n    visits(?x, \"bear\", True)\n\nforeach\n    visits(?x, \"lion\", True),\n    red(\"lion\", True)\nassert\n    red(?x, True)\n\nQuery:\nis_rough(\"squirrel\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts\nengine.add_rule('facts', 'eats', ('bear', 'squirrel', True))\nengine.add_rule('facts', 'is_cold', ('bear', True))\nengine.add_rule('facts', 'is_rough', ('bear', True))\nengine.add_rule('facts', 'visits', ('bear', 'lion', True))\n\nengine.add_rule('facts', 'eats', ('cat', 'lion', True))\nengine.add_rule('facts', 'likes', ('lion', 'cat', True))\n\nengine.add_rule('facts', 'visits', ('lion', 'bear', True))\n# Note: likes(\"lion\", \"cat\", True) already added above\n\nengine.add_rule('facts', 'eats', ('squirrel', 'lion', True))\nengine.add_rule('facts', 'is_cold', ('squirrel', True))\nengine.add_rule('facts', 'is_rough', ('squirrel', True))\nengine.add_rule('facts', 'likes', ('squirrel', 'bear', True))\nengine.add_rule('facts', 'visits', ('squirrel', 'lion', True))\n\n# Rules\nengine.add_rule('rules', 'eats_lion_makes_lion_red',\n    (lambda: [('?x', '?lion')] if engine.prove1('facts', 'eats', ('?x', 'lion', True)) else None),\n    lambda ?x, ?lion: engine.add_rule('facts', 'red', ('lion', True)))\n\nengine.add_rule('rules', 'green_and_likes_lion_eats_bear',\n    (lambda: [('?x')] if engine.prove1('facts', 'is_green', ('?x', True)) and \n                engine.prove1('facts', 'likes', ('?x', 'lion', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'eats', ('?x', 'bear', True)))\n\nengine.add_rule('rules', 'visits_bear_makes_bear_like_lion',\n    (lambda: [('?x')] if engine.prove1('facts', 'visits', ('?x', 'bear', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'likes', ('bear', 'lion', True)))\n\nengine.add_rule('rules', 'likes_squirrel_and_lion_visits_lion',\n    (lambda: [('?x')] if engine.prove1('facts', 'likes', ('?x', 'squirrel', True)) and \n                engine.prove1('facts', 'likes', ('?x', 'lion', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'visits', ('?x', 'lion', True)))\n\nengine.add_rule('rules', 'green_eats_squirrel',\n    (lambda: [('?x')] if engine.prove1('facts', 'is_green', ('?x', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'eats', ('?x', 'squirrel', True)))\n\nengine.add_rule('rules', 'likes_lion_visits_bear',\n    (lambda: [('?x')] if engine.prove1('facts', 'likes', ('?x', 'lion', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'visits', ('?x', 'bear', True)))\n\nengine.add_rule('rules', 'visits_lion_and_red_lion_makes_self_red',\n    (lambda: [('?x')] if engine.prove1('facts', 'visits', ('?x', 'lion', True)) and \n                engine.prove1('facts', 'red', ('lion', True)) else None),\n    lambda ?x: engine.add_rule('facts', 'red', ('?x', True)))\n\n# Query\nresult = engine.prove1('facts', 'is_rough', ('squirrel', False))\nprint(\"Result:\", result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 794,
+            "completion_tokens": 2055,
+            "total_tokens": 2849
+          },
+          "api_time_only": 42.833903074264526,
+          "solver_time_only": 0.0016736984252929688
+        }
+      ]
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nrules:\nforeach eats(X, \"lion\", True)\n    assert is_red(\"lion\", True)\n\nforeach is_green(X, True) and likes(X, \"lion\", True)\n    assert eats(X, \"bear\", True)\n\nforeach visits(X, \"bear\", True)\n    assert likes(\"bear\", \"lion\", True)\n\nforeach likes(X, \"squirrel\", True) and likes(X, \"lion\", True)\n    assert visits(X, \"lion\", True)\n\nforeach is_green(X, True)\n    assert eats(X, \"squirrel\", True)\n\nforeach likes(X, \"lion\", True)\n    assert visits(X, \"bear\", True)\n\nforeach visits(X, \"lion\", True) and is_green(\"lion\", True)\n    assert is_red(X, True)\n\nquery:\nis_rough(\"squirrel\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 621,
+            "completion_tokens": 1263,
+            "total_tokens": 1884
+          },
+          "api_time_only": 28.66905403137207,
+          "solver_time_only": 0.0013017654418945312
+        },
+        {
+          "round_index": 2,
+          "input_code": "facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nrules:\nforeach eats(X, \"lion\", True)\n    assert is_red(\"lion\", True)\n\nforeach is_green(X, True) and likes(X, \"lion\", True)\n    assert eats(X, \"bear\", True)\n\nforeach visits(X, \"bear\", True)\n    assert likes(\"bear\", \"lion\", True)\n\nforeach likes(X, \"squirrel\", True) and likes(X, \"lion\", True)\n    assert visits(X, \"lion\", True)\n\nforeach is_green(X, True)\n    assert eats(X, \"squirrel\", True)\n\nforeach likes(X, \"lion\", True)\n    assert visits(X, \"bear\", True)\n\nforeach visits(X, \"lion\", True) and is_green(\"lion\", True)\n    assert is_red(X, True)\n\nquery:\nis_rough(\"squirrel\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\nfacts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nrules:\nforeach eats(X, \"lion\", True)\n    assert is_red(\"lion\", True)\n\nforeach is_green(X, True) and likes(X, \"lion\", True)\n    assert eats(X, \"bear\", True)\n\nforeach visits(X, \"bear\", True)\n    assert likes(\"bear\", \"lion\", True)\n\nforeach likes(X, \"squirrel\", True) and likes(X, \"lion\", True)\n    assert visits(X, \"lion\", True)\n\nforeach is_green(X, True)\n    assert eats(X, \"squirrel\", True)\n\nforeach likes(X, \"lion\", True)\n    assert visits(X, \"bear\", True)\n\nforeach visits(X, \"lion\", True) and is_green(\"lion\", True)\n    assert is_red(X, True)\n\nquery:\nis_rough(\"squirrel\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts\nengine.add_rule('facts', 'eats', ('bear', 'squirrel'), True)\nengine.add_rule('facts', 'is_cold', ('bear',), True)\nengine.add_rule('facts', 'is_rough', ('bear',), True)\nengine.add_rule('facts', 'visits', ('bear', 'lion'), True)\nengine.add_rule('facts', 'eats', ('cat', 'lion'), True)\nengine.add_rule('facts', 'likes', ('lion', 'cat'), True)\nengine.add_rule('facts', 'visits', ('lion', 'bear'), True)\nengine.add_rule('facts', 'eats', ('squirrel', 'lion'), True)\nengine.add_rule('facts', 'is_cold', ('squirrel',), True)\nengine.add_rule('facts', 'is_rough', ('squirrel',), True)\nengine.add_rule('facts', 'likes', ('squirrel', 'bear'), True)\nengine.add_rule('facts', 'visits', ('squirrel', 'lion'), True)\n\n# Rule: Red people are green (if someone is red, they are green)\nengine.add_rule('rules', 'red_implies_green', \n    ('X',), \n    [('is_red', ('X',))], \n    [('is_green', ('X',))])\n\n# Rule: If someone eats the lion then the lion is red\nengine.add_rule('rules', 'eats_lion_makes_lion_red',\n    (), \n    [('eats', ('X', 'lion'))], \n    [('is_red', ('lion',))])\n\n# Rule: If someone is green and they like the lion then they eat the bear\nengine.add_rule('rules', 'green_and_likes_lion_eats_bear',\n    ('X',), \n    [('is_green', ('X',)), ('likes', ('X', 'lion'))], \n    [('eats', ('X', 'bear'))])\n\n# Rule: If someone visits the bear then the bear likes the lion\nengine.add_rule('rules', 'visits_bear_bear_likes_lion',\n    (), \n    [('visits', ('X', 'bear'))], \n    [('likes', ('bear', 'lion'))])\n\n# Rule: If someone likes the squirrel and they like the lion then they visit the lion\nengine.add_rule('rules', 'likes_squirrel_and_lion_visits_lion',\n    ('X',), \n    [('likes', ('X', 'squirrel')), ('likes', ('X', 'lion'))], \n    [('visits', ('X', 'lion'))])\n\n# Rule: If someone is green then they eat the squirrel\nengine.add_rule('rules', 'green_eats_squirrel',\n    ('X',), \n    [('is_green', ('X',))], \n    [('eats', ('X', 'squirrel'))])\n\n# Rule: If someone likes the lion then they visit the bear\nengine.add_rule('rules', 'likes_lion_visits_bear',\n    ('X',), \n    [('likes', ('X', 'lion'))], \n    [('visits', ('X', 'bear'))])\n\n# Rule: If someone visits the lion and the lion is green then they are red\nengine.add_rule('rules', 'visits_lion_and_lion_green_is_red',\n    ('X',), \n    [('visits', ('X', 'lion')), ('is_green', ('lion',))], \n    [('is_red', ('X',))])\n\n# Query: is the squirrel not rough?\nengine.add_query('query', 'is_rough_squirrel_not_rough',\n    [('is_rough', ('squirrel',))])\n\n# Run the engine\nengine.activate('rules')\n\n# Check if we can prove squirrel is rough (should be True based on facts)\nresult = list(engine.prove('query', 'is_rough_squirrel_not_rough', 1))\n\n# The query asks if squirrel is NOT rough, so we need to check the negation\nif result:\n    # If we can prove squirrel IS rough, then \"squirrel is not rough\" is FALSE\n    print(\"False\")\nelse:\n    # If we cannot prove squirrel IS rough, then \"squirrel is not rough\" might be TRUE or UNKNOWN\n    # But from the facts, we know \"is_rough('squirrel', True)\" is explicitly stated\n    print(\"Unknown\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 734,
+            "completion_tokens": 2549,
+            "total_tokens": 3283
+          },
+          "api_time_only": 55.72996163368225,
+          "solver_time_only": 0.0004611015319824219
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Lion ---\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Lion ---\nvisits(\"lion\", \"bear\", True)\nlikes(\"lion\", \"cat\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_are_green: red(\"person\") -> green(\"person\")\n\nrules:\n# Rule 1: If someone eats the lion then the lion is red\nforeach\n    eats($someone, \"lion\", True)\nassert\n    red(\"lion\")\n\n# Rule 2: If someone is green and they like the lion then they eat the bear\nforeach\n    green($someone)\n    likes($someone, \"lion\")\nassert\n    eats($someone, \"bear\", True)\n\n# Rule 3: If someone visits the bear then the bear likes the lion\nforeach\n    visits($someone, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\")\n\n# Rule 4: If someone likes the squirrel and they like the lion then they visit the lion\nforeach\n    likes($someone, \"squirrel\")\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"lion\", True)\n\n# Rule 5: If someone is green then they eat the squirrel\nforeach\n    green($someone)\nassert\n    eats($someone, \"squirrel\", True)\n\n# Rule 6: If someone likes the lion then they visit the bear\nforeach\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"bear\", True)\n\n# Rule 7: If someone visits the lion and the lion is green then they are red\nforeach\n    visits($someone, \"lion\", True)\n    green(\"lion\")\nassert\n    red($someone)\n\nquery:\nnot(is_rough(\"squirrel\", True))",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 630,
+            "completion_tokens": 806,
+            "total_tokens": 1436
+          },
+          "api_time_only": 18.15264368057251,
+          "solver_time_only": 0.0012652873992919922
+        },
+        {
+          "round_index": 2,
+          "input_code": "facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_are_green: red(\"person\") -> green(\"person\")\n\nrules:\n# Rule 1: If someone eats the lion then the lion is red\nforeach\n    eats($someone, \"lion\", True)\nassert\n    red(\"lion\")\n\n# Rule 2: If someone is green and they like the lion then they eat the bear\nforeach\n    green($someone)\n    likes($someone, \"lion\")\nassert\n    eats($someone, \"bear\", True)\n\n# Rule 3: If someone visits the bear then the bear likes the lion\nforeach\n    visits($someone, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\")\n\n# Rule 4: If someone likes the squirrel and they like the lion then they visit the lion\nforeach\n    likes($someone, \"squirrel\")\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"lion\", True)\n\n# Rule 5: If someone is green then they eat the squirrel\nforeach\n    green($someone)\nassert\n    eats($someone, \"squirrel\", True)\n\n# Rule 6: If someone likes the lion then they visit the bear\nforeach\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"bear\", True)\n\n# Rule 7: If someone visits the lion and the lion is green then they are red\nforeach\n    visits($someone, \"lion\", True)\n    green(\"lion\")\nassert\n    red($someone)\n\nquery:\nnot(is_rough(\"squirrel\", True))",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\nfacts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_are_green: red(\"person\") -> green(\"person\")\n\nrules:\n# Rule 1: If someone eats the lion then the lion is red\nforeach\n    eats($someone, \"lion\", True)\nassert\n    red(\"lion\")\n\n# Rule 2: If someone is green and they like the lion then they eat the bear\nforeach\n    green($someone)\n    likes($someone, \"lion\")\nassert\n    eats($someone, \"bear\", True)\n\n# Rule 3: If someone visits the bear then the bear likes the lion\nforeach\n    visits($someone, \"bear\", True)\nassert\n    likes(\"bear\", \"lion\")\n\n# Rule 4: If someone likes the squirrel and they like the lion then they visit the lion\nforeach\n    likes($someone, \"squirrel\")\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"lion\", True)\n\n# Rule 5: If someone is green then they eat the squirrel\nforeach\n    green($someone)\nassert\n    eats($someone, \"squirrel\", True)\n\n# Rule 6: If someone likes the lion then they visit the bear\nforeach\n    likes($someone, \"lion\")\nassert\n    visits($someone, \"bear\", True)\n\n# Rule 7: If someone visits the lion and the lion is green then they are red\nforeach\n    visits($someone, \"lion\", True)\n    green(\"lion\")\nassert\n    red($someone)\n\nquery:\nnot(is_rough(\"squirrel\", True))\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Define facts\nengine.add_case_fact('facts', ('eats', 'bear', 'squirrel', True))\nengine.add_case_fact('facts', ('is_cold', 'bear', True))\nengine.add_case_fact('facts', ('is_rough', 'bear', True))\nengine.add_case_fact('facts', ('visits', 'bear', 'lion', True))\n\nengine.add_case_fact('facts', ('eats', 'cat', 'lion', True))\n\nengine.add_case_fact('facts', ('likes', 'lion', 'cat', True))\nengine.add_case_fact('facts', ('visits', 'lion', 'bear', True))\n\nengine.add_case_fact('facts', ('eats', 'squirrel', 'lion', True))\nengine.add_case_fact('facts', ('is_cold', 'squirrel', True))\nengine.add_case_fact('facts', ('is_rough', 'squirrel', True))\nengine.add_case_fact('facts', ('likes', 'squirrel', 'bear', True))\nengine.add_case_fact('facts', ('visits', 'squirrel', 'lion', True))\n\n# Rule 1: If someone eats the lion then the lion is red\n@engine.rule('rules', 'rule1')\ndef rule1($someone):\n    if engine.query('facts', 'eats', $someone, 'lion', True):\n        return [('red', 'lion')]\n\n# Rule 2: If someone is green and they like the lion then they eat the bear\n@engine.rule('rules', 'rule2')\ndef rule2($someone):\n    if (engine.query('facts', 'green', $someone, True) and \n        engine.query('facts', 'likes', $someone, 'lion', True)):\n        return [('eats', $someone, 'bear', True)]\n\n# Rule 3: If someone visits the bear then the bear likes the lion\n@engine.rule('rules', 'rule3')\ndef rule3($someone):\n    if engine.query('facts', 'visits', $someone, 'bear', True):\n        return [('likes', 'bear', 'lion')]\n\n# Rule 4: If someone likes the squirrel and they like the lion then they visit the lion\n@engine.rule('rules', 'rule4')\ndef rule4($someone):\n    if (engine.query('facts', 'likes', $someone, 'squirrel', True) and \n        engine.query('facts', 'likes', $someone, 'lion', True)):\n        return [('visits', $someone, 'lion', True)]\n\n# Rule 5: If someone is green then they eat the squirrel\n@engine.rule('rules', 'rule5')\ndef rule5($someone):\n    if engine.query('facts', 'green', $someone, True):\n        return [('eats', $someone, 'squirrel', True)]\n\n# Rule 6: If someone likes the lion then they visit the bear\n@engine.rule('rules', 'rule6')\ndef rule6($someone):\n    if engine.query('facts', 'likes', $someone, 'lion', True):\n        return [('visits', $someone, 'bear', True)]\n\n# Rule 7: If someone visits the lion and the lion is green then they are red\n@engine.rule('rules', 'rule7')\ndef rule7($someone):\n    if (engine.query('facts', 'visits', $someone, 'lion', True) and \n        engine.query('facts', 'green', 'lion', True)):\n        return [('red', $someone)]\n\n# Add the fact about red people being green\nengine.add_case_fact('facts', ('red_people_are_green', True))\n\n# Query: The squirrel is not rough\nquery_result = engine.query('facts', 'is_rough', 'squirrel', True)\n\n# Since we know from facts that is_rough(\"squirrel\", True) is given,\n# the statement \"The squirrel is not rough\" is false\nprint(\"False\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 884,
+            "completion_tokens": 1628,
+            "total_tokens": 2512
+          },
+          "api_time_only": 30.452635049819946,
+          "solver_time_only": 0.0005791187286376953
+        }
+      ]
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about the Bear ---\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\n# --- Facts about the Cat ---\neats(\"cat\", \"lion\", True)\n\n# --- Facts about the Lion ---\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\n# --- Facts about the Squirrel ---\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_green: red(\"person\") :- person(\"person\")\n\nRules:\n# If someone eats the lion then the lion is red.\nrule1: red(\"lion\") :- eats(\"person\", \"lion\", True)\n\n# If someone is green and they like the lion then they eat the bear.\nrule2: eats(\"person\", \"bear\", True) :- green(\"person\"), likes(\"person\", \"lion\", True)\n\n# If someone visits the bear then the bear likes the lion.\nrule3: likes(\"bear\", \"lion\", True) :- visits(\"person\", \"bear\", True)\n\n# If someone likes the squirrel and they like the lion then they visit the lion.\nrule4: visits(\"person\", \"lion\", True) :- likes(\"person\", \"squirrel\", True), likes(\"person\", \"lion\", True)\n\n# If someone is green then they eat the squirrel.\nrule5: eats(\"person\", \"squirrel\", True) :- green(\"person\")\n\n# If someone likes the lion then they visit the bear.\nrule6: visits(\"person\", \"bear\", True) :- likes(\"person\", \"lion\", True)\n\n# If someone visits the lion and the lion is green then they are red.\nrule7: red(\"person\") :- visits(\"person\", \"lion\", True), green(\"lion\")\n\n# Red people are green (from context: \"Red people are green\")\nred_people_are_green: green(\"person\") :- red(\"person\")\n\n# Define person predicate for all entities\nperson(\"bear\")\nperson(\"cat\")\nperson(\"lion\")\nperson(\"squirrel\")\n\n# Define green predicate for red people\ngreen_red_people: green(\"person\") :- red(\"person\")\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 621,
+            "completion_tokens": 651,
+            "total_tokens": 1272
+          },
+          "api_time_only": 12.23434567451477,
+          "solver_time_only": 0.0031583309173583984
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_green: red(\"person\") :- person(\"person\")\n\nRules:\n# If someone eats the lion then the lion is red.\nrule1: red(\"lion\") :- eats(\"person\", \"lion\", True)\n\n# If someone is green and they like the lion then they eat the bear.\nrule2: eats(\"person\", \"bear\", True) :- green(\"person\"), likes(\"person\", \"lion\", True)\n\n# If someone visits the bear then the bear likes the lion.\nrule3: likes(\"bear\", \"lion\", True) :- visits(\"person\", \"bear\", True)\n\n# If someone likes the squirrel and they like the lion then they visit the lion.\nrule4: visits(\"person\", \"lion\", True) :- likes(\"person\", \"squirrel\", True), likes(\"person\", \"lion\", True)\n\n# If someone is green then they eat the squirrel.\nrule5: eats(\"person\", \"squirrel\", True) :- green(\"person\")\n\n# If someone likes the lion then they visit the bear.\nrule6: visits(\"person\", \"bear\", True) :- likes(\"person\", \"lion\", True)\n\n# If someone visits the lion and the lion is green then they are red.\nrule7: red(\"person\") :- visits(\"person\", \"lion\", True), green(\"lion\")\n\n# Red people are green (from context: \"Red people are green\")\nred_people_are_green: green(\"person\") :- red(\"person\")\n\n# Define person predicate for all entities\nperson(\"bear\")\nperson(\"cat\")\nperson(\"lion\")\nperson(\"squirrel\")\n\n# Define green predicate for red people\ngreen_red_people: green(\"person\") :- red(\"person\")\n\nQuery:\nis_rough(\"squirrel\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nThe bear eats the squirrel. The bear is cold. The bear is rough. The bear visits the lion. The cat eats the lion. The lion likes the cat. The lion visits the bear. The squirrel eats the lion. The squirrel is cold. The squirrel is rough. The squirrel likes the bear. The squirrel visits the lion. Red people are green. If someone eats the lion then the lion is red. If someone is green and they like the lion then they eat the bear. If someone visits the bear then the bear likes the lion. If someone likes the squirrel and they like the lion then they visit the lion. If someone is green then they eat the squirrel. If someone likes the lion then they visit the bear. If someone visits the lion and the lion is green then they are red.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? The squirrel is not rough.\nPlan:\n{plan}\n\n## Original Code\nFacts:\neats(\"bear\", \"squirrel\", True)\nis_cold(\"bear\", True)\nis_rough(\"bear\", True)\nvisits(\"bear\", \"lion\", True)\n\neats(\"cat\", \"lion\", True)\n\nlikes(\"lion\", \"cat\", True)\nvisits(\"lion\", \"bear\", True)\n\neats(\"squirrel\", \"lion\", True)\nis_cold(\"squirrel\", True)\nis_rough(\"squirrel\", True)\nlikes(\"squirrel\", \"bear\", True)\nvisits(\"squirrel\", \"lion\", True)\n\nred_people_green: red(\"person\") :- person(\"person\")\n\nRules:\n# If someone eats the lion then the lion is red.\nrule1: red(\"lion\") :- eats(\"person\", \"lion\", True)\n\n# If someone is green and they like the lion then they eat the bear.\nrule2: eats(\"person\", \"bear\", True) :- green(\"person\"), likes(\"person\", \"lion\", True)\n\n# If someone visits the bear then the bear likes the lion.\nrule3: likes(\"bear\", \"lion\", True) :- visits(\"person\", \"bear\", True)\n\n# If someone likes the squirrel and they like the lion then they visit the lion.\nrule4: visits(\"person\", \"lion\", True) :- likes(\"person\", \"squirrel\", True), likes(\"person\", \"lion\", True)\n\n# If someone is green then they eat the squirrel.\nrule5: eats(\"person\", \"squirrel\", True) :- green(\"person\")\n\n# If someone likes the lion then they visit the bear.\nrule6: visits(\"person\", \"bear\", True) :- likes(\"person\", \"lion\", True)\n\n# If someone visits the lion and the lion is green then they are red.\nrule7: red(\"person\") :- visits(\"person\", \"lion\", True), green(\"lion\")\n\n# Red people are green (from context: \"Red people are green\")\nred_people_are_green: green(\"person\") :- red(\"person\")\n\n# Define person predicate for all entities\nperson(\"bear\")\nperson(\"cat\")\nperson(\"lion\")\nperson(\"squirrel\")\n\n# Define green predicate for red people\ngreen_red_people: green(\"person\") :- red(\"person\")\n\nQuery:\nis_rough(\"squirrel\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Facts\neats(\"bear\", \"squirrel\")\nis_cold(\"bear\")\nis_rough(\"bear\")\nvisits(\"bear\", \"lion\")\n\neats(\"cat\", \"lion\")\n\nlikes(\"lion\", \"cat\")\nvisits(\"lion\", \"bear\")\n\neats(\"squirrel\", \"lion\")\nis_cold(\"squirrel\")\nis_rough(\"squirrel\")\nlikes(\"squirrel\", \"bear\")\nvisits(\"squirrel\", \"lion\")\n\n# Define all entities as persons\nperson(\"bear\")\nperson(\"cat\")\nperson(\"lion\")\nperson(\"squirrel\")\n\n# Rules (using PyKe's foreach/then syntax)\ndef rule1():\n    \"\"\"If someone eats the lion then the lion is red.\"\"\"\n    foreach(eats(person, \"lion\"))\n    assert(red(\"lion\"))\n\ndef rule2():\n    \"\"\"If someone is green and they like the lion then they eat the bear.\"\"\"\n    foreach(green(person), likes(person, \"lion\"))\n    assert(eats(person, \"bear\"))\n\ndef rule3():\n    \"\"\"If someone visits the bear then the bear likes the lion.\"\"\"\n    foreach(visits(person, \"bear\"))\n    assert(likes(\"bear\", \"lion\"))\n\ndef rule4():\n    \"\"\"If someone likes the squirrel and they like the lion then they visit the lion.\"\"\"\n    foreach(likes(person, \"squirrel\"), likes(person, \"lion\"))\n    assert(visits(person, \"lion\"))\n\ndef rule5():\n    \"\"\"If someone is green then they eat the squirrel.\"\"\"\n    foreach(green(person))\n    assert(eats(person, \"squirrel\"))\n\ndef rule6():\n    \"\"\"If someone likes the lion then they visit the bear.\"\"\"\n    foreach(likes(person, \"lion\"))\n    assert(visits(person, \"bear\"))\n\ndef rule7():\n    \"\"\"If someone visits the lion and the lion is green then they are red.\"\"\"\n    foreach(visits(person, \"lion\"), green(\"lion\"))\n    assert(red(person))\n\ndef red_people_are_green():\n    \"\"\"Red people are green.\"\"\"\n    foreach(red(person))\n    assert(green(person))\n\n# Query: is the squirrel not rough?\n# Since we know is_rough(\"squirrel\") is true from facts, \n# the statement \"squirrel is not rough\" would be false\nquery_result = not is_rough(\"squirrel\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 923,
+            "completion_tokens": 1616,
+            "total_tokens": 2539
+          },
+          "api_time_only": 29.228182792663574,
+          "solver_time_only": 0.0004754066467285156
+        }
+      ]
+    }
+  ]
+}

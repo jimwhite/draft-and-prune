@@ -1,0 +1,31 @@
+1. Identify all entities and types: Stella, zumpus, wumpus, numpus, impus, rompus, vumpus, jompus, dumpus, yumpus, tumpus.  
+2. Identify all properties: metallic, floral, happy, kind, large, opaque, cold, spicy.  
+3. Represent "Stella is a numpus" as a base fact: `is_a("Stella", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every zumpus is metallic.  
+   - Each zumpus is a wumpus.  
+   - Wumpuses are not floral.  
+   - Every wumpus is a numpus.  
+   - Numpuses are happy.  
+   - Each numpus is an impus.  
+   - Impuses are kind.  
+   - Every impus is a rompus.  
+   - Every rompus is large.  
+   - Vumpuses are opaque.  
+   - Each rompus is a jompus.  
+   - Each jompus is cold.  
+   - Jompuses are dumpuses.  
+   - Each dumpus is not opaque.  
+   - Dumpuses are yumpuses.  
+   - Yumpuses are spicy.  
+   - Each yumpus is a tumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Stella is opaque" is provable:  
+   - Derive properties for Stella step-by-step using inheritance:  
+     Stella is a numpus → Stella is an impus (rule: each numpus is an impus)  
+     Stella is an impus → Stella is a rompus (rule: every impus is a rompus)  
+     Stella is a rompus → Stella is a jompus (rule: each rompus is a jompus)  
+     Stella is a jompus → Stella is a dumpus (rule: jompuses are dumpuses)  
+     Stella is a dumpus → Stella is not opaque (rule: each dumpus is not opaque)  
+   - Since Stella is a dumpus, and all dumpuses are *not* opaque, `is_opaque("Stella", True)` cannot be proven.  
+   - Therefore, to check the truth of "Stella is opaque", query: `facts.is_opaque("Stella", True)`.

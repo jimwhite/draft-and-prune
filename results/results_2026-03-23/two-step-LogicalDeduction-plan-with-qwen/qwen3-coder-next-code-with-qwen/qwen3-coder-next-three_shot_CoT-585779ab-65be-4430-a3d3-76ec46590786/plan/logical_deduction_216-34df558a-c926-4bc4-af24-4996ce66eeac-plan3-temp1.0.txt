@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints and search for solutions.  
+
+2.  **Define Variables and Their Domain:**  
+    * Identify the seven variables representing the fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, reflecting increasing cost.  
+    * Add the variables and their domain (1–7) to the `Problem` instance.  
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique cost rank.  
+    * Convert each statement to a constraint using `lambda` functions:  
+        - "The oranges are more expensive than the peaches" → `"oranges" > "peaches"`  
+        - "The cantaloupes are the fourth-most expensive" → `"cantaloupes" == 4`  
+        - "The pears are less expensive than the cantaloupes" → `"pears" < 4`  
+        - "The peaches are the second-most expensive" → `"peaches" == 6`  
+        - "The mangoes are the cheapest" → `"mangoes" == 1`  
+        - "The kiwis are the third-cheapest" → `"kiwis" == 3`  
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments.  
+    * Since the problem is well-constrained, there should be exactly one solution; retrieve it (e.g., `solutions[0]`).  
+
+5.  **Determine the Second-Cheapest Fruit:**  
+    * The question asks which fruit is second-cheapest, i.e., has rank **2** in the cost hierarchy (since 1 = cheapest).  
+    * Create a dictionary mapping choice letters (`'A'` through `'G'`) to the corresponding fruit names.  
+    * Iterate over the solution dictionary: for each fruit, check if its assigned rank equals 2.  
+    * Return the choice letter (e.g., `'A'`, `'B'`, etc.) corresponding to that fruit.

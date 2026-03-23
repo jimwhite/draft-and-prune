@@ -1,0 +1,30 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to initialize the constraint satisfaction problem solver.
+
+2. **Define Variables and Domain:**  
+   * Identify the five books as variables: `"yellow"`, `"green"`, `"gray"`, `"blue"`, and `"orange"`.  
+   * Define the domain as integers from 1 to 5, where 1 = leftmost position and 5 = rightmost position.  
+   * Add all five book variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Add constraint for "The gray book is to the left of the green book": `gray < green`.  
+   * Add constraint for "The gray book is the second from the right": `gray == 4`.  
+   * Add constraint for "The yellow book is to the right of the orange book": `orange < yellow`.  
+   * Add constraint for "The blue book is the second from the left": `blue == 2`.  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (since the problem is well-constrained and consistent).  
+
+5. **Determine the Rightmost Book:**  
+   * The question asks which book is rightmost (position 5).  
+   * Iterate through the solution dictionary to find which book has value `5`.  
+   * Match that book name with the answer choices:  
+        - A) yellow → check if solution["yellow"] == 5  
+        - B) green → check if solution["green"] == 5  
+        - C) gray → check if solution["gray"] == 5 (already known false: gray == 4)  
+        - D) blue → check if solution["blue"] == 5 (already known false: blue == 2)  
+        - E) orange → check if solution["orange"] == 5  
+   * Return the letter (e.g., `"B"`) corresponding to the book with position 5.

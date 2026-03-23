@@ -1,0 +1,22 @@
+1. Enumerate the five bird types and assign them integer codes (0–4).  
+2. Create two arrays of 5 Boolean variables: `bird_order[i]` for the bird type at position i (0-indexed positions 1–5), and `hall[i]` for the venue at position i (True = Gladwyn Hall, False = Howard Auditorium).  
+3. Add **venue position constraints**:  
+    - `hall[0] == True` (first lecture is in Gladwyn Hall).  
+    - `hall[3] == False` (fourth lecture is in Howard Auditorium).  
+    - Sum of `hall[i] for i in range(5)` equals 3 (exactly three Gladwyn lectures).  
+4. Add **sandpiper constraint**:  
+    - Sandpiper lecture is in Howard Auditorium → `hall[pos_sand] == False`.  
+    - Sandpiper lecture is earlier than oystercatchers → `pos_sand < pos_oyst`.  
+5. Add **tern–petrel constraint**:  
+    - Tern lecture earlier than petrel → `pos_tern < pos_pet`.  
+    - Petrel lecture is in Gladwyn Hall → `hall[pos_pet] == True`.  
+6. Add **all-birds-different constraint**: `bird_order` is a permutation of the five bird types (use distinct constraints or permutation encoding).  
+7. Translate each answer choice into a logical condition about venue assignments at specific positions:  
+    - A: `hall[0] ∧ hall[1]` (first and second in Gladwyn).  
+    - B: `¬hall[1] ∧ ¬hall[2]` (second and third in Howard).  
+    - C: `hall[1] ∧ hall[4]` (second and fifth in Gladwyn).  
+    - D: `¬hall[2] ∧ ¬hall[3]` (third and fourth in Howard).  
+    - E: `hall[2] ∧ hall[4]` (third and fifth in Gladwyn).  
+8. For each answer choice, create a fresh solver with all base constraints and the additional condition for that choice.  
+9. If a choice leads to UNSAT, then it **must be false**—record its index (0–4).  
+10. Output the index of the answer that is provably impossible.

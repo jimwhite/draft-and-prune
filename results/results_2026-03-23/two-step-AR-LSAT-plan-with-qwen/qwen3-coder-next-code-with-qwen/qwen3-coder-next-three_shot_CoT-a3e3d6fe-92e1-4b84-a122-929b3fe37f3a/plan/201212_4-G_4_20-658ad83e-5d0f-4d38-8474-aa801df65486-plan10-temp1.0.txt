@@ -1,0 +1,23 @@
+1. Enumerate the seven articles and assign each an integer index (G=0, H=1, J=2, Q=3, R=4, S=5, Y=6).  
+2. Create integer variables `pos[0..6]` for the editing positions (1 to 7) of each article.  
+3. Add **domain constraints**: all `pos[i] ∈ {1,2,3,4,5,6,7}` and all `pos[i]` are pairwise distinct (using `Distinct`).  
+4. Add **topic constraint**: consecutive articles cannot cover the same topic.  
+    - Define a list `topic[i]` for article i: finance for G/H/J (indices 0–2), nutrition for Q/R/S (3–5), wildlife for Y (6).  
+    - For each position k from 1 to 6: if `pos[i] = k` and `pos[j] = k+1`, then `topic[i] ≠ topic[j]`. Implement by: for all pairs (i,j), if `pos[i] + 1 == pos[j]` or `pos[j] + 1 == pos[i]`, then `topic[i] ≠ topic[j]`. Use auxiliary Boolean or directly encode via big-M: for each consecutive pair of positions (1,2), (2,3), ..., (6,7), ensure that whichever two articles occupy them have different topics.  
+5. Add **S–Q conditional constraint**: “S can be earlier than Q only if Q is third.”  
+    - Equivalent to: If `pos_S < pos_Q`, then `pos_Q == 3`.  
+    - Encode as: `(pos_S >= pos_Q) ∨ (pos_Q == 3)`.  
+6. Add **S before Y constraint**: `pos_S < pos_Y`.  
+7. Add **J–G–R chain constraint**: `pos_J < pos_G` and `pos_G < pos_R`.  
+8. Translate the answer choices into article indices:  
+    - G is second → article 0 at position 2  
+    - H is second → article 1 at position 2  
+    - S is second → article 5 at position 2  
+    - R is third → article 4 at position 3  
+    - Y is third → article 6 at position 3  
+9. Define `answer_index_list = []`. For each candidate condition (article i at position 2 or 3, etc.):  
+    - Clone base constraints into a fresh solver.  
+    - Add the specific constraint (e.g., `pos[i] == target_position`).  
+    - If the model is SAT, then this condition *could be true*; append its index (0–4) to `answer_index_list`.  
+10. The correct answer is the choice(s) for which the model is SAT — select the first (or only) valid index from `answer_index_list`.  
+11. Output the chosen answer as a string from the original choices list using the index in `answer_index_list`.

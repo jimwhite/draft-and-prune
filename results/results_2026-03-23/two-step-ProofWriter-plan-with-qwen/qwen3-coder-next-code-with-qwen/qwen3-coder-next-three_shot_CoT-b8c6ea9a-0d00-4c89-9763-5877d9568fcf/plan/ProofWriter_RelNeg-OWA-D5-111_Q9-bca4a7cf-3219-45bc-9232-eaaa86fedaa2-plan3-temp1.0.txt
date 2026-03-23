@@ -1,0 +1,14 @@
+1. Identify all entities involved: bald_eagle, lion, mouse, squirrel.
+2. Encode all explicitly stated facts using ternary predicates:
+   - Directly state positive facts: chases("bald_eagle", "mouse", True), chases("bald_eagle", "squirrel", True), is_cold("bald_eagle", True), chases("lion", "bald_eagle", True), ¬chases("lion", "mouse", True) (encoded as chases("lion", "mouse", False)), chases("lion", "squirrel", True), is_blue("lion", True), needs("lion", "squirrel", True), visits("lion", "squirrel", True), ¬visits("mouse", "bald_eagle", True) (visits("mouse", "bald_eagle", False)), ¬visits("mouse", "squirrel", True) (visits("mouse", "squirrel", False)), is_cold("squirrel", True), is_red("squirrel", True), ¬visits("squirrel", "lion", True) (visits("squirrel", "lion", False)).
+   - Note: Explicit negative facts must be encoded with False as the third argument.
+3. Encode each conditional rule in PyKe using `foreach` blocks:
+   • If something visits the mouse → the mouse is green: `foreach: visits(X, "mouse", True) ⇒ assert facts.is_green("mouse", True)`
+   • If the mouse does not chase the lion → the mouse needs the lion: `foreach: chases("mouse", "lion", False) ⇒ assert facts.needs("mouse", "lion", True)`
+   • If something visits the squirrel and the squirrel does not chase the lion → the lion is green: `foreach: visits(X, "squirrel", True), chases("squirrel", "lion", False) ⇒ assert facts.is_green("lion", True)`
+   • If something is young → it visits the bald eagle: `foreach: is_young(X, True) ⇒ assert facts.visits(X, "bald_eagle", True)`
+   • If something visits the bald eagle → the bald eagle visits the squirrel: `foreach: visits(X, "bald_eagle", True) ⇒ assert facts.visits("bald_eagle", "squirrel", True)`
+   • If something visits the squirrel and the squirrel is red → it is young: `foreach: visits(X, "squirrel", True), is_red("squirrel", True) ⇒ assert facts.is_young(X, True)`
+   • If something needs the squirrel and it is not cold → the squirrel chases the bald eagle: `foreach: needs(X, "squirrel", True), is_cold(X, False) ⇒ assert facts.chases("squirrel", "bald_eagle", True)`
+4. Perform backward chaining from the query: determine whether is_young("bald_eagle", True) can be derived.
+5. The query is: `facts.is_young("bald_eagle", True)` — the question asks whether this statement is true; we must check if it follows logically, and report true/false/unknown based on the solver’s result.

@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables: `"watermelons"`, `"oranges"`, `"loquats"`, `"plums"`, and `"kiwis"` — representing the five fruits.  
+   * Define a domain of integers from **1 to 5**, where **1 = least expensive (cheapest)** and **5 = most expensive**.  
+   * Add all variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into constraints using lambda functions:  
+     - "The plums are less expensive than the kiwis" → `plums < kiwis` (i.e., plums have a lower rank number than kiwis).  
+     - "The plums are more expensive than the watermelons" → `watermelons < plums`.  
+     - "The loquats are more expensive than the kiwis" → `kiwis < loquats`.  
+     - "The oranges are the most expensive" → `oranges == 5`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to obtain all valid price-order assignments.  
+   * Extract the unique solution (since constraints yield one consistent ordering).
+
+5. **Determine the Correct Answer:**  
+   * The question asks: "Which fruit is the second-cheapest?" → corresponds to rank **2** in our system (1 = cheapest, 2 = second-cheapest).  
+   * Create a mapping from choice letters ("A"–"E") to fruit names:  
+     A → `"watermelons"`, B → `"oranges"`, C → `"loquats"`, D → `"plums"`, E → `"kiwis"`.  
+   * In the solution dictionary, find which fruit has value `2`.  
+   * Return the corresponding choice letter.

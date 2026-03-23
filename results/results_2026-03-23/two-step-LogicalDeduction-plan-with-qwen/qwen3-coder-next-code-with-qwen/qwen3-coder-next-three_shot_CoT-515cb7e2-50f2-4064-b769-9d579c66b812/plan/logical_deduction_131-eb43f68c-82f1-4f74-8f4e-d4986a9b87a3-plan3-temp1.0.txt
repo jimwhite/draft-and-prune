@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction solver.
+
+2.  **Define Variables and Domain:**
+    * Define the seven golfers as variables: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, `"Dan"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest/rank 1)** and **7 = last place (lowest/rank 7)**.
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Convert each statement into a precise constraint:
+        - "Rob finished first" → Rob's position = 1.
+        - "Eve finished last" → Eve's position = 7.
+        - "Dan finished above Ada" → Dan's position < Ada's position (smaller number = better/more upward).
+        - "Mel finished above Mya" → Mel's position < Mya's position.
+        - "Joe finished second-to-last" → Joe's position = 6 (since last is 7).
+        - "Mya finished third" → Mya's position = 3.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Use `getSolutions()` to compute all valid assignments satisfying all constraints.
+    * Extract the unique solution (since the problem is fully constrained, only one solution exists).
+
+5.  **Determine Which Choice Is True:**
+    * The question asks which golfer finished third, i.e., whose position equals 3.
+    * From the solution dictionary, locate which variable (golfer) has value 3.
+    * Map the found golfer to the corresponding choice letter:
+        - "Joe" → A, "Mel" → B, "Mya" → C, "Eve" → D, "Rob" → E, "Ada" → F, "Dan" → G.
+    * Return the letter (e.g., `'C'` if Mya is third).

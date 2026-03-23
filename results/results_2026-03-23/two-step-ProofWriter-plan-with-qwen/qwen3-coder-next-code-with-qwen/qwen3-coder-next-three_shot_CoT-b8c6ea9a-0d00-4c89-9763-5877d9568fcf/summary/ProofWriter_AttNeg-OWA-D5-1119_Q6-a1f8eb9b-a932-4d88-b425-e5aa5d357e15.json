@@ -1,0 +1,394 @@
+{
+  "problem": {
+    "id": "ProofWriter_AttNeg-OWA-D5-1119_Q6",
+    "context": "Anne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.",
+    "question": "Based on the above information, is the following statement true, false, or unknown? Fiona is not kind.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Unknown"
+    ],
+    "answer": "B"
+  },
+  "timing": 421.3217134475708,
+  "all_solver_outputs": [
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined"
+  ],
+  "all_solver_error_types": [
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error"
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1335,
+        "completion_tokens": 385,
+        "total_tokens": 1720
+      },
+      "plan_generation_api_time_only": 13.04653549194336,
+      "code_generation_usage": {
+        "prompt_tokens": 3507,
+        "completion_tokens": 121,
+        "total_tokens": 3628
+      },
+      "code_generation_api_time_only": 7.198402643203735,
+      "repair_usage_total": {
+        "prompt_tokens": 1154,
+        "completion_tokens": 2652,
+        "total_tokens": 3806
+      },
+      "repair_api_time_only_total": 65.04820084571838,
+      "path_usage_total": {
+        "prompt_tokens": 5996,
+        "completion_tokens": 3158,
+        "total_tokens": 9154
+      },
+      "path_api_time_only": 85.29313898086548,
+      "solver_time_only": 0.003021240234375
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1335,
+        "completion_tokens": 643,
+        "total_tokens": 1978
+      },
+      "plan_generation_api_time_only": 17.80579900741577,
+      "code_generation_usage": {
+        "prompt_tokens": 3765,
+        "completion_tokens": 123,
+        "total_tokens": 3888
+      },
+      "code_generation_api_time_only": 5.767169713973999,
+      "repair_usage_total": {
+        "prompt_tokens": 1158,
+        "completion_tokens": 2169,
+        "total_tokens": 3327
+      },
+      "repair_api_time_only_total": 56.904378175735474,
+      "path_usage_total": {
+        "prompt_tokens": 6258,
+        "completion_tokens": 2935,
+        "total_tokens": 9193
+      },
+      "path_api_time_only": 80.47734689712524,
+      "solver_time_only": 0.00418543815612793
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1335,
+        "completion_tokens": 470,
+        "total_tokens": 1805
+      },
+      "plan_generation_api_time_only": 12.432466268539429,
+      "code_generation_usage": {
+        "prompt_tokens": 3592,
+        "completion_tokens": 121,
+        "total_tokens": 3713
+      },
+      "code_generation_api_time_only": 4.896052598953247,
+      "repair_usage_total": {
+        "prompt_tokens": 1160,
+        "completion_tokens": 2278,
+        "total_tokens": 3438
+      },
+      "repair_api_time_only_total": 59.44461178779602,
+      "path_usage_total": {
+        "prompt_tokens": 6087,
+        "completion_tokens": 2869,
+        "total_tokens": 8956
+      },
+      "path_api_time_only": 76.7731306552887,
+      "solver_time_only": 0.0019068717956542969
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1335,
+        "completion_tokens": 366,
+        "total_tokens": 1701
+      },
+      "plan_generation_api_time_only": 9.515172958374023,
+      "code_generation_usage": {
+        "prompt_tokens": 3488,
+        "completion_tokens": 412,
+        "total_tokens": 3900
+      },
+      "code_generation_api_time_only": 11.790220022201538,
+      "repair_usage_total": {
+        "prompt_tokens": 2061,
+        "completion_tokens": 2622,
+        "total_tokens": 4683
+      },
+      "repair_api_time_only_total": 64.11613202095032,
+      "path_usage_total": {
+        "prompt_tokens": 6884,
+        "completion_tokens": 3400,
+        "total_tokens": 10284
+      },
+      "path_api_time_only": 85.42152500152588,
+      "solver_time_only": 0.003271341323852539
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1335,
+        "completion_tokens": 384,
+        "total_tokens": 1719
+      },
+      "plan_generation_api_time_only": 12.31185245513916,
+      "code_generation_usage": {
+        "prompt_tokens": 3506,
+        "completion_tokens": 121,
+        "total_tokens": 3627
+      },
+      "code_generation_api_time_only": 7.348800182342529,
+      "repair_usage_total": {
+        "prompt_tokens": 1160,
+        "completion_tokens": 2154,
+        "total_tokens": 3314
+      },
+      "repair_api_time_only_total": 51.552343130111694,
+      "path_usage_total": {
+        "prompt_tokens": 6001,
+        "completion_tokens": 2659,
+        "total_tokens": 8660
+      },
+      "path_api_time_only": 71.21299576759338,
+      "solver_time_only": 0.004845857620239258
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 31226,
+    "completion_tokens": 15021,
+    "total_tokens": 46247
+  },
+  "api_time_only_total": 399.1781373023987,
+  "solver_time_only_total": 0.017230749130249023,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 520,
+            "completion_tokens": 527,
+            "total_tokens": 1047
+          },
+          "api_time_only": 13.791923761367798,
+          "solver_time_only": 0.0013625621795654297
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\nFacts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine, goal\n\n# Initialize knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Define facts\ndef add_facts():\n    # Anne's properties\n    engine.add_fact('facts', 'is_blue', ('Anne', True))\n    engine.add_fact('facts', 'is_cold', ('Anne', True))\n    engine.add_fact('facts', 'is_kind', ('Anne', True))\n    engine.add_fact('facts', 'is_quiet', ('Anne', True))\n    \n    # Bob's properties\n    engine.add_fact('facts', 'is_blue', ('Bob', True))\n    engine.add_fact('facts', 'is_kind', ('Bob', True))\n    engine.add_fact('facts', 'is_nice', ('Bob', True))\n    engine.add_fact('facts', 'is_quiet', ('Bob', False))\n    \n    # Dave's properties\n    engine.add_fact('facts', 'is_furry', ('Dave', False))\n    engine.add_fact('facts', 'is_green', ('Dave', True))\n    engine.add_fact('facts', 'is_quiet', ('Dave', True))\n    \n    # Fiona's properties\n    engine.add_fact('facts', 'is_cold', ('Fiona', True))\n\n# Define rules\n@engine.rule('rules')\ndef cold_to_blue():\n    return (\n        ('facts', 'is_cold', ('?x', True)),\n        (),\n        [('facts', 'is_blue', ('?x', True))]\n    )\n\n@engine.rule('rules')\ndef green_and_nice_to_kind():\n    return (\n        ('facts', 'is_green', ('?x', True)),\n        ('facts', 'is_nice', ('?x', True)),\n        [('facts', 'is_kind', ('?x', True))]\n    )\n\n@engine.rule('rules')\ndef blue_to_kind():\n    return (\n        ('facts', 'is_blue', ('?x', True)),\n        (),\n        [('facts', 'is_kind', ('?x', True))]\n    )\n\n@engine.rule('rules')\ndef kind_and_cold_to_nice():\n    return (\n        ('facts', 'is_kind', ('?x', True)),\n        ('facts', 'is_cold', ('?x', True)),\n        [('facts', 'is_nice', ('?x', True))]\n    )\n\n@engine.rule('rules')\ndef nice_to_green():\n    return (\n        ('facts', 'is_nice', ('?x', True)),\n        (),\n        [('facts', 'is_green', ('?x', True))]\n    )\n\n@engine.rule('rules')\ndef cold_and_green_to_quiet():\n    return (\n        ('facts', 'is_cold', ('?x', True)),\n        ('facts', 'is_green', ('?x', True)),\n        [('facts', 'is_quiet', ('?x', True))]\n    )\n\n# Main execution\nif __name__ == \"__main__\":\n    # Add facts and rules to engine\n    add_facts()\n    \n    # Enable the rules (activate rulebases)\n    engine.activate('rules')\n    \n    # Query: is Fiona not kind?\n    try:\n        result = list(engine.prove('facts', 'is_kind', ('Fiona', True), 1))\n        if result:\n            print(\"False\")  # Fiona IS kind, so \"Fiona is not kind\" is false\n        else:\n            # Try to prove she's not kind directly\n            result_not = list(engine.prove('facts', 'is_kind', ('Fiona', False), 1))\n            if result_not:\n                print(\"True\")  # Fiona is not kind\n            else:\n                print(\"Unknown\")\n    except Exception as e:\n        # If we can't determine, it's unknown\n        print(\"Unknown\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 634,
+            "completion_tokens": 2125,
+            "total_tokens": 2759
+          },
+          "api_time_only": 51.256277084350586,
+          "solver_time_only": 0.0006470680236816406
+        }
+      ]
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_not_quiet(\"Bob\", True)\n\n# --- Facts about Dave ---\nis_not_furry(\"Dave\", True)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_not_quiet(\"Bob\", True)\n\n# --- Facts about Dave ---\nis_not_furry(\"Dave\", True)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_not_quiet(\"Bob\", True)\n\nis_not_furry(\"Dave\", True)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 522,
+            "completion_tokens": 529,
+            "total_tokens": 1051
+          },
+          "api_time_only": 15.559762001037598,
+          "solver_time_only": 0.0018589496612548828
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_not_quiet(\"Bob\", True)\n\nis_not_furry(\"Dave\", True)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\nFacts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_not_quiet(\"Bob\", True)\n\nis_not_furry(\"Dave\", True)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\nassert\n    is_blue(?x, True)\n\nforeach\n    is_green(?x, True) and is_nice(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_blue(?x, True)\nassert\n    is_kind(?x, True)\n\nforeach\n    is_kind(?x, True) and is_cold(?x, True)\nassert\n    is_nice(?x, True)\n\nforeach\n    is_nice(?x, True)\nassert\n    is_green(?x, True)\n\nforeach\n    is_cold(?x, True) and is_green(?x, True)\nassert\n    is_quiet(?x, True)\n\nQuery:\nis_kind(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts\nengine.add_predicate('is_blue', 'Anne', True)\nengine.add_predicate('is_cold', 'Anne', True)\nengine.add_predicate('is_kind', 'Anne', True)\nengine.add_predicate('is_quiet', 'Anne', True)\n\nengine.add_predicate('is_blue', 'Bob', True)\nengine.add_predicate('is_kind', 'Bob', True)\nengine.add_predicate('is_nice', 'Bob', True)\nengine.add_predicate('is_not_quiet', 'Bob', True)\n\nengine.add_predicate('is_not_furry', 'Dave', True)\nengine.add_predicate('is_green', 'Dave', True)\nengine.add_predicate('is_quiet', 'Dave', True)\n\nengine.add_predicate('is_cold', 'Fiona', True)\n\n# Rules\n@engine.rule\ndef cold_people_are_blue(x):\n    return (\n        ('is_cold', x, True),\n        '=>',\n        ('is_blue', x, True)\n    )\n\n@engine.rule\ndef green_nice_people_are_kind(x):\n    return (\n        ('is_green', x, True),\n        ('is_nice', x, True),\n        '=>',\n        ('is_kind', x, True)\n    )\n\n@engine.rule\ndef blue_people_are_kind(x):\n    return (\n        ('is_blue', x, True),\n        '=>',\n        ('is_kind', x, True)\n    )\n\n@engine.rule\ndef kind_cold_people_are_nice(x):\n    return (\n        ('is_kind', x, True),\n        ('is_cold', x, True),\n        '=>',\n        ('is_nice', x, True)\n    )\n\n@engine.rule\ndef nice_people_are_green(x):\n    return (\n        ('is_nice', x, True),\n        '=>',\n        ('is_green', x, True)\n    )\n\n@engine.rule\ndef cold_green_people_are_quiet(x):\n    return (\n        ('is_cold', x, True),\n        ('is_green', x, True),\n        '=>',\n        ('is_quiet', x, True)\n    )\n\n# Query\nresult = engine.query(('is_kind', 'Fiona', False))\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 636,
+            "completion_tokens": 1640,
+            "total_tokens": 2276
+          },
+          "api_time_only": 41.344616174697876,
+          "solver_time_only": 0.002109050750732422
+        }
+      ]
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 520,
+            "completion_tokens": 525,
+            "total_tokens": 1045
+          },
+          "api_time_only": 13.050610065460205,
+          "solver_time_only": 0.0013015270233154297
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\nFacts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Import required modules\nfrom pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Define facts\nengine.add_predicate('is_blue', 'Anne', True)\nengine.add_predicate('is_cold', 'Anne', True)\nengine.add_predicate('is_kind', 'Anne', True)\nengine.add_predicate('is_quiet', 'Anne', True)\n\nengine.add_predicate('is_blue', 'Bob', True)\nengine.add_predicate('is_kind', 'Bob', True)\nengine.add_predicate('is_nice', 'Bob', True)\nengine.add_predicate('is_quiet', 'Bob', False)\n\nengine.add_predicate('is_furry', 'Dave', False)\nengine.add_predicate('is_green', 'Dave', True)\nengine.add_predicate('is_quiet', 'Dave', True)\n\nengine.add_predicate('is_cold', 'Fiona', True)\n\n# Define rules\n@engine.rule\ndef cold_implies_blue(x):\n    return (\n        ('is_cold', x, True),\n        '=>',\n        ('is_blue', x, True)\n    )\n\n@engine.rule\ndef green_and_nice_implies_kind(x):\n    return (\n        ('is_green', x, True),\n        ('is_nice', x, True),\n        '=>',\n        ('is_kind', x, True)\n    )\n\n@engine.rule\ndef blue_implies_kind(x):\n    return (\n        ('is_blue', x, True),\n        '=>',\n        ('is_kind', x, True)\n    )\n\n@engine.rule\ndef kind_and_cold_implies_nice(x):\n    return (\n        ('is_kind', x, True),\n        ('is_cold', x, True),\n        '=>',\n        ('is_nice', x, True)\n    )\n\n@engine.rule\ndef nice_implies_green(x):\n    return (\n        ('is_nice', x, True),\n        '=>',\n        ('is_green', x, True)\n    )\n\n@engine.rule\ndef cold_and_green_implies_quiet(x):\n    return (\n        ('is_cold', x, True),\n        ('is_green', x, True),\n        '=>',\n        ('is_quiet', x, True)\n    )\n\n# Add facts to engine\nengine.activate('facts')\n\n# Query: is Fiona not kind?\nresult = engine.query(('is_kind', 'Fiona', True))\nprint(\"Fiona is kind:\", result)\n\n# Since we want to check if \"Fiona is not kind\" is true\nfiona_not_kind = not result\nprint(\"Fiona is not kind:\", fiona_not_kind)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 640,
+            "completion_tokens": 1753,
+            "total_tokens": 2393
+          },
+          "api_time_only": 46.394001722335815,
+          "solver_time_only": 0.0003428459167480469
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n```\n\n```rules\n# Rule: All cold people are blue.\ncold_are_blue\n    foreach\n        facts.is_cold($person, True)\n    assert\n        facts.is_blue($person, True)\n\n# Rule: Green, nice people are kind.\ngreen_and_nice_are_kind\n    foreach\n        facts.is_green($person, True)\n        facts.is_nice($person, True)\n    assert\n        facts.is_kind($person, True)\n\n# Rule: All blue people are kind.\nblue_are_kind\n    foreach\n        facts.is_blue($person, True)\n    assert\n        facts.is_kind($person, True)\n\n# Rule: Kind, cold people are nice.\nkind_and_cold_are_nice\n    foreach\n        facts.is_kind($person, True)\n        facts.is_cold($person, True)\n    assert\n        facts.is_nice($person, True)\n\n# Rule: If someone is nice then they are green.\nnice_are_green\n    foreach\n        facts.is_nice($person, True)\n    assert\n        facts.is_green($person, True)\n\n# Rule: Cold, green people are quiet.\ncold_and_green_are_quiet\n    foreach\n        facts.is_cold($person, True)\n        facts.is_green($person, True)\n    assert\n        facts.is_quiet($person, True)\n```\n\n```query\nfacts.is_kind(\"Fiona\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n```facts\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n```\n\n```rules\n# Rule: All cold people are blue.\ncold_are_blue\n    foreach\n        facts.is_cold($person, True)\n    assert\n        facts.is_blue($person, True)\n\n# Rule: Green, nice people are kind.\ngreen_and_nice_are_kind\n    foreach\n        facts.is_green($person, True)\n        facts.is_nice($person, True)\n    assert\n        facts.is_kind($person, True)\n\n# Rule: All blue people are kind.\nblue_are_kind\n    foreach\n        facts.is_blue($person, True)\n    assert\n        facts.is_kind($person, True)\n\n# Rule: Kind, cold people are nice.\nkind_and_cold_are_nice\n    foreach\n        facts.is_kind($person, True)\n        facts.is_cold($person, True)\n    assert\n        facts.is_nice($person, True)\n\n# Rule: If someone is nice then they are green.\nnice_are_green\n    foreach\n        facts.is_nice($person, True)\n    assert\n        facts.is_green($person, True)\n\n# Rule: Cold, green people are quiet.\ncold_and_green_are_quiet\n    foreach\n        facts.is_cold($person, True)\n        facts.is_green($person, True)\n    assert\n        facts.is_quiet($person, True)\n```\n\n```query\nfacts.is_kind(\"Fiona\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Import required PyKe modules\nfrom pyke import knowledge_engine\n\n# Create knowledge base\nengine = knowledge_engine.engine(__file__)\n\n# --- Facts ---\nengine.add_predicate('is_blue', 2)\nengine.add_predicate('is_cold', 2)\nengine.add_predicate('is_kind', 2)\nengine.add_predicate('is_quiet', 2)\nengine.add_predicate('is_furry', 2)\nengine.add_predicate('is_green', 2)\nengine.add_predicate('is_nice', 2)\n\n# Add explicit facts\nengine.add_fact('facts', 'is_blue', ('Anne', True))\nengine.add_fact('facts', 'is_cold', ('Anne', True))\nengine.add_fact('facts', 'is_kind', ('Anne', True))\nengine.add_fact('facts', 'is_quiet', ('Anne', True))\n\nengine.add_fact('facts', 'is_blue', ('Bob', True))\nengine.add_fact('facts', 'is_kind', ('Bob', True))\nengine.add_fact('facts', 'is_nice', ('Bob', True))\nengine.add_fact('facts', 'is_quiet', ('Bob', False))\n\nengine.add_fact('facts', 'is_furry', ('Dave', False))\nengine.add_fact('facts', 'is_green', ('Dave', True))\nengine.add_fact('facts', 'is_quiet', ('Dave', True))\n\nengine.add_fact('facts', 'is_cold', ('Fiona', True))\n\n# --- Rules ---\nengine.add_rule('cold_are_blue', \n    (('is_cold', '$person', True),),\n    (('is_blue', '$person', True),))\n\nengine.add_rule('green_and_nice_are_kind',\n    (('is_green', '$person', True),\n     ('is_nice', '$person', True)),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('blue_are_kind',\n    (('is_blue', '$person', True),),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('kind_and_cold_are_nice',\n    (('is_kind', '$person', True),\n     ('is_cold', '$person', True)),\n    (('is_nice', '$person', True),))\n\nengine.add_rule('nice_are_green',\n    (('is_nice', '$person', True),),\n    (('is_green', '$person', True),))\n\nengine.add_rule('cold_and_green_are_quiet',\n    (('is_cold', '$person', True),\n     ('is_green', '$person', True)),\n    (('is_quiet', '$person', True),))\n\n# Activate the knowledge base\nengine.activate('facts')\n\n# --- Query ---\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n    if result:\n        # Fiona IS kind, so \"Fiona is not kind\" is FALSE\n        print(\"Statement 'Fiona is not kind' is FALSE\")\n    else:\n        # Fiona is NOT kind, so \"Fiona is not kind\" is TRUE\n        print(\"Statement 'Fiona is not kind' is TRUE\")\nexcept:\n    # If we can't prove she's kind, check if we can prove she's not kind\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n        if result:\n            print(\"Statement 'Fiona is not kind' is TRUE\")\n        else:\n            print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n    except:\n        print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n\n# Alternative: Direct query for the negation\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n    if result:\n        print(\"TRUE\")\n    else:\n        # Check if we can prove she IS kind\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\nexcept:\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\n    except:\n        print(\"UNKNOWN\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 788,
+            "completion_tokens": 1757,
+            "total_tokens": 2545
+          },
+          "api_time_only": 42.10044288635254,
+          "solver_time_only": 0.0006794929504394531
+        },
+        {
+          "round_index": 2,
+          "input_code": "# Import required PyKe modules\nfrom pyke import knowledge_engine\n\n# Create knowledge base\nengine = knowledge_engine.engine(__file__)\n\n# --- Facts ---\nengine.add_predicate('is_blue', 2)\nengine.add_predicate('is_cold', 2)\nengine.add_predicate('is_kind', 2)\nengine.add_predicate('is_quiet', 2)\nengine.add_predicate('is_furry', 2)\nengine.add_predicate('is_green', 2)\nengine.add_predicate('is_nice', 2)\n\n# Add explicit facts\nengine.add_fact('facts', 'is_blue', ('Anne', True))\nengine.add_fact('facts', 'is_cold', ('Anne', True))\nengine.add_fact('facts', 'is_kind', ('Anne', True))\nengine.add_fact('facts', 'is_quiet', ('Anne', True))\n\nengine.add_fact('facts', 'is_blue', ('Bob', True))\nengine.add_fact('facts', 'is_kind', ('Bob', True))\nengine.add_fact('facts', 'is_nice', ('Bob', True))\nengine.add_fact('facts', 'is_quiet', ('Bob', False))\n\nengine.add_fact('facts', 'is_furry', ('Dave', False))\nengine.add_fact('facts', 'is_green', ('Dave', True))\nengine.add_fact('facts', 'is_quiet', ('Dave', True))\n\nengine.add_fact('facts', 'is_cold', ('Fiona', True))\n\n# --- Rules ---\nengine.add_rule('cold_are_blue', \n    (('is_cold', '$person', True),),\n    (('is_blue', '$person', True),))\n\nengine.add_rule('green_and_nice_are_kind',\n    (('is_green', '$person', True),\n     ('is_nice', '$person', True)),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('blue_are_kind',\n    (('is_blue', '$person', True),),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('kind_and_cold_are_nice',\n    (('is_kind', '$person', True),\n     ('is_cold', '$person', True)),\n    (('is_nice', '$person', True),))\n\nengine.add_rule('nice_are_green',\n    (('is_nice', '$person', True),),\n    (('is_green', '$person', True),))\n\nengine.add_rule('cold_and_green_are_quiet',\n    (('is_cold', '$person', True),\n     ('is_green', '$person', True)),\n    (('is_quiet', '$person', True),))\n\n# Activate the knowledge base\nengine.activate('facts')\n\n# --- Query ---\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n    if result:\n        # Fiona IS kind, so \"Fiona is not kind\" is FALSE\n        print(\"Statement 'Fiona is not kind' is FALSE\")\n    else:\n        # Fiona is NOT kind, so \"Fiona is not kind\" is TRUE\n        print(\"Statement 'Fiona is not kind' is TRUE\")\nexcept:\n    # If we can't prove she's kind, check if we can prove she's not kind\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n        if result:\n            print(\"Statement 'Fiona is not kind' is TRUE\")\n        else:\n            print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n    except:\n        print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n\n# Alternative: Direct query for the negation\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n    if result:\n        print(\"TRUE\")\n    else:\n        # Check if we can prove she IS kind\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\nexcept:\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\n    except:\n        print(\"UNKNOWN\")",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n# Import required PyKe modules\nfrom pyke import knowledge_engine\n\n# Create knowledge base\nengine = knowledge_engine.engine(__file__)\n\n# --- Facts ---\nengine.add_predicate('is_blue', 2)\nengine.add_predicate('is_cold', 2)\nengine.add_predicate('is_kind', 2)\nengine.add_predicate('is_quiet', 2)\nengine.add_predicate('is_furry', 2)\nengine.add_predicate('is_green', 2)\nengine.add_predicate('is_nice', 2)\n\n# Add explicit facts\nengine.add_fact('facts', 'is_blue', ('Anne', True))\nengine.add_fact('facts', 'is_cold', ('Anne', True))\nengine.add_fact('facts', 'is_kind', ('Anne', True))\nengine.add_fact('facts', 'is_quiet', ('Anne', True))\n\nengine.add_fact('facts', 'is_blue', ('Bob', True))\nengine.add_fact('facts', 'is_kind', ('Bob', True))\nengine.add_fact('facts', 'is_nice', ('Bob', True))\nengine.add_fact('facts', 'is_quiet', ('Bob', False))\n\nengine.add_fact('facts', 'is_furry', ('Dave', False))\nengine.add_fact('facts', 'is_green', ('Dave', True))\nengine.add_fact('facts', 'is_quiet', ('Dave', True))\n\nengine.add_fact('facts', 'is_cold', ('Fiona', True))\n\n# --- Rules ---\nengine.add_rule('cold_are_blue', \n    (('is_cold', '$person', True),),\n    (('is_blue', '$person', True),))\n\nengine.add_rule('green_and_nice_are_kind',\n    (('is_green', '$person', True),\n     ('is_nice', '$person', True)),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('blue_are_kind',\n    (('is_blue', '$person', True),),\n    (('is_kind', '$person', True),))\n\nengine.add_rule('kind_and_cold_are_nice',\n    (('is_kind', '$person', True),\n     ('is_cold', '$person', True)),\n    (('is_nice', '$person', True),))\n\nengine.add_rule('nice_are_green',\n    (('is_nice', '$person', True),),\n    (('is_green', '$person', True),))\n\nengine.add_rule('cold_and_green_are_quiet',\n    (('is_cold', '$person', True),\n     ('is_green', '$person', True)),\n    (('is_quiet', '$person', True),))\n\n# Activate the knowledge base\nengine.activate('facts')\n\n# --- Query ---\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n    if result:\n        # Fiona IS kind, so \"Fiona is not kind\" is FALSE\n        print(\"Statement 'Fiona is not kind' is FALSE\")\n    else:\n        # Fiona is NOT kind, so \"Fiona is not kind\" is TRUE\n        print(\"Statement 'Fiona is not kind' is TRUE\")\nexcept:\n    # If we can't prove she's kind, check if we can prove she's not kind\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n        if result:\n            print(\"Statement 'Fiona is not kind' is TRUE\")\n        else:\n            print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n    except:\n        print(\"Statement 'Fiona is not kind' is UNKNOWN\")\n\n# Alternative: Direct query for the negation\ntry:\n    result = list(engine.query('facts', 'is_kind', ('Fiona', False)))\n    if result:\n        print(\"TRUE\")\n    else:\n        # Check if we can prove she IS kind\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\nexcept:\n    try:\n        result = list(engine.query('facts', 'is_kind', ('Fiona', True)))\n        if result:\n            print(\"FALSE\")\n        else:\n            print(\"UNKNOWN\")\n    except:\n        print(\"UNKNOWN\")\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "# Import required PyKe modules\nfrom pyke import knowledge_engine\n\n# Create knowledge base\nengine = knowledge_engine.engine(__file__)\n\n# --- Facts ---\nFacts:\nis_blue, Anne, True\nis_cold, Anne, True\nis_kind, Anne, True\nis_quiet, Anne, True\n\nis_blue, Bob, True\nis_kind, Bob, True\nis_nice, Bob, True\nis_quiet, Bob, False\n\nis_furry, Dave, False\nis_green, Dave, True\nis_quiet, Dave, True\n\nis_cold, Fiona, True\n\n# --- Rules ---\nRules:\nforeach is_cold($person, True)\n    assert is_blue($person, True)\n\nforeach is_green($person, True), is_nice($person, True)\n    assert is_kind($person, True)\n\nforeach is_blue($person, True)\n    assert is_kind($person, True)\n\nforeach is_kind($person, True), is_cold($person, True)\n    assert is_nice($person, True)\n\nforeach is_nice($person, True)\n    assert is_green($person, True)\n\nforeach is_cold($person, True), is_green($person, True)\n    assert is_quiet($person, True)\n\n# --- Query ---\nQuery:\nfacts.is_kind(Fiona, True)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 1273,
+            "completion_tokens": 865,
+            "total_tokens": 2138
+          },
+          "api_time_only": 22.01568913459778,
+          "solver_time_only": 0.0008559226989746094
+        }
+      ]
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\n# --- Facts about Anne ---\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\n# --- Facts about Bob ---\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\n# --- Facts about Dave ---\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\n# --- Facts about Fiona ---\nis_cold(\"Fiona\", True)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 520,
+            "completion_tokens": 525,
+            "total_tokens": 1045
+          },
+          "api_time_only": 12.820803880691528,
+          "solver_time_only": 0.002727985382080078
+        },
+        {
+          "round_index": 2,
+          "input_code": "Facts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nAnne is blue. Anne is cold. Anne is kind. Anne is quiet. Bob is blue. Bob is kind. Bob is nice. Bob is not quiet. Dave is not furry. Dave is green. Dave is quiet. Fiona is cold. All cold people are blue. Green, nice people are kind. All blue people are kind. Kind, cold people are nice. If someone is nice then they are green. Cold, green people are quiet.\nQuestion:\nBased on the above information, is the following statement true, false, or unknown? Fiona is not kind.\nPlan:\n{plan}\n\n## Original Code\nFacts:\nis_blue(\"Anne\", True)\nis_cold(\"Anne\", True)\nis_kind(\"Anne\", True)\nis_quiet(\"Anne\", True)\n\nis_blue(\"Bob\", True)\nis_kind(\"Bob\", True)\nis_nice(\"Bob\", True)\nis_quiet(\"Bob\", False)\n\nis_furry(\"Dave\", False)\nis_green(\"Dave\", True)\nis_quiet(\"Dave\", True)\n\nis_cold(\"Fiona\", True)\n\nRules:\nforeach\n    is_cold(?x, True)\n=> \n    assert(is_blue(?x, True))\n\nforeach\n    is_green(?x, True),\n    is_nice(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_blue(?x, True)\n=> \n    assert(is_kind(?x, True))\n\nforeach\n    is_kind(?x, True),\n    is_cold(?x, True)\n=> \n    assert(is_nice(?x, True))\n\nforeach\n    is_nice(?x, True)\n=> \n    assert(is_green(?x, True))\n\nforeach\n    is_cold(?x, True),\n    is_green(?x, True)\n=> \n    assert(is_quiet(?x, True))\n\nQuery:\nis_kind(\"Fiona\", False)\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\nengine = knowledge_engine.engine(__file__)\n\n# Facts\nengine.add_case_fact('kb', ('is_blue', 'Anne', True))\nengine.add_case_fact('kb', ('is_cold', 'Anne', True))\nengine.add_case_fact('kb', ('is_kind', 'Anne', True))\nengine.add_case_fact('kb', ('is_quiet', 'Anne', True))\n\nengine.add_case_fact('kb', ('is_blue', 'Bob', True))\nengine.add_case_fact('kb', ('is_kind', 'Bob', True))\nengine.add_case_fact('kb', ('is_nice', 'Bob', True))\nengine.add_case_fact('kb', ('is_quiet', 'Bob', False))\n\nengine.add_case_fact('kb', ('is_furry', 'Dave', False))\nengine.add_case_fact('kb', ('is_green', 'Dave', True))\nengine.add_case_fact('kb', ('is_quiet', 'Dave', True))\n\nengine.add_case_fact('kb', ('is_cold', 'Fiona', True))\n\n# Rules\nengine.add_rule('kb',\n    ('is_cold', '?x', True),\n    (),\n    ('is_blue', '?x', True)\n)\n\nengine.add_rule('kb',\n    ('is_green', '?x', True),\n    ('is_nice', '?x', True),\n    ('is_kind', '?x', True)\n)\n\nengine.add_rule('kb',\n    ('is_blue', '?x', True),\n    (),\n    ('is_kind', '?x', True)\n)\n\nengine.add_rule('kb',\n    ('is_kind', '?x', True),\n    ('is_cold', '?x', True),\n    ('is_nice', '?x', True)\n)\n\nengine.add_rule('kb',\n    ('is_nice', '?x', True),\n    (),\n    ('is_green', '?x', True)\n)\n\nengine.add_rule('kb',\n    ('is_cold', '?x', True),\n    ('is_green', '?x', True),\n    ('is_quiet', '?x', True)\n)\n\n# Query\nresult = engine.query('kb').goal(('is_kind', 'Fiona', False))\nprint(\"Fiona is not kind:\", result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 640,
+            "completion_tokens": 1629,
+            "total_tokens": 2269
+          },
+          "api_time_only": 38.731539249420166,
+          "solver_time_only": 0.0017786026000976562
+        }
+      ]
+    }
+  ]
+}

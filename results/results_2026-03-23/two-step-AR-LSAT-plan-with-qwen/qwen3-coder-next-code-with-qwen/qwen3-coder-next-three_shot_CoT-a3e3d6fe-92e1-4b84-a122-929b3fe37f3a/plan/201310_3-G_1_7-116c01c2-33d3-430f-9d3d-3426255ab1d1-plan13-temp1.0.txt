@@ -1,0 +1,29 @@
+1. Enumerate the six bands and assign them integer indices: Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5.  
+2. Create integer position variables for each band: pos[0] through pos[5], one per band, representing their slot number (1 to 6).  
+3. Add **domain constraints**: each position must be in [1,6], and all positions are distinct (using `Distinct` or pairwise inequalities).  
+4. Add **original constraint base**:  
+   - Vegemite before Zircon: pos[1] < pos[5]  
+   - Wellspring and Zircon before Xpert: pos[2] < pos[3] ∧ pos[5] < pos[3]  
+   - Uneasy in last three slots: pos[0] ∈ {4,5,6}  
+   - Yardsign in first three slots: pos[4] ∈ {1,2,3}  
+5. For each answer choice (i=0 to 4), do the following:  
+   a. Translate the answer choice into logical constraints.  
+   b. Clone the base solver (including all original constraints above).  
+   c. Add the new constraint from answer choice i to the clone.  
+   d. Check if the *original* relative ordering constraint (Wellspring < Xpert ∧ Zircon < Xpert) is logically implied by the *new* constraint + other base constraints:  
+      - To test logical equivalence, verify both directions:  
+        i. In clone with *new* constraint, assert that (pos[2] < pos[3]) is false or (pos[5] < pos[3]) is false → UNSAT required (i.e., new constraint + base ⇒ Wellspring < Xpert ∧ Zircon < Xpert must hold).  
+        ii. In clone with *original* constraint, assert that the new answer constraint is false → UNSAT required (i.e., original constraints + base ⇒ new answer constraint must hold).  
+      - Simplified: check that the set of satisfying assignments (permutations) under the new constraint + base is *identical* to that under original + base:  
+        - Let S_original = models of base ∪ {pos[2] < pos[3], pos[5] < pos[3]}  
+        - Let S_new(i) = models of base ∪ {constraints_from_choice_i}  
+        - For correctness, verify: (S_original == S_new(i)) by checking both:  
+          • base ∪ original_constraints ⇒ choice_i (i.e., any model satisfying base+original must satisfy choice_i)  
+          • base ∪ choice_i ⇒ original_constraints (i.e., any model satisfying base+choice_i must satisfy Wellspring < Xpert and Zircon < Xpert)  
+   e. For efficiency: use two UNSAT checks per answer choice:  
+        - Check 1: base + choice_i + ¬(pos[2] < pos[3]) is UNSAT  
+        - Check 2: base + choice_i + ¬(pos[5] < pos[3]) is UNSAT  
+        - Check 3: base + original_constraints + ¬choice_i is UNSAT  
+   f. If all three checks pass, the answer choice is logically equivalent; record its index.  
+6. Among choices 0–4, collect indices where the above equivalence holds.  
+7. The correct answer corresponds to that index; return the corresponding string from choices list.

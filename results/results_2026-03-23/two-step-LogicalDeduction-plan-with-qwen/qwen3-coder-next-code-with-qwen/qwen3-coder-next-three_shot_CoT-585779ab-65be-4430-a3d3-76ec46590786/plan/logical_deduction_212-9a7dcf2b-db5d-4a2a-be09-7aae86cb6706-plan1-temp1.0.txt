@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruits as variables: `"oranges"`, `"plums"`, `"loquats"`, `"apples"`, `"kiwis"`, `"cantaloupes"`, and `"peaches"`.  
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.  
+    * Add all variables to the `Problem` with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+    * Translate each statement into a constraint using `lambda` functions:  
+        - "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+        - "The plums are the cheapest" → `plums == 1`  
+        - "The loquats are the fourth-most expensive" → `loquats == 4` *(Note: "fourth-most expensive" means rank 4, where cheaper = lower number)*  
+        - "The peaches are less expensive than the oranges" → `peaches < oranges`  
+        - "The peaches are more expensive than the kiwis" → `kiwis < peaches`  
+        - "The apples are the second-cheapest" → `apples == 2`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments.  
+    * Extract the unique solution (assuming the problem has exactly one solution due to consistency and specificity of constraints).
+
+5.  **Determine the Second-Most Expensive Fruit:**  
+    * The second-most expensive corresponds to rank **6** (since most expensive = 7, second-most = 6).  
+    * Create a mapping from choice letters (A–G) to fruit names:  
+        A → "oranges", B → "plums", C → "loquats", D → "apples", E → "kiwis", F → "cantaloupes", G → "peaches".  
+    * Iterate through the solution dictionary to find which fruit has position/rank 6.  
+    * Return the corresponding choice letter as the answer.

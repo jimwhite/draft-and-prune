@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Define the seven bird variables as strings: `"blue_jay"`, `"owl"`, `"hawk"`, `"falcon"`, `"hummingbird"`, `"robin"`, and `"quail"`.
+    * Define the domain of positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the problem with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce that all birds occupy distinct positions.
+    * Translate each statement into a constraint using lambda functions:
+        * "The hummingbird is to the left of the falcon" → `hummingbird < falcon`
+        * "The owl is the second from the left" → `owl == 2`
+        * "The robin is to the left of the hummingbird" → `robin < hummingbird`
+        * "The quail is to the right of the falcon" → `falcon < quail`
+        * "The robin is to the right of the owl" → `owl < robin`
+        * "The blue jay is the third from the right" → In a 7-position line, third from the right = position `7 - 3 + 1 = 5`, so `blue_jay == 5`
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to retrieve all valid arrangements that satisfy the constraints.
+    * Since the problem is well-defined and consistent, there will be exactly one solution; extract it (e.g., `solutions[0]`).
+
+5.  **Identify the Leftmost Bird:**
+    * The leftmost bird is the one assigned to position `1`.
+    * Extract the solution dictionary and find which key (bird name) maps to value `1`.
+
+6.  **Map to the Correct Choice:**
+    * Create a dictionary mapping choice letters (`'A'` through `'G'`) to the corresponding bird names in the order given:  
+        `{'A': 'blue_jay', 'B': 'owl', 'C': 'hawk', 'D': 'falcon', 'E': 'hummingbird', 'F': 'robin', 'G': 'quail'}`
+    * Using the bird found in step 5, determine which choice letter corresponds to it.
+    * Output that choice letter as the final answer.

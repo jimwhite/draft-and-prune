@@ -1,0 +1,20 @@
+1. Identify all entities: Bob, Charlie, Erin, Fiona.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_green("Bob", True)
+   - is_kind("Bob", True)
+   - is_green("Charlie", True)
+   - is_smart("Charlie", False)
+   - is_young("Erin", False)
+   - is_nice("Fiona", True)
+   - is_young("Fiona", True)
+3. Translate all contextual rules into PyKe `foreach` + `assert` format:
+   • Green and smart → quiet: `foreach is_green(x, True) and is_smart(x, True)` → `assert is_quiet(x, True)`
+   • Kind → green: `foreach is_kind(x, True)` → `assert is_green(x, True)`
+   • Smart → young: `foreach is_smart(x, True)` → `assert is_young(x, True)`
+   • Young → kind: `foreach is_young(x, True)` → `assert is_kind(x, True)`
+   • Quiet → furry: `foreach is_quiet(x, True)` → `assert is_furry(x, True)`
+   • Quiet and nice → furry: `foreach is_quiet(x, True) and is_nice(x, True)` → `assert is_furry(x, True)`
+   • Nice and green → smart: `foreach is_nice(x, True) and is_green(x, True)` → `assert is_smart(x, True)`
+   • Bob-specific conditional: `foreach is_kind("Bob", True) and not is_green("Bob", True)` → `assert is_furry("Bob", True)`
+4. Note: Several rules may interact (e.g., Fiona is young ⇒ kind ⇒ green; Fiona is nice and now green ⇒ smart; Fiona smart ⇒ young—consistent); need to propagate all derived facts.
+5. Query: test whether `is_quiet("Fiona", True)` can be deduced (true), contradicted (false), or remains undetermined (unknown).

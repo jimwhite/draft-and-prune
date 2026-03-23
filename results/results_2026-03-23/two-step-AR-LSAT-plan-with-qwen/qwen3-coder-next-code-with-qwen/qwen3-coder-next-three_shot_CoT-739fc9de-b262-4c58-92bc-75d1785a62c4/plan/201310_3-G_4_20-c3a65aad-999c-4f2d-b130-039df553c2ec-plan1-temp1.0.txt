@@ -1,0 +1,21 @@
+1. Enumerate the five bird types and assign them integer codes (e.g., 0: oystercatchers, 1: petrels, 2: rails, 3: sandpipers, 4: terns).  
+2. Create integer position variables for each bird type (position in 1–5 schedule) and Boolean venue variables for each lecture (True = Gladwyn Hall, False = Howard Auditorium), indexed by bird type.  
+3. Add **domain constraints**: positions are distinct integers from 1 to 5; venues are Boolean (True/False).  
+4. Add **fixed venue constraints**:  
+    - First lecture is in Gladwyn Hall → exactly one bird with position 1 has venue = True.  
+    - Fourth lecture is in Howard Auditorium → exactly one bird with position 4 has venue = False.  
+    - Exactly three lectures in Gladwyn Hall → sum of all venue variables = 3.  
+5. Add **sandpipers constraints**:  
+    - Sandpipers lecture is in Howard Auditorium (venue = False).  
+    - Sandpipers lecture occurs earlier than oystercatchers (pos_sandpipers < pos_oystercatchers).  
+6. Add **terns and petrels constraints**:  
+    - Terns lecture occurs earlier than petrels (pos_terns < pos_petrels).  
+    - Petrels lecture is in Gladwyn Hall (venue = True).  
+7. Translate each answer choice into a logical conjunction of venue constraints based on lecture number:  
+    - e.g., “first and second lectures both in Gladwyn Hall” → venue(position1) = True ∧ venue(position2) = True.  
+8. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the venue constraints corresponding to that choice (e.g., for choice 0: position 1 and 2 venues are True).  
+    - Check satisfiability.  
+9. If a choice leads to UNSAT, it is impossible → must be false; record its index.  
+10. Return the index of the choice(s) that must be false (exactly one per problem).

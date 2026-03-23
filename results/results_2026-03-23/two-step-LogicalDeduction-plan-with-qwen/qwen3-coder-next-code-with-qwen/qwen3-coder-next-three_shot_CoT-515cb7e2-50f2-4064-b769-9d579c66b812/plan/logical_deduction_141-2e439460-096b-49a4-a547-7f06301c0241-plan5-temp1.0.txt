@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to create a constraint satisfaction problem solver.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the seven golfers: `"Joe"`, `"Rob"`, `"Eli"`, `"Dan"`, `"Mya"`, `"Ada"`, and `"Ana"`.  
+    * Define the domain as integers from 1 to 7, where **1 represents the best (highest/final position)** and **7 represents the worst (lowest/last) position**. This aligns with standard tournament ranking: lower number = better finish (above).  
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique position (no ties).  
+    * Convert each statement into constraints using `lambda` functions:  
+        - "Joe finished above Ana" means Joe’s position number is **less than** Ana’s (`lambda j, a: j < a`).  
+        - "Ana finished second-to-last" means Ana’s position is **6** (since last = 7, second-to-last = 6).  
+        - "Mya finished fourth" means Mya’s position is **4**.  
+        - "Dan finished third" means Dan’s position is **3**.  
+        - "Ada finished second" means Ada’s position is **2**.  
+        - "Eli finished third-to-last" means Eli’s position is **5** (positions from last: 1st-last=7, 2nd-last=6, **3rd-last=5**).  
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments. Given consistency and uniqueness implied by the problem, expect exactly one solution.  
+    * Extract the first (and only) solution dictionary.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks who finished **last**, i.e., position **7**.  
+    * Create a mapping from choice letters (`"A"` to `"G"`) to golfer names: `{"A": "Joe", "B": "Rob", "C": "Eli", "D": "Dan", "E": "Mya", "F": "Ada", "G": "Ana"}`.  
+    * Iterate through the solution dictionary to find which golfer has position value **7**.  
+    * Output the choice letter (e.g., `"B"`) corresponding to that golfer.

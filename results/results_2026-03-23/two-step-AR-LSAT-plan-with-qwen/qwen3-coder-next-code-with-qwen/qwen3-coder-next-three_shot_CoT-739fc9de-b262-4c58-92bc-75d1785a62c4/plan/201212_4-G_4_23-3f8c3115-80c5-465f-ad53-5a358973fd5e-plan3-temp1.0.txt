@@ -1,0 +1,31 @@
+1. Enumerate the seven articles and assign each a unique integer index (e.g., G=0, H=1, J=2, Q=3, R=4, S=5, Y=6).  
+2. Create integer variables `pos[i]` for i in 0..6, representing the editing position (1 to 7) of each article.  
+3. Add **domain constraints**: All `pos[i]` ∈ {1,2,...,7}, and all `pos[i]` are pairwise distinct (use `Distinct([pos[0], ..., pos[6]])`).  
+4. Add **topic constraints**:  
+    - Finance articles: G, H, J → topic 0  
+    - Nutrition articles: Q, R, S → topic 1  
+    - Wildlife article: Y → topic 2  
+    - Define a list `topic[i]` mapping each article index to its topic.  
+5. Add **no-consecutive-same-topic constraint**: For all consecutive positions k=1..6, if article A is at position k and article B at position k+1, then `topic[A] ≠ topic[B]`. Implement via pairwise implications: for each pair (i,j), if |pos[i] - pos[j]| == 1, then `topic[i] ≠ topic[j]`.  
+6. Add **relative ordering constraints**:  
+    - S earlier than Y: `pos[S] < pos[Y]` (i.e., `pos[5] < pos[6]`).  
+    - J earlier than G: `pos[J] < pos[G]` (`pos[2] < pos[0]`).  
+    - G earlier than R: `pos[G] < pos[R]` (`pos[0] < pos[4]`).  
+    - "S can be earlier than Q only if Q is third" → logical implication: if `pos[S] < pos[Q]`, then `pos[Q] == 3`. Equivalently: `pos[S] < pos[Q] → pos[Q] == 3`, which is equivalent to `pos[S] ≥ pos[Q] OR pos[Q] == 3`. Encode via disjunction using auxiliary Boolean or big-M encoding: `(pos[Q] == 3) ∨ (pos[S] >= pos[Q])`. Since Z3 doesn’t directly support OR of integer constraints, rewrite as: `ITE(pos[Q] != 3, pos[S] >= pos[Q], True)`, or use a Boolean variable `b` and enforce: `b ↔ (pos[S] < pos[Q])`, then add constraint `b → (pos[Q] == 3)`. Simpler: assert `pos[S] < pos[Q] → pos[Q] == 3` via: `(pos[S] >= pos[Q]) ∨ (pos[Q] == 3)`. In Z3, use: `Or(pos[Q] != pos[S] + 1 if needed? No — just use: Or(pos[Q] == 3, pos[S] >= pos[Q])`.  
+7. Define the five answer choices as candidate constraints:  
+    - H fourth → `pos[H] == 4` (`pos[1] == 4`)  
+    - H sixth → `pos[H] == 6`  
+    - R fourth → `pos[R] == 4` (`pos[4] == 4`)  
+    - R seventh → `pos[R] == 7`  
+    - Y fifth → `pos[Y] == 5` (`pos[6] == 5`)  
+8. For each answer choice in order:  
+    - Clone base constraints into a fresh solver `s`.  
+    - Add the candidate constraint (e.g., `pos[1] == 4`).  
+    - Check SAT. If SAT, check whether the solution is **unique** (i.e., the full order is determined). To test uniqueness:  
+        - After solving, collect model assignments for all `pos[i]`.  
+        - Add constraint that *at least one* position differs from the solution: `Or(pos[0] != v0, pos[1] != v1, ..., pos[6] != v6)` where `vi` are model values.  
+        - Re-check SAT with this added constraint.  
+        - If UNSAT, the original assignment was unique — so this condition determines the full order.  
+    - If uniqueness holds, record this answer as valid.  
+9. Since only *one* of the five options will make the order fully determined, stop at the first valid or collect all and return the correct index.  
+10. Return the option that satisfies the uniqueness condition — i.e., when added, leads to exactly one possible editing order.

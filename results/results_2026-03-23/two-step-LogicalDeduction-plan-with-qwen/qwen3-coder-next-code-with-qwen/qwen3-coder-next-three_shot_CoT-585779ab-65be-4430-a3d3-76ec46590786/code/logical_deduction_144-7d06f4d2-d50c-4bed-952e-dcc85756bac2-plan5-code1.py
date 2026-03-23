@@ -1,0 +1,51 @@
+from constraint import *
+
+# Initialize the problem
+problem = Problem()
+
+# Define variables (golfers) and domain (positions 1 to 7, where 1 = first place)
+golfers = ["Joe", "Dan", "Ada", "Amy", "Rob", "Mya", "Mel"]
+positions = range(1, 8)
+problem.addVariables(golfers, positions)
+
+# Add all-different constraint
+problem.addConstraint(AllDifferentConstraint())
+
+# Add constraints based on the statements:
+# "Ada finished below Amy" -> Ada's position > Amy's position
+problem.addConstraint(lambda Ada, Amy: Ada > Amy, ["Ada", "Amy"])
+
+# "Joe finished below Dan" -> Joe's position > Dan's position
+problem.addConstraint(lambda Joe, Dan: Joe > Dan, ["Joe", "Dan"])
+
+# "Dan finished below Ada" -> Dan's position > Ada's position
+problem.addConstraint(lambda Dan, Ada: Dan > Ada, ["Dan", "Ada"])
+
+# "Mel finished third-to-last" -> Mel's position = 5 (positions: 1,2,3,4,5,6,7)
+problem.addConstraint(lambda Mel: Mel == 5, ["Mel"])
+
+# "Amy finished third" -> Amy's position = 3
+problem.addConstraint(lambda Amy: Amy == 3, ["Amy"])
+
+# "Rob finished below Mya" -> Rob's position > Mya's position
+problem.addConstraint(lambda Rob, Mya: Rob > Mya, ["Rob", "Mya"])
+
+# Solve the problem
+solutions = problem.getSolutions()
+
+# Map choice letters to golfer names
+choices = {
+    "A": "Joe",
+    "B": "Dan",
+    "C": "Ada",
+    "D": "Amy",
+    "E": "Rob",
+    "F": "Mya",
+    "G": "Mel"
+}
+
+# Find which golfer has position 1 (first place)
+for solution in solutions:
+    for letter, golfer_name in choices.items():
+        if solution[golfer_name] == 1:
+            print(letter)

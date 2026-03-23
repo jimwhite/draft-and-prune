@@ -1,0 +1,16 @@
+1. Enumerate the eight employees and assign them integer indices (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables for each employee indicating whether they are selected (e.g., `M`, `O`, `P`, `S`, `T`, `W`, `Y`, `Z`).  
+3. Add the **fixed constraint**: Yoder is not selected (`not Y`).  
+4. Add the **minimum team size constraint**: at least four employees are selected (`sum(selected_employees) >= 4`).  
+5. Add **implication constraints**:  
+   - If Myers is selected, then Ortega and Paine are not: `M => (not O) and (not P)`.  
+   - If Schmidt is selected, then both Paine and Thomson must be: `S => (P and T)`.  
+   - If Wong is selected, then both Myers and Yoder must be: `W => (M and Y)`.  
+6. Since Y is false, the Wong implication simplifies: `W => M and false`, i.e., `not W` (because Y is false, Wong cannot be selected). Add constraint `not W`.  
+7. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+8. Define an answer index list `answer_index_list = []`. For each candidate employee in the answer choices:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert that the candidate employee *is* selected (e.g., assert `Z == True` for Zayre).  
+   - If the model is SAT, then this employee *could* be on the team; do *not* add to `answer_index_list`.  
+   - If the model is UNSAT, then this employee *cannot* be on the team (given Y not selected); append its index to `answer_index_list`.  
+9. Print the answer index list (only those for which UNSAT was found).

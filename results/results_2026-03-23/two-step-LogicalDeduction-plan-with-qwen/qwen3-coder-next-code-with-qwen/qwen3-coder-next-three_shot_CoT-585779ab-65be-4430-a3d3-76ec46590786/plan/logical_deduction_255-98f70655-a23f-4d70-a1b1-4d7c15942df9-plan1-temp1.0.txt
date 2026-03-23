@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the three vehicles: `"hatchback"`, `"limousine"`, and `"station_wagon"`.  
+   * Define the domain as integers 1 to 3, where **1 = oldest**, **2 = second-newest (middle)**, and **3 = newest**.  
+   * Add these variables with domain {1, 2, 3} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique age ranks for each vehicle.  
+   * Translate "The station wagon is older than the hatchback" into a constraint: `station_wagon < hatchback`.  
+   * Translate "The hatchback is the second-newest" into a constraint: `hatchback == 2`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments. Given three variables and tight constraints, there will be exactly one solution.  
+   * Extract the unique solution dictionary.
+
+5. **Determine the Correct Answer:**  
+   * Identify which vehicle has rank 1 (oldest) in the solution.  
+   * Map the solution to the provided choices:  
+        - A) hatchback is oldest → check if `solution["hatchback"] == 1`  
+        - B) limousine is oldest → check if `solution["limousine"] == 1`  
+        - C) station_wagon is oldest → check if `solution["station_wagon"] == 1`  
+   * Output the letter (A, B, or C) corresponding to the vehicle at position 1.

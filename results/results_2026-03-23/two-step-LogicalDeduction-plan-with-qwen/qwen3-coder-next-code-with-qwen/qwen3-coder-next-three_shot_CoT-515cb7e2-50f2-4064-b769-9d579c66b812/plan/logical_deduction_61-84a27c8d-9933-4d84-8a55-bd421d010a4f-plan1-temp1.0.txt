@@ -1,0 +1,26 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the five books as string variables: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.  
+    * Define the domain of possible positions as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+    * Add all five variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.  
+    * Translate each natural-language statement into a constraint using lambda functions:  
+        - "The red book is to the right of the gray book" → `red > gray`  
+        - "The black book is to the left of the blue book" → `black < blue`  
+        - "The blue book is to the left of the gray book" → `blue < gray`  
+        - "The purple book is the second from the right" → `purple == 4` (since position 5 is rightmost, second from right is 4).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid arrangements.  
+    * Extract the unique solution from the returned list (as the problem is deterministic and consistent).
+
+5.  **Identify the Correct Answer:**  
+    * Note that all answer choices assert which book is second from the right (i.e., position 4).  
+    * The statement "The purple book is the second from the right" is given in the problem and matches choice C.  
+    * Alternatively, verify by checking the solved solution: locate which book has position 4 and match it to the choices.  
+    * The correct choice is C, since the purple book is explicitly constrained to be at position 4.

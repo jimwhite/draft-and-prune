@@ -1,0 +1,16 @@
+1. Enumerate the six singers: assign integer indices (0=Kammer, 1=Lugo, 2=Trillo, 3=Waite, 4=Yoshida, 5=Zinn).  
+2. Create integer variables for audition positions (1 to 6) for each singer.  
+3. Add **distinctness constraint**: all position variables must be pairwise distinct (a permutation of [1..6]).  
+4. Add **recording constraints**:  
+   - Kammer and Lugo are recorded (so their positions satisfy the recorded-audition conditions).  
+   - The fourth audition is not recorded → position 4 must be assigned to a non-recorded singer (Trillo, Waite, Yoshida, or Zinn).  
+   - The fifth audition must be recorded → position 5 must be assigned to either Kammer or Lugo.  
+5. Add **Waite constraint**: Waite’s position < Kammer’s position and Waite’s position < Lugo’s position (Waite before both recorded auditions).  
+6. Add **Kammer–Trillo constraint**: Kammer’s position < Trillo’s position.  
+7. Add **Zinn–Yoshida constraint**: Zinn’s position < Yoshida’s position.  
+8. For each answer choice (a candidate ordering), extract the list of singers in order, convert to position mapping, and check consistency with all constraints.  
+9. For each choice:  
+   - Construct a fresh solver, add base constraints (3–7).  
+   - Assert that the first singer in the choice is at position 1, second at 2, ..., sixth at 6.  
+   - If the solver returns SAT, that ordering is possible; record its index.  
+10. Return the index of the one choice(s) that yields SAT.

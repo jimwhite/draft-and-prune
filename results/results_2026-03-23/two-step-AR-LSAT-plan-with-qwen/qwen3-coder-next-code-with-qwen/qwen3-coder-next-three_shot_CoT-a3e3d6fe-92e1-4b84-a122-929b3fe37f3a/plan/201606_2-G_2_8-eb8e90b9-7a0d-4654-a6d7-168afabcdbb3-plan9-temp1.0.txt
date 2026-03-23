@@ -1,0 +1,17 @@
+1. Enumerate the six students and assign them integer indices; enumerate the four years (1921–1924) as positions 0–3 or 1–4.  
+2. Create integer variables `assign[s]` for each student s in {Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio}, where `assign[s]` ∈ {1921, 1922, 1923, 1924} ∪ {None}, indicating the year assigned or None if not assigned.  
+3. Add **assignment constraints**: exactly four students are assigned (i.e., four have non-None values), and the four assigned years are distinct and cover {1921, 1922, 1923, 1924}.  
+4. Add **year-specific constraints**:  
+    - Only Louis or Tiffany can be assigned to 1923: if `assign[s] == 1923`, then s must be Louis or Tiffany.  
+5. Add conditional constraints:  
+    - If Mollie is assigned (`assign[Mollie] != None`), then `assign[Mollie] ∈ {1921, 1922}`.  
+    - If Tiffany is assigned (`assign[Tiffany] != None`), then Ryan must be assigned (`assign[Ryan] != None`).  
+    - If Ryan is assigned, then Onyx must be assigned and `assign[Onyx] == assign[Ryan] - 1` (i.e., Onyx’s year is immediately before Ryan’s).  
+6. Add the problem-specific assumption: both Ryan and Yoshio are assigned (`assign[Ryan] != None` and `assign[Yoshio] != None`).  
+7. For each answer choice, form the constraint corresponding to the statement (e.g., `assign[Louis] == 1923` for first choice).  
+8. For each answer choice:  
+    - Clone the base solver into a fresh one, add all constraints (including Ryan and Yoshio assigned),  
+    - Add the choice-specific constraint,  
+    - Check satisfiability.  
+9. Collect all choices for which the augmented solver returns SAT; these are possibilities that *could* be true.  
+10. Return the index (or indices) of such valid choice(s).

@@ -1,0 +1,17 @@
+1. Enumerate the seven articles and assign them integer indices: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6.  
+2. Create integer variables `pos[0..6]` for the editing positions (1 to 7) of each article.  
+3. Add **domain constraints**: all `pos[i]` ∈ {1,2,...,7}, and all distinct (permutation).  
+4. Add **topic groupings**: Finance = {G, H, J}, Nutrition = {Q, R, S}, Wildlife = {Y}.  
+5. Add **no consecutive same-topic constraint**: For all i ≠ j, if `|pos[i] - pos[j]| == 1`, then topics(i) ≠ topics(j).  
+6. Add **S-before-Q conditional constraint**: If S is earlier than Q, then Q must be third: `pos_S < pos_Q → pos_Q == 3`.  
+7. Add **S-before-Y constraint**: `pos_S < pos_Y`.  
+8. Add **J-before-G and G-before-R chain**: `pos_J < pos_G < pos_R`.  
+9. Translate the answer choices into article indices and map to conditions:  
+   - 'G is second' → `pos_G == 2`  
+   - 'H is second.' → `pos_H == 2`  
+   - 'S is second' → `pos_S == 2`  
+   - 'R is third.' → `pos_R == 3`  
+   - 'Y is third' → `pos_Y == 3`  
+10. Define an answer index list `answer_index_list = []`. For each choice (in order), clone the base constraints into a fresh solver, assert the position condition for that article, and check satisfiability.  
+11. If the model is SAT (feasible), then that choice *could be true*; append its index to `answer_index_list`.  
+12. Print the answer index list (the list of indices corresponding to feasible choices).

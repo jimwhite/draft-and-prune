@@ -1,0 +1,24 @@
+1. Enumerate the six employees and assign them integer indices (e.g., Robertson=0, Souza=1, Togowa=2, Vaughn=3, Xu=4, Young=5).  
+2. Create integer variables `pos[i]` for each employee i, representing their assigned parking space (1 to 6).  
+3. Add **domain constraints**: each `pos[i] ∈ {1,2,3,4,5,6}`.  
+4. Add **distinctness constraint**: all `pos[i]` are pairwise distinct (using `Distinct(pos)` or explicit pairwise inequality).  
+5. Add **base ordering constraints**:  
+   - Young > Togowa: `pos[Young] > pos[Togowa]`  
+   - Xu > Souza: `pos[Xu] > pos[Souza]`  
+   - Robertson > Young: `pos[Robertson] > pos[Young]`  
+   - Robertson ∈ {1,2,3,4}: `pos[Robertson] <= 4`  
+6. Add **hypothetical condition constraint**: Young > Souza (`pos[Young] > pos[Souza]`).  
+7. Translate each answer choice into a constraint:  
+   - A. Togowa = 1 → `pos[Togowa] == 1`  
+   - B. Young = 2 → `pos[Young] == 2`  
+   - C. Robertson = 3 → `pos[Robertson] == 3`  
+   - D. Souza = 3 → `pos[Souza] == 3`  
+   - E. Vaughn = 4 → `pos[Vaughn] == 4`  
+8. For each answer choice (in order), do:  
+   - Clone the base solver (including all constraints from steps 3–6).  
+   - Add the specific constraint for that answer choice.  
+   - Check satisfiability with Z3.  
+   - If SAT, then that option *could* be true; record its index (0 to 4).  
+9. Collect all indices of answer choices that yield SAT.  
+10. Since the question asks "which one could be true", only *one* choice will be SAT; output that choice’s index (or directly output the corresponding string).  
+11. Print or return the valid option(s) — but per question format, only one correct choice is expected.

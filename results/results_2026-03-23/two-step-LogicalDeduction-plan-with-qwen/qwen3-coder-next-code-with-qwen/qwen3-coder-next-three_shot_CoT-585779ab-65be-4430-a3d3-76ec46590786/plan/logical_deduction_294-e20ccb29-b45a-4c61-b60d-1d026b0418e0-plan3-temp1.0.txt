@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the three birds as variables: `"raven"`, `"quail"`, and `"crow"`.
+    * Define the domain for positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.
+    * Add all variables with the domain `{1, 2, 3}` to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.
+    * Translate the statements into constraints:
+        * "The quail is the leftmost" → constraint: `quail == 1`.
+        * "The raven is the rightmost" → constraint: `raven == 3`.
+
+4.  **Solve the Problem:**
+    * Use the `getSolutions()` method to obtain all valid assignments.
+    * Extract the unique solution (since only one arrangement satisfies all constraints).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which statement is true; specifically, to verify the rightmost bird.
+    * Examine the solution to confirm which bird is at position 3 (rightmost).
+    * Match this bird with the choices:
+        - Choice A: "The raven is the rightmost."
+        - Choice B: "The quail is the rightmost."
+        - Choice C: "The crow is the rightmost."
+    * Since the constraint directly states "the raven is the rightmost", and this is consistent in the solution, select choice A.

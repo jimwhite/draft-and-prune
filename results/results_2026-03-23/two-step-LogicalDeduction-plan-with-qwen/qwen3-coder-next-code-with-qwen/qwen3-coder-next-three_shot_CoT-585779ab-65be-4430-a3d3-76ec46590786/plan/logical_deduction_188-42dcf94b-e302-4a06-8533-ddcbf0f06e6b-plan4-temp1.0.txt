@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to begin building the constraint satisfaction model.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: `["mangoes", "watermelons", "peaches", "kiwis", "oranges", "cantaloupes", "plums"]`.  
+   * Define the domain as integers 1 through 7, where **1 = cheapest** and **7 = most expensive** (i.e., ascending price order from left to right).  
+   * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into a constraint using lambda functions or `FunctionConstraint` (or direct equality for fixed positions):  
+     - "The watermelons are the cheapest" → `watermelons == 1`  
+     - "The kiwis are the third-cheapest" → `kiwis == 3`  
+     - "The cantaloupes are the second-most expensive" → Since most expensive is 7, second-most is 6 → `cantaloupes == 6`  
+     - "The peaches are more expensive than the mangoes" → `mangoes < peaches`  
+     - "The oranges are more expensive than the cantaloupes" → `cantaloupes < oranges`, and since cantaloupes = 6, this implies `oranges == 7`  
+     - "The peaches are less expensive than the plums" → `peaches < plums`  
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the single solution (as constraints yield a unique ordering).
+
+5. **Determine the Second-Cheapest Fruit:**  
+   * In our ranking, second-cheapest corresponds to rank **2**.  
+   * Build a mapping from choice letters (A–G) to fruit names:  
+     A → "mangoes", B → "watermelons", C → "peaches", D → "kiwis", E → "oranges", F → "cantaloupes", G → "plums".  
+   * Iterate over the solution dictionary to find which fruit has position 2.  
+   * Return the corresponding choice letter as the answer.

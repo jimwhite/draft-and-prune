@@ -1,0 +1,27 @@
+1. Identify all entities and types: Fae, rompus, dumpus, numpus, jompus, tumpus, impus, yumpus, zumpus, wumpus, vumpus.  
+2. Identify all properties: metallic, blue, fruity, mean, temperate, dull, transparent, sweet.  
+3. Represent "Fae is a numpus" as a base fact: `is_a("Fae", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Rompuses are metallic.  
+   - Rompuses are dumpuses.  
+   - Dumpuses are blue.  
+   - Every dumpus is a numpus.  
+   - Every numpus is fruity.  
+   - Numpuses are jompuses.  
+   - Every jompus is mean.  
+   - Jompuses are tumpuses.  
+   - Tumpuses are not temperate.  
+   - Tumpuses are impuses.  
+   - Impuses are not dull.  
+   - Each impus is a yumpus.  
+   - Every yumpus is not transparent.  
+   - Yumpuses are zumpuses.  
+   - Wumpuses are transparent. *(Note: wumpus does not appear in the chain from Fae; may be irrelevant unless inferred via other paths, but no path connects Fae to wumpus.)*  
+   - Zumpuses are not sweet.  
+   - Zumpuses are vumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. Note: Since Fae is a numpus, and every numpus is fruity and is a jompus, and jompuses are tumpuses, and tumpuses are impuses, and impuses are yumpuses, and yumpuses are zumpuses: Fae is a yumpus.  
+   Given "Every yumpus is not transparent", we can conclude Fae is not transparent.  
+7. The query tests if the statement "Fae is transparent" is provable (to assess truth of “Fae is transparent”):  
+   → Use `facts.is_transparent("Fae", True)`.  
+8. If the solver returns unsatisfiable (i.e., cannot prove Fae is transparent), and we can prove `is_transparent("Fae", False)`, then the statement “Fae is transparent” is false.

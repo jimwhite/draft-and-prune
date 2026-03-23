@@ -1,0 +1,28 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign integer indices.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign integer indices.  
+3. Create integer variables `pos_historian` for each historian (position of their lecture in the sequence 1–4).  
+4. Create integer variables `topic_pos[topic]` for each topic's lecture position (1–4).  
+5. Add **bijective constraints**:  
+    - Each historian has a unique position (1–4).  
+    - Each topic has a unique position (1–4).  
+6. Add **assignment constraint**: each historian gives exactly one lecture on one topic, so introduce binary assignment variables `assign[h][t]` (1 if historian h gives lecture on topic t), with:  
+    - Each historian assigned to exactly one topic.  
+    - Each topic assigned to exactly one historian.  
+    - Link `assign[h][t]` with positions: if `assign[h][t] == 1`, then `pos_historian[h] == topic_pos[t]`.  
+7. Add **topic-order constraints**:  
+    - Oil paintings and watercolors lectures are both earlier than lithographs: `topic_pos[oil] < topic_pos[litho]` and `topic_pos[water] < topic_pos[litho]`.  
+8. Add **historian-order constraints**:  
+    - Farley’s lecture is earlier than oil paintings lecture: `pos_historian[Farley] < topic_pos[oil]`.  
+    - Holden’s lecture is earlier than both Garcia’s and Jiang’s lectures: `pos_historian[Holden] < pos_historian[Garcia]` and `pos_historian[Holden] < pos_historian[Jiang]`.  
+9. Translate the five answer choices into logical statements in terms of positions:  
+    - (A) `pos_historian[Farley] < topic_pos[sculptures]`  
+    - (B) `pos_historian[Holden] < topic_pos[litho]`  
+    - (C) `topic_pos[sculptures] < pos_historian[Garcia]`  
+    - (D) `topic_pos[sculptures] < pos_historian[Jiang]`  
+    - (E) `topic_pos[water] < pos_historian[Garcia]`  
+10. For each answer choice, verify whether it **must be true** in all satisfying assignments:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the **negation** of the candidate statement (e.g., for (A), assert `pos_historian[Farley] >= topic_pos[sculptures]`).  
+    - If UNSAT, then the statement **must** be true; record its index.  
+11. Collect all indices of statements that survive the “must be true” test (i.e., negation leads to UNSAT).  
+12. Output the index (0-based) of the correct answer choice(s) — only one should exist.

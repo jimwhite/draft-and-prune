@@ -1,0 +1,14 @@
+1. Enumerate the eight employees and assign them integer indices.  
+2. Create Boolean variables for each employee indicating whether they are selected (True/False).  
+3. Add **minimum team size constraint**: at least four employees must be selected (sum of Booleans ≥ 4).  
+4. Add **Myers constraint**: if Myers is selected, then Ortega and Paine must both be unselected.  
+5. Add **Schmidt constraint**: if Schmidt is selected, then both Paine and Thomson must be selected.  
+6. Add **Wong constraint**: if Wong is selected, then both Myers and Yoder must be selected.  
+7. Add **Yoder-not-on-team constraint**: Yoder is unselected (False).  
+8. Translate the answer choices into employee indices.  
+9. Define a forced-exclusion index list 'forced_exclusion_list' []. For each candidate employee in the answer choices:  
+    - Clone the base constraints (including Yoder=False) into a fresh solver.  
+    - Assert that this candidate *is* selected (True).  
+    - If the resulting constraint system is SAT, then the candidate *could* be on the team (i.e., not forced out); skip.  
+    - If UNSAT, then under the condition Yoder is not on the team, this candidate *cannot* be on any valid team; append their index to 'forced_exclusion_list'.  
+10. The correct answer is the employee whose index appears in 'forced_exclusion_list' (the one that must be excluded).

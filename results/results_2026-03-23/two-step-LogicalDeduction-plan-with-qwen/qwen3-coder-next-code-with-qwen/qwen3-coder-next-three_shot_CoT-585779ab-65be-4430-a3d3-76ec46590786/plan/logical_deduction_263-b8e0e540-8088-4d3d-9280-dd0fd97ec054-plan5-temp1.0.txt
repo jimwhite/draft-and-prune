@@ -1,0 +1,24 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the three golfers as variables: `"Ana"`, `"Rob"`, and `"Joe"`.
+    * Define a domain of integer positions from 1 to 3, where **1 = first place (highest/above)** and **3 = last place (lowest/below)**.
+    * Add these variables with domain {1, 2, 3} to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a distinct finishing position.
+    * Translate the statements into constraints:
+        * "Joe finished above Ana" → Joe's position number < Ana's position number (e.g., `lambda j, a: j < a`).
+        * "Rob finished second" → Rob's position must equal 2.
+
+4.  **Solve for the Arrangement:**
+    * Use `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Since the problem is small and consistent, there will be exactly one solution.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which statement is true about finishing position (last = 3rd place).
+    * Map choice letters to golfers: "A" → Ana, "B" → Rob, "C" → Joe.
+    * Check which golfer has position 3 in the solution.
+    * Return the corresponding choice letter as the answer.

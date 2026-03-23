@@ -1,0 +1,33 @@
+1. Enumerate the six photographers and assign each an integer index (0=Frost, 1=Gonzalez, 2=Heideck, 3=Knutson, 4=Lai, 5=Mays).  
+2. Create Boolean decision variables `S[i]` and `T[i]` for each photographer i:  
+   - `S[i]` = True if photographer i is assigned to Silva University,  
+   - `T[i]` = True if photographer i is assigned to Thorne University.  
+3. Add **mutual exclusion constraint**: No photographer can be assigned to both ceremonies: `¬(S[i] ∧ T[i])` for all i.  
+4. Add **at-least-two constraint per ceremony**: Each ceremony must have ≥2 photographers:  
+   - `sum(S[i] for i in range(6)) >= 2`  
+   - `sum(T[i] for i in range(6)) >= 2`  
+5. Add **Frost-Heideck together constraint**: Frost and Heideck must be assigned to the same ceremony (and only one of them is possible, since no overlap):  
+   - Either both in Silva: `S[0] ↔ S[2]` and `T[0] = T[2] = False`,  
+   - Or both in Thorne: `T[0] ↔ T[2]` and `S[0] = S[2] = False`.  
+   - Equivalently: `(S[0] == S[2]) ∧ (T[0] == T[2])`.  
+6. Add **Lai-Mays separation constraint**: If both Lai and Mays are assigned (to *some* ceremony), they must be on different ceremonies:  
+   - `¬(Lai and Mays both assigned) ∨ (S[4] ≠ S[5])`  
+   - Since they can’t be on both, `S[i] + T[i] ∈ {0,1}`; so this is:  
+     `(¬(S[4] ∨ T[4]) ∨ ¬(S[5] ∨ T[5])) ∨ (S[4] ≠ S[5])`.  
+   - Simplify to: `(S[4] + T[4] ≤ 1) ∧ (S[5] + T[5] ≤ 1)` already enforced, and then enforce:  
+     `(S[4] + S[5] ≤ 1) ∧ (T[4] + T[5] ≤ 1)` — but this is too strong.  
+     Better: only require that *if* both are assigned (i.e., `S[4] + T[4] = 1` and `S[5] + T[5] = 1`), then they must be on different ceremonies:  
+     `(S[4] + T[4] = 1 ∧ S[5] + T[5] = 1) → (S[4] ≠ S[5])`  
+     Which is logically equivalent to: `(S[4] + T[4] ≤ 1) ∨ (S[5] + T[5] ≤ 1) ∨ (S[4] ≠ S[5])`.  
+     In Z3, encode as: `Implies(And(S[4] + T[4] == 1, S[5] + T[5] == 1), S[4] != S[5])`.  
+7. Add **Gonzalez-Lai conditional**: If Gonzalez is at Silva, then Lai must be at Thorne:  
+   - `S[1] → T[4]`  
+8. Add **Knutson conditional**: If Knutson is *not* at Thorne, then both Heideck and Mays must be at Thorne:  
+   - `¬T[3] → (T[2] ∧ T[5])`  
+9. For each answer choice:  
+   - Parse the assignment (e.g., `'Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Lai'`).  
+   - For each photographer, set their `S[i]` and `T[i]` variables according to the assignment (e.g., Frost → `S[0]=True`, `T[0]=False`, etc.).  
+   - For unmentioned photographers, leave their variables unconstrained (but still subject to mutual exclusion and other constraints).  
+10. Clone the full solver with base constraints, assert the fixed assignment variables for that choice, and check satisfiability.  
+11. The first (or only) choice that yields SAT is the correct answer.  
+12. Record the index of the first satisfying choice and return it as the final answer.

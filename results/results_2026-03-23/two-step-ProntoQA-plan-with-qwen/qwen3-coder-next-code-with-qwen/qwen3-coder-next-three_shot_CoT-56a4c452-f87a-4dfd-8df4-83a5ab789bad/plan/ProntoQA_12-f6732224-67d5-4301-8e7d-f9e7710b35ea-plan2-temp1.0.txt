@@ -1,0 +1,27 @@
+1. Identify all entities and types: Fae, tumpus, numpus, vumpus, dumpus, zumpus, yumpus, jompus, rompus, impus, wumpus.  
+2. Identify all properties: orange, small, sour, cold, dull, amenable, floral, opaque, not floral (as a derived negation), and inferable properties like "sour", "cold", etc.  
+3. Represent the base fact: `is_a("Fae", "dumpus", True)`.  
+4. Translate each class property and subclass relationship into a rule, ensuring logical consistency (e.g., handle negations explicitly where given):  
+   - Each tumpus is orange → `foreach(x, is_a(x, "tumpus") => is_orange(x, True))`  
+   - Tumpuses are numpuses → `foreach(x, is_a(x, "tumpus") => is_a(x, "numpus"))`  
+   - Numpuses are small → `foreach(x, is_a(x, "numpus") => is_small(x, True))`  
+   - Numpuses are vumpuses → `foreach(x, is_a(x, "numpus") => is_a(x, "vumpus"))`  
+   - Every vumpus is sour → `foreach(x, is_a(x, "vumpus") => is_sour(x, True))`  
+   - Vumpuses are dumpuses → `foreach(x, is_a(x, "vumpus") => is_a(x, "dumpus"))`  
+   - Each dumpus is cold → `foreach(x, is_a(x, "dumpus") => is_cold(x, True))`  
+   - Every dumpus is a zumpus → `foreach(x, is_a(x, "dumpus") => is_a(x, "zumpus"))`  
+   - Each zumpus is dull → `foreach(x, is_a(x, "zumpus") => is_dull(x, True))`  
+   - Zumpuses are yumpuses → `foreach(x, is_a(x, "zumpus") => is_a(x, "yumpus"))`  
+   - Jompuses are floral → `foreach(x, is_a(x, "jompus") => is_floral(x, True))`  
+   - Every yumpus is not amenable → `foreach(x, is_a(x, "yumpus") => is_amenable(x, False))`  
+   - Each yumpus is a rompus → `foreach(x, is_a(x, "yumpus") => is_a(x, "rompus"))`  
+   - Every rompus is opaque → `foreach(x, is_a(x, "rompus") => is_opaque(x, True))`  
+   - Rompuses are impuses → `foreach(x, is_a(x, "rompus") => is_a(x, "impus"))`  
+   - Impuses are not floral → `foreach(x, is_a(x, "impus") => is_floral(x, False))`  
+   - Impuses are wumpuses → `foreach(x, is_a(x, "impus") => is_a(x, "wumpus"))`  
+5. Implement each rule using `foreach` (condition) → `assert` (conclusion), ensuring subclass inferences chain correctly (e.g., from dumpus → zumpus → yumpus).  
+6. Derive Fae’s classification chain: Fae is a dumpus → Fae is a zumpus → Fae is a yumpus → Fae is a rompus → Fae is an impus.  
+7. From Fae being a yumpus, apply rule: every yumpus is not amenable → `is_amenable("Fae", False)`.  
+8. Additionally, from Fae being an impus and “impuses are not floral”, derive `is_floral("Fae", False)` directly.  
+9. The query tests whether “Fae is not floral” is provable: use `facts.is_floral("Fae", False)`.  
+10. Since the rule set directly entails `is_floral("Fae", False)`, the statement is provably true.

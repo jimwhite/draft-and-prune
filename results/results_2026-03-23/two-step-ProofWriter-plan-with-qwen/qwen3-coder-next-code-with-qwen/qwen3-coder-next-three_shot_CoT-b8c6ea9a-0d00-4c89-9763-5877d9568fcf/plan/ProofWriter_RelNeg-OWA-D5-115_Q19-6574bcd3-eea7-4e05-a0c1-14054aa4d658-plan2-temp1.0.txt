@@ -1,0 +1,23 @@
+1. Identify all entities involved: bald_eagle, lion, bear, dog.  
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True) or predicate(subject, object, False) where negation is required (e.g., is_blue("bear", False), needs("dog", "bear", False), etc.).  
+3. Translate each conditional sentence into a PyKe rule using `foreach` blocks for the antecedent conditions and `assert` for the consequent consequences.  
+4. Ensure rules that involve variable scope (e.g., "something") use a single consistent variable name (e.g., `?x`) and handle conjunctions in the `foreach` by listing multiple facts or negations.  
+5. For rules with conditional antecedents involving multiple premises, encode each premise explicitly in the `foreach` block.  
+6. Handle explicit negations (e.g., "does not need", "is not blue") by asserting the predicate with `False`.  
+7. Specifically encode:  
+   • bald_eagle properties (blue, red, likes lion, needs bear/dog),  
+   • bear properties (not blue, nice, needs dog),  
+   • dog actions (chases bald_eagle, is red, does not need bear),  
+   • lion property (does not like bear).  
+8. Translate the 9 conditional rules:  
+   • If ?x likes lion and not red → ?x chases lion.  
+   • If ?x is red and needs bald_eagle → bald_eagle needs lion.  
+   • If ?x is round → ?x does not like dog.  
+   • If bald_eagle needs dog → dog is round.  
+   • If ?x likes dog → ?x likes bald_eagle.  
+   • If ?x chases lion and lion likes dog → dog does not like lion.  
+   • If bear likes lion → lion likes dog.  
+   • If ?x likes bear → bear likes lion.  
+   • If ?x is round → ?x likes bear.  
+9. For rules involving negated predicates in antecedents (e.g., "not red", "does not need"), use `facts.predicate(?x, False)` in the `foreach` condition.  
+10. The query is: “The dog does not need the dog.” → Encode as `facts.needs("dog", "dog", False)`.

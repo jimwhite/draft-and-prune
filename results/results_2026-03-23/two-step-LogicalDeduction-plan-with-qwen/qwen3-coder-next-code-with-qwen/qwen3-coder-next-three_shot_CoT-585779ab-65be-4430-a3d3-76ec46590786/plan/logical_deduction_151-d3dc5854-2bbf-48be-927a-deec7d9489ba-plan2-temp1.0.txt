@@ -1,0 +1,36 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the seven fruit variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define a numerical domain of integers from 1 to 7 representing expense rank, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all seven fruit variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique expense rank.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - "The oranges are more expensive than the peaches" → `oranges > peaches`  
+     - "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`  
+     - "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (i.e., `pears < 4`)  
+     - "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6)  
+     - "The mangoes are the cheapest" → `mangoes == 1`  
+     - "The kiwis are the third-cheapest" → `kiwis == 3` (since cheapest = 1, second-cheapest = 2, third-cheapest = 3)
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments of ranks to fruits satisfying all constraints.  
+   * Extract the unique solution (since the problem is fully constrained, there will be exactly one).
+
+5. **Identify the Correct Answer:**  
+   * The question asks which fruit is the *second-most expensive* → rank = 6.  
+   * From step 3, we already know `peaches == 6` is given directly.  
+   * Verify by checking the solved solution: find which fruit has value 6.  
+   * Map this to the correct choice letter from the list:  
+        - A) watermelons  
+        - B) mangoes  
+        - C) kiwis  
+        - D) pears  
+        - E) cantaloupes  
+        - F) oranges  
+        - G) peaches  
+   * Confirm that peaches (G) is the second-most expensive, and output `"G"`.

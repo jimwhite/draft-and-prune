@@ -1,0 +1,13 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign each an integer index.  
+2. Create a list of 8 integer variables `pos[0..7]` where `pos[i]` is the position (1-indexed) of composition with index i; alternatively, create `order[1..8]` where `order[k]` is the composition at position k (more natural for permutation constraints).  
+3. Enforce a permutation constraint: all `order[1..8]` must be distinct and each equals one of the 8 composition indices.  
+4. Add **T-F-R adjacency constraint**: T is performed either immediately before F (i.e., `pos_T + 1 == pos_F`) or immediately after R (i.e., `pos_R + 1 == pos_T`).  
+5. Add **separation constraint**: at least two compositions are between F and R ⇒ |pos_F - pos_R| ≥ 3.  
+6. Add **O-first-or-fifth constraint**: O must be at position 1 or 5 ⇒ `pos_O == 1 OR pos_O == 5`.  
+7. Add **eighth-composition constraint**: composition at position 8 is either L or H ⇒ `order[8] == index(L) OR order[8] == index(H)`.  
+8. Add **P-before-S constraint**: `pos_P < pos_S`.  
+9. Add **O-S separation with at least one in between**: |pos_O - pos_S| ≥ 2.  
+10. For each answer choice (list of 8 composition names in order), translate the sequence into positions: for each position k (1 to 8), assert `order[k] == index_of_composition_in_choice`.  
+11. For each choice, clone the full constraint set, add the specific ordering constraints from that choice, and check satisfiability with Z3.  
+12. Collect the indices of all choices for which the model is SAT; exactly one such choice must exist per problem structure.  
+13. Output the index (or string) of the valid choice.

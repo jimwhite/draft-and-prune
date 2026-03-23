@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven bird variables as strings: `"cardinal"`, `"crow"`, `"hummingbird"`, `"bluejay"`, `"owl"`, `"robin"`, and `"quail"` (note: combine "blue jay" into one word without space to avoid parsing issues).
+    * Set the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+
+4.  **Translate and Add Logical Constraints:**
+    * Convert each statement into a constraint using lambda functions:
+        * "The cardinal is to the right of the crow" → `cardinal > crow`
+        * "The quail is the third from the left" → `quail == 3`
+        * "The owl is to the right of the robin" → `owl > robin`
+        * "The hummingbird is to the right of the blue jay" → `hummingbird > bluejay`
+        * "The cardinal is the second from the left" → `cardinal == 2`
+        * "The owl is the third from the right" → Since positions are 1..7 left-to-right, third from right = position 5 (because 7-3+1=5) → `owl == 5`
+
+5.  **Solve the Constraint Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the first (and only) solution, which fully determines each bird's position.
+
+6.  **Identify the Correct Choice:**
+    * Observe that choice A states "The cardinal is the second from the left." From constraint #5, `cardinal == 2` directly verifies this statement as true.
+    * Since the problem guarantees logical consistency and a unique solution, this statement must hold in the only solution.
+    * Therefore, the correct answer is choice **A**, without needing to verify other choices (though verification could be done by checking `solution["cardinal"] == 2`).

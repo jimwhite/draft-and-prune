@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicles as string variables: `"truck"`, `"station_wagon"`, `"motorcyle"`, `"limousine"`, and `"hatchback"`.  
+   * Define the domain as integers 1 to 5, where **1 = oldest** and **5 = newest**, consistent with the problem's use of temporal ordering ("newest"/"older").  
+   * Add all variables and their domain to the problem instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add `AllDifferentConstraint()` to enforce uniqueness of age ranks.  
+   * Translate each statement into a constraint:  
+     - "The motorcyle is the second-newest" → `motorcyle == 4` (since newest = 5, second-newest = 4).  
+     - "The truck is newer than the limousine" → `truck < limousine` (smaller rank = newer).  
+     - "The motorcyle is older than the station wagon" → `station_wagon < motorcyle` (older means smaller rank; station wagon is older ⇒ smaller number).  
+     - "The limousine is newer than the hatchback" → `hatchback < limousine` (limousine is newer ⇒ smaller rank than hatchback).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments satisfying the constraints.  
+   * Extract the unique solution (a dictionary mapping vehicle names to ranks).
+
+5. **Identify the Newest Vehicle and Match to Choices:**  
+   * The question asks which vehicle is the **newest**, i.e., has rank **5**.  
+   * Create a mapping from choice letters to vehicle names:  
+     - "A" → `"truck"`  
+     - "B" → `"station_wagon"`  
+     - "C" → `"motorcyle"`  
+     - "D" → `"limousine"`  
+     - "E" → `"hatchback"`  
+   * Iterate over choices; for each, check if the corresponding vehicle's rank in the solution is 5.  
+   * Output the letter of the first (and only) matching choice.

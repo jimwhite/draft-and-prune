@@ -1,0 +1,23 @@
+1. Enumerate the seven sales representatives and assign each an integer index (e.g., Kim=0, Mahr=1, Parra=2, Quinn=3, Stuckey=4, Tiao=5, Udall=6).  
+2. Create integer variables `zone[i]` for each representative `i`, where `zone[i] ∈ {1, 2, 3}` indicating their assigned zone.  
+3. Add **exactly-one-zone constraint**: each `zone[i]` is in {1, 2, 3}.  
+4. Add **mutual exclusion constraints**:  
+   - Parra or Tiao (but not both) in Zone 1: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`  
+   - Tiao or Udall (but not both) in Zone 2: `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`  
+5. Add **grouping constraints**:  
+   - Parra and Quinn same zone: `zone[Parra] == zone[Quinn]`  
+   - Stuckey and Udall same zone: `zone[Stuckey] == zone[Udall]`  
+6. Add **zone count constraint**: number of reps in Zone 3 > number in Zone 2  
+   - Compute counts via auxiliary integer variables or cardinality constraints:  
+     `count3 = Sum([If(zone[i]==3, 1, 0) for i in range(7)])`  
+     `count2 = Sum([If(zone[i]==2, 1, 0) for i in range(7)])`  
+     `count3 > count2`  
+7. Translate each answer choice into a set of representatives (e.g., ['Kim', 'Mahr'] → indices {0,1}).  
+8. Define a function to check if an answer choice is feasible:  
+   - For each candidate list (e.g., "Zone 3 = {a, b, c}"):  
+     - Create a fresh solver.  
+     - Add base constraints (steps 3–6).  
+     - Enforce that exactly the listed representatives are in Zone 3: for each rep i, `zone[i] == 3` iff i is in the candidate set.  
+     - For reps *not* in the candidate set, enforce `zone[i] != 3` (i.e., `zone[i] == 1 or zone[i] == 2`).  
+     - Solve. If SAT, the choice is possible; record its index.  
+9. Collect indices of all feasible choices and output the corresponding answer list (e.g., index 3 → "Stuckey, Tiao, Udall").

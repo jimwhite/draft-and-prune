@@ -1,0 +1,25 @@
+1. Enumerate the three cookie types (oatmeal, peanut butter, sugar) and assign them integer indices 0, 1, 2.  
+2. Create integer variables `b_c[d][t]` for each day d ∈ {1..5} (Mon=1, Tue=2, ..., Fri=5) and cookie type t ∈ {0,1,2}, where `b_c[d][t] = k` means the k-th batch of type t is made on day d (k ∈ {1,2,3}), or 0 if no batch of type t is made on day d.  
+   Alternatively, define Boolean variables `x[d][t][k]` indicating whether the k-th batch of type t is made on day d (d=1..5, t=0..2, k=1..3), with exactly one `x[d][t][k] = true` per (t,k).  
+3. Add **exactly-three-batches constraint**: for each cookie type t, exactly one `x[d][t][1]`, one `x[d][t][2]`, and one `x[d][t][3]` are true across d=1..5.  
+4. Add **no-two-same-type-same-day constraint**: for each cookie type t and day d, at most one batch (i.e., sum over k of `x[d][t][k]` ≤ 1).  
+5. Add **at-least-one-on-Monday constraint**: sum over t,k of `x[1][t][k] ≥ 1`.  
+6. Add **second-oatmeal = first-peanut-butter constraint**: day of batch 2 of oatmeal equals day of batch 1 of peanut butter. That is, ∃d such that `x[d][0][2] ∧ x[d][1][1]`.  
+7. Add **second-sugar-on-Thursday constraint**: `x[4][2][2] = true` (since Thu=4).  
+8. Add the conditional premise: "If one kind of cookie's first batch is made on the same day as another kind of cookie's third batch", i.e., there exist distinct types t1 ≠ t2 and days d such that `x[d][t1][1] ∧ x[d][t2][3]`. Implement this as an *assumption* for evaluating the answer choices: create a fresh solver S0 with base constraints (1–7), and for each candidate premise instance, assert `x[d][t1][1] ∧ x[d][t2][3]` for some d, t1≠t2; but since the premise is existential, treat it as: when checking each answer choice, consider only models where such a pair exists.  
+   → Instead, handle via proof: for each answer choice statement S, check if "S must be true" under base constraints + premise. If "not S ∧ base_constraints ∧ premise" is SAT, then S could be false — i.e., S is a candidate answer.  
+9. Translate each answer choice into a logical statement about daily batch counts:  
+   - Let `cnt[d] = sum_{t,k} x[d][t][k]` be total batches on day d.  
+   - Choice A: `∀d, cnt[d] ≥ 1` (i.e., min batches per day = 0? No: says *at least one per day*; so negation is `∃d, cnt[d] = 0`)  
+   - Choice B: `cnt[3] ≥ 2` (Wed=3); negation = `cnt[3] ≤ 1`.  
+   - Choice C: `cnt[1] = 1` (Mon=1); negation = `cnt[1] ≠ 1`, i.e., `cnt[1] ≥ 2` (since at least one, and integer).  
+   - Choice D: `cnt[2] = 2` (Tue=2); negation = `cnt[2] ≠ 2`, i.e., `cnt[2] ≤ 1 ∨ cnt[2] ≥ 3`.  
+   - Choice E: `cnt[5] = 1` (Fri=5); negation = `cnt[5] ≠ 1`.  
+10. For each answer choice, build a solver S = base_constraints + premise (i.e., ∃d,t1≠t2: `x[d][t1][1] ∧ x[d][t2][3]`).  
+   To model premise existence, introduce auxiliary Boolean variables `premise[d][t1][t2]` and assert `OR_{d=1..5, t1≠t2} premise[d][t1][t2] = true`, with each `premise[d][t1][t2] ⇒ (x[d][t1][1] ∧ x[d][t2][3])`.  
+   Then, for each choice j:  
+   - Create solver S_j = S + (negation of choice_j statement).  
+   - If S_j is SAT, then the choice *could be false* — i.e., it is a valid answer.  
+11. Collect indices of all choices for which S_j is SAT.  
+12. Return the list of indices (should be exactly one, but plan allows multiple if ambiguous — though problem implies one correct answer).  
+13. Output the raw list of indices (e.g., [0] for first choice, etc.).

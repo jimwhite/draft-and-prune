@@ -1,0 +1,21 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices.  
+2. Create Boolean variables `r1[i][b]` for rider i testing bicycle b on day 1, and `r2[i][b]` for rider i testing bicycle b on day 2.  
+3. Add **day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider i, exactly one of `r1[i][b]` is true.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle b, exactly one of `r1[i][b]` is true.  
+4. Add **day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider i, exactly one of `r2[i][b]` is true.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle b, exactly one of `r2[i][b]` is true.  
+5. Add **preference/forbidden constraints**:  
+   - Reynaldo cannot test F on either day: `¬r1[Reynaldo][F]` and `¬r2[Reynaldo][F]`.  
+   - Yuki cannot test J on either day: `¬r1[Yuki][J]` and `¬r2[Yuki][J]`.  
+6. Add **Theresa constraint**: Theresa must test H on at least one day (exactly: “must be one of the testers for H” means she tests H on day 1 or day 2 or both — but since each bicycle is tested once per day and only one rider per bicycle per day, she tests H on exactly one day): `r1[Theresa][H] ∨ r2[Theresa][H]`.  
+7. Add **Yuki-Seamus dependency**: The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all bicycles b, `r1[Yuki][b] → r2[Seamus][b]`. Since assignments are bijective per day, this uniquely pins Seamus’s day-2 bicycle to Yuki’s day-1 bicycle.  
+8. Translate the answer choices into logical conjunctions:  
+   - For each choice like “Both X and Y test J”, interpret as: X tests J on *some* day (not necessarily same day), and Y tests J on *some* day — but the phrasing “both ... test J” in LSAT-style logic games typically means each of them tests J *on the same day*, as otherwise it’s ambiguous and contradicts one-bike-per-rider-per-day. However, in context of “CANNOT be true” and the phrasing of other choices (e.g., “Both Reynaldo and Seamus test J”), standard interpretation is: there exists a day (day 1 or day 2) such that *both* riders test J on that day.  
+   - But to match standard logic game conventions, we assume the statement “Both X and Y test J” means they both test bicycle J on *the same day* (day 1 or day 2), since each rider tests only one bike per day and each bike is tested by exactly one rider per day.  
+   - Thus, for each choice, add constraint: (r1[X][J] ∧ r1[Y][J]) ∨ (r2[X][J] ∧ r2[Y][J]).  
+9. For each answer choice, clone the base constraints into a fresh solver and add the above constraint for that pair.  
+10. If the model is UNSAT, then this scenario *cannot* be true — i.e., it is the correct answer to “which one CANNOT be true?”  
+11. Collect all indices of choices for which the model is UNSAT; exactly one should be unsatisfiable.  
+12. Return the index of that choice as the answer.

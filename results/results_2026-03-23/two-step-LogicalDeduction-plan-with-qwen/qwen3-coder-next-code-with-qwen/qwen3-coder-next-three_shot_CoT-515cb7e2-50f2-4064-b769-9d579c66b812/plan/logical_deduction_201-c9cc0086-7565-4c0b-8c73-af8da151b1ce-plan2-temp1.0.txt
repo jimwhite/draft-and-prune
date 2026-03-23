@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+   * Create a `Problem()` instance to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven books as variables: `"purple"`, `"brown"`, `"red"`, `"blue"`, `"gray"`, `"black"`, `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, and **7 = rightmost**.  
+   * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3. **Add AllDifferent Constraint:**  
+   * Add an `AllDifferentConstraint()` to ensure each book occupies a unique position.
+
+4. **Translate Each Statement into Constraints:**  
+   * "The brown book is to the left of the green book" → `brown < green`  
+   * "The gray book is the second from the left" → `gray == 2`  
+   * "The black book is to the left of the gray book" → `black < gray` (i.e., `black < 2`, so `black == 1`)  
+   * "The blue book is to the left of the red book" → `blue < red`  
+   * "The blue book is the second from the right" → `blue == 6` (since position 7 is rightmost)  
+   * "The green book is to the left of the purple book" → `green < purple`
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Since the constraints uniquely determine positions, extract the sole solution (or any one if multiple exist).
+
+6. **Analyze the Solution to Determine Which Statement is True:**  
+   * The question asks: "Which book is fourth from the left?" → i.e., which book has position **4**.  
+   * Build a mapping from choice letters to book names:  
+     - `"A"` → `"purple"`, `"B"` → `"brown"`, `"C"` → `"red"`, `"D"` → `"blue"`, `"E"` → `"gray"`, `"F"` → `"black"`, `"G"` → `"green"`  
+   * In the solution dictionary, find which book has value `4`.  
+   * Return the corresponding choice letter.

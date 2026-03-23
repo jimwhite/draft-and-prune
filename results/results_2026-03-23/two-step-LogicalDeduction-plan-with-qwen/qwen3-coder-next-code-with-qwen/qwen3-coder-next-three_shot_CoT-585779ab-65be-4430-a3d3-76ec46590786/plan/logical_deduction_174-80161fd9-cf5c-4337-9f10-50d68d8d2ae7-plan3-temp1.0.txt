@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruit variables: `"loquats"`, `"cantaloupes"`, `"watermelons"`, `"apples"`, `"oranges"`, `"pears"`, and `"mangoes"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all seven fruit variables to the `Problem` with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all fruits have distinct price ranks using the `AllDifferentConstraint`.
+
+4.  **Translate Statements into Explicit and Relative Constraints:**
+    * Add the constraint `"oranges" == 2` (second-cheapest = rank 2).
+    * Add the constraint `"apples" < "pears"` (apples less expensive than pears).
+    * Add the constraint `"mangoes" > "cantaloupes"` (mangoes more expensive than cantaloupes).
+    * Add the constraint `"mangoes" == 3` (third-cheapest = rank 3).
+    * Add the constraint `"watermelons" == 6` (second-most expensive among seven = rank 7 - 1 = 6).
+    * Add the constraint `"loquats" == 5` (third-most expensive = rank 7 - 2 = 5).
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments of ranks to fruits.
+    * Extract the unique solution (or the first one) since the problem is fully constrained.
+
+6.  **Identify the Correct Answer:**
+    * Note that the question asks which fruit is third-most expensive (rank 5).
+    * The statement itself ("The loquats are the third-most expensive") is given in the problem, and our constraints directly set `"loquats" == 5`.
+    * However, verify by checking the solved solution: find which fruit has rank 5.
+    * Map choice letters to fruits: A→loquats, B→cantaloupes, C→watermelons, D→apples, E→oranges, F→pears, G→mangoes.
+    * Return the letter corresponding to the fruit with rank 5 (which should be "A").

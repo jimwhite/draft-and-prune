@@ -1,0 +1,17 @@
+1. Identify all entities involved: bald_eagle, cat, lion, mouse.
+2. Encode all explicitly stated facts using ternary predicates (subject, object, True) for relations and properties:
+   - Relations: chase("bald_eagle", "cat", True), not_chase("bald_eagle", "mouse", True), young("bald_eagle", True), not_chase("cat", "bald_eagle", True), not_eat("cat", "bald_eagle", True), rough("cat", True), young("cat", True), sees("cat", "bald_eagle", True), chase("lion", "bald_eagle", True), chase("lion", "cat", True), eat("lion", "bald_eagle", True), eat("lion", "cat", True), chase("mouse", "bald_eagle", True), chase("mouse", "lion", True), eat("mouse", "bald_eagle", True), young("mouse", True).
+3. Represent negative facts as separate predicates (e.g., not_chase, not_eat) or encode as negated literals in rules; for PyKe, use `~chase("bald_eagle", "mouse")` in rule preconditions if supported, or define explicit unary negative predicates like `not_chase(X, Y)` if binary predicate can’t be negated directly.
+4. Translate all conditional rules into PyKe `foreach` blocks with conditions and `assert` conclusions:
+   • If kind(X) → round(X)
+   • If chase(X, bald_eagle) → round(X)
+   • If round(X) → sees(X, bald_eagle)
+   • If chase(X, cat) ∧ chase(cat, bald_eagle) → eat(X, bald_eagle)
+   • If chase(X, cat) → sees(cat, lion)   [Note: conclusion is fixed — no variable]
+   • If sees(X, cat) → chase(X, bald_eagle)
+   • If young(bald_eagle) ∧ chase(bald_eagle, lion) → sees(bald_eagle, lion)
+   • If eat(mouse, cat) ∧ eat(mouse, bald_eagle) → eat(bald_eagle, cat)
+   • If sees(X, bald_eagle) ∧ chase(X, cat) → sees(bald_eagle, cat)
+5. Note: Rule “If something chases the cat then the cat sees the lion” asserts a fact about *cat and lion*, not involving X → encode as an unconditional assertion when the condition holds (i.e., use `foreach` with condition `chase(X, cat)`, and assert `sees("cat", "lion", True)`).
+6. Query: Determine whether `sees("cat", "lion", True)` can be deduced.
+   → Use facts.sees("cat", "lion", True) as the query.

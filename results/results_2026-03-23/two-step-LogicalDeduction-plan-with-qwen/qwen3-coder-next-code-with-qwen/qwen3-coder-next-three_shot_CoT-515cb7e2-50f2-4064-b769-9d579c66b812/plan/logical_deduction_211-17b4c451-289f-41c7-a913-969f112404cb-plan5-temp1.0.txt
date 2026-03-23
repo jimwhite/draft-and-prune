@@ -1,0 +1,33 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"joe"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Add AllDifferentConstraint:**  
+   * Enforce that each golfer has a distinct placement by adding an `AllDifferentConstraint` over the seven variables.
+
+4. **Translate Statements into Constraints:**  
+   * "Amy finished below Joe" → Amy’s position number > Joe’s position number (`amy > joe`).  
+   * "Dan finished above Mya" → Dan’s position number < Mya’s position number (`dan < mya`).  
+   * "Eli finished third" → `eli == 3`.  
+   * "Ana finished first" → `ana == 1`.  
+   * "Amy finished second-to-last" → In a 7-person race, second-to-last is position **6** (`amy == 6`).  
+   * "Mya finished fourth" → `mya == 4`.  
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints fully determine placements except for Mel and possibly one other, but all constraints are tight enough to yield a unique arrangement for all variables).
+
+6. **Determine Third-to-Last Placement:**  
+   * In a 7-person contest, **third-to-last** corresponds to position number: 7 - 3 + 1 = **5**.  
+   * So we seek the golfer whose placement value is exactly 5.
+
+7. **Match to Answer Choices:**  
+   * Create a mapping from choice letters (A through G) to golfer names:  
+     A → "mya", B → "eli", C → "ana", D → "amy", E → "mel", F → "dan", G → "joe".  
+   * Iterate through the solution dictionary to find which golfer has position 5.  
+   * Return the choice letter corresponding to that golfer.

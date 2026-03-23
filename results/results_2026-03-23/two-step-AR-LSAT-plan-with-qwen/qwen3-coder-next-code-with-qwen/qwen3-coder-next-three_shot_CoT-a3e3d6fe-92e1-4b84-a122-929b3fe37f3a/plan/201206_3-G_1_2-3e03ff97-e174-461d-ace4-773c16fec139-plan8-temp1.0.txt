@@ -1,0 +1,16 @@
+1. Enumerate the six lab assistants and assign them integer indices.  
+2. Enumerate the six sessions: label them by (day, period) where day ∈ {0=Wednesday, 1=Thursday, 2=Friday} and period ∈ {0=morning, 1=afternoon}; assign each session a unique index from 0 to 5 in lexicographic order: (Wed, M)=0, (Wed, A)=1, (Thu, M)=2, (Thu, A)=3, (Fri, M)=4, (Fri, A)=5.  
+3. Create integer variables `assign[i]` for each assistant i (0–5), representing the session index (0–5) they lead.  
+4. Add **injectivity constraint**: each assistant leads exactly one session → `assign` is a permutation of [0,1,2,3,4,5].  
+5. Add **session constraints** based on day/period: define helper functions or lookup to determine (day, period) for any session index.  
+6. Add **Kevin-Rebecca same-day constraint**: day(assign[Kevin]) == day(assign[Rebecca]).  
+7. Add **Lan-Olivia different-day constraint**: day(assign[Lan]) ≠ day(assign[Olivia]).  
+8. Add **Nessa afternoon constraint**: period(assign[Nessa]) == 1 (i.e., session index ∈ {1,3,5}).  
+9. Add **Julio earlier-day than Olivia constraint**: day(assign[Julio]) < day(assign[Olivia]).  
+10. Add **extra assumption**: Lan does *not* lead a Wednesday session → day(assign[Lan]) ≠ 0.  
+11. Translate the answer choices into assistant indices: Rebecca=5, Olivia=4, Nessa=2, Kevin=1, Julio=0 (assuming order: Julio, Kevin, Lan, Nessa, Olivia, Rebecca → indices 0–5).  
+12. Define `answer_index_list = []`. For each candidate assistant in the answer choices:  
+    - Clone the base constraints + Lan ≠ Wed into a fresh solver.  
+    - Assert that this assistant does **not** lead *any* Thursday session → day(assign[assistant]) ≠ 1 (since Thu sessions are indices 2 and 3, i.e., day=1).  
+    - If the model is UNSAT under this negation, then the assistant **must** lead a Thursday session; append their index to `answer_index_list`.  
+13. Return the single assistant in `answer_index_list` (guaranteed by problem structure).

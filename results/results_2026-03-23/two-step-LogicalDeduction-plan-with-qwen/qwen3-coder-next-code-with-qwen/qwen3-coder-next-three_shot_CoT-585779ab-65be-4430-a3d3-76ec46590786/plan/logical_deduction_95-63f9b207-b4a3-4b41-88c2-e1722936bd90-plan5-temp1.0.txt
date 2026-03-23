@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five birds as variables: `"blue jay"`, `"cardinal"`, `"hawk"`, `"hummingbird"`, and `"quail"`.  
+    * Define the domain as integer positions 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+    * Add all variables to the problem with the domain {1, 2, 3, 4, 5}.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate each statement into a constraint using lambda or direct value constraints:  
+        - "The quail is the second from the left" → `quail == 2`  
+        - "The cardinal is the third from the left" → `cardinal == 3`  
+        - "The quail is to the left of the blue jay" → `quail < blue_jay` (i.e., 2 < blue_jay ⇒ blue_jay ∈ {3,4,5}, but cardinal is 3 so blue_jay ∈ {4,5})  
+        - "The blue jay is to the left of the hummingbird" → `blue_jay < hummingbird`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Extract the unique solution (or first solution) from the returned list.
+
+5.  **Determine the Leftmost Bird and Select the Correct Choice:**  
+    * The question asks which bird is leftmost (position 1).  
+    * From the solution, identify which variable has value 1.  
+    * Map that bird to the corresponding choice letter using the provided options:  
+        - "A) The blue jay is the leftmost." → A if `blue_jay == 1`  
+        - "B) The cardinal is the leftmost." → B if `cardinal == 1`  
+        - "C) The hawk is the leftmost." → C if `hawk == 1`  
+        - "D) The hummingbird is the leftmost." → D if `hummingbird == 1`  
+        - "E) The quail is the leftmost." → E if `quail == 1`  
+    * Return the letter (A–E) corresponding to the bird at position 1.

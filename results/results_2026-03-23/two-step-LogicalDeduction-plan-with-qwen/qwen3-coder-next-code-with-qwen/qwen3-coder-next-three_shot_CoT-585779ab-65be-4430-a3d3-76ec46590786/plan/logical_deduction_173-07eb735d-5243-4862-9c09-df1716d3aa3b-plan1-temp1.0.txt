@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.  
+
+2.  **Define Variables and Their Domain:**  
+    * Identify the seven fruits as variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.  
+    * Define a domain of integers from **1 to 7**, where **1 = cheapest** and **7 = most expensive**, consistent with standard ranking conventions for "most/least expensive".  
+    * Add each fruit variable to the problem with this domain.  
+
+3.  **Translate Each Statement into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+    * Convert each relative comparison or fixed position statement into a constraint:  
+        - "The pears are more expensive than the kiwis" → `kiwis < pears` (since lower rank = cheaper).  
+        - "The watermelons are less expensive than the peaches" → `watermelons > peaches` (since lower rank = cheaper; if watermelons are less expensive, their rank is higher).  
+        - "The mangoes are the third-cheapest" → `mangoes == 3` (3rd position from cheapest = rank 3).  
+        - "The watermelons are the third-most expensive" → With ranks 1 (cheapest) to 7 (most expensive), 3rd-most expensive means rank = 5 (since 1=cheapest, 2, 3, **4=second-most-expensive**, **5=third-most-expensive**). So `watermelons == 5`.  
+        - "The plums are the second-most expensive" → rank = 6 (most expensive = 7, so second-most = 6). So `plums == 6`.  
+        - "The loquats are the second-cheapest" → rank = 2. So `loquats == 2`.  
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.  
+    * Since the problem is well-defined and consistent, there should be exactly one solution; extract it.  
+
+5.  **Determine the Correct Answer Based on the Question:**  
+    * The question asks which fruit is **second-most expensive**, i.e., rank = 6.  
+    * From the solved assignment, find which fruit has rank 6.  
+    * Create a mapping from choice letters to the corresponding fruit name in the choices list:  
+        A → "loquats", B → "peaches", C → "watermelons", D → "plums", E → "kiwis", F → "mangoes", G → "pears".  
+    * Identify the choice letter corresponding to the fruit with rank 6 and select it as the answer.

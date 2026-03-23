@@ -1,0 +1,29 @@
+1.  Identify all entities and types: Rex, dumpus, tumpus, vumpus, zumpus, wumpus, numpus, rompus, jompus, yumpus, impus.  
+2.  Identify all properties: dull, spicy, fruity, large, blue, kind, cold, transparent, spicy (note: "spicy" appears in both negated and positive forms), impus is a type but no new property.  
+3.  Represent "Rex is a wumpus" as a base fact: `is_a("Rex", "wumpus", True)`.  
+4.  Convert all class properties and subclass relationships into logical rules:  
+   - Every dumpus is not dull.  
+   - Tumpuses are not spicy.  
+   - Dumpuses ⊆ vumpuses (i.e., each dumpus is a vumpus).  
+   - Vumpuses are fruity.  
+   - Each vumpus is a zumpus (vumpus ⊆ zumpus).  
+   - Each zumpus is large.  
+   - Each zumpus is a wumpus (zumpus ⊆ wumpus).  
+   - Wumpuses are blue.  
+   - Wumpuses are numpuses (wumpus ⊆ numpus).  
+   - Each numpus is kind.  
+   - Numpuses are rompuses (numpus ⊆ rompus).  
+   - Rompuses are cold.  
+   - Rompuses are jompuses (rompus ⊆ jompus).  
+   - Jompuses are not transparent.  
+   - Jompuses are yumpuses (jompus ⊆ yumpus).  
+   - Yumpuses are spicy.  
+   - Every yumpus is an impus (yumpus ⊆ impus).  
+5.  Implement each rule using `foreach` conditions (over individuals of the appropriate type) and `assert` conclusions (of appropriate property or subtype).  
+6.  Observe conflicting rules:  
+   - From base fact `is_a("Rex", "wumpus")` and rule *zumpus ⊆ wumpus*, but also *wumpus ⊆ numpus* ⇒ Rex is a numpus ⇒ Rex is a rompus ⇒ Rex is a jompus ⇒ Rex is a yumpus.  
+   - Rule *yumpuses are spicy* ⇒ `is_spicy("Rex", True)`.  
+   - Rule *tumpuses are not spicy* does not apply unless Rex is a tumpus — but no chain links Rex to tumpus.  
+   - Thus, "Rex is spicy" is provable, so "Rex is not spicy" is false.  
+7.  The query tests if the statement "Rex is not spicy" is provable:  
+   → Use `facts.is_spicy("Rex", False)`.

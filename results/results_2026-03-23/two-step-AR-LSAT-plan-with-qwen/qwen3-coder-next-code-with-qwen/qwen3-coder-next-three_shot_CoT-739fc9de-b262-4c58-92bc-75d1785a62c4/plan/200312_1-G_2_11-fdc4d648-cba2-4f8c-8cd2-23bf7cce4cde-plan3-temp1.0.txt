@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types and assign them integer codes (0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles).  
+2. Create integer variables `pos[type]` for each cargo type denoting its bay number (1–6).  
+3. Add **domain constraints**: all `pos[type]` must be integers in [1,6] and pairwise distinct.  
+4. Add **base ordering constraints**:  
+   - `pos[grain] > pos[livestock]`  
+   - `pos[livestock] > pos[textiles]`  
+   - `pos[produce] > pos[fuel]`  
+   - `|pos[textiles] - pos[produce]| == 1` (textiles adjacent to produce)  
+5. Add **conditional constraint** (the given "if" scenario): `|pos[produce] - pos[livestock]| == 1` (produce adjacent to livestock).  
+6. Translate answer choices into structural conditions:  
+   - "Bay 2 is holding fuel" → `pos[fuel] == 2`  
+   - "Bay 4 is holding produce" → `pos[produce] == 4`  
+   - "Bay 4 is holding textiles" → `pos[textiles] == 4`  
+   - "Bay 5 is holding grain" → `pos[grain] == 5`  
+   - "Bay 5 is holding machinery" → `pos[machinery] == 5`  
+7. Define answer index list `answer_index_list = []`. For each choice (in order 0–4):  
+   - Clone the full constraint set (base + conditional) into a fresh solver.  
+   - Assert the condition corresponding to that choice (e.g., `pos[fuel] == 2` for choice 0).  
+   - If the model is UNSAT, then this scenario is impossible under the "if" condition; append its index to `answer_index_list` (as the EXCEPT answer).  
+8. Output `answer_index_list[0]`.

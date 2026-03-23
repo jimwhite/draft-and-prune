@@ -1,0 +1,28 @@
+1. Identify all individuals: Bob, Fiona, Gary, Harry.
+2. Represent all explicitly stated facts using ternary predicates:
+   - is_big("Bob", True), is_cold("Bob", True), is_furry("Bob", True), is_smart("Bob", True)
+   - is_cold("Fiona", True), is_green("Fiona", False), is_white("Fiona", True)
+   - is_smart("Gary", True)
+   - is_big("Harry", True), is_cold("Harry", True), is_smart("Harry", True)
+3. Encode all universal conditional rules as PyKe `foreach`-`assert` rules:
+   • All green people are furry: foreach(is_green(X, True)) → assert(is_furry(X, True))
+   • If Gary is furry and not smart → Gary is white: (special case; use fact constraint or separate rule handling Gary specifically—note: generic rule would be forall, but PyKe requires pattern match; since Gary is a constant, encode as conditional fact or use rule with explicit subject: if(is_furry("Gary", True) and not is_smart("Gary", True)) → assert(is_white("Gary", True)))
+   • Smart people are green: foreach(is_smart(X, True)) → assert(is_green(X, True))
+   • If Bob is not green and not white → Bob is furry: (special case for Bob) — use rule pattern matching Bob’s negated properties and assert is_furry("Bob", True), but note this fact is already given; treat as backup or redundancy, not needed for query.
+   • Big people are cold: foreach(is_big(X, True)) → assert(is_cold(X, True))
+   • If someone is smart and furry → they are big: foreach(is_smart(X, True), is_furry(X, True)) → assert(is_big(X, True))
+   • If someone is white and not cold → they are not blue: foreach(is_white(X, True), is_cold(X, False)) → assert(is_blue(X, False))
+   • All cold people are not blue: foreach(is_cold(X, True)) → assert(is_blue(X, False))
+4. Observe redundancy: several facts imply others (e.g., Bob is smart → green, and since he’s smart and furry → big (consistent), cold already given).
+5. Focus on deriving is_white("Bob", True) or its negation:
+   - From Bob: cold, furry, big, smart.
+   - From smart → green (rule), so is_green("Bob", True).
+   - From green → furry (redundant for Bob), OK.
+   - No direct rule gives white for Bob. White only derived from: Fiona’s explicit fact, or rule involving white and not cold → not blue (irrelevant), or Gary-specific conditional.
+   - Check if Bob can be white: only if a rule implies is_white("Bob", True). No such rule applies to Bob.
+   - Try indirect: is_white(X, True) never derived unless stated or via special rule (none for Bob).
+   - But is_white("Bob", False) may not follow either.
+6. Query: determine if Bob is white → use facts.is_white("Bob", True) as the assertion to test.
+   - Since no rule or fact implies it, and no contradiction arises if assumed false (e.g., Bob not white is consistent with all known), the status is unknown.
+   - However, must formally encode query in PyKe: assert fact(is_white("Bob", True)) and see if derivable; if not, then unknown.
+7. Final query encoding: facts.is_white("Bob", True) — then use PyKe’s prove() or check to see if it can be proven true, false (i.e., its negation derivable), or unknown.

@@ -1,0 +1,19 @@
+1. Enumerate the six employees and assign each an integer index (0: Robertson, 1: Souza, 2: Togowa, 3: Vaughn, 4: Xu, 5: Young).  
+2. Create integer variables `pos[employee]` for each employee’s assigned parking space (1 to 6).  
+3. Add **distinctness and domain constraints**: all `pos[i]` are distinct integers in [1,6].  
+4. Add **base ordering constraints**:  
+   - Young > Togowa: `pos_Young > pos_Togowa`  
+   - Xu > Souza: `pos_Xu > pos_Souza`  
+   - Robertson > Young: `pos_Robertson > pos_Young`  
+   - Robertson ∈ {1,2,3,4}: `pos_Robertson <= 4`  
+5. Add **conditional constraint** (the given premise): Young > Souza: `pos_Young > pos_Souza`.  
+6. Translate each answer choice into a constraint involving the position of a specific employee:  
+   - Choice 0: Togowa = 1 → `pos_Togowa == 1`  
+   - Choice 1: Young = 2 → `pos_Young == 2`  
+   - Choice 2: Robertson = 3 → `pos_Robertson == 3`  
+   - Choice 3: Souza = 3 → `pos_Souza == 3`  
+   - Choice 4: Vaughn = 4 → `pos_Vaughn == 4`  
+7. For each choice, clone the combined solver (base + conditional constraint) and add the specific constraint from that choice.  
+8. Check SAT: if satisfiable, then that choice **could be true**.  
+9. Collect indices of all choices for which the model is SAT into `answer_index_list`.  
+10. Output the answer corresponding to `answer_index_list[0]` (since exactly one choice is possible per LSAT-style logic).

@@ -1,0 +1,22 @@
+1. Identify all individuals: Anne, Bob, Charlie, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates:  
+   - is_nice("Anne", True)  
+   - is_big("Bob", True), is_blue("Bob", True), is_cold("Bob", True)  
+   - is_big("Charlie", True), is_cold("Charlie", True), is_nice("Charlie", True), is_young("Charlie", True)  
+   - is_furry("Fiona", True), is_young("Fiona", True)  
+3. Translate each universal conditional statement into a PyKe rule:  
+   - If someone is furry and nice → they are cold.  
+   - If Bob is blue and Bob is big → Bob is cold (but this fact is already given, so skip or verify consistency).  
+   - All blue and cold people are big.  
+   - If someone is nice → they are smart.  
+   - All smart and big people are nice.  
+   - All smart people are blue.  
+   - Blue, smart people are furry.  
+   - Furry, cold people are smart.  
+   - Cold people are big.  
+4. For each rule:  
+   • Use `foreach` to match all individuals satisfying the premises (e.g., for universal rules like “All X are Y” or conditionals over variables),  
+   • Use `assert` to record the consequent (e.g., `facts.is_smart(x, True)`, `facts.is_blue(x, True)`, etc.).  
+   Note: Rules involving specific individuals (e.g., “If Bob is blue and big…”) can be safely omitted since the conclusion is already asserted directly as a fact.  
+5. The query checks whether Charlie is *not* smart:  
+   → Use `facts.is_smart("Charlie", False)`

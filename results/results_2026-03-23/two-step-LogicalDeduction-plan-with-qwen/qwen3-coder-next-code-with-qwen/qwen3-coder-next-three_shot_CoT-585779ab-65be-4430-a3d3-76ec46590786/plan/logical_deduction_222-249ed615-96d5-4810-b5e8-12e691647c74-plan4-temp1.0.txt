@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven vehicle types as variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the oldest** vehicle and **7 represents the newest**, to align with standard age-ranking logic (smaller number = older).
+    * Add all seven variables with domain {1, 2, ..., 7} to the problem.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle receives a unique age rank.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The station wagon is the fourth-newest" → position of `station_wagon` = 4 (since 7 is newest, 6 is third-newest? Wait: fourth-newest = rank = 4 from newest → but if 1=oldest, 7=newest, then nth-newest = rank = 8 - n. So fourth-newest = 8 - 4 = **4**? Let's double-check:
+        * Newest (1st-newest) → rank 7  
+        * 2nd-newest → rank 6  
+        * 3rd-newest → rank 5  
+        * **4th-newest → rank 4** ✓ (Yes, consistent: n-th newest = 8 - n. So 4th-newest = 4)
+    * "The minivan is the third-newest" → rank = 8 - 3 = **5**
+    * "The tractor is the second-oldest" → oldest=1, so second-oldest = **2**
+    * "The convertible is older than the station wagon" → convertibles rank < station_wagon's rank
+    * "The truck is newer than the bus" → truck's rank > bus's rank (since higher number = newer)
+    * "The hatchback is older than the convertible" → hatchback's rank < convertible's rank
+
+5.  **Solve the Constraint Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks.
+    * Extract the unique solution (the solver will return a list of dict(s), each mapping vehicle names to integer ranks).
+
+6.  **Interpret the Question and Choices:**
+    * The question asks which vehicle is the **oldest**, i.e., the one with rank = **1**.
+    * The answer choices map as follows:
+        - A) truck  
+        - B) hatchback  
+        - C) minivan  
+        - D) bus  
+        - E) tractor (already fixed at rank 2, so cannot be oldest)
+        - F) station_wagon  
+        - G) convertible  
+    * Identify the vehicle in the solution with rank = 1, then select the corresponding letter (A–G).

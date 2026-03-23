@@ -1,0 +1,19 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign integer indices 0–4.  
+2. Create Boolean variables for assignment: `assign[i][j]` where i ∈ {0,1,2} (Venezuela, Yemen, Zambia) and j ∈ {0,1,2,3,4} (candidates), indicating if candidate j is assigned to country i.  
+3. Add **one-per-country** constraints: for each country i, exactly one candidate j has `assign[i][j] = True`.  
+4. Add **one-per-candidate** constraints: for each candidate j, at most one country i has `assign[i][j] = True`.  
+5. Add **constraint A**: Exactly one of Kayne (index 1) or Novetzke (index 3) is assigned to any country: `assign[0][1] ∨ assign[1][1] ∨ assign[2][1]` XOR `assign[0][3] ∨ assign[1][3] ∨ assign[2][3]`.  
+6. Add **constraint B**: If Jaramillo (index 0) is assigned, then Kayne (index 1) must also be assigned: `(assign[0][0] ∨ assign[1][0] ∨ assign[2][0]) → (assign[0][1] ∨ assign[1][1] ∨ assign[2][1])`.  
+7. Add **constraint C**: If Ong (index 4) is assigned to Venezuela (index 0), then Kayne (index 1) must *not* be assigned to Yemen (index 1): `assign[0][4] → ¬(assign[1][1])`.  
+8. Add **constraint D**: If Landon (index 2) is assigned, it must be to Zambia (index 2): `(assign[0][2] ∨ assign[1][2]) → False`, i.e., `assign[0][2] = False` and `assign[1][2] = False`.  
+9. Translate the five answer choices into pairs of candidate indices:  
+   - Choice 0: Jaramillo (0) and Novetzke (3) unassigned  
+   - Choice 1: Jaramillo (0) and Ong (4) unassigned  
+   - Choice 2: Kayne (1) and Landon (2) unassigned  
+   - Choice 3: Kayne (1) and Novetzke (3) unassigned  
+   - Choice 4: Landon (2) and Ong (4) unassigned  
+10. Define an answer index list `answer_index_list = []`. For each choice k (0 to 4):  
+    - Clone base constraints into a fresh solver.  
+    - Assert that the two candidates in choice k are *not* assigned to any country (i.e., for each candidate j in the pair, `¬assign[0][j] ∧ ¬assign[1][j] ∧ ¬assign[2][j]`).  
+    - If the model is SAT, then this pair *could* be the unassigned pair; append k to `answer_index_list`.  
+11. Print `answer_index_list`.

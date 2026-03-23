@@ -1,0 +1,21 @@
+1. Enumerate the eight students and assign them integer indices.  
+2. Define Boolean variables `assigned[student][day]` to indicate if a student gives *any* report on that day (Monday, Tuesday, Wednesday), and Boolean variables `slot[student][day][time]` to indicate if a student gives the report in morning or afternoon on that day (only valid if assigned[student][day] is true).  
+3. Add **exactly six reports** constraint: sum over all students and days/times of `slot[student][day][time]` equals 6.  
+4. Add **two reports per day** constraint: for each day, exactly two students have `slot[student][day][morning] = true` and `slot[student][day][afternoon] = true`, i.e., exactly two assignments per day.  
+5. Add **mutual exclusivity per student**: no student gives more than one report (i.e., for each student, at most one of the six `slot` variables is true).  
+6. Add **day-specific availability constraints**:  
+    - George can only give a report on Tuesday (`assigned[George][Monday] = false`, `assigned[George][Wednesday] = false`).  
+    - Olivia and Robert cannot give afternoon reports (`slot[Olivia][*][afternoon] = false`, `slot[Robert][*][afternoon] = false`).  
+7. Add **conditional constraint for Nina**: If `assigned[Nina][day] = true`, then:  
+    - If day is Monday or Tuesday, then `assigned[Helen][next_day] = true` and `assigned[Irving][next_day] = true`.  
+    - If day is Wednesday, no further constraint.  
+8. Add the given conditions:  
+    - Kyle gives afternoon report on Tuesday: `slot[Kyle][Tuesday][afternoon] = true`.  
+    - Helen gives afternoon report on Wednesday: `slot[Helen][Wednesday][afternoon] = true`.  
+9. For each choice in the answer options, construct a list of three students: morning reporters for Monday, Tuesday, Wednesday.  
+10. For each choice:  
+    - Clone the base solver.  
+    - Add constraints that the specified students give morning reports on their respective days (i.e., for Monday's morning reporter `X`, set `slot[X][Monday][morning] = true`; similarly for Tuesday and Wednesday).  
+    - Ensure consistency: if a student appears as both morning and afternoon reporter (impossible), or assigned to multiple slots, the solver will reject it—but this is covered by mutual exclusivity.  
+    - Solve; if SAT, the choice is possible. Record its index.  
+11. Output the index of the feasible choice(s).

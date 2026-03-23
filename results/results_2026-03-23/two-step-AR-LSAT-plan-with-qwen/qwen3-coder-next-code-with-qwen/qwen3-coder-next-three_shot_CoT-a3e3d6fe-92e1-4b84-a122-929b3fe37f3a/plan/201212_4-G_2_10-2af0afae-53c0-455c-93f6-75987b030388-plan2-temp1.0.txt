@@ -1,0 +1,20 @@
+1. Enumerate the five witnesses and assign integer indices (0: Franco, 1: Garcia, 2: Hong, 3: Iturbe, 4: Jackson).  
+2. Assign integer variables for each witness’s testimony day (1=Monday, 2=Tuesday, 3=Wednesday).  
+3. Add **domain constraints**: each witness’s day variable ∈ {1, 2, 3}.  
+4. Add **Iturbe fixed constraint**: Iturbe’s day = 3 (Wednesday).  
+5. Add **exactly two witnesses on Tuesday**: count of witnesses with day == 2 must equal 2.  
+6. Add **Franco-Garcia different-day constraint**: Franco ≠ Garcia.  
+7. Add **Hong not-Monday constraint**: Hong ≠ 1.  
+8. Add **at-least-one on Monday constraint**: at least one witness has day == 1.  
+9. Add **problem-specific assumption (given condition)**: Franco = Hong (same day).  
+10. Translate each answer choice into a logical proposition about the schedule:  
+    - A: Franco = 3  
+    - B: Garcia = 1  
+    - C: Garcia = 3  
+    - D: Hong = 2  
+    - E: Only Iturbe on Wednesday → day counts: (Wednesday=1, others <3)  
+11. For each answer choice, check if it **must be true** under all schedules satisfying all constraints (including Franco=Hong). Use proof by universal implication:  
+    - Clone base + assumption into solver S.  
+    - For choice i, create solver S_i = S ∪ {¬(choice i proposition)}.  
+    - If S_i is UNSAT, then choice i must be true; record its index.  
+12. Among the five choices, exactly one will be forced (UNSAT when negated); output its index as the answer.

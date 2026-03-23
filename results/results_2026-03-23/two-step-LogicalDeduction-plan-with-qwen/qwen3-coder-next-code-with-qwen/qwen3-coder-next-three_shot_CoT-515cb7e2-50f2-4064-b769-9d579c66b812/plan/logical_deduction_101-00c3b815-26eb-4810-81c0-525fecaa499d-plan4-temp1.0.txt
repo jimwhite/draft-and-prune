@@ -1,0 +1,30 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruits as variables: `"apples"`, `"pears"`, `"mangoes"`, `"oranges"`, `"watermelons"`, `"peaches"`, and `"cantaloupes"`.  
+    * Define a numerical domain from 1 to 7, where **1 = cheapest** and **7 = most expensive**.  
+    * Add each fruit variable with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Translate Statements into Constraints:**  
+    * Add `AllDifferentConstraint()` to ensure all fruits have distinct prices ranks.  
+    * Translate each relative comparison into inequality constraints using `lambda` functions:  
+        - "The pears are more expensive than the oranges" → `pears > oranges`  
+        - "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`  
+        - "The peaches are less expensive than the cantaloupes" → `peaches < cantaloupes`  
+    * Translate absolute-position statements into equality constraints:  
+        - "The apples are the third-cheapest" → `apples == 3`  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6)  
+        - "The mangoes are the fourth-most expensive" → `mangoes == 4` (most expensive=7 ⇒ fourth-most = 7−3 = 4)
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid rank assignments.  
+    * Since the constraints are consistent and sufficient, there should be exactly one solution; retrieve it (e.g., `solutions[0]`).
+
+5.  **Determine the Second-Cheapest Fruit:**  
+    * The question asks for the fruit that is the second-cheapest, i.e., rank = 2.  
+    * Create a mapping from choice letters (`'A'` to `'G'`) to fruit names according to the choices:  
+        - `'A': 'apples'`, `'B': 'pears'`, `'C': 'mangoes'`, `'D': 'oranges'`, `'E': 'watermelons'`, `'F': 'peaches'`, `'G': 'cantaloupes'`  
+    * Iterate over the mapping, and for each fruit in the solution, check if its rank equals 2.  
+    * Return (or print) the choice letter corresponding to that fruit as the answer.

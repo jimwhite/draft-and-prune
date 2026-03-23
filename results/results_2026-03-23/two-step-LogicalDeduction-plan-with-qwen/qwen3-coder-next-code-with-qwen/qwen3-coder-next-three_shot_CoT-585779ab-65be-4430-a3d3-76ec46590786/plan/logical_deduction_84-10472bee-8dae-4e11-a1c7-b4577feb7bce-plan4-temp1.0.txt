@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**
+   * Define the variables as the five vehicles: `"tractor"`, `"station_wagon"`, `"minivan"`, `"sedan"`, and `"hatchback"`.
+   * Define a numerical domain from 1 to 5, where **1 = oldest**, and **5 = newest** (so "third-newest" corresponds to position 3, since newest=5 → second-newest=4 → third-newest=3).
+   * Add all vehicle variables with domain `{1,2,3,4,5}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+   * Translate each statement into a constraint:
+        * "The minivan is older than the sedan" → `minivan < sedan`
+        * "The tractor is older than the hatchback" → `tractor < hatchback`
+        * "The minivan is the third-newest" → `minivan == 3`
+        * "The station wagon is the second-newest" → `station_wagon == 4`
+
+4. **Solve for the Arrangement:**
+   * Call `getSolutions()` to enumerate all valid assignments.
+   * Extract the unique solution (or any one, since uniqueness is implied by problem consistency).
+
+5. **Determine Which Choice is True:**
+   * Examine the question: it asks which vehicle *is* the third-newest.
+   * From the solved solution, identify the vehicle with rank `3` (third-newest).
+   * Map this vehicle to the corresponding choice letter:
+        - A) tractor → check if `solution["tractor"] == 3`
+        - B) station_wagon → check if `solution["station_wagon"] == 3`
+        - C) minivan → check if `solution["minivan"] == 3`
+        - D) sedan → check if `solution["sedan"] == 3`
+        - E) hatchback → check if `solution["hatchback"] == 3`
+   * Return the letter (e.g., `"C"`) of the choice whose vehicle has rank 3.

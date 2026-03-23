@@ -1,0 +1,17 @@
+1. Enumerate the six photographers and assign them integer indices.  
+2. Create Boolean variables for each photographer-ceremony assignment: `S[i]` (True if photographer i assigned to Silva, False for Thorne).  
+3. Add **at-least-two-per-ceremony constraints**:  
+    - Sum of `S[i]` over all photographers ≥ 2 (Silva).  
+    - Sum of `(1 - S[i])` over all photographers ≥ 2 (Thorne).  
+4. Add **mutual exclusivity constraint**: No photographer assigned to both (implicit via binary `S[i]`).  
+5. Add **Frost–Heideck together constraint**: `S[Frost] == S[Heideck]`.  
+6. Add **Lai–Mays separation constraint**: If both assigned, they must be on different ceremonies: `¬(S[Lai] == S[Mays])` → `(S[Lai] != S[Mays])`.  
+7. Add **Gonzalez→Lai conditional**: If `S[Gonzalez] == True`, then `S[Lai] == False`.  
+8. Add **Knutson conditional**: If `S[Knutson] == False`, then both `S[Heideck] == False` and `S[Mays] == False`.  
+9. Translate each choice into a complete assignment vector (list of `S[i]` values).  
+10. For each choice:  
+    - Clone base constraints into a fresh solver.  
+    - Assert the exact assignment from the choice (e.g., `S[Frost] == True`, `S[Gonzalez] == False`, etc.).  
+    - Check satisfiability.  
+11. Append the index of the first (or only) choice that yields SAT to `answer_index_list`.  
+12. Print the answer index list.

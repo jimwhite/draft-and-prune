@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles and assign integer codes (0 to 5).  
+2. Create six integer variables `pos[6]` representing the bay numbers (1–6) for each cargo type, where `pos[i]` = bay number holding cargo i.  
+3. Add **domain constraints**: all `pos[i]` must be integers in [1,6], and pairwise distinct (a permutation of 1–6).  
+4. Add **given base constraints** from problem description:  
+   - Grain > livestock (pos_grain > pos_livestock)  
+   - Livestock > textiles (pos_livestock > pos_textiles)  
+   - Produce > fuel (pos_produce > pos_fuel)  
+   - Textiles and produce adjacent: |pos_textiles - pos_produce| = 1  
+5. Add **conditional constraint** from the "If" clause: produce is next to livestock ⇒ |pos_produce - pos_livestock| = 1  
+6. Interpret answer choices as assertions about specific cargo in specific bays:  
+   - Choice 0: fuel in bay 2 ⇒ pos_fuel == 2  
+   - Choice 1: produce in bay 4 ⇒ pos_produce == 4  
+   - Choice 2: textiles in bay 4 ⇒ pos_textiles == 4  
+   - Choice 3: grain in bay 5 ⇒ pos_grain == 5  
+   - Choice 4: machinery in bay 5 ⇒ pos_machinery == 5  
+7. Define `answer_index_list = []`. For each choice index i (0 to 4):  
+   - Clone the full constraint set (base + conditional) into a fresh solver.  
+   - Assert the specific condition for that choice (e.g., `pos_fuel == 2` for i=0).  
+   - Solve. If UNSAT, then the choice **cannot** be true under the condition ⇒ it is the EXCEPT answer; append i to `answer_index_list`.  
+8. After checking all, return the index i in `answer_index_list` corresponding to the EXCEPT option.

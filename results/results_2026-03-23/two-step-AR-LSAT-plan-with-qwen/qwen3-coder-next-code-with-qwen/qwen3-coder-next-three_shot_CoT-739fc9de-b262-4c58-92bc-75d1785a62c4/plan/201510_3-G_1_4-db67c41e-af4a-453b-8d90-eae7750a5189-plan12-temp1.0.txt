@@ -1,0 +1,16 @@
+1. Enumerate the seven recruits and assign integer positions 1 through 7 to their recruitment order.  
+2. Create integer variables `pos[person]` for each person: Peters, Quinn, Rovero, Stanton, Tao, Villas, White.  
+3. Add **domain constraints**: all `pos[person]` ∈ {1,2,3,4,5,6,7}, and all positions distinct.  
+4. Add **fixed constraint**: Peters recruited fourth → `pos[Peters] == 4`.  
+5. Add **Villas-White constraint**: Villas immediately before White → `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero constraint**: Quinn earlier than Rovero → `pos[Quinn] < pos[Rovero]`.  
+7. Add **conditional constraint**: Quinn immediately before Rovero → `pos[Quinn] + 1 == pos[Rovero]`.  
+   - Note: This is an assumption for the conditional question; we will assume it holds throughout the analysis.  
+8. Add **Stanton-Tao constraint**: Stanton not adjacent to Tao → `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+9. Translate answer choices into target positions: ["first", "second", "third", "fifth", "seventh"] → [1,2,3,5,7].  
+10. Define `answer_index_list = []`. For each candidate position `p` in [1,2,3,5,7]:  
+    - Clone the base constraints (including the conditional assumption `pos[Quinn] + 1 == pos[Rovero]`).  
+    - Add constraint `pos[Stanton] == p`.  
+    - Check satisfiability with Z3.  
+    - If UNSAT, then Stanton **cannot** be recruited at position `p`; append `p` to `answer_index_list`.  
+11. Output `answer_index_list` (as raw list of integers).

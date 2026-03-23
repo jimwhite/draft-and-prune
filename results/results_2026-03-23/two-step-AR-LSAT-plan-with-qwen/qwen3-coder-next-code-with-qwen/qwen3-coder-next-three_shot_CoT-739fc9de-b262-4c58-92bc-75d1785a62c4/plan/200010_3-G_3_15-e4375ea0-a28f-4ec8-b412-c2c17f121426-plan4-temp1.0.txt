@@ -1,0 +1,20 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign integer indices 0–7.  
+2. Create integer variables `pos[c]` for each composition c, representing its 1-based performance position (1 to 8).  
+3. Add **domain constraints**: all `pos[c]` ∈ {1,2,...,8} and pairwise distinct (bijection).  
+4. Add **order constraints** from the base conditions:  
+   - T immediately before F: `pos[T] + 1 == pos[F]` OR T immediately after R: `pos[R] + 1 == pos[T]`.  
+   - At least two compositions between F and R: `|pos[F] - pos[R]| ≥ 3`.  
+   - O is first or fifth: `pos[O] == 1` OR `pos[O] == 5`.  
+   - Eighth composition is L or H: `pos[L] == 8` OR `pos[H] == 8`.  
+   - P before S: `pos[P] < pos[S]`.  
+   - At least one composition between O and S: `|pos[O] - pos[S]| ≥ 2`.  
+5. Add the **conditional premise**: O is performed immediately after T ⇒ `pos[O] == pos[T] + 1`.  
+   - Since this is an implication, combine with the first condition:  
+     Combine *all* constraints (including the T-F/R adjacency) together with `pos[O] == pos[T] + 1`.  
+6. Determine possible positions of F under the full constraint set:  
+   - Create a solver with all constraints *including* `pos[O] == pos[T] + 1`.  
+   - For each possible position f ∈ {1,2,...,8}, add `pos[F] == f` and check SAT.  
+   - Record all feasible f values (positions where F can be).  
+7. Group the feasible positions into contiguous ranges matching answer choices:  
+   - Check which of the five provided options matches the set of feasible positions for F.  
+8. Output the option(s) whose described positions exactly match the computed feasible positions for F (e.g., if feasible positions are {1,2}, answer is "first or second").

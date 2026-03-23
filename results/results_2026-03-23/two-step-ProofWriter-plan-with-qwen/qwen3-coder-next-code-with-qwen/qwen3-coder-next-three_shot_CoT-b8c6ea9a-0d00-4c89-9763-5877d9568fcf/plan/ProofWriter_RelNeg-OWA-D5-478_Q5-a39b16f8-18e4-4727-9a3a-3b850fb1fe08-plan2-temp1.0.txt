@@ -1,0 +1,27 @@
+1. Identify all entities involved: cow, mouse, rabbit, squirrel.  
+2. Define ternary predicates for properties and relations: e.g., is_kind(subject, True), sees(subject, object, True), eats(subject, object, True), needs(subject, object, True), is_green(subject, True), is_rough(subject, True), is_blue(subject, False) (for “not blue”), etc.  
+3. Encode all explicitly stated facts as `facts.pred(subject, object, value)` (value is True or False as appropriate):  
+   - is_kind("cow", True)  
+   - sees("cow", "mouse", True)  
+   - eats("mouse", "cow", True)  
+   - is_kind("mouse", True)  
+   - needs("mouse", "squirrel", True)  
+   - eats("rabbit", "mouse", True)  
+   - is_blue("rabbit", False)  
+   - is_blue("squirrel", False)  
+   - is_green("squirrel", True)  
+   - is_rough("squirrel", True)  
+   - needs("squirrel", "mouse", True)  
+   - sees("squirrel", "rabbit", True)  
+4. Translate each conditional in the context into a PyKe rule with `foreach` (condition) and `assert` (conclusion):  
+   • If X sees the cow → X sees the squirrel.  
+   • If X sees the rabbit → X eats the cow.  
+   • If X needs the cow → cow eats the mouse.  
+   • If X needs the squirrel AND squirrel needs the cow → cow does not need rabbit (i.e., needs("cow", "rabbit", False)).  
+   • If mouse eats rabbit AND rabbit does not see mouse → rabbit is green (i.e., is_green("rabbit", True)).  
+   • If cow needs rabbit → rabbit does not eat mouse (i.e., eats("rabbit", "mouse", False)).  
+   • If X eats squirrel AND squirrel eats cow → X needs the cow.  
+   • If X eats mouse → X eats squirrel.  
+5. For negated conclusions (e.g., “does not need”, “does not eat”), assert the predicate with False as the object (e.g., needs("cow", "rabbit", False)).  
+6. The query tests whether the rabbit needs the cow:  
+   → Use facts.needs("rabbit", "cow", True)

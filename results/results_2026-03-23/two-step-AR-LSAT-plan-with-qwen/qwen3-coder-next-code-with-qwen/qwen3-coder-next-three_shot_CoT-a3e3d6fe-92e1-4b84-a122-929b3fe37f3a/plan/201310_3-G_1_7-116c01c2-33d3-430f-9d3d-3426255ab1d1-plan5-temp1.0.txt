@@ -1,0 +1,28 @@
+1. Enumerate the six bands and assign them integer indices (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer position variables for each band (slot 1 to 6), with distinctness enforced.  
+3. Add original constraints:  
+   - Vegemite < Zircon  
+   - Wellspring < Xpert and Zircon < Xpert  
+   - Uneasy ∈ {4,5,6} (i.e., slot index ≥ 4 if using 1-based indexing or ≥3 if 0-based; use consistent offset)  
+   - Yardsign ∈ {1,2,3} (index ≤ 2 if 0-based)  
+4. Translate each answer choice into a logical constraint:  
+   - A: "Only Uneasy can perform in a later slot than Xpert" → for all bands B ≠ Uneasy, B < Xpert; and Uneasy > Xpert  
+   - B: "Vegemite < Wellspring ∧ Wellspring < Zircon"  
+   - C: "Vegemite < Xpert ∧ Wellspring < Xpert" (note: missing Zircon < Xpert)  
+   - D: "|Xpert − Uneasy| = 1"  
+   - E: "Xpert ∈ {5,6}" (1-based) or Xpert ∈ {4,5} (0-based)  
+5. For each choice, check logical equivalence to the original constraint "Wellspring < Xpert ∧ Zircon < Xpert" *in the context of all other constraints*.  
+   - To do this, for each choice:  
+     a. Clone the base solver with all original constraints.  
+     b. Replace the pair constraint (Wellspring < Xpert ∧ Zircon < Xpert) with the choice’s constraint.  
+     c. For *all possible assignments satisfying the modified constraints*, check whether Wellspring < Xpert ∧ Zircon < Xpert always holds (i.e., the new constraint implies the original in combination with other constraints).  
+     d. Also check that Wellspring < Xpert ∧ Zircon < Xpert implies the new constraint (i.e., both directions hold under all other constraints).  
+6. Since Z3 cannot directly check logical equivalence of formulas, use model enumeration or two separate entailment checks:  
+   - Check entailment 1: Original + other constraints ⊨ new constraint  
+   - Check entailment 2: New constraint + other constraints ⊨ original pair constraint  
+7. A choice is valid only if both entailments hold: i.e., the sets of satisfying assignments are identical.  
+8. For each choice, run two solver instances:  
+   - Instance 1: Original constraints + other constraints + ¬(new constraint). If UNSAT ⇒ entailment 1 holds.  
+   - Instance 2: New constraint + other constraints + ¬(Wellspring < Xpert ∧ Zircon < Xpert). If UNSAT ⇒ entailment 2 holds.  
+9. Append the index of any choice for which both entailments hold to 'answer_index_list'.  
+10. Print answer index list.

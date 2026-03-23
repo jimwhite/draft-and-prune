@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign each a unique index (e.g., Quinn=0, Rovero=1, Stanton=2, Tao=3, Villas=4, White=5, Peters=6).  
+2. Create integer variables `pos[i]` for the recruitment position (1 to 7) of each accomplice i.  
+3. Add **domain and uniqueness constraints**: `1 ≤ pos[i] ≤ 7` for all i, and all `pos[i]` are pairwise distinct (use `Distinct(pos)`).  
+4. Add **fixed position constraint**: Peters is recruited fourth → `pos[Peters] == 4`.  
+5. Add **Villas–White adjacency constraint**: Villas is recruited immediately before White → `pos[White] == pos[Villas] + 1`.  
+6. Add **Quinn–Rovero ordering constraint**: Quinn recruited earlier than Rovero → `pos[Quinn] < pos[Rovero]`.  
+7. Add **Stanton–Tao non-adjacency constraint**: Stanton is neither immediately before nor after Tao → `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+8. Parse each answer choice as a list of seven names in order; extract the implied position sequence: for position j (1-based), assign `pos[name] = j`.  
+9. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert the position assignments derived from the choice (e.g., if choice[0] == 'Quinn', assert `pos[Quinn] == 1`, etc.).  
+   - Check satisfiability.  
+10. The valid choice(s) are those for which the augmented solver returns SAT; select the first (or all, per problem phrasing) that is SAT.  
+11. Output the index of the first valid choice from the provided list (0-indexed).  

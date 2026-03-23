@@ -1,0 +1,24 @@
+1. Identify all entities and types: Sam, tumpus, yumpus, wumpus, jompus, vumpus, impus, zumpus, numpus, dumpus, rompus.  
+2. Identify all properties: small, aggressive, bright, liquid, orange, transparent, fruity, sour.  
+3. Represent "Sam is a wumpus" as a base fact: `is_a("Sam", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Tumpuses are not small.  
+   * Tumpuses are yumpuses.  
+   * Every yumpus is aggressive.  
+   * Each yumpus is a wumpus.  
+   * Every wumpus is bright.  
+   * Each wumpus is a jompus.  
+   * Jompuses are not liquid.  
+   * Every jompus is a vumpus.  
+   * Each vumpus is orange.  
+   * Every vumpus is an impus.  
+   * Every impus is not transparent.  
+   * Each impus is a zumpus.  
+   * Every zumpus is fruity.  
+   * Every zumpus is a numpus.  
+   * Every numpus is sour.  
+   * Rompuses are not fruity.  
+   * Numpuses are dumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence, ensuring correct directional reasoning (e.g., subclass → property inheritance or class membership).  
+6. Determine whether "Sam is fruity" is provable: since Sam is a wumpus, and every wumpus is a jompus, and every jompus is a vumpus, and every vumpus is an impus, and every impus is a zumpus, and every zumpus is fruity, we can derive that Sam is fruity.  
+   → Use `facts.is_fruity("Sam", True)`.

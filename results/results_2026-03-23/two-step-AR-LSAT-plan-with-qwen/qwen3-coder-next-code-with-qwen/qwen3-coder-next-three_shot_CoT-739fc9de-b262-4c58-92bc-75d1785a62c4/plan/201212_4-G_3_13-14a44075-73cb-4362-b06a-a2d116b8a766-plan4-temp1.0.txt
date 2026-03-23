@@ -1,0 +1,25 @@
+1. Enumerate the six targets: ImageWebsite (IW), ImageVoicemail (IV), SolideWebsite (SW), SolideVoicemail (SV), TruvestWebsite (TW), TruvestVoicemail (TV). Assign integer codes: 1=1 day, 2=2 days, 3=3 days.  
+2. Create integer variables for each of the six targets (IW, IV, SW, SV, TW, TV), each with domain {1, 2, 3}.  
+3. Add **base constraints**:  
+   - None of the clients can have a website target longer than its voicemail target: IW ≤ IV, SW ≤ SV, TW ≤ TV.  
+   - Image's voicemail target must be shorter than the other clients' voicemail targets: IV < SV and IV < TV.  
+   - Solide's website target must be shorter than Truvest's website target: SW < TW.  
+4. Add **given condition**: Image's website target is 2 days: IW = 2.  
+5. From (3) and (4), derive immediate implications:  
+   - Since IW = 2 and IW ≤ IV, then IV ∈ {2, 3}.  
+   - But IV < SV and IV < TV ⇒ SV ≥ IV + 1, TV ≥ IV + 1. Since max target = 3, IV cannot be 2 (else SV ≥ 3 and TV ≥ 3, so SV = TV = 3), which is possible. IV cannot be 3 (else IV < SV, IV < TV impossible). So IV = 2, and thus SV = 3, TV = 3.  
+6. From SW < TW and SW ≤ SV (i.e., SW ≤ 3, but also SW < TW), and TW ≤ TV = 3 ⇒ TW ∈ {1, 2, 3}, but SW < TW and SW ≥ 1.  
+7. However, with IV = 2 forced (as shown), we now check which target *must* be 2 days:  
+   - IW = 2 (given)  
+   - IV = 2 (forced by constraints + given)  
+8. So ImageVoicemail target must be 2 days.  
+9. To confirm via Z3: build model with all constraints, assert IW = 2, then check which target(s) take value 2 in *all* satisfying assignments.  
+10. Define variables: [IW, IV, SW, SV, TW, TV] as Ints.  
+11. Add all constraints: domain (1≤ each ≤3), IW=2, IW≤IV, SW≤SV, TW≤TV, IV<SV, IV<TV, SW<TW.  
+12. For each candidate target (IV, SW, SV, TW, TV), check if it must be 2:  
+   - For each candidate T in [IV, SW, SV, TW, TV], test with fresh solver:  
+     • Add base constraints + IW=2.  
+     • Assert T ≠ 2.  
+     • If UNSAT, then T must be 2; record index.  
+13. The only target that must be 2 is IV (Image's voicemail target).  
+14. Return index of "Image's voicemail target".

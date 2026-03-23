@@ -1,0 +1,35 @@
+1.  Identify all entities and types: Polly, vumpus, zumpus, dumpus, impus, numpus, tumpus, jompus, yumpus, wumpus, rompus.  
+2.  Identify all properties: transparent, large, spicy, blue, temperate, not_blue (i.e., property "blue" and its negation), happy, amenable, floral, not_floral (i.e., property "floral" and its negation).  
+3.  Represent "Polly is a vumpus" as a base fact: `is_a("Polly", "vumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Every vumpus is transparent.  
+    - Vumpuses are zumpuses.  
+    - Every zumpus is not large.  
+    - Zumpuses are dumpuses.  
+    - Every dumpus is spicy.  
+    - Each dumpus is a numpus.  
+    - Every impus is blue.  
+    - Numpuses are temperate.  
+    - Each numpus is a tumpus.  
+    - Tumpuses are not blue.  
+    - Tumpuses are jompuses.  
+    - Each jompus is happy.  
+    - Each jompus is a yumpus.  
+    - Each yumpus is not amenable.  
+    - Every yumpus is a wumpus.  
+    - Wumpuses are not floral.  
+    - Wumpuses are rompuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - e.g., `foreach (x) if is_a(x, "vumpus") then is_transparent(x, True)`  
+    - e.g., `foreach (x) if is_a(x, "vumpus") then is_a(x, "zumpus", True)`  
+    - e.g., `foreach (x) if is_a(x, "zumpus") then not(is_large(x))`  
+    - Continue similarly for all rules, using explicit negation predicates or Boolean flags where needed (e.g., `is_not_blue(x)` or `is_blue(x, False)` depending on representation scheme).  
+6.  Infer the relevant property chain for Polly:  
+    - From `is_a(Polly, "vumpus")`, derive `is_a(Polly, "zumpus")` (via vumpus → zumpus),  
+    - then `is_a(Polly, "dumpus")` (zumpus → dumpus),  
+    - then `is_a(Polly, "numpus")` (dumpus → numpus),  
+    - then `is_a(Polly, "tumpus")` (numpus → tumpus).  
+    - Since tumpuses are not blue, derive `is_not_blue(Polly)` or equivalently `not is_blue(Polly)`.  
+    - Note: Though impuses are blue, there's no path from Polly to impus; the tumpus link forces negation of blue.  
+7.  The query tests if the statement "Polly is not blue" is provable:  
+    → Use `facts.is_not_blue("Polly", True)` OR if using binary predicate representation, `facts.is_blue("Polly", False)`.

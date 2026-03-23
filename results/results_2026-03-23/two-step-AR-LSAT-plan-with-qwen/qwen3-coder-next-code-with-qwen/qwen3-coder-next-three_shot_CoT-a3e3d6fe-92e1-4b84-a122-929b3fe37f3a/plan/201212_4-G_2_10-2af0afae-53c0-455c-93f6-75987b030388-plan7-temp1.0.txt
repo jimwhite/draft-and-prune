@@ -1,0 +1,22 @@
+1. Enumerate the five witnesses and assign them integer indices (0: Franco, 1: Garcia, 2: Hong, 3: Iturbe, 4: Jackson).  
+2. Enumerate the three days and assign them integer indices (0: Monday, 1: Tuesday, 2: Wednesday).  
+3. Create integer variables `d[i]` for each witness i, representing the day they testify (domain: {0, 1, 2}).  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `d[3] == 2`.  
+5. Add **mutual exclusion constraint**: Franco and Garcia do not testify on the same day → `d[0] != d[1]`.  
+6. Add **Tuesday constraint**: Exactly two witnesses testify on Tuesday → count of witnesses with `d[i] == 1` equals 2.  
+7. Add **Monday restriction for Hong**: Hong does not testify on Monday → `d[2] != 0`.  
+8. Add **Monday coverage**: At least one witness testifies on Monday → at least one `d[i] == 0`.  
+9. Add **given hypothesis**: Franco and Hong testify on the same day → `d[0] == d[2]`.  
+10. For each choice in the answer options, translate it into a logical condition on the days:  
+    - Choice 0 ("Franco ... Wednesday") → `d[0] == 2`  
+    - Choice 1 ("Garcia ... Monday") → `d[1] == 0`  
+    - Choice 2 ("Garcia ... Wednesday") → `d[1] == 2`  
+    - Choice 3 ("Hong ... Tuesday") → `d[2] == 1`  
+    - Choice 4 ("Iturbe is the only witness on Wednesday") → `d[3] == 2` AND for all i ≠ 3, `d[i] != 2`.  
+11. Define a list of forced_conditions (all True initially), and for each choice j:  
+    - Clone the base + hypothesis constraints into a fresh solver.  
+    - Assert that choice j is false (e.g., for Choice 0, assert `d[0] != 2`).  
+    - If the modified solver is UNSAT, then the original choice must be true; set `forced_conditions[j] = True`.  
+    - Otherwise, `forced_conditions[j] = False`.  
+12. The correct answer is the index j where `forced_conditions[j]` is True (exactly one such index exists).  
+13. Return the index of the must-be-true choice as final output (0 to 4).

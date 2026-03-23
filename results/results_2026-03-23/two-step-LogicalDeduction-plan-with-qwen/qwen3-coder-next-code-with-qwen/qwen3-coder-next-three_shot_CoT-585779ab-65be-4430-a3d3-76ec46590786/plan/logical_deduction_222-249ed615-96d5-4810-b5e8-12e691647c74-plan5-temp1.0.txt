@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven vehicles as variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.  
+   * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**.  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.  
+   * Translate each statement into a constraint:  
+     - "The station wagon is the fourth-newest" → rank of `"station_wagon"` = 4  
+     - "The minivan is the third-newest" → rank of `"minivan"` = 3  
+     - "The tractor is the second-oldest" → rank of `"tractor"` = 2  
+     - "The convertible is older than the station wagon" → rank of `"convertible"` < rank of `"station_wagon"` (i.e., `convertible < 4`)  
+     - "The truck is newer than the bus" → rank of `"truck"` > rank of `"bus"`  
+     - "The hatchback is older than the convertible" → rank of `"hatchback"` < rank of `"convertible"`
+
+4. **Solve for Valid Arrangements:**  
+   * Use `getSolutions()` to find all satisfying assignments.  
+   * Since the problem is deterministic, extract the unique solution (the first one in the list).
+
+5. **Determine the Correct Answer:**  
+   * Identify which vehicle has rank 1 (oldest), as the question asks for the oldest vehicle.  
+   * Map each choice letter (A–G) to its corresponding vehicle name:  
+     A → `"truck"`, B → `"hatchback"`, C → `"minivan"`, D → `"bus"`, E → `"tractor"`, F → `"station_wagon"`, G → `"convertible"`  
+   * Search the solution dictionary for the vehicle with value 1 and output the corresponding choice letter.

@@ -1,0 +1,30 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the seven golfers: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, and `"Dan"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first (best)** and **7 = last (worst)** finishing position.  
+    * Add all variables with their domain (1–7) to the problem instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that each golfer has a unique finishing position.  
+    * Add specific constraints derived from the statements:  
+        - "Rob finished first" → Rob's position = 1.  
+        - "Eve finished last" → Eve's position = 7.  
+        - "Joe finished second-to-last" → Joe's position = 6 (since positions: 1,2,3,4,5,6,7).  
+        - "Mya finished third" → Mya's position = 3.  
+        - "Dan finished above Ada" → Dan's position < Ada's position (smaller number = better rank).  
+        - "Mel finished above Mya" → Mel's position < Mya's position.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid assignments of positions to golfers.  
+    * Extract the unique solution (since the problem is well-constrained and consistent, only one solution should exist).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks: "Which of the following is true?" and specifically requests who finished **third** (position 3).  
+    * The solution will directly give the position of each golfer.  
+    * Identify which golfer has position = 3 (this is given in the statement as "Mya finished third", but verify consistency).  
+    * Map the identified golfer to the corresponding choice letter from the list:  
+        `['A) Joe', 'B) Mel', 'C) Mya', 'D) Eve', 'E) Rob', 'F) Ada', 'G) Dan']`.  
+    * Return the letter (e.g., `'C'`) corresponding to the correct golfer finishing third.

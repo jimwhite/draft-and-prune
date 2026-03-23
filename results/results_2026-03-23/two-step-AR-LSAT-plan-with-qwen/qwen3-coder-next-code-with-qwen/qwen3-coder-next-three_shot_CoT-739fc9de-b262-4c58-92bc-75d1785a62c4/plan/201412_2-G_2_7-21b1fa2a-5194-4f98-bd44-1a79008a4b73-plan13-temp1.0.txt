@@ -1,0 +1,19 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices.  
+2. Enumerate the four lecture topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices.  
+3. Create two sets of integer variables:  
+   - `h_pos[h]` for each historian h ∈ {Farley, Garcia, Holden, Jiang}: position in schedule (1 to 4), all distinct.  
+   - `t_who[t]` for each topic t ∈ {lithographs, oil paintings, sculptures, watercolors}: historian who gives that lecture (a value in {0,1,2,3} mapping to historians).  
+   Alternatively, use binary variables `assigned[h][t]` (1 if historian h gives lecture on topic t), ensuring each historian gets exactly one topic and each topic is assigned to exactly one historian.  
+4. Impose **bijections**: for each historian, exactly one topic; for each topic, assigned to exactly one historian.  
+5. Add **topic ordering constraints**:  
+   - oil paintings and watercolors lectures are both earlier than lithographs lecture: `pos(oil) < pos(litho)` and `pos(watercolors) < pos(litho)`.  
+   - Farley's lecture is earlier than oil paintings lecture: `pos(Farley) < pos(oil)`.  
+   - Holden's lecture is earlier than both Garcia's and Jiang's lectures: `pos(Holden) < pos(Garcia)` and `pos(Holden) < pos(Jiang)`.  
+6. Translate the five answer choices into logical statements about positions or assignments. For each choice:  
+   - Convert to a formal constraint (e.g., "Farley < sculptures" → `pos(Farley) < pos_of_topic[sculptures]`).  
+7. To determine which statement *must* be true: for each answer choice, check whether its negation leads to UNSAT under the base constraints.  
+   - For each choice C:  
+     - Clone solver with base constraints.  
+     - Assert ¬C (negation of the statement).  
+     - If UNSAT, then C must hold in all solutions → append index of C to answer list.  
+8. Output the index (or indices) of statements that are logically entailed — only one such statement should exist per problem format.

@@ -1,0 +1,18 @@
+1. Enumerate the seven accomplices and assign each a unique integer index.  
+2. Create integer position variables for each accomplice (positions 1 through 7, one per person).  
+3. Add **domain and uniqueness constraints**: each position variable is in [1,7] and all are distinct.  
+4. Add **fixed constraint**: Peters is recruited fourth → `pos_Peters == 4`.  
+5. Add **relative ordering constraints**:  
+    - Quinn before Rovero → `pos_Quinn < pos_Rovero`.  
+    - Villas immediately before White → `pos_White == pos_Villas + 1`.  
+    - Stanton not adjacent to Tao → `|pos_Stanton - pos_Tao| != 1`.  
+6. Add the **conditional assumption**: Quinn immediately before Rovero → `pos_Rovero == pos_Quinn + 1`.  
+7. Combine the conditional with existing constraints to form a single constraint system.  
+8. Translate the answer choices into positions: first=1, second=2, third=3, fifth=5, seventh=7.  
+9. For each candidate position in the answer choices:  
+    - Clone the conditional constraint system into a fresh solver.  
+    - Add assumption that Stanton is recruited at that position: `pos_Stanton == candidate`.  
+    - Check satisfiability.  
+    - If UNSAT, then Stanton **cannot** be at that position; record the position as a possible answer.  
+10. Collect all positions for which UNSAT occurs (i.e., Stanton cannot occupy that position under the given condition).  
+11. Output the list of positions satisfying the question (those that are impossible for Stanton under the condition).

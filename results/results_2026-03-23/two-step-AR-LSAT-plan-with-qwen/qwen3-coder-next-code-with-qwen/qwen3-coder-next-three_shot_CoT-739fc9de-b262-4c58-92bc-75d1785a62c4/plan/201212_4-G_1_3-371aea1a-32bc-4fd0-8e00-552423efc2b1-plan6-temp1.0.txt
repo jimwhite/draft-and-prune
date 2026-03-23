@@ -1,0 +1,18 @@
+1. Enumerate the seven houses and assign integer indices (0 to 6 for positions 1 to 7).  
+2. Create integer variables for each house’s showing position (1-indexed: positions 1–7).  
+3. Add **domain constraints**: each house assigned a unique integer from 1 to 7 (all-different).  
+4. Partition positions into time slots:  
+   - Morning: positions 1–2  
+   - Afternoon: positions 3–5  
+   - Evening: positions 6–7  
+5. Add **J constraint**: J must be shown in evening → position_J ∈ {6,7}.  
+6. Add **K constraint**: K cannot be shown in morning → position_K ∉ {1,2} → position_K ∈ {3,4,5,6,7}.  
+7. Add **L ordering constraints**: L after K and before M → position_K < position_L < position_M.  
+8. Translate each answer choice into a logical condition (e.g., “K is shown in the evening” = position_K ∈ {6,7}).  
+9. For each answer choice, check whether it **must** be true:  
+   - Clone base constraints into a fresh solver.  
+   - Add the **negation** of the answer choice (e.g., if choice is “K in evening”, add position_K ∈ {3,4,5}).  
+   - If this augmented constraint set is UNSAT, then the original answer choice **must** be true.  
+10. Among the five choices, collect those for which the negation yields UNSAT — these are candidates where the statement must hold.  
+11. Since exactly one answer choice is correct (standard LSAT logic), output the single choice whose negation leads to UNSAT.  
+12. Return that choice as the answer.

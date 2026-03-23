@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the five book types: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.
+    * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.
+    * Add all variables to the problem with this domain.
+
+3.  **Add Constraints:**
+    * Add `AllDifferentConstraint()` to ensure each book occupies a unique position.
+    * Add constraint for "The red book is to the right of the gray book": `red > gray`.
+    * Add constraint for "The black book is to the left of the blue book": `black < blue`.
+    * Add constraint for "The blue book is to the left of the gray book": `blue < gray`.
+    * Add constraint for "The purple book is the second from the right": `purple == 4` (since positions go left-to-right as 1 to 5, so second from right is position 4).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid arrangements.
+    * Extract the unique solution (as the problem is consistent and has one solution).
+
+5.  **Evaluate the Answer Choices:**
+    * The question asks which book is the second from the right (i.e., at position 4).
+    * Construct a dictionary mapping choice letters to book names: `{'A': 'gray', 'B': 'red', 'C': 'purple', 'D': 'blue', 'E': 'black'}`.
+    * Iterate through the solution to find which book is assigned position 4.
+    * Identify and return the corresponding choice letter.

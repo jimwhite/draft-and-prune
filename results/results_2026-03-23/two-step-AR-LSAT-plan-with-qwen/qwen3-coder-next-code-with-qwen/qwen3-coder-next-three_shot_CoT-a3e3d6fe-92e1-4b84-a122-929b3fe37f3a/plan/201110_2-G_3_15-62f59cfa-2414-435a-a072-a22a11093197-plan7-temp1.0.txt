@@ -1,0 +1,24 @@
+1. Enumerate riders (Reynaldo, Seamus, Theresa, Yuki) and bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables: `r1[i][j]` = 1 if rider i tests bicycle j on day 1; `r2[i][j]` = 1 if rider i tests bicycle j on day 2.  
+3. Add **day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider i, sum_j r1[i][j] = 1.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle j, sum_i r1[i][j] = 1.  
+4. Add **day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider i, sum_j r2[i][j] = 1.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle j, sum_i r2[i][j] = 1.  
+5. Add **exclusion constraints**:  
+   - Reynaldo cannot test F on any day: r1[0][0] = 0 and r2[0][0] = 0.  
+   - Yuki cannot test J on any day: r1[3][3] = 0 and r2[3][3] = 0.  
+6. Add **Theresa-H constraint**: Theresa (index 2) must test H (index 2) on at least one day: r1[2][2] ∨ r2[2][2] = true.  
+7. Add **Yuki-Seamus cross-day constraint**: The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all j, r1[3][j] → r2[1][j]; equivalently, for each j, r1[3][j] ≤ r2[1][j].  
+8. Translate each answer choice into a logical assertion:  
+   - (A) Reynaldo tests J on day 1 → r1[0][3] = 1  
+   - (B) Reynaldo tests J on day 2 → r2[0][3] = 1  
+   - (C) Seamus tests H on day 1 → r1[1][2] = 1  
+   - (D) Yuki tests H on day 1 → r1[3][2] = 1  
+   - (E) Yuki tests H on day 2 → r2[3][2] = 1  
+9. Define answer index list 'answer_index_list' = []. For each choice (indexed 0–4):  
+   - Clone base constraints into a fresh solver.  
+   - Add the specific assertion for that choice.  
+   - If UNSAT, then the choice **cannot** be true; append its index to answer_index_list.  
+10. Print answer_index_list (contains indices of impossible statements).

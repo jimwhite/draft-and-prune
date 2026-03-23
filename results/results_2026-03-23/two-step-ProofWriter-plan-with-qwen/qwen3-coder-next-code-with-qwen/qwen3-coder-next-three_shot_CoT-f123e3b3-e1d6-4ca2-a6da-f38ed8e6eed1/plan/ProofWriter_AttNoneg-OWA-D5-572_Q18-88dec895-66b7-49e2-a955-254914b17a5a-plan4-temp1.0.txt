@@ -1,0 +1,29 @@
+1. Identify all individuals: Charlie, Erin, Fiona, Harry.
+2. Represent all explicitly stated facts using ternary predicates (predicate(subject, True)):
+   - is_green("Charlie", True)
+   - is_kind("Charlie", True)
+   - is_nice("Charlie", True)
+   - is_rough("Charlie", True)
+   - is_kind("Erin", True)
+   - is_nice("Erin", True)
+   - is_quiet("Erin", True)
+   - is_quiet("Fiona", True)
+   - is_rough("Fiona", True)
+   - is_smart("Harry", True)
+3. Encode all context rules as `foreach` + `assert` blocks:
+   • All rough, green people are quiet.
+   • If someone is green and rough then they are nice.
+   • All kind, smart people are green.
+   • If Erin is green and blue then Erin is quiet. (Note: This is a conditional about Erin only; treat as special case or derive if needed)
+   • All quiet people are smart.
+   • All kind people are green.
+   • If someone is smart then they are kind.
+   • All rough, nice people are blue.
+4. For rules with universal quantifiers (e.g., “All X are Y”), use `foreach` over all individuals satisfying the premises and assert the conclusion.
+5. Note that some rules involve conjunctions of predicates, and some are conditional on specific individuals (e.g., Erin), so encode accordingly.
+6. The query checks whether “Erin is rough” — specifically, to verify if facts.is_rough("Erin", True) holds.
+   • Since “is_rough” is not directly asserted for Erin, but must be inferred from other rules/facts.
+   • Determine whether `is_rough("Erin", True)` can be proved, contradicted (e.g., via `is_rough("Erin", False)` inferred), or remains undetermined.
+7. Do not assume negation as failure; only conclude `False` if a contradiction is derivable (e.g., both `is_rough("Erin", True)` and `is_rough("Erin", False)` are derivable, or a rule implies ¬rough for Erin given known facts).
+8. Use the existing facts and forward-chaining via rules to compute closure of predicates.
+9. Final query: `facts.is_rough("Erin", True)` — return true if derivable, false if its negation is derivable, unknown otherwise.

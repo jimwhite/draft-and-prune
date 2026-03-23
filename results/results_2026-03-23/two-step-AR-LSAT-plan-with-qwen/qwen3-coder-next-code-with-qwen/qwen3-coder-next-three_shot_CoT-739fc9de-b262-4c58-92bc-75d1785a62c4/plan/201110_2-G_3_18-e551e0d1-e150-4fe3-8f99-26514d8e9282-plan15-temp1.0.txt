@@ -1,0 +1,25 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables for first-day assignments: `R1[i][j] = True` if rider i tests bicycle j on day 1; similarly `R2[i][j]` for day 2.  
+3. Add **day-1 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 1: for each rider i, exactly one `R1[i][j]` is True.  
+    - Each bicycle is tested by exactly one rider on day 1: for each bicycle j, exactly one `R1[i][j]` is True.  
+4. Add **day-2 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 2: for each rider i, exactly one `R2[i][j]` is True.  
+    - Each bicycle is tested by exactly one rider on day 2: for each bicycle j, exactly one `R2[i][j]` is True.  
+5. Add **global constraint**: no rider tests the same bicycle on both days: for all i,j, `R1[i][j] → ¬R2[i][j]`.  
+6. Add **prohibited assignments**:  
+    - Reynaldo cannot test F on either day: `¬R1[0][0]` and `¬R2[0][0]`.  
+    - Yuki cannot test J on either day: `¬R1[3][3]` and `¬R2[3][3]`.  
+7. Add **Theresa must test H on at least one day**: `R1[2][2] ∨ R2[2][2]`.  
+8. Add **Yuki–Seamus linking constraint**: the bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all j, `R1[3][j] → R2[1][j]`.  
+9. Translate each answer choice into a Boolean condition on assignments:  
+    - "Both X and Y test J" means `R1[i_X][3] ∧ R1[i_Y][3]` OR `R2[i_X][3] ∧ R2[i_Y][3]`.  
+    - Since the question asks what **CANNOT** be true, we need to find which choice is *inconsistent* with all constraints.  
+10. For each answer choice, clone the base solver and assert the condition (e.g., both Reynaldo and Seamus test J on day 1, or both test J on day 2 — but note the condition does not specify day; however, the phrasing "Both X and Y test J" in such LSAT-style problems means *on the same day* — we must check both days separately).  
+    - Specifically: for each choice, create two variants — one assuming the pairing occurs on day 1, another assuming day 2.  
+    - For variant A (day 1): assert `R1[riderA][bicycle] ∧ R1[riderB][bicycle]`.  
+    - For variant B (day 2): assert `R2[riderA][bicycle] ∧ R2[riderB][bicycle]`.  
+    - If **both variants** yield UNSAT, then the choice **cannot be true**.  
+11. Identify which choice(s) are UNSAT in all variants — that is the answer.  
+12. Since only one choice CANNOT be true, collect its index into `answer_index_list` (or directly identify the minimal index corresponding to the first impossible choice if order is fixed).  
+13. Return the index (or choose) corresponding to the option that is logically impossible under all assignments satisfying constraints.

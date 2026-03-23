@@ -1,0 +1,18 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign them integer codes.  
+2. Enumerate the three screens (1, 2, 3) and two time slots per screen: for screen 1 and 2, times are [7, 9] (7 PM first), for screen 3 time is [8]. Represent each assignment as a tuple: (screen, time), yielding positions: [(1,7), (1,9), (2,7), (2,9), (3,8)].  
+3. Create integer variables `pos[movie]` in {0,1,2,3,4} representing which of the five time slots the movie is scheduled in (indexing the ordered list above).  
+4. Add **uniqueness constraint**: all `pos[movie]` must be distinct (since each movie shown once, each slot used exactly once).  
+5. Encode screen and time from position index:  
+   - pos 0 → (1,7), pos 1 → (1,9),  
+   - pos 2 → (2,7), pos 3 → (2,9),  
+   - pos 4 → (3,8).  
+6. Add ordering constraint: western before horror ⇒ `pos_western < pos_horror`.  
+7. Add screen constraint: sci-fi not on screen 3 ⇒ `pos_sci_fi ≠ 4`.  
+8. Add screen constraint: romance not on screen 2 ⇒ `pos_romance ∉ {2,3}`.  
+9. Add screen constraint: horror and mystery on different screens ⇒ screen(pos_horror) ≠ screen(pos_mystery).  
+10. For each answer choice (a proposed list for screen 1: [movie_at_7PM, movie_at_9PM]), do the following in a loop:  
+    - Clone base constraints into fresh solver.  
+    - Assert `pos[movie1] == 0` and `pos[movie2] == 1`.  
+    - Assert that no other movie is assigned to positions 0 or 1.  
+    - If model is UNSAT, then this list CANNOT be accurate; record the index of this answer choice.  
+11. Return the index (0-indexed) of the single answer that is UNSAT — i.e., the one that CANNOT be accurate.

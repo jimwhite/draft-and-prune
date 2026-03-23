@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**
+   * Define the variables as the five fruits: `"mangoes"`, `"kiwis"`, `"plums"`, `"pears"`, and `"watermelons"`.
+   * Assign integer ranks from 1 to 5, where **1 = cheapest**, **2 = second-cheapest**, ..., **5 = most expensive**.
+   * Add the variables and their domain (1–5) to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**
+   * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+   * Use lambda functions to encode the following:
+     * "The kiwis are less expensive than the plums" → `kiwis < plums`.
+     * "The pears are the third-most expensive" → `pears == 3`.
+     * "The kiwis are the second-cheapest" → `kiwis == 2`.
+     * "The watermelons are the most expensive" → `watermelons == 5`.
+
+4. **Solve for the Arrangement:**
+   * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+   * Extract the unique solution (since the problem is well-constrained).
+
+5. **Determine Which Statement Is True:**
+   * The question asks which fruit is the third-most expensive, i.e., has rank 3.
+   * From the solution, identify which fruit has value 3.
+   * Match this fruit to the corresponding choice:
+     - A) mangoes → third-most expensive?
+     - B) kiwis → rank 2 (contradicts)
+     - C) plums
+     - D) pears → rank 3 (given directly)
+     - E) watermelons → rank 5 (contradicts)
+   * Since the constraint explicitly says `"pears are the third-most expensive"`, and all constraints are consistent, the correct answer must be D. Just verify that in the solution, pears = 3 and no contradictions arise.
+   * Output the letter "D".

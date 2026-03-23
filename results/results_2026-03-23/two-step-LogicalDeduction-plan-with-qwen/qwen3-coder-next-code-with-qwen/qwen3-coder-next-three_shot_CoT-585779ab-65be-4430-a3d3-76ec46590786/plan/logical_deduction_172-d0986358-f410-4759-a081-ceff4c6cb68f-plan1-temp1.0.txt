@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven vehicle variables: `"limousine"`, `"convertible"`, `"station_wagon"`, `"minivan"`, `"bus"`, `"tractor"`, and `"truck"`.  
+   * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**, consistent with age ranking in previous problems.  
+   * Add all seven variables to the problem, each constrained to values in `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add Constraints to Enforce Logical Rules:**  
+   * Add `AllDifferentConstraint()` to ensure all vehicles have distinct age ranks.  
+   * Translate each statement into a lambda-based constraint:  
+     - "The minivan is the oldest" → `minivan == 1`  
+     - "The truck is older than the station wagon" → `truck < station_wagon`  
+     - "The truck is newer than the limousine" → `truck > limousine`  
+     - "The bus is newer than the convertible" → `bus > convertible`  
+     - "The bus is older than the tractor" → `bus < tractor`  
+     - "The limousine is newer than the tractor" → `limousine > tractor`  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments satisfying all constraints.  
+   * Extract the unique solution (assuming exactly one exists, as stated by consistency).
+
+5. **Determine the Third-Newest Vehicle:**  
+   * Since newest = 7, third-newest corresponds to rank **5** (because: newest=7 → 2nd-newest=6 → 3rd-newest=5).  
+   * Create a mapping from choice letters to vehicle names: `{"A": "limousine", "B": "convertible", "C": "station_wagon", "D": "minivan", "E": "bus", "F": "tractor", "G": "truck"}`.  
+   * Iterate over the solution dictionary to find which vehicle has position `5`.  
+   * Output the corresponding choice letter.

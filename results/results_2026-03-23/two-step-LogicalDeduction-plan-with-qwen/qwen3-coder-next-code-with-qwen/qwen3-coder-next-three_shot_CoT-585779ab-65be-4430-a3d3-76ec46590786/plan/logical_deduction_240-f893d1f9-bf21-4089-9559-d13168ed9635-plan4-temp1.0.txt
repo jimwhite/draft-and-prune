@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to hold variables and constraints.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the three birds as variables: `"hummingbird"`, `"owl"`, and `"falcon"`.  
+    * Define the domain as integers 1, 2, 3 where **1 = leftmost**, **2 = middle (second from left)**, and **3 = rightmost**.  
+    * Add these variables with their domain to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate the statements into constraints using `lambda` functions:  
+        * "The falcon is to the right of the owl" → `falcon > owl`  
+        * "The hummingbird is to the left of the owl" → `hummingbird < owl`  
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid arrangements.  
+    * Since the problem has a unique solution, retrieve the first (and only) solution.  
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which bird is **second from the left**, i.e., position 2.  
+    * Create a dictionary mapping choice letters ("A", "B", "C") to birds:  
+        - "A" → "hummingbird"  
+        - "B" → "owl"  
+        - "C" → "falcon"  
+    * Find the bird in the solution with position 2 and return its corresponding choice letter.

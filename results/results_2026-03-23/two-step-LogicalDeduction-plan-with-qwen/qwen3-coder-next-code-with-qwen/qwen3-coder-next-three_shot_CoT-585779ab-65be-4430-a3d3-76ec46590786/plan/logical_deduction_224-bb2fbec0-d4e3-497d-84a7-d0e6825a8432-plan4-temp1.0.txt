@@ -1,0 +1,31 @@
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Create a new `Problem()` instance.
+
+2.  **Define Variables and Domain:**
+    * List the seven birds as string variables: `"quail"`, `"raven"`, `"hummingbird"`, `"robin"`, `"falcon"`, `"owl"`, `"bluejay"`.
+    * Define the domain as integers 1 through 7 (inclusive), where 1 = leftmost, 7 = rightmost.
+    * Add all seven variables to the problem with domain {1,2,3,4,5,6,7}.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all bird positions are distinct using `AllDifferentConstraint()`.
+
+4.  **Add Position-Based Constraints:**
+    * "The blue jay is the second from the right" → position(bluejay) = 6 (since rightmost is 7, second-right is 6).
+    * "The owl is the third from the right" → position(owl) = 5.
+    * "The raven is the third from the left" → position(raven) = 3.
+
+5.  **Add Relative-Order Constraints (using lambda functions):**
+    * "The blue jay is to the left of the falcon" → bluejay < falcon.
+    * "The raven is to the left of the robin" → raven < robin.
+    * "The hummingbird is to the left of the quail" → hummingbird < quail.
+
+6.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments.
+    * Extract the first (and unique) solution.
+
+7.  **Identify the Rightmost Bird:**
+    * Find the bird with position = 7 in the solution.
+    * Map the resulting bird name to the correct choice letter from the provided list:
+        - quail → A, raven → B, hummingbird → C, robin → D, falcon → E, owl → F, bluejay → G.
+    * Output the corresponding letter.

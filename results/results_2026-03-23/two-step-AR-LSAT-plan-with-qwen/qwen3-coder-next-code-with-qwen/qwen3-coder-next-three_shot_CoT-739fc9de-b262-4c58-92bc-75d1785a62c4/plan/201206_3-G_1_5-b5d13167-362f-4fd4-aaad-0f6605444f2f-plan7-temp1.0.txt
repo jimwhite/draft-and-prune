@@ -1,0 +1,21 @@
+1. Enumerate the six lab assistants and assign them integer indices: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: denote them as (Day, Time), where Day ∈ {Wed=0, Thu=1, Fri=2}, Time ∈ {Morning=0, Afternoon=1}; assign each session an index 0 to 5:  
+   - Session 0: Wed Morning  
+   - Session 1: Wed Afternoon  
+   - Session 2: Thu Morning  
+   - Session 3: Thu Afternoon  
+   - Session 4: Fri Morning  
+   - Session 5: Fri Afternoon  
+3. Create integer variables `assign[i]` for each assistant i (0≤i≤5), denoting the session index (0–5) they lead.  
+4. Add **injectivity constraint**: each session is led by exactly one assistant → all `assign[i]` are pairwise distinct.  
+5. Add **fixed constraint**: Julio leads Thursday afternoon → `assign[0] == 3`.  
+6. Add **Kevin–Rebecca same-day constraint**: Kevin and Rebecca must lead sessions on the same day → `Day(assign[1]) == Day(assign[5])`, where `Day(s) = s // 2`.  
+7. Add **Lan–Olivia different-day constraint**: Lan and Olivia must lead sessions on different days → `Day(assign[2]) != Day(assign[4])`.  
+8. Add **Nessa afternoon constraint**: Nessa leads an afternoon session → `(assign[3] % 2) == 1`.  
+9. Add **Julio earlier day than Olivia constraint**: Julio’s session is on an earlier day than Olivia’s → `Day(assign[0]) < Day(assign[4])`. Since Julio is fixed at session 3 (Thu Afternoon), `Day(3) = 1`, so: `1 < Day(assign[4])` → `assign[4] ≥ 4`.  
+10. Enumerate the five other assistants (all except Julio): Kevin, Lan, Nessa, Olivia, Rebecca. For each assistant j in {1,2,3,4,5}, determine how many have a uniquely determined session index under the above constraints:  
+    - For each assistant j, solve with current constraints and check if `assign[j]` is fixed across all solutions.  
+    - To do this rigorously: for each j, attempt to find two models with different `assign[j]` values. If no such pair exists (i.e., all satisfying assignments give same `assign[j]`), then assistant j’s session is determined.  
+11. Count how many assistants among the five (j=1..5) have uniquely determined sessions.  
+12. Map this count to the answer option: 1→'one', 2→'two', etc.  
+13. Return the answer string.

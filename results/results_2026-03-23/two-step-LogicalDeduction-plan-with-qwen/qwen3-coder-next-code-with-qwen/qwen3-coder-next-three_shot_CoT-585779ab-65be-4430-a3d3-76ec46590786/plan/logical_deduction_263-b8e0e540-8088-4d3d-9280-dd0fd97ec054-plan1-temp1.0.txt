@@ -1,0 +1,22 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the golf tournament ordering.
+
+2.  **Define Variables and Domain:**
+    * Identify the variables as the three golfers: `"ana"`, `"rob"`, and `"Joe"` (note capitalization for consistency with name).
+    * Define the domain as integers from 1 to 3, where **1 = first (highest/best position)** and **3 = last (lowest/worst position)**.
+    * Add all three variables to the problem with domain `{1, 2, 3}`.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique finishing positions for each golfer.
+    * Translate "Joe finished above Ana" into a constraint: Joe's position number must be less than Ana's (`lambda j, a: j < a`).
+    * Translate "Rob finished second" into a constraint: Rob's position must be exactly 2 (`lambda r: r == 2`).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid solutions.
+    * Extract the single solution (as the problem is deterministic and consistent).
+
+5.  **Determine the Correct Answer:**
+    * Identify the golfer with position 3 (last place) from the solution.
+    * Map the answer choices to their corresponding golfer: "A" → Ana, "B" → Rob, "C" → Joe.
+    * Check which choice's golfer has position 3 in the solution and output the corresponding letter.

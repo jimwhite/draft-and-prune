@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"purple"`, `"green"`, `"white"`, `"gray"`, `"red"`, `"black"`, `"brown"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate each statement into a constraint:  
+     - "The gray book is to the left of the purple book" → `gray < purple`  
+     - "The white book is to the right of the brown book" → `brown < white`  
+     - "The black book is the third from the right" → `black == 5` (since position 7 is rightmost, so third from right = 7 − 2 = 5)  
+     - "The purple book is to the left of the white book" → `purple < white`  
+     - "The white book is the second from the right" → `white == 6` (7 − 1 = 6)  
+     - "The gray book is the third from the left" → `gray == 3`  
+     - "The brown book is to the right of the green book" → `green < brown`
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Since the problem is well-constrained and consistent, extract the (unique) solution from the list of solutions.
+
+5. **Answer the Question:**  
+   * The question asks which book is *second from the right*, i.e., position 6.  
+   * Verify against the solution: which book has value `6`?  
+   * Build a mapping from choice letters to books:  
+     - `'A' → "purple"`, `'B' → "green"`, `'C' → "white"`, `'D' → "gray"`,  
+       `'E' → "red"`, `'F' → "black"`, `'G' → "brown"`  
+   * Identify the choice whose book has position 6 in the solution.  
+   * Return (or output) that choice letter as the correct answer.

@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the seven bird variables: `"cardinal"`, `"crow"`, `"hummingbird"`, `"bluejay"`, `"owl"`, `"robin"`, and `"quail"` (note: hyphenate "blue jay" to "bluejay" to avoid space-related issues).  
+    * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+
+4.  **Translate Statements into Positional Constraints:**  
+    * "The cardinal is to the right of the crow" → `cardinal > crow`  
+    * "The quail is the third from the left" → `quail == 3`  
+    * "The owl is to the right of the robin" → `owl > robin`  
+    * "The hummingbird is to the right of the blue jay" → `hummingbird > bluejay`  
+    * "The cardinal is the second from the left" → `cardinal == 2`  
+    * "The owl is the third from the right" → Since positions run left-to-right as 1–7, third from the right is position `7 - 3 + 1 = 5`, so `owl == 5`
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all satisfying assignments.  
+    * Retrieve the single solution (as the constraints uniquely determine positions).
+
+6.  **Validate and Extract Answer:**  
+    * Observe that the question directly includes statement "The cardinal is the second from the left" as choice A, and the problem states this explicitly — so we expect this to be true.  
+    * Confirm that in the solved solution, `cardinal == 2`.  
+    * Since the question asks "Which of the following is true?" and choice A exactly matches a given constraint (and must hold in any valid solution), select A.  
+    * However, to be robust: iterate through the solution dictionary, verify `cardinal == 2`, and map back to choice A.
+
+7.  **Map Solution to Choice Letter:**  
+    * Create a list of choices in order: `["A", "B", "C", "D", "E", "F", "G"]`  
+    * Create a list mapping to the birds mentioned in each choice in order: `["cardinal", "crow", "hummingbird", "bluejay", "owl", "robin", "quail"]`  
+    * For each index `i`, check if the bird's position in the solution equals 2.  
+    * Return the choice letter at that index (i.e., `"A"` if cardinal is at 2, etc.).

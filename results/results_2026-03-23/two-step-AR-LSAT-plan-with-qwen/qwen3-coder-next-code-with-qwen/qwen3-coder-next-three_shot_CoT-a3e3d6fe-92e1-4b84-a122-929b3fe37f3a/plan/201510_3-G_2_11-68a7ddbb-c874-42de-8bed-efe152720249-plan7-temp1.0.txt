@@ -1,0 +1,34 @@
+1. Enumerate the three photographers (Fuentes, Gagnon, Hue) and assign integer codes: 0=Fuentes, 1=Gagnon, 2=Hue.  
+2. Enumerate the three sections: 0=Lifestyle, 1=Metro, 2=Sports.  
+3. Define integer variables `count[p][s]` for photographer p's count in section s (0 ≤ count ≤ 2).  
+4. Add **section size constraints**: for each section s, `count[0][s] + count[1][s] + count[2][s] == 2`.  
+5. Add **total photograph constraint**: total photos = 6 (redundant due to section constraints but implicit).  
+6. Add **per-photographer global count constraints**: for each photographer p, `1 ≤ sum_s count[p][s] ≤ 3`.  
+7. Add **Gagnon constraint**: `count[1][2] == 0` (no Gagnon in Sports).  
+8. Add **given condition constraint**: Lifestyle has 1 Fuentes and 1 Hue → `count[0][0] == 1`, `count[2][0] == 1`.  
+9. Add **Lifestyle-Metro overlap constraint**: at least one photographer appears in both Lifestyle and Metro → `count[0][0] + count[1][0] + count[2][0] > 0` ∧ `count[0][1] + count[1][1] + count[2][1] > 0` ∧ `count[0][0]*count[0][1] + count[1][0]*count[1][1] + count[2][0]*count[2][1] ≥ 1` (i.e., existence of p with `count[p][0] > 0` and `count[p][1] > 0`). Implement via auxiliary Boolean variables: for each p, let `shared[p] = And(count[p][0] > 0, count[p][1] > 0)`; then `shared[0] ∨ shared[1] ∨ shared[2]`.  
+10. Add **Hue-Lifestyle/Fuentes-Sports equality constraint**: `count[2][0] == count[0][2]`. Since `count[2][0]` is fixed to 1, this implies `count[0][2] == 1`.  
+11. From step 8 and 10, deduce: Lifestyle = [Fuentes:1, Gagnon:0?, Hue:1], Sports must have Fuentes count = 1.  
+12. Use deductions to simplify:  
+    - Lifestyle total is 2 → Fuentes=1, Hue=1 ⇒ Gagnon=0 in Lifestyle.  
+    - Sports total is 2, and Fuentes=1 ⇒ remaining 1 photo in Sports is either Gagnon (impossible, per step 6) or Hue. So Sports = [Fuentes:1, Hue:1] (since Gagnon≠0 total count per photographer ≤3 and ≥1 must be satisfied).  
+    - Thus `count[2][2] = 1`.  
+13. Total counts so far:  
+    - Fuentes: Lifestyle=1, Sports=1 ⇒ Metro must be 0,1, or 2 but total ≤3 and ≥1 → possible.  
+    - Hue: Lifestyle=1, Sports=1 ⇒ Metro must be 0 or 1 (since total ≤3).  
+    - Gagnon: Lifestyle=0, Sports=0 ⇒ Metro must be 2 (only way to satisfy ≥1 and total ≤3, as only section left).  
+14. Conclude: Gagnon must appear in Metro twice → `count[1][1] = 2`.  
+15. Now check each answer choice:  
+    A. Both Metro by Fuentes → `count[0][1] = 2` — contradicts step 14 (Metro must be Gagnon). UNSAT.  
+    B. Both Metro by Gagnon → `count[1][1] = 2` — matches step 14. Check consistency:  
+        - Fuentes: Lifestyle=1, Sports=1, Metro=0 → total=2 (valid).  
+        - Gagnon: Metro=2 → total=2 (valid, ≥1 & ≤3).  
+        - Hue: Lifestyle=1, Sports=1, Metro=0 → total=2 (valid).  
+        - Lifestyle-Metro overlap: need someone in both Lifestyle and Metro. Currently Lifestyle={Fuentes,Hue}, Metro=Gagnon → no overlap! Violates constraint from step 8. UNSAT.  
+    C. Exactly one Metro by Hue → `count[2][1] = 1`. Then Metro: Gagnon=1 (since `count[1][1]` must be 2? Wait — reconsider: total Metro=2, so if Hue=1, remaining 1 photo must be assigned. Gagnon can’t be in Sports/Lifestyle (Lifestyle=0, Sports=0), so Gagnon must be 1 in Metro? But 1+1=2, ok. However Hue total = Lifestyle(1) + Metro(1) + Sports(1)=3 (valid). Fuentes = Lifestyle(1)+Sports(1)=2 (Metro=0, total=2). Gagnon=Metro(1), but that’s only 1 — valid.  
+        - Lifestyle-Metro overlap: need photographer in both Lifestyle and Metro. Lifestyle={Fuentes,Hue}, Metro has one Hue — so Hue is in both! Constraint satisfied.  
+        - All constraints hold: check counts, section sizes, etc. SAT → possible.  
+    D. Both Sports by Hue → `count[2][2] = 2`. But step 10 requires `count[0][2] = count[2][0] = 1` ⇒ Fuentes must be 1 in Sports. Contradiction (Sports total=2, can’t have Hue=2 and Fuentes=1). UNSAT.  
+    E. Neither Sports by Hue → `count[2][2] = 0`. Then Fuentes must be 2 in Sports (to satisfy `count[0][2] = count[2][0] = 1`? No — that would require `count[0][2]=1`, not 2. Actually, constraint is `count[2][0] == count[0][2]`, and `count[2][0]=1`, so `count[0][2]=1`. Then Sports = Fuentes=1, remaining 1 must be Gagnon — impossible. UNSAT.  
+16. Define answer index list `answer_index_list = []`. For each choice (0 to 4), create a fresh solver, add base constraints + given condition, and add the choice’s specific assignment (e.g., for B: `count[1][1] == 2`). If model is SAT, append index to list.  
+17. Print the answer index list (expected: [2] for choice C).

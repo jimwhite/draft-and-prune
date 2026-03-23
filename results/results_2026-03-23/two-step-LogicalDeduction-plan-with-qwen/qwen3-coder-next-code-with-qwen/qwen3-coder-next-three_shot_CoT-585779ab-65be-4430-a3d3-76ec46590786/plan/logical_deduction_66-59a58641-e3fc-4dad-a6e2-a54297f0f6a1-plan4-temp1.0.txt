@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the five golfers: `"Joe"`, `"Eve"`, `"Mya"`, `"Rob"`, and `"Dan"`.  
+    * Define the domain as integers from 1 to 5, where **1 = first (best/earliest)** and **5 = last (worst/latest)**.  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Convert each statement to a constraint using `lambda` functions:  
+        * "Joe finished below Dan" → Joe’s position number > Dan’s position number (since lower numbers = better rank).  
+        * "Mya finished first" → Mya’s position == 1.  
+        * "Dan finished below Rob" → Dan’s position > Rob’s position.  
+        * "Eve finished above Rob" → Eve’s position < Rob’s position.
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to compute all valid arrangements satisfying all constraints.  
+    * Extract the unique solution (since the puzzle is well-posed).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks who finished last → find which golfer has position 5 in the solution.  
+    * Map choice letters to golfer names: A → "Joe", B → "Eve", C → "Mya", D → "Rob", E → "Dan".  
+    * Determine which golfer has position 5 and return the corresponding choice letter.

@@ -1,0 +1,22 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: `"mangoes"`, `"watermelons"`, and `"kiwis"` (three fruits).  
+   * Define a numerical domain for cost ranking. Use integers 1 to 3, where **1 = least expensive**, **2 = second-most expensive**, and **3 = most expensive**.  
+   * Add the fruit variables with domain {1, 2, 3} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a distinct price rank.  
+   * Translate "The watermelons are less expensive than the kiwis" into a constraint: `watermelons < kiwis` (lower rank number = cheaper).  
+   * Translate "The kiwis are the second-most expensive" into a constraint: `kiwis == 2`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid solutions satisfying the constraints.  
+   * Extract the unique solution (since only one assignment satisfies all conditions).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which statement is true; note that choice C directly restates a given premise ("The kiwis are the second-most expensive").  
+   * Verify using the solution: confirm that kiwis have rank 2.  
+   * Since choice C matches the given and verified condition, return `'C'` as the answer.

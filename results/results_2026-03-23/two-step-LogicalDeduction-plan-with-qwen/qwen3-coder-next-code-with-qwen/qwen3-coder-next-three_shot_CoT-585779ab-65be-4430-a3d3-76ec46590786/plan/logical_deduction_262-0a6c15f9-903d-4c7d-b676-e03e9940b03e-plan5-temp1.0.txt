@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to model the golf tournament ranking puzzle.
+
+2.  **Define Variables and Domain:**
+    * Identify the three variables representing the golfers: `"Dan"`, `"Mel"`, and `"Amy"`.
+    * Define a domain of integers from 1 to 3, where **1 represents first place (highest/final position)**, 2 is second, and 3 is third (lowest).
+    * Add these variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Translate "Dan finished above Amy" into a constraint: `Dan`'s rank is less than `Amy`'s (`Dan < Amy`), since a smaller number means higher finishing position.
+    * Translate "Amy finished above Mel" into a constraint: `Amy < Mel`.
+
+4.  **Solve for the Unique Ranking:**
+    * Call `getSolutions()` to compute all valid solutions; due to the strict transitive ordering, there will be exactly one solution.
+    * Retrieve the sole solution dictionary from the list of results.
+
+5.  **Determine the Correct Answer:**
+    * The question asks who finished first (rank = 1).
+    * Create a mapping from choice letters to golfer names: `"A"` → `"Dan"`, `"B"` → `"Mel"`, `"C"` → `"Amy"`.
+    * Inspect the solution to find which golfer has rank 1.
+    * Return (or print) the choice letter corresponding to that golfer as the answer.

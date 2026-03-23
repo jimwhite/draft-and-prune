@@ -1,0 +1,22 @@
+1. Identify all entities involved: cat, cow, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True), including:
+   - Direct property facts: is_round("rabbit", True), is_cold("squirrel", True)
+   - Direct relation facts: eats("cat", "squirrel", True), sees("cat", "squirrel", True), eats("cow", "squirrel", True), sees("cow", "cat", True), sees("rabbit", "cat", True), eats("squirrel", "rabbit", True), needs("squirrel", "rabbit", True), sees("squirrel", "cat", True)
+3. Translate each conditional statement into a PyKe rule:
+   • If someone sees the cat and is not green → they see the cow.
+   • If rabbit is kind and rabbit sees squirrel → squirrel needs rabbit. (Note: “kind” is not defined, so this rule may be inactive unless kind("rabbit", True) is derived or assumed.)
+   • Rough people are cold: If someone is rough → they are cold.
+   • If someone sees the rabbit → they are not round.
+   • If someone sees the squirrel and is not green → they need the squirrel.
+   • If someone eats the cow → they see the rabbit.
+   • If someone eats the squirrel → they are rough.
+   • If someone is cold → they eat the cow.
+4. Express each rule using `foreach` blocks (with proper variable scoping and conjunctions) and `assert` clauses for conclusions.
+5. For the query “The cat is not round”, check whether ¬is_round("cat", True) holds:
+   → Use facts.is_round("cat", False)
+6. Note: Since “is_round” is only directly asserted for the rabbit, and the rule “If someone sees the rabbit → they are not round” does *not* apply to the cat (the cat sees the squirrel and cat, but not rabbit), there is no direct derivation that cat is round or not. However, derive whether any chain forces is_round("cat", True) or ¬is_round("cat", True). Specifically:
+   - Rabbit is round; rabbit sees cat → no direct rule about seeing a non-rabbit entity.
+   - No fact implies the cat sees the rabbit, so no activation of “If someone sees the rabbit → not round” for the cat.
+   - No other rule assigns is_round to any entity besides rabbit. So cat’s roundness remains undetermined.
+7. Therefore, the truth value of “The cat is not round” depends on whether is_round("cat", True) can be proven; since it cannot, and ¬is_round("cat", True) is not directly asserted or derivable, the answer is unknown — but explicitly query for facts.is_round("cat", False) to test.
+8. Implement and run PyKe solver with the full knowledge base (facts + rules), then evaluate the query.

@@ -1,0 +1,22 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a new `Problem` object to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables: `"cantaloupe"`, `"apple"`, and `"loquat"` (three fruits).  
+   * Define the domain for ranking expense: integers from 1 to 3, where **1 = least expensive**, **2 = middle**, and **3 = most expensive**.  
+   * Add all three fruit variables with domain {1, 2, 3} to the `Problem`.
+
+3. **Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a distinct expense rank.  
+   * Translate "The loquats are more expensive than the apples" into a constraint: `loquat > apple` (i.e., rank(loquat) > rank(apple)).  
+   * Translate "The cantaloupes are less expensive than the apples" into a constraint: `cantaloupe < apple` (i.e., rank(cantaloupe) < rank(apple)).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments. Given only three items and strict ordering, there should be exactly one solution satisfying both inequalities.
+
+5. **Identify the Correct Answer:**  
+   * The question asks which fruit is the most expensive — i.e., has rank 3.  
+   * Create a mapping from choice letters to fruit names: `"A" → "cantaloupe"`, `"B" → "apple"`, `"C" → "loquat"`.  
+   * Examine the solution to find which fruit has rank 3.  
+   * Return the corresponding choice letter (e.g., `"C"` if loquats have rank 3).

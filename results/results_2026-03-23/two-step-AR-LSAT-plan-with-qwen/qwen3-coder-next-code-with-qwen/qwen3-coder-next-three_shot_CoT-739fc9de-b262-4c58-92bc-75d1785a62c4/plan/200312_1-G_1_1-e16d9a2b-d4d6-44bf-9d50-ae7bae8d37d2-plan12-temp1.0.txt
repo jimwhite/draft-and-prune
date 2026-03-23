@@ -1,0 +1,14 @@
+1. Enumerate the nine scientists with unique integer identifiers: botanists (F=0, G=1, H=2), chemists (K=3, L=4, M=5), zoologists (P=6, Q=7, R=8).  
+2. Define 9 Boolean decision variables `selected[i]` for whether scientist i is on the panel.  
+3. Add **panel size constraint**: exactly 5 scientists are selected (`sum(selected) == 5`).  
+4. Add **type coverage constraints**: at least one botanist (`selected[0] + selected[1] + selected[2] >= 1`), at least one chemist (`selected[3] + selected[4] + selected[5] >= 1`), at least one zoologist (`selected[6] + selected[7] + selected[8] >= 1`).  
+5. Add **conditional constraint**: if more than one botanist is selected (i.e., `selected[0] + selected[1] + selected[2] >= 2`), then at most one zoologist is selected (`selected[6] + selected[7] + selected[8] <= 1`).  
+6. Add **exclusion constraint F–K**: `not (selected[0] and selected[3])`.  
+7. Add **exclusion constraint K–M**: `not (selected[3] and selected[5])`.  
+8. Add **conditional constraint M ⇒ P ∧ R**: if `selected[5]` is true, then both `selected[6]` and `selected[8]` must be true (i.e., `selected[5] <= selected[6]`, `selected[5] <= selected[8]`).  
+9. Translate each answer choice into a list of scientist indices; e.g., "F, G, K, P, Q" → [0, 1, 3, 6, 7].  
+10. For each choice in order:  
+    - Create a fresh solver and clone all constraints (steps 3–8).  
+    - Assert that exactly the scientists in the choice are selected: for each scientist i, if i is in the choice, assert `selected[i] == True`; else, assert `selected[i] == False`.  
+    - Check satisfiability. If SAT, this choice is acceptable; record its index (0 to 4) as the answer.  
+11. Return the index of the first acceptable choice (as per typical LSAT multiple-choice logic).

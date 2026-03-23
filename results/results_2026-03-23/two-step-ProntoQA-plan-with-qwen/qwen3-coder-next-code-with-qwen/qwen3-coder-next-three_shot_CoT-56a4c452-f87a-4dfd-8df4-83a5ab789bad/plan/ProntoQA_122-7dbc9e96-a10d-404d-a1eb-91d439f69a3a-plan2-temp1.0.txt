@@ -1,0 +1,32 @@
+1.  Identify all entities and types: Fae, rompus, dumpus, numpus, jompus, tumpus, impus, yumpus, zumpus, vumpus, wumpus.  
+2.  Identify all properties: metallic, blue, fruity, mean, temperate, dull, transparent, sweet.  
+3.  Represent "Fae is a numpus" as a base fact: `is_a("Fae", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Rompuses are metallic → Every rompus has property metallic.  
+    * Rompuses are dumpuses → Every rompus is a dumpus.  
+    * Dumpuses are blue → Every dumpus has property blue.  
+    * Every dumpus is a numpus → Every dumpus is a subclass of numpus.  
+    * Every numpus is fruity → Every numpus has property fruity.  
+    * Numpuses are jompuses → Every numpus is a jompus.  
+    * Every jompus is mean → Every jompus has property mean.  
+    * Jompuses are tumpuses → Every jompus is a tumpus.  
+    * Tumpuses are not temperate → Every tumpus has property ¬temperate.  
+    * Tumpuses are impuses → Every tumpus is an impus.  
+    * Impuses are not dull → Every impus has property ¬dull.  
+    * Each impus is a yumpus → Every impus is a yumpus.  
+    * Every yumpus is not transparent → Every yumpus has property ¬transparent.  
+    * Yumpuses are zumpuses → Every yumpus is a zumpus.  
+    * Wumpuses are transparent → Every wumpus has property transparent.  
+    * Zumpuses are not sweet → Every zumpus has property ¬sweet.  
+    * Zumpuses are vumpuses → Every zumpus is a vumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` (or negated fact) for the consequence. For negative properties, assert the negation directly (e.g., `¬is_transparent(x)` or `is_transparent(x, False)` depending on representation).  
+6.  Derive Fae’s type hierarchy: Since `is_a(Fae, numpus)` and `numpus ⊆ dumpus`, `dumpus ⊆ jompus`, `jompus ⊆ tumpus`, `tumpus ⊆ impus`, `impus ⊆ yumpus`, and `yumpus ⊆ zumpus`, conclude Fae is a yumpus.  
+7.  Use the rule "Every yumpus is not transparent" to conclude Fae is not transparent.  
+8.  The query tests if the statement "Fae is transparent" is provable: Since we can prove ¬transparent(Fae), the statement "Fae is transparent" is false.  
+   → Use `facts.is_transparent("Fae", True)` to check provability — if unsatisfiable (or `is_transparent("Fae", False)` is entailed), then the answer to the question ("Is Fae transparent?") is **false**, so "Fae is transparent" is false, and thus the statement "Fae is not transparent" would be true — but note: the *question* asks whether **"Fae is transparent"** is true or false. Wait — re-read:  
+   Question: *Is the following statement true or false? Fae is transparent.*  
+   So we need to check if `is_transparent("Fae", True)` holds. Since the rule says *every yumpus is not transparent*, and Fae is a yumpus, `is_transparent("Fae", True)` is **not provable** (in fact, contradicted). So the statement "Fae is transparent" is **false**.  
+   → Final query: `facts.is_transparent("Fae", True)` — result should be *unprovable / false*.  
+   → But in PyKe, to verify the *negation*, we might query `facts.is_transparent("Fae", True)` and if the solver proves it false (or cannot prove true), then the answer is **false**.  
+   However, strictly per plan:  
+   → Use `facts.is_transparent("Fae", True)` to test the statement.

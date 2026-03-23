@@ -1,0 +1,20 @@
+1. Identify all entities involved: Bob, Charlie, Dave, Fiona.  
+2. Encode all explicitly stated facts as `facts.predicate(entity, value, True)` using ternary predicates:  
+   - is_cold("Bob", True), is_quiet("Bob", True), is_red("Bob", True), is_smart("Bob", True)  
+   - is_kind("Charlie", True), is_quiet("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True)  
+   - is_cold("Dave", True), is_kind("Dave", True), is_smart("Dave", True)  
+   - is_quiet("Fiona", True)  
+3. Translate all conditional statements into PyKe rules using `foreach` blocks with conditions and `assert` for conclusions:  
+   • If X is quiet and cold → X is smart  
+   • If X is red and cold → X is round  
+   • If X is kind and rough → X is red  
+   • If X is quiet → X is rough  
+   • If X is cold and smart → X is red  
+   • If X is rough → X is cold  
+   • If X is red → X is rough  
+   • If Dave is smart and kind → Dave is quiet  
+4. For each rule:  
+   - Use `foreach` to match antecedent conditions over variable X (or specific constants for Dave rule)  
+   - Assert the consequent property or fact  
+5. The query checks if Charlie is known to be kind:  
+   → Use `facts.is_kind("Charlie", True)`

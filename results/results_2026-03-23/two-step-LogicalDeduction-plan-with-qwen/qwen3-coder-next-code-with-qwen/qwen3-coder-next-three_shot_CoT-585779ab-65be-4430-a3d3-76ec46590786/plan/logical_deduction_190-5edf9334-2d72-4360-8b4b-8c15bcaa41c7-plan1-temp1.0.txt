@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * The seven golfers are the variables: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.
+    * Add all variables with domain `{1, 2, ..., 7}` to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Convert each statement into a constraint using `lambda`:
+        * "Amy finished third" → `amy == 3`
+        * "Joe finished last" → `joe == 7`
+        * "Mya finished above Dan" → `mya < dan` (smaller number = better/earlier finish)
+        * "Eve finished fourth" → `eve == 4`
+        * "Amy finished above Rob" → `amy < rob` (and since amy=3, this implies rob > 3)
+        * "Ada finished third-to-last" → In a 7-person race, third-to-last is position **5** (since 7 = last, 6 = second-to-last, 5 = third-to-last), so `ada == 5`
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the (unique) solution dictionary from the list of solutions.
+
+5.  **Evaluate the Choices:**
+    * The question asks "Which of the following is true?" and lists options about who finished third.
+    * Since the constraint "Amy finished third" directly fixes `amy = 3`, **only choice D ("Amy finished third") is guaranteed true**.
+    * No need to search the solution for position 3—this is explicitly given. Verify consistency: with `amy=3`, `ada=5`, `eve=4`, `joe=7`, and `amy < rob` ⇒ `rob ≥ 4`, but `eve=4` and `ada=5`, so rob must be 6 (since 3,4,5 taken by amy,eve,ada and Joe=7), etc.—but regardless, Amy is unambiguously third by statement.

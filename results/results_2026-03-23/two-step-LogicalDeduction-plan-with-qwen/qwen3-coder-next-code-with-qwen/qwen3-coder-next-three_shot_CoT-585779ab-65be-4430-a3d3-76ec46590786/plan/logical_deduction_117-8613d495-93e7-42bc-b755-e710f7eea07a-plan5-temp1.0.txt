@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament ranking puzzle.
+
+2. **Define Variables and Domain:**  
+   * Define the seven variables as the golfers: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.  
+   * Add all variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct rankings.  
+   * Translate each statement into a constraint:  
+     - "Amy finished third" → ` Amy == 3`  
+     - "Joe finished last" → ` Joe == 7`  
+     - "Mya finished above Dan" → ` Mya < Dan` (since lower rank number = better/earlier finish)  
+     - "Eve finished fourth" → ` Eve == 4`  
+     - "Amy finished above Rob" → ` Amy < Rob` (i.e., `3 < Rob`, so `Rob > 3`)  
+     - "Ada finished third-to-last" → In a field of 7, third-to-last is position `7 - 3 + 1 = 5`, so ` Ada == 5`  
+
+4. **Solve for Valid Rankings:**  
+   * Use the `getSolutions()` method to compute all consistent rankings.  
+   * Since the constraints are sufficient, expect a unique solution; extract it (e.g., `solutions[0]`).
+
+5. **Identify the Second-to-Last Finisher:**  
+   * The question asks who finished **second-to-last**, i.e., position `7 - 2 + 1 = 6`.  
+   * Create a mapping from choice letters (`"A"` to `"G"`) to the corresponding golfer names:  
+     - `"A"` → `"Dan"`, `"B"` → `"Eve"`, `"C"` → `"Mya"`, `"D"` → `"Amy"`, `"E"` → `"Rob"`, `"F"` → `"Ada"`, `"G"` → `"Joe"`  
+   * Iterate through the choices: for each choice, check if that golfer’s rank in the solution is **6**.  
+   * Return (or print) the letter of the first matching choice — this is the correct answer.

@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Define the five vehicles as variables: `"tractor"`, `"truck"`, `"bus"`, `"minivan"`, and `"convertible"`.
+    * Assign each variable a domain of integers from 1 to 5, where **1 represents the oldest** vehicle and **5 represents the newest**.
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Translate each statement into constraints:
+        * "The bus is newer than the tractor" → `bus > tractor`
+        * "The convertible is older than the tractor" → `convertible < tractor`
+        * "The truck is the second-newest" → `truck == 4` (since newest=5, second-newest=4)
+        * "The minivan is older than the convertible" → `minivan < convertible`
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.
+    * Extract the unique solution (since the problem is well-defined, there should be exactly one).
+
+5.  **Evaluate the Answer Choices:**
+    * The question asks which vehicle is **third-newest**, which corresponds to rank = 3 (since newest=5, second-newest=4, third-newest=3).
+    * Map each choice letter to its vehicle: A→"tractor", B→"truck", C→"bus", D→"minivan", E→"convertible".
+    * In the solution, find which vehicle has rank 3.
+    * Return the letter corresponding to that vehicle as the answer.

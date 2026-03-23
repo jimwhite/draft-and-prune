@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven bird names: `"hawk"`, `"raven"`, `"hummingbird"`, `"falcon"`, `"owl"`, `"quail"`, and `"cardinal"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost position** and **7 = rightmost position**.
+    * Add all variables to the problem with this domain.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that each bird occupies a unique position by adding an `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The quail is to the left of the hummingbird" → `quail < hummingbird`
+    * "The raven is to the right of the hummingbird" → `hummingbird < raven`
+    * "The cardinal is the second from the left" → `cardinal == 2`
+    * "The owl is to the left of the cardinal" → `owl < cardinal` (i.e., `owl < 2`, so `owl == 1`)
+    * "The raven is the third from the right" → positions: rightmost=7, 2nd-right=6, 3rd-right=5 → `raven == 5`
+    * "The falcon is the rightmost" → `falcon == 7`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Since the constraints are sufficient for a unique solution, extract the first (or only) solution.
+
+6.  **Identify the Correct Answer:**
+    * The question asks which bird is "the third from the left", i.e., position 3.
+    * Create a mapping from choice letters to bird names:
+        - A → `"hawk"`
+        - B → `"raven"`
+        - C → `"hummingbird"`
+        - D → `"falcon"`
+        - E → `"owl"`
+        - F → `"quail"`
+        - G → `"cardinal"`
+    * For the solved solution, find which bird has position 3.
+    * Return the corresponding choice letter.

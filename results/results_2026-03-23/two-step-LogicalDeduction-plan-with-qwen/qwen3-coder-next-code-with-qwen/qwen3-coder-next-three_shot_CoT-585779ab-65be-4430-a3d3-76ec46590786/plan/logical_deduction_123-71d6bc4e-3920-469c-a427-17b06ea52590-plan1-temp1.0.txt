@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to initialize the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven books as variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each statement into a constraint:  
+        * "The yellow book is the rightmost" → `yellow == 7`.  
+        * "The blue book is to the left of the orange book" → `blue < orange`.  
+        * "The green book is to the right of the white book" → `white < green`.  
+        * "The blue book is to the right of the green book" → `green < blue`.  
+        * "The black book is the fourth from the left" → `black == 4`.  
+        * "The brown book is the third from the right" → In a 1–7 scale, third from the right is position 5 (`7 - 3 + 1 = 5`), so `brown == 5`.
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid configurations.  
+    * Extract the unique solution (since constraints are consistent and specific, exactly one solution is expected).
+
+5.  **Determine the Leftmost Book:**  
+    * The question asks which book is leftmost (position 1).  
+    * Create a mapping from choice letters `['A','B','C','D','E','F','G']` to the corresponding book names in order: `A→'brown'`, `B→'white'`, `C→'black'`, `D→'yellow'`, `E→'orange'`, `F→'blue'`, `G→'green'`.  
+    * Iterate over the solution dictionary to find which book has position 1.  
+    * Return the choice letter associated with that book.

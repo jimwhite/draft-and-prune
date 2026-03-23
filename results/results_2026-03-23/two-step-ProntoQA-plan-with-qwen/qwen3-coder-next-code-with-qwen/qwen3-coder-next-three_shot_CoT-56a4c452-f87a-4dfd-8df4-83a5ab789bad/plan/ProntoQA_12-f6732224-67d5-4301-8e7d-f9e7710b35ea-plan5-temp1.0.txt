@@ -1,0 +1,27 @@
+1. Identify all entities and types: Fae, tumpus, numpus, vumpus, dumpus, zumpus, yumpus, jompus, rompus, impus, wumpus.  
+2. Identify all properties: orange, small, sour, cold, dull, amenable, floral, opaque, floral (redundant), not floral.  
+3. Represent "Fae is a dumpus" as a base fact: `is_a("Fae", "dumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Every tumpus is orange.  
+   * Tumpuses are numpuses.  
+   * Numpuses are small.  
+   * Numpuses are vumpuses.  
+   * Every vumpus is sour.  
+   * Vumpuses are dumpuses.  
+   * Each dumpus is cold.  
+   * Every dumpus is a zumpus.  
+   * Each zumpus is dull.  
+   * Zumpuses are yumpuses.  
+   * Jompuses are floral.  
+   * Every yumpus is not amenable.  
+   * Each yumpus is a rompus.  
+   * Every rompus is opaque.  
+   * Rompuses are impuses.  
+   * Impuses are not floral.  
+   * Impuses are wumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (e.g., `foreach x, is_a(x, "dumpus", True) → assert is_cold(x, True)`).  
+6. Derive Fae’s classification chain: Fae is a dumpus → dumpuses are zumpuses → zumpuses are yumpuses → yumpuses are rompuses → rompuses are impuses.  
+   Therefore, Fae is an impus.  
+7. Use the rule "Impuses are not floral" to conclude Fae is not floral.  
+8. The query tests if the statement "Fae is not floral" is provable:  
+   → Use `facts.is_floral("Fae", False)`.

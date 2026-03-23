@@ -1,0 +1,68 @@
+1. Enumerate the six bands and assign them integer codes (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer variables `pos[b]` for each band b ∈ {0,…,5}, representing their slot position (1 to 6).  
+3. Add **domain constraints**: each `pos[b]` ∈ {1,2,3,4,5,6}, and all `pos[b]` are pairwise distinct (permutation).  
+4. Add **original constraint set** (unchanged conditions):  
+   - Vegemite before Zircon: `pos[1] < pos[5]`.  
+   - Wellspring and Zircon before Xpert: `pos[2] < pos[3]` and `pos[5] < pos[3]`.  
+   - Uneasy in last three slots: `pos[0] ∈ {4,5,6}` (i.e., `pos[0] ≥ 4`).  
+   - Yardsign in first three slots: `pos[4] ∈ {1,2,3}` (i.e., `pos[4] ≤ 3`).  
+5. For each answer choice, formalize its logical meaning in terms of position constraints:  
+   - Option 0: “Only Uneasy can perform in a later slot than Xpert” → Interpret as: if `pos[b] > pos[3]` then b=0; equivalently, for all b ≠ 0, `pos[b] < pos[3]`.  
+   - Option 1: “Vegemite before Wellspring and Wellspring before Zircon” → `pos[1] < pos[2] ∧ pos[2] < pos[5]`.  
+   - Option 2: “Vegemite and Wellspring each before Xpert” → `pos[1] < pos[3] ∧ pos[2] < pos[3]`.  
+   - Option 3: “Xpert immediately before or after Uneasy” → `|pos[3] − pos[0]| = 1`.  
+   - Option 4: “Xpert in slot five or six” → `pos[3] ∈ {5,6}`.  
+6. For each answer choice i (0 to 4):  
+   - Clone base constraints into a fresh solver.  
+   - Assert the translated constraints of answer choice i *instead of* the original Wellspring/Zircon-before-Xpert constraints (i.e., drop `pos[2] < pos[3]` and `pos[5] < pos[3]`, and add the new constraints).  
+   - Also retain all other original constraints (Vegemite before Zircon, Uneasy last three, Yardsign first three).  
+   - Check satisfiability (SAT/UNSAT) of the new system.  
+7. Determine which answer choice produces *exactly the same set of valid orderings* as the original problem. To do this rigorously:  
+   - First, generate all models (or count solutions) under original constraints using a loop with solution blocking (but for logical equivalence, we avoid enumerating all).  
+   - Instead, test logical equivalence by checking two directions:  
+     a. Under original constraints + new constraint ⇒ all original solutions satisfy the new constraint (i.e., add new constraint to base and check SAT — must be SAT).  
+     b. Under original constraints + *not* new constraint ⇒ UNSAT (i.e., if the new constraint is necessary).  
+   - Alternatively, for robust comparison: for each answer choice i, check that:  
+     (i) every model satisfying original constraints also satisfies new constraint i (original ⇒ new), and  
+     (ii) every model satisfying original constraints *without* Wellspring/Zircon-before-Xpert but *with* new constraint i is also a model of original constraints (new ⇒ original under other premises).  
+   - Practical Z3 method:  
+     - For each answer choice i:  
+       - Create solver1 with original constraints (including Wellspring/Zircon before Xpert).  
+       - Create solver2 with all other original constraints *minus* Wellspring/Zircon before Xpert, plus answer choice i constraint.  
+       - Check:  
+         • solver1 ⇒ solver2: add original constraints and *negation* of answer-i constraint; if UNSAT, then all solutions satisfy answer i.  
+         • solver2 ⇒ solver1: add answer-i constraints and *negation* of original Wellspring/Zircon-before-Xpert pair; if UNSAT, then answer-i implies the original effect.  
+         • If both UNSAT, answer i is logically equivalent.  
+8. Alternatively, since the question asks which *substitution* has the *same effect*, we can test each answer choice by:  
+   - Building solverA with original constraints (including the two ≤ constraints for Wellspring/Zircon before Xpert).  
+   - Building solverB_i with all other original constraints, but replacing `pos[2] < pos[3] ∧ pos[5] < pos[3]` with answer choice i’s condition.  
+   - Then verify that for all possible permutations (via model enumeration or via checking if both solvers have identical solution sets):  
+     • For each solver, check SAT and collect constraints that distinguish them.  
+   - Efficient method: for each i, check two things:  
+     • solverA + (¬answer_i_constraint) is UNSAT → answer i is necessary under original.  
+     • solverB_i + (¬original_WZ_constraints) is UNSAT → answer i implies original effect.  
+   - However, since枚 all models is feasible (6! = 720), in practice generate all valid permutations under original constraints, and for each answer choice i, verify that the set of permutations satisfying solverB_i matches exactly.  
+   - But Z3 doesn’t need enumeration: instead, for each i:  
+     - Add all other constraints (except Wellspring/Zircon before Xpert) to both solvers.  
+     - Add answer_i constraint to solver2, and original WZ constraints to solver1.  
+     - Check:  
+         (A) Is there a permutation satisfying original constraints that *violates* answer i? → If yes, then i ≠ effect.  
+         (B) Is there a permutation satisfying answer i + other constraints that *violates* original WZ? → If yes, then i ≠ effect.  
+     - So:  
+         test_A_i = solverA + (¬answer_i_constraint); if SAT → i fails.  
+         test_B_i = solverB_i + (¬original_WZ_constraints); if SAT → i fails.  
+9. For each answer choice, translate the *negation* of its constraint precisely into Z3 constraints:  
+   - E.g., for option 0 (only Uneasy after Xpert): negation is “∃b ≠ 0 such that pos[b] > pos[3]”.  
+   - For option 1 (Veg < Wells < Zir): negation is `pos[1] ≥ pos[2] ∨ pos[2] ≥ pos[5]`.  
+   - Use Z3’s `Or`/`And` with disjunctive negation.  
+10. For each i ∈ {0,1,2,3,4}:  
+    - Initialize solverA with original constraints (including `pos[2] < pos[3]` and `pos[5] < pos[3]`).  
+    - Initialize solverB_i with:  
+        • original constraints *except* `pos[2] < pos[3]` and `pos[5] < pos[3]`,  
+        • plus answer_i constraint.  
+    - Create `solverA_neg_i = solverA.clone(); neg_i_constraint = logical_negation(answer_i_formula); solverA_neg_i.add(neg_i_constraint);`  
+    - If `solverA_neg_i.check() == z3.sat`, then answer i is not sufficient (original has a model violating it) → eliminate.  
+    - Create `solverB_i_neg_original = solverB_i.clone();` add negation of original WZ pair (`pos[2] >= pos[3] ∨ pos[5] >= pos[3]`).  
+    - If `solverB_i_neg_original.check() == z3.sat`, then answer i is not necessary (allows extra models) → eliminate.  
+11. The answer choice for which both `solverA_neg_i` and `solverB_i_neg_original` are UNSAT is the correct one.  
+12. Return that answer choice’s index as the solution.

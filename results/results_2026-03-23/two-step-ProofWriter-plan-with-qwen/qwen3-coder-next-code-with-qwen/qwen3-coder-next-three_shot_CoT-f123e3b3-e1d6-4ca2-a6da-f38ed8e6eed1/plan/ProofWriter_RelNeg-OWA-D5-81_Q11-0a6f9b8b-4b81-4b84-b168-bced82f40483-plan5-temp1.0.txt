@@ -1,0 +1,20 @@
+1. Identify all entities: cat, cow, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True) or property(subject, boolean), including:
+   - eats("cat", "squirrel", True), sees("cat", "squirrel", True)
+   - eats("cow", "squirrel", True), sees("cow", "cat", True)
+   - is_round("rabbit", True), sees("rabbit", "cat", True)
+   - eats("squirrel", "rabbit", True), is_cold("squirrel", True)
+   - needs("squirrel", "rabbit", True), sees("squirrel", "cat", True)
+3. Translate each conditional statement into a PyKe rule using `foreach` and `assert`:
+   • If X sees the cat and X is not green → X sees the cow.
+   • If rabbit is kind AND rabbit sees squirrel → squirrel needs rabbit. (Note: “kind” property not directly asserted; keep conditional)
+   • If X is rough → X is cold.
+   • If X sees rabbit → X is not round (encode as: foreach sees(X, "rabbit", True) assert is_round(X, False))
+   • If X sees squirrel and X is not green → X needs squirrel.
+   • If X eats cow → X sees rabbit.
+   • If X eats squirrel → X is rough.
+   • If X is cold → X eats cow.
+4. Note: The predicate `is_green` appears only in rules but has no asserted facts; treat it as unknown unless deduced, and use `not is_green(X)` in rules (i.e., no explicit evidence of being green ⇒ assume not green? No — must reason cautiously; in PyKe, `not` in conditionals requires negation-as-failure or explicit fact. Since no `is_green` facts are given, we cannot assume any subject is green or not green — so those rules may be non-applicable unless `is_green` can be inferred to be false. However, PyKe’s default logical closure does not support closed-world assumption; thus, for safety in encoding: only apply rules when `is_green` is explicitly known to be false — but since none are, the antecedents involving `not is_green` will only fire if we explicitly assert `is_green(X, False)` elsewhere — which we don’t. So encode these rules literally with `not is_green(X)` condition using standard PyKe conditional syntax (e.g., `foreach ... and not facts.is_green(X, True)` — but standard PyKe uses positive matching only; therefore, such rules require careful handling. *However*, per instructions and typical PyKe usage (positive logic with explicit facts only), we assume these rules are applied only when `is_green` is known to be false. Since no such facts exist, these rules will not fire — so encoding must reflect that: implement them only where antecedents can be fully satisfied with known facts.
+   → Thus, for rules with `not is_green(X)`, we leave them in the rule set but note they won’t trigger without `is_green` negation facts. This is acceptable per specification: encode rules as given.
+5. Encode the query: Determine whether `is_round("cat", False)` holds — i.e., check if cat is NOT round.
+   → Use facts.is_round("cat", False) as the query assertion.

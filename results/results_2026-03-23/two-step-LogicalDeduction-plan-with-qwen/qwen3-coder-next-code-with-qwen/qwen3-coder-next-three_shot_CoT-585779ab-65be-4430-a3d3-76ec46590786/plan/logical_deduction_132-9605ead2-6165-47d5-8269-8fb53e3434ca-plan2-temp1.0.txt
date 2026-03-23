@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven vehicle types as string variables: `"minivan"`, `"bus"`, `"limousine"`, `"truck"`, `"convertible"`, `"tractor"`, `"motorcycle"`.  
+   * Assign integer ranks from 1 to 7, where **1 = oldest**, **7 = newest**.  
+   * Add all seven variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle gets a unique age rank.
+
+4. **Translate Each Statement into Constraints:**  
+   * "The limousine is older than the minivan" → `limousine < minivan`  
+   * "The tractor is older than the limousine" → `tractor < limousine`  
+   * "The bus is the newest" → `bus == 7`  
+   * "The truck is the third-newest" → Since newest=7, third-newest = 7 − 2 = **5**, so `truck == 5`  
+   * "The motorcycle is the fourth-newest" → 7 − 3 = **4**, so `motorcycle == 4`  
+   * "The convertible is older than the tractor" → `convertible < tractor`
+
+5. **Solve the Constraint Problem:**  
+   * Call `getSolutions()` to compute all valid assignments. Given consistency and uniqueness, expect exactly one solution.
+
+6. **Identify the Third-Oldest Vehicle:**  
+   * The third-oldest corresponds to rank **3** (since 1 = oldest, 2 = second-oldest, 3 = third-oldest).  
+   * Create a dictionary mapping choice letters (`"A"` through `"G"`) to the corresponding vehicle names from the options.  
+   * Iterate over the solution dictionary (vehicle → rank), find which vehicle has rank `3`.  
+   * Output the choice letter associated with that vehicle.

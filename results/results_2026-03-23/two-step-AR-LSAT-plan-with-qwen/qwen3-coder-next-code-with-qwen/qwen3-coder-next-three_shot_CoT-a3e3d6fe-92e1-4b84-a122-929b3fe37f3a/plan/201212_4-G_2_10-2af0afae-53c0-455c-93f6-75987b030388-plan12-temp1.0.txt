@@ -1,0 +1,25 @@
+1. Enumerate the five witnesses (Franco, Garcia, Hong, Iturbe, Jackson) and assign integer indices.  
+2. Assign each witness to one of three days (Monday=0, Tuesday=1, Wednesday=2) using integer variables `d[F], d[G], d[H], d[I], d[J]`.  
+3. Add **domain constraints**: each `d[witness] ∈ {0,1,2}`.  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `d[I] = 2`.  
+5. Add **day-count constraints**:  
+   - Tuesday has exactly two witnesses → count of witnesses with `d[w] == 1` is 2.  
+   - Monday has at least one witness → count of witnesses with `d[w] == 0` ≥ 1.  
+6. Add **mutual-exclusion constraints**:  
+   - Franco and Garcia do not testify on same day → `d[F] ≠ d[G]`.  
+   - Hong does not testify on Monday → `d[H] ≠ 0`.  
+7. Add **assumed condition**: Franco and Hong testify on the same day → `d[F] == d[H]`.  
+8. For each answer choice, encode its logical condition as a constraint:  
+   - A: `d[F] == 2` (Franco on Wednesday)  
+   - B: `d[G] == 0` (Garcia on Monday)  
+   - C: `d[G] == 2` (Garcia on Wednesday)  
+   - D: `d[H] == 1` (Hong on Tuesday)  
+   - E: `d[I] == 2 ∧ d[w] ≠ 2 for all w ≠ I` (only Iturbe on Wednesday)  
+9. For each answer choice, clone the base constraints plus condition `d[F] == d[H]`, then add the answer choice constraint.  
+10. If every clone is SAT, check which answer choices are *necessarily* true in all satisfying assignments:  
+    - For a choice to be *must be true*, it must hold in *every* model of the constrained system.  
+    - To prove necessity, for each answer choice `C_i`, check if `¬C_i` is UNSAT under the assumptions.  
+    - Specifically: For each answer choice `C_i`, add `¬C_i` to the base+`d[F]==d[H]` constraints and check UNSAT.  
+    - If UNSAT, then `C_i` is forced (must be true).  
+11. Collect all answer indices where UNSAT is found → these are the must-true statements.  
+12. Output only the answer index of the unique forced statement (since question asks "which one...must be true").

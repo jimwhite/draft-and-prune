@@ -1,0 +1,15 @@
+1. Identify all entities: Bob, Charlie, Dave, Fiona.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_cold("Bob", True), is_quiet("Charlie", True), etc.).
+3. List all derived rules from the context and translate them into PyKe `foreach` + `assert` format:
+   • If something is quiet and cold → it is smart.
+   • Red, cold things are round. (needs a predicate like is_round with ternary)
+   • If something is kind and rough → it is red.
+   • All quiet things are rough.
+   • Cold, smart things are red.
+   • If something is rough → it is cold.
+   • All red things are rough.
+   • If Dave is smart and Dave is kind → Dave is quiet.
+4. For the rule “Red, cold things are round” and “Cold, smart things are round” (note: the problem says “Red, cold things are round.” — assume predicate is_round), encode using `foreach` matching subject where both properties hold and assert is_round(subject, True).
+5. Similarly, for rules with *conjunction of properties* leading to a property (e.g., quiet + cold → smart), use `foreach` with pattern-matching on multiple facts.
+6. Note: The query is “Charlie is kind.” Since the fact *“Charlie is kind”* is explicitly given in the input, no inference is needed — it’s directly asserted.
+7. Encode query as facts.is_kind("Charlie", True).

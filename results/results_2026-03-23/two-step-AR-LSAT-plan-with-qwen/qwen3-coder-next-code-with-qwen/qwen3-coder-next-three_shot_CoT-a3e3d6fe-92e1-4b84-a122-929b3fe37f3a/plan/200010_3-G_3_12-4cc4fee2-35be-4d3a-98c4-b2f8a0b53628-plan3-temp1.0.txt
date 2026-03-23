@@ -1,0 +1,12 @@
+1. Enumerate the eight compositions and assign each an integer index (F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7).  
+2. Create eight integer variables (e.g., `pos_F`, `pos_H`, ..., `pos_T`) representing the performance position (1 to 8) of each composition.  
+3. Add **domain constraints**: All positions must be integers in [1, 8], and all distinct (use `Distinct()`).  
+4. Add **T-F/R adjacency constraint**: Either `pos_T == pos_F - 1` (T immediately before F) OR `pos_T == pos_R + 1` (T immediately after R).  
+5. Add **separation constraint for F and R**: Either (`pos_F + 2 ≤ pos_R`) OR (`pos_R + 2 ≤ pos_F`).  
+6. Add **O position constraint**: `pos_O == 1` OR `pos_O == 5`.  
+7. Add **eighth position constraint**: `pos_L == 8` OR `pos_H == 8`.  
+8. Add **P before S constraint**: `pos_P < pos_S`.  
+9. Add **O-S separation constraint with at least one in between**: Either (`pos_O + 2 ≤ pos_S`) OR (`pos_S + 2 ≤ pos_O`).  
+10. For each answer choice, convert the given sequence into expected positions (first=1 to eighth=8), then add constraints fixing each composition’s position accordingly.  
+11. For each choice, clone the base solver, add the fixed positions from that sequence, and check satisfiability.  
+12. The choice for which the model is SAT is a valid order; collect all such indices and output only that index (as per multiple-choice logic).

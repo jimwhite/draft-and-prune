@@ -1,0 +1,18 @@
+1. Enumerate the nine possible scientists and assign each an integer code (0–2: botanists F, G, H; 3–5: chemists K, L, M; 6–8: zoologists P, Q, R).  
+2. Create Boolean selection variables `s[0]` through `s[8]`, where `s[i]` is True if scientist i is selected.  
+3. Add **cardinality constraint**: exactly five scientists are selected (`sum(s) == 5`).  
+4. Add **type coverage constraints**:  
+    - At least one botanist: `s[0] or s[1] or s[2]`.  
+    - At least one chemist: `s[3] or s[4] or s[5]`.  
+    - At least one zoologist: `s[6] or s[7] or s[8]`.  
+5. Add **conditional constraint for botanist/zoologist trade-off**: if more than one botanist is selected, then at most one zoologist is selected.  
+    - Implement as: `(botanist_count <= 1) or (zoologist_count <= 1)`, where `botanist_count = s[0]+s[1]+s[2]`, `zoologist_count = s[6]+s[7]+s[8]`.  
+    - Encode using Z3’s `If` or via logical equivalence: `(botanist_count >= 2) → (zoologist_count <= 1)`.  
+6. Add **mutual exclusion constraints**:  
+    - F and K cannot both be selected: `Not(s[0] and s[3])`.  
+    - K and M cannot both be selected: `Not(s[3] and s[5])`.  
+7. Add **implication constraint**: if M is selected, both P and R must be selected: `s[5] → (s[6] and s[8])`.  
+8. Translate each choice into a Boolean assignment: for each option, set `s[i] = True` for included scientists and `False` for others.  
+9. For each choice, create a fresh solver, add all global constraints (steps 3–7), and assert the specific choice assignment (step 8).  
+10. If the model is SAT for a choice, it is acceptable; collect all acceptable choices.  
+11. Among the collected acceptable choices, select and return the first (or only) one matching the question’s requirement.

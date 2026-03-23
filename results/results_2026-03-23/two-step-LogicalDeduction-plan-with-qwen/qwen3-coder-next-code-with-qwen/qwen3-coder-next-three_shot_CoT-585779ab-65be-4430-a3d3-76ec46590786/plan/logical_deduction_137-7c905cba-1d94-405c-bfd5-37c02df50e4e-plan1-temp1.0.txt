@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * The variables are the seven fruits: `"kiwis"`, `"cantaloupes"`, `"oranges"`, `"loquats"`, `"pears"`, `"watermelons"`, and `"peaches"`.  
+   * Define a domain of integers from 1 to 7, where **1 represents the least expensive (cheapest)** and **7 represents the most expensive**.  
+   * Add all seven fruit variables to the problem with domain [1, 2, 3, 4, 5, 6, 7].
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price rankings.  
+   * Translate each statement into a constraint using lambda functions:  
+     - "The loquats are less expensive than the peaches" → `loquats < peaches`  
+     - "The pears are the third-cheapest" → `pears == 3`  
+     - "The oranges are less expensive than the cantaloupes" → `oranges < cantaloupes`  
+     - "The loquats are more expensive than the watermelons" → `loquats > watermelons`  
+     - "The peaches are less expensive than the oranges" → `peaches < oranges`  
+     - "The kiwis are the second-most expensive" → Since 7 is most expensive, second-most = position 6 ⇒ `kiwis == 6`  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to compute all satisfying assignments.  
+   * Extract the unique solution (as the problem is well-posed and consistent).
+
+5. **Identify the Most Expensive Fruit:**  
+   * The question asks which fruit is the most expensive → i.e., has rank **7**.  
+   * Create a mapping from choice letters to fruit names:  
+     `{'A': 'kiwis', 'B': 'cantaloupes', 'C': 'oranges', 'D': 'loquats', 'E': 'pears', 'F': 'watermelons', 'G': 'peaches'}`  
+   * Iterate over the solution dictionary to find which fruit has value 7.  
+   * Return the corresponding choice letter for that fruit as the answer.

@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables as the seven fruits: `"kiwis"`, `"cantaloupes"`, `"oranges"`, `"loquats"`, `"pears"`, `"watermelons"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, consistent with the problem's use of "less/more expensive".
+    * Add all fruit variables and their domain (1–7) to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two fruits share the same price rank.
+    * Convert each statement into a formal constraint using `lambda` functions:
+        * "The loquats are less expensive than the peaches" → `loquats < peaches`
+        * "The pears are the third-cheapest" → `pears == 3`
+        * "The oranges are less expensive than the cantaloupes" → `oranges < cantaloupes`
+        * "The loquats are more expensive than the watermelons" → `watermelons < loquats`
+        * "The peaches are less expensive than the oranges" → `peaches < oranges`
+        * "The kiwis are the second-most expensive" → Since 7 is most expensive, second-most expensive is position **6**, so `kiwis == 6`
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` on the `Problem` instance to find all valid assignments of ranks.
+    * Extract the unique solution (the list will contain one dictionary mapping fruits to their rank values).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which fruit is the **second-cheapest**, i.e., rank **2**.
+    * Create a dictionary mapping choice letters (`'A'` through `'G'`) to their corresponding fruit names:  
+        `{'A': 'kiwis', 'B': 'cantaloupes', 'C': 'oranges', 'D': 'loquats', 'E': 'pears', 'F': 'watermelons', 'G': 'peaches'}`
+    * Iterate over the choices; for each choice, check if the fruit assigned to it has rank 2 in the solution.
+    * Return (or output) the letter of the first matching choice — that is, the choice where the fruit's position equals 2.

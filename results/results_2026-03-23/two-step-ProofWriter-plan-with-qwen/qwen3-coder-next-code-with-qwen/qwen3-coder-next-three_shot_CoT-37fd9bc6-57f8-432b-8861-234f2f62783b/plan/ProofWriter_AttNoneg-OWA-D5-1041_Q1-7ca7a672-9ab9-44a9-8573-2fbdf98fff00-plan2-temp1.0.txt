@@ -1,0 +1,18 @@
+1. Identify all entities: Bob, Charlie, Dave, Fiona.  
+2. Encode all explicitly stated facts as `facts.predicate(entity, value, True)` using ternary predicates:  
+   - Direct properties for Bob: is_cold("Bob", True), is_quiet("Bob", True), is_red("Bob", True), is_smart("Bob", True)  
+   - Direct properties for Charlie: is_kind("Charlie", True), is_quiet("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True)  
+   - Direct properties for Dave: is_cold("Dave", True), is_kind("Dave", True), is_smart("Dave", True)  
+   - Direct properties for Fiona: is_quiet("Fiona", True)  
+3. Translate each conditional statement into a PyKe rule using `foreach` for the antecedent and `assert` for the consequent:  
+   • If x is quiet and cold → x is smart  
+   • If x is red and cold → x is round  
+   • If x is kind and rough → x is red  
+   • All quiet things are rough → if x is quiet → x is rough  
+   • If x is cold and smart → x is red  
+   • If x is rough → x is cold  
+   • All red things are rough → if x is red → x is rough  
+   • If Dave is smart and kind → Dave is quiet  
+4. For rules involving negation (none here), use `not` in the `foreach` condition; all current rules are positive.  
+5. The query is whether Charlie is kind: since it is explicitly stated as a fact (is_kind("Charlie", True)), the answer is true.  
+6. To verify via PyKe, assert the query as `facts.is_kind("Charlie", True)` — but recall that in PyKe, queries are posed as goals to be proven; since the fact is directly given and no rule contradicts it, the query will succeed.

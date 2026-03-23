@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to hold variables and constraints for the seven fruits.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven variables corresponding to the fruits: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, establishing a strictly increasing cost ranking.
+    * Add all variables and their domain (1–7) to the problem instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct cost rankings.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "The pears are more expensive than the kiwis" → `kiwis < pears`.
+        * "The watermelons are less expensive than the peaches" → `watermelons < peaches`.
+        * "The mangoes are the third-cheapest" → `mangoes == 3`.
+        * "The watermelons are the third-most expensive" → Since there are seven items, third-most expensive corresponds to rank 5 (positions: 1=cheapest, ..., 4=4th-cheapest/4th-most-expensive? No: most expensive = rank 7, second-most-expensive = 6, third-most-expensive = 5) → `watermelons == 5`.
+        * "The plums are the second-most expensive" → `plums == 6`.
+        * "The loquats are the second-cheapest" → `loquats == 2`.
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to find all valid cost assignments satisfying the constraints.
+    * Extract the single solution (since the problem is well-constrained and consistent), which will be a dictionary mapping each fruit to its cost rank.
+
+5.  **Identify the Cheapest Fruit:**
+    * The question asks which fruit is the cheapest → i.e., has rank 1.
+    * Create a mapping from choice letters to fruit names: `"A" → "loquats"`, `"B" → "peaches"`, `"C" → "watermelons"`, `"D" → "plums"`, `"E" → "kiwis"`, `"F" → "mangoes"`, `"G" → "pears"`.
+    * Search the solution dictionary for the fruit with value `1`.
+    * Return the choice letter corresponding to that fruit.

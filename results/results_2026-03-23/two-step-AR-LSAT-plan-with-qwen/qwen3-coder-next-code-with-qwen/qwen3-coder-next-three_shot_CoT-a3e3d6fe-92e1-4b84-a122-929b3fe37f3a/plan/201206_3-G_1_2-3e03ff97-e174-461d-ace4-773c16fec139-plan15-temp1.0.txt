@@ -1,0 +1,20 @@
+1. Enumerate the six lab assistants and assign them integer codes: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: Wed morning=0, Wed afternoon=1, Thu morning=2, Thu afternoon=3, Fri morning=4, Fri afternoon=5.  
+3. Create integer variables `assistant[i]` for each session i (0–5), representing which assistant leads that session.  
+4. Add **domain constraints**: each `assistant[i]` ∈ {0,1,2,3,4,5}; all `assistant[i]` must be pairwise distinct (each assistant leads exactly one session).  
+5. Add **day mapping constraints**: define helper variables `day[i]` = session i’s day (0=Wed, 1=Thu, 2=Fri) — can be derived from session index: `day[i] = i // 2`.  
+6. Add **Kevin-Rebecca same-day constraint**: `day[assistant_inv[K]] == day[assistant_inv[R]]`, but easier: let `pos_K` = index where assistant[i]==1, `pos_R` = index where assistant[j]==5, then enforce `day[pos_K] == day[pos_R]`. Alternatively, avoid inverse indices by using **bijection**: enforce for all i,j: if `assistant[i]==1` and `assistant[j]==5`, then `day[i] == day[j]`. Implement via big-M or direct quantifier-free logic:  
+   - For each session i, let `is_K[i] = (assistant[i] == 1)`, `is_R[i] = (assistant[i] == 5)` — use Boolean indicators with iff constraints.  
+   - Then enforce: `∑_{i} is_K[i] = 1`, `∑_{i} is_R[i] = 1`, and `∑_{i} day[i] * is_K[i] == ∑_{i} day[i] * is_R[i]`.  
+   (Simpler: create position variables `pos_K`, `pos_R` ∈ {0..5}, enforce `assistant[pos_K] == 1`, `assistant[pos_R] == 5`, and `day[pos_K] == day[pos_R]`.)  
+7. Add **Lan-Olivia different-day constraint**: if `assistant[i] == 2` and `assistant[j] == 4`, then `day[i] != day[j]`. Use position variables `pos_L`, `pos_O`, enforce `day[pos_L] != day[pos_O]`.  
+8. Add **Nessa afternoon constraint**: `pos_N` must be in {1,3,5} (afternoon sessions).  
+9. Add **Julio before Olivia constraint**: `day[pos_J] < day[pos_O]`, or if same day, `pos_J < pos_O` (since morning < afternoon on same day). Better: enforce session index ordering: `pos_J < pos_O` (since sessions are ordered chronologically).  
+10. Add **extra assumption for conditional problem**: Lan does *not* lead a Wednesday session ⇒ `day[pos_L] != 0` (i.e., `pos_L ∉ {0,1}`).  
+11. Define target list of answer choices: [Rebecca=5, Olivia=4, Nessa=3, Kevin=1, Julio=0].  
+12. Define answer list `must_thu_list = []`. For each assistant A in [5,4,3,1,0]:  
+    - Clone base constraints + the Lan-Wednesday exclusion.  
+    - Add constraint: A leads *no* Thursday session (i.e., for sessions 2 and 3, `assistant[i] != A`).  
+    - If UNSAT, then A *must* lead a Thursday session; append A to `must_thu_list`.  
+13. Return the first (only) element of `must_thu_list` as the answer.  
+14. Output the assistant name corresponding to that index.

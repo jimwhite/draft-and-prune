@@ -1,0 +1,26 @@
+1. Identify all entities: bald_eagle, bear, dog, lion.  
+2. Encode all directly stated facts using ternary predicates (predicate(subject, object, True) or predicate(subject, object, False)):  
+   - is_blue("bald_eagle", True)  
+   - is_red("bald_eagle", True)  
+   - likes("bald_eagle", "lion", True)  
+   - needs("bald_eagle", "bear", True)  
+   - needs("bald_eagle", "dog", True)  
+   - is_blue("bear", False)  
+   - is_nice("bear", True)  
+   - needs("bear", "dog", True)  
+   - chases("dog", "bald_eagle", True)  
+   - is_red("dog", True)  
+   - needs("dog", "bear", False)  
+   - likes("lion", "bear", False)  
+3. Translate all conditional rules into PyKe `foreach` + `assert` blocks:  
+   • If X likes the lion and X is not red → X chases the lion.  
+   • If X is red and X needs the bald eagle → the bald eagle needs the lion.  
+   • If X is round → X does not like the dog.  
+   • If bald_eagle needs the dog → the dog is round.  
+   • If X likes the dog → X likes the bald eagle.  
+   • If X chases the lion and the lion likes the dog → the dog does not like the lion.  
+   • If the bear likes the lion → the lion likes the dog.  
+   • If X likes the bear → the bear likes the lion.  
+   • If X is round → X likes the bear.  
+4. Note: The query is about whether the dog does *not* need itself → encode as facts.needs("dog", "dog", False).  
+5. Also, implicitly assume no other relations hold unless derived; PyKe will infer closure under rules and facts.

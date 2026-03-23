@@ -1,0 +1,11 @@
+1. Enumerate the nine scientists with indices: botanists F=0, G=1, H=2; chemists K=3, L=4, M=5; zoologists P=6, Q=7, R=8.  
+2. Create Boolean selection variables `s[i]` for i in 0..8 indicating whether scientist i is selected.  
+3. Add **panel size constraint**: exactly five scientists are selected (sum of s[i] == 5).  
+4. Add **type coverage constraints**: at least one botanist (s[0] ∨ s[1] ∨ s[2]), at least one chemist (s[3] ∨ s[4] ∨ s[5]), at least one zoologist (s[6] ∨ s[7] ∨ s[8]).  
+5. Add **conditional constraint**: if more than one botanist is selected (i.e., s[0] + s[1] + s[2] ≥ 2), then at most one zoologist is selected (s[6] + s[7] + s[8] ≤ 1).  
+6. Add **mutual exclusion constraints**: F and K cannot both be selected (¬(s[0] ∧ s[3])); K and M cannot both be selected (¬(s[3] ∧ s[5])).  
+7. Add **implication constraint**: if M is selected (s[5] = true), then both P and R must be selected (s[6] ∧ s[8]).  
+8. Preprocess each answer choice: convert string into list of scientist names, map to indices, set corresponding `s[i] = true`, others `false`.  
+9. For each choice, clone the base constraints (steps 3–7), add the fixed selection literals from step 8, and check satisfiability with Z3.  
+10. Append the index of the first (and only) satisfiable choice to `answer_index_list`.  
+11. Print the answer index list (should contain exactly one element).

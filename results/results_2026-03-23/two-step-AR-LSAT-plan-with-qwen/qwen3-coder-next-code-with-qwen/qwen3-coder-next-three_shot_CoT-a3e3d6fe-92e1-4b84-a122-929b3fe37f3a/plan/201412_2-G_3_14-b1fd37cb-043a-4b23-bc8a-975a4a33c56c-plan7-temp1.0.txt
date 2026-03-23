@@ -1,0 +1,16 @@
+1. Enumerate the six colors: forest=0, olive=1, peach=2, turquoise=3, white=4, yellow=5.  
+2. Represent rug configurations as sets of colors; since exactly five colors are used total, and each used color appears in exactly one rug, the three rugs partition a 5-element subset of the six colors.  
+3. Since there are exactly two solid rugs, the third rug must be multicolored and contain the remaining 3 colors (since 2 solid rugs × 1 color + multicolored rug × k colors = total used colors = 5 ⇒ k=3).  
+4. Model the possible solid rug color pairs as candidate sets: for each answer choice, assume those two colors are the solid rugs (i.e., each forms its own singleton rug), and check if a valid assignment for the third multicolored rug (using exactly 3 of the remaining 4 colors) exists satisfying all rules.  
+5. Add constraints for each candidate pair:  
+   - Let the two solid colors be s1 and s2 (must be distinct).  
+   - The third rug R must consist of exactly 3 colors from the remaining 4 colors (i.e., all colors except s1, s2, and one excluded color).  
+   - Enforce all rules on R:  
+     a. If white ∈ R, then |R| ≥ 3 and two *other* colors must also be in R — but since |R|=3, this requires white ∈ R ⇒ R = {white, a, b} with a,b ≠ white — automatically satisfied as long as white ∈ R.  
+     b. If olive ∈ R, then peach ∈ R.  
+     c. Forest and turquoise cannot both be in R.  
+     d. Peach and turquoise cannot both be in R.  
+     e. Peach and yellow cannot both be in R.  
+6. For each answer choice, create a solver instance, assert that s1 and s2 are solid rugs (i.e., each appears alone in its rug), assert the third rug R uses exactly 3 colors from the complement set, and enforce all above rules on R.  
+7. If no model exists (UNSAT), then the solid rug pair is **impossible**, and thus belongs to the answer set.  
+8. Collect all impossible solid rug color pairs and output their indices in the choice list.

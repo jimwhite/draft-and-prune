@@ -1,0 +1,25 @@
+1. Identify all entities involved: bald_eagle, cow, dog, lion.
+2. Define explicit facts using ternary predicates of the form predicate(subject, object, True/False):
+   - For properties like is_rough, is_round, is_young, is_big, is_green: use predicate(entity, True/False).
+   - For relations like eats, sees, visits: use predicate(subject, object, True/False).
+3. Encode all directly stated *positive* facts:
+   - eats("bald_eagle", "cow", True)
+   - eats("bald_eagle", "dog", False)
+   - is_rough("bald_eagle", True), is_round("cow", True)
+   - sees("cow", "bald_eagle", True), sees("cow", "dog", False)
+   - visits("cow", "bald_eagle", True), visits("cow", "lion", True)
+   - is_rough("dog", True), is_young("lion", True), sees("lion", "bald_eagle", False), sees("lion", "cow", True)
+4. Encode all directly stated *negative* facts as explicit False assertions (e.g., sees("lion", "bald_eagle", False)).
+5. Translate each conditional rule into PyKe `foreach` + `assert` format:
+   • If X is green and eats bald_eagle → bald_eagle is not rough.
+   • If X is big and does not see bald_eagle → bald_eagle is rough.
+   • If X is big → visits(X, "dog", True).
+   • If X eats lion and X is big → eats(X, "dog", True).
+   • If X visits dog → eats("dog", "cow", True).
+   • If X is rough and eats cow → is_young(X, True).
+   • If lion eats cow → visits(lion, "bald_eagle", True).
+   • If X is big and sees lion → is_green(X, True).
+   • If X is young → is_big(X, True).
+6. Note: Since is_young("lion", True) is given as a fact, apply the rule *if young then big* to derive is_big("lion", True).
+7. The query tests whether lion is big:
+   → Use facts.is_big("lion", True)

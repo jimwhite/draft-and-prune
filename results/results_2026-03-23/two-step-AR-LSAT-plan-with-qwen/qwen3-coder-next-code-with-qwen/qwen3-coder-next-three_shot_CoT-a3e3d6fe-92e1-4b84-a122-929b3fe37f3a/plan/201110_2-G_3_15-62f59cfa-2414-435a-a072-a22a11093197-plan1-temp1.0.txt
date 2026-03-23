@@ -1,0 +1,24 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning each a unique integer index (0–3).  
+2. Create Boolean variables for first-day and second-day assignments: `first[i][j]` (rider i tests bicycle j on day 1) and `second[i][j]` (rider i tests bicycle j on day 2), where `i ∈ {0,1,2,3}` (riders) and `j ∈ {0,1,2,3}` (bicycles).  
+3. Add **day-1 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 1: for each rider i, exactly one `first[i][j]` is true.  
+    - Each bicycle is tested by exactly one rider on day 1: for each bicycle j, exactly one `first[i][j]` is true.  
+4. Add **day-2 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 2: for each rider i, exactly one `second[i][j]` is true.  
+    - Each bicycle is tested by exactly one rider on day 2: for each bicycle j, exactly one `second[i][j]` is true.  
+5. Add **given condition constraints**:  
+    - Reynaldo (index 0) cannot test F (index 0) on either day: `¬first[0][0]`, `¬second[0][0]`.  
+    - Yuki (index 3) cannot test J (index 3) on day 1: `¬first[3][3]`.  
+    - Theresa (index 2) must test H (index 2) on at least one day: `first[2][2] ∨ second[2][2]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus (index 1) on day 2: for all j, `first[3][j] → second[1][j]`. (Equivalently: for each j, `first[3][j] ∧ ¬second[1][j]` is forbidden.)  
+6. Translate each choice into a logical proposition and encode as a constraint:  
+    - Choice A: "Reynaldo tests J on the first day" → `first[0][3]`  
+    - Choice B: "Reynaldo tests J on the second day" → `second[0][3]`  
+    - Choice C: "Seamus tests H on the first day" → `first[1][2]`  
+    - Choice D: "Yuki tests H on the first day" → `first[3][2]`  
+    - Choice E: "Yuki tests H on the second day" → `second[3][2]`  
+7. Define a list of prohibited indices `forbidden_index_list = []`. For each choice index k ∈ {0,1,2,3,4}:  
+    - Clone the base constraints (steps 2–5) into a fresh solver.  
+    - Assert the proposition corresponding to choice k (step 6).  
+    - If the resulting formula is UNSAT, then this scenario is impossible; append k to `forbidden_index_list`.  
+8. The EXCEPT answer corresponds to the one *impossible* scenario; return the choice index (0–4) in `forbidden_index_list`.

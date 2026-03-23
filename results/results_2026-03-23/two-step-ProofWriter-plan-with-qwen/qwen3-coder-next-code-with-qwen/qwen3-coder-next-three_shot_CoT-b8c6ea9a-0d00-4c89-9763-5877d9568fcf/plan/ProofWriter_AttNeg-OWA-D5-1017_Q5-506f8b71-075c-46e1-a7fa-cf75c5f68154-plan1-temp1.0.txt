@@ -1,0 +1,23 @@
+1. Identify all entities involved: Dave, Erin, Fiona, Gary.
+2. Encode all explicitly stated facts as ternary predicates of the form predicate(subject, boolean/object, True):
+   - is_big("Dave", True)
+   - is_furry("Dave", True)
+   - is_blue("Erin", True)
+   - is_cold("Erin", True)
+   - is_round("Erin", True)
+   - is_quiet("Fiona", True)
+   - is_rough("Gary", True)
+3. Translate each conditional rule in the context into PyKe rules using `foreach` blocks and `assert` conclusions:
+   • If something is rough AND cold → it is furry.
+   • If something is quiet AND big → it is NOT round (i.e., assert is_round(subject, False)).
+   • If Dave is blue → Dave is furry (i.e., assert is_furry("Dave", True)).
+   • All quiet AND blue things → they are big (i.e., is_big(subject, True)).
+   • If Fiona is furry → Fiona is blue (i.e., is_blue("Fiona", True)).
+   • If something is quiet → it is cold (i.e., is_cold(subject, True)).
+   • All big things → they are cold (i.e., is_cold(subject, True)).
+   • All blue AND round things → they are NOT quiet (i.e., is_quiet(subject, False)).
+   • Cold things → rough (i.e., is_rough(subject, True)).
+4. For rules involving logical conjunctions in the antecedent (e.g., "rough and cold"), use nested `foreach` or a single `foreach` with multiple conditions in the body.
+5. For negated conclusions (e.g., "not round", "not quiet"), assert the negated property using `assert predicate(subject, False)`.
+6. The query checks whether Erin is furry:
+   → Use facts.is_furry("Erin", True) to verify truth; if this fact can be derived, answer is true; if its negation (is_furry("Erin", False)) can be derived, answer is false; otherwise unknown.

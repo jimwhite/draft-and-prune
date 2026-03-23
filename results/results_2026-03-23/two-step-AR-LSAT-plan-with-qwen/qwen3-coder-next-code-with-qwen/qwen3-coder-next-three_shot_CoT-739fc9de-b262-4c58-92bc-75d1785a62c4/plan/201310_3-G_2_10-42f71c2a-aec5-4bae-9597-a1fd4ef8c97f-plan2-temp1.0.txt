@@ -1,0 +1,16 @@
+1. Enumerate the eight employees and assign integer indices to them (Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables for each employee's inclusion in the team (team[i] = True iff employee i is selected).  
+3. Add **minimum-size constraint**: sum(team[i] for i in range(8)) >= 4.  
+4. Add **conditional constraints**:  
+   - If Myers is selected, then Ortega and Paine must both be excluded: team[0] → (¬team[1] ∧ ¬team[2]).  
+   - If Schmidt is selected, then both Paine and Thomson must be selected: team[3] → (team[2] ∧ team[4]).  
+   - If Wong is selected, then both Myers and Yoder must be selected: team[5] → (team[0] ∧ team[6]).  
+5. Add **Yoder exclusion constraint**: team[6] = False (as per question condition).  
+6. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+7. Define an answer index list `answer_index_list = []`. For each candidate employee index in the answer choices (in order):  
+   - Clone the base constraints plus Yoder exclusion into a fresh solver.  
+   - Assert that this employee *is* selected: team[idx] = True.  
+   - If the resulting formula is SAT (i.e., a valid team exists including this employee), then the candidate *could* be on the team.  
+   - If the formula is UNSAT (i.e., no valid team exists including this employee), then this employee *cannot* be on the team under the given condition, and thus is the correct answer to the "EXCEPT" question.  
+8. Collect all employee indices for which no valid team exists when included (UNSAT cases); append them to `answer_index_list` in the order they are tested.  
+9. The first such index corresponds to the answer choice that *must be excluded*, which satisfies "EXCEPT" (i.e., cannot be on the team). Since only one answer is correct, the plan ensures we identify it as the first UNSAT case (or verify uniqueness).

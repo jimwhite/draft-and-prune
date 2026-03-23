@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * List the seven vehicles as variables: `"limousine"`, `"sedan"`, `"tractor"`, `"motorcycle"`, `"minivan"`, `"hatchback"`, and `"truck"` (note: correct spelling of "motorcyle" to "motorcycle").
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, and **7 = newest**.
+    * Add all variables with domain [1..7] to the `Problem` instance.
+
+3.  **Add AllDifferentConstraint:**
+    * Enforce that all vehicles have distinct age ranks using `AllDifferentConstraint`.
+
+4.  **Translate Rules into Constraints:**
+    * "The minivan is newer than the limousine" → `minivan > limousine`.
+    * "The tractor is the second-newest" → `tractor == 6` (since 7 is newest).
+    * "The truck is older than the sedan" → `truck < sedan`.
+    * "The minivan is older than the truck" → `minivan < truck`.
+    * "The hatchback is newer than the tractor" → `hatchback > tractor` → `hatchback > 6`, so `hatchback == 7`.
+    * "The motorcyle is the fourth-newest" → In a 1-to-7 scale (1=oldest, 7=newest), fourth-newest = position 4 (since 1st-newest=7, 2nd-newest=6, 3rd-newest=5, 4th-newest=4), so `motorcycle == 4`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (expected as only one satisfies all constraints).
+
+6.  **Identify the Correct Answer:**
+    * The question asks which vehicle is the *second-newest*, i.e., rank 6.
+    * Extract the vehicle with value `6` from the solution dictionary.
+    * Map it to the corresponding choice letter:
+        * A) limousine
+        * B) sedan
+        * C) tractor
+        * D) motorcycle
+        * E) minivan
+        * F) hatchback
+        * G) truck
+    * Print the correct letter (matching the vehicle found at position 6).

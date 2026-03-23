@@ -1,0 +1,22 @@
+1. Enumerate the five witnesses and assign them integer codes: Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4.  
+2. Assign integer day variables (0=Monday, 1=Tuesday, 2=Wednesday) for each witness’s testimony day.  
+3. Add **domain constraints**: Each witness’s day variable must be in {0, 1, 2}.  
+4. Add **per-day capacity constraints**:  
+    - Exactly two witnesses on Tuesday: count of witnesses with day == 1 is exactly 2.  
+    - At least one witness on Monday: count of witnesses with day == 0 ≥ 1.  
+    - Iturbe testifies on Wednesday: day_Iturbe == 2.  
+5. Add **mutual exclusion constraints**:  
+    - Franco and Garcia do not testify on the same day: day_Franco ≠ day_Garcia.  
+    - Hong does not testify on Monday: day_Hong ≠ 0.  
+6. Add **given assumption constraint**: Franco and Hong testify on the same day: day_Franco == day_Hong.  
+7. Translate each answer choice into a Boolean condition on the schedule:  
+    - A: day_Franco == 2  
+    - B: day_Garcia == 0  
+    - C: day_Garcia == 2  
+    - D: day_Hong == 1  
+    - E: (day_Iturbe == 2) ∧ (no other witness has day == 2)  
+8. Define answer index list 'forced_condition_indices' = []. For each answer choice index i ∈ {0,1,2,3,4}:  
+    - Clone the base constraints (steps 2–6) into a fresh solver S.  
+    - Add constraint that the current answer choice is *false* (e.g., for i=0, assert day_Franco ≠ 2).  
+    - Check satisfiability of S. If UNSAT, then the answer choice *must* be true; append i to forced_condition_indices.  
+9. Return forced_condition_indices as the list of necessary conclusions.

@@ -1,0 +1,13 @@
+1. Enumerate the eight compositions and assign each an integer index (e.g., F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7).  
+2. Create integer position variables `pos[c]` for each composition c, representing its performance slot (1 to 8).  
+3. Add **domain constraints**: all `pos[c] ∈ {1,2,...,8}` and pairwise distinct (AllDifferent(pos)).  
+4. Add **T-F-R adjacency constraint**: either `pos_T == pos_F - 1` (T immediately before F) OR `pos_R == pos_T - 1` (T immediately after R).  
+5. Add **separation constraint for F and R**: `abs(pos_F - pos_R) >= 3` (since ≥2 compositions between them implies distance ≥3).  
+6. Add **O position constraint**: `pos_O == 1 OR pos_O == 5`.  
+7. Add **eighth-slot constraint**: `pos_L == 8 OR pos_H == 8`.  
+8. Add **P-before-S constraint**: `pos_P < pos_S`.  
+9. Add **O-S separation constraint**: `abs(pos_O - pos_S) >= 2` (since at least one composition between them).  
+10. For each answer choice (a list of 8 compositions in order), translate it into a target assignment: for position i (1-indexed), assign `pos[composition] = i`.  
+11. For each choice, clone base constraints into a fresh solver and assert the fixed ordering from the choice (i.e., constrain `pos[c]` to the given position for each c).  
+12. Check satisfiability; if SAT, that list is a possible order. Collect all choices with SAT result.  
+13. Output the index (or indices) of the satisfiable choice(s).

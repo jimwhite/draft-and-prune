@@ -1,0 +1,14 @@
+1. Enumerate the six band members and assign integer codes to each role: ["guitarist", "keyboard player", "percussionist", "saxophonist", "trumpeter", "violinist"].  
+2. Create integer variables for each member’s solo position: pos_g, pos_k, pos_p, pos_s, pos_t, pos_v (each ∈ {1,2,...,6}).  
+3. Add **domain constraints**: all positions are distinct integers from 1 to 6 (use `Distinct` or pairwise inequalities).  
+4. Add **guitarist constraint**: pos_g ≠ 4.  
+5. Add **percussionist < keyboard player** constraint: pos_p < pos_k.  
+6. Add **violinist < keyboard player < guitarist** constraints: pos_v < pos_k and pos_k < pos_g.  
+7. Add **saxophonist constraint**: saxophonist performs after exactly one of percussionist or trumpeter (XOR):  
+   - (pos_p < pos_s) XOR (pos_t < pos_s), implemented as `(pos_p < pos_s) + (pos_t < pos_s) == 1` using integer arithmetic.  
+8. Translate the answer choices into member indices: guitarist=0, keyboard player=1, saxophonist=2, trumpeter=3, violinist=4.  
+9. Define answer index list `answer_index_list = []`. For each candidate member in [0,1,2,3,4] (i.e., the five choices):  
+   - Clone base constraints into a fresh solver.  
+   - Assert that this member performs the third solo: `pos_candidate == 3`.  
+   - If the model is UNSAT, then this member **cannot** be third; append the index to `answer_index_list`.  
+10. Print the answer index list (which should contain exactly one index, corresponding to the member who cannot perform third).

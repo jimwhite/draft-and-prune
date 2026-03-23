@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (to match the phrasing "second-most expensive" meaning rank 6).
+    * Add all fruit variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.
+    * Translate each statement into constraints:
+        * "The oranges are more expensive than the peaches" → `oranges > peaches` (since higher rank = more expensive).
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4` (since most expensive = 7, fourth-most = 4).
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (since lower rank = less expensive).
+        * "The peaches are the second-most expensive" → `peaches == 6` (7 = most, so 6 = second-most).
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (1 = cheapest, 2 = second-cheapest, 3 = third-cheapest).
+
+4.  **Solve for the Complete Assignment:**
+    * Use `getSolutions()` to compute all valid price assignments.
+    * Extract the unique solution (or first one if multiple exist, though uniqueness is implied by full specification).
+
+5.  **Determine Which Fruit Is Second-Most Expensive:**
+    * The question asks for the fruit with rank **6** (second-most expensive).
+    * Examine the solved solution dictionary to find which fruit has value `6`.
+    * Map that fruit name to the corresponding choice letter using the provided list:
+        - A: watermelons
+        - B: mangoes
+        - C: kiwis
+        - D: pears
+        - E: cantaloupes
+        - F: oranges
+        - G: peaches
+    * Return the correct choice letter (e.g., `'F'` if `oranges == 6`).

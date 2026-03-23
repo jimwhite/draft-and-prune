@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles — assign integer indices 0 to 5.  
+2. Create six integer variables `b_fuel`, `b_grain`, `b_live`, `b_mach`, `b_prod`, `b_text` representing the bay numbers (1–6) for each cargo type.  
+3. Add **domain constraints**: all bay variables must be distinct integers in range [1, 6].  
+4. Add **base ordering constraints** from the problem:  
+   - `b_grain > b_live`  
+   - `b_live > b_text`  
+   - `b_prod > b_fuel`  
+   - `|b_text - b_prod| = 1` (textiles and produce adjacent)  
+5. Add the **hypothetical condition**: "produce is next to livestock" → `|b_prod - b_live| = 1`.  
+6. Translate the answer choices into logical statements about bay assignments:  
+   - Option 0: `b_fuel == 2`  
+   - Option 1: `b_prod == 4`  
+   - Option 2: `b_text == 4`  
+   - Option 3: `b_grain == 5`  
+   - Option 4: `b_mach == 5`  
+7. Define answer index list `answer_index_list = []`. For each option *i* (0 to 4):  
+   - Clone base + hypothetical constraints into a fresh solver.  
+   - Assert the condition for that option (e.g., `b_fuel == 2` for i=0).  
+   - If the model is **UNSAT**, then this option **cannot** be true under the condition; thus it is the "EXCEPT" candidate — append *i* to `answer_index_list`.  
+8. Print `answer_index_list` (expected size 1).

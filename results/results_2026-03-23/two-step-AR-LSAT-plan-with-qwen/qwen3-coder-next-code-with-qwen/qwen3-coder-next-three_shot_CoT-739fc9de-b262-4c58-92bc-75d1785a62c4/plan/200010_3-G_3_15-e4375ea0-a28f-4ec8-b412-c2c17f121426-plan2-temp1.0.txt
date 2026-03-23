@@ -1,0 +1,25 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign integer indices to each.  
+2. Create integer variables `pos[comp]` for each composition's performance position (1 to 8).  
+3. Add **domain constraints**: each `pos[comp]` ∈ {1,2,...,8}, and all positions are distinct (using `Distinct`).  
+4. Add the core ordering constraints from the problem:  
+    - T is performed either immediately before F (`pos_T + 1 == pos_F`) or immediately after R (`pos_R + 1 == pos_T`).  
+    - At least two compositions are performed either after F and before R, or after R and before F:  
+        - Either `(pos_F < pos_R - 2)` or `(pos_R < pos_F - 2)`.  
+    - O is performed either first or fifth: `pos_O == 1 ∨ pos_O == 5`.  
+    - The eighth composition is either L or H: `pos_L == 8 ∨ pos_H == 8`.  
+    - P is performed before S: `pos_P < pos_S`.  
+    - At least one composition is performed either after O and before S, or after S and before O:  
+        - `(pos_O < pos_S - 1) ∨ (pos_S < pos_O - 1)`.  
+5. Add the conditional assumption: **O is performed immediately after T** → `pos_O == pos_T + 1`.  
+6. Combine with the core constraints to form a single constraint system under this assumption.  
+7. For each possible position of F (i.e., positions 1 through 8), check feasibility:  
+    - Clone the solver, assert `pos_F == k` for k in {1,2,...,8},  
+    - Check SAT; if UNSAT, F cannot be at position k under the assumption.  
+8. Group the feasible positions of F into contiguous or specified intervals matching the answer choices:  
+    - 'first or second' → {1,2}  
+    - 'second or third' → {2,3}  
+    - 'fourth or sixth' → {4,6}  
+    - 'fourth or seventh' → {4,7}  
+    - 'sixth or seventh' → {6,7}  
+9. Determine which choice’s interval exactly matches the set of feasible positions for F (i.e., F must be at *only* those positions).  
+10. Return the index of the choice whose interval is precisely the set of possible F positions under the assumption.

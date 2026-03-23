@@ -1,0 +1,14 @@
+1. Enumerate the six roles and assign each an integer index (e.g., guitarist=0, keyboard player=1, percussionist=2, saxophonist=3, trumpeter=4, violinist=5).  
+2. Create integer variables `pos[0]` to `pos[5]`, where `pos[i]` is the solo position (1–6) for role i.  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6}, and all `pos[i]` are pairwise distinct (a permutation).  
+4. Add **guitarist constraint**: `pos[guitarist] ≠ 4`.  
+5. Add **percussionist < keyboard player** constraint: `pos[percussionist] < pos[keyboard_player]`.  
+6. Add **violinist < keyboard player < guitarist** constraints: `pos[violinist] < pos[keyboard_player]` and `pos[keyboard_player] < pos[guitarist]`.  
+7. Add **saxophonist XOR constraint**: saxophonist performs after *exactly one* of percussionist or trumpeter:  
+    - `(pos[saxophonist] > pos[percussionist]) XOR (pos[saxophonist] > pos[trumpeter])`.  
+8. Translate the answer choices into role indices: ['guitarist', 'keyboard player', 'saxophonist', 'trumpeter', 'violinist'] → indices [0,1,2,4,5] (excluding saxophonist index 3? Wait: correct mapping is: 0:guitarist, 1:keyboard player, 2:percussionist, 3:saxophonist, 4:trumpeter, 5:violinist). So answer roles: guitar=0, keyboard=1, sax=3, trumpeter=4, violinist=5.  
+9. Define `answer_index_list = []`. For each role index in `[0,1,3,4,5]`:  
+    - Clone base constraints into a fresh solver.  
+    - Add `pos[role] == 3`.  
+    - If the model is UNSAT, then this role **cannot** be third; append its index to `answer_index_list`.  
+10. Print `answer_index_list`.

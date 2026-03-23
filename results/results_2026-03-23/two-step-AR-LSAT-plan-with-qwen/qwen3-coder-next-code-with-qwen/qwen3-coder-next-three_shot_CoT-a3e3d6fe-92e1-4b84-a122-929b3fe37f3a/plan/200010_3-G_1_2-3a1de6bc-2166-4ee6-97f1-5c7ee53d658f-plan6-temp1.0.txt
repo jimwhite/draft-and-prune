@@ -1,0 +1,23 @@
+1. Enumerate the eight students and assign integer indices (e.g., George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Define Boolean variables `assigned[i]` for each student i indicating whether they give a report (exactly six must be true).  
+3. Define Boolean variables `day[i][d]` for student i on day d ∈ {Mon=0, Tue=1, Wed=2}, indicating if student i gives a report on day d; enforce `day[i][0] ∨ day[i][1] ∨ day[i][2]` only if `assigned[i]`, and exactly one day per assigned student.  
+4. Define Boolean variables `slot[i][s]` for student i and slot s ∈ {morning=0, afternoon=1}, with constraint `slot[i][0] ∨ slot[i][1]` iff `assigned[i]`, and exactly one slot per assigned student.  
+5. Enforce that each day has exactly two reports: for each day d, sum over i of `day[i][d]` = 2.  
+6. Add **George constraint**: George can only give a report on Tuesday (`day[0][1] = True` and `day[0][0] = day[0][2] = False`).  
+7. Add **Olivia/Robert constraint**: Neither can give an afternoon report (`slot[6][1] = False`, `slot[7][1] = False`).  
+8. Add **Nina conditional constraint**: If Nina gives a report (`assigned[5] = True`), then:  
+    - If her report is on Monday or Tuesday (i.e., `day[5][0] ∨ day[5][1]`), then both Helen and Irving must give reports the next day:  
+        - If `day[5][0]`, then `day[1][1] ∧ day[2][1]` must hold (Helen and Irving on Tue);  
+        - If `day[5][1]`, then `day[1][2] ∧ day[2][2]` must hold (Helen and Irving on Wed);  
+    - If her report is on Wednesday (`day[5][2] = True`), no further constraint.  
+9. Add **given condition**: Kyle and Lenore do *not* give reports (`assigned[3] = False`, `assigned[4] = False`).  
+10. For each answer choice (a triple of students for Mon-morning, Tue-morning, Wed-morning):  
+    - Clone the base constraints (excluding this step) into a fresh solver.  
+    - Assert:  
+        - The three specified students are assigned (`assigned[i] = True` for each in the triple);  
+        - Each of them is scheduled in the specified slot and day: e.g., for 'Helen, George, Nina' → `day[1][0] ∧ slot[1][0]`, `day[0][1] ∧ slot[0][0]`, `day[5][2] ∧ slot[5][0]`;  
+        - The remaining assigned students (to make total 6) must be selected from the other eligible students (excluding Kyle, Lenore), respecting all constraints;  
+        - Note: The triple must consist of distinct students and each slot/day assignment must be valid (e.g., only one person per slot per day).  
+    - Check satisfiability. If SAT, the triple is possible; record this choice index as a valid candidate.  
+11. Since the question asks for "could be", we are to select among the given options the one(s) that *are* possible. However, the format implies a single answer; we will identify which choices yield SAT (typically only one does in LSAT-style).  
+12. Output the index of the valid choice(s) based on SAT results.

@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+    * Create an instance of `Problem`.
+
+2.  **Define Variables and Domain:**  
+    * List the seven vehicles as variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.  
+    * Define the domain as integers 1 to 7, where **1 = oldest**, **7 = newest** (to align with age-based ranking).  
+    * Add all variables and the domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add `AllDifferentConstraint()` to ensure unique positions.  
+    * "The station wagon is the fourth-newest" → position = 4 (since 7=newest, 6=3rd-newest, 5=2nd-newest, **4=4th-newest**).  
+    * "The minivan is the third-newest" → position = 5 (7=newest, 6=2nd-newest, **5=3rd-newest**).  
+    * "The tractor is the second-oldest" → position = 2 (1=oldest, **2=second-oldest**).  
+    * "The convertible is older than the station wagon" → `convertible < station_wagon` (since smaller number = older).  
+    * "The truck is newer than the bus" → `bus < truck` (since bus is older, so its position number is smaller).  
+    * "The hatchback is older than the convertible" → `hatchback < convertible`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid arrangements.  
+    * Extract the (unique) solution from the list.
+
+5.  **Identify the Second-Newest Vehicle:**  
+    * The second-newest corresponds to position = 6 (since 7=newest, **6=second-newest**).  
+    * Create a dictionary mapping choice letters to vehicle names: `'A' → 'truck'`, `'B' → 'hatchback'`, ..., `'G' → 'convertible'`.  
+    * Iterate through the solution dictionary to find which vehicle has position 6.  
+    * Return the corresponding choice letter.

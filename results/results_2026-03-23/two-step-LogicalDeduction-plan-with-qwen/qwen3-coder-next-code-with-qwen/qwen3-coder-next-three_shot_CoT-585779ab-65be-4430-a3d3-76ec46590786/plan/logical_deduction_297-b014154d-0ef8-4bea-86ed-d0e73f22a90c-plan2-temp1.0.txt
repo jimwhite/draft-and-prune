@@ -1,0 +1,24 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to begin building the puzzle solver.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables as the three golfers: `"amy"`, `"eli"`, and `"eve"`.  
+    * Define the domain as integers from 1 to 3, where **1 = last place (lowest rank)** and **3 = first place (highest/rank 1)** — i.e., *smaller position number means worse finish*.  
+    * Add the golfers as variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finish position.  
+    * Translate the statements into constraints using `lambda` functions:  
+        * "Eve finished above Amy" means Eve had a better (i.e., smaller number) rank than Amy → `eve < amy`.  
+        * "Eli finished below Amy" means Eli had a worse (i.e., larger number) rank than Amy → `amy < eli`.
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid orderings.  
+    * Since the problem is well-constrained, extract the unique solution (the only dictionary satisfying all constraints).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks who finished *last*. In our ranking system, that corresponds to position **3** (worst rank).  
+    * Create a mapping from choice letters (`"A"` → `"amy"`, `"B"` → `"eli"`, `"C"` → `"eve"`) to golfer names.  
+    * In the solution dictionary, find which golfer has value `3`.  
+    * Return the corresponding choice letter as the final answer.

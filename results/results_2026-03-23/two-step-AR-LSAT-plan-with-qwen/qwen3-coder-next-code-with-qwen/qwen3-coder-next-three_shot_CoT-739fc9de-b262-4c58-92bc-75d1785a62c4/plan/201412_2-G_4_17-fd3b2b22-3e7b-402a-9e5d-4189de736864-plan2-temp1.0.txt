@@ -1,0 +1,13 @@
+1. Enumerate the six photographers and assign integer indices (e.g., Frost=0, Gonzalez=1, Heideck=2, Knutson=3, Lai=4, Mays=5).  
+2. Create Boolean variables for each photographer and ceremony: `S[i]` = True if photographer i is assigned to Silva, `T[i]` = True if assigned to Thorne.  
+3. Add **mutual exclusivity constraint**: No photographer assigned to both ceremonies: `S[i] == True => T[i] == False`, and vice versa (equivalently, `S[i] && T[i] == False` for all i).  
+4. Add **minimum assignment constraint**: At least two photographers at each ceremony: `sum(S[i]) >= 2`, `sum(T[i]) >= 2`.  
+5. Add **Frost–Heideck constraint**: Frost and Heideck must be assigned *together* to one ceremony: `(S[0] == S[2]) and (T[0] == T[2])` and `(S[0] or S[2])` (ensuring they are assigned somewhere).  
+6. Add **Lai–Mays constraint**: If both assigned, they must be at different ceremonies: `S[4] and S[5] => False`, `T[4] and T[5] => False` (i.e., `S[4] != S[5]` if both assigned, or equivalently `(S[4] && S[5]) == False`).  
+7. Add **Gonzalez→Lai constraint**: If Gonzalez is at Silva, then Lai must be at Thorne: `S[1] => T[4]`.  
+8. Add **Knutson conditional constraint**: If Knutson is *not* at Thorne, then both Heideck and Mays must be at Thorne: `~T[3] => (T[2] and T[5])`.  
+9. For each answer choice in the list of 5 options:  
+    a. Parse the assignment to set truth values for `S[i]` and `T[i]`.  
+    b. For each photographer, ensure assignment is consistent: if in Silva only, `S[i]=True`, `T[i]=False`; if in Thorne only, `S[i]=False`, `T[i]=True`; if unassigned, `S[i]=False`, `T[i]=False`.  
+    c. Check if all constraints (steps 3–8) are satisfied under this assignment.  
+10. Return the index of the first (or only) option that satisfies all constraints.

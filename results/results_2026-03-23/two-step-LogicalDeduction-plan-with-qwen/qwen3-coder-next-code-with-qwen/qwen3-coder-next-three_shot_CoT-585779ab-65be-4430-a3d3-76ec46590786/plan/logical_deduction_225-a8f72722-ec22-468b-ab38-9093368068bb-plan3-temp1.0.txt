@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Create a list of strings for the seven books: `"purple"`, `"brown"`, `"red"`, `"blue"`, `"gray"`, `"black"`, and `"green"`.
+    * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven book variables to the problem with this domain (positions 1 through 7).
+
+3.  **Add All-Different Constraint:**
+    * Enforce that each book occupies a unique position using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints Using Lambda Functions:**
+    * "The brown book is to the left of the green book" → `brown < green`
+    * "The gray book is the second from the left" → `gray == 2`
+    * "The black book is to the left of the gray book" → `black < gray`
+    * "The blue book is to the left of the red book" → `blue < red`
+    * "The blue book is the second from the right" → Since rightmost is position 7, second from right is position 6 → `blue == 6`
+    * "The green book is to the left of the purple book" → `green < purple`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions to books.
+    * Extract the single solution (or iterate through solutions if multiple exist, though the problem implies uniqueness).
+
+6.  **Determine "Third from the Right":**
+    * For a 7-position shelf, third from the right corresponds to position = 7 - 2 = **5**.
+    * Confirm: positions from right: 1st=7, 2nd=6, **3rd=5**.
+
+7.  **Identify the Correct Choice:**
+    * Create a mapping from choice letters to book names:
+        * "A" → `"purple"`
+        * "B" → `"brown"`
+        * "C" → `"red"`
+        * "D" → `"blue"`
+        * "E" → `"gray"`
+        * "F" → `"black"`
+        * "G" → `"green"`
+    * Iterate through the choices (A–G), and for each choice, check if the corresponding book's position in the solution equals **5**.
+    * Return the letter (A–G) of the first (and only) choice where this condition holds.

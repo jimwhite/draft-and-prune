@@ -1,0 +1,34 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven vehicle variables: `"truck"`, `"motorcycle"`, `"sedan"`, `"minivan"`, `"station_wagon"`, `"hatchback"`, and `"tractor"` (note: correct spelling of "motorcyle" to "motorcycle" for consistency, though the problem uses "motorcyle"; retain original spelling if strictly required by problem, but standardize to match choice strings—here choices use "motorcyle", so keep variable as `"motorcyle"` to match).  
+    * Define the domain for age ranking: integers from **1 (oldest)** to **7 (newest)**.  
+    * Add all seven vehicle variables with domain `{1,2,3,4,5,6,7}` to the problem.
+
+3.  **Translate Statements into Constraints:**  
+    * Add `AllDifferentConstraint` to enforce unique rankings.  
+    * "The hatchback is newer than the truck" → `hatchback > truck` (since higher number = newer).  
+    * "The sedan is the third-newest" → `sedan == 5` (because newest=7, second-newest=6, third-newest=5).  
+    * "The station wagon is the newest" → `station_wagon == 7`.  
+    * "The motorcyle is older than the truck" → `motorcyle < truck` (lower number = older).  
+    * "The minivan is newer than the sedan" → `minivan > sedan` (i.e., `minivan > 5`).  
+    * "The tractor is the third-oldest" → `tractor == 3` (oldest=1, second-oldest=2, third-oldest=3).
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution (a dictionary mapping vehicle names to their numeric ranks).
+
+5.  **Determine the Fourth-Newest Vehicle:**  
+    * Since numbering is 1=oldest to 7=newest, fourth-newest corresponds to rank `7 - 4 + 1 = 4`.  
+    * Identify which vehicle has rank `4` in the solution.  
+    * Map this vehicle to the correct choice letter by matching against:  
+        A) truck → 4th-newest?  
+        B) motorcyle → 4th-newest?  
+        C) sedan → 4th-newest? (but sedan=5, so no)  
+        D) minivan → 4th-newest?  
+        E) station_wagon → 4th-newest? (station_wagon=7, so no)  
+        F) hatchback → 4th-newest?  
+        G) tractor → 4th-newest? (tractor=3, so no)  
+    * Return the letter of the choice whose vehicle is assigned rank 4.

@@ -1,0 +1,25 @@
+1. Identify all entities: Dave, Erin, Fiona, Harry.
+2. Encode explicitly stated facts using ternary predicates:
+   - is_blue("Dave", True)
+   - is_red("Erin", True)
+   - is_round("Erin", True)
+   - is_smart("Erin", True)
+   - is_white("Erin", True)
+   - is_rough("Fiona", True)
+   - is_round("Fiona", True)
+   - is_red("Harry", True)
+   - is_rough("Harry", True)
+   - is_smart("Harry", True)
+3. Translate all contextual implications into PyKe rules:
+   • All smart, round people are blue → foreach: is_smart(x, True), is_round(x, True) ; assert: is_blue(x, True)
+   • If Fiona is round → Fiona is red → special-case fact (Fiona is known to be round), so assert: is_red("Fiona", True)
+   • If someone is red → they are young → foreach: is_red(x, True) ; assert: is_young(x, True)
+   • If Harry is young and round → Harry is rough → foreach: is_young("Harry", True), is_round("Harry", True) ; assert: is_rough("Harry", True)
+   • If someone is young and smart → they are blue → foreach: is_young(x, True), is_smart(x, True) ; assert: is_blue(x, True)
+   • White people are smart → foreach: is_white(x, True) ; assert: is_smart(x, True)
+   • Young people are round → foreach: is_young(x, True) ; assert: is_round(x, True)
+   • If someone is young → they are white → foreach: is_young(x, True) ; assert: is_white(x, True)
+4. Note that Fiona is known to be rough and round (given), so the rule “If Fiona is round → red” can be triggered once, yielding is_red("Fiona", True).
+5. Use forward chaining to derive additional facts: apply all applicable rules repeatedly until no new facts are inferred.
+6. The query checks whether Dave is red:
+   → Use facts.is_red("Dave", True)

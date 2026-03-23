@@ -1,0 +1,26 @@
+1. Identify all entities: Anne, Dave, Erin, Gary.  
+2. Encode all directly stated properties and relations using ternary predicates:  
+   - is_big("Anne", True), is_cold("Anne", True), is_young("Anne", True)  
+   - is_round("Dave", True), is_white("Dave", True)  
+   - is_cold("Erin", True), is_white("Erin", True), is_young("Erin", True)  
+   - is_cold("Gary", True), is_young("Gary", True)  
+3. Encode all given implications as rules using `foreach` and `assert`:  
+   • If something is big → it is cold.  
+   • If something is round → it is big.  
+   • If something is furry and round → it is big.  
+   • If something is cold → it is furry.  
+   • If Erin is round → Erin is young.  
+   • If something is furry and big → it is young.  
+   • If something is white → it is round.  
+   • If Gary is cold → Gary is white.  
+   • If something is white and young → it is nice.  
+4. Focus on deriving is_furry("Dave", True) or its negation:  
+   - From given facts, Dave is round and white.  
+   - Using rules: white → round (already satisfied), round → big, cold → furry.  
+   - To infer Dave is furry, need Dave to be cold (via round→big and big→cold), or explicitly given.  
+   - However, no direct statement says Dave is cold; only round and white are given.  
+   - Round → big, then big → cold ⇒ Dave is cold ⇒ cold → furry ⇒ Dave is furry.  
+   - This chain is valid, so the rule set should entail is_furry("Dave", True).  
+5. The query tests the negation:  
+   → Use facts.is_furry("Dave", False) to check if it is provably false.  
+   But since the chain above proves Dave *is* furry, the statement "Dave is not furry" would be false; hence we query the negation to confirm unsatisfiability.

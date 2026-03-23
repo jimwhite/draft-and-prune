@@ -1,0 +1,17 @@
+1. Enumerate the six available students (Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio) and assign integer indices.  
+2. Define Boolean assignment variables `assigned[i][y]` for each student i and year y ∈ {1921, 1922, 1923, 1924}, where `assigned[i][y]` is true iff student i is assigned to year y.  
+3. Add **exactly-one-year constraint**: each assigned student must be assigned to exactly one year (1921–1924), and each year is assigned exactly one student.  
+    - For each student: sum over years of `assigned[i][y]` ≤ 1.  
+    - For each year: sum over students of `assigned[i][y]` = 1.  
+    - Since only four of six students are assigned, exactly two students are unassigned; enforce `sum_i sum_y assigned[i][y] = 4`.  
+4. Add **fixed premise constraint**: Ryan and Yoshio are both assigned (i.e., `sum_y assigned[ryan][y] = 1` and `sum_y assigned[yoshio][y] = 1`).  
+5. Add **1923 constraint**: Only Louis or Tiffany can be assigned to 1923 → `assigned[louis][1923] ∨ assigned[tiffany][1923]`, and no one else.  
+6. Add **Mollie constraint**: If Mollie is assigned, she must be in 1921 or 1922 → `sum_{y∈{1923,1924}} assigned[mollie][y] = 0`.  
+7. Add **Tiffany→Ryan constraint**: If Tiffany is assigned, then Ryan must be assigned → `sum_y assigned[tiffany][y] ≤ sum_y assigned[ryan][y]`. (Already satisfied per premise, but still enforce for correctness.)  
+8. Add **Ryan→Onyx prior constraint**: If Ryan is assigned to year Y, then Onyx must be assigned to Y−1 → For each year y ∈ {1922,1923,1924}, if Ryan is in y, then Onyx must be in y−1. Implement as:  
+    - `assigned[ryan][y] → assigned[onyx][y-1]` for y = 1922,1923,1924.  
+    - (Note: 1921 has no predecessor, so `assigned[ryan][1921]` must be false — enforce implicitly via constraints.)  
+9. Translate each answer choice into a propositional condition (e.g., "Louis is assigned to 1923" = `assigned[louis][1923]`).  
+10. For each answer choice, create a fresh solver with the base constraints plus the premise (Ryan and Yoshio assigned) **and** the answer choice condition.  
+11. If any such assignment is SAT, then that choice **could be true**; record the index of satisfying choices.  
+12. Since only one choice can be correct (standard LSAT format), the answer list will have exactly one index.

@@ -1,0 +1,29 @@
+1. Enumerate the three cookie types (oatmeal, peanut butter, sugar) and assign each an index: 0=oatmeal, 1=peanut butter, 2=sugar.  
+2. Enumerate the five days (Monday to Friday) and assign each a position: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri.  
+3. Create integer variables for each batch’s production day: for cookie type c ∈ {0,1,2} and batch number b ∈ {1,2,3}, let day[c][b] be the day (0–4) on which batch b of cookie c is made.  
+4. Add **domain constraints**: each day[c][b] ∈ {0,1,2,3,4}.  
+5. Add **distinct-per-type constraints**: for each cookie type c, the three batches are on distinct days: day[c][1] ≠ day[c][2], day[c][1] ≠ day[c][3], day[c][2] ≠ day[c][3].  
+6. Add **at-least-one-on-Monday constraint**: at least one of the nine day[c][b] values equals 0 (Monday).  
+7. Add **Oatmeal-2 = Peanut Butter-1 constraint**: day[0][2] == day[1][1].  
+8. Add **Sugar-2 = Thursday constraint**: day[2][2] == 3 (Thursday).  
+9. Add the conditional premise: “one kind’s first batch is made on same day as another kind’s third batch”:  
+    - Enumerate all 3×2=6 possible ordered type pairs (c1≠c2):  
+        • c1=0, c2=1: day[0][1] == day[1][3]  
+        • c1=0, c2=2: day[0][1] == day[2][3]  
+        • c1=1, c2=0: day[1][1] == day[0][3]  
+        • c1=1, c2=2: day[1][1] == day[2][3]  
+        • c1=2, c1=0: day[2][1] == day[0][3]  
+        • c1=2, c2=1: day[2][1] == day[1][3]  
+    - Create a fresh solver, add all base constraints (steps 1–8), and assert one of the above six equality conditions.  
+    - Record that this is the *premise-satisfying* model space.  
+10. For each answer choice (each a statement about daily batch counts), encode it as a logical formula and test whether it *must be true* in all premise-satisfying models:  
+    - Choice 0: “At least one batch on each of the five days.” → For all d ∈ {0,1,2,3,4}, ∃(c,b) s.t. day[c][b] == d  
+    - Choice 1: “At least two batches on Wednesday (day=2).” → Count of day[c][b] == 2 ≥ 2  
+    - Choice 2: “Exactly one batch on Monday (day=0).” → Count of day[c][b] == 0 == 1  
+    - Choice 3: “Exactly two batches on Tuesday (day=1).” → Count of day[c][b] == 1 == 2  
+    - Choice 4: “Exactly one batch on Friday (day=4).” → Count of day[c][b] == 4 == 1  
+11. For each choice i (0–4):  
+    - Clone the premise-satisfying solver.  
+    - Assert that choice i’s condition does *not* hold (i.e., negate it).  
+    - If the resulting instance is SAT (i.e., a model exists satisfying the premise but falsifying choice i), then choice i *could be false*.  
+12. Collect indices of all such choices that could be false (i.e., for which SAT was found), and return that list as the answer index list.

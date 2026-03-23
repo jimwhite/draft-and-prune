@@ -1,0 +1,25 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and assign integer indices 0,1,2.  
+2. Enumerate days (Monday–Friday) and assign integer indices 0–4.  
+3. Create integer variables `batch_day[type][batch_num]` for each cookie type and batch number (1st, 2nd, 3rd), where `batch_num ∈ {0,1,2}`.  
+4. Add **domain constraints**: each `batch_day[type][batch_num] ∈ {0,1,2,3,4}` (Monday–Friday).  
+5. Add **distinct-day-per-type constraint**: for each cookie type, batches are on distinct days:  
+    - `batch_day[type][0] ≠ batch_day[type][1]`, `batch_day[type][0] ≠ batch_day[type][2]`, `batch_day[type][1] ≠ batch_day[type][2]`.  
+6. Add **minimum-Monday constraint**: at least one batch is on Monday (i.e., `min over all variables ≤ 0`).  
+7. Add **oatmeal–peanut butter linkage**: `batch_day[oatmeal][1] == batch_day[peanut_butter][0]`.  
+8. Add **sugar-Thursday constraint**: `batch_day[sugar][1] == 3` (Thursday = index 3).  
+9. Add **auxiliary variable per day**: define `count[day]` as number of batches on that day via linear counting (sum over all 9 batch variables checking equality to day index).  
+10. For each answer choice, form a Boolean condition representing the statement:  
+    - Choice A: `all(count[d] ≥ 1 for d in 0..4)`  
+    - Choice B: `count[2] ≥ 2` (Wednesday = index 2)  
+    - Choice C: `count[0] == 1`  
+    - Choice D: `count[1] == 2` (Tuesday = index 1)  
+    - Choice E: `count[4] == 1` (Friday = index 4)  
+11. Preprocess the core constraints (steps 3–8) into a solver S_core.  
+12. Create a fresh solver S_conditional for the conditional scenario: assume that *there exists* a day where one kind’s 1st batch coincides with another kind’s 3rd batch. Formally:  
+    - Introduce existential Boolean variables (or use disjunction) for all valid (type1, type2, day) triples where `batch_day[type1][0] == day` and `batch_day[type2][2] == day`, and add the disjunction of all such equalities to S_conditional.  
+13. Now, for each answer choice i (0–4):  
+    - Clone S_conditional into Si.  
+    - Assert the negation of choice i’s condition (i.e., assume the statement is *false*).  
+    - If Si is SAT, then it’s possible for that choice to be false under the given condition; hence, that choice *could* be false.  
+14. The question asks: "which one could be false?" → collect all indices i where Si is SAT.  
+15. Return the list of such indices (should be exactly one per LSAT-style logic games).

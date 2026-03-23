@@ -1,0 +1,16 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign integer indices (e.g., 0–5).  
+2. Create integer variables `pos[c]` for each cargo type `c`, representing its bay number (1–6).  
+3. Add **domain constraints**: `pos[c] ∈ {1,2,3,4,5,6}` for all c.  
+4. Add **distinctness constraint**: `pos[c1] ≠ pos[c2]` for all distinct cargo types c1, c2.  
+5. Add **given ordering constraints**:  
+   - grain > livestock: `pos[grain] > pos[livestock]`  
+   - livestock > textiles: `pos[livestock] > pos[txtiles]`  
+   - produce > fuel: `pos[produce] > pos[fuel]`  
+   - textiles adjacent to produce: `|pos[txtiles] - pos[produce]| = 1`  
+6. Add **additional conditional constraint** (hypothetical scenario): produce is next to livestock: `|pos[produce] - pos[livestock]| = 1`.  
+7. Combine constraints: use a base solver with all six above constraint groups.  
+8. For each choice in the answer options:  
+   - Create a fresh solver, copy base constraints, and add the specific assertion from the choice (e.g., `pos[fuel] == 2` for "Bay 2 is holding fuel").  
+   - If the model is SAT, the choice *could* be true; if UNSAT, it *cannot* be true.  
+9. The question asks for the choice that **could NOT be true** (EXCEPT), so collect all choices for which the model is UNSAT.  
+10. Map each UNSAT choice index to its original string; output only the EXCEPT answer (i.e., the single choice that is impossible).

@@ -1,0 +1,38 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven books as variables: `"green"`, `"brown"`, `"white"`, `"black"`, `"orange"`, `"purple"`, and `"yellow"`.
+    * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**, per standard left-to-right reading order.
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.
+    * Convert each natural-language statement into an explicit constraint using lambda functions:
+        * "The purple book is to the left of the yellow book" → `purple < yellow`
+        * "The green book is to the left of the white book" → `green < white`
+        * "The brown book is to the right of the yellow book" → `yellow < brown`
+        * "The white book is the fourth from the left" → `white == 4`
+        * "The green book is to the right of the orange book" → `orange < green`
+        * "The black book is the second from the left" → `black == 2`
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` on the `Problem` object to find all valid assignments.
+    * Extract the unique solution (a dictionary mapping each book to its position).
+
+5.  **Determine "Third from the Right":**
+    * Recognize that for a shelf of 7 books, position `p` from the left corresponds to position `(7 - p + 1)` from the right.
+    * Specifically, "third from the right" corresponds to position `7 - 3 + 1 = 5`.
+    * Therefore, identify the book whose position in the solution is **5**.
+
+6.  **Map to Answer Choices:**
+    * Create a mapping from choice letters (A–G) to book names:
+        - A → "green"
+        - B → "brown"
+        - C → "white"
+        - D → "black"
+        - E → "orange"
+        - F → "purple"
+        - G → "yellow"
+    * Find which book has position 5 in the solution and return its corresponding choice letter.

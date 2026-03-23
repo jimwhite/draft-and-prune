@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven bird variables: `"hummingbird"`, `"cardinal"`, `"blue_jay"`, `"owl"`, `"raven"`, `"quail"`, and `"robin"`.  
+    * Define the domain as integers from 1 to 7, where 1 = leftmost position and 7 = rightmost position.  
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Add AllDifferent Constraint:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+
+4.  **Translate Statements into Constraints:**  
+    * "The hummingbird is to the left of the quail" → `hummingbird < quail` (use a lambda constraint: `lambda h, q: h < q`).  
+    * "The robin is to the left of the cardinal" → `robin < cardinal`.  
+    * "The blue jay is the leftmost" → `blue_jay == 1`.  
+    * "The cardinal is the fourth from the left" → `cardinal == 4`.  
+    * "The raven is the third from the right" → in a 7-position line, third from the right = position 5 (since positions 5,6,7 are rightmost three), so `raven == 5`.  
+    * "The owl is the third from the left" → `owl == 3`.
+
+5.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to find all satisfying assignments.  
+    * Since the problem is well-constrained, expect a unique solution; extract it from the list.
+
+6.  **Identify the Leftmost Bird:**  
+    * The question asks which bird is leftmost (i.e., position 1).  
+    * From the solved assignment, find which bird variable has value 1.
+
+7. **Map to Correct Choice Letter:**  
+    * Create a mapping:  
+        - "A" → "hummingbird",  
+        - "B" → "cardinal",  
+        - "C" → "blue_jay",  
+        - "D" → "owl",  
+        - "E" → "raven",  
+        - "F" → "quail",  
+        - "G" → "robin".  
+    * Iterate through choices A–G. For each choice, check if the associated bird's position in the solution is 1.  
+    * Return the letter (e.g., "C") corresponding to the bird at position 1.

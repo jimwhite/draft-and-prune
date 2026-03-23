@@ -1,0 +1,26 @@
+1. Enumerate the five candidates and assign them integer indices: Jaramillo=0, Kayne=1, Landon=2, Novetzke=3, Ong=4.  
+2. Create integer variables `v[0..4]` where `v[i]` is the assigned country index for candidate i (Venezuela=0, Yemen=1, Zambia=2) or a special value (e.g., -1) if unassigned; alternatively, use Boolean variables `assign[i][c]` for candidate i assigned to country c.  
+3. Use Boolean variables `assign[i][c]` for each candidate i and country c ∈ {Venezuela, Yemen, Zambia}.  
+4. Add **one-to-one assignment constraints**:  
+    - Each candidate assigned to at most one country: for each i, sum_{c} assign[i][c] ≤ 1.  
+    - Each country gets exactly one ambassador: for each c, sum_{i} assign[i][c] = 1.  
+5. Add **Kayne/Novetzke exclusive constraint**: (Kayne assigned XOR Novetzke assigned).  
+    - Equivalent to: (assign[1][Venezuela] ∨ assign[1][Yemen] ∨ assign[1][Zambia]) XOR (assign[3][Venezuela] ∨ assign[3][Yemen] ∨ assign[3][Zambia]).  
+6. Add **Jaramillo ⇒ Kayne constraint**: If Jaramillo is assigned (to any country), then Kayne must be assigned (to some country):  
+    - (assign[0][Venezuela] ∨ assign[0][Yemen] ∨ assign[0][Zambia]) ⇒ (assign[1][Venezuela] ∨ assign[1][Yemen] ∨ assign[1][Zambia]).  
+7. Add **Ong-to-Venezuela ⇒ not Kayne-to-Yemen constraint**:  
+    - assign[4][Venezuela] ⇒ ¬assign[1][Yemen].  
+8. Add **Landon-to-Zambia constraint**: If Landon is assigned, it must be to Zambia:  
+    - assign[2][Venezuela] ∨ assign[2][Yemen] ⇒ false; equivalently, (assign[2][Venezuela] ∨ assign[2][Yemen]) must be false.  
+    - Or: assign[2][Venezuela] = false, assign[2][Yemen] = false.  
+9. Translate each answer choice into a pair of candidates; for each pair, define the assumption that *only* those two are unassigned (i.e., exactly three candidates are assigned, and the pair is unassigned).  
+    - For a pair (A,B), assert:  
+        - assign[A][c] = false for all c, and assign[B][c] = false for all c,  
+        - For the other three candidates X,Y,Z: each is assigned to exactly one country (sum_c assign[X][c] = 1, etc.), and the three assignments are disjoint across countries (already enforced by country constraints).  
+    - Since the total assignment already enforces exactly three ambassadors (one per country), this is sufficient: just force the two unassigned candidates to have no assignments.  
+10. For each answer choice (i.e., candidate pair):  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that both candidates in the pair receive no assignment (i.e., all `assign[i][c]` for those i are false).  
+    - Check satisfiability.  
+11. If the model is SAT, then that pair *could* be the unassigned pair; record it.  
+12. Collect all such pairs that are possible and return the one matching the question’s phrasing (though for this format, output indices of unassigned pairs that are possible).

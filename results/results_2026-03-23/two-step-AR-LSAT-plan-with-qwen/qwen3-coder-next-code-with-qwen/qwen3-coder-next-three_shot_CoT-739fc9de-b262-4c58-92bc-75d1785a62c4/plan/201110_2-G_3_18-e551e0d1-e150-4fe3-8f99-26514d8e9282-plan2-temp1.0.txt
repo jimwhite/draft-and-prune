@@ -1,0 +1,21 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assign integer indices to each.  
+2. Create Boolean variables `d1[r][b]` and `d2[r][b]` indicating whether rider r tests bicycle b on day 1 and day 2, respectively.  
+3. Add **day-1 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 1.  
+    - Each bicycle is tested by exactly one rider on day 1.  
+4. Add **day-2 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 2.  
+    - Each bicycle is tested by exactly one rider on day 2.  
+5. Add **global constraints**:  
+    - Reynaldo cannot test F on either day: `¬d1[Reynaldo][F] ∧ ¬d2[Reynaldo][F]`.  
+    - Yuki cannot test J on either day: `¬d1[Yuki][J] ∧ ¬d2[Yuki][J]`.  
+    - Theresa must test H on at least one day: `d1[Theresa][H] ∨ d2[Theresa][H]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: `∀b, d1[Yuki][b] → d2[Seamus][b]`.  
+6. Translate each answer choice into a logical conjunction of two day-1 assignments (since the phrasing “Both X and Y test Z” means both ride X and Y test bicycle Z on day 1; verify each choice's wording).  
+    - E.g., “Both Reynaldo and Seamus test J” → `d1[Reynaldo][J] ∧ d1[Seamus][J]`.  
+7. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific claim (the day-1 assignments described).  
+    - Check satisfiability: if UNSAT, then the claim **CANNOT be true**.  
+8. Collect all answer indices for which the model is UNSAT; these correspond to statements that cannot be true.  
+9. Return the answer corresponding to the statement(s) that are UNSAT (only one such choice is expected per LSAT-style question).

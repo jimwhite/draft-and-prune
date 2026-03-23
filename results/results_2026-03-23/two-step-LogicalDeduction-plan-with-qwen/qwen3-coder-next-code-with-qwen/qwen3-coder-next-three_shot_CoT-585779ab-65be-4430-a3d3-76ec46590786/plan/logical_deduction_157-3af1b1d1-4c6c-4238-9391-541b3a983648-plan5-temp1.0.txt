@@ -1,0 +1,39 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"falcon"`, `"owl"`, `"quail"`, `"raven"`, `"hummingbird"`, `"bluejay"`, and `"crow"` (note: use `"bluejay"` as a single string, without space, to match common constraint library conventions).  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, **2 = second from left**, ..., **7 = rightmost**.  
+   * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that each bird occupies a unique position by adding an `AllDifferentConstraint` over all seven variables.
+
+4. **Translate Natural Language Statements into Constraints:**  
+   * "The quail is to the left of the owl" → `quail < owl`  
+   * "The owl is the second from the left" → `owl == 2`  
+   * "The crow is to the right of the falcon" → `falcon < crow`  
+   * "The blue jay is to the right of the hummingbird" → `hummingbird < bluejay`  
+   * "The hummingbird is to the right of the raven" → `raven < hummingbird`  
+   * "The blue jay is to the left of the falcon" → `bluejay < falcon`  
+   * Add all six constraints using lambda or direct comparison methods (e.g., `problem.addConstraint(lambda q, o: q < o, ["quail", "owl"])`, or use `Variable`-based comparison where supported; for clarity and correctness, use explicit lambdas).
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Since the problem is well-constrained, expect exactly one solution; extract it (e.g., `solution = solutions[0]`).
+
+6. **Identify the Fourth-from-Left Bird:**  
+   * The question asks: which bird is at position 4 (fourth from the left)?  
+   * Invert the solution mapping: iterate through `solution.items()` to find which bird has value 4.  
+   * Map the resulting bird name to its corresponding choice letter using a dictionary:  
+        - `"falcon"` → `'A'`  
+        - `"owl"` → `'B'`  
+        - `"quail"` → `'C'`  
+        - `"raven"` → `'D'`  
+        - `"hummingbird"` → `'E'`  
+        - `"bluejay"` → `'F'`  
+        - `"crow"` → `'G'`  
+
+7. **Output the Correct Choice Letter:**  
+   * Return/print the choice letter (e.g., `"A"`, `"B"`, etc.) corresponding to the bird found in position 4.

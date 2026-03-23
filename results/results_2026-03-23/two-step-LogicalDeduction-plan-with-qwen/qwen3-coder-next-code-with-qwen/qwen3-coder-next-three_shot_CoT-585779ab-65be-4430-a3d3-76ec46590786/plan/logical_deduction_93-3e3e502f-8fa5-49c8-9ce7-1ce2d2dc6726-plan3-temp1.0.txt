@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables: `"cardinal"`, `"hawk"`, `"hummingbird"`, `"raven"`, and `"owl"` — representing the five birds.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost** position.  
+   * Add all five variables to the problem with this domain.
+
+3. **Add Constraints Based on Statements:**  
+   * Add `AllDifferentConstraint()` to ensure each bird occupies a unique position.  
+   * Add constraint: `"raven" < "hummingbird"` (raven is left of hummingbird).  
+   * Add constraint: `"hawk" < "owl"` (hawk is left of owl).  
+   * Add constraint: `"cardinal" < "hawk"` (cardinal is left of hawk).  
+   * Add constraint: `"raven" == 4` (since “second from the right” means position 4 in a 1–5 left-to-right scale).
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions to birds.  
+   * Extract the unique solution from the list (since the problem is fully constrained, there should be exactly one solution).
+
+5. **Determine Which Bird Is Rightmost (Position 5):**  
+   * The question asks which bird is the rightmost — i.e., has position value 5.  
+   * Iterate through the solved assignment (a dictionary mapping bird names to positions).  
+   * Find which bird has position = 5.  
+   * Map that bird to the corresponding choice letter using:  
+     - `'cardinal'` → `'A'`  
+     - `'hawk'` → `'B'`  
+     - `'hummingbird'` → `'C'`  
+     - `'raven'` → `'D'`  
+     - `'owl'` → `'E'`  
+   * Return the letter associated with the bird at position 5.

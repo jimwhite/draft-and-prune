@@ -1,0 +1,15 @@
+1. Enumerate the six employees and assign integer codes (0–5).  
+2. Create integer variables for each employee's assigned parking space (1–6), ensuring all assignments are distinct.  
+3. Add **domain constraints**: each employee's space ∈ {1,2,3,4,5,6}, and all spaces are pairwise distinct.  
+4. Add **ordering constraints** from rules:  
+    - Young > Togowa  
+    - Xu > Souza  
+    - Robertson > Young  
+    - Robertson ∈ {1,2,3,4}  
+5. Add **extra conditional constraint**: Young > Souza (as given in the premise).  
+6. Translate each choice into a constraint where that statement is true (e.g., "Togowa is #1" → space_Togowa == 1).  
+7. Define an answer index list 'answer_index_list' []. For each choice:  
+    - Clone the base + conditional constraints into a fresh solver.  
+    - Add the specific constraint for that choice.  
+    - If the model is SAT (i.e., a valid assignment exists satisfying all constraints including this choice), then that choice **could be true**; append its index to answer_index_list.  
+8. Print the answer index list (indices of choices that are possible).

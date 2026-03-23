@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Declare the five birds as variables: `"cardinal"`, `"crow"`, `"falcon"`, `"robin"`, and `"blue jay"`.  
+    * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.  
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Add Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate each statement into constraints:  
+        * "The robin is to the right of the cardinal" → `robin > cardinal` (using lambda: `lambda r, c: r > c`)  
+        * "The cardinal is to the right of the blue jay" → `cardinal > blue_jay`  
+        * "The blue jay is the second from the left" → `blue_jay == 2`  
+        * "The crow is the rightmost" → `crow == 5`
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution (since the constraints define a single arrangement).
+
+5.  **Determine Which Choice is True:**  
+    * The question asks: "Which of the following is true?" and choices describe which bird is second from the left (i.e., position 2).  
+    * Map choice letters to birds: A→cardinal, B→crow, C→falcon, D→robin, E→blue jay.  
+    * Find which bird has position 2 in the solution.  
+    * Output the corresponding choice letter (e.g., print `"E"` if `"blue jay"` is at position 2).

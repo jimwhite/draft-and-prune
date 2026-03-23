@@ -1,0 +1,15 @@
+1. Identify all entities involved: Anne, Dave, Erin, Gary.
+2. Define and encode all explicit properties using ternary predicates (e.g., is_big("Anne", True), is_round("Dave", True), etc.).
+3. Translate each universal conditional and rule from the context into PyKe rules using `foreach` and `assert`.
+   • If something is big → it is cold.
+   • Round things are big (i.e., if X is round, then X is big).
+   • Furry, round things are big.
+   • All cold things are furry (i.e., if X is cold, then X is furry).
+   • If Erin is round → Erin is young.
+   • All furry, big things are young.
+   • White things are round (i.e., if X is white, then X is round).
+   • If Gary is cold → Gary is white.
+   • All white, young things are nice.
+4. For rules with antecedents involving multiple conditions (e.g., furry and round), use appropriate `foreach` blocks to match all required properties.
+5. For rules with conditional antecedents that require negation or non-assertion (e.g., "not big"), handle via rule body logic: typically use separate `foreach` branches or assume default closed-world for known facts, but PyKe supports only positive reasoning—so avoid negation unless rewritten using equivalence or fallback to query-time evaluation. In this case, no explicit negations needed in premises beyond direct conditionals.
+6. Query the statement: Dave is furry → use facts.is_furry("Dave", True).

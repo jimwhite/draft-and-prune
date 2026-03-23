@@ -1,0 +1,24 @@
+1. Identify all entities and types: Sam, tumpus, dumpus, numpus, jompus, wumpus, vumpus, yumpus, rompus, zumpus, impus.  
+2. Identify all properties: fruity, liquid, sour, cold, brown, happy, large, mean.  
+3. Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4. Translate all class properties and subclass relationships into rules:  
+   - Tumpuses are fruity → `foreach tumpus X: assert is_fruity(X, True)`  
+   - Tumpuses are dumpuses → `foreach tumpus X: assert is_a(X, "dumpus", True)`  
+   - Each dumpus is liquid → `foreach dumpus X: assert is_liquid(X, True)`  
+   - Each dumpus is a numpus → `foreach dumpus X: assert is_a(X, "numpus", True)`  
+   - Numpuses are sour → `foreach numpus X: assert is_sour(X, True)`  
+   - Numpuses are jompuses → `foreach numpus X: assert is_a(X, "jompus", True)`  
+   - Jompuses are not cold → `foreach jompus X: assert is_cold(X, False)`  
+   - Jompuses are wumpuses → `foreach jompus X: assert is_a(X, "wumpus", True)`  
+   - Wumpuses are brown → `foreach wumpus X: assert is_brown(X, True)`  
+   - Wumpuses are vumpuses → `foreach wumpus X: assert is_a(X, "vumpus", True)`  
+   - Vumpuses are happy → `foreach vumpus X: assert is_happy(X, True)`  
+   - Each vumpus is a yumpus → `foreach vumpus X: assert is_a(X, "yumpus", True)`  
+   - Each yumpus is large → `foreach yumpus X: assert is_large(X, True)`  
+   - Each yumpus is a rompus → `foreach yumpus X: assert is_a(X, "rompus", True)`  
+   - Rompuses are not mean → `foreach rompus X: assert is_mean(X, False)`  
+   - Every rompus is a zumpus → `foreach rompus X: assert is_a(X, "zumpus", True)`  
+   - Each impus is not large → `foreach impus X: assert is_large(X, False)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. Given Sam is a numpus, and every numpus is a jompus (→ wumpus → vumpus → yumpus), derive that Sam is a yumpus. Since every yumpus is large, Sam is large. The statement “Sam is not large” would be false; therefore, the query for “Sam is large” should return provable true.  
+   → Use `facts.is_large("Sam", True)`.

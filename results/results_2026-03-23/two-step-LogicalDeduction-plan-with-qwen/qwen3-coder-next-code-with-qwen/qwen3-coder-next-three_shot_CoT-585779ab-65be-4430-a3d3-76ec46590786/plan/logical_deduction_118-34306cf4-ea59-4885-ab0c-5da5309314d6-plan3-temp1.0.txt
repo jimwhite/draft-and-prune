@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * List the seven golfers as strings: `"Eli"`, `"Ada"`, `"Amy"`, `"Ana"`, `"Eve"`, `"Mel"`, and `"Dan"`—these are the variables.
+    * Define a domain of integers from 1 to 7, where **1 = first place (highest/rank best)** and **7 = last place (lowest/worst rank)**.
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add `AllDifferentConstraint` to ensure no two golfers share the same rank.
+    * Translate each statement into a constraint:
+        - "Ada finished above Mel" → `ada_rank < mel_rank`
+        - "Dan finished above Ada" → `dan_rank < ada_rank`
+        - "Amy finished last" → `amy == 7`
+        - "Ana finished third-to-last" → In a 7-golfer field, third-to-last = position 5 (since 7=last, 6=second-last, 5=third-last) → `ana == 5`
+        - "Dan finished below Eli" → `dan_rank > eli_rank` (because higher rank number = worse/older/later position, and "below" means lower rank i.e., higher number)
+        - "Eve finished third" → `eve == 3`
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Extract the unique solution (the solver will return exactly one due to consistency and fixed setup).
+
+5.  **Identify Which Golfer Is Third:**
+    * The question asks which golfer is third-place → rank = 3.
+    * Create a mapping from choice letters (`'A'` to `'G'`) to golfer names:
+        - `'A' -> 'Eli'`, `'B' -> 'Ada'`, `'C' -> 'Amy'`, `'D' -> 'Ana'`, `'E' -> 'Eve'`, `'F' -> 'Mel'`, `'G' -> 'Dan'`
+    * In the solution dictionary, find the golfer whose value is 3.
+    * Return the corresponding choice letter for that golfer.

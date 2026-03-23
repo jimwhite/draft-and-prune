@@ -1,0 +1,20 @@
+1. Enumerate the six employees and assign integer indices (0 to 5).  
+2. Create integer variables for each employee’s parking space position; each variable must be in [1, 6].  
+3. Add **all-different constraint**: all six space assignments are distinct (each space used exactly once).  
+4. Add **ordering constraints** based on rules:  
+    - Young > Togowa (`pos_Young > pos_Togowa`).  
+    - Xu > Souza (`pos_Xu > pos_Souza`).  
+    - Robertson > Young (`pos_Robertson > pos_Young`).  
+    - Robertson ∈ {1, 2, 3, 4} (`pos_Robertson <= 4`).  
+5. Add **additional condition** from the question: Young > Souza (`pos_Young > pos_Souza`).  
+6. Translate answer choices into constraints on employee space assignments:  
+    - "Togowa is assigned parking space #1" → `pos_Togowa == 1`  
+    - "Young is assigned parking space #2" → `pos_Young == 2`  
+    - "Robertson is assigned parking space #3" → `pos_Robertson == 3`  
+    - "Souza is assigned parking space #3" → `pos_Souza == 3`  
+    - "Vaughn is assigned parking space #4" → `pos_Vaughn == 4`  
+7. Define a answer index list `answer_index_list = []`. For each choice (in order):  
+    - Clone the base constraints + Young > Souza into a fresh solver.  
+    - Assert the specific assignment from the choice.  
+    - If the model is SAT (i.e., a valid assignment exists satisfying all constraints and this choice), then that choice **could be true**; append its index to `answer_index_list`.  
+8. Print the answer index list (the indices of choices that are possible under the given condition).

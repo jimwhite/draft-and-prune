@@ -1,0 +1,34 @@
+1. Identify all entities and types: Max, rompus, numpus, wumpus, tumpus, dumpus, jompus, zumpus, yumpus.  
+2. Identify all properties: large, fruity, metallic, cold, brown, sweet.  
+3. Represent "Max is a numpus" as a base fact: `is_a("Max", "numpus", True)`.  
+4. Convert each class property and subclass relationship into a rule:  
+   - Every rompus is not large.  
+   - Every rompus is a numpus.  
+   - Every numpus is fruity.  
+   - Numpuses are wumpuses.  
+   - Wumpuses are not metallic.  
+   - Wumpuses are tumpuses.  
+   - Tumpuses are cold.  
+   - Dumpuses are not brown.  
+   - Tumpuses are jompuses.  
+   - Each jompus is sweet.  
+   - Jompuses are zumpuses.  
+   - Each zumpus is brown.  
+   - Every zumpus is a yumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+   - `forall(X, is_a(X,"rompus",True) → ~is_large(X))`  
+   - `forall(X, is_a(X,"rompus",True) → is_a(X,"numpus",True))`  
+   - `forall(X, is_a(X,"numpus",True) → is_fruity(X))`  
+   - `forall(X, is_a(X,"numpus",True) → is_a(X,"wumpus",True))`  
+   - `forall(X, is_a(X,"wumpus",True) → ~is_metallic(X))`  
+   - `forall(X, is_a(X,"wumpus",True) → is_a(X,"tumpus",True))`  
+   - `forall(X, is_a(X,"tumpus",True) → is_cold(X))`  
+   - `forall(X, is_a(X,"dumpus",True) → ~is_brown(X))`  
+   - `forall(X, is_a(X,"tumpus",True) → is_a(X,"jompus",True))`  
+   - `forall(X, is_a(X,"jompus",True) → is_sweet(X))`  
+   - `forall(X, is_a(X,"jompus",True) → is_a(X,"zumpus",True))`  
+   - `forall(X, is_a(X,"zumpus",True) → is_brown(X))`  
+   - `forall(X, is_a(X,"zumpus",True) → is_a(X,"yumpus",True))`  
+6. Derive implications from the facts and rules: Since Max is a numpus, he is also a wumpus (by rule 4), a tumpus (by rule 6), a jompus (by rule 9), a zumpus (by rule 12), and therefore brown (by rule 13: every zumpus is brown).  
+7. The query tests if the statement "Max is not brown" is provable; since Max *is* brown, this statement is false.  
+   → Use `facts.is_brown("Max", False)`.

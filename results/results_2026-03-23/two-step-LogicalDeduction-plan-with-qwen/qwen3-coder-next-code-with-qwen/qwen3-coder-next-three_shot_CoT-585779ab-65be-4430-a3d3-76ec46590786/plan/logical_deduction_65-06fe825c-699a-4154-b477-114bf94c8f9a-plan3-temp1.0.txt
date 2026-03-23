@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.  
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicles as variables: `"tractor"`, `"station_wagon"`, `"minivan"`, `"sedan"`, and `"hatchback"`.  
+   * Define the domain as integers from **1 to 5**, where **1 = oldest** and **5 = newest**.  
+   * Add all five variables with domain `{1,2,3,4,5}` to the `Problem` instance.  
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.  
+   * Translate each statement into a constraint:  
+     - *"The minivan is older than the sedan"* → `minivan < sedan` (use lambda: `lambda m, s: m < s`).  
+     - *"The tractor is older than the hatchback"* → `tractor < hatchback` (use lambda: `lambda t, h: t < h`).  
+     - *"The minivan is the third-newest"* → Since newest=5, second-newest=4, third-newest=3 ⇒ `minivan == 3`.  
+     - *"The station wagon is the second-newest"* → `station_wagon == 4`.  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (a dictionary mapping each vehicle to its rank).  
+
+5. **Identify the Correct Answer:**  
+   * The question asks which vehicle is second-newest (i.e., rank=4).  
+   * From the solution, find which vehicle has rank `4`.  
+   * Map that vehicle to the corresponding choice letter:  
+     - `"station_wagon"` → `'B'` (since B says "The station wagon is the second-newest")  
+   * Output `'B'` as the final answer.

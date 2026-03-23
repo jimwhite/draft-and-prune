@@ -1,0 +1,15 @@
+1. Enumerate the six photographers: Frost=0, Gonzalez=1, Heideck=2, Knutson=3, Lai=4, Mays=5.  
+2. Create Boolean variables `S[i]` for each photographer i indicating whether they are assigned to Silva University (Thorne is then `~S[i]`).  
+3. Add **at-least-two-per-ceremony** constraints:  
+    - Sum of `S[i]` over all i ≥ 2 (Silva has ≥2)  
+    - Sum of `(1 - S[i])` over all i ≥ 2 (Thorne has ≥2).  
+4. Add **mutual exclusivity** implicitly via assignment (each person assigned to at most one ceremony).  
+5. Add **Frost-Heideck together** constraint: `S[0] == S[2]`.  
+6. Add **Lai-Mays separation** constraint: `¬(S[4] ∧ S[5])` → equivalently, `(1 - S[4]) + (1 - S[5]) ≥ 1`, or `S[4] + S[5] ≤ 1`.  
+7. Add **Gonzalez→Thorne/Lai conditional**: If `S[1]` then `¬S[4]`.  
+8. Add **Knutson conditional**: If `¬S[3]` then `S[2] ∧ S[5]`.  
+9. For each answer choice:  
+    - Parse the assigned photographers per ceremony and derive corresponding `S[i]` truth values.  
+    - Clone base constraints into fresh solver, assert those exact assignments (e.g., `S[1] == True`, `S[4] == True`, `S[0] == False`, etc.).  
+    - Check satisfiability.  
+10. Return the first choice whose assignment yields SAT (or collect all satisfying indices and select accordingly).

@@ -1,0 +1,13 @@
+1. Enumerate the six singers: assign indices 0–5 to Kammer, Lugo, Trillo, Waite, Yoshida, Zinn.  
+2. Create integer position variables for each singer (1–6), all distinct via `Distinct` constraint.  
+3. Add **recording constraints**: Kammer and Lugo are recorded (R variables true for them); others not.  
+4. Add **position constraints**:  
+   - Fourth audition is unrecorded → position 4 must be assigned to a non-recorded singer (i.e., Trillo, Waite, Yoshida, or Zinn).  
+   - Fifth audition is recorded → position 5 must be Kammer or Lugo.  
+5. Add **ordering constraints**:  
+   - Waite precedes both recorded auditions → pos_Waite < pos_Kammer AND pos_Waite < pos_Lugo.  
+   - Kammer precedes Trillo → pos_Kammer < pos_Trillo.  
+   - Zinn precedes Yoshida → pos_Zinn < pos_Yoshida.  
+6. Translate each answer choice into a specific assignment (e.g., list of singer indices per position), then verify if it satisfies all constraints.  
+7. For each choice, construct the full position assignment and check against all constraints (domain, distinctness, recording, positional, ordering).  
+8. The first (and only) choice that satisfies *all* constraints is the correct answer; no need for iterative solving—direct substitution and validation suffices.

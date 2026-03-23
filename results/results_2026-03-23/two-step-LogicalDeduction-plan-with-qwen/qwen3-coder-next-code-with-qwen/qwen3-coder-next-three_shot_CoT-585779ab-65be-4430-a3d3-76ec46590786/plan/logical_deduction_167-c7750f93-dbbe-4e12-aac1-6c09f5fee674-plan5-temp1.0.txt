@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the seven birds as variables: `"falcon"`, `"crow"`, `"hawk"`, `"hummingbird"`, `"blue jay"`, `"robin"`, and `"raven"`.  
+   * Define the domain as integers from 1 to 7 (inclusive), where **1 = leftmost** and **7 = rightmost** position.  
+   * Add each bird variable to the problem with the domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.  
+   * Translate each statement into a constraint using lambda functions:  
+     - "The blue jay is to the right of the robin" → `blue_jay > robin`  
+     - "The hawk is to the left of the hummingbird" → `hawk < hummingbird`  
+     - "The robin is the second from the right" → `robin == 6` (since position 7 is rightmost, second from right is 6)  
+     - "The falcon is the third from the left" → `falcon == 3`  
+     - "The crow is to the right of the hummingbird" → `crow > hummingbird`  
+     - "The raven is the second from the left" → `raven == 2`  
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to compute all satisfying assignments.  
+   * Extract the unique solution (the problem has a single valid arrangement due to sufficient constraints).
+
+5. **Evaluate the Question and Choices:**  
+   * The question asks which bird is **third from the right**, i.e., position `7 - 2 = 5`.  
+   * Create a mapping from choice letters (A–G) to the corresponding bird names:  
+     - A → "falcon", B → "crow", C → "hawk", D → "hummingbird", E → "blue jay", F → "robin", G → "raven"  
+   * For each choice, check if the assigned position of its bird equals `5`.  
+   * Return (or print) the letter of the first matching choice — the correct answer.

@@ -1,0 +1,13 @@
+1. Enumerate the nine scientists (F, G, H, K, L, M, P, Q, R) and assign them integer indices 0–8.  
+2. Create Boolean selection variables for each scientist (e.g., `sel[i]` = True if selected).  
+3. Map each scientist to its field: botanist (F,G,H), chemist (K,L,M), zoologist (P,Q,R).  
+4. Add **field coverage constraint**: at least one botanist, one chemist, and one zoologist are selected.  
+5. Add **size constraint**: exactly five scientists are selected (sum of sel[i] = 5).  
+6. Add **"more than one botanist ⇒ at most one zoologist"** constraint: if count(botanists) ≥ 2 then count(zoologists) ≤ 1 (encode as (count_botanists ≥ 2) → (count_zoos ≤ 1)).  
+7. Add **"F and K cannot both be selected"** constraint: ¬(sel_F ∧ sel_K).  
+8. Add **"K and M cannot both be selected"** constraint: ¬(sel_K ∧ sel_M).  
+9. Add **"If M is selected, then both P and R must be selected"** constraint: sel_M → (sel_P ∧ sel_R).  
+10. Translate each answer choice into a selection pattern: set sel[i] = True for scientists in the choice, False otherwise.  
+11. For each answer choice, clone the base constraints into a fresh solver and assert the exact selection pattern (i.e., fix sel[i] to True/False per choice).  
+12. Check satisfiability: if SAT and all constraints are satisfied, that choice is acceptable; record the index of the acceptable choice.  
+13. Return the index of the first (and only) acceptable choice.

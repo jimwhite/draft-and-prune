@@ -1,0 +1,23 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.  
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: the three golfers `"Dan"`, `"Mel"`, and `"Amy"`.  
+   * Define the domain as integers `1`, `2`, `3`, where **1 = first place (leftmost / highest rank)**, 2 = second, 3 = third (rightmost / lowest rank).  
+   * Add the variables and their domain to the `Problem` instance.  
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Translate "Dan finished above Amy" into a constraint: Dan’s position number is less than Amy’s (`Dan < Amy`).  
+   * Translate "Amy finished above Mel" into a constraint: Amy’s position number is less than Mel’s (`Amy < Mel`).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions.  
+   * Since the constraints form a strict total order (Dan > Amy > Mel in rank, i.e., Dan < Amy < Mel in position number), there is exactly one solution: Dan = 1, Amy = 2, Mel = 3. Retrieve this unique solution.  
+
+5. **Determine the Correct Answer:**  
+   * The question asks who finished first (i.e., position = 1).  
+   * Map the choice letters to golfers: `'A' → "Dan"`, `'B' → "Mel"`, `'C' → "Amy"`.  
+   * Check the solution: Dan’s position is 1, so choice A is correct.  
+   * Return or output the letter `"A"` as the answer.

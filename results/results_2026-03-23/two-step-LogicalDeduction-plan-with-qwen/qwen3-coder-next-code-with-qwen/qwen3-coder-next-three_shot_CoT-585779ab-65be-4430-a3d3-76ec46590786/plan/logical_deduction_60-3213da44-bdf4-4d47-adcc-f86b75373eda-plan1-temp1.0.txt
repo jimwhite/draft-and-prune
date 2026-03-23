@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define variables as the five vehicles: `"bus"`, `"truck"`, `"motorcyle"`, `"sedan"`, and `"hatchback"`.  
+   * Use integers 1 to 5 for age ranking, where **1 = oldest**, **5 = newest**.  
+   * Add all variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Add AllDifferentConstraint:**  
+   * Enforce that all vehicles have distinct age ranks.
+
+4. **Translate Statements into Constraints:**  
+   * "The sedan is the second-oldest" → `sedan == 2`.  
+   * "The hatchback is newer than the motorcyle" → `hatchback > motorcyle`.  
+   * "The motorcyle is newer than the sedan" → `motorcyle > sedan`.  
+   * "The hatchback is older than the truck" → `hatchback < truck`.
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (since constraints fully determine ordering).
+
+6. **Identify the Correct Answer:**  
+   * The question asks which vehicle *is* the second-oldest (i.e., rank = 2).  
+   * From constraint `sedan == 2`, we already know the sedan is second-oldest.  
+   * Match this against the choices: Choice **D) The sedan is the second-oldest.** must be true.  
+   * Return `'D'` as the final answer.

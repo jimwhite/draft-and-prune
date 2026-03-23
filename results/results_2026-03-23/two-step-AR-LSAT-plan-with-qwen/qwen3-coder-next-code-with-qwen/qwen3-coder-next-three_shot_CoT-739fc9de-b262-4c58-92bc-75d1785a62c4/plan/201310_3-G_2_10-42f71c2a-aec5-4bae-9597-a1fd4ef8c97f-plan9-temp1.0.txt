@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign them integer codes (0: Myers, 1: Ortega, 2: Paine, 3: Schmidt, 4: Thomson, 5: Wong, 6: Yoder, 7: Zayre).  
+2. Create Boolean decision variables for each employee indicating whether they are selected (e.g., `myers`, `orta`, ..., `zayre`).  
+3. Add **global constraint**: team size ≥ 4 (sum of all Boolean variables ≥ 4).  
+4. Add **conditional constraints** based on the rules:  
+   - If Myers is selected, then neither Ortega nor Paine can be: `myers → (¬orta ∧ ¬paine)`, implemented as `(myers ⇒ ¬orta)` and `(myers ⇒ ¬paine)`.  
+   - If Schmidt is selected, then both Paine and Thomson must be: `schmidt → (paine ∧ thomson)`, implemented as `(schmidt ⇒ paine)` and `(schmidt ⇒ thomson)`.  
+   - If Wong is selected, then both Myers and Yoder must be: `wong → (myers ∧ yoder)`.  
+5. Add the given condition: **Yoder is not on the team** → `¬yoder`.  
+6. Translate answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+7. Define an answer index list `answer_index_list = []`. For each candidate employee (by index) in the choices:  
+   - Clone base constraints into a fresh solver.  
+   - Assert that this employee is selected (`employee_var = True`).  
+   - Solve the model. If SAT, then this employee *could* be on the team under Yoder ∉ team; if UNSAT, then this employee *cannot* be on the team and is the EXCEPT answer.  
+8. Since the question asks for who **could NOT** be on the team (EXCEPT), collect all employees for whom the model is UNSAT when forced in. The correct answer corresponds to the one forced-out employee (only one such should exist). Append the index of that employee to `answer_index_list`.  
+9. Return the answer corresponding to the single index in `answer_index_list`.

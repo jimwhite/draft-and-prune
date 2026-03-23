@@ -1,0 +1,30 @@
+1. Identify all entities and types: Sam, tumpus, dumpus, numpus, jompus, wumpus, vumpus, yumpus, rompus, zumpus, impus.  
+2. Identify all properties: fruity, liquid, sour, cold, brown, happy, large, mean.  
+3. Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4. Convert each class property and subclass relationship into rules:  
+   - Tumpuses are fruity → `foreach t: is_a(t, "tumpus", True) => facts.is_fruity(t, True)`  
+   - Tumpuses are dumpuses → `foreach t: is_a(t, "tumpus", True) => is_a(t, "dumpus", True)`  
+   - Each dumpus is liquid → `foreach d: is_a(d, "dumpus", True) => facts.is_liquid(d, True)`  
+   - Each dumpus is a numpus → `foreach d: is_a(d, "dumpus", True) => is_a(d, "numpus", True)`  
+   - Numpuses are sour → `foreach n: is_a(n, "numpus", True) => facts.is_sour(n, True)`  
+   - Numpuses are jompuses → `foreach n: is_a(n, "numpus", True) => is_a(n, "jompus", True)`  
+   - Jompuses are not cold → `foreach j: is_a(j, "jompus", True) => facts.is_cold(j, False)`  
+   - Jompuses are wumpuses → `foreach j: is_a(j, "jompus", True) => is_a(j, "wumpus", True)`  
+   - Wumpuses are brown → `foreach w: is_a(w, "wumpus", True) => facts.is_brown(w, True)`  
+   - Wumpuses are vumpuses → `foreach w: is_a(w, "wumpus", True) => is_a(w, "vumpus", True)`  
+   - Vumpuses are happy → `foreach v: is_a(v, "vumpus", True) => facts.is_happy(v, True)`  
+   - Each vumpus is a yumpus → `foreach v: is_a(v, "vumpus", True) => is_a(v, "yumpus", True)`  
+   - Each yumpus is large → `foreach y: is_a(y, "yumpus", True) => facts.is_large(y, True)`  
+   - Each yumpus is a rompus → `foreach y: is_a(y, "yumpus", True) => is_a(y, "rompus", True)`  
+   - Rompuses are not mean → `foreach r: is_a(r, "rompus", True) => facts.is_mean(r, False)`  
+   - Every rompus is a zumpus → `foreach r: is_a(r, "rompus", True) => is_a(r, "zumpus", True)`  
+   - Each impus is not large → `foreach i: is_a(i, "impus", True) => facts.is_large(i, False)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert`/property-update clause for the consequence.  
+6. Derive properties for Sam step-by-step:  
+   - Sam is a numpus ⇒ Sam is a jompus, sour, and not cold;  
+   - Sam is a jompus ⇒ Sam is a wumpus, brown, and a vumpus;  
+   - Sam is a vumpus ⇒ Sam is a yumpus and happy;  
+   - Sam is a yumpus ⇒ Sam is large and a rompus;  
+   - Sam is a rompus ⇒ Sam is not mean and a zumpus.  
+7. The query tests whether "Sam is large" is provable:  
+   → Use `facts.is_large("Sam", True)`.

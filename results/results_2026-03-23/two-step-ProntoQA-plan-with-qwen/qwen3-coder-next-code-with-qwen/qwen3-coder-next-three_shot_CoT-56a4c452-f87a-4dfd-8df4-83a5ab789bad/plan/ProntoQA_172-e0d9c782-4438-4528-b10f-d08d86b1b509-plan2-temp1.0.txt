@@ -1,0 +1,18 @@
+1. Identify all entities and types: Rex, zumpus, vumpus, dumpus, tumpus, wumpus, rompus, numpus.  
+2. Identify all properties: temperate, large, feisty, opaque, floral, luminous (note: no mention of luminous here—ignore), hot (not mentioned), brown (not mentioned), etc.—only: temperate, large, feisty, opaque, floral.  
+3. Represent "Rex is a zumpus" as a base fact: `is_a("Rex", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Each zumpus is not temperate. → `forall z: is_a(z, "zumpus", True) ⇒ ¬is_temperate(z)`  
+   * Every zumpus is a vumpus. → `forall z: is_a(z, "zumpus", True) ⇒ is_a(z, "vumpus", True)`  
+   * Vumpuses are large. → `forall v: is_a(v, "vumpus", True) ⇒ is_large(v)`  
+   * Each vumpus is a dumpus. → `forall v: is_a(v, "vumpus", True) ⇒ is_a(v, "dumpus", True)`  
+   * Every dumpus is feisty. → `forall d: is_a(d, "dumpus", True) ⇒ is_feisty(d)`  
+   * Tumpuses are not opaque. → `forall t: is_a(t, "tumpus", True) ⇒ ¬is_opaque(t)`  
+   * Dumpuses are wumpuses. → `forall d: is_a(d, "dumpus", True) ⇒ is_a(d, "wumpus", True)`  
+   * Every wumpus is floral. → `forall w: is_a(w, "wumpus", True) ⇒ is_floral(w)`  
+   * Wumpuses are rompuses. → `forall w: is_a(w, "wumpus", True) ⇒ is_a(w, "rompus", True)`  
+   * Rompuses are opaque. → `forall r: is_a(r, "rompus", True) ⇒ is_opaque(r)`  
+   * Rompuses are numpuses. → `forall r: is_a(r, "rompus", True) ⇒ is_a(r, "numpus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Rex is not opaque" is provable:  
+   → Use `facts.is_opaque("Rex", False)`.

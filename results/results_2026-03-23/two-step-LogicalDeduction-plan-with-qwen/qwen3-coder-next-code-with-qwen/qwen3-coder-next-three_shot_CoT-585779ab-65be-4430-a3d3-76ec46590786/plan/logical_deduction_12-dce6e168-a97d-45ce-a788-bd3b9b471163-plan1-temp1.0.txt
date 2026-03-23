@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the five golfers: `"Eve"`, `"Rob"`, `"Ana"`, `"Eli"`, and `"Mya"`.  
+    * Define the domain as integers from 1 to 5, where **1 = first place (highest rank)** and **5 = fifth place (lowest rank)**.  
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Translate each statement into constraints:  
+        * "Eli finished below Mya" means Eli's rank number is greater than Mya's (`Eli > Mya`).  
+        * "Eve finished first" means Eve’s position is 1.  
+        * "Ana finished below Eli" means Ana’s rank number is greater than Eli’s (`Ana > Eli`).  
+        * "Rob finished second" means Rob’s position is 2.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments of positions to golfers.  
+    * Extract the unique solution from the resulting list (since the problem is deterministic).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which golfer finished **third**, i.e., has position 3.  
+    * Create a mapping from choice letters to golfer names based on the choices:  
+        `"A" -> "Eve"`, `"B" -> "Rob"`, `"C" -> "Ana"`, `"D" -> "Eli"`, `"E" -> "Mya"`.  
+    * In the solved solution, find which golfer has position 3.  
+    * Return (or output) the letter corresponding to that golfer as the final answer.

@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign them integer indices (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables for each employee indicating whether they are selected for the team (e.g., `myers`, `ortega`, ..., `zayre`).  
+3. Add **at-least-four** constraint: sum of all Boolean selection variables ≥ 4.  
+4. Add **Yoder-not-selected** constraint: `yoder == False`.  
+5. Encode the conditional constraints as implications using Boolean logic:  
+   - If Myers is selected, then neither Ortega nor Paine can be: `myers ⇒ (¬ortega ∧ ¬paine)`, i.e., `¬myers ∨ ¬ortega` and `¬myers ∨ ¬paine`.  
+   - If Schmidt is selected, then both Paine and Thomson must be: `schmidt ⇒ (paine ∧ thomson)`, i.e., `¬schmidt ∨ paine` and `¬schmidt ∨ thomson`.  
+   - If Wong is selected, then both Myers and Yoder must be: `wong ⇒ (myers ∧ yoder)`. Since Yoder is fixed to False, this becomes `wong ⇒ (myers ∧ False)`, i.e., `¬wong ∨ False` → `¬wong`. So add constraint: `wong == False`.  
+6. Translate the answer choices into employee indices (Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0).  
+7. Define an answer index list `answer_index_list = []`. For each candidate employee in the answer choices:  
+   - Clone the current constraints (including Yoder=False and Wong=False) into a fresh solver.  
+   - Assert that the candidate employee is selected (`candidate == True`).  
+   - If the model is SAT (i.e., a valid team exists with this candidate selected), then the candidate *could* be on the team; skip.  
+   - If the model is UNSAT, then this candidate *cannot* be on the team under the constraint that Yoder is not selected; append its index to `answer_index_list`.  
+8. Print the answer index list.

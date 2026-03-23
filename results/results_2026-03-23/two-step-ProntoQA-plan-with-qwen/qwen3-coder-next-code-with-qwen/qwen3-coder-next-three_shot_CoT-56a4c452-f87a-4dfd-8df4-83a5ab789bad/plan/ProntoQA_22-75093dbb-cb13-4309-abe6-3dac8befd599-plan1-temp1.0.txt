@@ -1,0 +1,24 @@
+1. Identify all entities and types: Wren, wumpus, yumpus, tumpus, vumpus, jompus, impus, numpus, rompus, zumpus.  
+2. Identify all properties: sour, aggressive, transparent, wooden, large, red, feisty.  
+3. Represent "Wren is a tumpus" as a base fact: `is_a("Wren", "tumpus", True)`.  
+4. Convert each class property and subclass relationship into rules:  
+   - Every wumpus is sour → `foreach(X, is_a(X,"wumpus") => is_sour(X,True))`  
+   - Wumpuses are yumpuses → `foreach(X, is_a(X,"wumpus") => is_a(X,"yumpus"))`  
+   - Every yumpus is aggressive → `foreach(X, is_a(X,"yumpus") => is_aggressive(X,True))`  
+   - Every yumpus is a tumpus → `foreach(X, is_a(X,"yumpus") => is_a(X,"tumpus"))`  
+   - Every tumpus is transparent → `foreach(X, is_a(X,"tumpus") => is_transparent(X,True))`  
+   - Tumpuses are vumpuses → `foreach(X, is_a(X,"tumpus") => is_a(X,"vumpus"))`  
+   - Vumpuses are wooden → `foreach(X, is_a(X,"vumpus") => is_wooden(X,True))`  
+   - Each vumpus is a jompus → `foreach(X, is_a(X,"vumpus") => is_a(X,"jompus"))`  
+   - Each impus is not feisty → `foreach(X, is_a(X,"impus") => is_feisty(X,False))`  
+   - Every jompus is large → `foreach(X, is_a(X,"jompus") => is_large(X,True))`  
+   - Jompuses are numpuses → `foreach(X, is_a(X,"jompus") => is_a(X,"numpus"))`  
+   - Numpuses are red → `foreach(X, is_a(X,"numpus") => is_red(X,True))`  
+   - Numpuses are rompuses → `foreach(X, is_a(X,"numpus") => is_a(X,"rompus"))`  
+   - Every rompus is feisty → `foreach(X, is_a(X,"rompus") => is_feisty(X,True))`  
+   - Each rompus is a zumpus → `foreach(X, is_a(X,"rompus") => is_a(X,"zumpus"))`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if "Wren is not feisty" is provable:  
+   - Since Wren is a tumpus, and every tumpus is a vumpus ⇒ jompus ⇒ numpus ⇒ rompus, and every rompus is feisty ⇒ Wren is feisty.  
+   - Therefore, "Wren is not feisty" is false.  
+   → Use `facts.is_feisty("Wren", False)`.

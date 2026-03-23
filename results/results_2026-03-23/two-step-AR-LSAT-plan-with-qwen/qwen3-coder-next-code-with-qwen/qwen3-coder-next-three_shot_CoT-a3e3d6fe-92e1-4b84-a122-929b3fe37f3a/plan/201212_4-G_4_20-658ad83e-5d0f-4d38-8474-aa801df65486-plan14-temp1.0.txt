@@ -1,0 +1,27 @@
+1. Enumerate the seven articles: G, H, J (finance), Q, R, S (nutrition), Y (wildlife). Assign each article an integer index for convenience.  
+2. Create integer position variables `pos[article]` in range [1, 7], with all positions distinct (using `Distinct`).  
+3. Add **topic constraints**:  
+    - Finance articles: G, H, J  
+    - Nutrition articles: Q, R, S  
+    - Wildlife article: Y  
+4. Add **no-consecutive-same-topic constraint**: For every adjacent pair of positions (i.e., for all i from 1 to 6), if article A is at position i and article B at i+1, then topic(A) ≠ topic(B). Implement by enumerating all adjacent position pairs and adding:  
+    - For each pair of distinct articles (X, Y), if topic(X) == topic(Y), then `¬(pos_X = k ∧ pos_Y = k+1)` for all k=1..6.  
+    - Equivalently, use implication: `(pos_X = k) → (pos_Y ≠ k+1)` for all k, or more efficiently: use `Or(Not(pos_X == k), Not(pos_Y == k+1))` for each k=1..6.  
+5. Add **conditional constraint for S and Q**:  
+    - “S can be earlier than Q only if Q is third” means: If S < Q, then Q is third (pos_Q = 3).  
+    - Equivalently: `¬(S < Q) ∨ (pos_Q == 3)` → `Or(pos_S >= pos_Q, pos_Q == 3)`.  
+6. Add **S before Y constraint**: `pos_S < pos_Y`.  
+7. Add **ordering chain J < G < R**:  
+    - `pos_J < pos_G` and `pos_G < pos_R`.  
+8. Translate the five answer choices into logical conditions on positions:  
+    - “G is second” → `pos_G == 2`  
+    - “H is second” → `pos_H == 2`  
+    - “S is second” → `pos_S == 2`  
+    - “R is third” → `pos_R == 3`  
+    - “Y is third” → `pos_Y == 3`  
+9. Define a boolean list or output array to collect feasible options. For each answer choice:  
+    - Create a fresh solver, clone all base constraints (steps 2–7).  
+    - Add the specific condition for the choice (e.g., `pos_G == 2`).  
+    - Check satisfiability. If SAT, this choice **could be true**; record it as a valid option.  
+10. Among the choices, select those that are SAT — but note: only **one** choice is correct per LSAT logic games. Since the question asks “Which one of the following **could** be true?”, the answer is the *first* (or only) SAT choice; however, to match standard output format, list all valid indices or just return the first. But per instruction: only output plan — so stop at step 9 description.  
+11. (Optional but implied in practice) If multiple SAT, return all; if none, error — but problem states one must be possible.

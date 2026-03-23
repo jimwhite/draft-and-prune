@@ -1,0 +1,17 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign each an integer index.  
+2. Create integer variables for the showing position of each house (1 through 7).  
+3. Add **domain and uniqueness constraints**: positions are distinct integers in [1, 7].  
+4. Map position ranges to time-of-day blocks:  
+    - Morning: positions 1–2  
+    - Afternoon: positions 3–5  
+    - Evening: positions 6–7  
+5. Add **J constraint**: J must be shown in the evening ⇒ pos_J ∈ {6, 7}.  
+6. Add **K constraint**: K cannot be shown in the morning ⇒ pos_K ∉ {1, 2} ⇒ pos_K ∈ {3, 4, 5, 6, 7}.  
+7. Add **L–K–M ordering constraints**: pos_K < pos_L ∧ pos_L < pos_M.  
+8. Translate the five answer choices into logical statements about positions (e.g., “K is shown in the evening” ↔ pos_K ∈ {6, 7}).  
+9. For each answer choice, determine whether it **must** be true in all satisfying assignments:  
+    - Clone the base constraints into a fresh solver.  
+    - Add the **negation** of the answer choice (e.g., if the choice is “K is shown in the evening”, add pos_K ∉ {6, 7}).  
+    - If this augmented constraint set is UNSAT, then the original answer choice **must** be true; record its index.  
+10. Collect all indices of answer choices that survive the must-be-true test (i.e., their negation yields UNSAT).  
+11. Output the index of the correct answer choice (there should be exactly one).

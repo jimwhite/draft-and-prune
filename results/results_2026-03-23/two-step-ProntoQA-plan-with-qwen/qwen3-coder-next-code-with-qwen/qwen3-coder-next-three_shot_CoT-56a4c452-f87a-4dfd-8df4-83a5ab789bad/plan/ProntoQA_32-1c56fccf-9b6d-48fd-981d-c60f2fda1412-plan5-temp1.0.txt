@@ -1,0 +1,34 @@
+1.  Identify all entities and types: Sally, numpus, vumpus, tumpus, dumpus, wumpus, jompus, zumpus, impus, yumpus, rompus.  
+2.  Identify all properties: earthy, transparent, small, aggressive, wooden, nervous, temperate, blue.  
+3.  Represent "Sally is a numpus" as a base fact: `is_a("Sally", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+   - Numpuses are earthy.  
+   - Numpuses are vumpuses.  
+   - Vumpuses are transparent.  
+   - Each vumpus is a tumpus.  
+   - Tumpuses are small.  
+   - Tumpuses are dumpuses.  
+   - Each dumpus is not aggressive.  
+   - Dumpuses are wumpuses.  
+   - Every wumpus is not wooden.  
+   - Every wumpus is a jompus.  
+   - Jompuses are not nervous.  
+   - Each jompus is a zumpus.  
+   - Each zumpus is temperate.  
+   - Rompuses are wooden. *(Note: This fact alone does not contradict other rules since Sally is not a rompus and no chain leads to Sally being a rompus.)*  
+   - Zumpuses are impuses.  
+   - Each impus is blue.  
+   - Impuses are yumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+   - For property assertions (e.g., "Numpuses are earthy"): `foreach x, if is_a(x,"numpus",True) then assert is_earthy(x,True)`  
+   - For subclass relations (e.g., "Numpuses are vumpuses"): `foreach x, if is_a(x,"numpus",True) then assert is_a(x,"vumpus",True)`  
+   - For negated properties (e.g., "Each dumpus is not aggressive"): `foreach x, if is_a(x,"dumpus",True) then assert is_aggressive(x,False)`  
+   - For neutral logical implications (e.g., "Every wumpus is not wooden"): `foreach x, if is_a(x,"wumpus",True) then assert is_wooden(x,False)`  
+6.  Derive membership for Sally:  
+   - From step 3 and rule “Numpuses are vumpuses” ⇒ Sally is a vumpus.  
+   - From “Each vumpus is a tumpus” ⇒ Sally is a tumpus.  
+   - From “Tumpuses are dumpuses” ⇒ Sally is a dumpus.  
+   - From “Dumpuses are wumpuses” ⇒ Sally is a wumpus.  
+   - From “Every wumpus is not wooden” ⇒ Sally is not wooden.  
+7.  The query tests if the statement “Sally is not wooden” is provable:  
+   → Use `facts.is_wooden("Sally", False)`.

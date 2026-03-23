@@ -1,0 +1,30 @@
+1. Identify all entities and types: Rex, dumpus, tumpus, vumpus, zumpus, wumpus, numpus, rompus, jompus, yumpus, impus.  
+2. Identify all properties: dull, spicy, fruity, large, blue, kind, cold, transparent, yumpus-ness (implicit), spicy-ness (re-emphasized), impus-ness (implicit).  
+3. Represent "Rex is a wumpus" as a base fact: `is_a("Rex", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every dumpus is not dull → `foreach x, if is_a(x, "dumpus") then is_dull(x, False)`  
+   - Tumpuses are not spicy → `forall x, is_a(x, "tumpus") ⇒ is_spicy(x, False)`  
+   - Dumpuses are vumpuses → `foreach x, is_a(x, "dumpus") ⇒ is_a(x, "vumpus", True)`  
+   - Vumpuses are fruity → `foreach x, is_a(x, "vumpus") ⇒ is_fruity(x, True)`  
+   - Each vumpus is a zumpus → `foreach x, is_a(x, "vumpus") ⇒ is_a(x, "zumpus", True)`  
+   - Each zumpus is large → `foreach x, is_a(x, "zumpus") ⇒ is_large(x, True)`  
+   - Each zumpus is a wumpus → `foreach x, is_a(x, "zumpus") ⇒ is_a(x, "wumpus", True)`  
+   - Wumpuses are blue → `foreach x, is_a(x, "wumpus") ⇒ is_blue(x, True)`  
+   - Wumpuses are numpuses → `foreach x, is_a(x, "wumpus") ⇒ is_a(x, "numpus", True)`  
+   - Each numpus is kind → `foreach x, is_a(x, "numpus") ⇒ is_kind(x, True)`  
+   - Numpuses are rompuses → `foreach x, is_a(x, "numpus") ⇒ is_a(x, "rompus", True)`  
+   - Rompuses are cold → `foreach x, is_a(x, "rompus") ⇒ is_cold(x, True)`  
+   - Rompuses are jompuses → `foreach x, is_a(x, "rompus") ⇒ is_a(x, "jompus", True)`  
+   - Jompuses are not transparent → `foreach x, is_a(x, "jompus") ⇒ is_transparent(x, False)`  
+   - Jompuses are yumpuses → `foreach x, is_a(x, "jompus") ⇒ is_a(x, "yumpus", True)`  
+   - Yumpuses are spicy → `foreach x, is_a(x, "yumpus") ⇒ is_spicy(x, True)`  
+   - Every yumpus is an impus → `foreach x, is_a(x, "yumpus") ⇒ is_a(x, "impus", True)`  
+5. Implement each rule using `foreach` with condition on class membership and `assert` for consequence (including both subclass inclusions and property assertions).  
+6. Observe conflicting statements about spiciness:  
+   - From "Tumpuses are not spicy" and inheritance chain: tumpus ⊆ yumpus (via dumpus→vumpus→zumpus→wumpus→numpus→rompus→jompus→yumpus) but *no direct inheritance from tumpus to yumpus is given*; however, separate chain shows jompus ⊆ yumpus.  
+   - Crucially, Rex is a wumpus ⇒ numpus ⇒ rompus ⇒ jompus ⇒ yumpus, so Rex is a yumpus.  
+   - "Every yumpus is spicy" ⇒ Rex is spicy.  
+   - Separately, "Tumpuses are not spicy", but Rex is *not* asserted to be a tumpus (no path leads to tumpus from wumpus in given axioms), so no direct conflict.  
+   - Thus, `is_spicy("Rex", True)` is provable.  
+7. The query tests if "Rex is not spicy" is provable → i.e., whether `is_spicy("Rex", False)` holds. Since `is_spicy("Rex", True)` is provable, the negation is not.  
+8. → Use `facts.is_spicy("Rex", False)`.

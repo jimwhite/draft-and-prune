@@ -1,0 +1,18 @@
+1. Enumerate the eight students and assign them integer indices.  
+2. Define Boolean variables for each student-day-slot combination (e.g., `report[s][d][t]` where s ∈ {0..7}, d ∈ {Mon,Tue,Wed} (0–2), t ∈ {morning,afternoon} (0–1)), indicating whether student s gives a report on day d at time slot t.  
+3. Add **exactly six reports constraint**: sum of all `report[s][d][t]` over s, d, t equals 6.  
+4. Add **exactly two reports per day constraint**: for each day d, sum over s and t of `report[s][d][t]` equals 2.  
+5. Add **at most one report per slot constraint**: for each (d, t), sum over s of `report[s][d][t]` ≤ 1 (i.e., one morning, one afternoon per day).  
+6. Add **George-only-on-Tuesday constraint**: `report[George][d][t] == False` for d ≠ Tuesday (i.e., days 0 and 2).  
+7. Add **Olivia/Robert-no-afternoon constraint**: `report[Olivia][d][1] == False` and `report[Robert][d][1] == False` for all d.  
+8. Add **Nina conditional constraint**: if Nina gives a report on Monday (d=0) or Tuesday (d=1), then:  
+    - On the *next* day (d+1), both Helen and Irving must each give a report (one in morning, one in afternoon — i.e., `report[Helen][d+1][0] ∨ report[Helen][d+1][1]` and similarly for Irving),  
+    - But this does *not* apply if Nina reports on Wednesday (d=2). Formally:  
+      `(report[Nina][0][0] ∨ report[Nina][0][1]) → (report[Helen][1][0] ∨ report[Helen][1][1]) ∧ (report[Irving][1][0] ∨ report[Irving][1][1])`  
+      `(report[Nina][1][0] ∨ report[Nina][1][1]) → (report[Helen][2][0] ∨ report[Helen][2][1]) ∧ (report[Irving][2][0] ∨ report[Irving][2][1])`  
+9. For each answer choice (scheduled schedule), parse the assignments into a list of (student, day, slot) triplets.  
+10. For each schedule in the answer choices:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert equality between schedule assignments and the `report` variables (i.e., set `report[s][d][t] = True` for each assigned slot, `False` for others among the 6 assigned students/days/slots; note that unassigned students must have all `report[s][*][*] = False`).  
+    - If the model is SAT, then this schedule is possible; record its index as valid.  
+11. Output the index of the valid schedule(s).

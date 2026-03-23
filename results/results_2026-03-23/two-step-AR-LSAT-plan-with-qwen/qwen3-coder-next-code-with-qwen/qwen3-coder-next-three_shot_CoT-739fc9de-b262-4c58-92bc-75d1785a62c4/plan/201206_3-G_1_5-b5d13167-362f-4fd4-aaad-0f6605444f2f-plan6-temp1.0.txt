@@ -1,0 +1,18 @@
+1. Enumerate the six lab assistants and assign them integer indices: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: assign indices 0–5 to Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA) in chronological order.  
+3. Create integer variables `assistant[i]` for each session i (0–5), where `assistant[i] ∈ {0,1,2,3,4,5}`, enforcing all six are distinct (bijection).  
+4. Add **day and session type constraints**: define helper functions or constants to map session index to (day, time):  
+    - WM → Wed AM, WA → Wed PM, TM → Thu AM, TA → Thu PM, FM → Fri AM, FA → Fri PM.  
+5. Add **fixed constraint**: Julio leads Thursday afternoon session ⇒ `assistant[3] == 0`.  
+6. Add **Kevin and Rebecca same-day constraint**: `day(assistant⁻¹[1]) == day(assistant⁻¹[5])`.  
+7. Add **Lan and Olivia different-day constraint**: `day(assistant⁻¹[2]) != day(assistant⁻¹[4])`.  
+8. Add **Nessa afternoon constraint**: `session_time(assistant⁻¹[3]) == "afternoon"` (i.e., session index in {1, 4, 5}).  
+9. Add **Julio before Olivia constraint**: `session_index(assistant⁻¹[0]) < session_index(assistant⁻¹[4])`.  
+10. Since the question asks: *Given Julio = Thu PM*, how many of the other 5 assistants have their session **uniquely determined**?  
+11. To determine uniquely, for each other assistant X ∈ {Kevin, Lan, Nessa, Olivia, Rebecca}:  
+    - Clone base constraints + `assistant[3] == 0`.  
+    - For each candidate session s ∈ {0,1,2,4,5} (excluding 3), add constraint `assistant[s] == index_of_X`.  
+    - If only one s yields SAT (i.e., all others UNSAT), then X’s session is uniquely determined.  
+    - Alternatively, for each assistant X: solve twice — once with `assistant[s] == X` for s=0..5,s≠3; count how many s are feasible. If exactly one is feasible, X is uniquely determined.  
+12. Implement using Z3: for each of the 5 assistants, iterate over possible sessions (excluding Thursday PM), check satisfiability; tally those with exactly one satisfying assignment.  
+13. Return the count of assistants (among the 5) whose sessions are uniquely determined under the given condition.

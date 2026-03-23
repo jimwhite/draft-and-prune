@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Define integer variables `zone[i]` for each representative i (0–6), representing their assigned zone (1, 2, or 3).  
+3. Add **zone domain constraints**: each `zone[i]` ∈ {1, 2, 3}.  
+4. Add **mutual exclusion for zone assignments**: enforce one-to-one mapping of representatives to zones (no soft constraints; multiple reps per zone allowed, but each rep assigned exactly one zone).  
+5. Add constraint: "Either Parra or Tiao (but not both) works in Zone 1" — i.e., `zone[Parra] == 1` XOR `zone[Tiao] == 1`.  
+6. Add constraint: "Either Tiao or Udall (but not both) works in Zone 2" — i.e., `zone[Tiao] == 2` XOR `zone[Udall] == 2`.  
+7. Add constraint: "Parra and Quinn work in the same zone" — `zone[Parra] == zone[Quinn]`.  
+8. Add constraint: "Stuckey and Udall work in the same zone" — `zone[Stuckey] == zone[Udall]`.  
+9. Add constraint: "There are more representatives in Zone 3 than in Zone 2" — `count(zone[i] == 3) > count(zone[i] == 2)`.  
+10. Precompute total counts for Zone 1, 2, 3 via auxiliary integer variables or direct comparison.  
+11. For each answer choice: interpret the list of names as a proposed set of Zone 3 members.  
+    - Clone the base solver for each choice.  
+    - For every representative in Zone 3 list: assert `zone[i] == 3`.  
+    - For every representative NOT in Zone 3 list: assert `zone[i] != 3`.  
+    - (Implicitly, remaining reps are assigned to Zone 1 or 2, but constraints will enforce viability.)  
+    - Solve the constraints.  
+    - If SAT and the Zone 3 set matches *exactly* the answer choice (and all other constraints satisfied), then the choice is possible; record it.  
+12. Collect all valid choices and output the index (or literal string) of the correct answer.

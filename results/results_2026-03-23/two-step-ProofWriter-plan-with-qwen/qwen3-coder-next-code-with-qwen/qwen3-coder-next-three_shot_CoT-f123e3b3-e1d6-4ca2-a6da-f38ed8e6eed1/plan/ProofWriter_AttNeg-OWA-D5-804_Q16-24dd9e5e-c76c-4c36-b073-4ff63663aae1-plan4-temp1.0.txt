@@ -1,0 +1,27 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates:  
+   - is_kind("Anne", True)  
+   - is_big("Charlie", False), is_green("Charlie", False), is_white("Charlie", True)  
+   - is_big("Erin", True), is_green("Erin", True), is_white("Erin", True)  
+   - is_green("Fiona", True), is_kind("Fiona", True), is_quiet("Fiona", True), is_red("Fiona", True), is_white("Fiona", True)  
+3. Translate each conditional rule into PyKe `foreach` + `assert` structure:  
+   • If Erin is big and red → Erin is kind.  
+   • All rough things are green: if X is rough → X is green.  
+   • If something is kind → it is green.  
+   • Quiet, green things are big: if X is quiet and green → X is big.  
+   • If something is rough and green → it is red.  
+   • If something is green → it is rough.  
+   • If Erin is red → Erin is green (note: redundant given Erin is green factually, but include as rule).  
+   • All red, rough things are quiet: if X is red and rough → X is quiet.  
+   • If something is quiet and not red → it is not white.  
+4. For each rule, construct a `foreach` block matching the condition (using `and`, `not`) and assert the conclusion.  
+5. The query checks whether Anne is white:  
+   → Use facts.is_white("Anne", True)  
+6. Note: No direct or derived fact about Anne’s whiteness is given; we must infer from rules and known facts, but Anne only has `is_kind("Anne", True)` explicitly stated.  
+7. Since `is_kind(X, True) → is_green(X, True)` (rule), Anne must be green.  
+8. Then `is_green(X, True) → is_rough(X, True)` (rule), so Anne must be rough.  
+9. Then `is_rough(X, True) ∧ is_green(X, True) → is_red(X, True)` (rule), so Anne must be red.  
+10. Then `is_red(X, True) ∧ is_rough(X, True) → is_quiet(X, True)` (rule), so Anne must be quiet.  
+11. Then `is_quiet(X, True) ∧ ¬red(X) → ¬white(X)` — but Anne is red, so this rule does *not* apply.  
+12. No rule implies `is_white(Anne, True)`; all known white entities (Charlie, Erin, Fiona) have explicit statements.  
+13. Therefore, whiteness of Anne cannot be concluded — query is `facts.is_white("Anne", True)` and expected answer is unknown.

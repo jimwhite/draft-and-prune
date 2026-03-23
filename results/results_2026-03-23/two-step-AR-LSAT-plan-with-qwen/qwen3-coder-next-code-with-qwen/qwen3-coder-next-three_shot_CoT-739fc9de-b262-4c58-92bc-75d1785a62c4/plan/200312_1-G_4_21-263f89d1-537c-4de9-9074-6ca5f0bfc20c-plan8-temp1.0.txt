@@ -1,0 +1,17 @@
+1. Enumerate the five students: Jiang, Kramer, Lopez, Megregian, O'Neill → assign integer indices 0–4.  
+2. Enumerate the three plays: Sunset (S), Tamerlane (T), Undulation (U) → assign indices 0,1,2.  
+3. Create Boolean variables `review[i][j]` for student i reviews play j (i=0..4, j=0..2).  
+4. Add **at-least-one** constraint for each student: at least one of S,T,U is reviewed.  
+5. Add **Kramer-Lopez vs Megregian size constraint**: number of plays reviewed by Kramer < number by Megregian; similarly for Lopez < Megregian.  
+6. Add **no-overlap between (Lopez or Megregian) and Jiang**: if Lopez/Megregian reviews a play, Jiang does not.  
+7. Add **Kramer & O'Neill both review Tamerlane**: `review[1][1] = True`, `review[4][1] = True`.  
+8. Add **exactly-two-students-identical-reviews** constraint: there exists exactly one pair (i,j), i<j, such that for all plays k, `review[i][k] == review[j][k]`, and no other pairs share identical reviews.  
+9. Add **exactly-three-students-review-Undulation** as the given condition: sum over i of `review[i][2] == 3`.  
+10. For each answer choice, create a solver with base + condition:  
+    - Option A: Megregian does not review Undulation → `review[3][2] = False`.  
+    - Option B: O'Neill does not review Undulation → `review[4][2] = False`.  
+    - Option C: Jiang reviews Undulation → `review[0][2] = True`.  
+    - Option D: Lopez reviews Tamerlane → `review[2][1] = True`.  
+    - Option E: O'Neill reviews Sunset → `review[4][0] = True`.  
+11. For each option, check SAT: if SAT is possible (i.e., model exists), then that choice **could be true**.  
+12. Collect indices of all options for which the constraint set is SAT, store in `answer_index_list`, and output.

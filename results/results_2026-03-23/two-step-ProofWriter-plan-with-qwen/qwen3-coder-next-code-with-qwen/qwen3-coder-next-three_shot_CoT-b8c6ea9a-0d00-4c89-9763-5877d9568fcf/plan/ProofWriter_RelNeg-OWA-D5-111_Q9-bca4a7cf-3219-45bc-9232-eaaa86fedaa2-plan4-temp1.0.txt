@@ -1,0 +1,18 @@
+1. Identify all entities: bald_eagle, lion, mouse, squirrel.
+2. Encode all explicit facts as ternary predicates using facts.pred(subject, object, True/False):
+   - is_chasing("bald_eagle", "mouse", True), is_chasing("bald_eagle", "squirrel", True), is_cold("bald_eagle", True),
+   - is_chasing("lion", "bald_eagle", True), not(is_chasing("lion", "mouse", True)) → encoded as facts.is_chasing("lion", "mouse", False),
+   - is_chasing("lion", "squirrel", True), is_blue("lion", True),
+   - needs("lion", "squirrel", True), visits("lion", "squirrel", True),
+   - not(visited by mouse): facts.visits("mouse", "bald_eagle", False), facts.visits("mouse", "squirrel", False),
+   - is_cold("squirrel", True), is_red("squirrel", True), facts.visits("squirrel", "lion", False).
+3. Translate each conditional rule into PyKe `foreach` + `assert` rules:
+   • If X visits the mouse → mouse is green: foreach(sees("mouse", X, True)) → facts.is_green("mouse", True)? Wait: Rule says "If something visits the mouse" — predicate is `visits(X, "mouse", True)`.
+   • If mouse does NOT chase lion → mouse needs lion: condition is facts.is_chasing("mouse", "lion", False) → facts.needs("mouse", "lion", True).
+   • If X visits squirrel AND squirrel does NOT chase lion → lion is green: condition: facts.visits(X, "squirrel", True) AND facts.is_chasing("squirrel", "lion", False) → facts.is_green("lion", True).
+   • If X is young → X visits bald eagle: foreach(is_young(X, True)) → facts.visits(X, "bald_eagle", True).
+   • If X visits squirrel → bald eagle visits squirrel: foreach(visits(X, "squirrel", True)) → facts.visits("bald_eagle", "squirrel", True).
+   • If X visits squirrel AND squirrel is red → X is young: condition: facts.visits(X, "squirrel", True) AND facts.is_red("squirrel", True) → facts.is_young(X, True).
+   • If X needs squirrel AND X is NOT cold → squirrel chases bald eagle: condition: facts.needs(X, "squirrel", True) AND NOT facts.is_cold(X, True) → facts.is_chasing("squirrel", "bald_eagle", True).
+4. Ensure all negated facts (e.g., "does not visit") are encoded explicitly as False arguments in the predicate assertions.
+5. The query checks whether bald eagle is young: use facts.is_young("bald_eagle", True) to test truth; if negation holds, use facts.is_young("bald_eagle", False). Since the question is "The bald eagle is young.", we assert goal: facts.is_young("bald_eagle", True). But the final verdict depends on inference — so query should check both possibilities via PyKe’s proof mechanisms, but per instruction: use facts.is_young("bald_eagle", True) as the query to verify if entailed. However, plan states: to determine truth value (true/false/unknown), run goal: facts.is_young("bald_eagle", True) and observe if provable, then negation for false. But per standard PyKe query style for classification, simply use facts.is_young("bald_eagle", True) as the query statement to be evaluated.

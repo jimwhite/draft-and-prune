@@ -1,0 +1,44 @@
+1. Enumerate the four art historians and assign integer indices: Farley=0, Garcia=1, Holden=2, Jiang=3.  
+2. Enumerate the four topics and assign integer indices: lithographs=0, oil paintings=1, sculptures=2, watercolors=3.  
+3. Create integer variables `pos_historian[h]` for each historian h ∈ {0,1,2,3}, representing the lecture slot (1 to 4) when they give their talk.  
+4. Add **domain constraints**: each `pos_historian[h]` ∈ {1,2,3,4}, and all are distinct (injective assignment).  
+5. Create integer variables `topic_slot[t]` for each topic t ∈ {0,1,2,3}, representing the lecture slot when topic t is presented.  
+6. Add **domain constraints**: each `topic_slot[t]` ∈ {1,2,3,4}, and all are distinct.  
+7. Link historians to topics via a bijection: introduce 16 Boolean variables `assigned[h][t]` (True iff historian h gives the lecture on topic t).  
+8. Add **one-topic-per-historian constraints**: for each historian h, exactly one topic t has `assigned[h][t] = True`.  
+9. Add **one-historian-per-topic constraints**: for each topic t, exactly one historian h has `assigned[h][t] = True`.  
+10. Link positions: for each historian h and topic t, if `assigned[h][t] = True`, then `pos_historian[h] == topic_slot[t]`. (Implement via big-M or implication using helper constraints, e.g., enforce `pos_historian[h] == topic_slot[t]` iff `assigned[h][t]`, using auxiliary integer variables or disjunctive encoding.)  
+    - Simpler alternative: Instead of separate `topic_slot`, define a direct mapping: let `speaker_topic[h]` be the topic index given by historian h, with all `speaker_topic[h]` distinct. Then set `pos_historian[h] = lecture_slot[h]`, and topic topics are just the values of `speaker_topic`.  
+    - Re-plan: Use only 4 integer variables `lecture_order[i]` for i=1..4, where `lecture_order[slot] = (historian, topic)` pair. But Z3 doesn’t support tuples natively for quantifier-free logic—so use 2 separate permutations: ` historian_order[slot] ∈ {0,1,2,3}` and `topic_order[slot] ∈ {0,1,2,3}`, both bijective.  
+    - Final simplification: Use permutation variables: let `perm_h[0..3]` be the historian giving talk in slot 1..4, and `perm_t[0..3]` be the topic for that slot. Both are permutations of [0,1,2,3].  
+11. Add distinctness: All `perm_h[i]` distinct; all `perm_t[i]` distinct.  
+12. Encode ordering constraints:  
+    - oil paintings (topic=1) and watercolors (topic=3) must both be earlier than lithographs (topic=0):  
+        Find slots: `slot_oil = i` such that `perm_t[i] == 1`, similarly `slot_water = j` with `perm_t[j] == 3`, `slot_litho = k` with `perm_t[k] == 0`. Then enforce: `i < k` and `j < k`.  
+        Implement via `Or(perm_t[0]==1, perm_t[1]==1, perm_t[2]==1, perm_t[3]==1)` etc., but better: introduce 4 integer variables `t_slot[t]` for topic slots, with constraints:  
+            - `t_slot[1] < t_slot[0]`  
+            - `t_slot[3] < t_slot[0]`  
+    - Farley’s (historian=0) lecture earlier than oil paintings: `pos_h[0] < t_slot[1]`.  
+    - Holden’s (historian=2) earlier than Garcia’s (1) and Jiang’s (3): `pos_h[2] < pos_h[1]` and `pos_h[2] < pos_h[3]`.  
+    - Also enforce `pos_h[h] = s` iff `perm_h[s-1] == h`. So define `pos_h[h] = s` with `s ∈ {1,2,3,4}` and bijection. Use: for each h,s, Boolean `h_in_slot[h][s]` with exactly one per h and s. Then `pos_h[h] = sum_{s=1..4} s * h_in_slot[h][s]`.  
+    - Similarly for topic slots: `t_slot[t] = sum_{s=1..4} s * t_in_slot[t][s]`.  
+    - Add consistency: same slot index s must have same historian and topic: `h_in_slot[h][s] && t_in_slot[t][s] ⇒ assigned(h,t)`. Actually, better: define `slot_pair[s] = (h,t)` implicitly via a bijection between slots and (historian, topic) pairs: enforce that for each slot s, there is exactly one historian h and one topic t such that `h_in_slot[h][s] = True` and `t_in_slot[t][s] = True`.  
+        So: for each slot s (1..4), `sum_h h_in_slot[h][s] = 1` and `sum_t t_in_slot[t][s] = 1`.  
+        This naturally pairs h and t in the same slot.  
+13. Encode all ordering constraints using `pos_h` and `t_slot`:  
+    - `t_slot[1] < t_slot[0]`  
+    - `t_slot[3] < t_slot[0]`  
+    - `pos_h[0] < t_slot[1]`  
+    - `pos_h[2] < pos_h[1]`  
+    - `pos_h[2] < pos_h[3]`  
+14. Translate the answer choices into logical statements about `pos_h` and `t_slot`:  
+    - A: Farley earlier than sculptures (topic=2): `pos_h[0] < t_slot[2]`  
+    - B: Holden earlier than lithographs (topic=0): `pos_h[2] < t_slot[0]`  
+    - C: sculptures earlier than Garcia (historian=1): `t_slot[2] < pos_h[1]`  
+    - D: sculptures earlier than Jiang (historian=3): `t_slot[2] < pos_h[3]`  
+    - E: watercolors earlier than Garcia (historian=1): `t_slot[3] < pos_h[1]`  
+15. To find which statement **must be true**, use proof by contradiction:  
+    - For each choice, add the base constraints + the negation of the statement.  
+    - If UNSAT, then the statement must be true → it's a candidate answer.  
+16. Collect all statements that are forced (UNSAT under their negation). Exactly one such statement should exist per LSAT logic.  
+17. Return the index of the required answer choice.

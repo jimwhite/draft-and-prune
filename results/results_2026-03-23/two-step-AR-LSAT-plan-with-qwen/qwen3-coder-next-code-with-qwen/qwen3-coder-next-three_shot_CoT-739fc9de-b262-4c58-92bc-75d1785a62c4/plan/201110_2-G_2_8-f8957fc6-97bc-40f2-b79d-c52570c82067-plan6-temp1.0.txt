@@ -1,0 +1,14 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign integer indices 0–4.  
+2. Create Boolean variables `assigned[j]` for each candidate j indicating whether they are assigned to any ambassadorship.  
+3. Since exactly three ambassadors are assigned (one per country), add constraint: `sum(assigned) == 3`.  
+4. Introduce Boolean variables for country assignments: `to_Venezuela[j]`, `to_Yemen[j]`, `to_Zambia[j]` for each candidate j, with mutual exclusivity per country (exactly one candidate per country) and consistency with `assigned[j]` (`assigned[j] ↔ (to_Venezuela[j] ∨ to_Yemen[j] ∨ to_Zambia[j])`).  
+5. Add constraint: Exactly one candidate per country (3 countries → 3 distinct assignments).  
+6. Add **exclusive Kayne/Novetzke constraint**: Exactly one of Kayne or Novetzke is assigned (XOR).  
+7. Add **Jaramillo→Kayne constraint**: If Jaramillo is assigned, then Kayne must be assigned.  
+8. Add conditional constraint: If Ong is assigned to Venezuela, then Kayne must *not* be assigned to Yemen.  
+9. Add **Landon constraint**: If Landon is assigned, then he must be assigned to Zambia (i.e., `to_Zambia[2]` true if Landon assigned).  
+10. Translate answer choices into candidate index pairs: (Jaramillo, Novetzke), (Jaramillo, Ong), (Kayne, Landon), (Kayne, Novetzke), (Landon, Ong).  
+11. For each choice pair, define a fresh solver with base constraints.  
+    - Assert that *only* the two candidates in the pair are unassigned (i.e., `¬assigned[i] ∧ ¬assigned[j]` and `assigned[k]` for all other k).  
+    - Check satisfiability. If SAT, this pair is possible; record its index in `answer_index_list`.  
+12. Output the answer index list.

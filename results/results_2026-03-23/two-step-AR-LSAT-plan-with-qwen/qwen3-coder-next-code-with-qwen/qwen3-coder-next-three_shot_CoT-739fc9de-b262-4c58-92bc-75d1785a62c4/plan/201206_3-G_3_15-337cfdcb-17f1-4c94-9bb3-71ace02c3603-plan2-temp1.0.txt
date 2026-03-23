@@ -1,0 +1,25 @@
+1. Enumerate the seven sales representatives and assign each an integer index: Kim=0, Mahr=1, Parra=2, Quinn=3, Stuckey=4, Tiao=5, Udall=6.  
+2. Create integer variables for each representative’s zone assignment: `zone[i] ∈ {1, 2, 3}` for i = 0..6.  
+3. Add **mutual exclusivity constraint**: each representative is assigned exactly one zone (implicitly satisfied by domain and no extra logic needed).  
+4. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+5. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2: `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+6. Add **Parra–Quinn same zone constraint**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey–Udall same zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+    - Compute counts using auxiliary integer variables:  
+        `count1 = Sum([If(zone[i]==1, 1, 0) for i in range(7)])`  
+        `count2 = Sum([If(zone[i]==2, 1, 0) for i in range(7)])`  
+        `count3 = Sum([If(zone[i]==3, 1, 0) for i in range(7)])`  
+        Then assert `count3 > count2`.  
+9. Translate each answer choice into a *proposed set of Zone 3 members*, and check consistency:  
+    For each choice:  
+    - Let S be the set of representatives listed as being in Zone 3.  
+    - Clone the base constraints into a fresh solver.  
+    - Add constraint that exactly the representatives in S are assigned to Zone 3:  
+        `zone[i] == 3` iff representative i ∈ S, and `zone[i] != 3` for i ∉ S.  
+    - Additionally, ensure no other zone assignments conflict (already covered by logical consistency).  
+10. For each choice, check if the augmented system is SAT:  
+    - If SAT, then the choice is *possible* and satisfies all constraints.  
+11. Collect indices of SAT choices into `answer_index_list`.  
+12. Since only one choice may be correct (standard LSAT logic), but the question asks “which could be,” output all SAT choices — but here only one will be.  
+13. Print the answer index list (0-based index into the choices list).

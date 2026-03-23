@@ -1,0 +1,16 @@
+1. Identify all entities: Bob, Charlie, Dave, Erin.
+2. Encode all direct facts using ternary predicates:
+   - is_big("Bob", True), is_nice("Bob", True), is_smart("Bob", True)
+   - is_nice("Charlie", True), is_nice("Dave", True)
+   - is_big("Erin", True), is_blue("Erin", True), is_furry("Erin", True), is_quiet("Erin", True), is_round("Erin", True), is_smart("Erin", True)
+3. Translate universal conditionals into PyKe rules:
+   • All nice things are big: foreach(is_nice(x, True)) ⇒ assert(is_big(x, True))
+   • All furry things are blue: foreach(is_furry(x, True)) ⇒ assert(is_blue(x, True))
+   • Blue and furry things are quiet: foreach(is_blue(x, True), is_furry(x, True)) ⇒ assert(is_quiet(x, True))
+   • Round and nice things are blue: foreach(is_round(x, True), is_nice(x, True)) ⇒ assert(is_blue(x, True))
+   • If Bob is round then Bob is blue: foreach(is_round("Bob", True)) ⇒ assert(is_blue("Bob", True))
+   • Big and quiet things are furry: foreach(is_big(x, True), is_quiet(x, True)) ⇒ assert(is_furry(x, True))
+   • Blue and furry things are smart: foreach(is_blue(x, True), is_furry(x, True)) ⇒ assert(is_smart(x, True))
+   • If Charlie is nice and big then Charlie is quiet: foreach(is_nice("Charlie", True), is_big("Charlie", True)) ⇒ assert(is_quiet("Charlie", True))
+4. Note: Some rules may be redundant or overlapping; prioritize applying all in forward-chaining order.
+5. The query checks whether Charlie is blue: use facts.is_blue("Charlie", True)

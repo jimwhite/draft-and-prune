@@ -1,0 +1,17 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign them integer indices.  
+2. Create integer variables for their editing positions (1 through 7), ensuring all positions are distinct.  
+3. Add **domain constraints**: each article position ∈ [1, 7], all positions pairwise distinct.  
+4. Add **topic adjacency constraint**: no two consecutive articles may share the same topic (finance: G, H, J; nutrition: Q, R, S; wildlife: Y).  
+5. Add **S-before-Q conditional constraint**: if S is earlier than Q, then Q must be third; equivalently: `S < Q → pos_Q == 3`. Implement via implication using Boolean encoding or big-M constraint.  
+6. Add **S-before-Y constraint**: `pos_S < pos_Y`.  
+7. Add **J-G-R ordering constraints**: `pos_J < pos_G` and `pos_G < pos_R`.  
+8. Translate the five answer choices into specific position constraints:  
+   - Choice 0: G is second → `pos_G == 2`  
+   - Choice 1: H is second → `pos_H == 2`  
+   - Choice 2: S is second → `pos_S == 2`  
+   - Choice 3: R is third → `pos_R == 3`  
+   - Choice 4: Y is third → `pos_Y == 3`  
+9. For each choice, clone the base constraints into a fresh solver and add the corresponding position equality.  
+10. Check satisfiability: if SAT, that choice *could* be true; record its index.  
+11. Append the index of any SAT-achieving choice to `answer_index_list`.  
+12. Output `answer_index_list`.

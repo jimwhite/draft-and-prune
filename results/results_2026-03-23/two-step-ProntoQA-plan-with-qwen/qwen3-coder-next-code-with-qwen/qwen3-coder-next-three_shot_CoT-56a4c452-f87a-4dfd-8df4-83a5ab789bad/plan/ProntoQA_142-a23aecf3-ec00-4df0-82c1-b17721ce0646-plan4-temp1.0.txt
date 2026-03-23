@@ -1,0 +1,24 @@
+1. Identify all entities and types: Stella, zumpus, wumpus, numpus, impus, rompus, vumpus, jompus, dumpus, yumpus, tumpus.  
+2. Identify all properties: metallic, floral, happy, kind, large, opaque, cold, spicy.  
+3. Represent "Stella is a numpus" as a base fact: `is_a("Stella", "numpus", True)`.  
+4. Convert all class property and subclass relationships into rules:  
+   - Every zumpus is metallic → `foreach (z) is_a(z, "zumpus", True) ⇒ is_metallic(z, True)`  
+   - Each zumpus is a wumpus → `foreach (z) is_a(z, "zumpus", True) ⇒ is_a(z, "wumpus", True)`  
+   - Wumpuses are not floral → `foreach (w) is_a(w, "wumpus", True) ⇒ is_floral(w, False)`  
+   - Every wumpus is a numpus → `foreach (w) is_a(w, "wumpus", True) ⇒ is_a(w, "numpus", True)`  
+   - Numpuses are happy → `foreach (n) is_a(n, "numpus", True) ⇒ is_happy(n, True)`  
+   - Each numpus is an impus → `foreach (n) is_a(n, "numpus", True) ⇒ is_a(n, "impus", True)`  
+   - Impuses are kind → `foreach (i) is_a(i, "impus", True) ⇒ is_kind(i, True)`  
+   - Every impus is a rompus → `foreach (i) is_a(i, "impus", True) ⇒ is_a(i, "rompus", True)`  
+   - Every rompus is large → `foreach (r) is_a(r, "rompus", True) ⇒ is_large(r, True)`  
+   - Vumpuses are opaque → `foreach (v) is_a(v, "vumpus", True) ⇒ is_opaque(v, True)`  
+   - Each rompus is a jompus → `foreach (r) is_a(r, "rompus", True) ⇒ is_a(r, "jompus", True)`  
+   - Each jompus is cold → `foreach (j) is_a(j, "jompus", True) ⇒ is_cold(j, True)`  
+   - Jompuses are dumpuses → `foreach (j) is_a(j, "jompus", True) ⇒ is_a(j, "dumpus", True)`  
+   - Each dumpus is not opaque → `foreach (d) is_a(d, "dumpus", True) ⇒ is_opaque(d, False)`  
+   - Dumpuses are yumpuses → `foreach (d) is_a(d, "dumpus", True) ⇒ is_a(d, "yumpus", True)`  
+   - Yumpuses are spicy → `foreach (y) is_a(y, "yumpus", True) ⇒ is_spicy(y, True)`  
+   - Each yumpus is a tumpus → `foreach (y) is_a(y, "yumpus", True) ⇒ is_a(y, "tumpus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the conclusion, respecting potential conflicts (e.g., direct contradicting facts/properties like dumpuses being both opaque and not opaque only apply when the object is proven to be a dumpus *and* no conflicting higher-priority or direct fact overrides it — but here, Stella is proven to be a numpus → impus → rompus → jompus → dumpus, so `is_opaque(Stella, False)` will be derivable via the chain, *overriding* any vumpus-derived opaque claim unless Stella is also a vumpus; however, no path leads Stella to be a vumpus, so the chain from numpus→...→dumpus is sufficient).  
+6. The query tests if the statement "Stella is opaque" is provable; however, Stella is proven to be a dumpus (via numpus→impus→rompus→jompus→dumpus), and dumpuses are *not* opaque, so `is_opaque("Stella", True)` is false — thus the statement "Stella is opaque" is false.  
+   → Use `facts.is_opaque("Stella", True)`.

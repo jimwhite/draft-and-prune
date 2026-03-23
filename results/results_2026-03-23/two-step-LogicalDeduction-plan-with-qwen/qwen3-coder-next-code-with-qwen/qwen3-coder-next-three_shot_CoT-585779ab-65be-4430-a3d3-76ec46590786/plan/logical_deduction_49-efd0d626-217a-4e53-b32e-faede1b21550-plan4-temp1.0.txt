@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Identify the five fruits as variables: `"peaches"`, `"watermelons"`, `""pears"`, `"apples"`, and `"cantaloupes"`.  
+    * Define the domain as integers from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**, to reflect price ranking.  
+    * Add all fruit variables with domain {1, 2, 3, 4, 5} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into a constraint using `lambda` or direct assignment:  
+        * "The watermelons are the second-cheapest" → `watermelons == 2`  
+        * "The apples are the cheapest" → `apples == 1`  
+        * "The peaches are the most expensive" → `peaches == 5`  
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments of price ranks.  
+    * Since the constraints uniquely determine some positions (apples=1, watermelons=2, peaches=5), and only pears and cantaloupes remain (positions 3 and 4, with pears < cantaloupes), there will be exactly one solution. Retrieve it.
+
+5.  **Evaluate the Answer Choices:**  
+    * Observe that choice A states "The peaches are the most expensive", which directly matches the given constraint `peaches == 5`.  
+    * Since this is explicitly stated in the problem and enforced as a constraint, it must be true.  
+    * Verify that no other choice contradicts the constraints (e.g., B, C, D, E all claim another fruit is most expensive ≠ 5, which violates `peaches == 5`).  
+    * Therefore, **A is true**—output the choice letter "A" as the answer.

@@ -1,0 +1,23 @@
+1. Identify all entities: Charlie, Erin, Fiona, Gary.
+2. Represent explicit facts using ternary predicates:
+   - is_young("Charlie", True)
+   - is_blue("Erin", True), is_not_kind("Erin", True) [Note: treat "not kind" as a separate predicate is_not_kind]
+   - is_blue("Fiona", True), is_white("Fiona", True)
+   - is_blue("Gary", True), is_kind("Gary", True)
+3. Define derived predicates and encode relations:
+   - For negative facts like "Erin is not kind", use is_not_kind("Erin", True) and ensure no conflicting is_kind fact is inferred.
+   - Avoid redefining standard predicates (e.g., use unary-style with True object for properties).
+4. Translate all contextual rules into PyKe rules:
+   • Furry, nice things are white → foreach: is_furry(X, True) AND is_nice(X, True), assert: is_white(X, True)
+   • If young and blue → smart → foreach: is_young(X, True) AND is_blue(X, True), assert: is_smart(X, True)
+   • All blue, smart things are furry → foreach: is_blue(X, True) AND is_smart(X, True), assert: is_furry(X, True)
+   • All smart, white things are furry → foreach: is_smart(X, True) AND is_white(X, True), assert: is_furry(X, True)
+   • Young things are nice → foreach: is_young(X, True), assert: is_nice(X, True)
+   • If Fiona is smart and young → not furry → foreach: is_smart("Fiona", True) AND is_young("Fiona", True), assert: is_not_furry("Fiona", True)
+   • If Erin is kind → furry → foreach: is_kind("Erin", True), assert: is_furry("Erin", True)
+   • If Gary is smart and white → not kind → foreach: is_smart("Gary", True) AND is_white("Gary", True), assert: is_not_kind("Gary", True)
+   • If nice → blue → foreach: is_nice(X, True), assert: is_blue(X, True)
+5. Resolve consistency: detect potential contradictions (e.g., is_furry and is_not_furry for same entity) via PyKe’s conflict handling or by ensuring only one truth value is asserted per predicate-argument pair.
+6. The query checks whether Fiona is not white:
+   → Use facts.is_not_white("Fiona", True)  
+   Note: Since the fact states "Fiona is white" explicitly, and no rule derives a contradiction (e.g., no rule infers is_not_white), this query should evaluate to False.

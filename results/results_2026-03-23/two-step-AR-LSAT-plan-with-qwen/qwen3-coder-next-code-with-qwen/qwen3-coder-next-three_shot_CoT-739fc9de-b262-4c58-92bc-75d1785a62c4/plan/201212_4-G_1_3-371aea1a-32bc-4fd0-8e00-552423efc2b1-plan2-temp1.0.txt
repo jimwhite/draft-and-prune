@@ -1,0 +1,29 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer position variables for each house (1 to 7), ensuring all positions are distinct and cover exactly the set {1,2,3,4,5,6,7}.  
+3. Define time-slot groups:  
+   - Morning: positions 1–2  
+   - Afternoon: positions 3–5  
+   - Evening: positions 6–7  
+4. Add constraints based on rules:  
+   - J must be in evening → position_J ∈ {6,7}  
+   - K cannot be in morning → position_K ∉ {1,2} → position_K ∈ {3,4,5,6,7}  
+   - L after K and before M: position_K < position_L < position_M  
+5. Translate answer choices into logical statements about house positions and time slots:  
+   - "K is shown in the evening": position_K ∈ {6,7}  
+   - "L is shown in the afternoon": position_L ∈ {3,4,5}  
+   - "L is shown in the evening": position_L ∈ {6,7}  
+   - "M is shown in the morning": position_M ∈ {1,2}  
+   - "M is shown in the afternoon": position_M ∈ {3,4,5}  
+6. Define a boolean list `must_be_true_flags` of length 5 (one per choice).  
+7. For each choice i (0 to 4):  
+   - Clone base constraints into a fresh solver S.  
+   - Add constraint that choice i is false:  
+     • For "K in evening": assert position_K ∉ {6,7} (i.e., position_K ≤ 5)  
+     • For "L in afternoon": assert position_L ∉ {3,4,5} (i.e., position_L ∈ {1,2,6,7})  
+     • For "L in evening": assert position_L ∉ {6,7} (i.e., position_L ∈ {1,2,3,4,5})  
+     • For "M in morning": assert position_M ∈ {1,2} is false → position_M ∉ {1,2} (i.e., ≥3)  
+     • For "M in afternoon": assert position_M ∉ {3,4,5} (i.e., ∈ {1,2,6,7})  
+   - If S is UNSAT (i.e., choice i being false leads to contradiction), then the statement must be true → set `must_be_true_flags[i] = True`.  
+   - Otherwise, `must_be_true_flags[i] = False`.  
+8. Collect indices where `must_be_true_flags[i] == True` into a list of candidate answers.  
+9. Output the index (0-based) corresponding to the *only* true statement in the list — since exactly one must be true per LSAT-style logic game.

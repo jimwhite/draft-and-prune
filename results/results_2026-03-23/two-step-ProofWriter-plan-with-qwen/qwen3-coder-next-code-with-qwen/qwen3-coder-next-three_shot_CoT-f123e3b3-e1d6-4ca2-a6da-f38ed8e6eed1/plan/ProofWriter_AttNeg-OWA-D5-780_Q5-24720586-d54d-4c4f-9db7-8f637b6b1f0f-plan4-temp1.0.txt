@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Charlie, Dave, Harry.
+2. Encode explicit unary properties (is_big, is_blue, is_cold, is_kind, is_nice) and binary facts using ternary predicates: e.g., is_blue("Anne", True), is_big("Charlie", True).
+3. Note: All given properties are unary; no explicit binary relations beyond property assertions.
+4. Translate each implication into PyKe rules:
+   • If Charlie is cold → Charlie is nice.
+   • If Harry is kind and Harry is nice → Harry is quiet.
+   • All blue things are cold: foreach X, if is_blue(X, True) then is_cold(X, True).
+   • If something is quiet → it is kind: foreach X, if is_quiet(X, True) then is_kind(X, True).
+   • All kind things are big: foreach X, if is_kind(X, True) then is_big(X, True).
+   • Cold things are nice: foreach X, if is_cold(X, True) then is_nice(X, True).
+   • If Harry is nice and Harry is big → Harry is kind.
+   • If something is nice → it is quiet: foreach X, if is_nice(X, True) then is_quiet(X, True).
+5. Implement each rule using `foreach` blocks with conjunction conditions and `assert` for the consequence.
+6. Query: Check if Charlie is kind → use facts.is_kind("Charlie", True).

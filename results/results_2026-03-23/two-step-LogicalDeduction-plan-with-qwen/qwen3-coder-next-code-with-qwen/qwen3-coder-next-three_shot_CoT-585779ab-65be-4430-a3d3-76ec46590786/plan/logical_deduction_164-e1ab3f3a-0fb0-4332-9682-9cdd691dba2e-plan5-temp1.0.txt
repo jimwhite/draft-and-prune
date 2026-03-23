@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruits as variables: `"mangoes"`, `"kiwis"`, `"oranges"`, `"watermelons"`, `"apples"`, `"pears"`, and `"loquats"`.  
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** (since statements use "most/least expensive").  
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into constraints using `lambda` functions:  
+        - "The loquats are less expensive than the oranges" → `loquats < oranges`  
+        - "The oranges are the third-most expensive" → Since 7 is most expensive, "third-most expensive" means rank = 5 (because positions: 7=1st, 6=2nd, **5=3rd**). So `oranges == 5`.  
+        - "The apples are the cheapest" → `apples == 1`  
+        - "The kiwis are more expensive than the pears" → `kiwis > pears`  
+        - "The mangoes are more expensive than the watermelons" → `mangoes > watermelons`  
+        - "The loquats are more expensive than the kiwis" → `loquats > kiwis`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Extract the unique solution (since the problem is well-defined and consistent).
+
+5.  **Determine Which Fruit Is Most Expensive:**  
+    * The most expensive fruit has rank **7**.  
+    * Create a mapping from choice letters to fruit names:  
+        `'A': 'mangoes'`, `'B': 'kiwis'`, `'C': 'oranges'`, `'D': 'watermelons'`, `'E': 'apples'`, `'F': 'pears'`, `'G': 'loquats'`.  
+    * For each choice letter, check if the corresponding fruit's rank in the solution is 7.  
+    * Return the letter of the first (and only) matching choice as the answer.

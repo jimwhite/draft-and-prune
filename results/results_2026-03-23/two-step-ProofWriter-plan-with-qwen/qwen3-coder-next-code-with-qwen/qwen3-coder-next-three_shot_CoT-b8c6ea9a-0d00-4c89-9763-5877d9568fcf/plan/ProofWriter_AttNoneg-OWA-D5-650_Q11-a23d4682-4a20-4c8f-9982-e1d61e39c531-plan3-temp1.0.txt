@@ -1,0 +1,20 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.  
+2. Encode all explicit facts using ternary predicates:  
+   - is_smart("Anne", True)  
+   - is_nice("Charlie", True)  
+   - is_furry("Erin", True)  
+   - is_white("Erin", True)  
+   - is_smart("Fiona", True)  
+   - is_white("Fiona", True)  
+   - is_young("Fiona", True)  
+3. Translate universal and conditional statements into PyKe rules using `foreach` and `assert`:  
+   • Nice and smart → young: `foreach is_nice(?x, True) & is_smart(?x, True) → assert is_young(?x, True)`  
+   • Young and white → cold: `foreach is_young(?x, True) & is_white(?x, True) → assert is_cold(?x, True)`  
+   • White → red: `foreach is_white(?x, True) → assert is_red(?x, True)`  
+   • Furry and red → nice: `foreach is_furry(?x, True) & is_red(?x, True) → assert is_nice(?x, True)`  
+   • Young → white: `foreach is_young(?x, True) → assert is_white(?x, True)`  
+   • Smart and cold → furry: `foreach is_smart(?x, True) & is_cold(?x, True) → assert is_furry(?x, True)`  
+   • Nice and white → smart: `foreach is_nice(?x, True) & is_white(?x, True) → assert is_smart(?x, True)`  
+   • Anne furry and white → red: `foreach is_furry("Anne", True) & is_white("Anne", True) → assert is_red("Anne", True)`  
+4. Note that the rule "All young things are white" is repeated — encode it once.  
+5. The query tests whether Erin is cold: `facts.is_cold("Erin", True)`

@@ -1,0 +1,21 @@
+1. Enumerate the six cookbooks: K, L, M, N, O, P as indices 0 to 5.  
+2. Create Boolean variables for each cookbook indicating season: `fall[i]` (true means published in fall; spring = not fall).  
+3. Add **mutual-exclusion constraint**: for each cookbook, exactly one season is chosen: `fall[i] XOR spring[i]`, but since `spring[i] = not fall[i]`, just define `fall[i]` and derive spring from it.  
+4. Add **M and P cannot be same season**: `fall[M] != fall[P]`.  
+5. Add **K and N same season**: `fall[K] == fall[N]`.  
+6. Add **conditional constraint 1**: If K in fall then O in fall: `fall[K] → fall[O]`, equivalent to `not fall[K] or fall[O]`.  
+7. Add **conditional constraint 2**: If M in fall then N in spring: `fall[M] → not fall[N]`, equivalent to `not fall[M] or not fall[N]`.  
+8. Add **given assumption**: N is published in the fall: `fall[N] = true`.  
+9. From (8) and (5), deduce: `fall[K] = true`.  
+10. From (8) and (4), deduce: `fall[M] = false` (since M≠N season, and N is fall), so M is in spring.  
+11. From (9) and (6): since `fall[K] = true`, must have `fall[O] = true`.  
+12. Check each answer choice by adding a constraint and testing SAT:  
+    - Choice A: "K is published in spring" → add `not fall[K]`; conflict with step 9 (K must be fall); UNSAT → cannot be true.  
+    - Choice B: "L is published in fall" → add `fall[L] = true`; test SAT with all current constraints (no restriction on L).  
+    - Choice C: "M is published in fall" → add `fall[M] = true`; conflict with step 10 (M must be spring); UNSAT.  
+    - Choice D: "O is published in spring" → add `not fall[O]`; conflict with step 11 (O must be fall); UNSAT.  
+    - Choice E: "P is published in spring" → since `fall[M] = false`, M is spring; from (4), P≠M season ⇒ P must be fall? Wait no: constraint is M and P not same season → if M is spring (fall[M]=false), then P can be fall OR spring? Actually: `fall[M] != fall[P]` ⇒ if `fall[M]=false`, then `fall[P]` can be true (fall) only. But spring for P means `not fall[P]=true` ⇒ `fall[P]=false`, which equals M ⇒ violates constraint. So P must be fall if M is spring. But answer says "P in spring" ⇒ `not fall[P]` ⇒ `fall[P]=false`, same as M ⇒ UNSAT. However recheck: spring = not fall, so "P in spring" means `not fall[P]`. Since `fall[M]=false`, and constraint requires `fall[M] != fall[P]`, we need `fall[P]=true`. So "P in spring" is UNSAT.  
+13. But only **one** choice can be possible — Choice B ("L is published in fall") has no constraint linking L to others, so likely SAT.  
+14. For each answer choice, clone base solver + assumption `fall[N]=true`, add the choice’s constraint (e.g., `fall[L] = true` for B), and check SAT.  
+15. The only choice yielding SAT is B → append its index (1) to `answer_index_list`.  
+16. Print `answer_index_list`.

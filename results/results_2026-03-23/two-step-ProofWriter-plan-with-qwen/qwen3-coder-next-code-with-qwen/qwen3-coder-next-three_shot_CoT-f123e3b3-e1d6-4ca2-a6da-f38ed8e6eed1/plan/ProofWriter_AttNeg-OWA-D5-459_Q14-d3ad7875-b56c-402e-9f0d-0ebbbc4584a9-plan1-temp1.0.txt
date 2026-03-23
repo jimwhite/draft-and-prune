@@ -1,0 +1,15 @@
+1. Identify all entities: Bob, Charlie, Erin, Gary.
+2. Encode all explicit facts using ternary predicates with boolean or entity objects:
+   - For properties like is_cold, is_furry, is_round, is_big, is_quiet, is_red, is_white: use predicate("subject", boolean_value, True) where boolean_value is True or False.
+   - Example: facts.is_cold("Bob", False, True), facts.is_furry("Bob", True, True), ..., facts.is_white("Charlie", False, True).
+3. Translate each contextual rule into PyKe rules using `foreach` and `assert`:
+   • If someone is red and cold → they are furry.
+   • All furry people are round: ∀x (is_furry(x, True) → is_round(x, True)).
+   • If Charlie is furry → Charlie is round (redundant but must be encoded if explicitly given; may be subsumed by general rule).
+   • Big people are red: ∀x (is_big(x, True) → is_red(x, True)).
+   • Round people are quiet: ∀x (is_round(x, True) → is_quiet(x, True)).
+   • If someone is red → they are cold: ∀x (is_red(x, True) → is_cold(x, True)).
+4. Ensure each rule uses correct quantification (via `foreach`) and asserts conclusions with appropriate arguments (e.g., is_furry("x", True, True)).
+5. The query checks whether Gary is white:
+   → Use facts.is_white("Gary", True, True) (to test if it can be proven true), and also consider if ¬white can be proven.
+   However, in PyKe (assertion-based), the query is typically posed as facts.is_white("Gary", True, True) and whether it can be derived. If neither "is_white(Gary, True)" nor "is_white(Gary, False)" can be derived from facts + rules, the answer is unknown. But per instructions, encode query as `facts.is_white("Gary", True, True)`.

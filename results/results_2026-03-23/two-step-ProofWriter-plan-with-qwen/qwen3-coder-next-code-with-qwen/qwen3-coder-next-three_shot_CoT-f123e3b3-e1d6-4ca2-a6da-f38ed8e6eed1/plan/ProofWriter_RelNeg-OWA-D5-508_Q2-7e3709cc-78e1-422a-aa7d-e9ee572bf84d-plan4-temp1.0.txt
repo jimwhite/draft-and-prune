@@ -1,0 +1,17 @@
+1. Identify all entities: bald_eagle, cat, cow, squirrel.
+2. Encode direct facts using ternary predicates:
+   - is_big("bald_eagle", True), is_cold("bald_eagle", True), is_young("bald_eagle", True)
+   - is_kind("cat", False) (i.e., not kind)
+   - is_red("cow", True), likes("cow", "bald_eagle", True), visits("squirrel", "bald_eagle", True)
+3. Translate all implications into PyKe rules using `foreach` conditions and `assert` conclusions:
+   • If something likes the cow → the cow likes the squirrel.
+   • All big things are cold (already partially covered by explicit fact for bald_eagle, but rule needed: is_big(X) → is_cold(X)).
+   • If squirrel is red → squirrel is young.
+   • If something likes the squirrel → squirrel is red.
+   • If something is young → it likes the cow.
+   • If squirrel likes cat AND NOT chase("cow", "squirrel", True) → cat likes cow.
+   • If something visits the squirrel AND squirrel is big → it does NOT like squirrel.
+   • If something is big → it visits the cow.
+   • If something visits the squirrel AND NOT red(X) → squirrel does NOT visit bald_eagle.
+4. For negative facts, encode explicitly as `NOT facts.predicate(...)` or use `is_red("cow", True)` and derive contradiction if needed; here cow is explicitly stated red, so query `NOT facts.is_red("cow", True)` or equivalently `facts.is_red("cow", False)`.
+5. Query: verify whether cow is not red → use facts.is_red("cow", False).

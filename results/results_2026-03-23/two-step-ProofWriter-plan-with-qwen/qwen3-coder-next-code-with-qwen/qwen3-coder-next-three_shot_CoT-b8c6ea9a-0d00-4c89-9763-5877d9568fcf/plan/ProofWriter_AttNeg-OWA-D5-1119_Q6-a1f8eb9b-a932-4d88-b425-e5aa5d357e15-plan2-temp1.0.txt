@@ -1,0 +1,16 @@
+1. Identify all entities: Anne, Bob, Dave, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates: is_blue("Anne", True), is_cold("Anne", True), ..., is_not_furry("Dave", True), is_green("Dave", True), is_quiet("Dave", True), is_cold("Fiona", True).  
+3. Encode all universal implications as rules using `foreach` and `assert`:  
+   • All cold people are blue → if is_cold(X, True) then is_blue(X, True).  
+   • Green, nice people are kind → if is_green(X, True) and is_nice(X, True) then is_kind(X, True).  
+   • All blue people are kind → if is_blue(X, True) then is_kind(X, True).  
+   • Kind, cold people are nice → if is_kind(X, True) and is_cold(X, True) then is_nice(X, True).  
+   • If someone is nice then they are green → if is_nice(X, True) then is_green(X, True).  
+   • Cold, green people are quiet → if is_cold(X, True) and is_green(X, True) then is_quiet(X, True).  
+4. Handle negative facts explicitly: is_not_quiet("Bob", True), is_not_furry("Dave", True).  
+5. Do not introduce inverse predicates (e.g., do not define is_not_blue as a separate predicate); rely on negation-by-failure via query evaluation.  
+6. For the query “Fiona is not kind”, express as: does not hold that is_kind("Fiona", True) can be inferred — i.e., attempt to derive is_kind("Fiona", True); if neither the fact nor a derived rule supports it, and no contradiction arises, the answer is unknown.  
+7. Query: Use facts.is_kind("Fiona", True) — the statement “Fiona is not kind” is true if and only if is_kind("Fiona", True) cannot be proven (i.e., unknown in PyKe’s SMT context unless explicitly false).  
+8. Since no direct fact states is_kind("Fiona", True) or its negation, and Fiona is only known to be cold, check if other rules (e.g., all cold people are blue → is_blue("Fiona", True); all blue people are kind → is_kind("Fiona", True)) can derive is_kind("Fiona", True).  
+9. Conclude: Derivation chain: is_cold("Fiona", True) → is_blue("Fiona", True) (by rule 1); is_blue("Fiona", True) → is_kind("Fiona", True) (by rule 3). Therefore, is_kind("Fiona", True) *is* provable → “Fiona is not kind” is false.  
+10. Final query evaluation: Since is_kind("Fiona", True) is entailed, the statement “Fiona is not kind” is false.

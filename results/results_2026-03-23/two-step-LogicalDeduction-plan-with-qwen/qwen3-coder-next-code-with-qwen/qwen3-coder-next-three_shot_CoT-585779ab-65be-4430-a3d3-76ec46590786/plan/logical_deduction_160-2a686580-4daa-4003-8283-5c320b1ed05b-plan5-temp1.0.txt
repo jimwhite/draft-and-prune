@@ -1,0 +1,35 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven bird types as variables: `"hawk"`, `"hummingbird"`, `"falcon"`, `"cardinal"`, `"owl"`, `"robin"`, `"blue_jay"` (note underscore in variable name to avoid space issues).  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables to the problem with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into constraints:  
+     - "The hummingbird is to the left of the owl" → `hummingbird < owl`  
+     - "The robin is the rightmost" → `robin == 7`  
+     - "The blue jay is to the left of the hawk" → `blue_jay < hawk`  
+     - "The blue jay is the third from the left" → `blue_jay == 3`  
+     - "The falcon is the fourth from the left" → `falcon == 4`  
+     - "The cardinal is the second from the right" → `cardinal == 6` (since 7 is rightmost, second from right = position 6)
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+5. **Determine Correct Answer:**  
+   * The question asks which bird is the rightmost (position 7).  
+   * In the solution, identify the bird assigned to position 7.  
+   * Map that bird name to the corresponding choice letter using the provided options:  
+     - A) hawk → position 7?  
+     - B) hummingbird  
+     - C) falcon  
+     - D) cardinal  
+     - E) owl  
+     - F) robin (note: statement says robin is rightmost, so likely F is correct — verify with solution)  
+     - G) blue jay  
+   * Select and output the letter (e.g., print or return) corresponding to the bird at position 7.

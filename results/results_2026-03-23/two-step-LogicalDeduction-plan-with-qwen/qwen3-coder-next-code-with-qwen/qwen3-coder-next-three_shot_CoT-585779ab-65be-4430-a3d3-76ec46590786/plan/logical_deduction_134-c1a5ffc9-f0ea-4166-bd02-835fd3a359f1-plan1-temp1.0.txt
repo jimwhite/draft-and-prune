@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to build the constraint satisfaction model.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven vehicle variables: `"limousine"`, `"truck"`, `"sedan"`, `"tractor"`, `"minivan"`, `"motorcyle"`, `"hatchback"`.  
+   * Define a domain of integers from **1 to 7**, where **1 = oldest** and **7 = newest**.  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Translate each statement into a constraint using `lambda` functions:  
+     - `"The minivan is older than the tractor"` → `minivan < tractor`  
+     - `"The hatchback is older than the sedan"` → `hatchback < sedan`  
+     - `"The truck is the third-newest"` → `truck == 5` (since newest=7, second-newest=6, third-newest=5)  
+     - `"The hatchback is the second-newest"` → `hatchback == 6`  
+     - `"The tractor is older than the limousine"` → `tractor < limousine`  
+     - `"The motorcyle is newer than the limousine"` → `limousine < motorcyle`
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (as the problem is well-constrained).
+
+5. **Determine the Second-Oldest Vehicle:**  
+   * The question asks for the vehicle with rank **2** (since 1 = oldest, 2 = second-oldest).  
+   * Create a mapping from choice letters ("A", "B", ..., "G") to vehicle names:  
+     - `"A" → "limousine"`, `"B" → "truck"`, `"C" → "sedan"`, `"D" → "tractor"`, `"E" → "minivan"`, `"F" → "motorcyle"`, `"G" → "hatchback"`  
+   * For each choice letter, retrieve the corresponding vehicle and check if its rank in the solution equals 2.  
+   * Return (or output) the letter of the first (and only) matching choice.

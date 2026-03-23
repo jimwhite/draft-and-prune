@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the necessary `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold the variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables of the problem, which are the five vehicles: `"truck"`, `"motorcyle"`, `"limousine"`, `"station_wagon"`, and `"sedan"`.
+    * Define a numerical domain to represent the age ranking: use integers from 1 (oldest) to 5 (newest).
+    * Add the vehicle variables and their rank domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two vehicles share the same age rank.
+    * Convert each statement into a formal constraint using `lambda` functions:
+        * "The limousine is older than the truck" → `limousine < truck`
+        * "The sedan is newer than the motorcyle" → `motorcyle < seda`n (note: typo in problem; assume "sedan" is intended)
+        * "The station wagon is the oldest" → `station_wagon == 1`
+        * "The limousine is newer than the sedan" → `sedan < limousine`
+
+4.  **Solve for the Arrangement:**
+    * Use `getSolutions()` to find all valid arrangements satisfying the constraints.
+    * Since the problem is well-defined, extract the unique solution from the returned list.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which vehicle is the second-oldest, i.e., has rank 2.
+    * Create a dictionary mapping choice letters ("A"–"E") to vehicle names.
+    * Find the vehicle in the solution with rank 2.
+    * Return the corresponding choice letter.

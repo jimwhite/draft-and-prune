@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the variables as the seven fruits: `"plums"`, `"kiwis"`, `"pears"`, `"mangoes"`, `"apples"`, `"oranges"`, and `"loquats"`.
+    * Define the domain for these variables as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, consistent with the problem's use of comparative price terms ("less/more expensive").
+    * Add all variables and their domain (1..7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into constraints using `lambda` functions (or direct value assignments):
+        * "The pears are less expensive than the oranges" → `pears < oranges`
+        * "The mangoes are less expensive than the kiwis" → `mangoes < kiwis`
+        * "The plums are the second-most expensive" → `plums == 6` (since 7 is most expensive)
+        * "The loquats are more expensive than the apples" → `loquats > apples`
+        * "The kiwis are less expensive than the apples" → `kiwis < apples`
+        * "The loquats are the fourth-most expensive" → `loquats == 4`
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to find all valid assignments of ranks.
+    * Extract the single solution (or any one, if multiple exist—but logic implies uniqueness).
+
+5.  **Determine the Third-Cheapest Fruit:**
+    * The question asks for the fruit with rank **3** (since 1 = cheapest, 2 = second-cheapest, 3 = third-cheapest).
+    * Create a mapping from choice letters (`'A','B',...,G'`) to fruit names as per the choices:
+        - `'A': 'plums'`, `'B': 'kiwis'`, `'C': 'pears'`, `'D': 'mangoes'`, `'E': 'apples'`, `'F': 'oranges'`, `'G': 'loquats'`
+    * Iterate over the choices: for each choice letter, check if the corresponding fruit’s rank in the solution equals 3.
+    * Output the choice letter for which this condition holds.

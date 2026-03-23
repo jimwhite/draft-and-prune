@@ -1,0 +1,14 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables for the showing position (1 to 7) of each house.  
+3. Add **domain constraints**: all positions are distinct integers in [1,7].  
+4. Assign time slots:  
+    - Morning = positions {1,2},  
+    - Afternoon = positions {3,4,5},  
+    - Evening = positions {6,7}.  
+5. Add **J constraint**: J must be in evening → pos_J ∈ {6,7}.  
+6. Add **K constraint**: K cannot be in morning → pos_K ∉ {1,2} (i.e., pos_K ∈ {3,4,5,6,7}).  
+7. Add **L-K-M ordering constraints**: K before L, and L before M → pos_K < pos_L ∧ pos_L < pos_M.  
+8. Translate the five answer choices into logical statements (e.g., “K is shown in the evening” ↔ pos_K ∈ {6,7}, etc.).  
+9. For each answer choice, define a fresh solver with the base constraints plus the negation of that statement (i.e., assume the statement is *not* true).  
+10. If the negated instance is UNSAT, then the original statement must be true; record that answer choice as correct.  
+11. Return the answer choice(s) for which the negation leads to UNSAT (there should be exactly one).

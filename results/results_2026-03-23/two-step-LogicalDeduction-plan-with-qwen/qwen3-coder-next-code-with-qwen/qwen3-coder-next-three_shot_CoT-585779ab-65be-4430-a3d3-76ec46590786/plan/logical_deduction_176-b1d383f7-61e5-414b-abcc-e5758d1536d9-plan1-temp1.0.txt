@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * List the seven fruits as variables: `"plums"`, `"kiwis"`, `"pears"`, `"mangoes"`, `"apples"`, `"oranges"`, and `"loquats"`.  
+   * Define a numerical domain of integers from 1 to 7, where **1 = least expensive (cheapest)** and **7 = most expensive**. This establishes a cost ranking: lower number ⇒ cheaper, higher number ⇒ more expensive.  
+   * Add all seven fruit variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique cost rank.  
+   * Translate each statement into a constraint using `lambda` functions or direct assignment:  
+     - "The pears are less expensive than the oranges" → `pears < oranges`  
+     - "The mangoes are less expensive than the kiwis" → `mangoes < kiwis`  
+     - "The plums are the second-most expensive" → `plums == 6` (since 7 is most expensive)  
+     - "The loquats are more expensive than the apples" → `loquats > apples`  
+     - "The kiwis are less expensive than the apples" → `kiwis < apples`  
+     - "The loquats are the fourth-most expensive" → `loquats == 4`  
+
+4. **Solve for All Valid Rankings:**  
+   * Use `getSolutions()` to enumerate all solutions that satisfy the constraints.  
+   * Since the problem is deterministic and consistent, there will be exactly one valid solution; extract it.
+
+5. **Identify the Third-Cheapest Fruit:**  
+   * The question asks which fruit is the **third-cheapest**, i.e., rank = 3.  
+   * Create a mapping from choice letters to fruit names:  
+     `{"A": "plums", "B": "kiwis", "C": "pears", "D": "mangoes", "E": "apples", "F": "oranges", "G": "loquats"}`  
+   * Iterate through the solution dictionary, find the fruit with value 3.  
+   * Retrieve and output the corresponding choice letter.

@@ -1,0 +1,14 @@
+1. Identify all entities: bald_eagle, cow, dog, lion.  
+2. Encode explicitly stated facts using ternary predicates (e.g., eats("bald_eagle", "cow", True), is_rough("bald_eagle", True), is_round("cow", True), sees("cow", "bald_eagle", True), visits("cow", "lion", True), is_young("lion", True), sees("lion", "cow", True), etc.) with explicit negations represented as `facts.predicate(entity, False)` where stated (e.g., eats("bald_eagle", "dog", False), sees("cow", "dog", False), sees("lion", "bald_eagle", False)).  
+3. Translate each conditional implication into a PyKe rule:  
+   • If someone is green and eats the bald eagle → bald_eagle is not rough.  
+   • If someone is big and does not see the bald eagle → bald_eagle is rough.  
+   • If someone is big → they visit the dog.  
+   • If someone eats the lion and is big → lion eats the dog.  
+   • If someone visits the dog → dog eats the cow.  
+   • If someone is rough and eats the cow → they are young.  
+   • If lion eats the cow → lion visits the bald eagle.  
+   • If someone is big and sees the lion → they are green.  
+   • If someone is young → they are big.  
+4. For each rule, implement using `foreach` blocks to match antecedent conditions and an `assert` clause for the consequence, ensuring correct variable scoping and logical structure (including handling negated literals like `not sees("bald_eagle", ...)`, but note: in PyKe, negation is handled via facts not being asserted; however, explicitly stated negatives like "does not see" must be encoded as negative facts via `facts.predicate(subject, object, False)`).  
+5. Query whether the lion is big: use `facts.is_big("lion", True)`.

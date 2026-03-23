@@ -1,0 +1,38 @@
+1. Enumerate the three photographers: Fuentes (0), Gagnon (1), Hue (2).  
+2. Enumerate the three sections: Lifestyle (0), Metro (1), Sports (2).  
+3. Create integer variables `f[i][j]` for the number of photographs by photographer i in section j, where i ∈ {0,1,2}, j ∈ {0,1,2}.  
+4. Add **per-section totals**:  
+    - Lifestyle: `f[0][0] + f[1][0] + f[2][0] == 2`  
+    - Metro: `f[0][1] + f[1][1] + f[2][1] == 2`  
+    - Sports: `f[0][2] + f[1][2] + f[2][2] == 2`  
+5. Add **non-negativity and integrality**: All `f[i][j]` ∈ {0,1,2}.  
+6. Add **global photographer counts**: For each photographer i, let `total[i] = f[i][0] + f[i][1] + f[i][2]`. Add constraints: `1 <= total[i] <= 3` for i = 0,1,2.  
+7. Add **Gagnon constraint**: No Gagnon photos in Sports ⇒ `f[1][2] == 0`.  
+8. Add **cross-section constraint**: At least one Lifestyle photographer appears in Metro ⇒  
+    `(f[0][0] > 0 and f[0][1] > 0) or (f[1][0] > 0 and f[1][1] > 0) or (f[2][0] > 0 and f[2][1] > 0)`.  
+9. Add **Hue–Lifestyle = Fuentes–Sports constraint**: `f[2][0] == f[0][2]`.  
+10. Add **given condition**: One Lifestyle photo by Fuentes and one by Hue ⇒ `f[0][0] == 1` and `f[2][0] == 1`.  
+11. From this, deduce Lifestyle composition: Since total = 2 and f[0][0] = f[2][0] = 1, then `f[1][0] == 0`.  
+12. From step 6: `total[0] = f[0][0] + f[0][1] + f[0][2] = 1 + f[0][1] + f[0][2]`, and `total[2] = f[2][0] + f[2][1] + f[2][2] = 1 + f[2][1] + f[2][2]`. Since `f[2][0] == f[0][2]`, let x = f[0][2] ⇒ f[2][0] = x. But we already know f[2][0] = 1, so **x = 1**, hence `f[0][2] == 1`.  
+13. Update: `f[0][2] = 1`, `f[0][0] = 1`, and f[1][2] = 0 (from step 7).  
+14. Compute remaining variables:  
+    - Sports total = `f[0][2] + f[1][2] + f[2][2] = 1 + 0 + f[2][2] = 2` ⇒ `f[2][2] == 1`.  
+    - Hue total = `f[2][0] + f[2][1] + f[2][2] = 1 + f[2][1] + 1 = 2 + f[2][1]`. Since total[2] ≤ 3, `f[2][1] <= 1`; also ≥1 ⇒ total[2] ≥ 1 always satisfied.  
+    - Fuentes total = `f[0][0] + f[0][1] + f[0][2] = 1 + f[0][1] + 1 = 2 + f[0][1]`. Must be ≤3 ⇒ `f[0][1] <= 1`, and ≥1 ⇒ okay.  
+    - Metro total = `f[0][1] + f[1][1] + f[2][1] = 2`.  
+    - Gagnon total = `f[1][0] + f[1][1] + f[1][2] = 0 + f[1][1] + 0 = f[1][1]`. Must be ≥1 ⇒ `f[1][1] >= 1`, and ≤3 (always true).  
+    - So `f[1][1] ∈ {1,2}`. But Metro total = 2 and `f[0][1], f[2][1] ≥ 0`, so combinations possible.  
+15. Now incorporate the five answer choices, each as a condition to test feasibility:  
+    - Choice 0 (Both Metro by Fuentes): `f[0][1] == 2`.  
+    - Choice 1 (Both Metro by Gagnon): `f[1][1] == 2` ⇒ implies `f[0][1] = f[2][1] = 0`.  
+    - Choice 2 (Exactly one Metro by Hue): `f[2][1] == 1`.  
+    - Choice 3 (Both Sports by Hue): `f[2][2] == 2`. But from step 14, `f[2][2] = 1` ⇒ this is impossible. (Already fixed.)  
+    - Choice 4 (Neither Sports by Hue): `f[2][2] == 0`. Contradicts step 14 (`f[2][2] = 1`) ⇒ impossible.  
+    However, note: step 14 deduced `f[2][2] = 1` using only fixed conditions (given + constraints), so choices 3 and 4 are immediately inconsistent — but per plan, we must verify via SAT checking (i.e., clone solver and assert the condition).  
+16. Define answer index list `answer_index_list = []`.  
+17. For each choice (index 0 to 4):  
+    - Clone base constraints + given condition (`f[0][0]=1`, `f[2][0]=1`) into a fresh solver.  
+    - Add the specific choice condition (e.g., for index 3: `f[2][2] == 2`).  
+    - If model is SAT, then this choice **could be true**; append index to `answer_index_list`.  
+18. Return `answer_index_list` (note: problem asks "which one could be true", so list may have size 1; but multiple may be possible — per question, only one is correct).  
+19. Final output: the list of indices for which the choice is satisfiable.

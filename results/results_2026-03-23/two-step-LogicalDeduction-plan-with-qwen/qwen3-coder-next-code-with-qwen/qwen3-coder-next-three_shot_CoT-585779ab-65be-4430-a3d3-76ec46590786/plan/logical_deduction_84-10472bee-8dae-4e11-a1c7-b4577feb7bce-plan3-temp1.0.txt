@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the five vehicle variables: `"tractor"`, `"station_wagon"`, `"minivan"`, `"sedan"`, and `"hatchback"`.
+    * Set the domain for each variable as integers 1 to 5, where **1 = oldest**, and **5 = newest** (i.e., higher numbers indicate newer vehicles).
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Translate each textual statement into a constraint:
+        * "The minivan is older than the sedan" → `minivan < sedan`
+        * "The tractor is older than the hatchback" → `tractor < hatchback`
+        * "The minivan is the third-newest" → In a 1-to-5 scale (1=oldest), "third-newest" means position **3** from the newest side. Since 5 is newest, 4 is second-newest, **3 is third-newest**, so `minivan == 3`.
+        * "The station wagon is the second-newest" → Similarly, this corresponds to position **4**, so `station_wagon == 4`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions satisfying the constraints.
+    * Extract the unique solution (as implied by problem consistency).
+
+5.  **Determine Which Statement is True:**
+    * The question asks which vehicle is the third-newest (i.e., rank 3).
+    * From the solved solution, identify which vehicle has rank `3`.
+    * Map this vehicle to the corresponding choice:
+        - Choice A: tractor → check if `solution['tractor'] == 3`
+        - Choice B: station_wagon → check if `solution['station_wagon'] == 3`
+        - Choice C: minivan → check if `solution['minivan'] == 3`
+        - Choice D: sedan → check if `solution['sedan'] == 3`
+        - Choice E: hatchback → check if `solution['hatchback'] == 3`
+    * Return the letter (A–E) corresponding to the vehicle that satisfies `rank == 3`.

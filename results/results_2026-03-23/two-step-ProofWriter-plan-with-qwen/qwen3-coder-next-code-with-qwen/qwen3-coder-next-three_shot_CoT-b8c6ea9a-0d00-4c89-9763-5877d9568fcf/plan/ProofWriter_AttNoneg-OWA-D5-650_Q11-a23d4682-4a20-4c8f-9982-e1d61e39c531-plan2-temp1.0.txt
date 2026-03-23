@@ -1,0 +1,16 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.
+2. Represent all explicit facts using ternary predicates:
+   - is_smart("Anne", True), is_nice("Charlie", True), is_furry("Erin", True), is_white("Erin", True), is_smart("Fiona", True), is_white("Fiona", True), is_young("Fiona", True).
+3. Translate each rule into PyKe constraints using `foreach` and `assert`:
+   • Nice, smart things are young. (For all x: if is_nice(x,True) and is_smart(x,True) → is_young(x,True))
+   • All young, white things are cold. (For all x: if is_young(x,True) and is_white(x,True) → is_cold(x,True))
+   • White things are red. (For all x: if is_white(x,True) → is_red(x,True))
+   • All furry, red things are nice. (For all x: if is_furry(x,True) and is_red(x,True) → is_nice(x,True))
+   • All young things are white. (Note: duplicated in prompt; encode once: For all x: if is_young(x,True) → is_white(x,True))
+   • All smart, cold things are furry. (For all x: if is_smart(x,True) and is_cold(x,True) → is_furry(x,True))
+   • If something is nice and white then it is smart. (For all x: if is_nice(x,True) and is_white(x,True) → is_smart(x,True))
+   • If Anne is furry and white then Anne is red. (For all x: if x="Anne" and is_furry(x,True) and is_white(x,True) → is_red(x,True))
+4. Ensure rules are ordered to allow proper forward chaining (e.g., short- or fewer-precondition rules first, avoiding cycles unless handled).
+5. The query tests whether Erin is cold:
+   → Use facts.is_cold("Erin", True)  
+6. Run PyKe to check if `is_cold("Erin", True)` is derivable, and classify answer as true/false/unknown based on prove result.

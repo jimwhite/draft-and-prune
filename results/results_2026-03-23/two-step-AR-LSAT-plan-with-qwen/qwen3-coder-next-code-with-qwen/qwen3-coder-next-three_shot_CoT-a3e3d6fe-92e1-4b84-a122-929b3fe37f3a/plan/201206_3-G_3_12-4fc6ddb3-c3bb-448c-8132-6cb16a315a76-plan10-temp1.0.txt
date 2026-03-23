@@ -1,0 +1,19 @@
+1. Enumerate the seven sales representatives and assign them integer indices: [Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall] → [0,1,2,3,4,5,6].  
+2. Create integer variables `zone[i]` for each representative i ∈ {0,…,6}, where `zone[i] ∈ {1,2,3}`.  
+3. Add **mutual exclusivity of zone assignments**: for all i ≠ j, `zone[i] != zone[j]` is *not* required (multiple reps per zone allowed); only each rep assigned exactly one zone — enforced by domain constraint.  
+4. Add **Parra or Tiao (but not both) in Zone 1**: `(zone[2] == 1) != (zone[5] == 1)` — i.e., XOR.  
+5. Add **Tiao or Udall (but not both) in Zone 2**: `(zone[5] == 2) != (zone[6] == 2)`.  
+6. Add **Parra and Quinn in same zone**: `zone[2] == zone[3]`.  
+7. Add **Stuckey and Udall in same zone**: `zone[4] == zone[6]`.  
+8. Add **more reps in Zone 3 than Zone 2**: count of representatives assigned to zone 3 > count assigned to zone 2. Implement by computing counts via auxiliary integer variables or using `If` expressions:  
+   - Let `c1 = Sum([If(zone[i]==1, 1, 0) for i in range(7)])`,  
+   - `c2 = Sum([If(zone[i]==2, 1, 0) for i in range(7)])`,  
+   - `c3 = Sum([If(zone[i]==3, 1, 0) for i in range(7)])`,  
+   - Add constraint `c3 > c2`.  
+9. Translate each answer choice into a set of zone assignments:  
+   - For each option, parse assignment string, extract which reps go to which zone.  
+   - Convert rep names → indices; assign `zone[i] = zone_id` accordingly.  
+   - Add all such fixed assignments as constraints (e.g., `zone[2]==1`, `zone[3]==1`, etc.).  
+10. For each answer choice, clone the base constraints (steps 4–8) and add the specific assignments (step 9).  
+11. Check satisfiability with Z3: if SAT, the assignment is possible; collect the index of that choice.  
+12. Output the list of indices (0-based) of feasible choices — but since only one choice should be correct, expect list with exactly one element.

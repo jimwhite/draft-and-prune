@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the five fruit types as variables: `"peaches"`, `"watermelons"`, `"pears"`, `"apples"`, and `"cantaloupes"`.
+    * Assign a domain of integers from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**, consistent with typical price-ranking conventions (lower rank = lower cost).
+    * Add these variables and the domain to the `Problem` instance.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Convert each statement into a constraint:
+        * "The watermelons are the second-cheapest" → `watermelons == 2`
+        * "The apples are the cheapest" → `apples == 1`
+        * "The peaches are the most expensive" → `peaches == 5`
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (since lower rank = cheaper)
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments of ranks.
+    * Extract the single valid solution (as the constraints uniquely determine the arrangement).
+
+5.  **Verify Against the Question and Choices:**
+    * The question is phrased as "Which of the following is true?", and choice A directly states "The peaches are the most expensive."
+    * Since the constraint "The peaches are the most expensive" is explicitly given as a premise (and encoded as `peaches == 5`), it must hold in the solution.
+    * Therefore, option A is necessarily true by construction; no further verification of other choices is required—though the solver confirms consistency.
+    * Return "A" as the correct answer.

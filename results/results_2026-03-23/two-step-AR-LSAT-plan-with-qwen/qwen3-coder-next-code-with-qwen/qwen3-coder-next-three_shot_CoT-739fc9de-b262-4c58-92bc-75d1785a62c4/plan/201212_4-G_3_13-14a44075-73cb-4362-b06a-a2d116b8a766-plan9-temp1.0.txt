@@ -1,0 +1,31 @@
+1. Enumerate the six targets: assign integer codes to each target variable:  
+   - Image_website = iw, Image_voicemail = iv  
+   - Solide_website = sw, Solide_voicemail = sv  
+   - Truvest_website = tw, Truvest_voicemail = tv  
+2. Each target variable is constrained to domain {1, 2, 3} (days).  
+3. Add constraint: no client’s website target exceeds its voicemail target →  
+   - iw ≤ iv, sw ≤ sv, tw ≤ tv.  
+4. Add constraint: Image’s voicemail target is shorter than the *other clients’* voicemail targets →  
+   - iv < sv AND iv < tv.  
+5. Add constraint: Solide’s website target is shorter than Truvest’s website target →  
+   - sw < tw.  
+6. Add given condition: Image’s website target is 2 days → iw = 2.  
+7. From (3) and iw = 2, infer: iv ≥ 2 → iv ∈ {2, 3}.  
+8. From (4) and iv ≥ 2:  
+   - Since iv < sv and sv ∈ {1,2,3}, iv cannot be 3 (as no sv > 3), so iv ∈ {2}.  
+   - Therefore, iv = 2 is forced.  
+9. Now check if any other target *must* be 2:  
+   - Since iv = 2, and iv < sv and iv < tv → sv ≥ 3 and tv ≥ 3.  
+   - Also, from (3): sw ≤ sv ⇒ sw ≤ sv (sv = 3) → sw ∈ {1,2}  
+   - From (5): sw < tw and tw ≤ tv = 3 ⇒ tw ∈ {2,3}  
+     - If sw = 1: then tw ∈ {2,3} possible.  
+     - If sw = 2: then tw = 3 (since sw < tw).  
+   - So sw and tw are *not* forced to be 2 (e.g., sw=1, tw=2 is invalid because tw must be > sw and ≤ tv=3; but if tw=2, then sv>iv=2 → sv=3 works; however, is sw=1 possible? Yes: iv=2 < sv=3 and tv=3; iw=2 ≤ iv=2 ✔; sw=1 ≤ sv=3 ✔; tw=2 ≤ tv=3? No: tw=2, tv=3 OK, but sw=1 < tw=2 ✔ — so sw=1, tw=2 is feasible; but wait: tv must be ≥3 (since iv=2 < tv ⇒ tv=3). So tw can be 2.  
+   - But is *any* target other than iv forced to be 2?  
+     - Image's voicemail = iv = 2 (already established).  
+     - Check if Solide’s website must be 2: no — sw=1 is possible.  
+     - Check Solide’s voicemail sv: must be 3 (since iv=2 < sv and sv ≤ 3).  
+     - Check Truvest’s website tw: could be 2 (if sw=1) or 3 (if sw=2). Not forced.  
+     - Check Truvest’s voicemail tv: must be 3 (since iv=2 < tv ⇒ tv=3).  
+10. Therefore, only **Image’s voicemail target** must be 2 days.  
+11. Define answer index list as the index of "Image's voicemail target" in the choices (0-indexed: [0]).

@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables as the five vehicles: `"convertible"`, `"sedan"`, `"station_wagon"`, `"bus"`, and `"limousine"` (note: use underscores for multi-word names to ensure valid Python identifiers).  
+   * Define the domain as integers 1 through 5, where **1 = oldest** and **5 = newest**, reflecting chronological age order.  
+   * Add all five variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Translate each statement into a constraint using `addConstraint` with lambda functions:  
+     - "The sedan is newer than the station wagon" → `lambda s, sw: s > sw` (sedan rank > station_wagon rank).  
+     - "The limousine is the newest" → `lambda l: l == 5`.  
+     - "The bus is the second-newest" → `lambda b: b == 4`.  
+     - "The convertible is the second-oldest" → `lambda c: c == 2`.  
+   * Note: All constraints involving fixed positions (limousine=5, bus=4, convertible=2) can be added as `addConstraint` with a constant function or directly via `addVariable`-style constraints if the library supports fixed assignments—but standard practice is to use lambda with constant argument.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Since the problem is fully constrained, expect exactly one solution; extract it (e.g., `solutions[0]`).
+
+5. **Identify the Correct Answer:**  
+   * Observe that choice A directly states: "The convertible is the second-oldest.", which matches one of the given premises.  
+   * However, verify consistency: In the solved solution, confirm that convertible has rank 2.  
+   * Since this is stated as a fact in the problem and the system is consistent, choice A must be true.  
+   * Thus, the correct answer is "A" — no further iteration needed beyond recognizing that the problem explicitly provides this as a constraint, and the question asks which statement is true (i.e., holds in all models).

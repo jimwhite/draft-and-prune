@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the tournament rankings.
+
+2.  **Define Variables and Domain:**
+    * List the seven golfers as variables: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.
+    * Define the domain for ranking positions as integers 1 to 7, where **1 = first place (highest)** and **7 = last place (lowest)**.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.
+    * Convert each statement into constraints:
+        * "Amy finished third" → `Amy == 3`
+        * "Joe finished last" → `Joe == 7`
+        * "Mya finished above Dan" → `Mya < Dan` (lower rank number = better placement)
+        * "Eve finished fourth" → `Eve == 4`
+        * "Amy finished above Rob" → `Amy < Rob` (since Amy=3, this implies Rob > 3)
+        * "Ada finished third-to-last" → In a 7-person field, third-to-last means position 5 (since last=7, second-last=6, third-last=5) → `Ada == 5`
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Since the problem is well-constrained, extract the unique solution (or any one valid solution if multiple exist—though uniqueness is expected here).
+
+5.  **Determine Which Golfer Has Rank 4:**
+    * The question asks who finished fourth, i.e., which golfer has rank `4`.
+    * From the solved assignment, find the key (golfer name) whose value is `4`.
+    * Map this to the correct choice letter:
+        * `'A'` → Dan, `'B'` → Eve, `'C'` → Mya, `'D'` → Amy, `'E'` → Rob, `'F'` → Ada, `'G'` → Joe
+    * Return the letter corresponding to the golfer assigned rank 4 in the solution.

@@ -1,0 +1,20 @@
+1. Identify all entities involved: bald_eagle, cat, cow, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True) or predicate(subject, object, False):
+   - is_big("bald_eagle", True), is_cold("bald_eagle", True), is_young("bald_eagle", True)
+   - is_kind("cat", False)  [equivalently, not(is_kind("cat", True))]
+   - is_red("cow", True)
+   - likes("cow", "bald_eagle", True), visits("squirrel", "bald_eagle", True)
+3. Translate each conditional rule into PyKe rules using `foreach` and `assert`:
+   • If something likes the cow → the cow likes the squirrel.
+   • All big things are cold. (i.e., if X is big → X is cold)
+   • If squirrel is red → squirrel is young.
+   • If something likes the squirrel → squirrel is red.
+   • If something is young → it likes the cow.
+   • If (squirrel likes cat AND cow does NOT chase squirrel) → cat likes cow.
+   • If something visits the squirrel and squirrel is big → that thing does NOT like the squirrel.
+   • If something is big → it visits the cow.
+   • If something visits the squirrel and it is NOT red → squirrel does NOT visit bald_eagle.
+4. Note: Explicitly represent negated facts (e.g., cat is not kind) as `is_kind("cat", False)`; represent derived negations (e.g., "not red") in rule conditions using `~is_red(X, True)` or `~facts.is_red(X)` if PyKe supports negation-as-failure or use explicit boolean parameters like `is_red(subject, False)`.
+5. The query tests whether the cow is not red:
+   → Use facts.is_red("cow", False)  
+   Given that `is_red("cow", True)` is directly asserted, the query will be false.

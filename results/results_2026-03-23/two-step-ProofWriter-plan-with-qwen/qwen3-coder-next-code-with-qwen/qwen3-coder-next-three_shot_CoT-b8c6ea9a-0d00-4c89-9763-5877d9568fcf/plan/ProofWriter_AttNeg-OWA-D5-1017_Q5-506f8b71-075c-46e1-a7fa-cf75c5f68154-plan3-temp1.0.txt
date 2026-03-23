@@ -1,0 +1,18 @@
+1. Identify all entities: Dave, Erin, Fiona, Gary.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_big("Dave", True), is_furry("Dave", True)
+   - is_blue("Erin", True), is_cold("Erin", True), is_round("Erin", True)
+   - is_quiet("Fiona", True)
+   - is_rough("Gary", True)
+3. Translate each conditional rule into a PyKe `foreach` + `assert` structure:
+   • If something is rough and cold → it is furry.
+   • Quiet, big things are not round: i.e., if X is quiet AND big → ¬round(X); encode as `foreach: is_quiet(?x, True), is_big(?x, True) → not(is_round(?x, True))` (or equivalently `is_round(?x, False)`).
+   • If Dave is blue → Dave is furry: note Dave is not stated to be blue, so treat as rule but expect no activation unless blue is inferred.
+   • All quiet, blue things are big: `foreach: is_quiet(?x, True), is_blue(?x, True) → is_big(?x, True)`
+   • If Fiona is furry → Fiona is blue: `foreach: is_furry("Fiona", True) → is_blue("Fiona", True)`
+   • If something is quiet → it is cold: `foreach: is_quiet(?x, True) → is_cold(?x, True)`
+   • All big things are cold: `foreach: is_big(?x, True) → is_cold(?x, True)`
+   • All blue, round things are not quiet: `foreach: is_blue(?x, True), is_round(?x, True) → not(is_quiet(?x, True))`
+   • Cold things are rough: `foreach: is_cold(?x, True) → is_rough(?x, True)`
+4. Ensure correct polarity handling: for negated conclusions, use `not(pred(..., True))` or equivalently set the predicate to False if PyKe supports direct falsification via `facts.pred(..., False)`.
+5. Query whether Erin is furry: assert and check `is_furry("Erin", True)`; if derivable, answer true; if contradiction (i.e., `is_furry("Erin", False)` also derivable), false; otherwise unknown.

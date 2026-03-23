@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven variables as the book titles: `"yellow"`, `"red"`, `"gray"`, `"blue"`, `"white"`, `"orange"`, `"purple"`.  
+   * Define the domain of positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint()` to enforce that each book occupies a unique position.
+
+4. **Translate Each Statement into Formal Constraints:**  
+   * "The red book is the third from the right": Since there are 7 positions, third from the right = position **5** (positions: 1,2,3,4,**5**,6,7 → rightmost is 7, then 6, then 5). Add constraint: `red == 5`.  
+   * "The white book is to the right of the orange book": `white > orange`.  
+   * "The purple book is the third from the left": position **3**. Add constraint: `purple == 3`.  
+   * "The yellow book is to the right of the purple book": `yellow > purple` → `yellow > 3`.  
+   * "The blue book is to the right of the red book": `blue > red` → `blue > 5`.  
+   * "The blue book is to the left of the gray book": `blue < gray`.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions to books that satisfy the constraints.  
+   * Since the problem is well-constrained and consistent, there should be exactly one solution — extract it (e.g., `solutions[0]`).
+
+6. **Answer the Question:**  
+   * The question asks: "Which book is the second from the left?" → i.e., position **2**.  
+   * Create a mapping between choice letters (`'A','B',...,'G'`) and the corresponding book names:  
+     `{'A': 'yellow', 'B': 'red', 'C': 'gray', 'D': 'blue', 'E': 'white', 'F': 'orange', 'G': 'purple'}`  
+   * Iterate through the dictionary of choices; for each choice, check if its assigned book’s position in the solution equals 2.  
+   * Return (or print) the letter of the first matching choice — this is the correct answer.

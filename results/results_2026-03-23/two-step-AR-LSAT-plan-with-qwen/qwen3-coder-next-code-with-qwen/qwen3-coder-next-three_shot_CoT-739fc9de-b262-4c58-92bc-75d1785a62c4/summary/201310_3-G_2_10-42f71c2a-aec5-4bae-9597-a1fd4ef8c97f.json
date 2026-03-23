@@ -1,0 +1,571 @@
+{
+  "problem": {
+    "context": "A corporate manager is selecting employees for a research team. The team will include at least four employees, all from among the following eight: Myers, Ortega, Paine, Schmidt, Thomson, Wong, Yoder, and Zayre. The selection is constrained by the following conditions: If Myers is on the team, neither Ortega nor Paine can be. If Schmidt is on the team, both Paine and Thomson must also be. If Wong is on the team, both Myers and Yoder must also be.",
+    "question": "If Yoder is not on the team, then any of the following could be on the team EXCEPT:",
+    "answers": [
+      "Zayre",
+      "Thomson",
+      "Paine",
+      "Ortega",
+      "Myers"
+    ],
+    "label": 4,
+    "id_string": "201310_3-G_2_10"
+  },
+  "timing": 464.7021713256836,
+  "all_solver_outputs": [
+    "[4]",
+    "[0]",
+    "[4]",
+    "[]",
+    "[4]",
+    "[4]",
+    "[4]",
+    "[0]",
+    "[0]",
+    "[4]",
+    "[0]",
+    "[0]",
+    "[4]",
+    "4",
+    "[4]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 321,
+        "total_tokens": 1947
+      },
+      "plan_generation_api_time_only": 10.427637577056885,
+      "code_generation_usage": {
+        "prompt_tokens": 3317,
+        "completion_tokens": 440,
+        "total_tokens": 3757
+      },
+      "code_generation_api_time_only": 14.298758029937744,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4943,
+        "completion_tokens": 761,
+        "total_tokens": 5704
+      },
+      "path_api_time_only": 24.72639560699463,
+      "solver_time_only": 0.0797586441040039
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 507,
+        "total_tokens": 2133
+      },
+      "plan_generation_api_time_only": 15.16520619392395,
+      "code_generation_usage": {
+        "prompt_tokens": 3503,
+        "completion_tokens": 418,
+        "total_tokens": 3921
+      },
+      "code_generation_api_time_only": 13.5916166305542,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5129,
+        "completion_tokens": 925,
+        "total_tokens": 6054
+      },
+      "path_api_time_only": 28.75682282447815,
+      "solver_time_only": 0.07897639274597168
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 372,
+        "total_tokens": 1998
+      },
+      "plan_generation_api_time_only": 10.415766477584839,
+      "code_generation_usage": {
+        "prompt_tokens": 3368,
+        "completion_tokens": 391,
+        "total_tokens": 3759
+      },
+      "code_generation_api_time_only": 14.672036170959473,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4994,
+        "completion_tokens": 763,
+        "total_tokens": 5757
+      },
+      "path_api_time_only": 25.08780264854431,
+      "solver_time_only": 0.08015298843383789
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 555,
+        "total_tokens": 2181
+      },
+      "plan_generation_api_time_only": 14.868947744369507,
+      "code_generation_usage": {
+        "prompt_tokens": 3551,
+        "completion_tokens": 447,
+        "total_tokens": 3998
+      },
+      "code_generation_api_time_only": 15.09737777709961,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5177,
+        "completion_tokens": 1002,
+        "total_tokens": 6179
+      },
+      "path_api_time_only": 29.966325521469116,
+      "solver_time_only": 0.08227729797363281
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 459,
+        "total_tokens": 2085
+      },
+      "plan_generation_api_time_only": 14.010401487350464,
+      "code_generation_usage": {
+        "prompt_tokens": 3455,
+        "completion_tokens": 453,
+        "total_tokens": 3908
+      },
+      "code_generation_api_time_only": 15.53158187866211,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5081,
+        "completion_tokens": 912,
+        "total_tokens": 5993
+      },
+      "path_api_time_only": 29.541983366012573,
+      "solver_time_only": 0.07892918586730957
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 350,
+        "total_tokens": 1976
+      },
+      "plan_generation_api_time_only": 11.214377880096436,
+      "code_generation_usage": {
+        "prompt_tokens": 3346,
+        "completion_tokens": 395,
+        "total_tokens": 3741
+      },
+      "code_generation_api_time_only": 12.069305658340454,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4972,
+        "completion_tokens": 745,
+        "total_tokens": 5717
+      },
+      "path_api_time_only": 23.28368353843689,
+      "solver_time_only": 0.07914113998413086
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 668,
+        "total_tokens": 2294
+      },
+      "plan_generation_api_time_only": 21.043758392333984,
+      "code_generation_usage": {
+        "prompt_tokens": 3664,
+        "completion_tokens": 380,
+        "total_tokens": 4044
+      },
+      "code_generation_api_time_only": 11.850786924362183,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5290,
+        "completion_tokens": 1048,
+        "total_tokens": 6338
+      },
+      "path_api_time_only": 32.89454531669617,
+      "solver_time_only": 0.07327699661254883
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 456,
+        "total_tokens": 2082
+      },
+      "plan_generation_api_time_only": 14.552790880203247,
+      "code_generation_usage": {
+        "prompt_tokens": 3452,
+        "completion_tokens": 371,
+        "total_tokens": 3823
+      },
+      "code_generation_api_time_only": 12.440293550491333,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5078,
+        "completion_tokens": 827,
+        "total_tokens": 5905
+      },
+      "path_api_time_only": 26.99308443069458,
+      "solver_time_only": 0.07237482070922852
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 493,
+        "total_tokens": 2119
+      },
+      "plan_generation_api_time_only": 13.027579069137573,
+      "code_generation_usage": {
+        "prompt_tokens": 3489,
+        "completion_tokens": 549,
+        "total_tokens": 4038
+      },
+      "code_generation_api_time_only": 16.762373208999634,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5115,
+        "completion_tokens": 1042,
+        "total_tokens": 6157
+      },
+      "path_api_time_only": 29.789952278137207,
+      "solver_time_only": 0.07700276374816895
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 505,
+        "total_tokens": 2131
+      },
+      "plan_generation_api_time_only": 15.07785701751709,
+      "code_generation_usage": {
+        "prompt_tokens": 3501,
+        "completion_tokens": 488,
+        "total_tokens": 3989
+      },
+      "code_generation_api_time_only": 16.462974309921265,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5127,
+        "completion_tokens": 993,
+        "total_tokens": 6120
+      },
+      "path_api_time_only": 31.540831327438354,
+      "solver_time_only": 0.07724976539611816
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 591,
+        "total_tokens": 2217
+      },
+      "plan_generation_api_time_only": 17.44958758354187,
+      "code_generation_usage": {
+        "prompt_tokens": 3587,
+        "completion_tokens": 425,
+        "total_tokens": 4012
+      },
+      "code_generation_api_time_only": 11.977475881576538,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5213,
+        "completion_tokens": 1016,
+        "total_tokens": 6229
+      },
+      "path_api_time_only": 29.427063465118408,
+      "solver_time_only": 0.07160282135009766
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 556,
+        "total_tokens": 2182
+      },
+      "plan_generation_api_time_only": 15.663619756698608,
+      "code_generation_usage": {
+        "prompt_tokens": 3552,
+        "completion_tokens": 394,
+        "total_tokens": 3946
+      },
+      "code_generation_api_time_only": 12.04937219619751,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5178,
+        "completion_tokens": 950,
+        "total_tokens": 6128
+      },
+      "path_api_time_only": 27.712991952896118,
+      "solver_time_only": 0.0765688419342041
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 391,
+        "total_tokens": 2017
+      },
+      "plan_generation_api_time_only": 12.235030889511108,
+      "code_generation_usage": {
+        "prompt_tokens": 3387,
+        "completion_tokens": 453,
+        "total_tokens": 3840
+      },
+      "code_generation_api_time_only": 15.060308694839478,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5013,
+        "completion_tokens": 844,
+        "total_tokens": 5857
+      },
+      "path_api_time_only": 27.295339584350586,
+      "solver_time_only": 0.07768511772155762
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 812,
+        "total_tokens": 2438
+      },
+      "plan_generation_api_time_only": 20.049574375152588,
+      "code_generation_usage": {
+        "prompt_tokens": 3808,
+        "completion_tokens": 504,
+        "total_tokens": 4312
+      },
+      "code_generation_api_time_only": 18.295207977294922,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5434,
+        "completion_tokens": 1316,
+        "total_tokens": 6750
+      },
+      "path_api_time_only": 38.34478235244751,
+      "solver_time_only": 0.08031272888183594
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1626,
+        "completion_tokens": 463,
+        "total_tokens": 2089
+      },
+      "plan_generation_api_time_only": 12.022053241729736,
+      "code_generation_usage": {
+        "prompt_tokens": 3460,
+        "completion_tokens": 408,
+        "total_tokens": 3868
+      },
+      "code_generation_api_time_only": 12.991340637207031,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5086,
+        "completion_tokens": 871,
+        "total_tokens": 5957
+      },
+      "path_api_time_only": 25.013393878936768,
+      "solver_time_only": 0.07859063148498535
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 76830,
+    "completion_tokens": 14015,
+    "total_tokens": 90845
+  },
+  "api_time_only_total": 430.37499809265137,
+  "solver_time_only_total": 1.1639001369476318,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

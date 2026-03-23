@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the three birds as variables: `"raven"`, `"quail"`, and `"crow"`.  
+   * Define the domain for positions as integers from 1 to 3, where **1 = leftmost** and **3 = rightmost**.  
+   * Add all three variables with domain `{1, 2, 3}` to the `Problem` instance.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.  
+   * Translate "The quail is the leftmost" into a constraint: `quail == 1`.  
+   * Translate "The raven is the rightmost" into a constraint: `raven == 3`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Since only one solution exists, retrieve it (e.g., `solutions[0]` or iterate and take the first).
+
+5. **Verify and Match to Choices:**  
+   * Examine the solution: confirm that `quail = 1`, `raven = 3`, and thus `crow` must be at position 2.  
+   * The question asks which statement is true; check each choice:  
+        - A) "The raven is the rightmost." → matches `raven == 3` (true).  
+        - B) "The quail is the rightmost." → false (quail = 1).  
+        - C) "The crow is the rightmost." → false (crow = 2).  
+   * Output the correct choice letter "A".

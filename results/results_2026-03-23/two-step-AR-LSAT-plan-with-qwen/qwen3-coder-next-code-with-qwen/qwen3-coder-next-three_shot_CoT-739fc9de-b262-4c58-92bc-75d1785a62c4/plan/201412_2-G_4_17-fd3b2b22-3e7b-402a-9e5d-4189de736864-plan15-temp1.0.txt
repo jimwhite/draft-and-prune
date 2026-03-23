@@ -1,0 +1,14 @@
+1. Enumerate the six photographers and assign integer indices.  
+2. Create Boolean variables for each photographer's assignment to Silva (S) and Thorne (T), ensuring mutual exclusivity: for each photographer, exactly one of S or T is true (or neither, since not all must be assigned).  
+3. Add **at-least-two** constraint: at least two photographers assigned to Silva, and at least two assigned to Thorne.  
+4. Add **Frost-Heideck together constraint**: Frost and Heideck are assigned to the same ceremony (both S or both T).  
+5. Add **Lai-Mays separation constraint**: if both Lai and Mays are assigned, they must be at different ceremonies (i.e., NOT (Lai_S ∧ Mays_S) and NOT (Lai_T ∧ Mays_T)).  
+6. Add **Gonzalez→Lai conditional**: if Gonzalez is at Silva, then Lai must be at Thorne (i.e., Gonzalez_S → Lai_T).  
+7. Add **Knutson conditional**: if Knutson is NOT at Thorne, then both Heideck and Mays must be at Thorne (i.e., ¬Knutson_T → (Heideck_T ∧ Mays_T)).  
+8. For each answer choice:  
+    - Parse the assignment into explicit S/T assignments for each photographer.  
+    - Encode the assignment as hard constraints (e.g., if a photographer is listed for Silva, assert S=true and T=false; if unlisted, assert S=false and T=false).  
+    - Add these assignment constraints to the base constraint solver.  
+9. Check satisfiability of each option: if SAT, it is acceptable; record its index.  
+10. Return the index of the first (or only) acceptable assignment—since question asks “which one,” and choices are mutually exclusive, the plan identifies the valid option(s).  
+11. Print the index (or indices) of acceptable assignments.

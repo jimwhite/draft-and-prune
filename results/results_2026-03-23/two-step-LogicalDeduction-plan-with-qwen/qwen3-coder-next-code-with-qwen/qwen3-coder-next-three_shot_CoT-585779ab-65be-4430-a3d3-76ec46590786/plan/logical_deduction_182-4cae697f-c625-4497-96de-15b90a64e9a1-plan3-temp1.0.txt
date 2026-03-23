@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the seven bird names: `"hawk"`, `"hummingbird"`, `"quail"`, `"owl"`, `"crow"`, `"robin"`, and `"cardinal"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add Constraints Based on Statements:**  
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.  
+    * Translate each statement into a constraint:  
+        - "The cardinal is the second from the right" → `cardinal == 6` (since position 7 is rightmost, so second from right is 6).  
+        - "The hawk is the rightmost" → `hawk == 7`.  
+        - "The owl is to the left of the hummingbird" → `owl < hummingbird`.  
+        - "The robin is to the left of the quail" → `robin < quail`.  
+        - "The owl is to the right of the crow" → `crow < owl`.  
+        - "The robin is the fourth from the left" → `robin == 4`.
+
+4.  **Solve the Constraint Problem:**  
+    * Use `getSolutions()` to find all valid arrangements satisfying the constraints.  
+    * Extract the unique solution (since the problem is fully determined).
+
+5.  **Identify the Leftmost Bird and Match to Choice:**  
+    * The question asks for which bird is leftmost (position 1).  
+    * Map the answer choices to birds: A→hawk, B→hummingbird, C→quail, D→owl, E→crow, F→robin, G→cardinal.  
+    * In the solution dictionary, find which bird has position value 1.  
+    * Return the corresponding choice letter (e.g., if `crow == 1`, return 'E').

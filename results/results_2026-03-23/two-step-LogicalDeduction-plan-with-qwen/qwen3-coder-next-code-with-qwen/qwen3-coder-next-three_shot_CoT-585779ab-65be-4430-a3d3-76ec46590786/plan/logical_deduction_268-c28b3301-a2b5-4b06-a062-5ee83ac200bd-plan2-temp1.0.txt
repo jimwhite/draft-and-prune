@@ -1,0 +1,22 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the three fruits: `"mangoes"`, `"watermelons"`, and `"kiwis"`.  
+   * Define the domain as integer positions from 1 to 3, where **1 represents the cheapest** and **3 represents the most expensive** (since "most expensive" implies a ranking by cost).  
+   * Add all variables and the domain {1, 2, 3} to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert "The watermelons are less expensive than the kiwis" to a constraint: `watermelons < kiwis` (lower rank = cheaper).  
+   * Convert "The kiwis are the second-most expensive" to `kiwis == 2` (since second-most expensive in a 3-item set corresponds to rank 2 when 1=cheapest, 3=most expensive).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments of ranks to fruits.  
+   * Extract the unique solution (there should be exactly one that satisfies all constraints).
+
+5. **Identify the Correct Answer:**  
+   * The question asks which fruit is the cheapest (i.e., rank 1).  
+   * Create a mapping from choice letters to fruit names: `{"A": "mangoes", "B": "watermelons", "C": "kiwis"}`.  
+   * In the solution, find which fruit has rank 1 and return its corresponding choice letter.

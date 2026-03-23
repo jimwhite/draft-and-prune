@@ -1,0 +1,21 @@
+1. Enumerate the five witnesses (Franco, Garcia, Hong, Iturbe, Jackson) and assign integer indices.  
+2. Enumerate the three days (Monday=0, Tuesday=1, Wednesday=2) and assign integer codes.  
+3. Create integer variables `f`, `g`, `h`, `i`, `j` for the day each witness testifies (domain: {0, 1, 2}).  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `i == 2`.  
+5. Add **no-same-day constraint**: Franco and Garcia do not testify on same day → `f != g`.  
+6. Add **Hong constraint**: Hong does not testify on Monday → `h != 0`.  
+7. Add **Tuesday constraint**: exactly two witnesses testify on Tuesday → number of witnesses with day == 1 is exactly 2.  
+8. Add **Monday constraint**: at least one witness testifies on Monday → number of witnesses with day == 0 is ≥ 1.  
+9. Add **hypothesis constraint**: Franco and Hong testify on same day → `f == h`.  
+10. From the hypothesis, deduce possible day for Franco/Hong: cannot be Monday (Hong ≠ 0), so only Tuesday or Wednesday.  
+11. For each answer choice, translate to a Boolean condition on the schedule:  
+    - A: Franco = Wednesday → `f == 2`  
+    - B: Garcia = Monday → `g == 0`  
+    - C: Garcia = Wednesday → `g == 2`  
+    - D: Hong = Tuesday → `h == 1`  
+    - E: Iturbe is the only witness on Wednesday → `i == 2` and exactly one witness (Iturbe) has day == 2  
+12. Define `must_be_true_indices = []`. For each answer option (A–E):  
+    - Clone base + hypothesis constraints into a fresh solver.  
+    - Temporarily *negate* the answer condition (e.g., for A, assert `f != 2`).  
+    - If the negated instance is UNSAT, then the original condition *must* hold; add its index to `must_be_true_indices`.  
+13. Output `must_be_true_indices`.

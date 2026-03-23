@@ -1,0 +1,65 @@
+1. Identify all entities: bear, cat, dog, mouse.
+2. Encode all explicit facts using ternary predicates of the form predicate(subject, object, True):
+   - is_green("bear", True)
+   - likes("bear", "cat", True), likes("bear", "dog", True), visits("bear", "dog", True)
+   - is_young("cat", True)
+   - sees("cat", "bear", True), sees("cat", "dog", True), visits("cat", "bear", True), visits("cat", "mouse", True)
+   - is_round("dog", True)
+   - likes("dog", "bear", True), likes("dog", "mouse", True), visits("dog", "mouse", True)
+   - is_big("mouse", True), is_cold("mouse", True), is_round("mouse", True)
+3. Translate each conditional rule into a PyKe `foreach`+`assert` block:
+   • If X visits mouse AND mouse visits dog → X is cold.
+   • If X likes cat → X visits dog.
+   • If X is cold → X likes cat.
+   • If X is green → X sees dog.
+   • If X likes mouse → X sees cat.
+   • If X is green AND cold → X likes cat.
+   • If X is big AND X visits bear → bear is green.
+4. For rules with conjunctions (e.g., "X visits mouse and mouse visits dog"), use `foreach` to bind X, assert mouse's visit facts directly (already encoded as fact), and combine conditions via multiple matching clauses or explicit `and` in condition body where PyKe syntax allows.
+5. Note: mouse visits dog is *not* directly stated; only "mouse visits the bear" and "dog visits the mouse". So ensure correct dependency: `visits("mouse", "bear", True)` and `visits("dog", "mouse", True)`, but no `visits("mouse", "dog", True)` — thus first rule's antecedent may not hold unless derived.
+6. The query is: is the cat *not* cold? → this translates to checking if `is_cold("cat", False)` holds.
+   However, note that in PyKe, negative conclusions cannot be directly asserted; instead, we verify if `is_cold("cat", True)` can be proven. If it cannot, and no contradiction arises, then the negation holds as unknown unless we can derive its truth or falsity.
+   Specifically: The query statement is "The cat is not cold." To evaluate:
+   - If we can derive `is_cold("cat", True)`, answer = false.
+   - If we can derive `is_cold("cat", False)`, answer = true.
+   - If neither can be derived, answer = unknown.
+7. Since all predicates are binary/ternary positive facts with Boolean objects for properties, and PyKe only supports forward-chaining on asserted facts/rules, we must check if `is_cold("cat", True)` is entailed. There is no direct way to assert `is_cold("cat", False)`. So the query encoding should be:
+   → Ask whether `is_cold("cat", True)` is *not* provable, i.e., the system returns "unknown" unless contradiction or explicit negation is derivable. However, PyKe's standard query syntax only supports positive queries (`facts.is_cold("cat", True)`), so to test negation, we must rely on whether the solver returns false (i.e., no derivation possible). Thus:
+   Query: `is_cold("cat", True)` — if derivable, then "The cat is not cold" is false. If not derivable, then the statement may be true or unknown. But since no negation rules exist (e.g., closed-world assumption not built-in), we can only conclude "unknown" unless contradiction implies falsity.
+8. Evaluate whether any rule or chain yields `is_cold("cat", True)`:
+   - Direct fact? No.
+   - From rules: `if X is cold → X likes cat` — reverse not useful for deriving cold.
+   - `if X likes mouse → X sees cat` — does not yield cold.
+   - `if X visits mouse and mouse visits dog → X is cold` — no `mouse visits dog`.
+   - `if X is green and cold → X likes cat` — requires cold already.
+   - So unless cold is assumed or derived for *another* entity that forces cat to be cold (e.g., via `if X is cold → X likes cat`, but we need cat to be cold to get that), no derivation appears.
+   However, note: `if X is cold → X likes cat`. If something *is* cold (e.g., mouse), then it must like cat — which is already stated (`mouse` likes ? not explicitly said, but `is_cold("mouse", True)` so `likes("mouse", "cat", True)` must hold).
+   But does *any* rule make cat cold? None directly apply to cat in the antecedent.
+   Therefore, `is_cold("cat", True)` is likely *not* derivable → so "the cat is not cold" is *unknown*, unless we can prove `is_cold("cat", False)` — which PyKe cannot assert without explicit negation or rule.
+9. Final query setup:
+   Use a goal or check whether `facts.is_cold("cat", True)` is reachable.
+   Since PyKe does not natively support "unknown" as a return, but in verification context we interpret lack of derivation as unknown unless contradiction (i.e., both `P` and `not P`) arises — which it won’t here.
+   Thus, to answer the question "The cat is not cold", we:
+   - Try to derive `is_cold("cat", True)`: if yes → statement false.
+   - If no derivation, the truth value is unknown (since lack of evidence for cold does not imply not-cold without closed-world).
+   So the plan must instruct: encode query as checking derivability of `is_cold("cat", True)`; the truth value of "The cat is not cold" depends on that result.
+
+Plan:
+1. Identify all entities: bear, cat, dog, mouse.
+2. Encode direct facts using ternary predicates (e.g., is_green("bear", True), likes("bear", "cat", True), visits("cat", "mouse", True), is_cold("mouse", True)).
+3. Translate each conditional rule into PyKe rules using `foreach` for universal instantiation and `assert` for the conclusion:
+   - Rule 1: If X visits mouse ∧ mouse visits dog → is_cold(X, True)
+   - Rule 2: If X likes cat → visits(X, dog, True)
+   - Rule 3: If X is cold → likes(X, cat, True)
+   - Rule 4: If X is green → sees(X, dog, True)
+   - Rule 5: If X likes mouse → sees(X, cat, True)
+   - Rule 6: If X is green ∧ X is cold → likes(X, cat, True)
+   - Rule 7: If X is big ∧ visits(X, bear, True) → is_green("bear", True)
+4. Ensure fact base includes explicit visits/likes/sees/given properties and the derived facts from rules (e.g., since mouse is cold, Rule 3 implies likes("mouse", "cat", True)).
+5. Query the statement: To evaluate “The cat is not cold”, determine if `is_cold("cat", True)` can be derived:
+   - If derivable: the statement is false.
+   - If not derivable and no contradiction arises (i.e., `is_cold("cat", False)` also not derivable), the statement is unknown.
+6. In PyKe, encode query as checking whether `facts.is_cold("cat", True)` is reachable via forward chaining. There is no direct assertion of negation; thus, absence of derivation implies unknown unless closed-world assumed — but PyKe does not assume CWA by default.
+7. Verify explicitly: check all rules that could lead to `is_cold("cat", True)`; none apply to "cat" in the antecedent with currently known facts (e.g., cat is young and sees bear/dog, but no rule uses "is_young" or "sees bear" to derive cold).
+8. Conclude that `is_cold("cat", True)` is not derivable; therefore, the truth of “The cat is not cold” is unknown (as PyKe cannot assert non-membership without explicit negation rules).
+9. Final plan: assert all facts, apply rules iteratively until fixed point, then query `is_cold("cat", True)`. Report "unknown" if not derivable.

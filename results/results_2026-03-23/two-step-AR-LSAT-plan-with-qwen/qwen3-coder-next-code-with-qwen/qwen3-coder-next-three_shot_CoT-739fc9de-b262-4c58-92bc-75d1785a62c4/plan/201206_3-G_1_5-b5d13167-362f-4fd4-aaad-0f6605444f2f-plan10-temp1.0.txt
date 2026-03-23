@@ -1,0 +1,50 @@
+1. Enumerate the six lab assistants: Julio, Kevin, Lan, Nessa, Olivia, Rebecca → assign integer indices 0–5.  
+2. Enumerate the six sessions: Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA) → assign integer indices 0–5 in chronological order.  
+3. Create integer variables `assign[i]` for each assistant i, where `assign[i] ∈ {0,...,5}` denotes which session they lead.  
+4. Add **injectivity constraint**: all assistants lead distinct sessions → `Distinct(assign[0], ..., assign[5])`.  
+5. Add **session-to-day/time mapping**: define helper functions to extract day (0=Wed, 1=Thu, 2=Fri) and period (0=morning, 1=afternoon) from session index:  
+    - `day(s) = s // 2`, `period(s) = s % 2`.  
+6. Add fixed constraint: Julio leads Thursday afternoon → session index 3 (since TM=2, TA=3) ⇒ `assign[Julio_index] == 3`.  
+7. Add **Kevin & Rebecca same day**: `day(assign[Kevin]) == day(assign[Rebecca])`.  
+8. Add **Lan & Olivia different days**: `day(assign[Lan]) != day(assign[Olivia])`.  
+9. Add **Nessa afternoon**: `period(assign[Nessa]) == 1`.  
+10. Add **Julio earlier day than Olivia**: `day(assign[Julio]) < day(assign[Olivia])`.  
+11. Since Julio is fixed to Thursday (day 1), this implies Olivia must be on Friday (day 2). ⇒ `assign[Olivia] ∈ {4,5}`.  
+12. Now deduce fixed values and dependencies:  
+    - From (6): Julio = 3 (Thu PM).  
+    - From (10) + (6): Olivia ∈ {4,5} (Fri).  
+    - From (8): Lan ≠ Olivia’s day ⇒ Lan ∈ {0,1,2,3} (Wed or Thu).  
+    - From (9): Nessa ∈ {1,3,5} but 3 taken ⇒ Nessa ∈ {1,5}.  
+    - From (7): Kevin and Rebecca same day ⇒ both on Wed (0–1), Thu (2–3), or Fri (4–5); but Thu’s two slots are taken by Julio and possibly Olivia? Wait—Thursday only has 2 sessions: TM (2) and TA (3); TA taken by Julio ⇒ Kevin/Rebecca could be both on Wed, Thu (but only TM free = 2), or Fri. However, Thu has only one slot left (2), so Kevin & Rebecca cannot both be on Thu unless one is Timothy? No—only two sessions per day; Thursday: TM=2, TA=3 → both taken by Julio and possibly Olivia? But Olivia is Friday only. So Thursday slots: 2 (TM), 3 (TA=Julio) ⇒ TM free. So Kevin & Rebecca cannot both be on Thursday (only 1 slot left). So same-day pairs possible: Wed (slots 0,1), or Fri (slots 4,5).  
+13. Consider Kevin & Rebecca on Wed: both in {0,1}. Remaining assistants to assign: Kevin, Rebecca, Lan, Nessa, Olivia (5 people), slots left: 0,1,2,4,5 (since 3 taken).  
+    - Lan ∈ {0,1,2} but cannot be Friday → so Lan ∈ {0,1,2}.  
+    - Nessa ∈ {1,5} (afternoon slots 1,3,5; 3 taken).  
+    - Olivia ∈ {4,5}.  
+14. Consider Kevin & Rebecca on Fri: both in {4,5} → fills Friday completely. Then Olivia cannot be on Fri (conflict with Kevin/Rebecca using both slots), violating Julio < Olivia day ⇒ impossible.  
+    - So only possibility: Kevin & Rebecca on Wed (slots 0,1).  
+15. Therefore:  
+    - Slots 0,1 → Kevin & Rebecca (in some order).  
+    - Slot 3 → Julio.  
+    - Slots left: 2 (Thu AM), 4,5 (Fri).  
+    - Olivia ∈ {4,5} (Fri).  
+    - Lan must be on Wed or Thu ⇒ Lan ∈ {0,1,2}, but 0,1 taken ⇒ Lan = 2 (Thu AM) **or** conflict? Wait—Lan cannot be same day as Olivia; Olivia is Fri ⇒ Lan can be Wed (0,1) or Thu (2). But 0,1 taken by Kevin/Rebecca ⇒ only possible slot for Lan on Thu AM = 2. So **Lan must be Thu AM (slot 2)**.  
+16. Now used slots: 0,1 (K,R), 2 (Lan), 3 (Julio). Remaining: 4,5 (Fri) for Olivia and Nessa.  
+    - Olivia ∈ {4,5}, Nessa must be afternoon ⇒ slots 1,3,5; only slot 5 available (since 1,3 taken) ⇒ **Nessa = 5 (Fri PM)**.  
+    - Then Olivia must be 4 (Fri AM).  
+17. Summary of forced assignments:  
+    - Julio = 3 (fixed)  
+    - Kevin & Rebecca = {0,1} (order unknown)  
+    - Lan = 2 (forced)  
+    - Nessa = 5 (forced)  
+    - Olivia = 4 (forced)  
+18. So fixed for: Lan, Nessa, Olivia → 3 assistants. Kevin & Rebecca remain ambiguous (who gets slot 0 vs 1).  
+19. But the question: "for how many of the OTHER lab assistants can one determine which sessions they lead?"  
+    - Other = 5 assistants excluding Julio.  
+    - Among them: Lan, Nessa, Olivia → sessions determined (2,5,4).  
+    - Kevin and Rebecca: only day known (Wed), but exact session ambiguous.  
+    ⇒ So 3 assistants have determined sessions.  
+20. Confirm no other constraints violated:  
+    - Lan & Olivia on different days? Lan=Thu, Olivia=Fri ⇒ ok.  
+    - Nessa afternoon: Fri PM = 5 ⇒ ok.  
+    - Julio (Thu) earlier than Olivia (Fri) ⇒ ok.  
+21. Return count = 3.

@@ -1,0 +1,26 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to begin building the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five fruits as variables: `"mangoes"`, `"cantaloupes"`, `"plums"`, `"oranges"`, and `"watermelons"`.  
+    * Define the domain as integers from 1 to 5, where **1 represents cheapest** and **5 represents most expensive**.  
+    * Add all fruit variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate the statements into constraints:  
+        * "The oranges are more expensive than the watermelons" → `oranges > watermelons`  
+        * "The watermelons are the second-cheapest" → `watermelons == 2`  
+        * "The plums are less expensive than the cantaloupes" → `plums < cantaloupes`  
+        * "The plums are the second-most expensive" → `plums == 4` (since most expensive = 5, second-most expensive = 4)
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the unique solution (since the problem is fully constrained).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which fruit is the second-most expensive, and the statement explicitly says "The plums are the second-most expensive."  
+    * However, verify consistency: in the solution, check which fruit has rank 4.  
+    * Map the choices to fruits: "A" → mangoes, "B" → cantaloupes, "C" → plums, "D" → oranges, "E" → watermelons.  
+    * Identify the choice whose corresponding fruit has rank 4 in the solution and return that letter.

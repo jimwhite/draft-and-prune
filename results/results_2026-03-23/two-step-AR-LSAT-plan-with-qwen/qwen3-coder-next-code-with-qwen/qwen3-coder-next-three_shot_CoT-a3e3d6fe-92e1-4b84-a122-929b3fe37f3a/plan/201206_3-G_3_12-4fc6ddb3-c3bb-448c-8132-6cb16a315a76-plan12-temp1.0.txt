@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative's zone assignment (1, 2, or 3).  
+3. Add **zone-count constraints**: compute number of representatives in each zone (e.g., via auxiliary integer variables or reified counting).  
+4. Add **mutual exclusion constraints** for zone assignments based on logical conditions:  
+    - (Parra in Zone 1) XOR (Tiao in Zone 1).  
+    - (Tiao in Zone 2) XOR (Udall in Zone 2).  
+    - Parra and Quinn must be in same zone.  
+    - Stuckey and Udall must be in same zone.  
+5. Add **zone-size constraint**: count(Zone 3) > count(Zone 2).  
+6. Translate each answer choice into a set of zone assignment assertions (e.g., Kim→Zone 1, Parra→Zone 1, etc.).  
+7. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific assignments from the answer choice.  
+    - If the model is SAT (i.e., all constraints satisfied), then this answer choice is feasible; record its index.  
+8. Output the index (or indices) of the feasible answer choice(s).

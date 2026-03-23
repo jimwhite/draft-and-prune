@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Define the seven vehicle variables: `"limousine"`, `"sedan"`, `"tractor"`, `"motorcycle"`, `"minivan"`, `"hatchback"`, and `"truck"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, and **7 = newest**.
+    * Add all seven vehicle variables with domain `{1,2,3,4,5,6,7}` to the problem.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique positions.
+    * Add the following constraints using lambda functions:
+        * "The minivan is newer than the limousine" → `minivan > limousine`
+        * "The tractor is the second-newest" → `tractor == 6` (since 7 is newest, 2nd-newest is position 6)
+        * "The truck is older than the sedan" → `truck < sedan`
+        * "The minivan is older than the truck" → `minivan < truck`
+        * "The hatchback is newer than the tractor" → `hatchback > tractor` (and sincetractor==6, this implies hatchback == 7)
+        * "The motorcycle is the fourth-newest" → `motorcycle == 4` (positions: 1=oldest, 7=newest; so 4th-newest = position 4)
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all satisfying assignments.
+    * Extract the unique solution (as the problem is well-constrained and consistent).
+
+5.  **Identify the Correct Answer:**
+    * Note that the question asks which vehicle is second-newest, i.e., position 6.
+    * Create a mapping from choice letters (A–G) to vehicle names:
+        - A → "limousine", B → "sedan", C → "tractor", D → "motorcycle", E → "minivan", F → "hatchback", G → "truck"
+    * In the solution dictionary, find which vehicle has value 6.
+    * Return (or output) the corresponding choice letter.

@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five fruits: `"mangoes"`, `"kiwis"`, `"plums"`, `"pears"`, and `"watermelons"`.  
+   * Define the domain as integers 1 to 5, where **1 = cheapest** and **5 = most expensive**.  
+   * Add all variables with this domain to the problem.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique prices (i.e., each fruit has a distinct cost rank).  
+   * Convert each statement into a constraint using lambda functions or direct value constraints:  
+     - "The kiwis are less expensive than the plums" → `kiwis < plums`  
+     - "The pears are the third-most expensive" → `pears == 3`  
+     - "The kiwis are the second-cheapest" → `kiwis == 2` (since cheapest is rank 1, second-cheapest is rank 2)  
+     - "The watermelons are the most expensive" → `watermelons == 5`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments satisfying the constraints.  
+   * Since the problem is fully constrained, expect exactly one solution; extract it.
+
+5. **Identify the Correct Answer:**  
+   * The question asks which fruit is most expensive (rank 5). Compare against the choices:  
+     - A) mangoes → check if `solution["mangoes"] == 5`  
+     - B) kiwis → check if `solution["kiwis"] == 5` (already constrained to 2, so false)  
+     - C) plums → check if `solution["plums"] == 5`  
+     - D) pears → check if `solution["pears"] == 5` (already constrained to 3, so false)  
+     - E) watermelons → check if `solution["watermelons"] == 5` (explicitly constrained to 5, so true)  
+   * Map the choice letter corresponding to the fruit with rank 5 (will be E).

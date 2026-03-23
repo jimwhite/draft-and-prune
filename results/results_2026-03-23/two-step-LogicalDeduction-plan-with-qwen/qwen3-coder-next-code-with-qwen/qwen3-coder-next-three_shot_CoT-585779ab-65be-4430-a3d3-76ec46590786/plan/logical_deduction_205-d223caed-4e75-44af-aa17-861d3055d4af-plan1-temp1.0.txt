@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven birds as variables: `"hawk"`, `"crow"`, `"owl"`, `"raven"`, `"falcon"`, `"quail"`, and `"hummingbird"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**, reflecting positions along the branch.
+
+3.  **Add AllDifferent Constraint:**
+    * Add an `AllDifferentConstraint` over all seven bird variables to ensure each occupies a unique position.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The hummingbird is the second from the left" → `hummingbird == 2`
+    * "The raven is the fourth from the left" → `raven == 4`
+    * "The raven is to the right of the hawk" → `hawk < raven` (i.e., `hawk < 4`)
+    * "The owl is to the right of the crow" → `crow < owl`
+    * "The falcon is the rightmost" → `falcon == 7`
+    * "The hawk is to the right of the hummingbird" → `hummingbird < hawk` (i.e., `2 < hawk`)
+    * "The quail is the second from the right" → `quail == 6`
+
+5.  **Solve the Constraint Problem:**
+    * Use `getSolutions()` to compute all valid assignments satisfying the constraints.
+    * Extract the unique solution (the problem is well-constrained, so there should be exactly one).
+
+6.  **Interpret the Question and Identify the Correct Choice:**
+    * The question asks which bird is the **second from the right**, i.e., position 6.
+    * From step 4, we already know `quail == 6` is enforced as a constraint.
+    * However, verify in the solved solution that indeed only quail occupies position 6 (consistency check).
+    * Create a mapping from choice letters to bird names:
+        A → "hawk", B → "crow", C → "owl", D → "raven", E → "falcon", F → "quail", G → "hummingbird"
+    * Find the choice letter whose bird has position 6 in the solution.
+    * Return that letter as the answer (it should be "F").

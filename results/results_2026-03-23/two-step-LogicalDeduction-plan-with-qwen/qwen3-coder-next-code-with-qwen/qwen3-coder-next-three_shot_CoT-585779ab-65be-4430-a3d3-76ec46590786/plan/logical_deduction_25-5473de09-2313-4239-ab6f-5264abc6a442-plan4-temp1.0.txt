@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Set the variables as the five books: `"blue"`, `"purple"`, `"yellow"`, `"black"`, and `"green"`.  
+    * Define the domain as integers 1 through 5, where 1 = leftmost and 5 = rightmost.  
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+    * Translate each statement into constraints:  
+        * "The purple book is the third from the left" → `purple == 3`  
+        * "The yellow book is to the left of the black book" → `yellow < black`  
+        * "The green book is to the left of the purple book" → `green < purple`  
+        * "The blue book is to the left of the green book" → `blue < green`  
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid arrangements.  
+    * Since the constraints uniquely determine the order, extract the single solution.
+
+5.  **Determine Which Statement Is True:**  
+    * The question asks which book is the *second from the right*, i.e., position 4 (since rightmost is position 5).  
+    * Create a mapping from choice letters to book names: `{"A": "blue", "B": "purple", "C": "yellow", "D": "black", "E": "green"}`.  
+    * Check which book in the solution has position 4 and return its corresponding choice letter.

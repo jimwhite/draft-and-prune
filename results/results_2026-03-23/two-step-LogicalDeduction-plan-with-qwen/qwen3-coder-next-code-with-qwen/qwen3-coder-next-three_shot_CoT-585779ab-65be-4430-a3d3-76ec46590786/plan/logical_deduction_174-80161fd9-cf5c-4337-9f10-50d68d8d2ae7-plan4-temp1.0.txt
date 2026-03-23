@@ -1,0 +1,31 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven fruits as variables: `"loquats"`, `"cantaloupes"`, `"watermelons"`, `"apples"`, `"oranges"`, `"pears"`, and `"mangoes"`.  
+   * Define the domain as integers from **1 to 7**, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all variables to the `Problem` instance with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - "The oranges are the second-cheapest" → position of `"oranges"` = 2.  
+     - "The apples are less expensive than the pears" → `apples < pears`.  
+     - "The mangoes are more expensive than the cantaloupes" → `cantaloupes < mangoes`.  
+     - "The mangoes are the third-cheapest" → position of `"mangoes"` = 3.  
+     - "The watermelons are the second-most expensive" → position of `"watermelons"` = 6 (since 7 is most expensive, second-most is 6).  
+     - "The loquats are the third-most expensive" → position of `"loquats"` = 5 (since most expensive=7, second-most=6, third-most=5).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid solutions.  
+   * Extract the unique solution (as implied by consistency).
+
+5. **Identify the Correct Answer:**  
+   * Note: The question asks which statement is true, and option A explicitly states "The loquats are the third-most expensive."  
+   * Based on constraint #6 above, `"loquats"` is *explicitly constrained* to position 5, which corresponds to third-most expensive (positions: 7=most expensive → 6=second-most → 5=third-most).  
+   * Therefore, choice A is directly confirmed by the given constraint.  
+   * Since all constraints are satisfied and A matches a hard-coded condition, no further checking of other options is necessary — but to be thorough:  
+     * In the solution, retrieve the rank of `"loquats"`; confirm it equals 5.  
+     * Map choice letter "A" to `"loquats"` and verify that the condition holds.  
+   * Output choice letter "A".

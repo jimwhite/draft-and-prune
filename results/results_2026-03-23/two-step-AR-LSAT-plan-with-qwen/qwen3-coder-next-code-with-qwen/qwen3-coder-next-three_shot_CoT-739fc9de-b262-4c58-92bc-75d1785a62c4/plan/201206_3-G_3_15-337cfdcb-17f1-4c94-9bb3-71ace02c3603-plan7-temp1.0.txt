@@ -1,0 +1,21 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Define integer variables `zone[i]` for each representative `i`, representing their assigned zone (1, 2, or 3).  
+3. Add **domain constraints**: each `zone[i] ∈ {1, 2, 3}`.  
+4. Add **mutual exclusion constraints**: each representative is assigned exactly one zone (implicitly satisfied by `zone[i]` being a single integer).  
+5. Add **Zone 1 constraint**: exactly one of Parra or Tiao works in Zone 1 (exclusive OR): `(zone[Parra] == 1) ≠ (zone[Tiao] == 1)`.  
+6. Add **Zone 2 constraint**: exactly one of Tiao or Udall works in Zone 2 (exclusive OR): `(zone[Tiao] == 2) ≠ (zone[Udall] == 2)`.  
+7. Add **Parra–Quinn constraint**: Parra and Quinn are in the same zone: `zone[Parra] == zone[Quinn]`.  
+8. Add **Stuckey–Udall constraint**: Stuckey and Udall are in the same zone: `zone[Stuckey] == zone[Udall]`.  
+9. Add **Zone size constraint**: number of representatives in Zone 3 > number in Zone 2. Compute counts via auxiliary integer variables or arithmetic:  
+    - Let `c1 = Sum([If(zone[i]==1, 1, 0) for i])`  
+    - Let `c2 = Sum([If(zone[i]==2, 1, 0) for i])`  
+    - Let `c3 = Sum([If(zone[i]==3, 1, 0) for i])`  
+    - Enforce `c3 > c2`.  
+10. Translate each answer choice into a set of representatives claimed to be in Zone 3.  
+11. For each answer choice, do the following:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that exactly those representatives in the choice are assigned to Zone 3, and all others are *not* in Zone 3.  
+    - Assert that the distribution satisfies zone membership (i.e., all representatives not in Zone 3 must be assigned to Zone 1 or 2 consistently with other constraints).  
+    - Additionally, verify the zone sizes and other logical constraints remain consistent.  
+12. If the model is SAT for a choice, then that list *could* be Zone 3; record it as a valid option.  
+13. Return the choice(s) that yield SAT (only one is correct per question).

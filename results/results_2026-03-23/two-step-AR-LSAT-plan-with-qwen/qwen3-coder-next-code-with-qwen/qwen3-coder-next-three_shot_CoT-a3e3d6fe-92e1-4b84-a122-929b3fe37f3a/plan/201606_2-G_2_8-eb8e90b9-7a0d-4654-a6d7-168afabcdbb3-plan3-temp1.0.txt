@@ -1,0 +1,21 @@
+1. Enumerate the six available students and assign them integer indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5.  
+2. Enumerate the four years (1921–1924) and assign them indices: 1921=0, 1922=1, 1923=2, 1924=3.  
+3. Create integer variables `assign[s]` for each student s, representing the year index they are assigned to (0–3), or a special value e.g., -1 if not assigned.  
+4. Add **exactly-four-assignment constraint**: exactly four students are assigned (i.e., four students have `assign[s] != -1`).  
+5. Add **one-to-one constraint**: each assigned year has exactly one student (i.e., if `assign[s1] == y and assign[s2] == y`, then s1 = s2).  
+6. Add **1923 restriction**: only Louis or Tiffany can be assigned to 1923 (year index 2). That is: if `assign[s] == 2`, then s ∈ {Louis, Tiffany}.  
+7. Add **Mollie conditional constraint**: if Mollie is assigned (i.e., `assign[1] != -1`), then her year must be 0 or 1 (i.e., `assign[1] ∈ {0,1}`).  
+8. Add **Tiffany–Ryan dependency**: if Tiffany is assigned (`assign[4] != -1`), then Ryan must be assigned (`assign[3] != -1`).  
+9. Add **Ryan–Onyx dependency**: if Ryan is assigned (`assign[3] != -1`), then Onyx must be assigned (`assign[2] != -1`) and `assign[2] == assign[3] - 1`.  
+10. Add the scenario constraint: both Ryan and Yoshio are assigned (`assign[3] != -1` and `assign[5] != -1`).  
+11. For each answer choice, interpret it as a possible true statement:  
+    - "Louis is assigned to 1923" → `assign[0] == 2`.  
+    - "Mollie is assigned to 1921" → `assign[1] == 0`.  
+    - "Onyx is assigned to 1922" → `assign[2] == 1`.  
+    - "Tiffany is assigned to 1924" → `assign[4] == 3`.  
+    - "Yoshio is assigned to 1922" → `assign[5] == 1`.  
+12. For each choice:  
+    - Clone the base constraints (steps 4–10) into a fresh solver.  
+    - Assert the specific condition of the choice.  
+    - Check satisfiability. If SAT, the statement could be true; record its index (0–4).  
+13. Return the list of indices corresponding to choices that are possible under the given scenario.

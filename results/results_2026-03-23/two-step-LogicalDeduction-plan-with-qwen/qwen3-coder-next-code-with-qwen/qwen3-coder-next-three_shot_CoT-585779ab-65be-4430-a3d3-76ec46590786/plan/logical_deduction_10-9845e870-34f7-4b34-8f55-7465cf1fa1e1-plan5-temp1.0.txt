@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to begin constructing the constraint satisfaction model.
+
+2. **Define Variables and Domain:**  
+   * Identify the five birds as variables: `"owl"`, `"robin"`, `"bluejay"`, `"hawk"`, and `"hummingbird"` (note: concatenate "blue jay" into one string like `"bluejay"` to avoid spaces in variable names).  
+   * Define the domain as integers 1 through 5, where **1 = leftmost position**, and **5 = rightmost position**.  
+   * Add all variables with domain {1, 2, 3, 4, 5} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+   * Translate each statement into a constraint:  
+     - "The owl is the second from the right" → position of `"owl"` = 4 (since rightmost is 5, second from right is 4).  
+     - "The robin is the second from the left" → position of `"robin"` = 2.  
+     - "The robin is to the right of the blue jay" → position(`"bluejay"`) < position(`"robin"`), i.e., `bluejay < 2`.  
+     - "The hummingbird is to the right of the hawk" → position(`"hawk"`) < position(`"hummingbird"`), i.e., `hawk < hummingbird`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to retrieve all valid assignments satisfying the constraints.  
+   * Extract the unique solution (the solver should yield exactly one assignment due to the strong constraints).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which bird is second from the left (i.e., at position 2).  
+   * Compare each choice’s bird against the solved position: find which bird has value 2.  
+   * The correct choice corresponds directly to the statement in option **B)**: "The robin is the second from the left." Since this was explicitly given as a constraint, and our solution must respect it, **B is necessarily true**.  
+   * Verify consistency: in the solved solution, `"robin"` must equal 2 by constraint; no other bird can be at position 2. Hence, the answer is B.  
+   * Output "B" as the final answer.

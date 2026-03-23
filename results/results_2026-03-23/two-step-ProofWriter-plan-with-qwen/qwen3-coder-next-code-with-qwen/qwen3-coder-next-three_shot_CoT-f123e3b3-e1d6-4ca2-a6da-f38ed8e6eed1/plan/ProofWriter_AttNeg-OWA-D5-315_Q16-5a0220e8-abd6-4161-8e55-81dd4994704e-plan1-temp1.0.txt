@@ -1,0 +1,18 @@
+1. Identify all individuals: Bob, Dave, Erin, Fiona.
+2. Represent all explicitly stated properties as ternary facts using predicate(subject, boolean_value, True):
+   - is_blue("Bob", True), is_cold("Bob", True), is_green("Bob", True)
+   - is_blue("Dave", True), is_cold("Dave", True), is_green("Dave", True), is_kind("Dave", True), is_smart("Dave", True), is_white("Dave", True)
+   - is_smart("Erin", True)
+   - is_blue("Fiona", True)
+3. Translate each universal conditional into a PyKe rule with `foreach` + `assert`:
+   • Blue people are smart: foreach (X) where is_blue(X, True), assert is_smart(X, True)
+   • If Fiona is green and blue → Fiona is big: check Fiona-specific condition; assert is_big("Fiona", True) if both hold.
+   • Smart people are cold: foreach (X) where is_smart(X, True), assert is_cold(X, True)
+   • If Bob is kind and blue → Bob is not green: condition on Bob; assert is_green("Bob", False) when both kind and blue hold.
+   • If someone is blue → they are white: foreach (X) where is_blue(X, True), assert is_white(X, True)
+   • Green people are white: foreach (X) where is_green(X, True), assert is_white(X, True)
+   • All big people are kind: foreach (X) where is_big(X, True), assert is_kind(X, True)
+   • If someone is cold → they are green: foreach (X) where is_cold(X, True), assert is_green(X, True)
+4. Note inconsistencies in given facts (e.g., Bob is green and blue but may be forced non-green by rule), and ensure rules are applied in an order consistent with SMT reasoning (i.e., via forward chaining via PyKe rules).
+5. The query is whether Dave is big:
+   → Use facts.is_big("Dave", True)

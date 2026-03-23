@@ -1,0 +1,31 @@
+1. Enumerate the six cargo types and assign them integer codes (e.g., fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5).  
+2. Create integer variables `pos[type]` for each cargo type (0..5) indicating its bay position (1-based, 1–6).  
+3. Add **domain constraints**: Each `pos[type]` ∈ {1,2,3,4,5,6}, and all `pos[type]` are pairwise distinct (since each bay holds exactly one cargo type).  
+4. Add **ordering constraints** from the problem:  
+   - grain > livestock → `pos[grain] > pos[livestock]`  
+   - livestock > textiles → `pos[livestock] > pos[ textiles ]`  
+   - produce > fuel → `pos[produce] > pos[fuel]`  
+   - textiles and produce are adjacent → `|pos[produce] - pos[textiles]| == 1`  
+5. Add the **conditional constraint** for the scenario: exactly one bay between machinery and grain → `|pos[grain] - pos[machinery]| == 2`.  
+6. For each bay position `b ∈ {1,2,3,4,5,6}`, introduce a variable `determined[b]` (Boolean) that is true iff cargo type at bay `b` is uniquely determined across all valid solutions.  
+7. Use Z3 to find **all satisfying assignments** (or use incremental solving with blocking clauses) under the above constraints.  
+   - Since the question asks for *how many* bays have *completely determined* cargo (i.e., same type in every solution), we must:  
+     - Collect all solutions.  
+     - For each bay `b`, check if all solutions assign the *same* cargo type to it.  
+     - Count how many such bays exist.  
+8. However, since Z3 does not directly enumerate all solutions efficiently in one call, use a loop:  
+   - Solve once to get an initial solution `S0`. Record cargo types per bay.  
+   - Repeatedly add a blocking clause to exclude the current solution, solve again, and collect all distinct solutions (up to Exhaustion or up to reasonable bound—here likely few due to tight constraints).  
+   - For each bay, compute intersection of assigned cargo types across all solutions. If intersection size = 1, that bay is determined.  
+9. Alternatively (more robust for small space): For each cargo type `c` and bay `b`, ask:  
+   - Is there a solution where bay `b` is *not* cargo `c`?  
+   - If for a particular `(b,c)`, no such solution exists (i.e.,bay `b` must be `c`), then mark bay `b` as possibly determined for `c`.  
+   - After checking all `(b,c)`, count bays where exactly one `c` satisfies the above.  
+10. Implement step 9 using incremental solving:  
+    - For each bay `b ∈ {1..6}` and cargo type `c`:  
+        - Clone base constraints + `[pos[c] == b]`  
+        - Check SAT. Record which `(b,c)` are possible.  
+    - For each bay `b`, collect the set of possible cargos: `{c | model exists with pos[c]==b}`  
+    - Count bays where this set has size 1.  
+11. Return the count (convert integer to string matching choices: 'two', 'three', etc.).  
+12. Since only one answer is expected (number of determined bays), output that count as the final result.

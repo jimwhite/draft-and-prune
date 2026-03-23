@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the five books as variables: `"green"`, `"blue"`, `"white"`, `"purple"`, `"yellow"`.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost**, **5 = rightmost**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a lambda constraint:  
+     - "The blue book is to the right of the yellow book" → `blue > yellow`  
+     - "The white book is to the left of the yellow book" → `white < yellow`  
+     - "The blue book is the second from the right" → `blue == 4` (since position 5 is rightmost, so second from right is 4)  
+     - "The purple book is the second from the left" → `purple == 2`  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution from the returned list of solutions (expecting exactly one valid assignment).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is **leftmost**, i.e., has position value **1**.  
+   * Create a mapping from choice letters to book names: `{'A': 'green', 'B': 'blue', 'C': 'white', 'D': 'purple', 'E': 'yellow'}`.  
+   * Iterate through the choice-letter-to-book mapping, checking which book in the solution has value `1`.  
+   * Return (or record) the corresponding letter (e.g., `"C"`) as the final answer.

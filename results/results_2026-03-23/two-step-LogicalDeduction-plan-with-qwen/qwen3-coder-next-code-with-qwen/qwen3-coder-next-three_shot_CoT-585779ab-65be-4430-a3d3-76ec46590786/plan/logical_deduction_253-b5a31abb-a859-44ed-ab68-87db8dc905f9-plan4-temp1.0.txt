@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables as the three fruits: `"cantaloupe"`, `"watermelon"`, and `"mango"`.  
+    * Define a domain of integers from 1 to 3, where **1 represents the cheapest** and **3 represents the most expensive**, aligning with typical pricing rank conventions (lower number = cheaper).  
+    * Add the fruit variables and their domain (1–3) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate the given statements into constraints using `lambda` functions:  
+        * "The mangoes are the cheapest" → `mango == 1`.  
+        * "The cantaloupes are the second-most expensive" → `cantaloupe == 2`.  
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments of price ranks.  
+    * Since the constraints fully determine two values and the third is forced by uniqueness, extract the single solution.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which statement is true. Compare the choices directly to the solution:  
+        * Choice A explicitly states "The cantaloupes are the second-most expensive", which matches the constraint `cantaloupe == 2`.  
+    * Since this is guaranteed by the problem’s statements and our model, select **A** without further iteration.

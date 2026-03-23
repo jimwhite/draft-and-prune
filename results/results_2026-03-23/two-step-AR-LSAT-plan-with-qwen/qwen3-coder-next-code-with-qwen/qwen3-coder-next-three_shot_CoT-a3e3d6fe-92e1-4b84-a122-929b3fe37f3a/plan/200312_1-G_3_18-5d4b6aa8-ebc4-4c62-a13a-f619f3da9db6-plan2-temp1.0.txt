@@ -1,0 +1,26 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and days (Monday=1 to Friday=5), assign integer indices.  
+2. Create integer variables `o1, o2, o3` (positions of oatmeal batches 1–3), `p1, p2, p3` (peanut butter), `s1, s2, s3` (sugar), each in domain [1,5].  
+3. Add **distinctness per type**: for each cookie type, its three batches occur on distinct days: `o1 ≠ o2`, `o1 ≠ o3`, `o2 ≠ o3`, and similarly for peanut butter and sugar.  
+4. Add **fixed constraints**:  
+    - At least one batch on Monday: `min(o1,o2,o3,p1,p2,p3,s1,s2,s3) == 1` (or enforce at least one variable equals 1).  
+    - Second oatmeal batch coincides with first peanut butter: `o2 == p1`.  
+    - Second sugar batch on Thursday: `s2 == 4`.  
+5. Add **ordering within type**: batches are made in sequence, so `o1 < o2 < o3`, `p1 < p2 < p3`, `s1 < s2 < s3`.  
+6. Translate answer choices into logical statements about daily batch counts:  
+    - A: `all_counts[d] ≥ 1 for d in 1..5`  
+    - B: `count[3] ≥ 2` (Wednesday)  
+    - C: `count[1] == 1`  
+    - D: `count[2] == 2` (Tuesday)  
+    - E: `count[5] == 1`  
+7. Introduce the conditional premise: assume there exists a pair (X, Y) of distinct cookie types such that `first_X == third_Y`.  
+    - Express as disjunction: `(o1 == s3) ∨ (p1 == o3) ∨ (s1 == o3) ∨ (o1 == p3) ∨ (p1 == s3) ∨ (s1 == p3)`  
+    - Add this premise as a constraint to the solver.  
+8. For each answer choice statement S_i, do:  
+    - Clone base constraints + premise into fresh solver.  
+    - Assert S_i is true (e.g., `count[3] == 2` for D).  
+    - If model is SAT, then S_i *could* be true; but we need to find which one *could be false*, i.e., whether its negation is satisfiable under premise.  
+    - So instead: assert ¬S_i (negation of statement).  
+        - If UNSAT ⇒ S_i must be true, so cannot be false.  
+        - If SAT ⇒ S_i could be false under premise.  
+    - Collect indices of statements where `¬S_i` is SAT (i.e., the answer choice that could be false).  
+9. Output the index of the statement(s) for which `¬S_i` is satisfiable (the answer is that statement).

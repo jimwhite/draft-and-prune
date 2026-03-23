@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Identify the five vehicles as variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+    * Define the domain as integers 1 through 5, where **1 = oldest** and **5 = newest** (consistent with prior antique car problems in the set).  
+    * Add all variables and the domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age rankings.  
+    * Convert each statement to a constraint:  
+        - "The tractor is newer than the minivan" → `tractor > minivan` (since higher number = newer).  
+        - "The tractor is older than the limousine" → `tractor < limousine`.  
+        - "The convertible is older than the sedan" → `convertible < sedan`.  
+        - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid configurations satisfying the constraints.  
+    * Extract the unique solution (since logically consistent implies uniqueness).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which statement is true; choice A directly states "The convertible is the second-newest", which matches the constraint `convertible == 4`.  
+    * Since this is explicitly given and enforced in the model, verify that it holds in the solution.  
+    * Select choice A as the answer without further iteration, as it is literally restating a given premise (and the problem confirms consistency), but to strictly follow plan:  
+        - Create a mapping from choice letters to statements (though not needed for logic, per instructions).  
+        - Check each choice: A is true because the constraint enforces `convertible == 4`, and no other vehicle can be second-newest due to uniqueness.  
+    * Return 'A' as the final answer.

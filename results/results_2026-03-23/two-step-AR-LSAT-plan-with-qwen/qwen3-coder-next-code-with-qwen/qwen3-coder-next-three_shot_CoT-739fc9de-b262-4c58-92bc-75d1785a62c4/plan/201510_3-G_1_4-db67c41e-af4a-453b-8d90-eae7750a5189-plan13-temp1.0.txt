@@ -1,0 +1,12 @@
+1. Enumerate the seven accomplices and create integer variables for their recruitment positions (1 to 7).  
+2. Add **domain constraints**: each position must be between 1 and 7, all distinct.  
+3. Add **fixed constraint**: Peters is recruited fourth (`pos_Peters == 4`).  
+4. Add **Villas-White constraint**: Villas is immediately before White (`pos_Villas + 1 == pos_White`).  
+5. Add **Quinn-Rovero constraint (premise)**: Quinn is immediately before Rovero (`pos_Quinn + 1 == pos_Rovero`).  
+6. Add **S-T separation constraint**: Stanton is neither immediately before nor after Tao (`|pos_Stanton - pos_Tao| != 1`).  
+7. Translate answer choices (positions: 'first'→1, 'second'→2, ..., 'seventh'→7) into integer indices.  
+8. Define answer index list `answer_index_list = []`. For each candidate position `p` in [1,2,3,5,7]:  
+    - Clone the base constraints (including fixed Peters and premise) into a fresh solver.  
+    - Assert `pos_Stanton == p`.  
+    - If this augmented constraint set is UNSAT, then Stanton **cannot** be in position `p` under the premise; append `p` to `answer_index_list`.  
+9. Return `answer_index_list`.

@@ -1,0 +1,19 @@
+1. Identify all individuals: Bob, Fiona, Gary, Harry.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_big("Bob", True), is_cold("Bob", True), is_furry("Bob", True), is_smart("Bob", True)
+   - is_cold("Fiona", True), is_green("Fiona", False), is_white("Fiona", True)
+   - is_smart("Gary", True), is_big("Harry", True), is_cold("Harry", True), is_smart("Harry", True)
+3. Translate all conditional rules into PyKe `foreach`-`assert` rules:
+   • All green people are furry: if is_green(X, True) then is_furry(X, True)
+   • If Gary is furry and not smart → Gary is white (only applies to Gary; encode as a ground rule or use special handling—PyKe supports constant matching via `is_furry("Gary", True)`, `~is_smart("Gary", True)` in condition)
+   • Smart people are green: if is_smart(X, True) then is_green(X, True)
+   • If Bob is not green and not white → Bob is furry (ground rule: condition on constants)
+   • Big people are cold: if is_big(X, True) then is_cold(X, True)
+   • If someone is smart and furry → they are big: if is_smart(X, True) ∧ is_furry(X, True) then is_big(X, True)
+   • If someone is white and not cold → they are not blue: if is_white(X, True) ∧ ~is_cold(X, True) then is_blue(X, False)
+   • All cold people are not blue: if is_cold(X, True) then is_blue(X, False)
+4. For ground-specific rules (e.g., about Gary or Bob), use constant literals directly in the `foreach` condition (e.g., `is_furry("Gary", True)`, `~is_green("Fiona", True)`), but note that PyKe’s `foreach` typically matches patterns; thus, for ground conditions, encode them as separate ground rules or rely on fact-based inference (use `facts` and direct assertions where possible).
+5. The query checks whether Bob is white:
+   → Use facts.is_white("Bob", True)
+6. Additionally, note that Bob is already known to be cold and furry; use rules (e.g., smart ∧ furry → big, but Bob is already big) and cold → not blue to derive further properties.
+7. Since the query is about a property (white) not directly asserted for Bob, inference via rules may be needed to determine truth value.

@@ -1,0 +1,15 @@
+1. Enumerate the seven articles: G, H, J (finance); Q, R, S (nutrition); Y (wildlife), assign integer indices 0–6.  
+2. Create integer variables `pos[article]` for the position (1 to 7) of each article.  
+3. Add **domain constraints**: all `pos[article]` ∈ {1,2,...,7}, and all distinct (a permutation).  
+4. Add **topic constraints**: consecutive positions cannot have same topic: for all i from 1 to 6, if `pos[a] = k` and `pos[b] = k+1`, then topic(a) ≠ topic(b).  
+5. Add **S–Q conditional constraint**: S is earlier than Q only if Q is third → equivalently: if Q ≠ 3, then S > Q; or (Q == 3) ∨ (S > Q).  
+6. Add **S–Y constraint**: S must be earlier than Y → `pos[S] < pos[Y]`.  
+7. Add **J–G–R chain**: J < G and G < R → `pos[J] < pos[G] < pos[R]`.  
+8. Translate the answer choices into constraints where a specific article is fixed at a specific position (e.g., `pos[H] == 4`, etc.).  
+9. For each answer choice:  
+   - Clone the base solver into a fresh one.  
+   - Add the choice constraint (e.g., `pos[H] == 4`).  
+   - Count the number of satisfying assignments (models) for this constrained system:  
+       • Use a loop to iteratively block previously found models (by adding the negation of each found assignment) until UNSAT or until 2 distinct models are found.  
+   - If exactly one model exists (i.e., the solution is unique), then this choice *fully determines* the order; record its index.  
+10. Return the index (0-based) of the answer choice(s) for which the constrained system has a unique solution.

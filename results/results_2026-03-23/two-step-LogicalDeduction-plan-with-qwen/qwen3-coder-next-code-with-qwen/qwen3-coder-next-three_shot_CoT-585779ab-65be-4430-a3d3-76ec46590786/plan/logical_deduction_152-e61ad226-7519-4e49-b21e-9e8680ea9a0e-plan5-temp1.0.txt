@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven bird types as variables: `"hawk"`, `"raven"`, `"hummingbird"`, `"falcon"`, `"owl"`, `"quail"`, and `"cardinal"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost** position on the branch.
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Translate each statement into a lambda constraint:
+        * "The quail is to the left of the hummingbird" → `quail < hummingbird`
+        * "The raven is to the right of the hummingbird" → `hummingbird < raven`
+        * "The cardinal is the second from the left" → `cardinal == 2`
+        * "The owl is to the left of the cardinal" → `owl < cardinal` (i.e., `owl < 2`)
+        * "The raven is the third from the right" → `raven == 5` (since 7 - 3 + 1 = 5)
+        * "The falcon is the rightmost" → `falcon == 7`
+
+4.  **Solve the Problem:**
+    * Invoke `getSolutions()` to enumerate all valid assignments.
+    * Extract the unique solution (or first solution, as the problem is deterministic).
+
+5.  **Evaluate Answer Choices:**
+    * Interpret "X is the fourth from the left" as position 4.
+    * Create a mapping from choice letters (A–G) to the corresponding bird names:
+        A → "hawk", B → "raven", C → "hummingbird", D → "falcon", E → "owl", F → "quail", G → "cardinal"
+    * For the solved assignment, identify which bird occupies position 4.
+    * Return (or print) the letter corresponding to that bird.

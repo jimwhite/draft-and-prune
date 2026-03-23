@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define variables as the seven vehicles: `"sedan"`, `"truck"`, `"bus"`, `"station_wagon"`, `"tractor"`, `"convertible"`, and `"limousine"`.  
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, **7 = newest**.  
+    * Add all variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Formulate Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * "The truck is the oldest" → `truck == 1`.  
+    * "The tractor is the newest" → `tractor == 7`.  
+    * "The sedan is older than the station wagon" → `sedan < station_wagon`.  
+    * "The station wagon is the third-newest" → Since newest = 7, third-newest = position 5 (7−2=5), so `station_wagon == 5`.  
+    * "The bus is older than the convertible" → `bus < convertible`.  
+    * "The sedan is newer than the convertible" → `convertible < sedan`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the unique solution (as the problem is well-defined and consistent).
+
+5.  **Identify the Correct Choice:**  
+    * The question asks: "Which vehicle is third-oldest?" → That corresponds to rank **3** (since 1 = oldest, so 1st-oldest=1, 2nd-oldest=2, **3rd-oldest=3**).  
+    * Create a mapping from choice letters to vehicle names: `"A"→"sedan"`, `"B"→"truck"`, `"C"→"bus"`, `"D"→"station_wagon"`, `"E"→"tractor"`, `"F"→"convertible"`, `"G"→"limousine"`.  
+    * In the solved solution, find which variable has value `3`, then return its corresponding choice letter.  
+    * Output the correct letter (e.g., `"C"` if bus is at rank 3).

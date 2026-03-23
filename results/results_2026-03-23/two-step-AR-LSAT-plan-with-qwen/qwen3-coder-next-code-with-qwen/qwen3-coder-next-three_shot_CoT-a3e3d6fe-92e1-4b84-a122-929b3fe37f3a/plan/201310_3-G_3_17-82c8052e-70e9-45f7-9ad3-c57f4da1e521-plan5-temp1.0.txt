@@ -1,0 +1,26 @@
+1. Enumerate the five movie types and assign each an integer code: horror=0, mystery=1, romance=2, sci-fi=3, western=4.  
+2. Enumerate the three screens: screen1=0, screen2=1, screen3=2.  
+3. Enumerate the time slots: 7pm=0 (screen1/screen2 only), 8pm=1 (screen3 only), 9pm=2 (screen1/screen2 only).  
+4. Create integer variables for each movie’s screen and time slot: `screen[m] ∈ {0,1,2}`, `slot[m] ∈ {0,1,2}` for m in 0..4.  
+5. Add **screen/time domain constraints**:  
+    - For screens 1 and 2 (0,1): slot ∈ {0,2} (only 7pm or 9pm).  
+    - For screen 3 (2): slot must be 1 (8pm only).  
+6. Add **capacity constraints**:  
+    - Exactly two movies per screen 1 and screen 2 → sum over m of (screen[m]==0) == 2, similarly for screen1 (index1).  
+    - Exactly one movie on screen 3 → sum over m of (screen[m]==2) == 1.  
+7. Add **one-to-one assignment constraints**:  
+    - For each screen-slot combination, at most one movie can be assigned (e.g., for screen0 + slot0: at most 1 movie with screen[m]==0 ∧ slot[m]==0).  
+8. Add **order constraint**: western before horror → (screen[w]=s1 ∧ slot[w]=t1) < (screen[h]=s2 ∧ slot[h]=t2) lexicographically:  
+    - Encode time precedence: if t1 < t2 → true; if t1 == t2, then s1 < s2.  
+    - Specifically: (slot[w] < slot[h]) ∨ (slot[w] == slot[h] ∧ screen[w] < screen[h]).  
+9. Add **sci-fi not on screen 3** → screen[sci-fi] ≠ 2.  
+10. Add **romance not on screen 2** → screen[romance] ≠ 1.  
+11. Add **horror and mystery on different screens** → screen[horror] ≠ screen[mystery].  
+12. Translate answer choices into candidate screen-1 movie lists (7pm first): each choice gives two movies → assign to screen0, with slots: first=7pm (slot=0), second=9pm (slot=2).  
+13. For each answer choice in order:  
+    - Clone base constraints into a fresh solver.  
+    - Assert screen = 0 for both movies, and slot[7pm_movie] == 0, slot[9pm_movie] == 2.  
+    - Assert no other movie is assigned to (screen0, slot0) or (screen0, slot2).  
+    - Check satisfiability: if UNSAT, then this list **cannot** be accurate → record index.  
+14. Return the *first* (by list order) choice that is UNSAT — this is the answer.  
+15. Map back indices to movie names; output the corresponding string from choices.

@@ -1,0 +1,39 @@
+1. Enumerate the eight compositions and create integer variables for their performance positions (1 to 8).  
+2. Add **domain constraints**: each composition position is an integer in [1, 8], and all positions are distinct (permutation).  
+3. Add **T-F-R adjacency constraint**: T is immediately before F (`pos_T + 1 == pos_F`) OR immediately after R (`pos_R + 1 == pos_T`).  
+4. Add **spacing constraint**: at least two compositions between F and R → `|pos_F - pos_R| >= 3`.  
+5. Add **O position constraint**: O is first or fifth (`pos_O == 1` OR `pos_O == 5`).  
+6. Add **eighth position constraint**: eighth composition is L or H (`pos_L == 8` OR `pos_H == 8`).  
+7. Add **P-before-S constraint**: `pos_P < pos_S`.  
+8. Add **at-least-one-between-O-and-S constraint**: `|pos_O - pos_S| >= 2`.  
+9. Add the **conditional premise**: O is immediately after T (`pos_T + 1 == pos_O`).  
+10. With the premise added, derive the **revised constraints** (e.g., combine with O = 1 or 5; note that if `pos_T + 1 == pos_O`, then `pos_O` cannot be 1 (since no position before it), so `pos_O == 5`, hence `pos_T == 4`).  
+11. With `pos_T = 4`, `pos_O = 5`, update the T-F-R constraint:  
+    - Either `T` immediately before `F` → `pos_F = 5`, but `pos_O = 5` ⇒ conflict (since positions distinct) → impossible.  
+    - So only possibility is `T` immediately after `R` → `pos_R + 1 = pos_T = 4` ⇒ `pos_R = 3`.  
+12. Now we know: `pos_R = 3`, `pos_T = 4`, `pos_O = 5`.  
+13. Apply the spacing constraint: `|pos_F - pos_R| >= 3`, with `pos_R = 3` ⇒ `pos_F <= 0` (impossible) or `pos_F >= 6`. So `pos_F ∈ {6,7,8}`.  
+14. Apply eighth position constraint: L or H is at position 8. So if `pos_F = 8`, then F would occupy the last slot, but only L or H can be there ⇒ contradiction unless F = L or F = H (but all compositions are distinct, and F ≠ L, F ≠ H per list), so `pos_F ≠ 8`. Thus `pos_F ∈ {6,7}`.  
+15. Therefore F must be 6th or 7th — but need to verify feasibility for both:  
+    - Check if `pos_F = 6` is possible with all other constraints (including P < S and |O−S| ≥ 2, etc.).  
+    - Check if `pos_F = 7` is possible similarly.  
+16. Use Z3 to verify both `pos_F == 6` and `pos_F == 7` are satisfiable, while `pos_F == 8` is unsatisfiable (already reasoned), and positions 1–5 are taken by R=3, T=4, O=5, so F cannot be earlier than 6.  
+17. Translate answer choices to F positions:  
+    - 'first or second' → {1,2}  
+    - 'second or third' → {2,3}  
+    - 'fourth or sixth' → {4,6}  
+    - 'fourth or seventh' → {4,7}  
+    - 'sixth or seventh' → {6,7}  
+18. From step 14–16, F must be in {6,7}. So answer is 'fourth or sixth' is partially wrong (4 impossible), 'fourth or seventh' also includes 4, but 'sixth or seventh' matches exactly. However, the question asks "F must be performed either [choice]" — so we need the *exact* minimal set that F is forced into.  
+19. Since reasoning shows only 6 or 7 possible, and both are feasible (verify with Z3), answer is 'sixth or seventh'.  
+20. But the plan must be mechanical:  
+    - Define answer choices as sets of positions.  
+    - For each choice, check whether:  
+        (a) F *must* be in that set (i.e., in all satisfying models, `pos_F ∈ choice_set`),  
+        (b) and no smaller superset exists (but question only asks which *must* be the case, so (a) is sufficient).  
+21. To test (a), for each choice, assert `pos_F ∉ choice_set`, add all base constraints + premise (`T immediately after O`), and check unsatisfiability.  
+22. Add all constraints (steps 1–8 + premise `pos_T + 1 == pos_O`).  
+23. For each answer choice set, clone solver, assert `pos_F ∉ {positions in choice}`, check SAT.  
+24. The answer choice for which this assumption yields UNSAT (i.e., F *must* be in that set) is correct.  
+25. Since choice 5 ('sixth or seventh') should be the only one where UNSAT occurs, append its index to answer list.  
+26. Return that choice as the plan output (but raw plan only, so stop at solving logic).

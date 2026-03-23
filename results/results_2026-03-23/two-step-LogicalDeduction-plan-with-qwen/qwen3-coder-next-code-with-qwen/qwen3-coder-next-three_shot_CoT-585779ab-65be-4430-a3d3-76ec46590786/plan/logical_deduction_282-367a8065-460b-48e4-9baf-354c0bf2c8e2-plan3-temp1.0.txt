@@ -1,0 +1,23 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the three birds: `"quail"`, `"owl"`, and `"hummingbird"`.  
+    * Define the domain as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, **3 = rightmost**.  
+    * Add these variables and domain to the problem.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate "The quail is to the left of the owl" into a constraint: `quail < owl`.  
+    * Translate "The owl is to the left of the hummingbird" into a constraint: `owl < hummingbird`.
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to compute all valid arrangements.  
+    * Since the constraints impose a strict total order (quail < owl < hummingbird), there is exactly one solution: positions [1, 2, 3] for quail, owl, hummingbird respectively. Retrieve the first (and only) solution.
+
+5.  **Determine the Correct Answer:**  
+    * Examine the question: it asks which bird is rightmost (i.e., position 3).  
+    * In the solution, the hummingbird is in position 3.  
+    * Map choices: "A" → quail, "B" → owl, "C" → hummingbird.  
+    * The correct choice is "C", since the hummingbird is rightmost.

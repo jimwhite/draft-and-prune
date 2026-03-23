@@ -1,0 +1,18 @@
+1. Enumerate the six photographers: Frost, Gonzalez, Heideck, Knutson, Lai, Mays and assign each an integer index (0–5).  
+2. Create Boolean variables for each photographer and ceremony: `S[i]` = True if photographer i assigned to Silva, else Thorne (or unassigned); implicitly encode assignment via two Booleans per person but enforce exclusivity: `S[i] + T[i] <= 1`, and at most one ceremony per person.  
+3. Add **non-crossing constraint**: `S[i] == ~T[i]` for all i (i.e., each assigned person is in exactly one ceremony; unassigned = both false).  
+4. Add **minimum assignment constraint**: at least two photographers assigned to each ceremony: `sum(S[i] for i) >= 2` and `sum(T[i] for i) >= 2`.  
+5. Add **Frost–Heideck together constraint**: `S[0] == S[2]` and `T[0] == T[2]` (Frost and Heideck assigned to same ceremony, or both unassigned — but combined with min constraints, they must be assigned together).  
+6. Add **Lai–Mays separation constraint**: `~(S[4] & S[5])` and `~(T[4] & T[5])` (if both assigned, not to same ceremony).  
+7. Add **Gonzalez→Lai conditional**: `S[1] → ~S[4]` (i.e., if Gonzalez at Silva, Lai not at Silva ⇒ Lai must be at Thorne or unassigned; but since min requirements may force assignment, model as `S[1] ⇒ T[4]`? Actually: “If Gonzalez is assigned to Silva, then Lai must be assigned to Thorne” ⇒ `S[1] ⇒ T[4]`. Since Lai must be assigned to Thorne, we add `S[1] ⇒ T[4]`.  
+8. Add **Knutson conditional**: `~T[3] ⇒ (S[2] & S[5])`? Wait: “If Knutson is not assigned to Thorne, then both Heideck and Mays must be assigned to it.”  
+   - So: `~T[3] ⇒ (T[2] & T[5])`.  
+9. For each answer choice:  
+   - Parse the assignment string into sets of photographers per ceremony (Silva and Thorne).  
+   - For each photographer:  
+     - If in Silva set, assert `S[i] = True`, `T[i] = False`.  
+     - If in Thorne set, assert `S[i] = False`, `T[i] = True`.  
+     - If not listed, assert `S[i] = False`, `T[i] = False`.  
+   - Add all these assertions to a fresh solver with the base constraints.  
+10. Check SAT: if model is satisfiable, the assignment is acceptable; record its index.  
+11. Output the index (0-based) of the acceptable assignment — only one will satisfy.

@@ -1,0 +1,16 @@
+1. Enumerate the six roles and assign integer indices: guitar=0, keyboard=1, percussion=2, saxophone=3, trumpet=4, violinist=5.  
+2. Create integer variables `pos[r]` for each role r (0..5) representing the solo position (1 to 6), all distinct.  
+3. Add **domain constraints**: each `pos[r] ∈ {1,2,3,4,5,6}`, and all `pos[r]` are pairwise distinct.  
+4. Add **guitarist constraint**: guitarist does not perform fourth solo → `pos[0] ≠ 4`.  
+5. Add **percussion constraint**: percussionist performs before keyboard player → `pos[2] < pos[1]`.  
+6. Add **keyboard constraints**:  
+   - keyboard after violinist → `pos[5] < pos[1]`,  
+   - keyboard before guitarist → `pos[1] < pos[0]`.  
+7. Add **saxophonist constraint**: saxophonist performs after *exactly one* of {percussion, trumpet} → XOR:  
+   `(pos[2] < pos[3]) ≠ (pos[4] < pos[3])`.  
+8. Translate answer choices to role indices: guitar=0, keyboard=1, saxophone=3, trumpet=4, violinist=5.  
+9. For each candidate role in the answer choices (excluding 'violinist'? No—include all five), do:  
+   - Clone base constraints into a fresh solver.  
+   - Assert `pos[candidate] == 3`.  
+   - If UNSAT, then this role **cannot** be third; record its index.  
+10. Return the list of roles whose indices were recorded (those that cannot be third).

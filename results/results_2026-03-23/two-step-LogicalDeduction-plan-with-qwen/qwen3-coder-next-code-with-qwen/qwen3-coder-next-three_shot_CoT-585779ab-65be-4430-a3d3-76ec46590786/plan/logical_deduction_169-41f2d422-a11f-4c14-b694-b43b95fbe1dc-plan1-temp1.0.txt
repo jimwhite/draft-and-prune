@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * The variables are the seven golfers: `"Joe"`, `"Dan"`, `"Ana"`, `"Mel"`, `"Ada"`, `"Eve"`, and `"Amy"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first (highest/top) place** and **7 = last (lowest/bottom) place**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that each golfer has a unique finishing position using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * "Eve finished above Amy" → Eve’s position number < Amy’s position number (`eve < amy`).  
+   * "Dan finished second" → Dan’s position = 2.  
+   * "Ada finished below Ana" → Ana’s position number < Ada’s position number (`ana < ada`).  
+   * "Ana finished third-to-last" → In a 7-person field, third-to-last means position = 5 (since last = 7, second-last = 6, third-last = 5).  
+   * "Mel finished last" → Mel’s position = 7.  
+   * "Amy finished third" → Amy’s position = 3.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to obtain all valid solutions. Given the constraints, there should be exactly one solution.
+
+6. **Identify Who Finished Second:**  
+   * The question asks which golfer finished second (i.e., whose position is 2).  
+   * From the solved solution dictionary, find which key (golfer name) has value 2.  
+   * Note: The statement "Dan finished second" is explicitly given, so Dan must be the answer—but verify via constraint consistency.
+
+7. **Map to Given Choices and Output Answer:**  
+   * The choices list contains strings like `'B) Dan finished second.'`. Since Dan’s position is fixed to 2 by constraint, choice B is definitively true.  
+   * Return `'B'` as the correct answer letter.

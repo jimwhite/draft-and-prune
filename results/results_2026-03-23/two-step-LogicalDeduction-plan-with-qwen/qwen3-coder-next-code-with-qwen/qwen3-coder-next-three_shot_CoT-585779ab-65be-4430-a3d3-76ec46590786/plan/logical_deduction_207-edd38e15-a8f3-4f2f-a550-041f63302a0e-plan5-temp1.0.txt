@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin constructing the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven golfers as variables: `"Eli"`, `"Eve"`, `"Mel"`, `"Joe"`, `"Mya"`, `"Rob"`, and `"Ada"`.
+    * Define the domain for positions as integers from 1 to 7, where **1 = highest position (first place)** and **7 = lowest position (last place)**.
+    * Add each golfer as a variable with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3.  **Add Constraints Based on Statements:**
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.
+    * Translate each statement into a constraint:
+        * "Ada finished above Mya" → `Ada < Mya` (since lower position number = better finish).
+        * "Eli finished below Joe" → `Joe < Eli` (Joe has a better/smaller position number than Eli).
+        * "Eli finished above Eve" → `Eli < Eve`.
+        * "Ada finished second-to-last" → `Ada == 6` (positions: 7 is last, so 6 is second-to-last).
+        * "Mel finished third" → `Mel == 3`.
+        * "Rob finished fourth" → `Rob == 4`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions that satisfy the constraints.
+    * Extract the unique solution from the resulting list (as the problem is deterministic).
+
+5.  **Determine Which Golfer Finished Second-to-Last:**
+    * Note that "second-to-last" corresponds to position 6 in our numbering (since 7 is last).
+    * Create a dictionary mapping choice letters (`"A"` through `"G"`) to golfer names:  
+        `{"A": "Eli", "B": "Eve", "C": "Mel", "D": "Joe", "E": "Mya", "F": "Rob", "G": "Ada"}`.
+    * In the solved assignment, find which golfer has position `6`.
+    * Return the corresponding choice letter for that golfer as the answer.

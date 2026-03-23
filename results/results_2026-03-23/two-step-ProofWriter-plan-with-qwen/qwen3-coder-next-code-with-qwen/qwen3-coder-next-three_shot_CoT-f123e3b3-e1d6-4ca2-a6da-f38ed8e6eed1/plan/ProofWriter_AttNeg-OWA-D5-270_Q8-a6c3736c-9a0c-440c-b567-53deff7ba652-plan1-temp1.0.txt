@@ -1,0 +1,17 @@
+1. Identify all individuals: Charlie, Dave, Erin, Harry.
+2. Represent all explicitly stated facts using ternary predicates:
+   - is_green("Charlie", True)
+   - is_quiet("Dave", True), is_red("Dave", True), is_white("Dave", False)
+   - is_big("Erin", False), is_cold("Erin", False), is_green("Erin", True)
+   - is_big("Harry", True), is_cold("Harry", True), is_green("Harry", True)
+3. Translate all contextual implications into PyKe rules using `foreach` + `assert`:
+   • If someone is red → they are not white.
+   • If Charlie is quiet → Charlie is blue.
+   • If someone is quiet and red → they are blue.
+   • All white people are cold: foreach person if is_white(person, True) then is_cold(person, True).
+   • All green people are quiet: foreach person if is_green(person, True) then is_quiet(person, True).
+   • All blue, green people are red: foreach person if is_blue(person, True) and is_green(person, True) then is_red(person, True).
+   • If someone is red and not white → they are big: foreach person if is_red(person, True) and is_white(person, False) then is_big(person, True).
+4. Encode each implication as a separate rule with precise variable binding (use unique names like ?p for person) and ensure correct polarity (e.g., is_white(?p, False)).
+5. The query checks whether Charlie is *not* red:
+   → Use facts.is_red("Charlie", False)

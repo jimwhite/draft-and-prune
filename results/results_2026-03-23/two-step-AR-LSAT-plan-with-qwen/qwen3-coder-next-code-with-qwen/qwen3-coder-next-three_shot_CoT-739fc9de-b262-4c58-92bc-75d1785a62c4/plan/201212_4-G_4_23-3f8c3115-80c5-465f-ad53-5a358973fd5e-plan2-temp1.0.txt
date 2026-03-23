@@ -1,0 +1,25 @@
+1. Enumerate the seven articles and assign each an integer index: G, H, J → finance (0,1,2); Q, R, S → nutrition (3,4,5); Y → wildlife (6).  
+2. Create integer position variables `pos[0]` through `pos[6]` for the editing order (1 to 7).  
+3. Add **domain and uniqueness constraints**: all `pos[i] ∈ {1,…,7}` and pairwise distinct (all different).  
+4. Add **topic constraints**: define `topic[i]` = 0 for finance (G,H,J), 1 for nutrition (Q,R,S), 2 for wildlife (Y).  
+5. Add **no-consecutive-same-topic constraint**: for all consecutive positions k=1..6, if `pos[i]=k` and `pos[j]=k+1`, then `topic[i] ≠ topic[j]`. Implement via auxiliary Boolean encoding or direct pairwise implication: for every pair (i,j), if `pos[i] = k` and `pos[j] = k+1`, then enforce `topic[i] ≠ topic[j]` — more practically, for each adjacent position pair (k,k+1), enforce that the articles at those positions are of different topics using binary decision diagrams or by enumerating all 7! permutations? Instead: use a standard Z3 trick — introduce binary indicator `at_k[i]` for "article i is at position k", then enforce for each k=1..6 and all pairs (i,j), if `at_k[i]` and `at_{k+1}[j]`, then `topic[i] ≠ topic[j]`.  
+6. Add **S–Q conditional constraint**: "S can be earlier than Q only if Q is third" ≡ `pos_S < pos_Q → pos_Q = 3`. Equivalent to: if `pos_Q ≠ 3`, then `pos_S > pos_Q`.  
+7. Add **S before Y**: `pos_S < pos_Y`.  
+8. Add **J < G < R**: `pos_J < pos_G` and `pos_G < pos_R`.  
+9. Note: H is also finance (same topic as G,J), so H cannot be adjacent to another finance article.  
+10. Translate the five answer choices into conditions on positions:  
+    - H is fourth → `pos_H = 4`  
+    - H is sixth → `pos_H = 6`  
+    - R is fourth → `pos_R = 4`  
+    - R is seventh → `pos_R = 7`  
+    - Y is fifth → `pos_Y = 4? No, Y is fifth → pos_Y = 5`  
+11. For each answer choice condition:  
+    a. Clone the base constraints into a fresh solver.  
+    b. Assert the condition (e.g., `pos_H == 4`).  
+    c. Try to find **two distinct satisfying assignments** (models) for the positions — i.e., check if the solution is unique. To do this:  
+        - First, solve to get a model M1 (if UNSAT, discard as invalid).  
+        - Add constraint that forbids the exact assignment of M1: for each article i, add `pos[i] ≠ M1[pos[i]]`.  
+        - Solve again. If UNSAT, then only one solution exists ⇒ the condition fully determines the order.  
+    d. If the model is uniquely satisfiable under that condition, record the index of this choice as a possible correct answer.  
+12. Collect all such choices where uniqueness holds; only one should satisfy — output its index (or print the corresponding choice string if needed, but per plan: output plan).  
+13. Print the list of indices (or singleton) of choices that fully determine the order.

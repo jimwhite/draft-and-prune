@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruits as variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, `"pears"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price rankings.  
+   * Convert each statement into a constraint:  
+     - "The pears are more expensive than the kiwis" → `kiwis < pears` (kiwis cheaper ⇒ lower rank).  
+     - "The watermelons are less expensive than the peaches" → `watermelons < peaches`.  
+     - "The mangoes are the third-cheapest" → `mangoes == 3`.  
+     - "The watermelons are the third-most expensive" → With 7 items, third-most expensive means rank = 5 (since 7−3+1 = 5).  
+     - "The plums are the second-most expensive" → rank = 6 (since most expensive = 7, second-most = 6).  
+     - "The loquats are the second-cheapest" → `loquats == 2`.
+
+4. **Solve the Constraint Problem:**  
+   * Call `getSolutions()` to compute all valid price rankings.  
+   * Since the constraints uniquely determine the ordering, extract the single solution.
+
+5. **Answer the Question:**  
+   * The question asks: “Which of the following is true?” and each choice claims a fruit is third-cheapest (i.e., rank 3).  
+   * From constraints, we already know `"mangoes" == 3`, so choice **F** is true.  
+   * Verify by checking the solved value of `"mangoes"`; confirm it is 3.  
+   * Select option **F** as the correct answer.

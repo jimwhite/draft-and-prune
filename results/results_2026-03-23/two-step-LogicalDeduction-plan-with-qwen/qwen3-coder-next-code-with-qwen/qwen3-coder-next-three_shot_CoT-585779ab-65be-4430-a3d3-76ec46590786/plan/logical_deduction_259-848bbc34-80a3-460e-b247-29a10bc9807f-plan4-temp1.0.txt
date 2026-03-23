@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: `"cardinal"`, `"hawk"`, and `"hummingbird"` (three birds).  
+   * Define the domain as integer positions from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+   * Add all three variables to the `Problem` instance with domain `{1, 2, 3}`.
+
+3. **Add Constraints Based on Statements:**  
+   * Add `AllDifferentConstraint()` to enforce that each bird occupies a unique position.  
+   * Translate "The hummingbird is to the right of the hawk" into a constraint: `hummingbird > hawk`.  
+   * Translate "The cardinal is to the left of the hawk" into a constraint: `cardinal < hawk`.  
+   * Use lambda functions (e.g., `lambda h, c, hum: c < h` and `lambda h, c, hum: hum > h`) or direct value constraints via `addConstraint` with `InSetConstraint`/custom lambdas as needed.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments of positions.  
+   * Extract the unique solution (since the constraints fully determine order), e.g., a dictionary like `{'cardinal': 1, 'hawk': 2, 'hummingbird': 3}`.
+
+5. **Identify the Leftmost Bird and Match to Choices:**  
+   * Determine which bird has position value `1` (leftmost).  
+   * Create a mapping from choice letters to birds: `'A' -> 'cardinal'`, `'B' -> 'hawk'`, `'C' -> 'hummingbird'`.  
+   * Find the choice letter where the mapped bird has position `1`, and return that letter as the final answer.

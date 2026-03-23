@@ -1,0 +1,35 @@
+1. Enumerate the three photographers (Fuentes=0, Gagnon=1, Hue=2) and three sections (Lifestyle=0, Metro=1, Sports=2).  
+2. Create integer variables `count[p][s]` for each photographer p and section s, representing how many of that photographer's photos appear in that section.  
+3. Add **non-negativity and integrality**: all `count[p][s]` ∈ {0,1,2} (since max 2 per section).  
+4. Add **section totals**: for each section s, `count[0][s] + count[1][s] + count[2][s] == 2`.  
+5. Add **photographer totals**: for each photographer p, `1 ≤ sum_s count[p][s] ≤ 3`.  
+6. Add **Gagnon–Sports exclusion**: `count[1][2] == 0`.  
+7. Add **Lifestyle–Metro overlap constraint**: there exists at least one photographer p such that `count[p][0] ≥ 1` and `count[p][1] ≥ 1`.  
+   - Encode via auxiliary Boolean variables or big-M linearization: introduce `shared[p] ∈ {0,1}` for each p, constrain `shared[p] ≤ count[p][0]`, `shared[p] ≤ count[p][1]`, and require `shared[0] + shared[1] + shared[2] ≥ 1`.  
+8. Add **Hue–Lifestyle / Fuentes–Sports balance**: `count[2][0] == count[0][2]`.  
+9. Add **given condition**: `count[0][0] == 1` and `count[2][0] == 1`.  
+10. Deduce consequences:  
+    - From step 9 and step 8 → `count[0][2] == count[2][0] == 1`.  
+    - Lifestyle total = 2 ⇒ `count[1][0] == 0` (since Fuentes=1, Hue=1).  
+    - Gagnon cannot be in Sports ⇒ `count[1][2] == 0`.  
+    - Fuentes total = `count[0][0] + count[0][1] + count[0][2] = 1 + count[0][1] + 1 = 2 + count[0][1]`. Must be ≤3 ⇒ `count[0][1] ∈ {0,1}`.  
+    - Hue total = `count[2][0] + count[2][1] + count[2][2] = 1 + count[2][1] + count[2][2]`. Must be ≥1 and ≤3 ⇒ `count[2][1] + count[2][2] ≤ 2`.  
+    - Sports total = 2 ⇒ `count[0][2] + count[1][2] + count[2][2] = 1 + 0 + count[2][2] == 2` ⇒ `count[2][2] == 1`.  
+    - Then from Hue total: `1 + count[2][1] + 1 ≤ 3` ⇒ `count[2][1] ≤ 1`.  
+    - Metro total = 2 ⇒ `count[0][1] + count[1][1] + count[2][1] == 2`.  
+    - Gagnon total = `count[1][0] + count[1][1] + count[1][2] = 0 + count[1][1] + 0 = count[1][1]`. Must be ≥1 ⇒ `count[1][1] ≥ 1`.  
+    - Combine with Metro total: `count[0][1] + count[2][1] + count[1][1] == 2`, and `count[1][1] ≥ 1`.  
+    - So possible:  
+        • `count[1][1] = 1`, then `count[0][1] + count[2][1] = 1`.  
+        • `count[1][1] = 2`, then `count[0][1] + count[2][1] = 0`.  
+11. Translate the answer choices into conditions on variables:  
+    - Choice A: Metro both by Fuentes ⇒ `count[0][1] == 2`.  
+    - Choice B: Metro both by Gagnon ⇒ `count[1][1] == 2`.  
+    - Choice C: Exactly one Metro by Hue ⇒ `count[2][1] == 1`.  
+    - Choice D: Sports both by Hue ⇒ `count[2][2] == 2`.  
+    - Choice E: Neither Sports by Hue ⇒ `count[2][2] == 0`.  
+12. Note that from step 10, `count[2][2] == 1` is forced ⇒ Choices A and D are impossible (A: `count[0][1] == 2` contradicts earlier deductions? Actually, let's verify: from Metro total=2 and `count[0][1] + count[2][1] = 1` if `count[1][1]=1`, or both zero if `count[1][1]=2`. So `count[0][1] ≤ 1`. Thus A impossible. D contradicts `count[2][2]==1`. E contradicts same.)  
+13. Use Z3 to check feasibility of each choice under all constraints:  
+    - For each choice, clone base solver + given condition + constraint for that choice.  
+    - If SAT, record that choice could be true.  
+14. Collect indices of all satisfiable choices into `answer_index_list`.

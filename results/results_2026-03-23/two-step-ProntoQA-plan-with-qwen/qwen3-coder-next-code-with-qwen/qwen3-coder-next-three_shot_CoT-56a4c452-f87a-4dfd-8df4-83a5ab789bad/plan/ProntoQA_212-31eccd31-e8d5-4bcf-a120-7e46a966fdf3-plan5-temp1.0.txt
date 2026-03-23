@@ -1,0 +1,36 @@
+1. Identify all entities and types: Stella, tumpus, wumpus, vumpus, jompus, dumpus, numpus, rompus, yumpus, impus.  
+2. Identify all properties: red, sweet, small, aggressive, temperate, bright, luminous, opaque.  
+3. Represent "Stella is a wumpus" as a base fact: `is_a("Stella", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every tumpus is red.  
+   - Each tumpus is a wumpus.  
+   - Every wumpus is sweet.  
+   - Wumpuses are vumpuses.  
+   - Vumpuses are small.  
+   - Every vumpus is a jompus.  
+   - Every jompus is not aggressive.  
+   - Zumpuses are temperate. *(Note: zumpus appears only in premise, no instance; can be omitted unless needed for inference—verify if zumpus links to Stella’s chain. In this case, it does not affect Stella, as Stella is a wumpus and no zumpus→Stella path exists.)*  
+   - Each jompus is a dumpus.  
+   - Every dumpus is bright.  
+   - Every dumpus is a numpus.  
+   - Numpuses are not temperate.  
+   - Numpuses are rompuses.  
+   - Each rompus is not luminous.  
+   - Every rompus is a yumpus.  
+   - Yumpuses are opaque.  
+   - Every yumpus is an impus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence—especially focus on chaining inheritance: wumpus → vumpus → jompus → dumpus → numpus → rompus → yumpus → impus.  
+6. Derive Stella’s classification chain:  
+   - `is_a(Stella, wumpus)` (given)  
+   → `is_a(Stella, vumpus)` (from wumpus ⊆ vumpus)  
+   → `is_a(Stella, jompus)` (from vumpus ⊆ jompus)  
+   → `is_a(Stella, dumpus)` (from jompus ⊆ dumpus)  
+   → `is_a(Stella, numpus)` (from dumpus ⊆ numpus)  
+   → `is_a(Stella, rompus)` (from numpus ⊆ rompus)  
+   → `is_a(Stella, yumpus)` (from rompus ⊆ yumpus)  
+   → `is_a(Stella, impus)` (from yumpus ⊆ impus)  
+7. Derive properties via inheritance and direct assertions:  
+   - From numpuses are not temperate ⇒ `is_temperate(Stella, False)`  
+   - Also verify no conflicting path: e.g., zumpus is temperate, but Stella is not a zumpus (no subclass link between numpus/rompus/yumpus/impus and zumpus); inheritance is acyclic and disjoint.  
+8. The query tests if "Stella is not temperate" is provable:  
+   → Use `facts.is_temperate("Stella", False)`.

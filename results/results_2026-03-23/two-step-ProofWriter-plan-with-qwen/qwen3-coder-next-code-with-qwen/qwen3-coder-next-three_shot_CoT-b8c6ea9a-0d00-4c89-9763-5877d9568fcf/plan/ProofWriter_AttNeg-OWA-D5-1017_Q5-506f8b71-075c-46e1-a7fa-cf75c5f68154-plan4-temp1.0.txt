@@ -1,0 +1,14 @@
+1. Identify all entities: Dave, Erin, Fiona, Gary.
+2. Encode all explicitly stated facts as facts.<property>("<entity>", True/False), including is_big("Dave", True), is_furry("Dave", True), is_blue("Erin", True), is_cold("Erin", True), is_round("Erin", True), is_quiet("Fiona", True), is_rough("Gary", True).
+3. Translate each universal conditional into a rule using `foreach` and `assert`:
+   • If something is rough and cold → it is furry.
+   • If something is quiet and big → it is not round (i.e., is_round(obj, False)).
+   • If Dave is blue → Dave is furry.
+   • All quiet and blue things are big: for all X, if quiet(X) and blue(X), then big(X).
+   • If Fiona is furry → Fiona is blue.
+   • If something is quiet → it is cold.
+   • All big things are cold.
+   • All blue and round things are not quiet (i.e., is_quiet(obj, False)).
+   • Cold things are rough.
+4. For each rule, write a `foreach` block capturing the antecedent conditions and an `assert` statement for the consequent.
+5. The query asks whether Erin is furry; use facts.is_furry("Erin", True) to check.

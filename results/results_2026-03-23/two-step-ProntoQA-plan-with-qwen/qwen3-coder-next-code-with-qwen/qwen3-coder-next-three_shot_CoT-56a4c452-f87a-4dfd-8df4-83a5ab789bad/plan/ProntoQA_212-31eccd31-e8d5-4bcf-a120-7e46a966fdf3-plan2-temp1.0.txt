@@ -1,0 +1,31 @@
+1. Identify all entities and types: Stella, tumpus, wumpus, vumpus, jompus, dumpus, numpus, rompus, yumpus, impus, zumpus.  
+2. Identify all properties: red, sweet, small, aggressive, temperate, bright, luminous, opaque.  
+3. Represent "Stella is a wumpus" as a base fact: `is_a("Stella", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every tumpus is red.  
+   - Each tumpus is a wumpus.  
+   - Every wumpus is sweet.  
+   - Wumpuses are vumpuses.  
+   - Vumpuses are small.  
+   - Every vumpus is a jompus.  
+   - Every jompus is not aggressive.  
+   - Zumpuses are temperate.  
+   - Each jompus is a dumpus.  
+   - Each dumpus is bright.  
+   - Every dumpus is a numpus.  
+   - Numpuses are not temperate.  
+   - Numpuses are rompuses.  
+   - Each rompus is not luminous.  
+   - Every rompus is a yumpus.  
+   - Yumpuses are opaque.  
+   - Every yumpus is an impus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence, ensuring transitive subclass inferences (e.g., wumpus → vumpus → jompus → dumpus → numpus → rompus → yumpus → impus) are captured via chaining rules.  
+6. Derive Stella’s properties step-by-step:  
+   - From `is_a(Stella, wumpus)`, infer `is_red(Stella)` (via tumpus→wumpus rule is irrelevant; use wumpus→red? No—tumpus→red only. But wumpus is not directly red; infer via tumpus⊆wumpus and tumpus→red does *not* imply wumpus→red unless specified. Only tumpuses are red; not all wumpuses. So skip red for Stella unless she is a tumpus—she isn’t necessarily).  
+   - From `wumpus → vumpus` and `Stella is wumpus`, infer `is_a(Stella, vumpus)`.  
+   - From `vumpus → small`, infer `is_small(Stella)`.  
+   - From `vumpus → jompus`, infer `is_a(Stella, jompus)`.  
+   - From `jompus → dumpus`, infer `is_a(Stella, dumpus)`.  
+   - From `dumpus → numpus`, infer `is_a(Stella, numpus)`.  
+   - From `numpuses → not temperate`, infer `is_temperate(Stella, False)`.  
+7. The query tests if "Stella is not temperate" is provable: use `facts.is_temperate("Stella", False)`.

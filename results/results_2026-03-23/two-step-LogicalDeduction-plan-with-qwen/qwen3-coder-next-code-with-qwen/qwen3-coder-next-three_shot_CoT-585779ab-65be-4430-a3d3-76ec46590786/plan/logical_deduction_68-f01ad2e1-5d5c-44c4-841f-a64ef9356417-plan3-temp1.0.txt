@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament ranking puzzle.  
+
+2.  **Define Variables and Domain:**  
+    * Define variables for the five golfers: `"mel"`, `"dan"`, `"amy"`, `"joe"`, and `"eve"`.  
+    * Define a numerical domain from 1 to 5, where **1 = first place (highest rank)** and **5 = last place (lowest rank)**.  
+    * Add all variables and their domain to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Translate each statement into a constraint using lambda functions:  
+        - "Amy finished below Dan" → Amy's position number is greater than Dan's (`amy > dan`).  
+        - "Mel finished first" → Mel's position equals 1.  
+        - "Joe finished above Dan" → Joe's position number is less than Dan's (`joe < dan`).  
+        - "Eve finished last" → Eve's position equals 5.  
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to find all valid solutions.  
+    * Extract the sole solution (the problem has a unique arrangement).  
+
+5.  **Determine Which Choice is True:**  
+    * The question asks which golfer finished last (position 5).  
+    * Map the choice letters ("A", "B", "C", "D", "E") to their respective golfers:  
+        - A → "mel", B → "dan", C → "amy", D → "joe", E → "eve".  
+    * Check the solved solution for which golfer has position 5.  
+    * Output the corresponding choice letter.

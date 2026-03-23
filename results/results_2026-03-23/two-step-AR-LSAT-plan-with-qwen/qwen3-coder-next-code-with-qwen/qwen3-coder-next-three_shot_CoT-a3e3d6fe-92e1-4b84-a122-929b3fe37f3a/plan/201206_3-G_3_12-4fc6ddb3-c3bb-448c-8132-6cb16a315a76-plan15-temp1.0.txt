@@ -1,0 +1,14 @@
+1. Enumerate the seven sales representatives and assign integer indices.  
+2. Create integer variables `zone[i]` for each representative `i`, with domain {1, 2, 3} (Zone 1, Zone 2, Zone 3).  
+3. Add **mutual exclusion constraint**: no representative assigned to more than one zone (enforced implicitly by domain).  
+4. Add **Parra-or-Tiao constraint**: Exactly one of Parra or Tiao is in Zone 1.  
+5. Add **Tiao-or-Udall constraint**: Exactly one of Tiao or Udall is in Zone 2.  
+6. Add **Parra-Quinn constraint**: Parra and Quinn must be in the same zone (`zone[Parra] == zone[Quinn]`).  
+7. Add **Stuckey-Udall constraint**: Stuckey and Udall must be in the same zone (`zone[Stuckey] == zone[Udall]`).  
+8. Add **Zone-count constraint**: Number of representatives in Zone 3 > number in Zone 2.  
+9. Translate each answer choice into a set of zone assignments (e.g., list of `(representative, zone)` pairs).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific zone assignments from the answer choice (e.g., `zone[Kim] == 1`, `zone[Parra] == 1`, etc.).  
+    - If the model is SAT (i.e., all constraints satisfied), then this choice is possible; record it as valid.  
+11. Return the index (or indices) of all SAT answer choices (exactly one in this case).

@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign each a fixed integer position (0 to 6 for first to seventh).  
+2. Create a list of seven distinct integer variables representing the recruitment order positions (e.g., `quinn_pos`, `rovero_pos`, ..., `white_pos`), each in range 0–6.  
+3. Add **all-different constraint**: all seven positions must be pairwise distinct (each accomplice recruited exactly once).  
+4. Add **Peters constraint**: Peters is fourth → `peters_pos == 3`.  
+5. Add **Villas–White constraint**: Villas is immediately before White → `villas_pos + 1 == white_pos`.  
+6. Add **Quinn–Rovero constraint**: Quinn recruited earlier than Rovero → `quinn_pos < rovero_pos`.  
+7. Add **Stanton–Tao constraint**: Stanton is neither immediately before nor after Tao → `abs(stanton_pos - tao_pos) != 1`.  
+8. For each answer choice (a tuple of seven names in order from first to last):  
+   - Create a fresh solver instance.  
+   - Copy all base constraints into this solver.  
+   - Add Hardcoding constraints: for position `i` (0-indexed), the accomplice at that position in the choice must have its position variable set to `i`.  
+   - Check satisfiability: if SAT, the choice is possible; record this choice as valid.  
+9. Among the choices, select the one(s) that yield SAT and output its index (or directly return the valid string). Since only one choice is correct, return that string.  
+10. Print or return the single valid order (the answer choice that satisfies all constraints).

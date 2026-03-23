@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicle variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.
+    * Use integer positions 1 to 7 as the domain, where **1 represents the oldest** and **7 represents the newest**, to reflect age ranking.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Convert each statement to a formal constraint using `addConstraint` with appropriate lambda functions or direct assignments:
+        * "The station wagon is the fourth-newest" → position = 4 (since newest=7, fourth-newest = 7−3 = 4).
+        * "The minivan is the third-newest" → position = 5 (7−2 = 5).
+        * "The tractor is the second-oldest" → position = 2.
+        * "The convertible is older than the station wagon" → convertable's rank < station_wagon's rank (i.e., `convertible < 4`).
+        * "The truck is newer than the bus" → truck's rank > bus's rank (i.e., `bus < truck`).
+        * "The hatchback is older than the convertible" → hatchback's rank < convertable's rank (i.e., `hatchback < convertible`).
+
+4.  **Solve for Valid Arrangements:**
+    * Call `getSolutions()` to retrieve all solutions satisfying the constraints.
+    * Extract the unique solution (since the problem guarantees logical consistency and a unique order).
+
+5.  **Identify the Correct Answer:**
+    * The question asks for the **oldest** vehicle, i.e., the one with rank 1.
+    * Create a mapping from choice letters (A–G) to vehicle names:  
+        A→"truck", B→"hatchback", C→"minivan", D→"bus", E→"tractor", F→"station_wagon", G→"convertible".
+    * In the solution dictionary, find the vehicle with value 1.
+    * Return (or print) the corresponding choice letter.

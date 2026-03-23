@@ -1,0 +1,33 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"black"`, `"yellow"`, `"white"`, `"gray"`, `"purple"`, `"orange"`, `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that each book occupies a unique position using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints Using Lambda Functions:**  
+   * "The green book is to the left of the gray book" → `green < gray`.  
+   * "The gray book is the third from the right" → Since 7 = rightmost, third from right = position 5 → `gray == 5`.  
+   * "The white book is the rightmost" → `white == 7`.  
+   * "The orange book is the second from the left" → `orange == 2`.  
+   * "The black book is to the right of the yellow book" → `yellow < black`.  
+   * "The black book is the third from the left" → `black == 3`.
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Since the problem is fully constrained, extract the unique solution (or any one solution from the list).
+
+6. **Determine the Book in the Fourth Position:**  
+   * The question asks: “Which book is fourth from the left?” → i.e., position 4.  
+   * From the solution dictionary, find the key (book name) whose assigned position value is exactly 4.
+
+7. **Map the Result to the Correct Choice Letter:**  
+   * Create a mapping from choice letters `['A', 'B', 'C', 'D', 'E', 'F', 'G']` to the corresponding book names from the choices:  
+     * A → `"black"`, B → `"yellow"`, C → `"white"`, D → `"gray"`, E → `"purple"`, F → `"orange"`, G → `"green"`.  
+   * Identify which choice letter corresponds to the book found in position 4.  
+   * Output that letter as the final answer.

@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven variables corresponding to the books: `"yellow"`, `"red"`, `"gray"`, `"blue"`, `"white"`, `"orange"`, and `"purple"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost**, and **7 = rightmost**.  
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+    * Translate each statement into a constraint using lambda functions:  
+        * "The red book is the third from the right" → position 5 (since positions: left→right = 1,2,3,4,5,6,7; rightmost=7 ⇒ third from right = 7−2 = 5).  
+        * "The white book is to the right of the orange book" → `orange < white`.  
+        * "The purple book is the third from the left" → position 3.  
+        * "The yellow book is to the right of the purple book" → `purple < yellow`.  
+        * "The blue book is to the right of the red book" → `red < blue`.  
+        * "The blue book is to the left of the gray book" → `blue < gray`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the single solution (the problem has a unique arrangement due to sufficient constraints).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which book is **second from the left**, i.e., position 2.  
+    * Map each choice letter (A–G) to its corresponding book name from the choices:  
+        A→"yellow", B→"red", C→"gray", D→"blue", E→"white", F→"orange", G→"purple".  
+    * In the solution, locate which book has position 2.  
+    * Return the corresponding choice letter.

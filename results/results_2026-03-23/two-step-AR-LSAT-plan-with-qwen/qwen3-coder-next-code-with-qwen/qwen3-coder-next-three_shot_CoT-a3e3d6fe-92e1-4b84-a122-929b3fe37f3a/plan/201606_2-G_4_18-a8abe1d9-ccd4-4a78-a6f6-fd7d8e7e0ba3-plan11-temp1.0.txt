@@ -1,0 +1,17 @@
+1. Enumerate the six singers and assign indices: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer variables `pos[6]` for the audition positions (1-indexed, from 1 to 6), ensuring all positions are distinct.  
+3. Add **domain constraints**: `pos[i] ∈ {1,2,3,4,5,6}` and all positions distinct (use `Distinct(pos)`).  
+4. Add **recording constraints**:  
+   - Kammer (0) and Lugo (1) are recorded; others are not.  
+   - The fourth audition cannot be recorded → position 4 must be held by a non-recorded singer: `pos[i] != 4` for i ∈ {0,1}.  
+   - The fifth audition must be recorded → position 5 must be held by a recorded singer: `pos[i] == 5` for i ∈ {0,1}.  
+5. Add **order constraints**:  
+   - Waite (3) must be earlier than *both* recorded auditions: `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+   - Kammer (0) must be earlier than Trillo (2): `pos[0] < pos[2]`.  
+   - Zinn (5) must be earlier than Yoshida (4): `pos[5] < pos[4]`.  
+6. For each choice string, parse the singer order into a list of indices (e.g., ['Kammer', 'Trillo', ...] → [0, 2, 5, 3, 1, 4]).  
+7. For each parsed order:  
+   - Clone the base solver into a fresh one.  
+   - Assert that singer `s[i]` is at position `i+1`: add constraints `pos[s[i]] == i+1` for i=0..5.  
+   - Check satisfiability with `solver.check()`. If SAT, the order is possible; record its index.  
+8. Return the index (0-based) of the first SAT-possible choice as per options list order.

@@ -1,0 +1,16 @@
+1. Identify all individuals: Bob, Charlie, Fiona, Gary.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_kind("Bob", True), is_quiet("Charlie", True), is_rough("Charlie", True), is_kind("Fiona", True), is_rough("Fiona", True), is_white("Fiona", True), is_nice("Gary", True)).
+3. Translate each universal conditional rule into PyKe rules using `foreach` blocks and `assert` statements:
+   • If Gary is red and white → Gary is quiet.
+   • All white things are rough: foreach ?x, if is_white(?x, True) then assert is_rough(?x, True).
+   • If something is rough → it is red: foreach ?x, if is_rough(?x, True) then assert is_red(?x, True).
+   • If something is nice → it is white: foreach ?x, if is_nice(?x, True) then assert is_white(?x, True).
+   • All smart things are white: (Note: No explicit fact about "smart" is given for any entity, and no entity is declared smart or not smart; treat as a general rule: foreach ?x, if is_smart(?x, True) then assert is_white(?x, True).)
+   • Rough, quiet things are not kind: foreach ?x, if is_rough(?x, True) and is_quiet(?x, True) then assert is_kind(?x, False).
+   • If something is quiet and not smart → it is kind: foreach ?x, if is_quiet(?x, True) and not(is_smart(?x, True)) then assert is_kind(?x, True).
+   • Smart things are quiet: foreach ?x, if is_smart(?x, True) then assert is_quiet(?x, True).
+   • If something is smart and not rough → it is quiet: foreach ?x, if is_smart(?x, True) and not(is_rough(?x, True)) then assert is_quiet(?x, True).
+4. For the query (is Gary not quiet?), negate the target property:
+   → Use facts.is_quiet("Gary", False) as the query goal.
+5. Since PyKe uses forward-chaining and goals are checked via `prove`, ensure the query is phrased to check whether `is_quiet("Gary", False)` can be proven (i.e., is entailed), or whether its negation `is_quiet("Gary", True)` is provable, to distinguish true/false/unknown.
+6. Because the query asks “is Gary not quiet?”, frame it as: try to prove `facts.is_quiet("Gary", False)`; if that succeeds → true; if `facts.is_quiet("Gary", True)` can be proven → false; else unknown.

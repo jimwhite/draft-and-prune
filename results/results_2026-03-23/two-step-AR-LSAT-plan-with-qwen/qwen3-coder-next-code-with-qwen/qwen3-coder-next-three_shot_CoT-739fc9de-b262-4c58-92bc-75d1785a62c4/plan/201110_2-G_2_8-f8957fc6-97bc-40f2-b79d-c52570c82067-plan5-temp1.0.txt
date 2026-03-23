@@ -1,0 +1,14 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign each an integer index.  
+2. Create integer variables for the ambassador assignments: assign_j for Jaramillo (0 if not assigned, else 1=Venezuela, 2=Yemen, 3=Zambia), similarly for others. Alternatively, create 5×3 Boolean variables x[i][c] where i∈{0..4} (candidates), c∈{0..2} (countries), indicating if candidate i is assigned to country c.  
+3. Add **exactly-one-per-country** constraints: for each country, exactly one candidate is assigned (sum over candidates = 1).  
+4. Add **at-most-one-per-candidate** constraints: each candidate is assigned to at most one country (sum over countries ≤ 1). Since exactly three ambassadors are assigned, this implies exactly two candidates remain unassigned.  
+5. Add **constraint 1**: Exactly one of Kayne or Novetzke is assigned (XOR).  
+6. Add **constraint 2**: If Jaramillo is assigned, then Kayne is also assigned (i.e., if x_Jaramillo[0]∨x_Jaramillo[1]∨x_Jaramillo[2], then x_Kayne[0]∨x_Kayne[1]∨x_Kayne[2]).  
+7. Add **constraint 3**: If Ong is assigned to Venezuela (x_Ong[0] = True), then Kayne is NOT assigned to Yemen (¬(x_Kayne[1])).  
+8. Add **constraint 4**: If Landon is assigned, then he must be assigned to Zambia (i.e., x_Landon[0] ∨ x_Landon[1] → x_Landon[2]; equivalently: if x_Landon[0] ∨ x_Landon[1], then contradiction; or x_Landon[0]=False ∧ x_Landon[1]=False).  
+9. Translate each answer choice pair into two candidate indices (e.g., Jaramillo and Novetzke → indices 0 and 3).  
+10. Define an answer index list `answer_index_list = []`. For each pair:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that *only* these two candidates are unassigned: i.e., for each of the other three candidates, exactly one country is assigned to them (sum over countries = 1), and for the two in the pair, no country is assigned (all x[i][c] = False).  
+    - If the model is SAT, then this pair of unassigned candidates is possible; append the pair index to `answer_index_list`.  
+11. Print the answer index list.

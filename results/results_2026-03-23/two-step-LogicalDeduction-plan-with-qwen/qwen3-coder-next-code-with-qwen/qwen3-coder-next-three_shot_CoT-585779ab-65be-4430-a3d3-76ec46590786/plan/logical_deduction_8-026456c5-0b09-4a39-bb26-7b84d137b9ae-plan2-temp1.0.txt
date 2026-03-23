@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five birds as variables: `"owl"`, `"robin"`, `"blue jay"`, `"hawk"`, and `"hummingbird"`.  
+   * Assign a domain of integers from 1 to 5, where position 1 = leftmost and position 5 = rightmost.  
+   * Add all five variables to the problem with their shared domain using `addVariable()`.
+
+3. **Encode Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Add constraint: `"owl"` is second from the right → `owl == 4` (since positions are left-to-right: 1,2,3,4,5 ⇒ rightmost=5, second from right=4).  
+   * Add constraint: `"robin"` is second from the left → `robin == 2`.  
+   * Add constraint: `"robin"` is to the right of `"blue jay"` → `blue_jay < robin` (i.e., `blue_jay < 2`).  
+   * Add constraint: `"hummingbird"` is to the right of `"hawk"` → `hawk < hummingbird`.
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (as the problem is well-constrained and consistent).
+
+5. **Answer the Question:**  
+   * Determine which bird occupies position 5 (rightmost) in the solved assignment.  
+   * Map the resulting bird to the corresponding choice letter:  
+        - If `"owl"` is at position 5 → "A"  
+        - If `"robin"` is at position 5 → "B"  
+        - If `"blue jay"` is at position 5 → "C"  
+        - If `"hawk"` is at position 5 → "D"  
+        - If `"hummingbird"` is at position 5 → "E"  
+   * Output the correct choice letter.

@@ -1,0 +1,23 @@
+1. Enumerate the four riders and four bicycles, assigning integer indices (e.g., riders: 0=Reynaldo, 1=Seamus, 2=Theresa, 3=Yuki; bicycles: 0=F, 1=G, 2=H, 3=J).  
+2. Create integer variables for assignments:  
+   - `r1[i]` = bicycle tested by rider i on day 1 (0≤r1[i]≤3)  
+   - `r2[i]` = bicycle tested by rider i on day 2 (0≤r2[i]≤3)  
+3. Add **day-1 permutation constraints**: r1[0], r1[1], r1[2], r1[3] are pairwise distinct and cover all bicycles (i.e., form a permutation of [0,1,2,3]).  
+4. Add **day-2 permutation constraints**: r2[0], r2[1], r2[2], r2[3] are pairwise distinct and cover all bicycles.  
+5. Add **Reynaldo constraint**: r1[0] ≠ 0 (F).  
+6. Add **Yuki constraint**: r1[3] ≠ 3 (J).  
+7. Add **Theresa constraint for H**: At least one of r1[2] or r2[2] equals 2 (H).  
+8. Add **Yuki-Seamus linkage**: r1[3] = r2[1] (Yuki’s day-1 bike = Seamus’s day-2 bike).  
+9. Translate each answer choice into a logical condition:  
+   - A: r1[0] = 3 (Reynaldo tests J on day 1)  
+   - B: r2[0] = 3 (Reynaldo tests J on day 2)  
+   - C: r1[1] = 2 (Seamus tests H on day 1)  
+   - D: r1[3] = 2 (Yuki tests H on day 1)  
+   - E: r2[3] = 2 (Yuki tests H on day 2)  
+10. Define a forbidden index list `forbidden_list = []`. For each choice (index i from 0 to 4):  
+    - Clone base constraints into a fresh solver.  
+    - Assert the condition for choice i (e.g., `r1[0] == 3` for i=0).  
+    - Add *negation* of the unique constraint that must hold (if needed), but here simply test feasibility.  
+    - If the model is UNSAT, then choice i is impossible → append i to `forbidden_list`.  
+11. The EXCEPT choice corresponds to the *only* impossible option; return `forbidden_list[0]` (since exactly one must be false).  
+12. Output the corresponding choice string from the original choices using `forbidden_list[0]`.

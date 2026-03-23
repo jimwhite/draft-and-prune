@@ -1,0 +1,20 @@
+1. Identify all entities: lion, mouse, rabbit, squirrel.
+2. Encode explicit facts as ternary predicates using True or False objects:
+   - is_cold("lion", True), is_cold("mouse", True), is_cold("rabbit", True)
+   - is_rough("rabbit", True), is_kind("squirrel", True)
+   - does_not_need("lion", "mouse", True), does_not_visit("mouse", "squirrel", True), does_not_need("rabbit", "lion", True), does_not_visit("rabbit", "squirrel", True)
+   - visits("lion", "squirrel", True), needs("squirrel", "mouse", True), needs("squirrel", "rabbit", True)
+   - does_not_see("squirrel", "lion", True), does_not_see("squirrel", "rabbit", True)
+3. Translate all conditional statements into PyKe rules with `foreach` and `assert`:
+   • If something needs the rabbit and the rabbit sees the mouse → the mouse does not see the lion.
+   • If something is rough → it visits the mouse.
+   • If something needs the rabbit and visits the mouse → the mouse needs the rabbit.
+   • If something needs the rabbit and the rabbit is cold → it is rough.
+   • If something needs the rabbit → the rabbit needs the squirrel.
+   • If the squirrel sees the lion and the squirrel is not green → the lion needs the squirrel.
+   • If something is big → it visits the lion.
+   • If something visits the squirrel and the squirrel sees the lion → the lion is not kind.
+4. Note: Some predicates use negation (e.g., "does_not_need", "does_not_visit", "does_not_see")—encode these as separate predicate names with boolean objects (True for the negated fact).
+5. For rules involving existing predicates, ensure consistent predicate naming (e.g., "needs", "visits", "sees") and introduce explicit negated predicates only where needed (e.g., does_not_see, does_not_need).
+6. Query the negated statement: Determine whether "the mouse does not need the rabbit" holds:
+   → Use facts.does_not_need("mouse", "rabbit", True)

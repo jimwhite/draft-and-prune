@@ -1,0 +1,16 @@
+1. Enumerate the six cargo types and assign integer codes (e.g., 0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles).  
+2. Create integer variables `bay[i]` for i ∈ {0,...,5}, where `bay[type_idx]` is the bay number (1–6) holding that cargo type.  
+3. Add **domain constraints**: all `bay[type_idx]` are integers in [1,6], and pairwise distinct (each bay holds exactly one cargo type).  
+4. Add **ordering constraints**:  
+   - grain > livestock: `bay[grain] > bay[livestock]`  
+   - livestock > textiles: `bay[livestock] > bay[textiles]`  
+   - produce > fuel: `bay[produce] > bay[fuel]`  
+   - textiles and produce are adjacent: `|bay[textiles] - bay[produce]| == 1`  
+5. Add **hypothesis constraint**: exactly one bay between machinery and grain → `|bay[machinery] - bay[grain]| == 2`.  
+6. For each cargo type, define a boolean flag `determined[type]` that is true if the bay number for that type is uniquely fixed across all satisfying assignments.  
+7. Solve the base constraints once to collect all solutions (using iterative constraint addition or model enumeration).  
+   - Since Z3 does not directly enumerate all models, use a loop: after each SAT solution, add a constraint to exclude that assignment and repeat until UNSAT.  
+8. For each cargo type, check if its `bay[type]` value is identical across all solutions; if yes, mark it as determined.  
+9. Count the number of cargo types with `determined[type] == true`.  
+10. Map this count to the corresponding answer choice string ('two', 'three', etc.).  
+11. Output that string.

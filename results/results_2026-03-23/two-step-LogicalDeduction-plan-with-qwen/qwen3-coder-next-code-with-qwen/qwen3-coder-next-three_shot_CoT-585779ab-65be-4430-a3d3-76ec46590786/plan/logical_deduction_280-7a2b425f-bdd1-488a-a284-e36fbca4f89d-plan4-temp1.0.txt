@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the three vehicles: `"sedan"`, `"minivan"`, and `"motorcyle"` (note the typo in original, retain spelling as given).  
+   * Assign a domain of integers from 1 to 3, where **1 = oldest**, **2 = second-newest**, and **3 = newest** (consistent with standard age/position ordering where lower numbers mean older/newer-left, and second-newest is position 2).  
+   * Add all three variables with domain {1, 2, 3} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle occupies a distinct position.  
+   * Translate the given statements into constraints using `addConstraint` with lambda expressions:  
+     - "The motorcyle is the second-newest" → `motorcyle == 2`.  
+     - "The minivan is newer than the motorcyle" → `minivan > motorcyle` (since higher number means newer).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the sole (or first) solution dictionary mapping vehicle names to their positions.
+
+5. **Identify the Correct Choice:**  
+   * Compare each choice against the solved solution:  
+     - Option A claims `"sedan"` is in position 2.  
+     - Option B claims `"minivan"` is in position 2.  
+     - Option C claims `"motorcyle"` is in position 2.  
+   * Since the solution will have `motorcyle == 2` and `minivan > 2` (so minivan = 3), the remaining vehicle `"sedan"` must be in position 1.  
+   * Identify which choice matches the solved arrangement (specifically, verify if motorcyle is indeed in position 2, as per constraint) and output its letter.

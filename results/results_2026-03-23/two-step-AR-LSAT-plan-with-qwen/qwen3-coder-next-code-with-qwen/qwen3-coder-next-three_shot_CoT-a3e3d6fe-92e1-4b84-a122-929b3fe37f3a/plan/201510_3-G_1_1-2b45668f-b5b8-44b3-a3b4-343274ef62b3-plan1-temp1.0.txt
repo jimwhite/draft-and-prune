@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and assign them integer indices (e.g., Peters:0, Quinn:1, Rovero:2, Stanton:3, Tao:4, Villas:5, White:6).  
+2. Create integer position variables `pos[i]` for each accomplice i, representing their recruitment rank (1 to 7).  
+3. Add **domain constraints**: all `pos[i]` ∈ {1,2,...,7} and are pairwise distinct (a permutation).  
+4. Add **Peters constraint**: `pos[Peters] == 4`.  
+5. Add **Villas-White adjacency constraint**: Villas is immediately before White ⇒ `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero order constraint**: Quinn recruited earlier than Rovero ⇒ `pos[Quinn] < pos[Rovero]`.  
+7. Add **Stanton-Tao non-adjacency constraint**: Stanton is neither immediately before nor after Tao ⇒ `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+8. For each answer choice (a candidate sequence from first to seventh), decode it into a list of accomplice names in order.  
+9. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert that the k-th position (1-indexed) is occupied by the accomplice listed in the k-th slot of the choice.  
+   - Check satisfiability with Z3.  
+10. Collect and return the answer choice(s) for which the model is SAT (there should be exactly one).

@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+   * Create an instance of `Problem`.
+
+2. **Define Variables and Domain:**  
+   * Set the variables as the five books: `"blue"`, `"purple"`, `"yellow"`, `"black"`, `"green"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Formulate and Add Constraints:**  
+   * Add `AllDifferentConstraint` to enforce unique positions.  
+   * Translate each statement into a constraint:  
+     - "The purple book is the third from the left" → `purple == 3`.  
+     - "The green book is to the left of the purple book" → `green < 3` (since purple = 3).  
+     - "The blue book is to the left of the green book" → `blue < green`.  
+     - "The yellow book is to the left of the black book" → `yellow < black`.  
+   * All constraints are added using appropriate lambda or direct equality/inequality methods (e.g., `addConstraint(lambda p: p == 3, ["purple"])`, or using helper functions for inequality if needed—note that `constraint` library supports `BinaryConstraint` via `addConstraint(lambda x, y: x < y, ["blue", "green"])`, etc.).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints are tight and consistent, only one solution exists).  
+
+5. **Determine the Correct Answer:**  
+   * The question asks for which book is **second from the right**, i.e., position `4`.  
+   * Create a mapping: `"A"` → `"blue"`, `"B"` → `"purple"`, `"C"` → `"yellow"`, `"D"` → `"black"`, `"E"` → `"green"`.  
+   * In the solution dictionary, find which book has value `4`.  
+   * Return the corresponding choice letter.

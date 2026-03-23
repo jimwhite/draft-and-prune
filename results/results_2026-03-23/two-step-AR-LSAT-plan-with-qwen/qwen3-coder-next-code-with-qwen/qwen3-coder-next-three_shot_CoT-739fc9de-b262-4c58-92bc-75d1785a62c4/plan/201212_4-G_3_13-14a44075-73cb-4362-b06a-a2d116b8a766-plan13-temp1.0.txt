@@ -1,0 +1,24 @@
+1. Enumerate the six targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV). Assign integer codes to the target values: 1 = 1 day, 2 = 2 days, 3 = 3 days.  
+2. Create integer variables for each target: IW, IV, SW, SV, TW, TV ∈ {1, 2, 3}.  
+3. Add **per-client validity constraints**: For each client, website target ≤ voicemail target:  
+    - IW ≤ IV (Image),  
+    - SW ≤ SV (Solide),  
+    - TW ≤ TV (Truvest).  
+4. Add **Image voicemail constraint**: IV is strictly less than both SV and TV (shorter than other clients’ voicemail targets):  
+    - IV < SV,  
+    - IV < TV.  
+5. Add **Solide–Truvest website constraint**: SW < TW (Solide’s website target is shorter than Truvest’s).  
+6. Add **given condition**: IW = 2.  
+7. Substitute IW = 2 into constraints: From IW ≤ IV and values ∈ {1, 2, 3}, IV ≥ 2; combined with possible IV ∈ {2, 3}.  
+8. Since IV must be strictly less than SV and TV (both ∈ {1,2,3}), IV cannot be 3 (as nothing >3). Thus IV must be 2. So Image’s voicemail target = 2 days is forced.  
+9. Now, IV = 2, so SV > 2 and TV > 2 ⇒ SV ≥ 3 and TV ≥ 3. Since max value is 3, SV = 3 and TV = 3.  
+10. SW < TW and SW ≤ SV = 3, TW ≤ TV = 3. Also, SW ∈ {1,2,3}, TW ∈ {1,2,3}. From earlier: SW < TW and both ≤ 3. Possible pairs: (1,2), (1,3), (2,3).  
+11. But recall SW ≤ SV = 3 and TW ≤ TV = 3 (already satisfied). No further constraints force SW, SV, TW, or TV to be exactly 2 except IV.  
+12. However, we must verify which target **must** be 2 days. We already deduced IV = 2 necessarily. Check others:  
+    - IW is given as 2, but question asks which *must also* be 2; note IW = 2 is given, not derived.  
+    - SV = TV = 3 (forced).  
+    - TW must be > SW ≥ 1, but SW could be 1 and TW = 2 or 3; however, TV = 3 already, so if TW = 2, it's ≤ TV = 3 (valid). But is TW forced to be 2? No — TW could be 3 as well (e.g., SW = 1, TW = 3).  
+    - Similarly, SW could be 2 only if TW > 2 ⇒ TW = 3 (still valid), but not necessary.  
+13. Therefore, the only target that must be 2 days (in addition to given IW = 2) is IV.  
+14. Translate answer choices to indices and verify which one corresponds to "Image’s voicemail target".  
+15. Output answer index list containing the index of "Image's voicemail target" as the forced target.

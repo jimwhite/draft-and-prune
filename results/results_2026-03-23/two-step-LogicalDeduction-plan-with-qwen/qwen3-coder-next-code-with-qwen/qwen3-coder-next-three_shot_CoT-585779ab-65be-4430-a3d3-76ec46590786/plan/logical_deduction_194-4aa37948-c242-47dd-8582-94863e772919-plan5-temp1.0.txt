@@ -1,0 +1,40 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven book variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, and `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem, each with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.
+
+4. **Translate Each Statement into Formal Constraints:**  
+   * "The red book is to the right of the yellow book" → `red > yellow`.  
+   * "The white book is the second from the right" → `white == 6` (since position 7 is rightmost, second-right is 6).  
+   * "The red book is to the left of the green book" → `red < green`.  
+   * "The blue book is to the right of the black book" → `blue > black`.  
+   * "The black book is the third from the right" → `black == 5` (positions: 7 (rightmost), 6, **5**).  
+   * "The orange book is the leftmost" → `orange == 1`.
+
+5. **Solve the Constraint Problem:**  
+   * Call `getSolutions()` to find all satisfying assignments. Given the problem is well-constrained, expect a unique solution.
+
+6. **Analyze the Solution to Find the Third-from-Left Book:**  
+   * In our numbering, **position 3** corresponds to "third from the left".  
+   * Iterate through the solution dictionary (mapping book names → positions) to find which book has position value 3.
+
+7. **Map the Result to the Given Choices:**  
+   * Create a mapping from choice letters (`'A'` through `'G'`) to the corresponding book names:  
+     - `'A'`: `"black"`  
+     - `'B'`: `"orange"`  
+     - `'C'`: `"yellow"`  
+     - `'D'`: `"white"`  
+     - `'E'`: `"blue"`  
+     - `'F'`: `"red"`  
+     - `'G'`: `"green"`  
+   * Identify the choice letter whose associated book has position 3 in the solution.
+
+8. **Output the Correct Choice Letter:**  
+   * Return (or print) that letter as the answer.

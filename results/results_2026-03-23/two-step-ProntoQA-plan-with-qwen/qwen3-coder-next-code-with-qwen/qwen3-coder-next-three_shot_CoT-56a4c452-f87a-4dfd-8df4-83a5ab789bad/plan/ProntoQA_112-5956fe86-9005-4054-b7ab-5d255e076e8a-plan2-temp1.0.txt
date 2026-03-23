@@ -1,0 +1,40 @@
+1.  Identify all entities and types: Max, rompus, numpus, wumpus, tumpus, dumpus, jompus, zumpus, yumpus.  
+2.  Identify all properties: large, fruity, metallic, cold, brown, sweet.  
+3.  Represent "Max is a numpus" as a base fact: `is_a("Max", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Each rompus is not large.  
+    - Every rompus is a numpus.  
+    - Every numpus is fruity.  
+    - Numpuses are wumpuses.  
+    - Wumpuses are not metallic.  
+    - Wumpuses are tumpuses.  
+    - Tumpuses are cold.  
+    - Dumpuses are not brown. *(Note: irrelevant for Max, but included for completeness)*  
+    - Tumpuses are jompuses.  
+    - Each jompus is sweet.  
+    - Jompuses are zumpuses.  
+    - Each zumpus is brown.  
+    - Every zumpus is a yumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - `foreach (r) is_a(r, "rompus", True) => not is_large(r)`  
+    - `foreach (r) is_a(r, "rompus", True) => is_a(r, "numpus", True)`  
+    - `foreach (n) is_a(n, "numpus", True) => is_fruity(n)`  
+    - `foreach (n) is_a(n, "numpus", True) => is_a(n, "wumpus", True)`  
+    - `foreach (w) is_a(w, "wumpus", True) => not is_metallic(w)`  
+    - `foreach (w) is_a(w, "wumpus", True) => is_a(w, "tumpus", True)`  
+    - `foreach (t) is_a(t, "tumpus", True) => is_cold(t)`  
+    - `foreach (d) is_a(d, "dumpus", True) => not is_brown(d)`  
+    - `foreach (t) is_a(t, "tumpus", True) => is_a(t, "jompus", True)`  
+    - `foreach (j) is_a(j, "jompus", True) => is_sweet(j)`  
+    - `foreach (j) is_a(j, "jompus", True) => is_a(j, "zumpus", True)`  
+    - `foreach (z) is_a(z, "zumpus", True) => is_brown(z)`  
+    - `foreach (z) is_a(z, "zumpus", True) => is_a(z, "yumpus", True)`  
+6.  Derive properties of Max:  
+    - From `is_a("Max", "numpus", True)` and rule 4, infer `is_a("Max", "wumpus", True)`  
+    - From `is_a("Max", "wumpus", True)` and rule 6, infer `is_a("Max", "tumpus", True)`  
+    - From `is_a("Max", "tumpus", True)` and rule 9, infer `is_a("Max", "jompus", True)`  
+    - From `is_a("Max", "jompus", True)` and rule 10, infer `is_a("Max", "zumpus", True)`  
+    - From `is_a("Max", "zumpus", True)` and rule 11, infer `is_brown("Max")`  
+7.  The query tests if the statement "Max is not brown" is provable:  
+    → Use `facts.is_brown("Max", False)`.  
+8.  Since we have derived `is_brown("Max")`, the query `facts.is_brown("Max", False)` will be false; thus, the statement "Max is not brown" is false.

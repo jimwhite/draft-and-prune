@@ -1,0 +1,30 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to begin constructing the constraint satisfaction model.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruits as variables: `"plums"`, `"kiwis"`, `"cantaloupes"`, `"pears"`, `"watermelons"`, `"apples"`, and `"loquats"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, matching the wording of "most/least expensive" (so lower number = cheaper, higher number = more expensive).  
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique price ranks.  
+    * Translate each statement into a constraint using lambda functions:  
+        - "The watermelons are more expensive than the cantaloupes" → `watermelons > cantaloupes`  
+        - "The apples are less expensive than the cantaloupes" → `apples < cantaloupes`  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6)  
+        - "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+        - "The apples are more expensive than the loquats" → `apples > loquats`  
+        - "The loquats are the third-cheapest" → `loquats == 3` (since cheapest = 1, so third-cheapest = position 3)  
+        - "The plums are the cheapest" → `plums == 1`  
+
+4.  **Solve for the Price Order:**  
+    * Call `getSolutions()` to compute all valid assignments of ranks satisfying the constraints.  
+    * Extract the unique solution (the problem is well-constrained and consistent).  
+
+5.  **Determine Which Option Is True:**  
+    * The question asks: "Which fruit is the fourth-most expensive?" → In our ranking, **fourth-most expensive = rank 4** (since 1=cheapest, 2=second-cheapest, ..., 4=fourth-cheapest = fourth-most expensive).  
+    * Create a dictionary mapping choice letters `'A'` through `'G'` to their corresponding fruit names:  
+        `'A': 'plums'`, `'B': 'kiwis'`, `'C': 'cantaloupes'`, `'D': 'pears'`, `'E': 'watermelons'`, `'F': 'apples'`, `'G': 'loquats'`.  
+    * From the solution dictionary, find which fruit has rank 4.  
+    * Return (or print) the letter associated with that fruit.

@@ -1,0 +1,18 @@
+1. Enumerate the three photographers (Fuentes, Gagnon, Hue) and assign integer indices: Fuentes=0, Gagnon=1, Hue=2.  
+2. Enumerate the three sections (Lifestyle, Metro, Sports) and assign integer indices: Lifestyle=0, Metro=1, Sports=2.  
+3. Create integer variables `count[section][photographer]` representing how many photographs by photographer `p` appear in section `s`, for each section s ∈ {0,1,2} and photographer p ∈ {0,1,2}.  
+4. Add **per-section cardinality constraints**: each section has exactly two photographs: for each section s, `count[s][0] + count[s][1] + count[s][2] == 2`.  
+5. Add **total-photograph-per-photographer constraints**: for each photographer p, 1 ≤ `count[0][p] + count[1][p] + count[2][p]` ≤ 3.  
+6. Add **Gagnon-in-Sports-prohibited constraint**: `count[Sports][Gagnon] == 0`.  
+7. Add **Lifestyle-Metro overlap constraint**: at least one photographer appears in both Lifestyle and Metro sections. This is modeled by introducing auxiliary Boolean variables `shared[p]` for each photographer p, where `shared[p] = (count[0][p] > 0) ∧ (count[1][p] > 0)`, and then asserting `shared[0] ∨ shared[1] ∨ shared[2]`.  
+8. Add **Hue-in-Lifestyle = Fuentes-in-Sports constraint**: `count[Lifestyle][Hue] == count[Sports][Fuentes]`.  
+9. Add the **given condition**: Lifestyle has one Fuentes and one Hue photograph: `count[0][Fuentes] == 1` and `count[0][Hue] == 1`. From step 4, this implies `count[0][Gagnon] == 0`.  
+10. For each answer choice, translate it into a constraint and test feasibility:  
+    - Choice 0 (Both Metro by Fuentes): `count[1][Fuentes] == 2`.  
+    - Choice 1 (Both Metro by Gagnon): `count[1][Gagnon] == 2`.  
+    - Choice 2 (Exactly one Metro by Hue): `count[1][Hue] == 1`.  
+    - Choice 3 (Both Sports by Hue): `count[2][Hue] == 2`.  
+    - Choice 4 (Neither Sports by Hue): `count[2][Hue] == 0`.  
+11. For each choice, create a fresh solver, add base constraints (steps 3–9) plus the choice-specific constraint.  
+12. If a solver returns SAT for a choice, that choice **could be true**; record its index (0–4) in the answer index list.  
+13. Output the answer index list containing all indices of choices that are feasible.

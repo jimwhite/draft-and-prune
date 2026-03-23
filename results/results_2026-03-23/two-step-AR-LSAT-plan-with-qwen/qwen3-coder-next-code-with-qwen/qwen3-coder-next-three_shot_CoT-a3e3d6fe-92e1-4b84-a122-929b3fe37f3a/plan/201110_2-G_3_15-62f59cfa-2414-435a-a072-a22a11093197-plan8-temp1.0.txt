@@ -1,0 +1,19 @@
+1. Enumerate riders and bicycles, assign integer indices (riders: Reynaldo=0, Seamus=1, Theresa=2, Yuki=3; bicycles: F=0, G=1, H=2, J=3).  
+2. Create integer variables `d1_r[i]` (first-day assignment for rider i) and `d2_r[i]` (second-day assignment for rider i), each ranging from 0 to 3.  
+3. Add **bijective constraints** for each day: all d1_r[i] distinct, all d2_r[i] distinct (each bicycle used exactly once per day).  
+4. Add **fixed constraints**:  
+   - Reynaldo ≠ F: `d1_r[0] != 0` and `d2_r[0] != 0`.  
+   - Yuki ≠ J on first day: `d1_r[3] != 3`.  
+   - Theresa must test H on first day: `d1_r[2] == 2`.  
+   - Yuki's first-day bicycle must be tested by Seamus on second day: `d2_r[1] == d1_r[3]`.  
+5. Translate answer choices into logical assertions:  
+   - Choice 0: `d1_r[0] == 3` (Reynaldo tests J on first day).  
+   - Choice 1: `d2_r[0] == 3` (Reynaldo tests J on second day).  
+   - Choice 2: `d1_r[1] == 2` (Seamus tests H on first day).  
+   - Choice 3: `d1_r[3] == 2` (Yuki tests H on first day).  
+   - Choice 4: `d2_r[3] == 2` (Yuki tests H on second day).  
+6. Define answer index list `answer_index_list = []`. For each choice index i (0 to 4):  
+   - Clone base constraints into a fresh solver.  
+   - Assert the condition for choice i.  
+   - If UNSAT, then this choice **cannot** be true; append i to `answer_index_list`.  
+7. Print `answer_index_list` (the EXCEPT choice is the one with UNSAT).

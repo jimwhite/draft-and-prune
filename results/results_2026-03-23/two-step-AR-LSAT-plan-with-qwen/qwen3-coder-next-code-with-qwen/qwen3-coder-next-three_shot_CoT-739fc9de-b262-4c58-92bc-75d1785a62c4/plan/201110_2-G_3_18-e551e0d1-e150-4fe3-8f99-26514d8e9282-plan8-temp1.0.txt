@@ -1,0 +1,15 @@
+1. Enumerate the four riders and four bicycles with integer indices (e.g., riders: 0=Reynaldo, 1=Seamus, 2=Theresa, 3=Yuki; bicycles: 0=F, 1=G, 2=H, 3=J).  
+2. Create integer variables for first-day assignments: `r1[i]` = bicycle tested by rider i on day 1 (domain 0–3), and second-day assignments: `r2[i]` = bicycle tested by rider i on day 2 (domain 0–3).  
+3. Add **day-wise permutation constraints**:  
+    - Day 1: `Distinct(r1[0], r1[1], r1[2], r1[3])`  
+    - Day 2: `Distinct(r2[0], r2[1], r2[2], r2[3])`  
+4. Add **per-rider bicycle uniqueness across days**: `r1[i] != r2[i]` for all i (each rider tests a different bicycle on day 2).  
+5. Add **explicit condition constraints**:  
+    - Reynaldo cannot test F: `r1[0] != 0` and `r2[0] != 0`.  
+    - Yuki cannot test J: `r1[3] != 3` and `r2[3] != 3`.  
+    - Theresa must test H on at least one day: `(r1[2] == 2) or (r2[2] == 2)`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: `r2[1] == r1[3]`.  
+6. Translate each answer choice into a logical conjunction of equalities on `r1`/`r2`, e.g., “Both Reynaldo and Seamus test J” becomes `(r1[0] == 3 and r1[1] == 3)`.  
+7. For each answer choice, clone base constraints into a fresh solver and add the conjunction corresponding to that choice.  
+8. If the model is UNSAT, then that choice **cannot be true**; record its index in `answer_index_list`.  
+9. Print `answer_index_list` — it should contain exactly one index (the correct answer).

@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament ranking constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven golfers as variables: `"Joe"`, `"Dan"`, `"Ada"`, `"Amy"`, `"Rob"`, `"Mya"`, and `"Mel"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (highest rank)** and **7 = seventh place (lowest rank)**.  
+   * Add all variables with domain `{1, 2, ..., 7}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct ranks.  
+   * Translate each statement into constraints using lambda functions:  
+        - "Ada finished below Amy" → Ada’s rank > Amy’s rank (since higher number = worse position).  
+        - "Joe finished below Dan" → Joe’s rank > Dan’s rank.  
+        - "Dan finished below Ada" → Dan’s rank > Ada’s rank.  
+        - "Mel finished third-to-last" → In a 7-person field, third-to-last is position **5** (positions: 1st=best, 7th=last → last=7, second-to-last=6, third-to-last=5). So `Mel == 5`.  
+        - "Amy finished third" → `Amy == 3`.  
+        - "Rob finished below Mya" → Rob’s rank > Mya’s rank.
+
+4. **Solve for the Unique Ranking:**  
+   * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.  
+   * Since the problem is well-constrained and consistent, there will be exactly one solution; extract it (e.g., `solutions[0]` or iterate to get the first).  
+
+5. **Identify Who Finished Second:**  
+   * The question asks: "Which golfer finished second?" → Find the golfer whose rank is **2** in the solution.  
+   * Create a mapping from choice letters (`'A'` to `'G'`) to golfer names:  
+        - `"A" -> "Joe"`, `"B" -> "Dan"`, `"C" -> "Ada"`, `"D" -> "Amy"`, `"E" -> "Rob"`, `"F" -> "Mya"`, `"G" -> "Mel"`  
+   * Iterate through the choices; for each choice letter, retrieve the corresponding golfer name and check if that golfer’s rank equals 2 in the solution.  
+   * Return (or print) the letter of the first matching choice — this is the correct answer.

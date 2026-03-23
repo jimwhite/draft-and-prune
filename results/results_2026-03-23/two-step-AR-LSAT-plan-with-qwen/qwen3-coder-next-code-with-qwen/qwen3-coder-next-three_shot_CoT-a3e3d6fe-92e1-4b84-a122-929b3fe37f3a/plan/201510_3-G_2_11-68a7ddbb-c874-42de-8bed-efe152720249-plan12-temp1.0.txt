@@ -1,0 +1,22 @@
+1. Enumerate the three photographers (Fuentes, Gagnon, Hue) and assign integer indices 0, 1, 2 respectively.  
+2. Enumerate the three sections (Lifestyle, Metro, Sports) and assign integer indices 0, 1, 2 respectively.  
+3. Create integer variables for each section’s photograph assignments: define `L[i]`, `M[j]`, `S[k]` for i,j,k ∈ {0,1,2} where each variable indicates the photographer index of that photograph in the section (since two photos per section, create two variables: e.g., `L0`, `L1`, `M0`, `M1`, `S0`, `S1`).  
+4. Add **domain constraints**: each of the six photo-photographer variables must be in {0,1,2}.  
+5. Add **section cardinality constraints**: exactly two photos per section — already encoded via six variables (two per section).  
+6. Add **global photographer count constraints**:  
+    - For each photographer, number of photos ∈ [1,3]. Compute counts via `If(photographer_var == idx, 1, 0)` summation over all six variables and constrain to 1 ≤ count ≤ 3.  
+7. Add **Lifestyle/Metro overlap constraint**: at least one Lifestyle photo is by a photographer who appears in Metro → ∃p ∈ {0,1,2} such that (L0 == p ∨ L1 == p) ∧ (M0 == p ∨ M1 == p). Encode via disjunction over all 3 photographers: (L0==p ∧ (M0==p ∨ M1==p)) ∨ (L1==p ∧ (M0==p ∨ M1==p)).  
+8. Add **Hue-Fuentes balance constraint**: #Hue in Lifestyle = #Fuentes in Sports. Let `h_L = (If(L0==2,1,0) + If(L1==2,1,0))`, `f_S = (If(S0==0,1,0) + If(S1==0,1,0))`, constrain `h_L == f_S`.  
+9. Add **Gagnon constraint**: no Gagnon photos in Sports → S0 ≠ 1 ∧ S1 ≠ 1.  
+10. Add **given scenario constraint**: Lifestyle has one Fuentes and one Hue → {L0, L1} = {0,2} (unordered), i.e., `(L0 == 0 ∧ L1 == 2) ∨ (L0 == 2 ∧ L1 == 0)`.  
+11. Translate each answer choice into a logical constraint on photo-by-photographer assignments:  
+    - Choice 0 (Both Metro photos by Fuentes): M0 == 0 ∧ M1 == 0  
+    - Choice 1 (Both Metro photos by Gagnon): M0 == 1 ∧ M1 == 1  
+    - Choice 2 (Exactly one Metro photo by Hue): (M0==2) + (M1==2) == 1  
+    - Choice 3 (Both Sports photos by Hue): S0 == 2 ∧ S1 == 2  
+    - Choice 4 (Neither Sports photo by Hue): S0 ≠ 2 ∧ S1 ≠ 2  
+12. Define answer index list `answer_index_list = []`. For each choice index c ∈ {0,1,2,3,4}:  
+    - Clone base constraints (steps 1–10) into fresh solver.  
+    - Add the specific constraint for choice c.  
+    - Query solver; if SAT, then this scenario is possible → append c to `answer_index_list`.  
+13. Output the list of indices for which the choice could be true under the given conditions.

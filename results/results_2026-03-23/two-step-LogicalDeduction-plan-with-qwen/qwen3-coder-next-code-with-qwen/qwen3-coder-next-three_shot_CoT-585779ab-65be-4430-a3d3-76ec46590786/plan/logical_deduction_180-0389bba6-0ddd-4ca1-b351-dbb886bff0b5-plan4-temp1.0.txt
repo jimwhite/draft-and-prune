@@ -1,0 +1,46 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * List the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, `"green"`.
+    * Define the domain as integers 1 through 7, where position 1 is leftmost and position 7 is rightmost.
+    * Add all variables to the problem with this domain.
+
+3.  **Add All-Different Constraint:**
+    * Apply `AllDifferentConstraint()` to ensure each book occupies a unique position.
+
+4.  **Translate Statements into Positional Constraints:**
+    * "The red book is to the right of the yellow book" → `yellow < red`.
+    * "The white book is the second from the right" → `white == 6` (since position 7 is rightmost, so second from right is position 6).
+    * "The red book is to the left of the green book" → `red < green`.
+    * "The blue book is to the right of the black book" → `black < blue`.
+    * "The black book is the third from the right" → `black == 5` (positions: 7=rightmost, so third from right = position 5).
+    * "The orange book is the leftmost" → `orange == 1`.
+
+5.  **Add All Translated Constraints to the Problem:**
+    * Use `addConstraint(lambda a, b: ..., ["orange", "yellow"])` or more simply add direct equality/inequality constraints via `addConstraint(lambda x: ..., ["var"])` or binary relation constraints using tuples. Specifically:
+        * `addConstraint(lambda x: x == 6, ["white"])`
+        * `addConstraint(lambda x: x == 5, ["black"])`
+        * `addConstraint(lambda x: x == 1, ["orange"])`
+        * `addConstraint(lambda y, r: y < r, ["yellow", "red"])`
+        * `addConstraint(lambda r, g: r < g, ["red", "green"])`
+        * `addConstraint(lambda b, k: k < b, ["black", "blue"])`
+
+6.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Since the constraints uniquely determine positions, extract the first solution.
+
+7.  **Identify the Correct Answer:**
+    * The question asks which statement is true, and notably choice A literally restates one of the givens ("The black book is the third from the right").
+    * However, verify consistency: from step 4, black == 5 is directly added as a constraint, so it *must* be true.
+    * Confirm by inspecting the solution: check which book is in position 5 (third from right).
+    * Map the question's choices to the books:
+        - A → black
+        - B → orange
+        - C → yellow
+        - D → white
+        - E → blue
+        - F → red
+        - G → green
+    * Since black == 5 is enforced and thus true, answer "A" is correct. No further comparison needed — but for completeness: find the book at position 5 in solution and match to choice letter.

@@ -1,0 +1,17 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables `zone[i]` for each representative i, indicating their assigned zone (1, 2, or 3).  
+3. Add **domain constraints**: each `zone[i] ∈ {1,2,3}`.  
+4. Add **mutual exclusivity constraint**: exactly one zone per representative (enforced by variable assignment).  
+5. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1: `(zone[Parra]==1) XOR (zone[Tiao]==1)`.  
+6. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2: `(zone[Tiao]==2) XOR (zone[Udall]==2)`.  
+7. Add **Parra–Quinn same zone constraint**: `zone[Parra] == zone[Quinn]`.  
+8. Add **Stuckey–Udall same zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+9. Add **Zone size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+    - Count zone assignments: let `c1 = sum([zone[i]==1 for i])`, similarly `c2, c3`; require `c3 > c2`.  
+10. Translate each answer choice into a set of representatives and verify if there exists an assignment satisfying all constraints where Zone 3 contains *exactly* those representatives (i.e., members of the choice are in Zone 3, and no others).  
+11. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert `zone[i] == 3` iff representative i is in the choice list.  
+    - Assert `zone[i] ≠ 3` for all representatives not in the choice list.  
+    - Check satisfiability. If SAT, the choice is possible.  
+12. Identify the correct answer: among the choices, only one will yield SAT; return its index or full list.

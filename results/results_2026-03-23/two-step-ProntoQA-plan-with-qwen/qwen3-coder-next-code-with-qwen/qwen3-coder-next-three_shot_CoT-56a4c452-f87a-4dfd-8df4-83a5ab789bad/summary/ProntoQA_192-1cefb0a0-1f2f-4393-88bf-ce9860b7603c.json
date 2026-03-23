@@ -1,0 +1,406 @@
+{
+  "problem": {
+    "id": "ProntoQA_192",
+    "context": "Numpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.",
+    "question": "Is the following statement true or false? Sam is not dull.",
+    "options": [
+      "A) True",
+      "B) False"
+    ],
+    "answer": "B",
+    "explanation": [
+      "Sam is a numpus.",
+      "Numpuses are wumpuses.",
+      "Sam is a wumpus.",
+      "Wumpuses are rompuses.",
+      "Sam is a rompus.",
+      "Rompuses are vumpuses.",
+      "Sam is a vumpus.",
+      "Each vumpus is a yumpus.",
+      "Sam is a yumpus.",
+      "Each yumpus is dull.",
+      "Sam is dull."
+    ]
+  },
+  "timing": 473.1423497200012,
+  "all_solver_outputs": [
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+    "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers."
+  ],
+  "all_solver_error_types": [
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error",
+    "runtime_error"
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1134,
+        "completion_tokens": 280,
+        "total_tokens": 1414
+      },
+      "plan_generation_api_time_only": 7.620080471038818,
+      "code_generation_usage": {
+        "prompt_tokens": 3619,
+        "completion_tokens": 579,
+        "total_tokens": 4198
+      },
+      "code_generation_api_time_only": 16.047444820404053,
+      "repair_usage_total": {
+        "prompt_tokens": 1420,
+        "completion_tokens": 2383,
+        "total_tokens": 3803
+      },
+      "repair_api_time_only_total": 63.1068594455719,
+      "path_usage_total": {
+        "prompt_tokens": 6173,
+        "completion_tokens": 3242,
+        "total_tokens": 9415
+      },
+      "path_api_time_only": 86.77438473701477,
+      "solver_time_only": 0.003475189208984375
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1134,
+        "completion_tokens": 776,
+        "total_tokens": 1910
+      },
+      "plan_generation_api_time_only": 19.798256158828735,
+      "code_generation_usage": {
+        "prompt_tokens": 4115,
+        "completion_tokens": 531,
+        "total_tokens": 4646
+      },
+      "code_generation_api_time_only": 14.910190343856812,
+      "repair_usage_total": {
+        "prompt_tokens": 2662,
+        "completion_tokens": 2072,
+        "total_tokens": 4734
+      },
+      "repair_api_time_only_total": 52.358206033706665,
+      "path_usage_total": {
+        "prompt_tokens": 7911,
+        "completion_tokens": 3379,
+        "total_tokens": 11290
+      },
+      "path_api_time_only": 87.06665253639221,
+      "solver_time_only": 0.003136873245239258
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1134,
+        "completion_tokens": 751,
+        "total_tokens": 1885
+      },
+      "plan_generation_api_time_only": 18.62016987800598,
+      "code_generation_usage": {
+        "prompt_tokens": 4090,
+        "completion_tokens": 579,
+        "total_tokens": 4669
+      },
+      "code_generation_api_time_only": 17.808014392852783,
+      "repair_usage_total": {
+        "prompt_tokens": 1420,
+        "completion_tokens": 2116,
+        "total_tokens": 3536
+      },
+      "repair_api_time_only_total": 54.16736149787903,
+      "path_usage_total": {
+        "prompt_tokens": 6644,
+        "completion_tokens": 3446,
+        "total_tokens": 10090
+      },
+      "path_api_time_only": 90.5955457687378,
+      "solver_time_only": 0.0018546581268310547
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1134,
+        "completion_tokens": 747,
+        "total_tokens": 1881
+      },
+      "plan_generation_api_time_only": 19.599185943603516,
+      "code_generation_usage": {
+        "prompt_tokens": 4086,
+        "completion_tokens": 579,
+        "total_tokens": 4665
+      },
+      "code_generation_api_time_only": 15.684453010559082,
+      "repair_usage_total": {
+        "prompt_tokens": 1432,
+        "completion_tokens": 3211,
+        "total_tokens": 4643
+      },
+      "repair_api_time_only_total": 80.19483971595764,
+      "path_usage_total": {
+        "prompt_tokens": 6652,
+        "completion_tokens": 4537,
+        "total_tokens": 11189
+      },
+      "path_api_time_only": 115.47847867012024,
+      "solver_time_only": 0.0015075206756591797
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1134,
+        "completion_tokens": 415,
+        "total_tokens": 1549
+      },
+      "plan_generation_api_time_only": 12.443110704421997,
+      "code_generation_usage": {
+        "prompt_tokens": 3754,
+        "completion_tokens": 579,
+        "total_tokens": 4333
+      },
+      "code_generation_api_time_only": 16.115098476409912,
+      "repair_usage_total": {
+        "prompt_tokens": 1412,
+        "completion_tokens": 1707,
+        "total_tokens": 3119
+      },
+      "repair_api_time_only_total": 42.525190591812134,
+      "path_usage_total": {
+        "prompt_tokens": 6300,
+        "completion_tokens": 2701,
+        "total_tokens": 9001
+      },
+      "path_api_time_only": 71.08339977264404,
+      "solver_time_only": 0.0020647048950195312
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 33680,
+    "completion_tokens": 17305,
+    "total_tokens": 50985
+  },
+  "api_time_only_total": 450.99846148490906,
+  "solver_time_only_total": 0.012038946151733398,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 944,
+            "completion_tokens": 1828,
+            "total_tokens": 2772
+          },
+          "api_time_only": 48.837852239608765,
+          "solver_time_only": 0.0008213520050048828
+        },
+        {
+          "round_index": 2,
+          "input_code": "from pyke import knowledge_engine\n\n# Initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\nfrom pyke import knowledge_engine\n\n# Initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.add_rule('rules',\n    ('is_a', '?x', 'numpus', True),\n    ('is_a', '?x', 'wumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '?x', 'wumpus', True),\n    ('is_a', '?x', 'rompus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '?x', 'rompus', True),\n    ('is_a', '?x', 'vumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '?x', 'vumpus', True),\n    ('is_a', '?x', 'yumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '?x', 'yumpus', True),\n    ('is_dull', '?x', True)\n)\n\n# Activate the rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query: Is Sam not dull? (i.e., is_dull(Sam, False))\nresult = engine.query('facts', 'is_dull', ('Sam', False))\n\n# Print result (None means false, a dict means true)\nif result is None:\n    print(\"False\")\nelse:\n    print(\"True\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 476,
+            "completion_tokens": 555,
+            "total_tokens": 1031
+          },
+          "api_time_only": 14.269007205963135,
+          "solver_time_only": 0.0002789497375488281
+        }
+      ]
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Looking at this PyKe program, I need to fix the syntax error where `knowledge_engine` is not defined. In PyKe, you need to create a knowledge engine instance and run it to execute the rules.\n\nThe main issues are:\n1. Missing knowledge engine initialization\n2. Missing execution of the knowledge engine to trigger rule firing\n3. The query needs to be evaluated after rules have been applied\n\nHere's the corrected PyKe program:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create knowledge engine and load the rules\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts to the engine\nengine.add_facts(\"facts\", \"Sam\", \"numpus\")\n\n# Activate rules to fire\nengine.activate('rules')\n\n# Run the query\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n```\n\nWait, I need to be more precise about PyKe syntax. Let me provide the correct implementation:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create and initialize the knowledge engine\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts\nengine.add_facts(\"facts\", \"is_a\", [(\"Sam\", \"numpus\", True)])\n\n# Activate rules\nengine.activate('rules')\n\n# Query: Is Sam not dull? (i.e., is_dull(\"Sam\", False))\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n\n# The answer is FALSE because:\n# Sam is a numpus → Sam is a wumpus → Sam is a rompus → Sam is a vumpus → Sam is a yumpus → Sam is dull\n# Therefore, \"Sam is not dull\" is FALSE\n```",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 896,
+            "completion_tokens": 1377,
+            "total_tokens": 2273
+          },
+          "api_time_only": 34.32109451293945,
+          "solver_time_only": 0.0006575584411621094
+        },
+        {
+          "round_index": 2,
+          "input_code": "Looking at this PyKe program, I need to fix the syntax error where `knowledge_engine` is not defined. In PyKe, you need to create a knowledge engine instance and run it to execute the rules.\n\nThe main issues are:\n1. Missing knowledge engine initialization\n2. Missing execution of the knowledge engine to trigger rule firing\n3. The query needs to be evaluated after rules have been applied\n\nHere's the corrected PyKe program:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create knowledge engine and load the rules\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts to the engine\nengine.add_facts(\"facts\", \"Sam\", \"numpus\")\n\n# Activate rules to fire\nengine.activate('rules')\n\n# Run the query\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n```\n\nWait, I need to be more precise about PyKe syntax. Let me provide the correct implementation:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create and initialize the knowledge engine\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts\nengine.add_facts(\"facts\", \"is_a\", [(\"Sam\", \"numpus\", True)])\n\n# Activate rules\nengine.activate('rules')\n\n# Query: Is Sam not dull? (i.e., is_dull(\"Sam\", False))\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n\n# The answer is FALSE because:\n# Sam is a numpus → Sam is a wumpus → Sam is a rompus → Sam is a vumpus → Sam is a yumpus → Sam is dull\n# Therefore, \"Sam is not dull\" is FALSE\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\nLooking at this PyKe program, I need to fix the syntax error where `knowledge_engine` is not defined. In PyKe, you need to create a knowledge engine instance and run it to execute the rules.\n\nThe main issues are:\n1. Missing knowledge engine initialization\n2. Missing execution of the knowledge engine to trigger rule firing\n3. The query needs to be evaluated after rules have been applied\n\nHere's the corrected PyKe program:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create knowledge engine and load the rules\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts to the engine\nengine.add_facts(\"facts\", \"Sam\", \"numpus\")\n\n# Activate rules to fire\nengine.activate('rules')\n\n# Run the query\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n```\n\nWait, I need to be more precise about PyKe syntax. Let me provide the correct implementation:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```plan\n# Create and initialize the knowledge engine\nengine = pyke.knowledge_engine.engine(__name__)\n\n# Add facts\nengine.add_facts(\"facts\", \"is_a\", [(\"Sam\", \"numpus\", True)])\n\n# Activate rules\nengine.activate('rules')\n\n# Query: Is Sam not dull? (i.e., is_dull(\"Sam\", False))\nresult = engine.query(\"facts\", \"is_dull\", (\"Sam\", False))\n\n# The answer is FALSE because:\n# Sam is a numpus → Sam is a wumpus → Sam is a rompus → Sam is a vumpus → Sam is a yumpus → Sam is dull\n# Therefore, \"Sam is not dull\" is FALSE\n```\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "Looking at the error message, PyKe requires specific section headers: `Facts:`, `Rules:`, and `Query:` (with colons). The original code used triple-backtick blocks without proper headers.\n\nLet me analyze the logic:\n- Sam is a numpus\n- Numpuses → wumpuses  \n- Wumpuses → rompuses\n- Rompuses → vumpuses\n- Vumpuses → yumpuses  \n- Yumpuses are dull\n\nSo: Sam is a numpus → Sam is a wumpus → Sam is a rompus → Sam is a vumpus → Sam is a yumpus → Sam is dull\n\nTherefore, \"Sam is not dull\" is **FALSE**.\n\nHere's the corrected PyKe program with proper syntax:\n\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: name 'knowledge_engine' is not defined",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 1766,
+            "completion_tokens": 695,
+            "total_tokens": 2461
+          },
+          "api_time_only": 18.037111520767212,
+          "solver_time_only": 0.001194000244140625
+        }
+      ]
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 944,
+            "completion_tokens": 1561,
+            "total_tokens": 2505
+          },
+          "api_time_only": 38.54106855392456,
+          "solver_time_only": 0.0003218650817871094
+        },
+        {
+          "round_index": 2,
+          "input_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\nfrom pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query\nresult = engine.query('facts', 'is_dull', ('Sam', False))\nprint(result)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Add facts\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Add rules\nengine.add_rule('rules',\n    ('is_a', '$X', 'numpus', True),\n    ('is_a', '$X', 'wumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '$X', 'wumpus', True),\n    ('is_a', '$X', 'rompus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '$X', 'rompus', True),\n    ('is_a', '$X', 'vumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '$X', 'vumpus', True),\n    ('is_a', '$X', 'yumpus', True)\n)\n\nengine.add_rule('rules',\n    ('is_a', '$X', 'yumpus', True),\n    ('is_dull', '$X', True)\n)\n\n# Activate rules\nengine.activate('rules')\n\n# Run inference\nengine.run()\n\n# Query: Is Sam not dull? (i.e., is_dull(Sam, False))\nresult = engine.query('facts', 'is_dull', ('Sam', False))\n\n# Print result (None means false, non-None means true)\nif result is None:\n    print(\"False\")\nelse:\n    print(\"True\")",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 476,
+            "completion_tokens": 555,
+            "total_tokens": 1031
+          },
+          "api_time_only": 15.626292943954468,
+          "solver_time_only": 0.0003421306610107422
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Load the knowledge base\nengine.activate('kb')\n\n# Add facts\nengine.add_case_fact('kb', ('is_a', 'Sam', 'numpus', True))\n\n# Run inference\nengine.run()\n\n# Query the result\nresult = engine.query('kb', 'is_dull', ('Sam', False), None)\n\n# Print result\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 944,
+            "completion_tokens": 1791,
+            "total_tokens": 2735
+          },
+          "api_time_only": 45.321938037872314,
+          "solver_time_only": 0.0003657341003417969
+        },
+        {
+          "round_index": 2,
+          "input_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Load the knowledge base\nengine.activate('kb')\n\n# Add facts\nengine.add_case_fact('kb', ('is_a', 'Sam', 'numpus', True))\n\n# Run inference\nengine.run()\n\n# Query the result\nresult = engine.query('kb', 'is_dull', ('Sam', False), None)\n\n# Print result\nprint(result)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\nfrom pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Load the knowledge base\nengine.activate('kb')\n\n# Add facts\nengine.add_case_fact('kb', ('is_a', 'Sam', 'numpus', True))\n\n# Run inference\nengine.run()\n\n# Query the result\nresult = engine.query('kb', 'is_dull', ('Sam', False), None)\n\n# Print result\nprint(result)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create knowledge engine instance\nengine = knowledge_engine.engine(__file__)\n\n# Load the knowledge base\nengine.activate('kb')\n\n# Add facts\nengine.add_case_fact('kb', ('is_a', 'Sam', 'numpus', True))\n\n# Run inference\nengine.run()\n\n# Query the result: Is Sam NOT dull?\nresult = engine.query('kb', 'is_dull', ('Sam', False), None)\n\n# Print result\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 488,
+            "completion_tokens": 1420,
+            "total_tokens": 1908
+          },
+          "api_time_only": 34.87290167808533,
+          "solver_time_only": 0.00013494491577148438
+        }
+      ]
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\n```facts\nis_a(\"Sam\", \"numpus\", True)\n```\n\n```rules\n# Rule: Numpuses are not wooden.\nnumpus_is_not_wooden\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_wooden($thing, False)\n\n# Rule: Numpuses are wumpuses.\nnumpus_is_wumpus\n    foreach\n        facts.is_a($thing, \"numpus\", True)\n    assert\n        facts.is_a($thing, \"wumpus\", True)\n\n# Rule: Wumpuses are small.\nwumpus_is_small\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_small($thing, True)\n\n# Rule: Wumpuses are rompuses.\nwumpus_is_rompus\n    foreach\n        facts.is_a($thing, \"wumpus\", True)\n    assert\n        facts.is_a($thing, \"rompus\", True)\n\n# Rule: Rompuses are not floral.\nrompus_is_not_floral\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_floral($thing, False)\n\n# Rule: Rompuses are vumpuses.\nrompus_is_vumpus\n    foreach\n        facts.is_a($thing, \"rompus\", True)\n    assert\n        facts.is_a($thing, \"vumpus\", True)\n\n# Rule: Each vumpus is blue.\nvumpus_is_blue\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_blue($thing, True)\n\n# Rule: Jompuses are not dull.\njompus_is_not_dull\n    foreach\n        facts.is_a($thing, \"jompus\", True)\n    assert\n        facts.is_dull($thing, False)\n\n# Rule: Each vumpus is a yumpus.\nvumpus_is_yumpus\n    foreach\n        facts.is_a($thing, \"vumpus\", True)\n    assert\n        facts.is_a($thing, \"yumpus\", True)\n\n# Rule: Each yumpus is dull.\nyumpus_is_dull\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_dull($thing, True)\n\n# Rule: Yumpuses are zumpuses.\nyumpus_is_zumpus\n    foreach\n        facts.is_a($thing, \"yumpus\", True)\n    assert\n        facts.is_a($thing, \"zumpus\", True)\n```\n\n```query\nfacts.is_dull(\"Sam\", False)\n```\n\n## Error message from solver\nError executing PyKe Program: name 'knowledge_engine' is not defined\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create and initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\nengine.activate('rules')\n\n# Facts section\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Query section\nresult = engine.ask1('facts.is_dull(\"Sam\", False)')\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 944,
+            "completion_tokens": 947,
+            "total_tokens": 1891
+          },
+          "api_time_only": 22.953715801239014,
+          "solver_time_only": 0.00018334388732910156
+        },
+        {
+          "round_index": 2,
+          "input_code": "from pyke import knowledge_engine\n\n# Create and initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\nengine.activate('rules')\n\n# Facts section\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Query section\nresult = engine.ask1('facts.is_dull(\"Sam\", False)')\nprint(result)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the PyKe solver library.\n\nProblem:\nNumpuses are not wooden. Numpuses are wumpuses. Wumpuses are small. Wumpuses are rompuses. Rompuses are not floral. Rompuses are vumpuses. Each vumpus is blue. Jompuses are not dull. Each vumpus is a yumpus. Each yumpus is dull. Yumpuses are zumpuses. Sam is a numpus.\nQuestion:\nIs the following statement true or false? Sam is not dull.\nPlan:\n{plan}\n\n## Original Code\nfrom pyke import knowledge_engine\n\n# Create and initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\nengine.activate('rules')\n\n# Facts section\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\n\n# Query section\nresult = engine.ask1('facts.is_dull(\"Sam\", False)')\nprint(result)\n\n## Error message from solver\nError executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.\n\n# Instructions for Code Fixing\n- Write a new version of the code that corrects the identified syntax error.\n- Ensure the new code is syntactically correct and logically sound.\n\n# Output Requirements:\nTranslate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.\n- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.\n- Rules: Encode conditional logic from the context (e.g., \"If... then...\") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.\n- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.\n",
+          "repaired_code": "from pyke import knowledge_engine\n\n# Create and initialize the knowledge engine\nengine = knowledge_engine.engine(__file__)\nengine.activate('rules')\n\n# Facts section\nengine.add_case_fact('facts', ('is_a', 'Sam', 'numpus', True))\nengine.add_case_fact('facts', ('is_a', 'numpus', 'wumpus', True))\nengine.add_case_fact('facts', ('is_wooden', 'numpus', False))\nengine.add_case_fact('facts', ('is_small', 'wumpus', True))\nengine.add_case_fact('facts', ('is_a', 'wumpus', 'rompus', True))\nengine.add_case_fact('facts', ('is_floral', 'rompus', False))\nengine.add_case_fact('facts', ('is_a', 'rompus', 'vumpus', True))\nengine.add_case_fact('facts', ('is_blue', 'vumpus', True))\nengine.add_case_fact('facts', ('is_a', 'vumpus', 'yumpus', True))\nengine.add_case_fact('facts', ('is_dull', 'yumpus', True))\nengine.add_case_fact('facts', ('is_a', 'yumpus', 'zumpus', True))\nengine.add_case_fact('facts', ('is_dull', 'jompus', False))\n\n# Rules section\nengine.add_rule('rules',\n    ('is_a(?x, ?y)', 'is_a(?y, ?z)'),\n    ('is_a', '?x', '?z')\n)\n\n# Query section\nresult = engine.ask1('facts.is_dull(\"Sam\", True)')\nprint(result)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Error executing PyKe Program: Could not find required PyKe section(s): facts, rules, query. Expected ```facts / ```rules / ```query blocks or Facts: / Rules: / Query: section headers.",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 468,
+            "completion_tokens": 760,
+            "total_tokens": 1228
+          },
+          "api_time_only": 19.57147479057312,
+          "solver_time_only": 0.0003781318664550781
+        }
+      ]
+    }
+  ]
+}

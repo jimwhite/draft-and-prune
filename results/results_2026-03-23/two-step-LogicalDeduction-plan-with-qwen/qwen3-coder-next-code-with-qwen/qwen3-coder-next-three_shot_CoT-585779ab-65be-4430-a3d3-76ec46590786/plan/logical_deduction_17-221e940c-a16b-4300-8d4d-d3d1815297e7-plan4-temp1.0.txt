@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the pricing-order constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the five fruits as variables: `"watermelons"`, `"apples"`, `"mangoes"`, `"pears"`, and `"cantaloupes"`.  
+   * Define the domain as integers 1 to 5, where **1 = cheapest** and **5 = most expensive**, reflecting increasing cost.  
+   * Add all five variables with this domain to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+   * Convert each statement into a constraint using `lambda` functions:  
+        - "The watermelons are more expensive than the cantaloupes" → `watermelons > cantaloupes`  
+        - "The mangoes are less expensive than the pears" → `mangoes < pears`  
+        - "The apples are the second-cheapest" → `apples == 2`  
+        - "The watermelons are less expensive than the mangoes" → `watermelons < mangoes`
+
+4. **Solve for the Price Order:**  
+   * Call `getSolutions()` to compute all valid rank assignments satisfying the constraints.  
+   * Extract the unique solution from the list (as the problem is deterministic).
+
+5. **Identify the Cheapest Fruit and Match to Choice:**  
+   * The question asks for the cheapest fruit, i.e., the one with rank **1**.  
+   * Create a mapping from choice letters (`'A'`→`"watermelons"`, `'B'`→`"apples"`, `'C'`→`"mangoes"`, `'D'`→`"pears"`, `'E'`→`"cantaloupes"`).  
+   * In the solution dictionary, find which fruit has position 1.  
+   * Return the corresponding choice letter as the final answer.

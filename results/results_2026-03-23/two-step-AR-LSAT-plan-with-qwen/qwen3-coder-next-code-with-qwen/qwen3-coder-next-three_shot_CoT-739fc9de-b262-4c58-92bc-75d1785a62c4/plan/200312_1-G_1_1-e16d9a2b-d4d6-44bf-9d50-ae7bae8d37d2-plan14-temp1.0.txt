@@ -1,0 +1,19 @@
+1. Enumerate the nine scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists), assign each an index.  
+2. Create Boolean decision variables for each scientist indicating whether they are selected (e.g., `sel[F]`, `sel[G]`, ..., `sel[R]`).  
+3. Add **exactly-five** constraint: sum of all selection variables equals 5.  
+4. Add **at-least-one-per-category** constraint:  
+    - Botanist count ≥ 1 (`sel[F] + sel[G] + sel[H] ≥ 1`)  
+    - Chemist count ≥ 1 (`sel[K] + sel[L] + sel[M] ≥ 1`)  
+    - Zoologist count ≥ 1 (`sel[P] + sel[Q] + sel[R] ≥ 1`)  
+5. Add **conditional constraint** for botanists/zoologists: if botanist count ≥ 2, then zoologist count ≤ 1.  
+    - Implement via `botanist_count ≥ 2 → zoologist_count ≤ 1`, equivalently:  
+      `(botanist_count ≥ 2) → (zoologist_count ≤ 1)`  
+      using implication: `¬(botanist_count ≥ 2) ∨ (zoologist_count ≤ 1)`  
+      or encode with a helper Boolean `b_ge2` where `b_ge2 ↔ (botanist_count ≥ 2)` and add `b_ge2 → (zoologist_count ≤ 1)`.  
+6. Add **mutual exclusion**: F and K cannot both be selected: `¬(sel[F] ∧ sel[K])`.  
+7. Add **mutual exclusion**: K and M cannot both be selected: `¬(sel[K] ∧ sel[M])`.  
+8. Add **conditional constraint**: if M is selected, then both P and R must be selected: `sel[M] → (sel[P] ∧ sel[R])`.  
+9. For each choice string in the options, parse into a list of scientist names and assert that exactly those scientists are selected (e.g., `sel[F] = True`, `sel[G] = True`, ..., others False).  
+10. Check each parsed configuration for satisfiability under all constraints.  
+11. The first (or only) choice that yields a SAT result is the acceptable selection; record its index or directly identify it.  
+12. Output the corresponding choice string as the answer.

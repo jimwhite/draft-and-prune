@@ -1,0 +1,23 @@
+1. Enumerate the six cargo types and assign integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `pos[type]` for each cargo type (0..5), representing the bay number (1..6) where it is held.  
+3. Add **domain constraints**: `pos[type] ∈ {1,2,3,4,5,6}` for all types.  
+4. Add **distinctness constraint**: All six `pos[type]` values must be pairwise distinct (a permutation of 1..6).  
+5. Add **ordering constraints** from the problem:  
+    - `pos[grain] > pos[livestock]`  
+    - `pos[livestock] > pos[textiles]`  
+    - `pos[produce] > pos[fuel]`  
+6. Add **adjacency constraint**: textiles and produce are in adjacent bays: `|pos[produce] - pos[textiles]| = 1`.  
+7. Add **conditional constraint** from the question: exactly one bay between machinery and grain ⇒ `|pos[grain] - pos[machinery]| = 2`.  
+8. Derive forced positions by logical deduction step-by-step:  
+    - From `pos[grain] > pos[livestock] > pos[textiles]`, chain gives `pos[grain] ≥ pos[textiles] + 2`.  
+    - From adjacency and `pos[produce] > pos[fuel]`, analyze possible adjacent (textiles, produce) pairs:  
+        Since `pos[produce] > pos[fuel]` and `|pos[produce] - pos[textiles]| = 1`, the only viable adjacent pairs satisfying both conditions and integer positions 1–6 are limited.  
+    - Enumerate all permutations of 1..6 for the six positions satisfying:  
+        (a) `pos[grain] > pos[livestock] > pos[textiles]`  
+        (b) `pos[produce] > pos[fuel]`  
+        (c) `|pos[produce] - pos[textiles]| = 1`  
+        (d) `|pos[grain] - pos[machinery]| = 2`  
+    - For each valid assignment, count how many cargo types have uniquely determined positions across all solutions.  
+9. Compute the set of positions that are identical in every valid assignment.  
+10. Count the size of this intersection set → determine the number of completely determined bays (i.e., cargos fixed in position).  
+11. Map this count to the corresponding answer choice: 'two', 'three', 'four', 'five', or 'six'.

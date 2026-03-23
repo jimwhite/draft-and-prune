@@ -1,0 +1,25 @@
+1.  Identify all entities and types: Sam, tumpus, dumpus, numpus, jompus, wumpus, vumpus, yumpus, rompus, zumpus, impus.  
+2.  Identify all properties: fruity, liquid, sour, cold, brown, happy, large, mean.  
+3.  Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Tumpuses are fruity → for any x, if `is_a(x, "tumpus")` then `is_fruity(x, True)`.  
+    * Tumpuses are dumpuses → for any x, if `is_a(x, "tumpus")` then `is_a(x, "dumpus", True)`.  
+    * Each dumpus is liquid → for any x, if `is_a(x, "dumpus")` then `is_liquid(x, True)`.  
+    * Each dumpus is a numpus → for any x, if `is_a(x, "dumpus")` then `is_a(x, "numpus", True)`.  
+    * Numpuses are sour → for any x, if `is_a(x, "numpus")` then `is_sour(x, True)`.  
+    * Numpuses are jompuses → for any x, if `is_a(x, "numpus")` then `is_a(x, "jompus", True)`.  
+    * Jompuses are not cold → for any x, if `is_a(x, "jompus")` then `is_cold(x, False)`.  
+    * Jompuses are wumpuses → for any x, if `is_a(x, "jompus")` then `is_a(x, "wumpus", True)`.  
+    * Wumpuses are brown → for any x, if `is_a(x, "wumpus")` then `is_brown(x, True)`.  
+    * Wumpuses are vumpuses → for any x, if `is_a(x, "wumpus")` then `is_a(x, "vumpus", True)`.  
+    * Vumpuses are happy → for any x, if `is_a(x, "vumpus")` then `is_happy(x, True)`.  
+    * Each vumpus is a yumpus → for any x, if `is_a(x, "vumpus")` then `is_a(x, "yumpus", True)`.  
+    * Each yumpus is large → for any x, if `is_a(x, "yumpus")` then `is_large(x, True)`.  
+    * Each yumpus is a rompus → for any x, if `is_a(x, "yumpus")` then `is_a(x, "rompus", True)`.  
+    * Rompuses are not mean → for any x, if `is_a(x, "rompus")` then `is_mean(x, False)`.  
+    * Every rompus is a zumpus → for any x, if `is_a(x, "rompus")` then `is_a(x, "zumpus", True)`.  
+    * Each impus is not large → for any x, if `is_a(x, "impus")` then `is_large(x, False)`.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  Derive Sam’s type chain from base fact: Sam is a numpus ⇒ Sam is a jompus ⇒ Sam is a wumpus ⇒ Sam is a vumpus ⇒ Sam is a yumpus ⇒ Sam is large.  
+7.  The query tests if the statement "Sam is large" is provable: since Sam is a numpus, and all numpuses are jompuses, then wumpuses, vumpuses, yumpuses, and thus large, we can prove `is_large("Sam", True)`.  
+    → Use `facts.is_large("Sam", True)`.

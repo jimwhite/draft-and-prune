@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the five vehicles: `"sedan"`, `"convertible"`, `"station_wagon"`, `"bus"`, and `"motorcycle"`.  
+    * Define the domain as integers from **1 to 5**, where **1 = oldest** and **5 = newest**.  
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+    * Convert each statement into a constraint using `lambda` functions:  
+        - "The sedan is the second-newest" → `sedan == 4` (since newest=5, second-newest=4).  
+        - "The station wagon is newer than the convertible" → `station_wagon < convertible`.  
+        - "The sedan is older than the motorcycle" → `sedan < motorcycle` (since older = smaller rank).  
+        - "The bus is the oldest" → `bus == 1`.  
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the unique solution (or first solution) from the result list.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks for the vehicle that is **second-oldest**, i.e., has rank `2`.  
+    * Create a mapping from choice letters (`'A'` to `'E'`) to the corresponding vehicle names:  
+        `{'A': 'sedan', 'B': 'convertible', 'C': 'station_wagon', 'D': 'bus', 'E': 'motorcycle'}`.  
+    * Iterate over the choices, check which vehicle in the solution has rank `2`.  
+    * Output the corresponding choice letter.

@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the three golfers: `"amy"`, `"ana"`, and `" Joe"`. (Note: ensure correct spacing—actual variable name is `"joe"` without space to avoid parsing issues).
+    * Define the domain as integers 1, 2, and 3, where **1 represents first place (best/final rank)** and higher numbers represent worse finishing positions (e.g., 2 = second, 3 = third).
+    * Add the variables and their domain to the `Problem` instance.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+
+4.  **Translate Statements into Constraints:**
+    * "Amy finished below Ana" means Amy’s position number is greater than Ana’s (`amy > ana`).
+    * "Ana finished below Joe" means Ana’s position number is greater than Joe’s (`ana > joes` or more precisely `ana > joe`).
+    * Express these using lambda constraints.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the unique solution (as there should be exactly one arrangement satisfying both inequalities and the all-different requirement).
+
+6.  **Identify the Correct Answer:**
+    * Map each choice letter to its golfer: "A" → `"amy"`, "B" → `"ana"`, "C" → `"joe"`.
+    * Find the golfer with position value `1` (first place).
+    * Output the corresponding choice letter.

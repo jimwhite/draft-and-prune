@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament ranking puzzle.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables as the five golfers: `"Rob"`, `"Eve"`, `"Eli"`, `"Amy"`, and `"Dan"`.  
+   * Define the domain as integers 1 through 5, where **1 = first place (highest rank), 2 = second place**, etc., up to 5 = last place.  
+   * Add all variables with domain {1,2,3,4,5} to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Translate each statement into constraints:  
+     - "Dan finished second" → `Dan == 2`  
+     - "Amy finished below Eve" → Amy's position number is greater than Eve's (`Amy > Eve`), since lower numbers mean higher (better) finishes.  
+     - "Dan finished above Eve" → Dan's position number is less than Eve's (`Dan < Eve`). Given `Dan == 2`, this implies `Eve > 2`.  
+     - "Amy finished above Eli" → Amy's position number is less than Eli's (`Amy < Eli`).  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to enumerate all valid assignments.  
+   * Since the constraints uniquely determine the ordering, retrieve the sole solution.
+
+5. **Determine Which Golfer Finished Third:**  
+   * The question asks who finished third → find the golfer whose position value is **3** in the solution.  
+   * Map choice letters to golfers: A→Rob, B→Eve, C→Eli, D→Amy, E→Dan.  
+   * Identify which choice's golfer has position 3 and output the corresponding letter.

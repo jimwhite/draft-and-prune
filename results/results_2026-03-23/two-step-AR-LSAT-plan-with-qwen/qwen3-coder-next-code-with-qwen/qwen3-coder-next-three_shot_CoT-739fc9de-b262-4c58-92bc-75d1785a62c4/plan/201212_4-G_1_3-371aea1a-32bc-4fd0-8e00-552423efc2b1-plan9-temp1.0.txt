@@ -1,0 +1,23 @@
+1. Enumerate the seven houses and assign each an integer code: J=0, K=1, L=2, M=3, N=4, O=5, P=6.  
+2. Create integer variables `pos[house]` for each house's showing position (1 through 7).  
+3. Add **domain and uniqueness constraints**: all `pos[house]` are integers in [1,7], and pairwise distinct (one house per slot).  
+4. Add **time-of-day constraints**:  
+    - Morning slots: positions 1–2; afternoon: 3–5; evening: 6–7.  
+    - Encode: `pos[J] >= 6` (J must be in evening).  
+    - `pos[K] not in [1,2]` ⇒ encode as `pos[K] >= 3`.  
+5. Add **ordering constraints**:  
+    - L after K: `pos[L] > pos[K]`.  
+    - L before M: `pos[L] < pos[M]`.  
+6. Define the five answer choices as logical statements about house positions:  
+    - A: `pos[K] >= 6` (K in evening)  
+    - B: `3 <= pos[L] <= 5` (L in afternoon)  
+    - C: `pos[L] >= 6` (L in evening)  
+    - D: `pos[M] <= 2` (M in morning)  
+    - E: `3 <= pos[M] <= 5` (M in afternoon)  
+7. For each choice, use proof by necessity:  
+    - Clone base constraints into fresh solver S.  
+    - Assert the *negation* of the choice statement.  
+    - If `S.solve()` returns UNSAT, then the negation is impossible ⇒ the original statement *must* be true.  
+    - Append that choice’s index to `answer_index_list` if UNSAT.  
+8. Since only one answer must be true (single correct choice), return the first (or all) indices where UNSAT occurs.  
+9. Print `answer_index_list`.

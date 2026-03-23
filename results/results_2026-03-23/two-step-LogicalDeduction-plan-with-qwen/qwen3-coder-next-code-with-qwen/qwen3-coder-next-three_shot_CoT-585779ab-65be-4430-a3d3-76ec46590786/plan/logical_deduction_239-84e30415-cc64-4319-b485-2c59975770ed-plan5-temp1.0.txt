@@ -1,0 +1,31 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to define the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruits as variables: `"cantaloupes"`, `"plums"`, `"mangoes"`, `"apples"`, `"loquats"`, `"pears"`, and `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 = least expensive (cheapest)** and **7 = most expensive**.  
+   * Add all variables with domain {1, 2, ..., 7} to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert each statement into a constraint:  
+     - "The apples are less expensive than the cantaloupes" → `apples < cantaloupes`  
+     - "The apples are more expensive than the peaches" → `apples > peaches`  
+     - "The mangoes are the fourth-most expensive" → `mangoes == 4`  
+     - "The peaches are more expensive than the plums" → `peaches > plums`  
+     - "The pears are the third-most expensive" → `pears == 5` (since most expensive = highest rank; 7=most expensive, so third-most expensive is rank 5)  
+     - "The loquats are the third-cheapest" → `loquats == 3` (cheapest = rank 1, so third-cheapest is rank 3)
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of ranks to fruits satisfying all constraints.  
+   * Extract the solution(s); due to the uniqueness implied by consistency, expect exactly one solution.
+
+5. **Determine Which Option Is True:**  
+   * The question asks which fruit is the fourth-most expensive → i.e., rank 4.  
+   * Note: The choices include explicit references to "fourth-most expensive", and one option (C) is "The mangoes are the fourth-most expensive." However, we must verify against constraints:  
+     - From constraint: `mangoes == 4`, so mangoes *are* rank 4.  
+   * Build a mapping from choice letters to fruit names:  
+     - A → "cantaloupes", B → "plums", C → "mangoes", D → "apples", E → "loquats", F → "pears", G → "peaches".  
+   * In the solution, locate which fruit has rank 4. Since mangoes = 4 is a hard constraint, the answer must be C.  
+   * Output choice **C** as the correct answer.

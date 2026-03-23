@@ -1,0 +1,28 @@
+1. Identify all entities: lion, mouse, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, boolean), including both positive and negative facts:
+   - is_cold("lion", True)
+   - needs("lion", "mouse", False)
+   - visits("lion", "squirrel", True)
+   - is_cold("mouse", True)
+   - visits("mouse", "squirrel", False)
+   - is_cold("rabbit", True)
+   - is_rough("rabbit", True)
+   - needs("rabbit", "lion", False)
+   - visits("rabbit", "squirrel", False)
+   - is_kind("squirrel", True)
+   - needs("squirrel", "mouse", True)
+   - needs("squirrel", "rabbit", True)
+   - sees("squirrel", "lion", False)
+   - sees("squirrel", "rabbit", False)
+3. Translate each conditional rule into PyKe rules with `foreach` conditions and `assert` consequences:
+   • needs(X, rabbit) ∧ sees(rabbit, mouse) → ¬sees(mouse, lion)
+   • is_rough(X) → visits(X, mouse)
+   • needs(X, rabbit) ∧ visits(X, mouse) → needs(mouse, rabbit)
+   • needs(X, rabbit) ∧ is_cold(rabbit) → is_rough(X)
+   • needs(X, rabbit) → needs(rabbit, squirrel)
+   • sees(squirrel, lion) ∧ ¬is_green(squirrel) → needs(lion, squirrel)
+   • is_big(X) → visits(X, lion)
+   • visits(X, squirrel) ∧ sees(squirrel, lion) → ¬is_kind(lion)
+4. Note: Since the query is about whether the mouse does *not* need the rabbit, and we have a rule that can potentially derive needs(mouse, rabbit), we must be prepared to handle potential contradictions via negation-as-failure or use of both positive and negative assertions.
+5. The query checks the statement:
+   → Use facts.needs("mouse", "rabbit", False)

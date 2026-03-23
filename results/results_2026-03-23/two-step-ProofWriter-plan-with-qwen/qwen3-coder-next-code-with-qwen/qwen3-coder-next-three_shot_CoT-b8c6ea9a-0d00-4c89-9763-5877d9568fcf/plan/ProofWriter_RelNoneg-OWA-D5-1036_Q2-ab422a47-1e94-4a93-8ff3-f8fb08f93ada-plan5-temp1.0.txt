@@ -1,0 +1,29 @@
+1. Identify all entities involved: bear, cat, lion, squirrel.
+2. Define and encode all explicit properties (e.g., is_cold, is_rough) and relations (e.g., eats, likes, visits) as ternary predicates of the form predicate(subject, object, True), where objects for properties are booleans and for relations are entity names.
+3. Encode directly stated facts:
+   - eats("bear", "squirrel", True)
+   - is_cold("bear", True)
+   - is_rough("bear", True)
+   - visits("bear", "lion", True)
+   - eats("cat", "lion", True)
+   - likes("lion", "cat", True)
+   - visits("lion", "bear", True)
+   - eats("squirrel", "lion", True)
+   - is_cold("squirrel", True)
+   - is_rough("squirrel", True)  ← critical for the query
+   - likes("squirrel", "bear", True)
+   - visits("squirrel", "lion", True)
+4. Translate each conditional into a PyKe rule using `foreach` blocks and `assert` statements:
+   • Red people are green: foreach is_red(X, True) → assert is_green(X, True)
+   • If someone eats the lion then the lion is red: foreach eats(X, "lion", True) → assert is_red("lion", True)
+   • If someone is green and they like the lion then they eat the bear: foreach and(is_green(X, True), likes(X, "lion", True)) → assert eats(X, "bear", True)
+   • If someone visits the bear then the bear likes the lion: foreach visits(X, "bear", True) → assert likes("bear", "lion", True)
+   • If someone likes the squirrel and they like the lion then they visit the lion: foreach and(likes(X, "squirrel", True), likes(X, "lion", True)) → assert visits(X, "lion", True)
+   • If someone is green then they eat the squirrel: foreach is_green(X, True) → assert eats(X, "squirrel", True)
+   • If someone likes the lion then they visit the bear: foreach likes(X, "lion", True) → assert visits(X, "bear", True)
+   • If someone visits the lion and the lion is green then they are red: foreach and(visits(X, "lion", True), is_green("lion", True)) → assert is_red(X, True)
+5. The query tests the negation of a directly stated fact:  
+   → Check whether is_rough("squirrel", False) holds by asserting facts.is_rough("squirrel", False) and verifying if it is derivable.  
+   Since the fact "is_rough("squirrel", True)" is explicitly given, and no rule contradicts or overrides it (i.e., no rule infers is_rough("squirrel", False)), the negation "The squirrel is not rough" must be false.  
+   Thus, the query should be:  
+   facts.is_rough("squirrel", False)

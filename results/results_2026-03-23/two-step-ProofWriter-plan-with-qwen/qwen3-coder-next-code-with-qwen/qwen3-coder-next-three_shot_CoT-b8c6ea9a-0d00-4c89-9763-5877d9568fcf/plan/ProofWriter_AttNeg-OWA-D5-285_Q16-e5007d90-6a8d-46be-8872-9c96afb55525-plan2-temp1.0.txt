@@ -1,0 +1,36 @@
+1. Identify all individuals: Bob, Fiona, Gary, Harry.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_big("Bob", True), is_cold("Bob", True), is_furry("Bob", True), is_smart("Bob", True), is_cold("Fiona", True), is_green("Fiona", False), is_white("Fiona", True), etc.).
+3. Translate each conditional rule into a PyKe `foreach` + `assert` block:
+   • All green people are furry → `foreach(is_green(x, True)) assert(is_furry(x, True))`
+   • If Gary is furry and not smart → Gary is white (note: this is a ground rule for Gary; use `if(gary_furry_and_not_smart)` to match conditions, but PyKe requires pattern-based rules—so rewrite as: `foreach(is_furry(x, True), is_smart(x, False)) assert(is_white(x, True))`; however, the original states "If Gary is furry and not smart..."—so treat as a specific rule only for Gary, but standard practice is to generalize unless explicitly restricted. Since the problem says "If Gary...", encode as ground rule: assert explicitly for x=Gary when both conditions hold (but PyKe rules are general; assume generalization unless otherwise constrained).
+     However, strictly following natural language: only Gary is mentioned. To be safe, encode both interpretations: either as a general rule (if allowed by domain) or as a fact-based conditional. Given typical SMT/PyKe style, prefer generalization unless specificity is emphasized.
+     Since other rules are universally quantified (e.g., "All green people..."), treat this one as general unless specified otherwise. So: `foreach(is_furry(x, True), is_smart(x, False)) assert(is_white(x, True))`
+   • Smart people are green → `foreach(is_smart(x, True)) assert(is_green(x, True))`
+   • If Bob is not green and not white → Bob is furry. Again, this refers specifically to Bob. Options: (a) encode as a general rule for all x, or (b) only Bob. Since the antecedent is specific to Bob, but PyKe rules are pattern-based and generic, and given that other implications are universal, the intended meaning may be general. However, note: the phrase "If Bob is not green and Bob is not white then Bob is furry" is not logically equivalent to a universal statement. To preserve correctness, encode as:
+        Rule_1: `if(is_not_green("Bob") and is_not_white("Bob")) then assert(is_furry("Bob", True))`
+     But PyKe typically uses ternary predicates for properties and pattern matching; "not green" requires negation. In PyKe, use `foreach` with explicit facts and negated facts via conditionals or use Prolog-style negation-as-failure (not directly supported in standard PyKe rules without additional mechanisms). Alternative: Since is_green("Bob", False) may be inferred or given, but not stated—so assume we cannot rely on explicit negation in facts. Instead, encode the rule as:
+        `foreach(is_green(x, False), is_white(x, False)) assert(is_furry(x, True))`
+     This matches general pattern and includes Bob as a case.
+   • Big people are cold → `foreach(is_big(x, True)) assert(is_cold(x, True))`
+   • If someone is smart and furry → they are big → `foreach(is_smart(x, True), is_furry(x, True)) assert(is_big(x, True))`
+   • If someone is white and not cold → they are not blue → general rule: `foreach(is_white(x, True), is_cold(x, False)) assert(is_blue(x, False))`
+   • All cold people are not blue → `foreach(is_cold(x, True)) assert(is_blue(x, False))`
+4. Since the query is about Bob being white, and explicit facts include no mention of "is_white" for Bob, we must infer from rules:
+   - Bob is big (given) → via "big people are cold" rule, Bob is cold.
+   - Bob is cold (already given) and big → via "smart and furry → big", but that doesn’t help directly.
+   - Bob is smart (given) and furry (given) → so by "smart & furry → big", we already have big (consistent).
+   - Bob is cold → by "cold people are not blue", Bob is not blue.
+   - From facts: no direct info on green/white for Bob yet. However:
+     Smart → green (rule), so Bob is smart ⇒ Bob is green.
+   - So is_green("Bob", True) is inferred.
+   - Then, since Bob is green, the rule "green people are furry" applies (but Bob already is furry).
+   - Now, can Bob be white? Not directly contradicted yet.
+   - Check if Bob being white triggers anything:
+     If Bob were white, then (since Bob is cold) we have white and cold → no rule triggers from "white & not cold".
+     The rule about white & not cold ⇒ not blue doesn’t apply here.
+   - However, Bob is green (inferred), and nothing directly forbids being both green and white.
+   - Is there a rule that prevents being green and white? No explicit one.
+   - But can we derive Bob is white? Unlikely—no rule yields white for Bob.
+     So we expect "unknown" unless further inference shows necessity or impossibility.
+5. Query: Use facts.is_white("Bob", True) — if PyKe can derive it, answer true; if derives is_white("Bob", False), then false; else unknown.
+6. Note: Since the question asks whether "Bob is white" holds, and we must determine truth value, ensure the query correctly tests for the assertion. In PyKe, use `facts.is_white("Bob", True)` as goal.

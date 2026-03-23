@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the five vehicles as string variables: `"truck"`, `"station_wagon"`, `"motorcycle"`, `"convertible"`, and `"hatchback"`.  
+    * Define the domain for age ranking using integers from 1 (oldest) to 5 (newest).  
+    * Add all five vehicle variables with domain `{1,2,3,4,5}` to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.  
+    * Add constraints using lambda functions based on the statements:  
+        - "The convertible is newer than the truck" → `convertible > truck`  
+        - "The station wagon is newer than the hatchback" → `station_wagon > hatchback`  
+        - "The convertible is older than the hatchback" → `convertible < hatchback`  
+        - "The station wagon is the second-newest" → `station_wagon == 4` (since 5 = newest, 4 = second-newest)
+
+4.  **Solve for Valid Arrangements:**  
+    * Call `getSolutions()` to retrieve all solutions satisfying the constraints.  
+    * Extract the unique solution (list contains one dictionary mapping vehicles to ranks).
+
+5.  **Identify the Correct Answer:**  
+    * Note: The question asks which vehicle is second-newest, and the statement "The station wagon is the second-newests" is already given. However, verify consistency and find which vehicle has rank 4 in the solution.  
+    * Map choice letters to vehicle names: A→truck, B→station_wagon, C→motorcycle, D→convertible, E→hatchback.  
+    * In the solved solution, find which vehicle has position 4 (second-newest).  
+    * Output the corresponding choice letter.

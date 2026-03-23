@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * The seven vehicles are the variables: `"convertible"`, `"truck"`, `"tractor"`, `"limousine"`, `"motorcyle"`, `"hatchback"`, and `"sedan"`.  
+   * Define a numerical domain for age ranking: integers 1 to 7, where **1 = oldest**, and **7 = newest**.  
+   * Add all variables and domain (1–7) to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Translate each statement into a constraint using `addConstraint` with lambda functions:  
+     - "The hatchback is the fourth-newest" → `hatchback == 4`  
+       *(since newest = 7, fourth-newest = 7−3 = 4)*  
+     - "The limousine is older than the motorcyle" → `limousine < motorcyle`  
+     - "The truck is newer than the motorcyle" → `truck > motorcyle`  
+     - "The sedan is the second-newest" → `sedan == 6` *(7−1 = 6)*  
+     - "The tractor is newer than the convertible" → `tractor > convertible`  
+     - "The hatchback is older than the convertible" → `hatchback < convertible`  
+       *(hatchback = 4, so convertible > 4)*
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to compute all assignments satisfying the constraints.  
+   * Extract the unique solution (the problem is constrained enough to yield one).  
+
+5. **Determine the Third-Newest Vehicle:**  
+   * The third-newest corresponds to rank = 7 − 2 = **5**.  
+   * Create a dictionary mapping answer choices to vehicles:  
+     `{"A": "convertible", "B": "truck", "C": "tractor", "D": "limousine", "E": "motorcyle", "F": "hatchback", "G": "sedan"}`  
+   * Iterate through choices; for each vehicle in the solution, check if its rank is 5.  
+   * Return the letter (A–G) of the vehicle with rank 5 as the answer.

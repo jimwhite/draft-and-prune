@@ -1,0 +1,27 @@
+1. Enumerate the four art historians and assign integer indices: Farley=0, Garcia=1, Holden=2, Jiang=3.  
+2. Enumerate the four lecture topics and assign integer indices: lithographs=0, oil paintings=1, sculptures=2, watercolors=3.  
+3. Create integer variables `pos_H[i]` for each historian i (0–3) representing the lecture position (1 to 4).  
+4. Create integer variables `topic_pos[t]` for each topic t (0–3) representing the lecture position (1 to 4).  
+5. Add **bijective assignment constraints**:  
+    - Each historian gives exactly one lecture ⇒ `pos_H` is a permutation of [1,2,3,4].  
+    - Each topic is covered exactly once ⇒ `topic_pos` is a permutation of [1,2,3,4].  
+6. Add **pairing constraint**: the historian who gives the lecture on topic `t` is the one whose position equals `topic_pos[t]`.  
+    - Equivalently, for each historian h and topic t, introduce Boolean variable `assign[h][t]` meaning “historian h gives lecture on topic t”, and enforce:  
+        - Each historian assigned to exactly one topic.  
+        - Each topic assigned to exactly one historian.  
+    - Then `pos_H[h] = topic_pos[t]` iff `assign[h][t]` is true.  
+7. Add **topic ordering constraints**:  
+    - Oil paintings and watercolors both earlier than lithographs: `topic_pos[1] < topic_pos[0]` and `topic_pos[3] < topic_pos[0]`.  
+    - Farley’s lecture earlier than oil paintings: `pos_H[0] < topic_pos[1]`.  
+    - Holden’s lecture earlier than both Garcia’s and Jiang’s: `pos_H[2] < pos_H[1]` and `pos_H[2] < pos_H[3]`.  
+8. Translate the answer choices into logical statements about positions/topics:  
+    - A: Farley’s lecture earlier than sculptures ⇒ `pos_H[0] < topic_pos[2]`  
+    - B: Holden’s lecture earlier than lithographs ⇒ `pos_H[2] < topic_pos[0]`  
+    - C: Sculptures earlier than Garcia’s ⇒ `topic_pos[2] < pos_H[1]`  
+    - D: Sculptures earlier than Jiang’s ⇒ `topic_pos[2] < pos_H[3]`  
+    - E: Watercolors earlier than Garcia’s ⇒ `topic_pos[3] < pos_H[1]`  
+9. Define a list `must_be_true_indices = []`. For each answer choice i (0–4):  
+    - Clone base constraints into fresh solver `S`.  
+    - Assert that answer choice i is **false** (e.g., for i=0, assert `pos_H[0] >= topic_pos[2]`).  
+    - If `S.check()` is UNSAT, then the answer choice i must be true; append i to `must_be_true_indices`.  
+10. Print `must_be_true_indices`.

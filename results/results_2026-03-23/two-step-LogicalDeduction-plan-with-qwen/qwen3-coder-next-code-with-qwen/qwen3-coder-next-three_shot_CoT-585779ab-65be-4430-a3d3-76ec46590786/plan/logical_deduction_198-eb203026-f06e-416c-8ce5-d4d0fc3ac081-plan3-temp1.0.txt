@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven golfers: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, and `"Ana"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest/earliest finish)** and **7 = last place (lowest/latest finish)**.
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Translate each clue into constraints using `addConstraint` with lambda functions:
+        * "Joe finished first" → position of `"Joe"` equals 1.
+        * "Mel finished second-to-last" → position of `"Mel"` equals 6 (since last is 7, second-to-last is 6).
+        * "Rob finished above Eve" → position of `"Rob"` < position of `"Eve"` (lower rank = better finish).
+        * "Mel finished above Eli" → position of `"Mel"` < position of `"Eli"`.
+        * "Rob finished below Ada" → position of `"Rob"` > position of `"Ada"` (lower rank = better finish, so "below" means higher position number).
+        * "Eve finished fourth" → position of `"Eve"` equals 4.
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments of positions to golfers.
+    * Extract the unique solution (since the problem is fully determined).
+
+5.  **Determine the Correct Answer:**
+    * The question asks who finished fourth (i.e., position 4).
+    * Observe from the constraints that `"Eve"` is explicitly assigned position 4.
+    * Match this to the choices: Choice **"E) Eve finished fourth."** is directly supported.
+    * Return choice letter `"E"` as the answer.

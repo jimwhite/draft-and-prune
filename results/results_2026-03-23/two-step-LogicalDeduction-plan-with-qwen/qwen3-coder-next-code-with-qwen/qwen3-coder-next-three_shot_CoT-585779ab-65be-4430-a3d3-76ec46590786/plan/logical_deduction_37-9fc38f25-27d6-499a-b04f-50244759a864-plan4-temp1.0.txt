@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to define the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables as the five golfers: `"Joe"`, `"Ana"`, `"Amy"`, `"Mya"`, and `"Eve"`.  
+    * Define the domain as integers 1 through 5, where **1 = first place (best)** and **5 = last place (worst)**.  
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Translate each statement into a constraint:  
+        - "Joe finished last" → Joe's position = 5.  
+        - "Ana finished second" → Ana's position = 2.  
+        - "Mya finished second-to-last" → Mya's position = 4 (since last is 5, second-to-last is 4).  
+        - "Eve finished below Amy" → Eve's position number is greater than Amy's (since higher numbers = worse finishing positions: Amy < Eve).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution from the list of solutions.
+
+5.  **Determine Which Golfer Finished First (Position 1):**  
+    * Create a mapping from choice letters to golfer names as per the choices (e.g., "C" → "Amy").  
+    * Scan the solution dictionary to find which golfer has position 1.  
+    * Return the choice letter corresponding to that golfer as the correct answer.

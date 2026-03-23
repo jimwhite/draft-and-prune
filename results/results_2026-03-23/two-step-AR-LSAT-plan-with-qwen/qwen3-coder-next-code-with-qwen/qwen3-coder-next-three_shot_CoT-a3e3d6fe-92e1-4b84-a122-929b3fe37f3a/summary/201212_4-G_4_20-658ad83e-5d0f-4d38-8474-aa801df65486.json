@@ -1,0 +1,590 @@
+{
+  "problem": {
+    "context": "An editor will edit seven articles, one at a time. Three of the articles—G, H, and J—cover finance; three other articles—Q, R, and S—cover nutrition; and the remaining article, Y, covers wildlife. The order in which the articles are edited is subject to the following conditions: Consecutive articles cannot cover the same topic as each other. S can be earlier than Q only if Q is third. S must be earlier than Y. J must be earlier than G, and G must be earlier than R.",
+    "question": "Which one of the following could be true?",
+    "answers": [
+      "G is second",
+      "H is second.",
+      "S is second",
+      "R is third.",
+      "Y is third"
+    ],
+    "label": 1,
+    "id_string": "201212_4-G_4_20"
+  },
+  "timing": 576.8290629386902,
+  "all_solver_outputs": [
+    "[0, 1, 2, 3, 4]",
+    "[1]",
+    "[]",
+    "[1]",
+    "[]",
+    "[1]",
+    "H is second",
+    "[1]",
+    "[1]",
+    "H is second",
+    "[1]",
+    "[0, 1, 2, 3, 4]",
+    "[1]",
+    "1",
+    "1"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 455,
+        "total_tokens": 2077
+      },
+      "plan_generation_api_time_only": 15.57433819770813,
+      "code_generation_usage": {
+        "prompt_tokens": 3447,
+        "completion_tokens": 760,
+        "total_tokens": 4207
+      },
+      "code_generation_api_time_only": 20.71618390083313,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5069,
+        "completion_tokens": 1215,
+        "total_tokens": 6284
+      },
+      "path_api_time_only": 36.29052209854126,
+      "solver_time_only": 0.08328008651733398
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 354,
+        "total_tokens": 1976
+      },
+      "plan_generation_api_time_only": 11.8134024143219,
+      "code_generation_usage": {
+        "prompt_tokens": 3346,
+        "completion_tokens": 624,
+        "total_tokens": 3970
+      },
+      "code_generation_api_time_only": 19.21288824081421,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4968,
+        "completion_tokens": 978,
+        "total_tokens": 5946
+      },
+      "path_api_time_only": 31.02629065513611,
+      "solver_time_only": 0.0888676643371582
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 496,
+        "total_tokens": 2118
+      },
+      "plan_generation_api_time_only": 14.607953310012817,
+      "code_generation_usage": {
+        "prompt_tokens": 3488,
+        "completion_tokens": 758,
+        "total_tokens": 4246
+      },
+      "code_generation_api_time_only": 21.314366817474365,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5110,
+        "completion_tokens": 1254,
+        "total_tokens": 6364
+      },
+      "path_api_time_only": 35.92232012748718,
+      "solver_time_only": 0.09341835975646973
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 298,
+        "total_tokens": 1920
+      },
+      "plan_generation_api_time_only": 10.124655961990356,
+      "code_generation_usage": {
+        "prompt_tokens": 3290,
+        "completion_tokens": 666,
+        "total_tokens": 3956
+      },
+      "code_generation_api_time_only": 19.890681743621826,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4912,
+        "completion_tokens": 964,
+        "total_tokens": 5876
+      },
+      "path_api_time_only": 30.015337705612183,
+      "solver_time_only": 0.10556745529174805
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 439,
+        "total_tokens": 2061
+      },
+      "plan_generation_api_time_only": 14.13926386833191,
+      "code_generation_usage": {
+        "prompt_tokens": 3431,
+        "completion_tokens": 687,
+        "total_tokens": 4118
+      },
+      "code_generation_api_time_only": 18.820981979370117,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5053,
+        "completion_tokens": 1126,
+        "total_tokens": 6179
+      },
+      "path_api_time_only": 32.960245847702026,
+      "solver_time_only": 0.08748221397399902
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 383,
+        "total_tokens": 2005
+      },
+      "plan_generation_api_time_only": 10.77903151512146,
+      "code_generation_usage": {
+        "prompt_tokens": 3375,
+        "completion_tokens": 695,
+        "total_tokens": 4070
+      },
+      "code_generation_api_time_only": 20.73349404335022,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4997,
+        "completion_tokens": 1078,
+        "total_tokens": 6075
+      },
+      "path_api_time_only": 31.51252555847168,
+      "solver_time_only": 0.08411717414855957
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 1070,
+        "total_tokens": 2692
+      },
+      "plan_generation_api_time_only": 28.835121631622314,
+      "code_generation_usage": {
+        "prompt_tokens": 4062,
+        "completion_tokens": 707,
+        "total_tokens": 4769
+      },
+      "code_generation_api_time_only": 21.65671706199646,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5684,
+        "completion_tokens": 1777,
+        "total_tokens": 7461
+      },
+      "path_api_time_only": 50.491838693618774,
+      "solver_time_only": 0.13426923751831055
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 367,
+        "total_tokens": 1989
+      },
+      "plan_generation_api_time_only": 9.768950462341309,
+      "code_generation_usage": {
+        "prompt_tokens": 3359,
+        "completion_tokens": 879,
+        "total_tokens": 4238
+      },
+      "code_generation_api_time_only": 25.07397747039795,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4981,
+        "completion_tokens": 1246,
+        "total_tokens": 6227
+      },
+      "path_api_time_only": 34.84292793273926,
+      "solver_time_only": 0.09059691429138184
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 660,
+        "total_tokens": 2282
+      },
+      "plan_generation_api_time_only": 17.787668704986572,
+      "code_generation_usage": {
+        "prompt_tokens": 3652,
+        "completion_tokens": 708,
+        "total_tokens": 4360
+      },
+      "code_generation_api_time_only": 19.208585500717163,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5274,
+        "completion_tokens": 1368,
+        "total_tokens": 6642
+      },
+      "path_api_time_only": 36.996254205703735,
+      "solver_time_only": 0.08365535736083984
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 650,
+        "total_tokens": 2272
+      },
+      "plan_generation_api_time_only": 16.6272714138031,
+      "code_generation_usage": {
+        "prompt_tokens": 3642,
+        "completion_tokens": 686,
+        "total_tokens": 4328
+      },
+      "code_generation_api_time_only": 25.113876581192017,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5264,
+        "completion_tokens": 1336,
+        "total_tokens": 6600
+      },
+      "path_api_time_only": 41.74114799499512,
+      "solver_time_only": 0.09585762023925781
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 519,
+        "total_tokens": 2141
+      },
+      "plan_generation_api_time_only": 14.416010618209839,
+      "code_generation_usage": {
+        "prompt_tokens": 3511,
+        "completion_tokens": 635,
+        "total_tokens": 4146
+      },
+      "code_generation_api_time_only": 17.70323348045349,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5133,
+        "completion_tokens": 1154,
+        "total_tokens": 6287
+      },
+      "path_api_time_only": 32.11924409866333,
+      "solver_time_only": 0.09842181205749512
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 312,
+        "total_tokens": 1934
+      },
+      "plan_generation_api_time_only": 9.443923950195312,
+      "code_generation_usage": {
+        "prompt_tokens": 3304,
+        "completion_tokens": 600,
+        "total_tokens": 3904
+      },
+      "code_generation_api_time_only": 20.446388006210327,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4926,
+        "completion_tokens": 912,
+        "total_tokens": 5838
+      },
+      "path_api_time_only": 29.89031195640564,
+      "solver_time_only": 0.09029388427734375
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 481,
+        "total_tokens": 2103
+      },
+      "plan_generation_api_time_only": 15.404978036880493,
+      "code_generation_usage": {
+        "prompt_tokens": 3473,
+        "completion_tokens": 482,
+        "total_tokens": 3955
+      },
+      "code_generation_api_time_only": 14.036204099655151,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5095,
+        "completion_tokens": 963,
+        "total_tokens": 6058
+      },
+      "path_api_time_only": 29.441182136535645,
+      "solver_time_only": 0.08248782157897949
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 717,
+        "total_tokens": 2339
+      },
+      "plan_generation_api_time_only": 20.509711742401123,
+      "code_generation_usage": {
+        "prompt_tokens": 3709,
+        "completion_tokens": 558,
+        "total_tokens": 4267
+      },
+      "code_generation_api_time_only": 16.999239206314087,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5331,
+        "completion_tokens": 1275,
+        "total_tokens": 6606
+      },
+      "path_api_time_only": 37.50895094871521,
+      "solver_time_only": 0.0900111198425293
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1622,
+        "completion_tokens": 594,
+        "total_tokens": 2216
+      },
+      "plan_generation_api_time_only": 15.8275887966156,
+      "code_generation_usage": {
+        "prompt_tokens": 3586,
+        "completion_tokens": 601,
+        "total_tokens": 4187
+      },
+      "code_generation_api_time_only": 16.134433031082153,
+      "repair_usage_total": {
+        "prompt_tokens": 731,
+        "completion_tokens": 604,
+        "total_tokens": 1335
+      },
+      "repair_api_time_only_total": 18.48910093307495,
+      "path_usage_total": {
+        "prompt_tokens": 5939,
+        "completion_tokens": 1799,
+        "total_tokens": 7738
+      },
+      "path_api_time_only": 50.451122760772705,
+      "solver_time_only": 0.10095977783203125
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 77736,
+    "completion_tokens": 18445,
+    "total_tokens": 96181
+  },
+  "api_time_only_total": 541.2102227210999,
+  "solver_time_only_total": 1.4092864990234375,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Article indices: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6\narticles = [\"G\", \"H\", \"J\", \"Q\", \"R\", \"S\", \"Y\"]\ntopic_map = {\n    \"G\": 0, \"H\": 0, \"J\": 0,   # Finance\n    \"Q\": 1, \"R\": 1, \"S\": 1,   # Nutrition\n    \"Y\": 2                    # Wildlife\n}\n\n# Position variables: pos[a] = position in sequence (1-7)\npos = {a: Int(f\"pos_{a}\") for a in articles}\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: positions 1-7 and all distinct\nfor a in articles:\n    solver.add(pos[a] >= 1, pos[a] <= 7)\nsolver.add(Distinct(*[pos[a] for a in articles]))\n\n# No consecutive same-topic constraint\nfor i, a1 in enumerate(articles):\n    for j, a2 in enumerate(articles):\n        if i < j and topic_map[a1] == topic_map[a2]:\n            # Enforce |pos[a1] - pos[a2]| != 1\n            solver.add(Or(pos[a1] < pos[a2] - 1, pos[a1] > pos[a2] + 1))\n\n# S can be earlier than Q only if Q is third: (pos[S] < pos[Q]) → (pos[Q] == 3)\nsolver.add(Or(pos[\"S\"] >= pos[\"Q\"], pos[\"Q\"] == 3))\n\n# S must be earlier than Y\nsolver.add(pos[\"S\"] < pos[\"Y\"])\n\n# J before G, and G before R\nsolver.add(pos[\"J\"] < pos[\"G\"])\nsolver.add(pos[\"G\"] < pos[\"R\"])\n\n# Answer choices: check each possibility\nanswer_choices = [\n    (\"G is second\", lambda s: s.add(pos[\"G\"] == 2)),\n    (\"H is second.\", lambda s: s.add(pos[\"H\"] == 2)),\n    (\"S is second\", lambda s: s.add(pos[\"S\"] == 2)),\n    (\"R is third.\", lambda s: s.add(pos[\"R\"] == 3)),\n    (\"Y is third\", lambda s: s.add(pos[\"Y\"] == 3))\n]\n\n# Find which choices are possible\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for assertion in solver.assertions():\n        s_chk.add(assertion)\n    \n    # Add the specific constraint for this choice\n    constraint(s_chk)\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Article indices: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6\narticles = [\"G\", \"H\", \"J\", \"Q\", \"R\", \"S\", \"Y\"]\ntopic_map = {\n    \"G\": 0, \"H\": 0, \"J\": 0,   # Finance\n    \"Q\": 1, \"R\": 1, \"S\": 1,   # Nutrition\n    \"Y\": 2                    # Wildlife\n}\n\n# Position variables: pos[a] = position in sequence (1-7)\npos = {a: Int(f\"pos_{a}\") for a in articles}\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: positions 1-7 and all distinct\nfor a in articles:\n    solver.add(pos[a] >= 1, pos[a] <= 7)\nsolver.add(Distinct(*[pos[a] for a in articles]))\n\n# No consecutive same-topic constraint\nfor i, a1 in enumerate(articles):\n    for j, a2 in enumerate(articles):\n        if i < j and topic_map[a1] == topic_map[a2]:\n            # Enforce |pos[a1] - pos[a2]| != 1\n            solver.add(Or(pos[a1] < pos[a2] - 1, pos[a1] > pos[a2] + 1))\n\n# S can be earlier than Q only if Q is third: (pos[S] < pos[Q]) → (pos[Q] == 3)\nsolver.add(Or(pos[\"S\"] >= pos[\"Q\"], pos[\"Q\"] == 3))\n\n# S must be earlier than Y\nsolver.add(pos[\"S\"] < pos[\"Y\"])\n\n# J before G, and G before R\nsolver.add(pos[\"J\"] < pos[\"G\"])\nsolver.add(pos[\"G\"] < pos[\"R\"])\n\n# Answer choices: check each possibility\nanswer_choices = [\n    (\"G is second\", lambda s: s.add(pos[\"G\"] == 2)),\n    (\"H is second.\", lambda s: s.add(pos[\"H\"] == 2)),\n    (\"S is second\", lambda s: s.add(pos[\"S\"] == 2)),\n    (\"R is third.\", lambda s: s.add(pos[\"R\"] == 3)),\n    (\"Y is third\", lambda s: s.add(pos[\"Y\"] == 3))\n]\n\n# Find which choices are possible\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for assertion in solver.assertions():\n        s_chk.add(assertion)\n    \n    # Add the specific constraint for this choice\n    constraint(s_chk)\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break\n```\nError message from solver:\nZ3 execution error (return code 1).\nStderr:   File \"/tmp/tmpctk01grc.py\", line 61\n    ```\n    ^\nSyntaxError: invalid syntax\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Article indices: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6\narticles = [\"G\", \"H\", \"J\", \"Q\", \"R\", \"S\", \"Y\"]\ntopic_map = {\n    \"G\": 0, \"H\": 0, \"J\": 0,   # Finance\n    \"Q\": 1, \"R\": 1, \"S\": 1,   # Nutrition\n    \"Y\": 2                    # Wildlife\n}\n\n# Position variables: pos[a] = position in sequence (1-7)\npos = {a: Int(f\"pos_{a}\") for a in articles}\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: positions 1-7 and all distinct\nfor a in articles:\n    solver.add(pos[a] >= 1, pos[a] <= 7)\nsolver.add(Distinct(*[pos[a] for a in articles]))\n\n# No consecutive same-topic constraint\nfor i, a1 in enumerate(articles):\n    for j, a2 in enumerate(articles):\n        if i < j and topic_map[a1] == topic_map[a2]:\n            # Enforce |pos[a1] - pos[a2]| != 1\n            solver.add(Or(pos[a1] < pos[a2] - 1, pos[a1] > pos[a2] + 1))\n\n# S can be earlier than Q only if Q is third: (pos[S] < pos[Q]) → (pos[Q] == 3)\nsolver.add(Or(pos[\"S\"] >= pos[\"Q\"], pos[\"Q\"] == 3))\n\n# S must be earlier than Y\nsolver.add(pos[\"S\"] < pos[\"Y\"])\n\n# J before G, and G before R\nsolver.add(pos[\"J\"] < pos[\"G\"])\nsolver.add(pos[\"G\"] < pos[\"R\"])\n\n# Answer choices: check each possibility\nanswer_choices = [\n    (\"G is second\", lambda s: s.add(pos[\"G\"] == 2)),\n    (\"H is second.\", lambda s: s.add(pos[\"H\"] == 2)),\n    (\"S is second\", lambda s: s.add(pos[\"S\"] == 2)),\n    (\"R is third.\", lambda s: s.add(pos[\"R\"] == 3)),\n    (\"Y is third\", lambda s: s.add(pos[\"Y\"] == 3))\n]\n\n# Find which choices are possible\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for assertion in solver.assertions():\n        s_chk.add(assertion)\n    \n    # Add the specific constraint for this choice\n    constraint(s_chk)\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "1",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 731,
+            "completion_tokens": 604,
+            "total_tokens": 1335
+          },
+          "api_time_only": 18.48910093307495,
+          "solver_time_only": 0.08036136627197266
+        }
+      ]
+    }
+  ]
+}

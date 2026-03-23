@@ -1,0 +1,22 @@
+1. Enumerate the six employees and assign integer indices: Robertson=0, Souza=1, Togowa=2, Vaughn=3, Xu=4, Young=5.  
+2. Create integer variables `pos[e]` for each employee e ∈ {0..5}, representing their assigned parking space number (1 to 6).  
+3. Add **domain constraints**: each `pos[e] ∈ [1,6]`, and all six positions are distinct (using `Distinct` constraint).  
+4. Add **base constraints** from rules:  
+   - Young > Togowa: `pos[Young] > pos[Togowa]`  
+   - Xu > Souza: `pos[Xu] > pos[Souza]`  
+   - Robertson > Young: `pos[Robertson] > pos[Young]`  
+   - Robertson ∈ {1,2,3,4}: `Or(pos[Robertson]==1, pos[Robertson]==2, pos[Roberson]==3, pos[Robertson]==4)`  
+5. Add **conditional constraint** for the scenario: Young > Souza → `pos[Young] > pos[Souza]`.  
+6. Translate each answer choice into a candidate constraint:  
+   - Togowa is assigned space #1 → `pos[Togowa] == 1`  
+   - Young is assigned space #2 → `pos[Young] == 2`  
+   - Robertson is assigned space #3 → `pos[Robertson] == 3`  
+   - Souza is assigned space #3 → `pos[Souza] == 3`  
+   - Vaughn is assigned space #4 → `pos[Vaughn] == 4`  
+7. For each candidate constraint in order:  
+   - Clone the base constraints + conditional constraint into a fresh solver.  
+   - Assert the candidate constraint.  
+   - Check satisfiability (SAT/UNSAT).  
+   - If SAT, the candidate **could be true**; record its index.  
+8. The question asks "which one could be true", so collect indices of all satisfiable candidates (exactly one should be).  
+9. Return the index (or output corresponding choice string) for the satisfiable option(s).

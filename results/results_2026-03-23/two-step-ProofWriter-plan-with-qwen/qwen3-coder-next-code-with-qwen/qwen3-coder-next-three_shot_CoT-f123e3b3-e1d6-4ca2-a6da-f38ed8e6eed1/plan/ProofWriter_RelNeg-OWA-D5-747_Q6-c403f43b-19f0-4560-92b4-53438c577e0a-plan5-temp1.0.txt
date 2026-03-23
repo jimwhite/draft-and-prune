@@ -1,0 +1,36 @@
+1. Identify all entities involved: bear, tiger, mouse, squirrel.  
+2. Define ternary predicates for properties and relations using the form predicate(subject, object, True/False).  
+   - Properties: is_red, is_rough, is_green, is_kind take boolean objects (e.g., is_red("mouse", True), is_red("bear", False)).  
+   - Relations: likes, visits, eats take an entity as the second argument (e.g., likes("bear", "squirrel", True)).  
+3. Encode all explicitly stated facts (including negative literals) using `facts.pred(subject, object, value)` where value is True or False as appropriate:  
+   - eats("bear", "tiger", True), not_red_bear = facts.is_red("bear", False), likes("bear", "squirrel", True), visits("bear", "squirrel", True)  
+   - eats("mouse", "tiger", True), is_red("mouse", True), is_rough("mouse", True), likes("mouse", "bear", True), not_likes_tiger = facts.likes("mouse", "tiger", False)  
+   - likes("squirrel", "bear", True), eats("tiger", "mouse", True)  
+4. Translate each conditional statement into a rule:  
+   • If the mouse likes the bear and the bear likes the mouse → the mouse is not kind:  
+     foreach: facts.likes("mouse", "bear", True) ∧ facts.likes("bear", "mouse", True)  
+     assert: facts.is_kind("mouse", False)  
+   • If someone visits the mouse → they like the squirrel:  
+     foreach: facts.visits(X, "mouse", True)  
+     assert: facts.likes(X, "squirrel", True)  
+   • If someone is green → they visit the bear:  
+     foreach: facts.is_green(X, True)  
+     assert: facts.visits(X, "bear", True)  
+   • If someone likes the bear and the bear visits the tiger → they visit the bear:  
+     foreach: facts.likes(X, "bear", True) ∧ facts.visits("bear", "tiger", True)  
+     assert: facts.visits(X, "bear", True)  
+   • If someone eats the bear and they do not like the tiger → they are green:  
+     foreach: facts.eats(X, "bear", True) ∧ facts.likes(X, "tiger", False)  
+     assert: facts.is_green(X, True)  
+   • If someone visits the mouse → the mouse eats the bear:  
+     foreach: facts.visits(X, "mouse", True)  
+     assert: facts.eats("mouse", "bear", True)  
+   • If someone is red and eats the tiger → the tiger visits the mouse:  
+     foreach: facts.is_red(X, True) ∧ facts.eats(X, "tiger", True)  
+     assert: facts.visits("tiger", "mouse", True)  
+   • If someone visits the bear → they are kind:  
+     foreach: facts.visits(X, "bear", True)  
+     assert: facts.is_kind(X, True)  
+5. Note that several assertions depend on derived facts (e.g., “bear visits the tiger” is not given, so rules that require it may not fire unless derived).  
+6. The query checks whether the tiger does *not* like the squirrel:  
+   → Use facts.likes("tiger", "squirrel", False)

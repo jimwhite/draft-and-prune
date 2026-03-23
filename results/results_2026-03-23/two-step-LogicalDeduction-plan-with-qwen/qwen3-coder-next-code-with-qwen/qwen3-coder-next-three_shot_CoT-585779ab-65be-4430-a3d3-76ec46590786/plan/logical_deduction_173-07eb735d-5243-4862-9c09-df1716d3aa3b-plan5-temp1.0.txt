@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, ensuring a consistent ranking system.
+    * Add all variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all fruits have distinct prices/ranks by adding an `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into a Constraint:**
+    * "The pears are more expensive than the kiwis" → `pears > kiwis`.
+    * "The watermelons are less expensive than the peaches" → `watermelons < peaches`.
+    * "The mangoes are the third-cheapest" → `mangoes == 3`.
+    * "The watermelons are the third-most expensive" → In a 7-item ranking (1 cheapest, 7 most expensive), the third-most expensive is rank `7 - 3 + 1 = 5` → `watermelons == 5`.
+    * "The plums are the second-most expensive" → rank `7 - 2 + 1 = 6` → `plums == 6`.
+    * "The loquats are the second-cheapest" → rank `2` → `loquats == 2`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments of ranks to fruits.
+    * Extract the unique solution (since the constraints fully determine the ordering).
+
+6.  **Map Choices to Ranks and Identify Truth:**
+    * Note the question asks: "Which of the following is true?" regarding which fruit is **second-most expensive**, i.e., rank `6`.
+    * Examine the solution dictionary to find which fruit has rank `6`.
+    * Map each choice letter (`'A'` through `'G'`) to its corresponding fruit:
+        * A: loquats, B: peaches, C: watermelons, D: plums, E: kiwis, F: mangoes, G: pears.
+    * Determine which choice's fruit has rank `6` in the solution and return its letter as the answer.

@@ -1,0 +1,26 @@
+1. Enumerate the seven sales representatives and assign each an integer code.  
+2. Create integer variables for the zone assignment of each representative (1, 2, or 3).  
+3. Add **domain constraints**: each representative’s zone variable must be in {1, 2, 3}.  
+4. Add **mutual exclusivity and coverage constraints**: each representative assigned to exactly one zone (already ensured by zone being a single integer).  
+5. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1 (XOR).  
+6. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2 (XOR).  
+7. Add **Parra-Quinn constraint**: Parra and Quinn are assigned to the same zone.  
+8. Add **Stuckey-Udall constraint**: Stuckey and Udall are assigned to the same zone.  
+9. Add **zone size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+10. For each choice (list of representatives), construct a candidate assignment:  
+    - Assume *only* the listed representatives are in Zone 3.  
+    - Infer assignments for others using constraints:  
+        • If Parra and Quinn must be together, then if one is in Zone 3, both are.  
+        • If Stuckey and Udall must be together, same logic.  
+        • Use Zone 1 and Zone 2 XOR constraints to fix remaining assignments where possible.  
+    - More concretely: for each choice, build a solver with:  
+        • Assert that each listed rep is in Zone 3.  
+        • Assert that each *unlisted* rep is *not* in Zone 3 (i.e., zone = 1 or 2).  
+        • Add all original constraints (steps 3–9).  
+    - If this augmented system is SAT, then the choice is possible.  
+11. Define `answer_index_list = []`. For each choice index i (0 to 4):  
+    - Clone the base solver.  
+    - Assert that exactly the representatives in choice[i] are assigned zone 3 (i.e., for rep r: zone_r == 3 iff r ∈ choice[i]).  
+    - Add all other constraints.  
+    - If model is SAT, append i to `answer_index_list`.  
+12. Print the answer index list (or map to the choice string).

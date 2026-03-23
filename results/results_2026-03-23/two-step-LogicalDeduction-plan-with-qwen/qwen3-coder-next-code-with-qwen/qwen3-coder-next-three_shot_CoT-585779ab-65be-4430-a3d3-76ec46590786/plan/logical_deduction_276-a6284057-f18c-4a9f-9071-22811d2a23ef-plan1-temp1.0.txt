@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the three books as variables: `"purple"`, `"red"`, and `"yellow"`.  
+   * Define the domain as positions 1 to 3, where **1 = leftmost** and **3 = rightmost**.  
+   * Add all three variables with domain `{1, 2, 3}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate the statements into constraints:  
+     - "The purple book is to the right of the yellow book" → `purple > yellow` (position number greater).  
+     - "The yellow book is to the right of the red book" → `yellow > red`.  
+   * Add both constraints using lambda functions or direct relational constraints.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (since the ordering is fully determined by the chain of inequalities).
+
+5. **Determine the Leftmost Book:**  
+   * Identify the book assigned to position 1 (leftmost) in the solution.  
+   * Map this book to the corresponding choice letter:  
+     - If `"red"` is in position 1 → choose "B".  
+     - If `"yellow"` is in position 1 → choose "C".  
+     - If `"purple"` is in position 1 → choose "A" (though logically impossible per constraints).  
+   * Output the correct choice letter as the answer.

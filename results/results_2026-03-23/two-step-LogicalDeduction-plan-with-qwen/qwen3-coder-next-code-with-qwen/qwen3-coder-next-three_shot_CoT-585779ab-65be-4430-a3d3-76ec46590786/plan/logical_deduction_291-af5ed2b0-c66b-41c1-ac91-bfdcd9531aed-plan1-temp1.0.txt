@@ -1,0 +1,21 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to hold variables and constraints.
+
+2.  **Define Variables and Domain:**
+    * Define the three books as string variables: `"blue"`, `"orange"`, and `"green"`.
+    * Define the domain as positions 1 to 3, where **1 = leftmost** and **3 = rightmost**.
+    * Add all variables with domain `{1, 2, 3}` to the problem.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.
+    * Translate "The green book is the leftmost" into a constraint: `green == 1`.
+    * Translate "The orange book is to the left of the blue book" into a constraint: `orange < blue`.
+
+4.  **Solve and Extract the Solution:**
+    * Call `getSolution()` (or `getSolutions()` and take the first) to obtain the unique arrangement satisfying all constraints.
+
+5.  **Identify the Correct Choice:**
+    * The question asks which book is rightmost, i.e., has position **3**.
+    * Create a mapping from choice letters to book names: `"A" → "blue"`, `"B" → "orange"`, `"C" → "green"`.
+    * Check which book in the solution has position 3 and return its corresponding letter.

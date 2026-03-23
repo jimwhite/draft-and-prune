@@ -1,0 +1,12 @@
+1. Identify all individuals: Anne, Bob, Dave, Fiona.  
+2. Represent all explicitly stated facts using ternary predicates: is_blue(subject, True/False), is_cold(subject, True/False), is_kind(subject, True/False), is_quiet(subject, True/False), is_nice(subject, True/False), is_green(subject, True/False), is_furry(subject, True/False).  
+3. Encode all direct assertions as facts.pred("agent", value, True) or facts.pred("agent", value, False) (e.g., is_blue("Anne", True), is_quiet("Bob", False), is_furry("Dave", False), etc.).  
+4. Translate each universal conditional into a PyKe rule using `foreach` and `assert`:  
+   • All cold people are blue → if is_cold(x, True) then is_blue(x, True).  
+   • Green, nice people are kind → if is_green(x, True) and is_nice(x, True) then is_kind(x, True).  
+   • All blue people are kind → if is_blue(x, True) then is_kind(x, True).  
+   • Kind, cold people are nice → if is_kind(x, True) and is_cold(x, True) then is_nice(x, True).  
+   • If someone is nice then they are green → if is_nice(x, True) then is_green(x, True).  
+   • Cold, green people are quiet → if is_cold(x, True) and is_green(x, True) then is_quiet(x, True).  
+5. Implement each rule with `foreach` matching the antecedent conditions and an `assert` statement for the consequent.  
+6. The query tests whether Fiona is not kind: use facts.is_kind("Fiona", False).

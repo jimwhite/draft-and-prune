@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the seven books as string variables: `"black"`, `"yellow"`, `"white"`, `"gray"`, `"purple"`, `"orange"`, `"green"`.  
+    * Define the domain as integers from 1 to 7 (inclusive), where **1 = leftmost**, **7 = rightmost**.  
+    * Add all variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Add Constraints Using Rules:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each statement into a constraint:  
+        - "The green book is to the left of the gray book" → `green < gray`  
+        - "The gray book is the third from the right" → Since 7 is rightmost, third from right = position `5` (positions: left-to-right = 1,2,3,4,5,6,7 → rightmost=7, second-right=6, third-right=5)  
+        - "The white book is the rightmost" → `white == 7`  
+        - "The orange book is the second from the left" → `orange == 2`  
+        - "The black book is to the right of the yellow book" → `black > yellow`  
+        - "The black book is the third from the left" → `black == 3`
+
+4.  **Solve the Constraint Problem:**  
+    * Use `getSolutions()` to compute all valid assignments. Given the constraints, exactly one solution is expected. Extract the first (or only) solution dictionary.
+
+5.  **Answer the Question:**  
+    * The question asks: "Which of the following is true?" where all choices assert a specific book is *rightmost* (position 7).  
+    * From the constraints, we already have `white == 7`, so white is rightmost.  
+    * Build a mapping: `"A" -> "black"`, `"B" -> "yellow"`, `"C" -> "white"`, `"D" -> "gray"`, `"E" -> "purple"`, `"F" -> "orange"`, `"G" -> "green"`.  
+    * Identify which choice's book has position 7 in the solution. Confirm it matches `"C"` for `"white"`.  
+    * Return `"C"` as the correct answer.

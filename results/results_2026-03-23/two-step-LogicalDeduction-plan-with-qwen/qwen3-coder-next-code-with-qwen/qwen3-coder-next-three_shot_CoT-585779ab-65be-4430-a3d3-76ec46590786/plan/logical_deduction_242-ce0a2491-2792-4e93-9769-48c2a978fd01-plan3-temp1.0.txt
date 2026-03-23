@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Their Domain:**
+    * Define the variables as the three vehicles: `"minivan"`, `"bus"`, and `"sedan"`.
+    * Define a domain of integers from 1 to 3, where **1 represents the oldest** and **3 represents the newest**.
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Translate "The minivan is newer than the sedan" into the constraint: `minivan > sedan` (since newer means higher rank number).
+    * Translate "The minivan is older than the bus" into the constraint: `minivan < bus` (since older means lower rank number).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments.
+    * Extract the unique solution from the list of solutions.
+
+5.  **Determine Which Vehicle Is Oldest:**
+    * Identify the vehicle with rank value 1 (oldest) from the solution dictionary.
+    * Map this vehicle to the corresponding choice letter using the given options:
+        * "A) The minivan is the oldest." → check if `solution["minivan"] == 1`
+        * "B) The bus is the oldest." → check if `solution["bus"] == 1`
+        * "C) The sedan is the oldest." → check if `solution["sedan"] == 1`
+    * Output the correct choice letter (A, B, or C) based on which vehicle occupies rank 1.

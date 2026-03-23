@@ -1,0 +1,14 @@
+1. Identify all individuals: Bob, Charlie, Dave, Fiona.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_cold("Bob", True), is_quiet("Charlie", True), is_kind("Charlie", True), etc.).
+3. Translate each conditional rule into PyKe `foreach` + `assert` format:
+   • If something is quiet and cold → it is smart.
+   • Red, cold things are round. (i.e., if is_red(x, True) ∧ is_cold(x, True), then is_round(x, True))
+   • If something is kind and rough → it is red.
+   • All quiet things are rough. (i.e., if is_quiet(x, True), then is_rough(x, True))
+   • Cold, smart things are red. (i.e., if is_cold(x, True) ∧ is_smart(x, True), then is_red(x, True))
+   • If something is rough → it is cold.
+   • All red things are rough. (i.e., if is_red(x, True), then is_rough(x, True))
+   • If Dave is smart and Dave is kind → Dave is quiet.
+4. Confirm whether Charlie is kind by evaluating the query: facts.is_kind("Charlie", True). Since it is explicitly stated as a fact, this should be directly asserted and remain true regardless of rules.
+5. Verify no rule or derived fact contradicts is_kind("Charlie", True), especially checking rules that might infer ¬is_kind("Charlie", True) (none exist here).
+6. Conclude based on direct fact inclusion and consistency with all rules.

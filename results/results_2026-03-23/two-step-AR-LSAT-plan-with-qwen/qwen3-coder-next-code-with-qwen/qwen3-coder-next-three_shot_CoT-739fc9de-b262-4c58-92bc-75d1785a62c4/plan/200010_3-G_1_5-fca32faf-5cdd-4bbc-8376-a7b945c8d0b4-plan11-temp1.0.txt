@@ -1,0 +1,46 @@
+1. Enumerate the eight students and assign integer indices to them.
+2. Create Boolean variables for each student-day-slot combination: `report[s][d][t]` where s ∈ [0..7], d ∈ {Mon=0, Tue=1, Wed=2}, t ∈ {morning=0, afternoon=1}. True means student s gives a report on day d at slot t.
+3. Add **exactly-six-reports constraint**: sum of all `report[s][d][t]` over 8 students × 3 days × 2 slots = 6.
+4. Add **two-reports-per-day constraint**: for each day d, sum over s and t of `report[s][d][t]` = 2.
+5. Add **one-report-per-slot constraint**: for each day d and slot t, at most one student reports: pairwise inequality or use cardinality (but Boolean独占更佳).
+6. Add **Tuesday-only-for-George constraint**: `report[George][Mon][t] = False` and `report[George][Wed][t] = False` for t ∈ {0,1}.
+7. Add **Olivia/Robert-no-afternoon constraint**: `report[Olivia][d][1] = False` and `report[Robert][d][1] = False` for all d.
+8. Add **conditional Nina-Helen-Irving constraint**:
+   - For each possible day d ∈ {Mon=0, Tue=1} (i.e., not Wed), if Nina reports on day d (any slot), then Helen and Irving must both report on day d+1 (both slots, but only one per slot ⇒ at least one of morning/afternoon each).
+   - Since two reports/day and one slot per report, Helen and Irving must occupy both slots on the next day. So:  
+     If `report[Nina][d][0] ∨ report[Nina][d][1]`, then `report[Helen][d+1][0] ∧ report[Robert? no — Helen and Irving only][d+1][1]`.  
+     Formally: `(report[Nina][d][0] ∨ report[Nina][d][1]) ⇒ (report[Helen][d+1][0] ∧ report[Irving][d+1][1]) ∨ (report[Helen][d+1][1] ∧ report[Irving][d+1][0])`  
+     But since both must give reports (i.e., Helen *and* Irving each report once on day d+1), and only two slots, it must be exactly: `{Helen, Irving}` occupy both slots on day d+1. So enforce:  
+     `(report[Nina][d][0] ∨ report[Nina][d][1]) ⇒ (report[Helen][d+1][0] ∨ report[Helen][d+1][1]) ∧ (report[Irving][d+1][0] ∨ report[Irving][d+1][1]) ∧ (report[Helen][d+1][t1] ⇒ ¬report[Irving][d+1][t1])` — but easier:  
+     Enforce that *both* Helen and Irving report on day d+1: `report[Helen][d+1][0] ∨ report[Helen][d+1][1]` AND `report[Irving][d+1][0] ∨ report[Irving][d+1][1]`, plus day d+1 has exactly two reports → automatically implies Helen and Irving are the only ones that day.
+   - For d = Wed (day 2), no constraint (since "unless Nina’s report is on Wednesday").
+9. Add **given assignments**:
+   - Kyle gives afternoon report on Tuesday: `report[Kyle][1][1] = True`.
+   - Helen gives afternoon report on Wednesday: `report[Helen][2][1] = True`.
+10. Deduce consequences:
+   - Since Helen reports on Wed afternoon, and Tuesday already has Kyle (Tue afternoon), the other Tue report must be someone else (morning slot).
+   - Also, Helen is reporting on Wed ⇒ she *can* report only once (we’ll enforce implicitly via exactly-two-per-day and distinctness).
+11. Translate answer choices into expected morning report students for Mon, Tue, Wed:
+    - Each choice gives three names: [Mon_morning, Tue_morning, Wed_morning].
+    - We know:
+        - Tue afternoon = Kyle ⇒ so Tue_morning must be the other speaker on Tue.
+        - Wed afternoon = Helen ⇒ so Wed_morning must be someone else (not Olivia/Robert, since they can’t do afternoon — but morning is allowed).
+12. For each answer choice:
+    - Create fresh solver, clone all previous constraints + given assignments.
+    - Add constraint that Tue_morning is the second speaker (same day as Kyle), so:
+        - `report[choice_Tue_morning][1][0] = True`
+        - Also, ensure Tuesday has exactly two reports: Kyle + choice_Tue_morning ⇒ enforce that no other student reports on Tue.
+    - Similarly, Wed has exactly two reports: choose (Wed_morning) + Helen ⇒ enforce `report[choice_Wed_morning][2][0] = True`, and that no other student reports on Wed.
+    - Also ensure Monday gets exactly two reports: both must be the choice_Mon_morning and one other (the remaining slot), but the *choice only specifies morning* — so we don’t fix afternoon; just enforce that Mon_morning is fixed to given student.
+    - Specifically: for each choice, assert:
+        - `report[choice_Mon][0][0] = True`
+        - `report[choice_Tue][1][0] = True`
+        - `report[choice_Wed][2][0] = True`
+    - Now check SAT: if model exists, choice is possible; collect valid choices.
+13. But the question asks "which one *could* be..." — so we want choices that yield SAT.
+14. Instead of enumerating all, for each choice:
+    - Create solver, add base + fixed assignments + `report[choice_Mon_morning][0][0] = True`, `report[choice_Tue_morning][1][0] = True`, `report[choice_Wed_morning][2][0] = True`.
+    - Also enforce uniqueness per slot: e.g., on Tue, besides Kyle (afternoon) and choice_Tue_morning (morning), no one else can report ⇒ already enforced by exactly-two-per-day.
+15. For each choice, solve; if SAT, record its index (0-based or 1-based as per choice list).
+16. The final answer is the index (or indices) of feasible choices — but question implies only one correct choice; collect all that are SAT.
+17. Print list of feasible choice indices.

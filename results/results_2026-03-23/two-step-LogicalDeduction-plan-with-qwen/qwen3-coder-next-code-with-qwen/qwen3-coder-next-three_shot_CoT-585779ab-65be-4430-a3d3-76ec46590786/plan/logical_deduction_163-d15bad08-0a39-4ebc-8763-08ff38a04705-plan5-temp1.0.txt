@@ -1,0 +1,34 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven birds as variables: `"raven"`, `"cardinal"`, `"falcon"`, `"owl"`, `"blue_jay"`, `"quail"`, and `"robin"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven bird variables with domain {1, 2, ..., 7} to the problem.
+
+3. **Formulate Constraints from Statements:**  
+   * Add `AllDifferentConstraint()` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint:  
+     - "The owl is the second from the right" → `owl == 6` (since position 7 is rightmost, so second from right is 6).  
+     - "The cardinal is the fourth from the left" → `cardinal == 4`.  
+     - "The falcon is to the left of the blue jay" → `falcon < blue_jay`.  
+     - "The quail is to the left of the falcon" → `quail < falcon`.  
+     - "The raven is the second from the left" → `raven == 2`.  
+     - "The robin is to the left of the quail" → `robin < quail`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints fully determine ordering).
+
+5. **Determine Which Bird is Leftmost:**  
+   * In the solution, identify which bird has position 1 (leftmost).  
+   * Map this bird to the corresponding answer choice letter:  
+     - `"raven"` → A (but `raven == 2`, so not leftmost),  
+     - `"cardinal"` → B,  
+     - `"falcon"` → C,  
+     - `"owl"` → D,  
+     - `"blue_jay"` → E,  
+     - `"quail"` → F,  
+     - `"robin"` → G.  
+   * Return the letter (e.g., `'G'`) corresponding to the bird at position 1.

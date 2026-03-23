@@ -1,0 +1,17 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign each an integer index.  
+2. Enumerate the three screens (1, 2, 3) and assign each an integer index.  
+3. Create integer variables `screen[m]` for each movie m (1–5) indicating which screen it is shown on.  
+4. Create integer variables `time[m]` for each movie m indicating its start time: assign time codes as 0=7PM, 1=8PM, 2=9PM.  
+5. Add **screen count constraints**: screen 1 and 2 each show exactly two movies; screen 3 shows exactly one movie.  
+6. Add **time assignment constraints**:  
+    - Movies on screen 1: one at 7PM (time=0), one at 9PM (time=2).  
+    - Screen 2: one at 7PM (time=0), one at 9PM (time=2).  
+    - Screen 3: exactly one movie, at 8PM (time=1).  
+7. Add **ordering constraint**: western begins before horror: `time[w] < time[h]`.  
+8. Add **screen restriction**: sci-fi ≠ screen 3 (`screen[sci-fi] != 3`).  
+9. Add **screen restriction**: romance ≠ screen 2 (`screen[romance] != 2`).  
+10. Add **screen separation**: horror and mystery on different screens (`screen[h] != screen[m]`).  
+11. Map each choice (potential screen 1 list) to a pair of movies: for example, “sci-fi, horror” means screen 1 shows sci-fi (7PM) and horror (9PM), so: `screen[sci-fi]==1`, `time[sci-fi]==0`, `screen[horror]==1`, `time[horror]==2`.  
+12. For each answer choice, construct a fresh solver with base constraints + the specific assignment for screen 1.  
+13. Check satisfiability: if UNSAT, then the list cannot be accurate — this is the answer.  
+14. Return the index of the first (or only) UNSAT choice as the final answer.

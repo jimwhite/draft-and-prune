@@ -1,0 +1,20 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign integer indices 0–4.  
+2. Create Boolean variables `assigned[i][c]` for each candidate i and country c ∈ {Venezuela (0), Yemen (1), Zambia (2)}, indicating whether candidate i is assigned to country c.  
+3. Add **one-assignment-per-candidate**: for each candidate i, at most one country c has `assigned[i][c] = True`.  
+4. Add **one-candidate-per-country**: for each country c, exactly one candidate i has `assigned[i][c] = True`.  
+5. Add **constraint 1**: exactly one of Kayne or Novetzke is assigned (XOR): `(assigned[1][0] ∨ assigned[1][1] ∨ assigned[1][2]) ⊕ (assigned[3][0] ∨ assigned[3][1] ∨ assigned[3][2])`.  
+6. Add **constraint 2**: if Jaramillo is assigned to any country, then Kayne must be assigned to some country: `(assigned[0][0] ∨ assigned[0][1] ∨ assigned[0][2]) → (assigned[1][0] ∨ assigned[1][1] ∨ assigned[1][2])`.  
+7. Add **constraint 3**: if Ong is assigned to Venezuela, then Kayne is not assigned to Yemen: `(assigned[4][0]) → ¬(assigned[1][1])`.  
+8. Add **constraint 4**: if Landon is assigned, he must be to Zambia: `(assigned[2][0] ∨ assigned[2][1]) → False` (i.e., Landon cannot be assigned to Venezuela or Yemen).  
+9. Translate the answer choices into pairs of candidate indices:  
+   - (Jaramillo, Novetzke) → (0, 3),  
+   - (Jaramillo, Ong) → (0, 4),  
+   - (Kayne, Landon) → (1, 2),  
+   - (Kayne, Novetzke) → (1, 3),  
+   - (Landon, Ong) → (2, 4).  
+10. Define an answer index list `answer_index_list = []`. For each choice pair (i, j):  
+    - Clone the base constraints into a fresh solver.  
+    - Add constraint that candidates i and j are **not assigned** to any country: for each candidate k ∈ {i, j}, assert `¬assigned[k][0] ∧ ¬assigned[k][1] ∧ ¬assigned[k][2]`.  
+    - Also assert that the remaining three candidates are assigned exactly once (this is already enforced by global constraints, so no extra assertion needed).  
+    - If the model is SAT, then this pair *could* be unassigned; append its index to `answer_index_list`.  
+11. Print the answer index list.

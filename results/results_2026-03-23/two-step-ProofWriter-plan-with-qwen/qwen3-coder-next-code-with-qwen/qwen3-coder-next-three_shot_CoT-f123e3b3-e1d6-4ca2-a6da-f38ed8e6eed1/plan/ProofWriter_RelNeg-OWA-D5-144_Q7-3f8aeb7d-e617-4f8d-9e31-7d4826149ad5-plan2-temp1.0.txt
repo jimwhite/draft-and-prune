@@ -1,0 +1,14 @@
+1. Identify all entities: bald_eagle, bear, lion, squirrel.
+2. Encode explicit facts using ternary predicates (e.g., is_big("bald_eagle", True), is_green("bear", True), likes("bald_eagle", "bear", True), etc.).
+3. Translate each conditional statement into a rule:
+   • If someone is cold → they are not young.
+   • All big people are not green: If someone is big → they are not green.
+   • If the lion is big and green → the lion chases the bald eagle.
+   • If someone chases the bald eagle → they like the bear.
+   • If someone is round and visits the bald eagle → the bald eagle likes the squirrel.
+   • If someone visits the lion → they like the bald eagle.
+   • If the lion visits the squirrel and the squirrel chases the bear → the bear chases the bald eagle.
+   • If someone visits the lion → they are cold.
+   • If someone likes the bear → they chase the bear.
+4. For each rule, use `foreach` to bind variables satisfying the premises and an `assert` clause for the consequence.
+5. Query whether the bear chases the bald eagle: use `facts.chases("bear", "bald_eagle", True)`.

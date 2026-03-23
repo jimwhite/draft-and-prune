@@ -1,0 +1,17 @@
+1. Enumerate the four riders and four bicycles, assigning integer indices to each.  
+2. Create Boolean variables `day1[r][b]` and `day2[r][b]` to indicate whether rider `r` tests bicycle `b` on day 1 or day 2, respectively.  
+3. Add **bijective constraints** for each day:  
+    - For day 1: Each rider is assigned exactly one bicycle, and each bicycle is tested by exactly one rider.  
+    - For day 2: Each rider is assigned exactly one bicycle, and each bicycle is tested by exactly one rider.  
+4. Add **explicit constraints**:  
+    - Reynaldo cannot test F on either day: `¬day1[Reynaldo][F]` and `¬day2[Reynaldo][F]`.  
+    - Yuki cannot test J on either day: `¬day1[Yuki][J]` and `¬day2[Yuki][J]`.  
+    - Theresa must test H on at least one day: `day1[Theresa][H] ∨ day2[Theresa][H]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: `∀b, day1[Yuki][b] → day2[Seamus][b]`.  
+5. Translate each answer choice into a logical condition (e.g., "Both Reynaldo and Seamus test J" means `day1[Reynaldo][J] ∧ day2[Seamus][J]` OR `day1[Seamus][J] ∧ day2[Reynaldo][J]` OR both — but actually since each bicycle is tested once per day, "both test J" must mean *the same* rider tests it on both days is impossible; re-interpret: the statement implies that *on one day*, two riders test J — which is impossible per constraints. Actually, per problem statement: "Each rider tests only one bicycle per day", and "all four bicycles are tested each day" — so exactly one rider per bicycle per day. Therefore, "Both X and Y test J" must mean *one of them on day 1 and the other on day 2*, or possibly both days but that would violate bijection. Re-express: The phrase "Both X and Y test J" is ambiguous, but in LSAT-style logic games, it means *on one of the two days*, both X and Y are assigned to J — impossible. Instead, standard interpretation: It means that on *some day*, both X and Y test J — impossible. So likely the intended meaning is: *On one day, rider X tests J and on (the same or other) day, rider Y tests J* — but since per day only one rider per bicycle, this means either: (a) X tests J on day 1 and Y tests J on day 2, or (b) Y tests J on day 1 and X tests J on day 2 — both allowed unless contradicted. So for each choice, form the disjunction: `(day1[X][J] ∧ day2[Y][J]) ∨ (day1[Y][J] ∧ day2[X][J])`.  
+6. Define a list `forbidden_choice_indices = []`. For each answer choice (indexed 0 to 4):  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the condition from step 5 for that choice.  
+    - Check satisfiability: if UNSAT, then this scenario is impossible — i.e., the statement **cannot be true**. Append its index to `forbidden_choice_indices`.  
+7. Since exactly one answer choice is guaranteed impossible (as per standard multiple-choice), `forbidden_choice_indices` will contain exactly one index.  
+8. Output the list of indices of choices that CANNOT be true (i.e., `forbidden_choice_indices`).

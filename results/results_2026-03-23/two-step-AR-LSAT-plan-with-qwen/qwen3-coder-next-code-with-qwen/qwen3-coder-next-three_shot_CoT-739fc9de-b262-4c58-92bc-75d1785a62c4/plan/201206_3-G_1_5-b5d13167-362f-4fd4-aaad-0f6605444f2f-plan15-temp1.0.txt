@@ -1,0 +1,38 @@
+1. Enumerate the six lab assistants: assign integer indices 0–5 to Julio, Kevin, Lan, Nessa, Olivia, Rebecca respectively.  
+2. Enumerate the six sessions: assign indices 0–5 to [Wed AM, Wed PM, Thu AM, Thu PM, Fri AM, Fri PM] in chronological order.  
+3. Create integer variables `pos[i]` for each assistant i ∈ {0,…,5}, where `pos[i]` is the session index (0–5) they lead.  
+4. Add **domain constraints**: all `pos[i]` ∈ {0,1,2,3,4,5}, and all `pos[i]` distinct (bijection).  
+5. Add **fixed constraint**: Julio leads Thu PM → `pos[0] == 3`.  
+6. Add **same-day constraints**:  
+    - Kevin and Rebecca on same day: day(k) == day(r), where `day(session_index)` maps 0,1→Wed; 2,3→Thu; 4,5→Fri. Encode as `(pos[1]//2) == (pos[5]//2)`.  
+7. Add **different-day constraint**: Lan and Olivia on different days: `(pos[2]//2) != (pos[3]//2)`.  
+8. Add **Nessa afternoon constraint**: `pos[3] ∈ {1,3,5}` (i.e., session index mod 2 == 1).  
+9. Add **Julio before Olivia day constraint**: `pos[0] < pos[3]` is insufficient; must be strictly earlier *day*: `pos[0]//2 < pos[3]//2`.  
+10. Since Julio is fixed at session 3 (Thu PM, day index = 1), Olivia must be on Friday → `pos[3]//2 == 2`, i.e., `pos[3] ∈ {4,5}`.  
+11. From step 9: `pos[0]//2 = 3//2 = 1 < pos[3]//2` ⇒ `pos[3]//2 >= 2` → confirms Olivia on Friday.  
+12. From step 6: Kevin and Rebecca share same day (Wed, Thu, or Fri), but only Thursday and Friday remain *days with open sessions*:  
+    - Used: Julio at Thu PM (session 3), so Thu AM (session 2) is free; Fri AM/Pm (4,5) free; Wed sessions (0,1) fully available.  
+    - Olivia occupies one of {4,5}. So Friday has one slot left after Olivia.  
+13. Add fixed: `pos[0] = 3`. From step 9, `pos[3] ∈ {4,5}`.  
+14. Nessa must be in afternoon: `pos[3] ∈ {1,3,5}`. Since session 3 is taken, possible afternoon slots: {1,5}.  
+15. So Nessa ∈ {1,5}. But Olivia ∈ {4,5} and positions distinct → if Nessa = 5, then Olivia ≠ 5 ⇒ Olivia = 4; if Nessa ≠ 5, Nessa = 1.  
+16. So cases:  
+    - Case A: Olivia = 4, Nessa ∈ {1} (since 5 taken)  
+    - Case B: Olivia = 5, Nessa ∈ {1} (since 3 taken)  
+    - So in all cases: Olivia ∈ {4,5}, Nessa = 1 (only common possibility).  
+    Check: Can Nessa be 5? Then Olivia would need to be ≠5 ⇒ Olivia =4; but Nessa=5 is allowed (afternoon). So both (Nessa=1, Olivia=4/5) and (Nessa=5, Olivia=4) possible.  
+17. So Nessa is NOT uniquely determined yet? Wait: check Kevin-Rebecca same day:  
+    - Available slots after fixing Julio=3 and Olivia ∈ {4,5}, Nessa ∈ {1,5} distinct:  
+        Let’s list all assignments and see which are forced.  
+18. Instead, use solver:  
+    - Set base constraints + `pos[0]==3`.  
+    - Compute for each assistant i ∈ {1,2,3,4,5} (Kevin,Lan,Nessa,Olivia,Rebecca) the set of possible sessions across all satisfying assignments.  
+    - The count of assistants whose session is uniquely determined (|possible sessions| == 1) is the answer.  
+19. Therefore:  
+    - Clone base solver with `pos[0]==3`.  
+    - For each assistant i in [1,2,3,4,5]:  
+        - Collect all `pos[i]` values over all models (or use incremental solving to check uniqueness).  
+        - For efficiency: for each i and each slot s ∈ {0,1,2,4,5} (since 3 taken), check SAT of `pos[i] == s` under base + fixed.  
+        - If exactly one s yields SAT, assistant i is forced.  
+20. Count how many assistants (out of 5) have exactly one possible session.  
+21. Return that count and map to choices ['one', 'two', 'three', 'four', 'five'].

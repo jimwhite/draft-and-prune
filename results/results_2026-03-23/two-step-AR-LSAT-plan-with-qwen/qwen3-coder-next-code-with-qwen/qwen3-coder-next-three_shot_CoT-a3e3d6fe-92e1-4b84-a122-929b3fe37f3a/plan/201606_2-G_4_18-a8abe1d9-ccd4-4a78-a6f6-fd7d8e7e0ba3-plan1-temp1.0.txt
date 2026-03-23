@@ -1,0 +1,17 @@
+1. Enumerate the six singers and assign each an integer index: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer variables `pos[i]` for each singer i representing their audition position (1 to 6).  
+3. Add **distinctness constraint**: all `pos[i]` must be pairwise distinct (a permutation of 1–6).  
+4. Add **recording constraints**: Kammer and Lugo are the only recorded auditions, so recorded positions are exactly `pos[0]` and `pos[1]`.  
+5. Add **position constraints for recordings**:  
+    - Fourth audition is unrecorded → position 4 ∉ {pos[0], pos[1]}  
+    - Fifth audition is recorded → position 5 ∈ {pos[0], pos[1]}  
+6. Add **Waite constraint**: Waite auditions before both recorded auditions → `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+7. Add **Kammer–Trillo constraint**: `pos[0] < pos[2]`.  
+8. Add **Zinn–Yoshida constraint**: `pos[5] < pos[4]`.  
+9. For each choice (a candidate sequence), parse the order into a list of singer indices.  
+10. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that singer at index i in the choice list occupies position (i+1): `pos[index] == i+1` for all 6 singers.  
+    - Check if the model is SAT. If SAT, this choice is possible; record its index.  
+11. Return the index of the first SAT choice (as per question: “which one could be the order”).  
+12. Map that index to the corresponding string choice for output.

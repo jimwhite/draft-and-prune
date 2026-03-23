@@ -1,0 +1,30 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and assign them integer indices 0, 1, 2 respectively.  
+2. Create integer variables for the day (1–5) on which each batch is made:  
+   - For oatmeal: `O1`, `O2`, `O3` (first, second, third batch)  
+   - For peanut butter: `P1`, `P2`, `P3`  
+   - For sugar: `S1`, `S2`, `S3`  
+3. Add **domain constraints**: each variable ∈ {1, 2, 3, 4, 5} (Monday = 1, ..., Friday = 5).  
+4. Add **no-duplicate-day constraint per cookie type**: all batches of the same cookie must be on distinct days:  
+   - `O1 ≠ O2`, `O1 ≠ O3`, `O2 ≠ O3`  
+   - Same for P and S.  
+5. Add **fixed constraint**: second batch of sugar is Thursday ⇒ `S2 = 4`.  
+6. Add **second-oatmeal / first-peanut constraint**: `O2 = P1`.  
+7. Add **minimum-Monday constraint**: at least one batch occurs on Monday ⇒ `O1 == 1 ∨ O2 == 1 ∨ O3 == 1 ∨ P1 == 1 ∨ P2 == 1 ∨ P3 == 1 ∨ S1 == 1 ∨ S2 == 1 ∨ S3 == 1`.  
+8. Add the **additional hypothetical condition**: there exists a kind X and kind Y (X ≠ Y) such that the first batch of X is on the same day as the third batch of Y ⇒  
+   - `(O1 == P3) ∨ (O1 == S3) ∨ (P1 == O3) ∨ (P1 == S3) ∨ (S1 == O3) ∨ (S1 == P3)`  
+9. For each of the five answer choices, translate it into a logical condition:  
+   - A. "At least one batch on each day" ⇒ `cardinality{1,2,3,4,5} = 5`  
+   - B. "At least two batches on Wednesday (day 3)" ⇒ `count_of_day[3] ≥ 2`  
+   - C. "Exactly one batch on Monday" ⇒ `count_of_day[1] = 1`  
+   - D. "Exactly two batches on Tuesday" ⇒ `count_of_day[2] = 2`  
+   - E. "Exactly one batch on Friday" ⇒ `count_of_day[5] = 1`  
+10. Define answer index list `answer_index_list = []`.  
+11. For each choice (index 0 to 4):  
+    - Clone base constraints into fresh solver.  
+    - Add the hypothetical condition (Step 8).  
+    - Assert that this choice *must* be true (e.g., for choice D, assert `count_of_day[2] == 2`).  
+    - If model is SAT (i.e., choice can be true), then check whether the choice **could be false** by verifying:  
+        - Clone again; add base + hypothetical condition.  
+        - Assert that this choice is **false** (e.g., for D, assert `count_of_day[2] != 2`).  
+        - If this is SAT, then the choice *could* be false. Append index to `answer_index_list`.  
+12. Print `answer_index_list` (the set of indices for which the statement *could* be false).

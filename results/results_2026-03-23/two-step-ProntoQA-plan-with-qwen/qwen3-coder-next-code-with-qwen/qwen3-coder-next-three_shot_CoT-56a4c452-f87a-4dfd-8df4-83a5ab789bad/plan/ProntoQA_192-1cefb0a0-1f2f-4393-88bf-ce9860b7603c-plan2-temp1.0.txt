@@ -1,0 +1,34 @@
+1.  Identify all entities and types: Sam, numpus, wumpus, rompus, vumpus, jompus, yumpus, zumpus.  
+2.  Identify all properties: wooden, small, floral, blue, dull.  
+3.  Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Numpuses are not wooden.  
+    - Numpuses are wumpuses.  
+    - Wumpuses are small.  
+    - Wumpuses are rompuses.  
+    - Rompuses are not floral.  
+    - Rompuses are vumpuses.  
+    - Each vumpus is blue.  
+    - Jompuses are not dull. *(Note: Not relevant to Sam unless connectivity is required; but since Sam is a numpus, and we trace the chain, this fact may not be used.)*  
+    - Each vumpus is a yumpus.  
+    - Each yumpus is dull.  
+    - Yumpuses are zumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - For "Numpuses are not wooden": `foreach (x, "numpus", true): assert(is_wooden(x, false))`  
+    - For "Numpuses are wumpuses": `foreach (x, "numpus", true): assert(is_a(x, "wumpus", true))`  
+    - For "Wumpuses are small": `foreach (x, "wumpus", true): assert(is_small(x, true))`  
+    - For "Wumpuses are rompuses": `foreach (x, "wumpus", true): assert(is_a(x, "rompus", true))`  
+    - For "Rompuses are not floral": `foreach (x, "rompus", true): assert(is_floral(x, false))`  
+    - For "Rompuses are vumpuses": `foreach (x, "rompus", true): assert(is_a(x, "vumpus", true))`  
+    - For "Each vumpus is blue": `foreach (x, "vumpus", true): assert(is_blue(x, true))`  
+    - For "Each vumpus is a yumpus": `foreach (x, "vumpus", true): assert(is_a(x, "yumpus", true))`  
+    - For "Each yumpus is dull": `foreach (x, "yumpus", true): assert(is_dull(x, true))`  
+    - For "Yumpuses are zumpuses": `foreach (x, "yumpus", true): assert(is_a(x, "zumpus", true))`  
+6.  Derive properties of Sam step-by-step using the rules:  
+    - From Sam is a numpus → Sam is a wumpus.  
+    - From Sam is a wumpus → Sam is small and Sam is a rompus.  
+    - From Sam is a rompus → Sam is a vumpus.  
+    - From Sam is a vumpus → Sam is blue and Sam is a yumpus.  
+    - From Sam is a yumpus → Sam is dull.  
+7.  The query tests if the statement "Sam is not dull" is provable:  
+    → Use `facts.is_dull("Sam", False)`.

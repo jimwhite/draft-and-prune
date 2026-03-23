@@ -1,0 +1,31 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicles as string variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**.
+    * Add all vehicle variables to the problem with their domain (1–7) using `addVariable`.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` over all seven variables to ensure each vehicle has a unique age rank.
+
+4.  **Translate Absolute Position Constraints:**
+    * "The station wagon is the fourth-newest" → position 4 (since newest=7, then fourth-newest = 7−3 = 4). Add constraint: `station_wagon == 4`.
+    * "The minivan is the third-newest" → position 5 (7−2 = 5). Add constraint: `minivan == 5`.
+    * "The tractor is the second-oldest" → position 2 (oldest=1, second-oldest=2). Add constraint: `tractor == 2`.
+
+5.  **Translate Relative Order Constraints:**
+    * "The convertible is older than the station wagon" → `convertible < station_wagon`.
+    * "The truck is newer than the bus" → `bus < truck`.
+    * "The hatchback is older than the convertible" → `hatchback < convertibl e`.
+
+6.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Since the problem is constrained enough to be unique, extract the first (or only) solution.
+
+7.  **Determine the Newest Vehicle:**
+    * Identify which vehicle has position value 7 (newest).
+    * Map the multiple-choice letters to vehicles:
+        A) truck, B) hatchback, C) minivan, D) bus, E) tractor, F) station_wagon, G) convertible.
+    * Check which vehicle in the solution has rank 7 and return its corresponding letter.

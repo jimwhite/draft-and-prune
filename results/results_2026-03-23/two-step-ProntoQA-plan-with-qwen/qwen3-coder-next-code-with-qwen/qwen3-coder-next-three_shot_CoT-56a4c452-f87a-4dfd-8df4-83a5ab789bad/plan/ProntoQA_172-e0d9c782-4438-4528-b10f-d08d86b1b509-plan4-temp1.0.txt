@@ -1,0 +1,33 @@
+1. Identify all entities and types: Rex, zumpus, vumpus, dumpus, tumpus, wumpus, rompus, numpus.  
+2. Identify all properties: temperate, large, feisty, opaque, floral, luminous (not listed—ignore), hot (not listed—ignore), brown (not listed—ignore), etc. — only relevant properties: temperate, large, feisty, opaque, floral.  
+3. Represent "Rex is a zumpus" as a base fact: `is_a("Rex", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every zumpus is not temperate → ¬is_temperate(Z) for Z a zumpus.  
+   - Every zumpus is a vumpus → subclass(zumpus, vumpus).  
+   - Vumpuses are large → is_large(V) for all V that are vumpuses.  
+   - Each vumpus is a dumpus → subclass(vumpus, dumpus).  
+   - Every dumpus is feisty → is_feisty(D) for all D that are dumpuses.  
+   - Tumpuses are not opaque → ¬is_opaque(T) for all tumpuses.  
+   - Dumpuses are wumpuses → subclass(dumpus, wumpus).  
+   - Every wumpus is floral → is_floral(W) for all W that are wumpuses.  
+   - Wumpuses are rompuses → subclass(wumpus, rompus).  
+   - Rompuses are opaque → is_opaque(R) for all R that are rompuses.  
+   - Rompuses are numpuses → subclass(rompus, numpus).  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` or `neg_assert` clause for the consequence:  
+   - `foreach Z in zumpus: neg_assert(is_temperate(Z, True))`  
+   - `foreach V in vumpus: assert(is_large(V, True))`  
+   - `foreach D in dumpus: assert(is_feisty(D, True))`  
+   - `foreach T in tumpus: neg_assert(is_opaque(T, True))`  
+   - `foreach W in wumpus: assert(is_floral(W, True))`  
+   - `foreach R in rompus: assert(is_opaque(R, True))`  
+   - Subclass rules:  
+     - `foreach Z in zumpus: assert(is_a(Z, vumpus, True))`  
+     - `foreach V in vumpus: assert(is_a(V, dumpus, True))`  
+     - `foreach D in dumpus: assert(is_a(D, wumpus, True))`  
+     - `foreach W in wumpus: assert(is_a(W, rompus, True))`  
+     - `foreach R in rompus: assert(is_a(R, numpus, True))`  
+6. Use inheritance to derive type membership: Since `is_a(Rex, zumpus)` holds and subclass chains are defined (zumpus ⊆ vumpus ⊆ dumpus ⊆ wumpus ⊆ rompus), we can deduce `is_a(Rex, rompus)`.  
+7. From `is_a(Rex, rompus)` and rule for rompuses: `is_opaque(Rex, True)`.  
+8. Therefore, "Rex is not opaque" means `is_opaque(Rex, False)`.  
+9. Query: check if `facts.is_opaque("Rex", False)` is provable — it is not; the opposite is derivable.  
+10. Final query: `facts.is_opaque("Rex", False)`.

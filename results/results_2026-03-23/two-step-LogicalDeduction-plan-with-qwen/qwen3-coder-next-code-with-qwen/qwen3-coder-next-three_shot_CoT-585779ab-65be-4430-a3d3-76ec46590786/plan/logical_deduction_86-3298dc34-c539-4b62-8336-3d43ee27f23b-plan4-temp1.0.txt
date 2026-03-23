@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables: the five golfers represented as strings `["Eve", "Eli", "Joe", "Rob", "Mya"]`.  
+    * Define the domain as integers from 1 to 5, where **1 = first place (highest/earliest)** and **5 = last place (lowest/latest)**.  
+    * Add all variables with domain {1, 2, 3, 4, 5} to the problem.
+
+3.  **Add Constraints Based on Statements:**  
+    * Add `AllDifferentConstraint()` to ensure each golfer has a unique finish position.  
+    * "Rob finished above Mya" → Rob’s rank < Mya’s rank (i.e., `lambda r, m: r < m`).  
+    * "Eve finished first" → Eve’s position = 1.  
+    * "Joe finished above Eli" → Joe’s rank < Eli’s rank (i.e., `lambda j, e: j < e`).  
+    * "Joe finished below Mya" → Joe’s rank > Mya’s rank (i.e., `lambda j, m: j > m`).  
+    * Incorporate each constraint into the problem using `addConstraint` with appropriate lambda expressions.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid completions of positions.  
+    * Since the constraints uniquely determine the order, extract the single solution (e.g., `solutions[0]`).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which golfer finished last (i.e., position 5).  
+    * Construct a mapping from choice letters to golfer names: `"A" → "Eve"`, `"B" → "Eli"`, `"C" → "Joe"`, `"D" → "Rob"`, `"E" → "Mya"`.  
+    * Iterate through the choices; for each choice letter, check if the corresponding golfer’s position in the solution is 5.  
+    * Return (or record) the letter of the choice whose condition holds true.

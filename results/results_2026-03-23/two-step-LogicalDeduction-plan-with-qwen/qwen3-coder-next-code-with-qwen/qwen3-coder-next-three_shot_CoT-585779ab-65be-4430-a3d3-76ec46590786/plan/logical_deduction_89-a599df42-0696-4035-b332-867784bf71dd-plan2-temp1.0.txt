@@ -1,0 +1,26 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to initialize the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicle variables: `"station_wagon"`, `"sedan"`, `"tractor"`, `"motorcycle"`, and `"limousine"`.  
+   * Assign a numerical rank domain from 1 to 5, where **1 = oldest** and **5 = newest**.  
+   * Add all variables with the domain {1, 2, 3, 4, 5} to the problem.
+
+3. **Translate Each Statement into Constraints:**  
+   * Add `AllDifferentConstraint()` to enforce uniqueness of ranks.  
+   * "The tractor is newer than the motorcycle" → `tractor > motorcycle` (since higher rank = newer).  
+   * "The motorcycle is newer than the sedan" → `motorcycle > sedan`.  
+   * "The limousine is the oldest" → `limousine == 1`.  
+   * "The station wagon is the newest" → `station_wagon == 5`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (as the problem is fully constrained).
+
+5. **Identify the Second-Newest Vehicle:**  
+   * The second-newest corresponds to rank 4.  
+   * Create a mapping from choice letters ("A"–"E") to vehicle names:  
+        A → "station_wagon", B → "sedan", C → "tractor", D → "motorcycle", E → "limousine".  
+   * Find which vehicle in the solution has rank 4.  
+   * Return the corresponding choice letter as the answer.

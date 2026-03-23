@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"Eve"`, `"Ana"`, `"Amy"`, `"Dan"`, `"Eli"`, `"Rob"`, and `"Mya"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (highest/farthest left)** and **7 = seventh place (lowest/farthest right)**.  
+   * Add all seven variables with domain `{1, 2, ..., 7}` to the `Problem` instance.
+
+3. **Add All-Different Constraint:**  
+   * Enforce that all golfers have distinct placements by adding an `AllDifferentConstraint`.
+
+4. **Translate Statements into Constraints Using Lambda Functions:**  
+   * "Mya finished above Eli" → `Mya`'s rank < `Eli`'s rank (`lambda m, e: m < e`).  
+   * "Eve finished below Rob" → `Rob`'s rank < `Eve`'s rank (`lambda r, e2: r < e2`).  
+   * "Amy finished second" → `Amy == 2`.  
+   * "Rob finished below Dan" → `Dan`'s rank < `Rob`'s rank (`lambda d, r: d < r`).  
+   * "Ana finished second-to-last" → In 7 positions, second-to-last is position **6**, so `Ana == 6`.  
+   * "Dan finished fourth" → `Dan == 4`.
+
+5. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments of positions satisfying all constraints.  
+   * Extract the unique solution (or any one solution, since uniqueness is implied by problem consistency).
+
+6. **Evaluate the Question and Choices:**  
+   * The question asks which golfer finished in **third place**, i.e., rank = 3.  
+   * Create a mapping from choice letters to golfer names:  
+     - `"A" → "Eve"`, `"B" → "Ana"`, `"C" → "Amy"`, `"D" → "Dan"`, `"E" → "Eli"`, `"F" → "Rob"`, `"G" → "Mya"`  
+   * In the solved assignment, locate which golfer has rank 3.  
+   * Return the corresponding choice letter (e.g., if `"Eve" == 3`, return `"A"`).

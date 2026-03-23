@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven bird variables: `"cardinal"`, `"bluejay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, and `"raven"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**, consistent with the problem’s fixed linear order.  
+   * Add all seven variables to the `Problem` instance with this domain.
+
+3. **Translate Each Statement into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+   * Translate the relative-position statements into inequality constraints using lambda functions:  
+     - "The falcon is to the right of the quail" → `quail < falcon`  
+     - "The robin is to the right of the hummingbird" → `hummingbird < robin`  
+     - "The raven is to the left of the quail" → `raven < quail`  
+   - Translate absolute-position statements into equality constraints:  
+     - "The blue jay is the second from the left" → `bluejay == 2`  
+     - "The robin is the third from the left" → `robin == 3`  
+     - "The cardinal is the third from the right" → `cardinal == 5` (since positions are 1-indexed left-to-right: rightmost is 7, so third from right = 7−2 = 5)
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+   * Given the problem is well-constrained, extract the unique solution (the first element of the returned list).
+
+5. **Determine Which Choice is True:**  
+   * The question asks: “Which of the following is true?” and lists 7 options, each asserting a specific bird is *third from the right* (i.e., position 5).  
+   * Note: The first choice ("A) The cardinal is the third from the right.") matches the constraint already used (`cardinal == 5`), but verification is needed to ensure consistency.  
+   * Construct a dictionary mapping choice letters `['A','B',...,'G']` to the respective bird names:  
+     - `'A' → 'cardinal'`, `'B' → 'bluejay'`, `'C' → 'robin'`, `'D' → 'falcon'`, `'E' → 'quail'`, `'F' → 'hummingbird'`, `'G' → 'raven'`  
+   * For each choice letter in order, check whether the bird’s position in the solution equals 5 (third from right).  
+   * Return (or record) the first matching choice letter whose bird is at position 5 — though logically, only one will satisfy all constraints and match the assertion.

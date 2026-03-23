@@ -1,0 +1,21 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the three vehicle variables: `"truck"`, `"minivan"`, and `"tractor"`.  
+    * Define a numerical domain from 1 to 3, where **1 = oldest** and **3 = newest**.  
+    * Add these variables to the `Problem` with the domain `{1, 2, 3}`.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Translate "The truck is newer than the minivan" as `truck > minivan` (since higher rank = newer).  
+    * Translate "The minivan is newer than the tractor" as `minivan > tractor`.
+
+4.  **Solve for the Arrangement:**  
+    * Use `getSolutions()` to find all valid assignments. Given consistency and uniqueness, there will be exactly one solution.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which vehicle is the oldest, i.e., has rank **1**.  
+    * Map choice letters to vehicles: `"A" → "truck"`, `"B" → "minivan"`, `"C" → "tractor"`.  
+    * Locate the vehicle in the solution with position value 1 and return its corresponding choice letter.

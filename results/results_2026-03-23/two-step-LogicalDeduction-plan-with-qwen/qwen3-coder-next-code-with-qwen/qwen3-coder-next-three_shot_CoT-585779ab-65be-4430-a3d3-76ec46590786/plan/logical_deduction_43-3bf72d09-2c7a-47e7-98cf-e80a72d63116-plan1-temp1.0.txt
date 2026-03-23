@@ -1,0 +1,30 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the puzzle.
+
+2. **Define Variables and Domain:**  
+   * List the five birds as string variables: `"owl"`, `"crow"`, `"raven"`, `"robin"`, `"cardinal"`.  
+   * Define the domain of positions as integers from 1 to 5, where **1 = leftmost**, **2 = second from left**, ..., **5 = rightmost**.  
+   * Add each bird variable to the problem with domain {1, 2, 3, 4, 5}.
+
+3. **Add Constraints Based on Statements:**  
+   * Enforce uniqueness: add `AllDifferentConstraint()` to ensure all positions are distinct.  
+   * "The raven is the second from the left" → constrain `raven == 2`.  
+   * "The raven is to the right of the owl" → constrain `owl < raven` (i.e., `owl < 2`).  
+   * "The robin is the second from the right" → constrain `robin == 4`.  
+   * "The robin is to the left of the crow" → constrain `robin < crow` (i.e., `4 < crow`, so `crow == 5`).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+5. **Identify the True Statement:**  
+   * The question asks which statement is true regarding who is second from the left (position 2).  
+   * Use the solution to check which bird occupies position 2.  
+   * Map the answer:  
+        - A) owl → check if `solution["owl"] == 2`  
+        - B) crow → check if `solution["crow"] == 2`  
+        - C) raven → check if `solution["raven"] == 2` (known to be true from constraint)  
+        - D) robin → check if `solution["robin"] == 2` (known false, robin=4)  
+        - E) cardinal → check if `solution["cardinal"] == 2`  
+   * Return the letter (C) corresponding to the correct choice.

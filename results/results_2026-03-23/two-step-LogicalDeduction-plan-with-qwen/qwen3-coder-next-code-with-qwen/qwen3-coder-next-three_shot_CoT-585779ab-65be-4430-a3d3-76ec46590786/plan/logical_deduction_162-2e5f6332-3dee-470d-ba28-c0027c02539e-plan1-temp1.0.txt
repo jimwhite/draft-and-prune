@@ -1,0 +1,35 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to begin building the constraint satisfaction model.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven vehicles as variables: `"limousine"`, `"truck"`, `"sedan"`, `"tractor"`, `"minivan"`, `"motorcyle"`, and `"hatchback"`.  
+   * Define a domain of integers from 1 to 7, where **1 = oldest** and **7 = newest**.  
+   * Add all seven variables to the problem, each with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Translate each statement into constraints:  
+     - "The minivan is older than the tractor" → `minivan < tractor`  
+     - "The hatchback is older than the sedan" → `hatchback < sedan`  
+     - "The truck is the third-newest" → Since newest = 7, third-newest = 5 ⇒ `truck == 5`  
+     - "The hatchback is the second-newest" → second-newest = 6 ⇒ `hatchback == 6`  
+     - "The tractor is older than the limousine" → `tractor < limousine`  
+     - "The motorcyle is newer than the limousine" → `limousine < motorcyle`  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments satisfying all constraints.  
+   * Given the fixed order and consistency, extract the unique solution (or first solution if multiple exist but only one fits all constraints).
+
+5. **Determine the Newest Vehicle:**  
+   * The newest vehicle corresponds to position 7 (maximum rank).  
+   * Iterate through the solution dictionary to find which vehicle has value 7.  
+   * Map that vehicle name to its corresponding choice letter using the provided list of choices:  
+     - `"limousine"` → A  
+     - `"truck"` → B  
+     - `"sedan"` → C  
+     - `"tractor"` → D  
+     - `"minivan"` → E  
+     - `"motorcyle"` → F  
+     - `"hatchback"` → G  
+   * Return the letter corresponding to the vehicle ranked 7.

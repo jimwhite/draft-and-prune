@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven bird types as variables: `"falcon"`, `"crow"`, `"hawk"`, `"hummingbird"`, `"bluejay"`, `"robin"`, and `"raven"` (note: combine "blue jay" into one string without space to avoid parsing issues).
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost** position on the branch.
+    * Add all seven variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that each bird occupies a unique position by adding an `AllDifferentConstraint` over all seven variables.
+
+4.  **Translate Each Statement into a Formal Constraint:**
+    * "The blue jay is to the right of the robin" → `bluejay > robin`
+    * "The hawk is to the left of the hummingbird" → `hawk < hummingbird`
+    * "The robin is the second from the right" → `robin == 6` (since position 7 is rightmost, second from right = 6)
+    * "The falcon is the third from the left" → `falcon == 3`
+    * "The crow is to the right of the hummingbird" → `crow > hummingbird`
+    * "The raven is the second from the left" → `raven == 2`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions to birds.
+    * Extract the solution (there should be exactly one valid arrangement due to logical consistency and sufficient constraints).
+
+6.  **Identify the Rightmost Bird (Position 7):**
+    * In the solved assignment, locate which bird has position value **7** (the rightmost).
+    * Create a mapping dictionary from choice letters to bird names:  
+        `"A" → "falcon"`, `"B" → "crow"`, `"C" → "hawk"`, `"D" → "hummingbird"`, `"E" → "bluejay"`, `"F" → "robin"`, `"G" → "raven"`.
+
+7.  **Determine and Output the Correct Choice:**
+    * Find the key (choice letter) in the mapping whose value matches the bird at position 7.
+    * Return this choice letter as the final answer.

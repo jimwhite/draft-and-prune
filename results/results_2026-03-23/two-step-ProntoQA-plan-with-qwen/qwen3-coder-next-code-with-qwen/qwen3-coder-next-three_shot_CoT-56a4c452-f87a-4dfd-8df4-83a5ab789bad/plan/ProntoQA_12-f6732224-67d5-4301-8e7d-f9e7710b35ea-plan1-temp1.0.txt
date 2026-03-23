@@ -1,0 +1,25 @@
+1.  Identify all entities and types: Fae, tumpus, numpus, vumpus, dumpus, zumpus, yumpus, jompus, rompus, impus, wumpus.  
+2.  Identify all properties: orange, small, sour, cold, dull, amenable, floral, opaque, not floral (i.e., negative property: non-floral), but note that "not floral" is derived from rule, not primitive.  
+3.  Represent "Fae is a dumpus" as a base fact: `is_a("Fae", "dumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Every tumpus is orange.  
+    * Tumpuses are numpuses.  
+    * Numpuses are small.  
+    * Numpuses are vumpuses.  
+    * Every vumpus is sour.  
+    * Vumpuses are dumpuses.  
+    * Each dumpus is cold.  
+    * Every dumpus is a zumpus.  
+    * Each zumpus is dull.  
+    * Zumpuses are yumpuses.  
+    * Jompuses are floral.  
+    * Every yumpus is not amenable.  
+    * Each yumpus is a rompus.  
+    * Every rompus is opaque.  
+    * Rompuses are impuses.  
+    * Impuses are not floral.  
+    * Impuses are wumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (e.g., `foreach(x: is_a(x, "dumpus", True) => assert(is_hot(x, False), ...)`, but specifically for negative conclusions: `foreach(x: is_a(x, "impus", True) => assert(not_floral(x), ...)` or use predicate `is_floral(x, False)` if PyKe supports boolean-valued predicates).  
+6.  Derive that Fae is a dumpus → zumpus (by rule "Every dumpus is a zumpus") → yumpus ("Zumpuses are yumpuses") → rompus ("Each yumpus is a rompus") → impus ("Rompuses are impuses") → and since "Impuses are not floral", conclude Fae is not floral.  
+7.  The query tests if "Fae is not floral" is provable:  
+    → Use `facts.is_floral("Fae", False)`.

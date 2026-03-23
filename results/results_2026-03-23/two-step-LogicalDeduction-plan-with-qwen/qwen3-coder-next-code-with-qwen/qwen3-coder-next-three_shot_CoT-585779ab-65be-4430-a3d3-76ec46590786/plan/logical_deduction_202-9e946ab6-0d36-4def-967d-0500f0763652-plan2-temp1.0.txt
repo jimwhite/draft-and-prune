@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruits as variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+    * Define a domain of integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**.  
+    * Add all seven fruit variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price rankings.  
+    * Translate each statement into a constraint using lambda functions or direct value constraints:  
+        * "The oranges are more expensive than the peaches" → `oranges > peaches`.  
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.  
+        * "The pears are less expensive than the cantaloupes" → `pears < 4`.  
+        * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6).  
+        * "The mangoes are the cheapest" → `mangoes == 1`.  
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest=1, second-cheapest=2, third-cheapest=3).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` on the `Problem` object to find all valid assignments.  
+    * Extract the unique solution (the problem is fully constrained and consistent).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which fruit is the cheapest (i.e., rank 1).  
+    * Note: Choice B explicitly states "The mangoes are the cheapest", and one constraint directly sets `mangoes == 1`.  
+    * Verify by checking the solution: confirm which fruit has rank 1.  
+    * Since mangoes are constrained to rank 1, and all choices list only one fruit per option, select the choice matching that fruit.  
+    * Output the letter corresponding to "The mangoes are the cheapest" — which is **B**.

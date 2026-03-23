@@ -1,0 +1,24 @@
+1. Identify all entities and types: Wren, dumpus, yumpus, rompus, vumpus, numpus, zumpus, tumpus, impus, wumpus, jompus.  
+2. Identify all properties: earthy, transparent, mean, brown, temperate, bitter, shy, wooden.  
+3. Represent "Wren is a numpus" as a base fact: `is_a("Wren", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Dumpuses are not earthy.  
+   * Each dumpus is a yumpus.  
+   * Yumpuses are transparent.  
+   * Each rompus is not mean.  
+   * Yumpuses are vumpuses.  
+   * Vumpuses are not brown.  
+   * Vumpuses are numpuses.  
+   * Numpuses are not temperate.  
+   * Every numpus is a zumpus.  
+   * Each zumpus is bitter.  
+   * Zumpuses are tumpuses.  
+   * Tumpuses are shy.  
+   * Tumpuses are impuses.  
+   * Impuses are wooden.  
+   * Each impus is a wumpus.  
+   * Each wumpus is mean.  
+   * Every wumpus is a jompus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Wren is not mean" is provable:  
+   → Use `facts.is_mean("Wren", False)`.

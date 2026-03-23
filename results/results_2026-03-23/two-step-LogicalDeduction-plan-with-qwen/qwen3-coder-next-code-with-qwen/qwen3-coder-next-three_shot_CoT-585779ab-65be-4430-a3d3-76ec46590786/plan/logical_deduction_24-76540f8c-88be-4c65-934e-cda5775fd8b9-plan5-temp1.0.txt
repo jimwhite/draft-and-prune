@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five vehicles: `"truck"`, `"station_wagon"`, `"motorcyle"`, `"limousine"`, and `"hatchback"`.  
+   * Assign an integer domain of 1 to 5, where **1 = oldest** and **5 = newest**, consistent with the prior antique car show problems.  
+   * Add all variables and their shared domain to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - "The motorcyle is the second-newest" → `motorcyle == 4`  
+     - "The truck is newer than the limousine" → `truck > limousine`  
+     - "The motorcyle is older than the station wagon" → `motorcyle < station_wagon`  
+     - "The limousine is newer than the hatchback" → `limousine > hatchback`  
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to compute all valid assignments of ranks.  
+   * Extract the unique solution (since consistency and uniqueness are guaranteed by the problem statement).
+
+5. **Determine the Newest Vehicle:**  
+   * The question asks which vehicle is the newest, i.e., has rank **5**.  
+   * Create a mapping from choice letters to vehicle names: `{"A": "truck", "B": "station_wagon", "C": "motorcyle", "D": "limousine", "E": "hatchback"}`.  
+   * Iterate over the choice dictionary and find which vehicle in the solution has value `5`.  
+   * Return the corresponding letter as the answer.

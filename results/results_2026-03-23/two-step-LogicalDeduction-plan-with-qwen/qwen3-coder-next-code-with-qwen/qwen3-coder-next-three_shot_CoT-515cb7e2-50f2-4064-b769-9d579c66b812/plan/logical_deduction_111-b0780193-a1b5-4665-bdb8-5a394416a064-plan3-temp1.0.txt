@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate each statement into explicit constraints using `addConstraint` with lambda functions or direct value assignments:  
+     - "The yellow book is the rightmost" → position of `"yellow"` = 7.  
+     - "The blue book is to the left of the orange book" → `blue < orange`.  
+     - "The green book is to the right of the white book" → `white < green`.  
+     - "The blue book is to the right of the green book" → `green < blue`.  
+     - "The black book is the fourth from the left" → position of `"black"` = 4.  
+     - "The brown book is the third from the right" → position of `"brown"` = 5 (since 7 - 3 + 1 = 5).  
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to find all solutions satisfying the constraints.  
+   * Extract the unique solution (assuming the puzzle has a single valid arrangement).
+
+5. **Identify the Correct Choice:**  
+   * The question asks: which book is the **second from the right**? In our indexing (1 = leftmost), second from the right = position **6**.  
+   * Create a dictionary mapping choice letters ("A" to "G") to the corresponding book names in order:  
+     * A → `"brown"`, B → `"white"`, C → `"black"`, D → `"yellow"`, E → `"orange"`, F → `"blue"`, G → `"green"`.  
+   * In the solved solution, find which book has position 6.  
+   * Output the choice letter (A–G) associated with that book as the answer.

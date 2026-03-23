@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the five vehicles as variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+   * Define the domain as integers 1 to 5, where **1 = oldest**, and **5 = newest**.  
+   * Add all variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Translate the statements into constraints using `addConstraint` with lambda functions:  
+     - "The tractor is newer than the minivan" → `minivan < tractor` (since smaller number = older, so minivan older ⇒ minivan rank < tractor rank).  
+     - "The tractor is older than the limousine" → `tractor < limousine`.  
+     - "The convertible is older than the sedan" → `convertible < sedan`.  
+     - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (as the problem is deterministic).
+
+5. **Determine Which Choice Is True:**  
+   * Note that choice A directly states "The convertible is the second-newest", which matches the constraint `convertible == 4`.  
+   * However, to follow the procedure rigorously:  
+     - Verify that in the solution, `convertible == 4`.  
+     - Since this is explicitly given and enforced as a constraint, it must hold true in any valid solution.  
+   * Among the choices, only A is a direct restatement of a given constraint (and thus necessarily true), while B–E assert false positions.  
+   * Confirm by checking the solution: identify which vehicle is at rank 4 and match to choices.  
+   * Return "A" as the correct answer.

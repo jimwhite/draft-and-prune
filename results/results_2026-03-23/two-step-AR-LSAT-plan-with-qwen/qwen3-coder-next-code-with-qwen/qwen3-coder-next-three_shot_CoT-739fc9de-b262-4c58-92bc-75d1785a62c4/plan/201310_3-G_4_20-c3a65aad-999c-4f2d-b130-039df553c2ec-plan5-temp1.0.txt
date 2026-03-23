@@ -1,0 +1,11 @@
+1. Enumerate the five bird types and assign them integer codes.  
+2. Create Boolean variables for each lecture position (1 to 5) and hall assignment: `G[i]` = True if lecture *i* is in Gladwyn Hall, False otherwise.  
+3. Add **hall-count constraint**: exactly three lectures in Gladwyn Hall: `sum(G[i] for i in 1..5) == 3`.  
+4. Add **fixed hall constraints**: first lecture in Gladwyn Hall (`G[1] == True`), fourth in Howard Auditorium (`G[4] == False`).  
+5. Let `bird[i]` be integer variables (1–5) denoting the bird type for lecture *i*, with all `bird[i]` pairwise distinct.  
+6. Add **sandpipers constraint**: sandpipers lecture is in Howard Auditorium (`G[pos_sand] == False`) and earlier than oystercatchers (`pos_sand < pos_oys`).  
+7. Add **terns and petrels constraint**: terns lecture before petrels (`pos_tern < pos_pet`), and petrels lecture is in Gladwyn Hall (`G[pos_pet] == True`).  
+8. Translate the five answer choices into logical statements about hall assignments at specific positions.  
+9. For each choice, construct a fresh solver with base constraints plus the clause asserting that the scenario in the choice occurs (e.g., for choice A: `G[1] == True` and `G[2] == True`).  
+10. Check satisfiability: if UNSAT, then the scenario is impossible → it **must be false**. Record which choice(s) are UNSAT.  
+11. Since exactly one answer is correct (must be false), the plan outputs the index of the UNSAT choice.

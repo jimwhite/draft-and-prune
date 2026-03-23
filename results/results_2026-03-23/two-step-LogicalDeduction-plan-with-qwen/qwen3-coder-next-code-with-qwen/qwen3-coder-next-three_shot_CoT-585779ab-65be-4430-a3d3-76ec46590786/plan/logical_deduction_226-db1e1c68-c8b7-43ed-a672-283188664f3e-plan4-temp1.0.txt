@@ -1,0 +1,40 @@
+1. **Initialize the Problem Environment:**
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+   * Instantiate a `Problem` object to model the constraints.
+
+2. **Define Variables and Domain:**
+   * Define the seven books as string variables: `"green"`, `"brown"`, `"white"`, `"black"`, `"orange"`, `"purple"`, `"yellow"`.
+   * Define the domain as integers from 1 to 7 (inclusive), where **1 = leftmost** and **7 = rightmost**.
+   * Add all variables to the problem with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Add Constraint: All Different Positions**
+   * Add an `AllDifferentConstraint` over all seven book variables to ensure each occupies a unique position.
+
+4. **Translate Each Statement into Constraints:**
+   * "The purple book is to the left of the yellow book" → `purple < yellow`
+   * "The green book is to the left of the white book" → `green < white`
+   * "The brown book is to the right of the yellow book" → `yellow < brown`
+   * "The white book is the fourth from the left" → `white == 4`
+   * "The green book is to the right of the orange book" → `orange < green`
+   * "The black book is the second from the left" → `black == 2`
+
+5. **Solve the Constraint Satisfaction Problem:**
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+   * Since the problem is deterministic and consistent, expect one unique solution.
+
+6. **Identify Which Book Is Third from the Left:**
+   * In our positional system, "third from the left" corresponds to position **3**.
+   * For each key-value pair in the solution dictionary, check if the value (position) equals 3.
+   * Retrieve the book name associated with position 3.
+
+7. **Map Result to the Correct Choice Letter:**
+   * Create a mapping from choice letters to book names:
+     - "A" → `"green"`
+     - "B" → `"brown"`
+     - "C" → `"white"`
+     - "D" → `"black"`
+     - "E" → `"orange"`
+     - "F" → `"purple"`
+     - "G" → `"yellow"`
+   * Find the choice letter corresponding to the book found in position 3.
+   * Output that choice letter as the answer.

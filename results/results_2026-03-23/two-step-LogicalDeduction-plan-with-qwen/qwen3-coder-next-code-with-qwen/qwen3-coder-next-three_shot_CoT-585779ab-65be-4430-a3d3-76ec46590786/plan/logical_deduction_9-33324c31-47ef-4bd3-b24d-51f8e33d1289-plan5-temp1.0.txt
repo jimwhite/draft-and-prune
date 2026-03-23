@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * Define the variables as the five books: `"brown"`, `"orange"`, `"red"`, `"purple"`, and `"black"`.
+   * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**, representing positions on the shelf.
+   * Add all variables to the problem with their domain using `addVariable()`.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.
+   * Translate each statement into a constraint:
+     - "The purple book is to the left of the black book" → `purple < black`
+     - "The red book is to the right of the brown book" → `brown < red`
+     - "The orange book is the second from the left" → `orange == 2`
+     - "The black book is the third from the left" → `black == 3`
+
+4. **Solve for Valid Arrangements:**
+   * Use `getSolutions()` to find all solutions satisfying the constraints.
+   * Extract the unique solution (assuming exactly one valid arrangement).
+
+5. **Determine Which Book is Second from the Right:**
+   * The second-from-the-right position corresponds to index **4** (since 5 is rightmost).
+   * Create a mapping from choice letters to book names using the answer choices:
+     - A → `"brown"`, B → `"orange"`, C → `"red"`, D → `"purple"`, E → `"black"`
+   * For each choice letter, check if the corresponding book's position in the solution equals 4.
+   * Return (or identify) the letter of the first matching choice — that book is second from the right.

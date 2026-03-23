@@ -1,0 +1,14 @@
+1. Identify all individuals: Bob, Dave, Erin, Fiona.
+2. Encode all directly stated atomic facts using ternary predicates (e.g., is_blue("Bob", True), is_cold("Bob", True), etc.).
+3. Translate each universal conditional statement into a PyKe rule:
+   • Blue people are smart: foreach is_blue(X, True) → assert is_smart(X, True)
+   • If Fiona is green and blue → Fiona is big: foreach is_green("Fiona", True), is_blue("Fiona", True) → assert is_big("Fiona", True)
+   • Smart people are cold: foreach is_smart(X, True) → assert is_cold(X, True)
+   • If Bob is kind and blue → Bob is not green: foreach is_kind("Bob", True), is_blue("Bob", True) → assert is_green("Bob", False)
+   • If someone is blue → they are white: foreach is_blue(X, True) → assert is_white(X, True)
+   • Green people are white: foreach is_green(X, True) → assert is_white(X, True)
+   • All big people are kind: foreach is_big(X, True) → assert is_kind(X, True)
+   • If someone is cold → they are green: foreach is_cold(X, True) → assert is_green(X, True)
+4. Note that Dave already has explicit fact is_smart("Dave", True); due to smart people are cold, we infer is_cold("Dave", True); then via cold→green, get is_green("Dave", True). Also from blue→white and Dave being blue, infer is_white("Dave", True). No explicit or derived fact asserts is_big("Dave", True), nor any rule directly yields it.
+5. The query tests whether Dave is big:
+   → Use facts.is_big("Dave", True)

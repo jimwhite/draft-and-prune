@@ -1,0 +1,51 @@
+1. Identify all entities: Anne, Bob, Erin, Fiona.
+2. Encode all explicitly stated properties as ternary facts using is_<property>(entity, True) or is_<property>(entity, False) only if explicitly negated (none are here).
+   - is_round("Anne", True), is_red("Bob", True), is_smart("Bob", True), 
+   - is_furry("Erin", True), is_red("Erin", True), is_rough("Erin", True), is_smart("Erin", True),
+   - is_big("Fiona", True), is_furry("Fiona", True), is_smart("Fiona", True).
+3. Translate all universal conditionals and logical implications into PyKe rules:
+   • All smart things are furry: foreach (X), is_smart(X, True) → is_furry(X, True).
+   • All furry things are red: foreach (X), is_furry(X, True) → is_red(X, True).
+   • All round things are rough: foreach (X), is_round(X, True) → is_rough(X, True).
+   • If Bob is white then Bob is furry: foreach (), is_white("Bob", True) → is_furry("Bob", True).
+   • All red, rough things are big: foreach (X), is_red(X, True) ∧ is_rough(X, True) → is_big(X, True).
+   • All rough things are smart: foreach (X), is_rough(X, True) → is_smart(X, True).
+   • If Fiona is furry then Fiona is red: foreach (), is_furry("Fiona", True) → is_red("Fiona", True).
+   • If Bob is round and big then Bob is furry: foreach (), is_round("Bob", True) ∧ is_big("Bob", True) → is_furry("Bob", True).
+   • If Fiona is red and white then Fiona is smart: foreach (), is_red("Fiona", True) ∧ is_white("Fiona", True) → is_smart("Fiona", True).
+4. For each rule, implement a `foreach` block matching the antecedent condition(s) and an `assert` clause asserting the consequent.
+5. Note: "is_white" is never asserted as True for any entity; in particular, we have no fact stating Bob is white.
+6. The query tests "Bob is not white", i.e., is_white("Bob", False).
+   → Since no rule or fact derives is_white("Bob", True), but PyKe uses closed-world assumption only for defined relations? Clarify: PyKe does *not* assume negation-as-failure by default; thus, absence of is_white("Bob", True) does *not* imply is_white("Bob", False). Therefore, we must check if the system can derive is_white("Bob", False) or not.
+   However, PyKe’s facts.pred(pred, subj, obj, value) only asserts *positive* facts; negative conclusions must be derived via explicit rules or domain constraints.
+   Since no rule or fact allows concluding ¬is_white("Bob"), and no premise requires is_white("Bob") to be true, the truth of "Bob is not white" cannot be established definitively from the given info — unless we can prove is_white("Bob", True) leads to contradiction.
+7. Check if assuming is_white("Bob", True) leads to inconsistency:
+   - If is_white("Bob", True), then by rule "If Bob is white → Bob is furry" ⇒ is_furry("Bob", True).
+   - From "All smart things are furry": already satisfied (is_smart("Bob", True) ⇒ is_furry("Bob", True)) — no conflict.
+   - "All furry things are red": ⇒ is_red("Bob", True) — already known.
+   - "All rough things are smart": Bob is not known to be rough (not stated), so no derivation.
+   - "If Bob is round and big → furry": Bob’s roundness or bigness unknown — irrelevant.
+   - No rule derives is_rough("Bob") or is_big("Bob") from is_white alone.
+   - Since no contradiction arises, is_white("Bob", True) is *possible*, so we cannot conclude ¬is_white("Bob").
+8. Therefore, the query isos_white("Bob", False) is *unknown*.
+   But the question only asks to outline the plan — not to solve.
+
+So final plan steps:
+
+1. Identify individuals: Anne, Bob, Erin, Fiona.
+2. Declare all explicit positive property facts using ternary predicates: is_round("Anne", True), is_red("Bob", True), etc.
+3. Define all given conditionals as rules using `foreach` and `assert`, covering:
+   - All smart → furry,
+   - All furry → red,
+   - All round → rough,
+   - Bob white → Bob furry,
+   - Red ∧ rough → big,
+   - Rough → smart,
+   - Fiona furry → Fiona red,
+   - Bob round ∧ big → Bob furry,
+   - Fiona red ∧ white → Fiona smart.
+4. Implement each rule in PyKe syntax with proper quantification over variable X (e.g., `foreach( (X,) )` or named tuples).
+5. Note that no explicit fact about "white" is asserted for any entity, and white is only mentioned in conditionals.
+6. The query for "Bob is not white" corresponds to checking whether facts.is_white("Bob", False) can be derived.
+7. Since PyKe only derives positive facts (negation is not automatic), and no rule or fact leads to is_white("Bob", False) (and no contradiction arises if Bob *were* white), the statement is undetermined by the rules.
+8. Final step: Attempt to prove facts.is_white("Bob", False) using the PyKe query interface. If neither is_white("Bob", True) nor its negation can be derived, classify answer as unknown — but the plan itself ends with encoding the query goal.

@@ -1,0 +1,17 @@
+1. Enumerate the six available colors: forest (0), olive (1), peach (2), turquoise (3), white (4), yellow (5).  
+2. Represent rug color assignments using sets: for each of the three rugs, define a set of colors used (subset of {0–5}), with exactly five distinct colors total across all rugs.  
+3. Add global constraint: the union of all three rug color sets has size exactly 5.  
+4. Add constraints per rule:  
+   - If white (4) ∈ rug, then rug contains ≥2 other colors (i.e., |rug| ≥ 3).  
+   - If olive (1) ∈ rug, then peach (2) ∈ rug.  
+   - Forest (0) and turquoise (3) cannot coexist in same rug: ¬(0 ∈ r ∧ 3 ∈ r).  
+   - Peach (2) and turquoise (3) cannot coexist: ¬(2 ∈ r ∧ 3 ∈ r).  
+   - Peach (2) and yellow (5) cannot coexist: ¬(2 ∈ r ∧ 5 ∈ r).  
+5. Add constraint that exactly two rugs are solid (size 1), one rug is multicolored (size ≥2).  
+6. Represent each answer choice as a pair of colors (e.g., ‘forest and peach’ → {0,2}) that are the two solid rugs (each rug is a singleton set containing one of these colors).  
+7. For each answer choice pair (c1, c2):  
+   - Clone the base constraints into a fresh solver.  
+   - Enforce rug1 = {c1}, rug2 = {c2} (solid rugs), and rug3 is multicolored (|rug3| ≥ 2).  
+   - Enforce all five colors are used exactly once across rugs (i.e., |{c1, c2} ∪ rug3| = 5 and disjointness: rug3 ∩ {c1, c2} = ∅).  
+   - If UNSAT, then (c1,c2) is impossible as solid rugs; record the pair.  
+8. Output the list of answer choices (as indices) that are CANNOT be the two solid rugs.

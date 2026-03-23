@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define variables: `"green"`, `"blue"`, `"white"`, `"purple"`, `"yellow"` representing the five books.  
+   * Define domain: integers `1` to `5`, where `1` = leftmost and `5` = rightmost.  
+   * Add all variables with domain `{1,2,3,4,5}` to the `Problem`.
+
+3. **Add Constraints from Statements:**  
+   * Add `AllDifferentConstraint()` to enforce uniqueness of positions.  
+   * "The blue book is to the right of the yellow book" → `blue > yellow`.  
+   * "The white book is to the left of the yellow book" → `white < yellow`.  
+   * "The blue book is the second from the right" → `blue == 4` (since position 5 is rightmost, so second from right is 4).  
+   * "The purple book is the second from the left" → `purple == 2`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the first (and only) solution, which maps each book to its position.
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is leftmost (i.e., assigned position `1`).  
+   * Create a mapping from choice letters to book names:  
+        - `'A' → 'green'`, `'B' → 'blue'`, `'C' → 'white'`, `'D' → 'purple'`, `'E' → 'yellow'`.  
+   * In the solution, find which book has position `1`, and return its corresponding choice letter.

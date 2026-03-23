@@ -1,0 +1,31 @@
+1. Enumerate the six cookbooks (K, L, M, N, O, P) and assign each an integer index.  
+2. Create Boolean variables for each cookbook: `fall[i]` is True if cookbook i is published in fall, False otherwise (spring).  
+3. Add **mutual exclusivity constraint**: each cookbook is published in exactly one season (implicitly handled by Boolean variable semantics).  
+4. Add **M and P cannot be in same season**: `fall[M] != fall[P]`.  
+5. Add **K and N same season**: `fall[K] == fall[N]`.  
+6. Add conditional constraint: If K is in fall, then O must be in fall → `fall[K] == True => fall[O] == True`.  
+7. Add conditional constraint: If M is in fall, then N must be in spring → `fall[M] == True => fall[N] == False`.  
+8. Add **assumption constraint**: N is published in fall → `fall[N] == True`.  
+9. From step 5 and step 8, deduce `fall[K] == True` (since K and N same season).  
+10. From step 6 and deduced `fall[K] == True`, infer `fall[O] == True`.  
+11. From step 4, since `fall[M] != fall[P]`, at least one of M or P must be in spring.  
+12. From step 7 and `fall[N] == True`, deduce `fall[M]` cannot be True (otherwise N would have to be spring); thus `fall[M] == False` (M in spring).  
+13. From step 4, `fall[M] == False` implies `fall[P] == True` (P in fall).  
+14. So under assumption N = fall, we have:  
+    - N = fall (given)  
+    - K = fall (from K=N)  
+    - O = fall (from K=fall → O=fall)  
+    - M = spring (from M=fall → N=spring, but N=fall)  
+    - P = fall (from M≠P seasons and M=spring)  
+15. L has no constraints beyond being in one season; it is free to be either fall or spring.  
+16. Translate answer choices:  
+    - 'K is published in the spring' → `fall[K] == False` → contradicts step 10 (K=fall), so impossible.  
+    - 'L is published in the fall' → `fall[L] == True` → possible (free variable).  
+    - 'M is published in the fall' → `fall[M] == True` → contradicts step 10 (M=spring), impossible.  
+    - 'O is published in the spring' → `fall[O] == False` → contradicts step 10 (O=fall), impossible.  
+    - 'P is published in the spring' → `fall[P] == False` → contradicts step 10 (P=fall), impossible.  
+17. Define answer index list `answer_index_list = []`. For each choice:  
+    - Clone base constraints + assumption (N=fall) into fresh solver.  
+    - Add the specific choice condition as a constraint.  
+    - Check satisfiability: if SAT, append its index to `answer_index_list`.  
+18. Print the answer index list (should contain only index for 'L is published in the fall').

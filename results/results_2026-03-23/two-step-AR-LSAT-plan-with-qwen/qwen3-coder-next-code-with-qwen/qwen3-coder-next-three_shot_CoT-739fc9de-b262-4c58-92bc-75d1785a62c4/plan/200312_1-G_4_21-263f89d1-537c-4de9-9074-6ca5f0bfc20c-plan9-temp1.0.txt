@@ -1,0 +1,22 @@
+1. Enumerate the five students and assign them integer indices: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays and assign them integer indices: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[i][j]` for each student i and play j, indicating whether student i reviews play j.  
+4. Add **at-least-one constraint**: each student reviews at least one play: for all i, `review[i][0] ∨ review[i][1] ∨ review[i][2]`.  
+5. Add **Kramer & Lopez constraint**: each reviews fewer plays than Megregian:  
+    - Let `count[i] = review[i][0] + review[i][1] + review[i][2]` (sum of Booleans interpreted as integers).  
+    - `count[1] < count[3]` and `count[2] < count[3]`.  
+6. Add **Lopez/Megregian vs Jiang disjointness**: Neither Lopez nor Megregian reviews any play Jiang reviews:  
+    - For each play j, `review[2][j] ⇒ ¬review[0][j]` and `review[3][j] ⇒ ¬review[0][j]`.  
+7. Add **Kramer & O'Neill both review Tamerlane**: `review[1][1] = True` and `review[4][1] = True`.  
+8. Add **global constraint**: exactly two students review the same set of plays (i.e., there exist distinct i, j such that for all k, `review[i][k] == review[j][k]`, and no other pair does — but Z3 cannot directly encode "exactly one pair", so instead we model: there exists a pair (i,j) with i<j such that they are identical, and for all other pairs (p,q) ≠ (i,j), they differ. We'll handle this via existential quantification in the solver by introducing bit-vector/enum variables for each student's set or using pairwise comparison. However, a practical approach: introduce 5 Boolean vectors for each student (as bit strings of length 3), assert existence of exactly one pair with equal vectors and all other pairs unequal. Since Z3 supports quantifiers weakly, prefer encoding via auxiliary Boolean variables for equality: For each pair (i,j), define `eq[i][j] = ∧_{k=0..2} (review[i][k] ↔ review[j][k])`. Then assert: ∨_{i<j} eq[i][j] (at least one pair equal) and ∧_{(i<j), (p<q), (i,j)≠(p,q)} ¬(eq[i][j] ∧ eq[p][q]) (at most one pair equal). This requires 10 equality pairs and careful Boolean logic.  
+9. Add **assumed condition**: exactly three students review Undulation: `count_Und = review[0][2] + review[1][2] + review[2][2] + review[3][2] + review[4][2] == 3`.  
+10. For each answer choice, check satisfiability under the assumption that the statement is true:  
+    - (A) Megregian does not review Undulation → `review[3][2] == False`  
+    - (B) O'Neill does not review Undulation → `review[4][2] == False`  
+    - (C) Jiang reviews Undulation → `review[0][2] == True`  
+    - (D) Lopez reviews Tamerlane → `review[2][1] == True`  
+    - (E) O'Neill reviews Sunset → `review[4][0] == True`  
+11. For each option, clone base solver + constraint (8) and + `count_Und == 3`, then add the option-specific assumption. If SAT, the option is possible; record its index.  
+12. The correct answer is the one for which the solver returns SAT (since question asks “which one could be true” — i.e., is possible).  
+13. Output the list of indices (likely one) for which SAT holds — i.e., those answer choices that are consistent.  
+14. Since the problem format expects one choice, return the index (0–4) of the only SAT option.

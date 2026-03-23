@@ -1,0 +1,36 @@
+1. Enumerate the six bands and assign them integer indices (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer variables `slot[i]` for each band i, representing its position (1 to 6).  
+3. Add **domain constraints**: all `slot[i]` ∈ {1,2,3,4,5,6} and all distinct (via `Distinct` constraint).  
+4. Add **original constraints**:  
+   - Vegemite before Zircon: `slot[Vegemite] < slot[Zircon]`.  
+   - Wellspring and Zircon before Xpert: `slot[Wellspring] < slot[Xpert]` and `slot[Zircon] < slot[Xpert]`.  
+   - Uneasy in last three slots: `slot[Uneasy] ∈ {4,5,6}` (encoded as `slot[Uneasy] >= 4`).  
+   - Yardsign in first three slots: `slot[Yardsign] <= 3`.  
+5. For each answer choice, express its logical condition as constraints:  
+   - Choice A: "Only Uneasy can perform in a later slot than Xpert" → `slot[b] > slot[Xpert]` iff `b == Uneasy`. So:  
+     - For all bands b ≠ Uneasy: `slot[b] <= slot[Xpert]`.  
+     - `slot[Uneasy] > slot[Xpert]` (optional, but safe to add for full equivalence).  
+   - Choice B: `slot[Vegemite] < slot[Wellspring] < slot[Zircon]`.  
+   - Choice C: `slot[Vegemite] < slot[Xpert]` and `slot[Wellspring] < slot[Xpert]`.  
+   - Choice D: `|slot[Xpert] - slot[Uneasy]| = 1`.  
+   - Choice E: `slot[Xpert] ∈ {5,6}`.  
+6. To test equivalence, for each choice:  
+   - Clone the original base solver into a fresh solver.  
+   - Add the original constraints + the new constraint from the choice (i.e., together).  
+   - Enumerate all valid permutations satisfying both sets of constraints and check if the solution sets are identical.  
+   - Since full enumeration is infeasible, use a more practical equivalence check:  
+     - For each of the original constraints that were replaced (Wellspring < Xpert and Zircon < Xpert), verify that these are *logically entailed* by the original constraints plus the new choice constraint (and vice versa).  
+   - Specifically:  
+     a. Check that adding the new constraint to the original constraints does *not* rule out any original-satisfying assignment:  
+        - For each original valid ordering (if feasible), check it satisfies the new constraint — but since enumerating all 720 permutations is possible, do so.  
+     b. Or more efficiently: For each choice, check if the original constraints **imply** the new constraint and vice versa *under the other fixed constraints*.  
+   - Given small size (6! = 720), generate all solutions satisfying the *original constraints*, store as a set of tuples `(slot[0],...,slot[5])`.  
+   - For each choice, generate all solutions satisfying *original constraints + the new choice constraint*.  
+   - If the solution sets are identical, that choice is equivalent.  
+7. Implement enumeration:  
+   - Use `itertools.permutations(range(6))` for slot assignments (0-indexed positions, map to 1–6 by index+1).  
+   - For each permutation `perm`, where `perm[i]` is the slot number (0-indexed) for band i, convert to 1-indexed: `slot[i] = perm[i] + 1`.  
+   - Check if all original constraints hold. If yes, record the full assignment (or just keep as set of band→slot mappings).  
+8. For each choice, do the same: generate all permutations satisfying original constraints + choice constraint, and compare solution sets.  
+9. The answer is the choice whose added constraint yields *exactly the same set of valid permutations* as the original constraints alone (i.e., no extra restrictions or relaxations).  
+10. Return the index of that choice (or directly output the string if only one matches).

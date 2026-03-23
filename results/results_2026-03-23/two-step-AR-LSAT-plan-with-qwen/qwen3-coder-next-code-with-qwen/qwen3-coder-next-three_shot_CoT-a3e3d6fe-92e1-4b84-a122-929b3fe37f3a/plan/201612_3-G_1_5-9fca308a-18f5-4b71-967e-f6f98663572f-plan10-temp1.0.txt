@@ -1,0 +1,25 @@
+1. Enumerate the five students and assign integer indices (e.g., Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4).  
+2. Create integer variables `team[i]` for each student i, where `team[i] ∈ {0,1}` (e.g., 0=green, 1=red).  
+3. Create Boolean variables `facilitator[i]` for each student i (True if student is a facilitator).  
+4. Add **team-size constraints**: exactly one team has size 2 and the other has size 3.  
+    - Count green team members: `sum(1 if team[i]==0 else 0 for i in range(5)) == 2 OR == 3`. Implement via auxiliary integer variable `green_count = Sum([If(team[i]==0,1,0) for i])` and constraint `Or(green_count == 2, green_count == 3)`.  
+5. Add **exactly one facilitator per team**: For each team, exactly one student assigned to that team is a facilitator.  
+    - Green facilitator: `Sum([If(team[i]==0, If(facilitator[i],1,0), 0) for i]) == 1`.  
+    - Red facilitator: `Sum([If(team[i]==1, If(facilitator[i],1,0), 0) for i]) == 1`.  
+6. Add **given constraints**:  
+    - Juana and Olga on different teams: `team[0] != team[4]`.  
+    - Lateefah on green team: `team[2] == 0`.  
+    - Kelly is not a facilitator: `Not(facilitator[1])`.  
+    - Olga is a facilitator: `facilitator[4] == True`.  
+7. Add **hypothetical condition**: Mei is on green team: `team[3] == 0`.  
+8. Translate the five answer choices into logical conditions to check for necessity (i.e., must hold in *all* satisfying assignments under the hypothetical):  
+    - A: Juana on green → `team[0] == 0`  
+    - B: Kelly on red → `team[1] == 1`  
+    - C: Olga on green → `team[4] == 0`  
+    - D: Lateefah is facilitator → `facilitator[2] == True`  
+    - E: Mei is facilitator → `facilitator[3] == True`  
+9. For each answer choice index j (0 to 4), do:  
+    a. Clone the base constraints + hypothetical condition into fresh solver S.  
+    b. Assert that choice j is *false* in this clone (e.g., if j=0, assert `team[0] != 0`).  
+    c. If S is UNSAT, then choice j must be true; record its index in `answer_index_list`.  
+10. Output the single correct answer corresponding to the recorded index (since only one choice must be true).

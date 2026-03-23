@@ -1,0 +1,32 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the golf tournament ranking constraints.
+
+2.  **Define Variables and Domain:**
+    * List the seven golfers as variables: `"Joe"`, `"Rob"`, `"Eli"`, `"Dan"`, `"Mya"`, `"Ada"`, `"Ana"`.
+    * Define the domain as integers from 1 to 7, where **1 = highest rank (best/first place)** and **7 = lowest rank (worst/last place)**.
+    * Add all seven variables to the problem with their domain (1–7).
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` to ensure every golfer has a distinct, unique rank.
+
+4.  **Translate Each Statement into Constraints:**
+    * "Joe finished above Ana" → Joe’s rank is numerically *less than* Ana’s rank (`lambda j, a: j < a`).
+    * "Ana finished second-to-last" → Ana’s rank = 6 (since last is 7, second-to-last is 6).
+    * "Mya finished fourth" → Mya’s rank = 4.
+    * "Dan finished third" → Dan’s rank = 3.
+    * "Ada finished second" → Ada’s rank = 2.
+    * "Eli finished third-to-last" → Third-to-last in a 7-person race is position 5 (positions: 1,2,3,4,5,**6,7** ⇒ 5 is third-to-last).
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to compute all valid rank assignments.
+    * Extract the single solution (or first solution, as uniqueness is guaranteed by problem consistency).
+
+6.  **Identify the Golfer in Last Place (Rank = 7):**
+    * Create a mapping from choice letters to golfers:  
+      `{"A": "Joe", "B": "Rob", "C": "Eli", "D": "Dan", "E": "Mya", "F": "Ada", "G": "Ana"}`.
+    * In the solution dictionary, locate which golfer has rank `7`.
+    * Find and output the corresponding choice letter from the mapping.
+
+7.  **Output Final Answer:**
+    * Return (or record) the correct letter from the choices that identifies who finished last.

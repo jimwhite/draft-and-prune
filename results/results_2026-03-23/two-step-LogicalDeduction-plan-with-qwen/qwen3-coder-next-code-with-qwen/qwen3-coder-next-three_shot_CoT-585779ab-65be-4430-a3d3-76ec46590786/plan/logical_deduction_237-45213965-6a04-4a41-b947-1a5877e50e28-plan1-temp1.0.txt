@@ -1,0 +1,33 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Create a list of variable names for the seven books: `"red"`, `"white"`, `"purple"`, `"black"`, `"gray"`, `"orange"`, and `"blue"`.
+    * Define the domain as integers from 1 to 7, where position 1 = leftmost and position 7 = rightmost.
+    * Add all seven variables to the problem with their domain [1, 2, 3, 4, 5, 6, 7].
+
+3.  **Add the AllDifferent Constraint:**
+    * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into a Formal Constraint:**
+    * "The red book is to the right of the white book" → `red > white`
+    * "The gray book is to the left of the orange book" → `gray < orange`
+    * "The gray book is to the right of the blue book" → `gray > blue`
+    * "The red book is the second from the right" → `red == 6` (since position 7 is rightmost, second from right = 6)
+    * "The black book is the fourth from the left" → `black == 4`
+    * "The orange book is to the left of the white book" → `orange < white`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Since the problem is well-constrained and consistent, extract the unique solution from the list.
+
+6.  **Interpret the Question:**
+    * The question asks which book is "third from the right".
+    * In a 7-position shelf (1=leftmost, 7=rightmost), third from the right corresponds to position = 7 - 2 = **5**.
+    * Therefore, identify the book assigned to position 5 in the solution.
+
+7.  **Map Solution to Answer Choice:**
+    * Create a mapping from choice letters to book names: `'A' -> 'red'`, `'B' -> 'white'`, `'C' -> 'purple'`, `'D' -> 'black'`, `'E' -> 'gray'`, `'F' -> 'orange'`, `'G' -> 'blue'`.
+    * Iterate over the choices; for each choice letter, check if the corresponding book's position in the solution is 5.
+    * Return (or record) the correct choice letter where this condition holds.

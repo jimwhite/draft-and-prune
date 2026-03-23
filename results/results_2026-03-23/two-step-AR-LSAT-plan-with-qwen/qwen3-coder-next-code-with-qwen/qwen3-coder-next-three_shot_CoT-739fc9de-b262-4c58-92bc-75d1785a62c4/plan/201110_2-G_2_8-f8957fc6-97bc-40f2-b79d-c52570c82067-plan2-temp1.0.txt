@@ -1,0 +1,22 @@
+1. Enumerate the five candidates and assign integer indices (0: Jaramillo, 1: Kayne, 2: Landon, 3: Novetzke, 4: Ong).  
+2. Create Boolean decision variables for each candidate-country assignment: `assign[i][j]` where i ∈ {0..4}, j ∈ {0..2} (0: Venezuela, 1: Yemen, 2: Zambia), meaning candidate i is assigned to country j.  
+3. Add **exactly-one-country-per-candidate** constraints: For each candidate, sum over countries ≤ 1; since only 3 posts exist and exactly 3 candidates are assigned, equivalently enforce: for each candidate i, `sum(assign[i][j] for j in 0..2) == 1` if assigned, but easier: enforce **exactly 3 candidates are selected**, and each selected candidate gets exactly one country. So:  
+   - For each candidate i: `sum(assign[i][j] for j in 0..2) <= 1`.  
+   - Global: `sum(assign[i][j] for i in 0..4, j in 0..2) == 3`.  
+   - Each country gets exactly one ambassador: for each country j, `sum(assign[i][j] for i in 0..4) == 1`.  
+4. Add **constraint A (exclusive Kayne/Novetzke)**: Exactly one of Kayne or Novetzke is assigned to *some* ambassadorship. This is:  
+   - `(sum(assign[1][j] for j in 0..2) == 1) ^ (sum(assign[3][j] for j in 0..2) == 1)` is XOR: i.e.,  
+   - `(sum(assign[1][j]) + sum(assign[3][j])) == 1`.  
+5. Add **constraint B (Jaramillo → Kayne)**: If Jaramillo is assigned, then Kayne must be assigned. That is:  
+   - `sum(assign[0][j] for j) <= sum(assign[1][j] for j)`.  
+6. Add **constraint C (Ong→Venezuela ⇒ ¬Kayne→Yemen)**: If Ong is assigned to Venezuela, then Kayne must *not* be assigned to Yemen. This is:  
+   - `assign[4][0] == 1 ⇒ assign[1][1] == 0`, equivalently: `assign[4][0] + assign[1][1] <= 1`.  
+7. Add **constraint D (Landon → Zambia)**: If Landon is assigned, it must be to Zambia. So:  
+   - `assign[2][0] == 0` and `assign[2][1] == 0`.  
+8. Translate each answer choice into the pair of candidates not assigned (i.e., whose total assignment sum is 0). For each choice:  
+   - Example: ['Jaramillo and Novetzke'] → candidates 0 and 3 unassigned ⇒ `sum(assign[0][j]) == 0` and `sum(assign[3][j]) == 0`.  
+9. For each answer choice:  
+   - Clone the base solver (constraints 3–7).  
+   - Add constraints fixing the specified pair to be unassigned.  
+   - Check satisfiability with `solver.check()`. If SAT, then this pair *could* be the unassigned ones → record its index.  
+10. Collect indices of all answer choices that are feasible (SAT), and output them as the list.

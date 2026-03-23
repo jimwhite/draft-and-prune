@@ -1,0 +1,22 @@
+1. Enumerate the six available colors: forest (0), olive (1), peach (2), turquoise (3), white (4), yellow (5).  
+2. Create Boolean variables `color_used[c]` for each color c, indicating whether color c is used in at least one rug.  
+3. Add **exactly-five-used constraint**: exactly 5 of the 6 colors are used (sum(color_used) == 5).  
+4. Introduce Boolean variables `rug[i][c]` for rug i ∈ {0,1,2} and color c ∈ {0..5}, indicating whether rug i uses color c.  
+5. Add **color-use linking constraint**: for each color c, `color_used[c] == (rug[0][c] ∨ rug[1][c] ∨ rug[2][c])`.  
+6. Add **exactly-one-rug-per-color constraint**: for each color c, at most one rug uses it (i.e., `rug[i][c] ∧ rug[j][c] → False` for i ≠ j).  
+7. Add **solid/multicolored definition**: a rug is solid iff exactly one `rug[i][c]` is True; multicolored iff at least two `rug[i][c]` are True.  
+8. Add **exactly-two-solid constraint**: exactly two rugs have sum_c(rug[i][c]) == 1, and the third rug has sum_c(rug[i][c]) ≥ 2.  
+9. Add **rule constraints for any rug** (for each rug i):  
+    - If white used → at least 3 colors total: `rug[i][4] → (sum_c rug[i][c] ≥ 3)`  
+    - If olive used → peach must be used: `rug[i][1] → rug[i][2]`  
+    - Forest and turquoise cannot both be used: `¬(rug[i][0] ∧ rug[i][3])`  
+    - Peach and turquoise cannot both be used: `¬(rug[i][2] ∧ rug[i][3])`  
+    - Peach and yellow cannot both be used: `¬(rug[i][2] ∧ rug[i][5])`  
+10. Translate answer choices into color pairs: e.g., ['forest','peach'] = indices [0,2], etc. Each choice corresponds to assuming the two solid rugs are precisely those colors (so for a solid rug with color c, set `rug[i][c] = True` and `rug[i][d] = False` for d ≠ c, for two rugs i1,i2).  
+11. For each answer choice (pair of colors):  
+    - Clone base constraints into fresh solver.  
+    - Add constraint that two solid rugs have exactly those colors: pick distinct rugs (say rug0, rug1), set `rug0[c1]=True`, `rug0[d≠c1]=False`, similarly for rug1 with c2.  
+    - Ensure third rug (rug2) is multicolored: `sum_c rug2[c] ≥ 2`.  
+    - Keep `color_used` and other global constraints.  
+    - If the model is UNSAT, then that color pair **cannot** be the two solid rugs; record the index.  
+12. Return list of indices of answer choices that are impossible (UNSAT).

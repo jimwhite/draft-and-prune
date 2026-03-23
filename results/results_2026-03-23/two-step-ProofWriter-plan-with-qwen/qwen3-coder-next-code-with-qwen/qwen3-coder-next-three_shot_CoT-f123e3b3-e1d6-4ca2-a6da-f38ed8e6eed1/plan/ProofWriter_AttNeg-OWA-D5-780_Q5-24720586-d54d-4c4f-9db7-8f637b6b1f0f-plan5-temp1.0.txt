@@ -1,0 +1,18 @@
+1. Identify all individuals: Anne, Charlie, Dave, Harry.
+2. Encode all directly stated atomic properties as facts.pred(person, property_value, True):
+   - is_big("Anne", True), is_blue("Anne", True), is_kind("Anne", True), is_nice("Anne", True)
+   - is_big("Charlie", True), is_blue("Charlie", True), is_nice("Charlie", True)
+   - is_blue("Dave", True), is_cold("Dave", True), is_nice("Dave", True)
+   - is_blue("Harry", True)
+3. Translate each universal implication into a PyKe rule using `foreach` with conditions and `assert` for conclusions:
+   • If Charlie is cold → Charlie is nice.
+   • If Harry is kind AND Harry is nice → Harry is quiet.
+   • All blue things are cold: foreach X, if is_blue(X, True) then is_cold(X, True)
+   • If something is quiet → it is kind: foreach X, if is_quiet(X, True) then is_kind(X, True)
+   • All kind things are big: foreach X, if is_kind(X, True) then is_big(X, True)
+   • Cold things are nice: foreach X, if is_cold(X, True) then is_nice(X, True)
+   • If Harry is nice AND Harry is big → Harry is kind.
+   • If something is nice → it is quiet: foreach X, if is_nice(X, True) then is_quiet(X, True)
+4. Ensure each rule uses proper variable scoping (e.g., `foreach X`) and consistent property names.
+5. The query tests whether Charlie is kind:
+   → Use facts.is_kind("Charlie", True)

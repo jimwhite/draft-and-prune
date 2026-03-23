@@ -1,0 +1,26 @@
+1. Enumerate the six available students: Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio. Assign integer indices 0–5 respectively.  
+2. Define integer variables `assign[i]` for each student i, representing the year assigned (-1 if not assigned; valid years: 1921–1924 → map to 0–3 for convenience).  
+3. Add **assignment constraints**: exactly four students are assigned (i.e., four students have `assign[i] != -1`, and the other two are unassigned).  
+4. Add **year uniqueness constraint**: if two students are assigned, they must be assigned to different years (i.e., their `assign[i]` values among assigned students are distinct and in {0,1,2,3}).  
+5. Add **fixed condition from question**: Ryan (index 3) and Yoshio (index 5) *are* assigned. So set `assign[3] != -1` and `assign[5] != -1`.  
+6. Add **only Louis or Tiffany can be assigned to 1923**: If a student i is assigned to year 2 (i.e., 1923), then `i == 0 (Louis)` or `i == 4 (Tiffany)`.  
+7. Add **Mollie constraint**: If Mollie (index 1) is assigned (`assign[1] != -1`), then `assign[1] ∈ {0,1}` (i.e., 1921 or 1922).  
+8. Add **Tiffany → Ryan constraint**: If Tiffany (index 4) is assigned (`assign[4] != -1`), then Ryan (index 3) must be assigned. This is *already satisfied* in the current scenario, so the implication holds trivially — but to encode it formally: `assign[4] != -1 → assign[3] != -1`.  
+9. Add **Ryan → Onyx prior constraint**: If Ryan is assigned to year y (0≤y≤3), then Onyx must be assigned to year y−1, i.e., `assign[3] == y → assign[2] == y - 1` for y > 0. Since Ryan *is* assigned, `assign[3] ∈ {0,1,2,3}`, but y=0 would violate “immediately prior” (no year -1), so Ryan cannot be in 1921 → thus `assign[3] ≠ 0`.  
+10. Deduce **Ryan’s possible years**: Since Ryan must have Onyx immediately before him, and only years 0–3 exist, valid pairs:  
+    - Onyx=0 (1921), Ryan=1 (1922)  
+    - Onyx=1 (1922), Ryan=2 (1923)  
+    - Onyx=2 (1923), Ryan=3 (1924)  
+    So `assign[3] ∈ {1,2,3}`, and correspondingly `assign[2] = assign[3] - 1`.  
+11. Since only four students total are assigned, and Ryan (3) and Yoshio (5) are *fixed* assigned, we need to choose exactly two more from {Louis(0), Mollie(1), Onyx(2), Tiffany(4)} to complete the group of four — but note: if Ryan is assigned, Onyx *must* be assigned (by constraint), so Onyx (2) is also necessarily assigned. Therefore, the assigned set is exactly {Ryan(3), Yoshio(5), Onyx(2)} ∪ one more from {Louis(0), Mollie(1), Tiffany(4)}.  
+12. Now consider each answer choice as a statement to test feasibility:  
+    For each option, clone the current solver and add the specific claim (e.g., `assign[0] == 2` for Louis assigned to 1923), then check SAT.  
+    - Option A: Louis assigned to 1923 → `assign[0] == 2`.  
+    - Option B: Mollie assigned to 1921 → `assign[1] == 0`.  
+    - Option C: Onyx assigned to 1922 → `assign[2] == 1`.  
+    - Option D: Tiffany assigned to 1924 → `assign[4] == 3`.  
+    - Option E: Yoshio assigned to 1922 → `assign[5] == 1`.  
+13. Since Yoshio *is* assigned, and his year is unconstrained directly by the rules (except all assignments must be distinct), test feasibility of each statement under the full set of constraints and known fixeds.  
+14. A statement is “could be true” if the extended solver (base + statement) returns SAT.  
+15. Collect all indices of options for which the model is SAT — only one will be correct per LSAT-style logic games.  
+16. Return the index (0–4) of the option that is feasible — but per instructions, just output the plan steps.

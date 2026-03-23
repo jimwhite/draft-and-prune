@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction model.
+
+2.  **Define Variables and Domain:**
+    * Identify the variables as the seven golfers: `"Ana"`, `"Eli"`, `"Mya"`, `"Amy"`, `"Joe"`, `"Mel"`, and `"Ada"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest/above)** and **7 = seventh place (lowest/below)**.
+    * Add all variables with the domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Translate each statement into constraints using lambda functions or built-in constraints:
+        * "Ada finished above Mel" → `ada_position < mel_position`.
+        * "Ada finished third-to-last" → Since there are 7 golfers, third-to-last is position **5** (positions: 1=1st, ..., 5=5th=third-to-last, 7=7th=last).
+        * "Amy finished above Ana" → `amy_position < ana_position`.
+        * "Mya finished second-to-last" → position **6** (since 7 is last, 6 is second-to-last).
+        * "Joe finished above Amy" → `joe_position < amy_position`.
+        * "Eli finished below Ana" → `eli_position > ana_position`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid permutations.
+    * Extract the unique solution (or one solution, if multiple exist) from the returned list of dictionaries.
+
+5.  **Identify Who Finished Third:**
+    * Scan the solution dictionary to find which golfer has position **3**.
+    * Create a mapping from choice letters (A–G) to golfer names: A→"Ana", B→"Eli", C→"Mya", D→"Amy", E→"Joe", F→"Mel", G→"Ada".
+    * Compare the golfer at position 3 against this mapping.
+    * Return the choice letter corresponding to that golfer.

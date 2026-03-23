@@ -1,0 +1,19 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `bay[0..5]`, where `bay[i]` is the bay number (1–6) where cargo type `i` is located.  
+3. Add **domain constraints**: each `bay[i]` ∈ {1,2,3,4,5,6}, and all `bay[i]` are distinct (bijection between cargo types and bays).  
+4. Add **ordering constraints** from the problem:  
+   - grain > livestock ⇒ `bay[1] > bay[2]`  
+   - livestock > textiles ⇒ `bay[2] > bay[5]`  
+   - produce > fuel ⇒ `bay[4] > bay[0]`  
+   - textiles adjacent to produce ⇒ `|bay[5] - bay[4]| = 1`  
+5. Add **hypothesis constraint** for the conditional: exactly one bay between machinery and grain ⇒ `|bay[3] - bay[1]| = 2`.  
+6. For each cargo type, collect the set of possible bays across all satisfying assignments (using multiple solver queries with incremental assumptions).  
+7. Determine how many bays have the same cargo type in every satisfying assignment (i.e., bays where the cargo is uniquely determined).  
+   - Initialize a counter `determined_bays = 0`.  
+   - For each bay position `p` ∈ {1,2,3,4,5,6}:  
+     - Clone the base constraints + hypothesis.  
+     - For each cargo type `c`, check if `bay[c] == p` is forced:  
+       - If for some cargo type `c`, the constraint `bay[c] == p` is implied (model is UNSAT when asserting `bay[c] != p`), then bay `p` must hold cargo `c`.  
+       - Otherwise, if no cargo type is forced into bay `p`, skip.  
+     - If exactly one cargo type is forced into bay `p` (i.e., for all satisfying assignments, bay `p` contains the same cargo), increment `determined_bays`.  
+8. Return the integer value of `determined_bays`, then map it to the corresponding choice string: 2→'two', 3→'three', etc.

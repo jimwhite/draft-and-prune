@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Define the five vehicle types as variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+    * Assign a numerical domain of integers from 1 to 5, where **1 = oldest**, and **5 = newest**.  
+    * Add all five variables to the problem with this domain using `addVariable()`.  
+
+3.  **Encode Constraints Using Logical Rules:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+    * Translate each statement into a constraint using `addConstraint()` with lambda expressions:  
+        - "The tractor is newer than the minivan" → `minivan < tractor` (since smaller rank = older, so minivan must have a lower rank number than tractor).  
+        - "The tractor is older than the limousine" → `tractor < limousine` (tractor has lower rank number than limousine).  
+        - "The convertible is older than the sedan" → `convertible < sedan`.  
+        - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).  
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments satisfying all constraints.  
+    * Extract the unique solution (a dictionary mapping vehicles to ranks) from the result list (only one solution expected due to uniqueness implied by problem).  
+
+5.  **Map the Solution to the Question and Choices:**  
+    * Identify which vehicle has rank `3`, since "third-newest" corresponds to position 3 (positions: 1=oldest, 2=second-oldest, 3=third-newest, 4=second-newest, 5=newest).  
+    * Create a mapping from choice letters to vehicle names:  
+        `{'A': 'convertible', 'B': 'sedan', 'C': 'tractor', 'D': 'minivan', 'E': 'limousine'}`.  
+    * Iterate over choices, check if the vehicle in that choice has rank 3 in the solution, and output the corresponding letter.

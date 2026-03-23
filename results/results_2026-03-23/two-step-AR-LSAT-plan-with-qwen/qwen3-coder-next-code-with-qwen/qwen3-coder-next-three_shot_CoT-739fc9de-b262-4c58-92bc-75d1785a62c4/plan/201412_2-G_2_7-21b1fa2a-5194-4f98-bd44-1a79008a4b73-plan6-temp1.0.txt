@@ -1,0 +1,26 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign each an integer index.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign each an integer index.  
+3. Create a permutation variable `lecture_topic` of length 4 where `lecture_topic[i] = j` means the i-th lecture (in time order) is on topic j.  
+   - Alternatively, create position variables for each topic: `pos_topic[j] = i` where topic j is the i-th lecture (1 ≤ i ≤ 4).  
+   - Prefer position variables: define `pos_lithographs`, `pos_oil`, `pos_sculptures`, `pos_watercolors` ∈ {1,2,3,4}, all distinct.  
+4. Similarly, create position variables for each art historian’s lecture: `pos_Farley`, `pos_Garcia`, `pos_Holden`, `pos_Jiang` ∈ {1,2,3,4}, all distinct.  
+5. Add **topic-historian assignment constraint**: each historian gives exactly one lecture, so there is a bijection between historians and topics; implicitly handled via distinct positions if we assign topics to historians.  
+   - Instead, define a mapping: let `assignment[h] = topic` (i.e., historian h gives lecture on topic assignment[h]).  
+   - Alternatively, define 4 binary variables per (historian, topic) pair indicating who teaches what; add that each historian is assigned exactly one topic and each topic is assigned to exactly one historian.  
+6. Add **topic-ordering constraints**:  
+   - `pos_oil < pos_lithographs` and `pos_watercolors < pos_lithographs`.  
+   - `pos_Farley < pos_oil` (Farley before oil paintings lecture).  
+   - `pos_Holden < pos_Garcia` and `pos_Holden < pos_Jiang`.  
+7. Translate each answer choice into a logical statement about positions:  
+   - A: `pos_Farley < pos_sculptures`  
+   - B: `pos_Holden < pos_lithographs`  
+   - C: `pos_sculptures < pos_Garcia`  
+   - D: `pos_sculptures < pos_Jiang`  
+   - E: `pos_watercolors < pos_Garcia`  
+8. Define a list of answer index pairs: `(index, statement)` for the 5 choices.  
+9. For each choice, use proof by contradiction to determine if it **must** be true:  
+   - Clone base constraints into a fresh solver.  
+   - Assert the *negation* of the statement (e.g., for B, assert `pos_Holden >= pos_lithographs`).  
+   - If UNSAT, then the statement is forced → it must be true.  
+10. Identify which choice(s) yield UNSAT under negation; the problem states "Which one must be true?", so exactly one should succeed.  
+11. Return the index of the unique satisfying choice as the answer.

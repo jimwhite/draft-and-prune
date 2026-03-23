@@ -1,0 +1,37 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, and `"green"`.  
+   * Assign positions from 1 to 7 (leftmost = 1, rightmost = 7) as the domain for each variable.  
+   * Add all variables to the problem with their shared domain [1, 2, 3, 4, 5, 6, 7].
+
+3. **Add the AllDifferent Constraint:**  
+   * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * "The red book is to the right of the yellow book" → `yellow < red`  
+   * "The white book is the second from the right" → `white == 6` (since positions 1–7, rightmost = 7 ⇒ second-rightmost = 6)  
+   * "The red book is to the left of the green book" → `red < green`  
+   * "The blue book is to the right of the black book" → `black < blue`  
+   * "The black book is the third from the right" → `black == 5` (rightmost = 7, second-rightmost = 6 ⇒ third-rightmost = 5)  
+   * "The orange book is the leftmost" → `orange == 1`
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the (unique) solution dictionary mapping each book to its position.
+
+6. **Determine Which Choice Is True:**  
+   * The question asks: *"Which of the following is true?"*, listing statements about "X book is third from the right", i.e., position 5.  
+   * Since `black == 5` is explicitly given in the constraints, choice A ("The black book is the third from the right") must be true.  
+   * However, verify by checking: in the solution, find which book has position 5.  
+   * Map choice letters A–G to the corresponding books:  
+     - A → black  
+     - B → orange  
+     - C → yellow  
+     - D → white  
+     - E → blue  
+     - F → red  
+     - G → green  
+   * Identify the choice where `solution[book] == 5`, and output its letter.

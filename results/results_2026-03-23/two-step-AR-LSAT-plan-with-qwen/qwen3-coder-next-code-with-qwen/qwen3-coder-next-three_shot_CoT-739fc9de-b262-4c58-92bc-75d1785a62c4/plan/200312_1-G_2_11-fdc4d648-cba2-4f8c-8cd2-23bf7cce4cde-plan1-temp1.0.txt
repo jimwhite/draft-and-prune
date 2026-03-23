@@ -1,0 +1,19 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `pos[t]` for each cargo type t, representing its bay number (1 to 6).  
+3. Add **domain constraints**: each `pos[t] ∈ {1,2,3,4,5,6}` and all positions are distinct (all-different constraint).  
+4. Add **ordering constraints** from the premises:  
+   - grain > livestock ⇒ `pos[grain] > pos[livestock]`  
+   - livestock > textiles ⇒ `pos[livestock] > pos[textiles]`  
+   - produce > fuel ⇒ `pos[produce] > pos[fuel]`  
+   - textiles and produce are adjacent ⇒ `|pos[textiles] - pos[produce]| == 1`  
+5. Add the **conditional hypothesis** (given condition): produce is next to livestock ⇒ `|pos[produce] - pos[livestock]| == 1`.  
+6. Translate each answer choice into a logical constraint and check consistency under the full model:  
+   - A. “Bay 2 is holding fuel” ⇒ `pos[fuel] == 2`  
+   - B. “Bay 4 is holding produce” ⇒ `pos[produce] == 4`  
+   - C. “Bay 4 is holding textiles” ⇒ `pos[textiles] == 4`  
+   - D. “Bay 5 is holding grain” ⇒ `pos[grain] == 5`  
+   - E. “Bay 5 is holding machinery” ⇒ `pos[machinery] == 5`  
+7. For each choice, clone the base constraints (steps 3–5) into a fresh solver, add the choice-specific constraint, and check SAT.  
+8. Collect all choices for which the constrained model is UNSAT (i.e., impossible under the hypothesis); those are candidates for “EXCEPT”.  
+9. Among the choices, exactly one must be impossible — that is the answer; append its index to `answer_index_list`.  
+10. Print `answer_index_list`.

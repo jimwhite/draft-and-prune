@@ -1,0 +1,34 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to create a constraint satisfaction problem for the seven fruits.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**. This mapping aligns with the phrasing "cheapest", "second-cheapest", etc.  
+   * Add all fruit variables and the domain (1–7) to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into constraints using `lambda` functions or direct equality/inequality:  
+     - "The oranges are more expensive than the peaches" → `oranges > peaches` (higher rank number = more expensive).  
+     - "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.  
+     - "The pears are less expensive than the cantaloupes" → `pears < 4`.  
+     - "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6).  
+     - "The mangoes are the cheapest" → `mangoes == 1`.  
+     - "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest=1, second=2, third=3).
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments of ranks to fruits.  
+   * Extract the unique solution (the problem has sufficient constraints for a single solution).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which fruit is the cheapest (rank 1).  
+   * Note that one choice states "The mangoes are the cheapest." and from constraint `mangoes == 1`, this is immediately confirmed.  
+   * However, to be thorough:  
+     - Build a mapping from choice letters (`'A'` through `'G'`) to fruit names:  
+       `{'A': 'watermelons', 'B': 'mangoes', 'C': 'kiwis', 'D': 'pears', 'E': 'cantaloupes', 'F': 'oranges', 'G': 'peaches'}`.  
+     - In the solved solution, find which fruit has rank 1.  
+     - Return the corresponding choice letter. (In this case, `"mangoes"` will be at rank 1, so answer is `'B'`.)
+
+6. **Output the Final Answer:**  
+   * Since only the plan is required (no actual code or answer), stop at step 5 — the plan fully specifies how to compute the correct choice.

@@ -1,0 +1,20 @@
+1. Enumerate the four riders and four bicycles, assigning integer indices to each.  
+2. Create Boolean variables `rider_bike_day[i][j][d]` for rider i, bicycle j on day d (d = 0 for first day, d = 1 for second day), indicating if rider i tests bicycle j on day d.  
+3. Add **coverage constraints**: for each day d and each bicycle j, exactly one rider tests it (i.e., sum over riders = 1).  
+4. Add **uniqueness constraints per day**: for each rider i and day d, exactly one bicycle is assigned (i.e., sum over bicycles = 1).  
+5. Add **per-rider daily uniqueness**: each rider tests exactly one bicycle per day (already implied by above, but reinforce if needed).  
+6. Add **no-repeat constraint across days**: each rider tests a *different* bicycle on day 2 than on day 1 (i.e., for each rider i, if `rider_bike_day[i][j][0]` is true then `rider_bike_day[i][j][1]` must be false, and vice versa; equivalently, for each rider i, sum over j of `rider_bike_day[i][j][0] * rider_bike_day[i][j][1] = 0`).  
+7. Add **explicit condition constraints**:  
+    - Reynaldo cannot test F: `rider_bike_day[Reynaldo][F][d] = false` for both d.  
+    - Yuki cannot test J: `rider_bike_day[Yuki][J][d] = false` for both d.  
+    - Theresa must be one of the testers for H: i.e., in at least one day, Theresa tests H (sum over d of `rider_bike_day[Theresa][H][d] >= 1`).  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for each bicycle j, `rider_bike_day[Yuki][j][0]` implies `rider_bike_day[Seamus][j][1]`; since exactly one j satisfies the former, enforce `rider_bike_day[Seamus][j][1] = rider_bike_day[Yuki][j][0]` for all j (or equivalently, fix Seamus’s day-2 bicycle to match Yuki’s day-1 choice).  
+8. Translate each answer choice into a Boolean constraint on assignments:  
+    - e.g., “Both Reynaldo and Seamus test J” means: Reynaldo tests J on some day AND Seamus tests J on some day (but note: since each bicycle is tested once per day, and only one rider per bicycle per day, this can *only* happen if they test J on *different days*). So:  
+        `(rider_bike_day[Reynaldo][J][0] OR rider_bike_day[Reynaldo][J][1]) AND (rider_bike_day[Seamus][J][0] OR rider_bike_day[Seamus][J][1])`.  
+    - Similarly for others.  
+9. Define answer_index_list = [] (will store indices of *impossible* choices). For each answer choice i:  
+    - Clone base constraints into fresh solver S.  
+    - Assert the constraint for answer choice i (as constructed above).  
+    - If S.check() == UNSAT, then this scenario CANNOT be true; append i to answer_index_list.  
+10. After checking all choices, return the index (or indices) of the impossible case(s). Since only one choice is correct as “CANNOT be true”, expected answer_index_list length = 1.

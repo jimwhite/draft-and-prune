@@ -1,0 +1,23 @@
+1. Enumerate solos (positions 1 to 5), pianists (Wayne=0, Zara=1), and piece types (modern=0, traditional=1).  
+2. Create integer variables `pianist[i]` ∈ {0,1} and `piece[i]` ∈ {0,1} for each solo i (0-indexed).  
+3. Add **fixed constraint**: third solo (index 2) is traditional → `piece[2] == 1`.  
+4. Add **exactly two consecutive traditional pieces** constraint:  
+    - Exactly one pair of adjacent solos has `piece[i] == piece[i+1] == 1` (i.e., either positions (0,1), (1,2), (2,3), or (3,4) is the double-traditional pair), and no other adjacent pair is both traditional.  
+5. Add **fourth solo (index 3) constraint**: `(pianist[3] == 0 ∧ piece[3] == 1) ∨ (pianist[3] == 1 ∧ piece[3] == 0)`.  
+6. Add **second and fifth solo constraint**: `pianist[1] != pianist[4]`.  
+7. Add **no-traditional-before-Wayne-modern constraint**:  
+    - Let `wayne_modern_first` be the smallest index j such that `pianist[j] == 0 ∧ piece[j] == 0`.  
+    - Then, for all i < `wayne_modern_first`, `piece[i] == 0`.  
+    - Implement via auxiliary integer variable for first Wayne modern solo or via logical implication:  
+        `∀i, (∀j < i, piece[j] == 1) → ∃k < i, pianist[k]==0 ∧ piece[k]==0` is false; instead enforce:  
+        If `piece[i] == 1`, then there exists some j < i with `pianist[j]==0 ∧ piece[j]==0`.  
+8. Add **scenario assumption**: fifth solo (index 4) is Wayne performing traditional → `pianist[4] == 0 ∧ piece[4] == 1`.  
+9. Enumerate the five answer choices as logical conditions:  
+    - A: Zara performs first solo → `pianist[0] == 1`  
+    - B: Wayne performs second solo → `pianist[1] == 0`  
+    - C: Zara performs third solo → `pianist[2] == 1`  
+    - D: Second solo is modern → `piece[1] == 0`  
+    - E: Fourth solo is traditional → `piece[3] == 1`  
+10. For each choice, clone the base + scenario constraints into a fresh solver and assert the choice condition.  
+11. If the model is SAT, then that choice **could be true**; record its index.  
+12. Return the indices of all choices that are satisfiable.

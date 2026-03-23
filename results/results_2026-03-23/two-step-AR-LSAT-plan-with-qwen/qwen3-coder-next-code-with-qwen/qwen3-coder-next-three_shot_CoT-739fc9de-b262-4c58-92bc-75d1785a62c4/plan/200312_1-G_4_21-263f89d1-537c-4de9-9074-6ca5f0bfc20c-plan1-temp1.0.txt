@@ -1,0 +1,18 @@
+1. Enumerate the five students and assign integer indices: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[i][p]` for each student i and play p, indicating whether student i reviews play p.  
+4. Add **non-empty constraint**: each student reviews at least one play (for all i, `review[i][0] or review[i][1] or review[i][2]` is true).  
+5. Add **Kramer & Lopez vs Megregian constraint**: number of plays reviewed by Kramer < number reviewed by Megregian; same for Lopez < Megregian.  
+6. Add **Lopez/Megregian vs Jiang disjointness**: for each play p, if Lopez or Megregian reviews p, then Jiang does not review p.  
+7. Add **Kramer & O'Neill both review Tamerlane**: `review[1][1] = true` and `review[4][1] = true`.  
+8. Add **exactly one duplicate reviewer pair constraint**: among the five students, there is exactly one unordered pair (i,j), i<j, such that their review sets are identical (i.e., for all p, `review[i][p] == review[j][p]`), and no other pair shares identical sets.  
+9. Add **exactly three students review Undulation**: sum over i of `review[i][2]` equals 3.  
+10. Translate each answer choice into a logical condition:  
+    - Option A: Megregian does not review Undulation → `review[3][2] == false`.  
+    - Option B: O'Neill does not review Undulation → `review[4][2] == false`.  
+    - Option C: Jiang reviews Undulation → `review[0][2] == true`.  
+    - Option D: Lopez reviews Tamerlane → `review[2][1] == true`.  
+    - Option E: O'Neill reviews Sunset → `review[4][0] == true`.  
+11. For each option (in order), clone the base constraints into a fresh solver, add the option condition, and check SAT.  
+12. Among options that yield SAT (i.e., are possible), select the one(s) that satisfy all constraints. Since question asks "which one could be true", pick the first SAT option (or collect all SAT options if multiple possible, though typical LSAT-style expects one).  
+13. Return the index of the option that is feasible (index 0 to 4).

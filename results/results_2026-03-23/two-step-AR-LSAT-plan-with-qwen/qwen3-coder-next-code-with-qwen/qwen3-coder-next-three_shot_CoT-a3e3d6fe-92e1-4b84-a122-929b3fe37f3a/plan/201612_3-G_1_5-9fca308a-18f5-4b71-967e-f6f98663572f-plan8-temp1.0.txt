@@ -1,0 +1,26 @@
+1. Enumerate the five students and assign integer indices (e.g., Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4).  
+2. Create Boolean variables for team assignment: `green[i]` = True if student i is on green team (so red[i] = ¬green[i]).  
+3. Create Boolean variables for facilitator assignment: `facilitator[i]` = True if student i is a facilitator.  
+4. Add **team-size constraints**: exactly two students on one team, three on the other → `sum(green) == 2 OR sum(green) == 3` (enforced via disjunction or equivalence with facilitator constraints later).  
+5. Add **exactly one facilitator per team**: `facilitator[i]` must be True for exactly one student on green and exactly one on red → `sum(green[i] and facilitator[i] for all i) == 1` and `sum((NOT green[i]) and facilitator[i] for all i) == 1`.  
+6. Add **fixed constraints**:  
+   - Lateefah is on green: `green[2] = True`.  
+   - Olga is a facilitator: `facilitator[4] = True`.  
+   - Kelly is not a facilitator: `facilitator[1] = False`.  
+   - Juana and Olga are on different teams: `green[0] != green[4]`.  
+7. Add the **assumption**: Mei is on green → `green[3] = True`.  
+8. Under this assumption, derive implications:  
+   - Since Lateefah and Mei are both on green, and green team size is either 2 or 3, green must have exactly three members (since Lateefah + Mei = 2, but Juana ≠ Olga and one of them must join green to satisfy team size — we’ll let Z3 resolve).  
+   - Olga is a facilitator and must be on a team; since Juana ≠ Olga, if Olga is red, then green has Lateefah, Mei, and one of Juana/Olga’s teammates; if Olga is green, conflict with Juana rule unless Juana is red.  
+9. For each choice in the answer options, express the condition as a logical formula and check necessity:  
+   - For each option `C`, form constraint `assumption ∧ base_constraints ∧ NOT C`.  
+   - If UNSAT, then `C` must hold; append index of that option to answer_index_list.  
+10. Specifically:  
+    - Option 0: Juana ∈ green → check if ¬(green[0]) leads to UNSAT.  
+    - Option 1: Kelly ∈ red → check if ¬(NOT green[1]) (i.e., green[1]) leads to UNSAT.  
+    - Option 2: Olga ∈ green → check if ¬(green[4]) leads to UNSAT.  
+    - Option 3: Lateefah is facilitator → check if ¬facilitator[2] leads to UNSAT.  
+    - Option 4: Mei is facilitator → check if ¬facilitator[3] leads to UNSAT.  
+11. For each candidate, clone base constraints + assumption (Mei on green) and add negation of the option; query Z3.  
+12. Collect all indices of options that are forced (UNSAT when negated). Only one will be forced; output its index.  
+13. Print the answer index list (expected to have exactly one element).

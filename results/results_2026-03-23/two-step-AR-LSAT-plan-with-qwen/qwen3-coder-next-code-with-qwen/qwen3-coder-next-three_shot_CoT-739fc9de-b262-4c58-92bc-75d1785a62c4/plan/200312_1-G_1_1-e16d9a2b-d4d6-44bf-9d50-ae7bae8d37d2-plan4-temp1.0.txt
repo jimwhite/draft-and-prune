@@ -1,0 +1,19 @@
+1. Enumerate the nine scientists (F, G, H for botanists; K, L, M for chemists; P, Q, R for zoologists) and assign each a boolean variable indicating selection (True = selected).  
+2. Add **type count constraints**:  
+    - Botanist count: b = (F + G + H) ≥ 1, ≤ 3  
+    - Chemist count: c = (K + L + M) ≥ 1, ≤ 3  
+    - Zoologist count: z = (P + Q + R) ≥ 1, ≤ 3  
+    - Total panel size: b + c + z == 5  
+3. Add **conditional constraints**:  
+    - If botanist count ≥ 2, then zoologist count ≤ 1: (b ≥ 2) → (z ≤ 1)  
+    - F and K cannot both be selected: ¬(F ∧ K)  
+    - K and M cannot both be selected: ¬(K ∧ M)  
+    - If M is selected, then P and R must both be selected: M → (P ∧ R)  
+4. Translate each answer choice into a conjunction of selected/unselected literals:  
+    - For example, “F, G, K, P, Q” means F=1, G=1, H=0, K=1, L=0, M=0, P=1, Q=1, R=0  
+5. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific selection assignments (e.g., F == True, G == True, ..., R == False).  
+    - Check satisfiability.  
+6. The first (or any) choice that yields SAT is acceptable; record its index. Since only one is correct, stop at first SAT or collect all SAT indices and pick the matching one.  
+7. Return the index of the acceptable choice.

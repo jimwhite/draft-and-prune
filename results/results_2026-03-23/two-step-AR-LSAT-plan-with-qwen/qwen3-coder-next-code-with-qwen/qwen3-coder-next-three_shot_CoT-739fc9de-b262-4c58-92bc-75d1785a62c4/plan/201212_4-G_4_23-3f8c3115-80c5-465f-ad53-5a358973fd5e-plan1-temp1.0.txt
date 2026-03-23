@@ -1,0 +1,16 @@
+1. Enumerate the seven articles and assign each a unique position variable (1 to 7).  
+2. Assign article-topic labels: G, H, J → finance; Q, R, S → nutrition; Y → wildlife.  
+3. Add **domain constraints**: all position variables are distinct integers in [1,7].  
+4. Add **topic-consecutive constraint**: for every pair of adjacent positions (i, i+1), the topics of articles in those positions must differ.  
+5. Add **S-Q conditional constraint**: if S is earlier than Q, then Q must be in position 3. Formally: (pos_S < pos_Q) → (pos_Q == 3).  
+6. Add **S-Y constraint**: S must be earlier than Y: pos_S < pos_Y.  
+7. Add **J-G-R chain constraint**: J earlier than G, and G earlier than R: pos_J < pos_G < pos_R.  
+8. Translate the five answer choices into temporary assumptions (e.g., "H is fourth" → pos_H == 4).  
+9. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Add the specific assumption (e.g., pos_H == 4).  
+   - Solve to check if the model is SAT.  
+   - If SAT, extract *all* satisfying assignments and check whether the full ordering is unique (i.e., only one linear extension satisfies all constraints under the assumption).  
+   - To check uniqueness: after finding a model, add a constraint that at least one position differs from the found assignment; if this new solver is UNSAT, then the ordering is unique.  
+10. Identify which answer choice(s) lead to a *uniquely determined* full editing order.  
+11. Return the corresponding answer string (e.g., `'R is fourth.'`) for which the order is fully determined.

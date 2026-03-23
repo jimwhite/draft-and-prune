@@ -1,0 +1,39 @@
+1. Identify all entities involved: Anne, Bob, Fiona, Gary.
+2. Represent all explicit facts using ternary predicates of the form predicate(entity, boolean_value), where boolean_value is True or False:
+   - is_kind("Anne", True)
+   - is_quiet("Anne", True)
+   - is_smart("Anne", True)
+   - is_kind("Bob", True)
+   - is_nice("Bob", True)
+   - is_smart("Bob", True)
+   - is_nice("Fiona", False)  // i.e., not nice
+   - is_red("Fiona", True)
+   - is_nice("Gary", True)
+   - is_white("Gary", True)
+3. Encode the conditional rules as `foreach` blocks with conditions and corresponding `assert` statements:
+   • If Bob is kind → Bob is smart.
+   • If something is kind and nice → it is smart.
+   • If something is nice and red → it is smart.
+   • If something is quiet and not nice → it is smart.
+   • All green things are kind: If something is green → it is kind.
+   • If Anne is quiet and white → Anne is kind.  // Note: must check if white(A) is known; not directly stated, but may be inferred.
+   • If Fiona is not nice → Fiona is green.
+   • All smart, kind things are white: If something is smart and kind → it is white.
+   • If something is kind and green → it is quiet.
+4. For rules with mixed positive/negative conditions (e.g., "quiet and not nice"), use `foreach` with conjunction including negated facts, e.g.:
+   - foreach: is_quiet(?x, True), not(is_nice(?x, True))
+   - assert: is_smart(?x, True)
+5. Similarly handle the rule “If Fiona is not nice then Fiona is green”: since is_nice("Fiona", False) is a fact, assert is_green("Fiona", True).
+6. The query asks whether Fiona is smart:
+   → Use facts.is_smart("Fiona", True) to check if it can be proven.
+7. Ensure that negative knowledge (e.g., “Fiona is not nice”) is represented via facts.is_nice("Fiona", False), and that PyKe’s negation-as-failure is appropriately applied by using explicit negated facts where possible or leveraging PyKe’s support for `not(...)` in conditions.
+8. Confirm all derived conclusions are added to the fact base incrementally and recheck for closures (e.g., if Fiona becomes green, then by “kind ∧ green → quiet”, she may become quiet, which with ¬nice could trigger smartness).
+9. Since the query is about Fiona’s smartness, prioritize tracing:
+   - From is_nice("Fiona", False) → is_green("Fiona", True)
+   - Then if is_kind("Fiona", ?) can be derived (e.g., via green → kind), and is_green, then quiet; but we need smart.
+   - Alternatively: use “nice ∧ red → smart”: Fiona is red and not nice, so this doesn’t apply.
+   - Use “quiet ∧ not nice → smart”: requires Fiona to be quiet and ¬nice. So if we can derive is_quiet("Fiona", True), then smart follows.
+   - quiet can come from: “kind ∧ green → quiet”; so need is_kind("Fiona", True) — which follows from “green → kind” and Fiona green.
+   - Thus chain: ¬nice(Fiona) → green(Fiona) → kind(Fiona) [via green→kind] → quiet(Fiona) [via kind∧green→quiet], and already ¬nice(Fiona), so quiet ∧ ¬nice → smart ⇒ Fiona is smart.
+10. Therefore, the plan must encode all rules precisely and let PyKe infer that Fiona is smart.
+11. The query statement: facts.is_smart("Fiona", True).

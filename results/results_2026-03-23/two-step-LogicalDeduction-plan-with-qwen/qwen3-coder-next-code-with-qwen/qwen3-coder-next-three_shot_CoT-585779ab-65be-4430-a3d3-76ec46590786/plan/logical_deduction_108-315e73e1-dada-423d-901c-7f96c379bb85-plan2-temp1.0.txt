@@ -1,0 +1,33 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define variables as the seven fruits: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, based on standard interpretation of "cheapest/most expensive" rankings.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem`.
+
+3.  **Add All-Different Constraint:**
+    * Apply `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+
+4.  **Translate Explicit Positional Constraints:**
+    * "The mangoes are the third-cheapest" → `mangoes == 3`
+    * "The watermelons are the third-most expensive" → Since most expensive = rank 7, third-most expensive = rank **5** (7 - 3 + 1 = 5), so `watermelons == 5`
+    * "The plums are the second-most expensive" → rank = 6 (since most expensive is 7), so `plums == 6`
+    * "The loquats are the second-cheapest" → rank = 2, so `loquats == 2`
+
+5.  **Translate Relative Ordering Constraints:**
+    * "The pears are more expensive than the kiwis" → `kiwis < pears` (lower rank number means cheaper, so pears > kiwis → `kiwis < pears`)
+    * "The watermelons are less expensive than the peaches" → watermelons cheaper than peaches → `watermelons < peaches` (since lower number = cheaper), and since watermelons is 5, this implies `peaches > 5`
+
+6.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks.
+    * Extract the unique solution (only one should satisfy all constraints).
+
+7.  **Analyze the Question and Choices:**
+    * The question asks which fruit is third-most expensive, i.e., rank = 5.
+    * From constraint #4, watermelons is explicitly assigned rank 5, but verify via solution.
+    * However, confirm by checking the solved assignment: find which fruit has value 5.
+    * Create a mapping from choice letters to fruit names: A→"loquats", B→"peaches", C→"watermelons", D→"plums", E→"kiwis", F→"mangoes", G→"pears".
+    * Identify the choice whose associated fruit has rank = 5 in the solution.
+    * Return that choice letter as the answer.

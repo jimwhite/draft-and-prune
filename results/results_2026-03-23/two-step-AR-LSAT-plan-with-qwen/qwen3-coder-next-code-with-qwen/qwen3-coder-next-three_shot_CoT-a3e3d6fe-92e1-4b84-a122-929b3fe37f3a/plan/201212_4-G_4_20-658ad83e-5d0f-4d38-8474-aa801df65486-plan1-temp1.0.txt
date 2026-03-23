@@ -1,0 +1,17 @@
+1. Enumerate the seven articles and assign each a unique position variable (1 to 7).  
+2. Assign topic types to articles: G, H, J → finance (F); Q, R, S → nutrition (N); Y → wildlife (W).  
+3. Create integer position variables for each article: pos_G, pos_H, pos_J, pos_Q, pos_R, pos_S, pos_Y.  
+4. Add **domain constraints**: each position ∈ {1,…,7} and all positions are distinct (via AllDifferent).  
+5. Add **consecutive-different-topic constraint**: for every pair of consecutive positions (i, i+1), the articles at those positions must have different topics. Implement by checking topic of article at position k and k+1 for k=1..6 using auxiliary Boolean or integer encoding (e.g., topic_vars[k] ∈ {F,N,W}).  
+6. Add **S-before-Q conditional constraint**: If S is before Q (pos_S < pos_Q), then Q must be third (pos_Q == 3). Equivalently: (pos_S < pos_Q) → (pos_Q == 3), i.e., ¬(pos_S < pos_Q) ∨ (pos_Q == 3).  
+7. Add **S-before-Y constraint**: pos_S < pos_Y.  
+8. Add **J < G < R chain**: pos_J < pos_G ∧ pos_G < pos_R.  
+9. Translate each answer choice into a position constraint:  
+   - "G is second" → pos_G = 2  
+   - "H is second" → pos_H = 2  
+   - "S is second" → pos_S = 2  
+   - "R is third" → pos_R = 3  
+   - "Y is third" → pos_Y = 3  
+10. For each choice, clone base constraints into fresh solver and assert the corresponding position equality.  
+11. If the instance is SAT, that choice **could be true**; record its index (0 to 4).  
+12. Output the list of indices for which the model is SAT (there should be exactly one).

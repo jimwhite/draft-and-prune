@@ -1,0 +1,24 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the three birds as string variables: `"bluejay"`, `"cardinal"`, and `"quail"`.  
+   * Define the domain as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, **3 = rightmost**.  
+   * Add all three variables with domain `{1, 2, 3}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate the statements into constraints using `lambda`:  
+     - "The cardinal is to the right of the quail" → `quail < cardinal`  
+     - "The quail is to the right of the blue jay" → `bluejay < quail`  
+   * Use `addConstraint(lambda q, c: q < c, ["quail", "cardinal"])` and `addConstraint(lambda b, q: b < q, ["bluejay", "quail"])`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Extract the single solution (since three items with strict ordering yield a unique arrangement).
+
+5. **Identify the Correct Answer:**  
+   * Determine which bird is at position 1 (leftmost) in the solution.  
+   * Map choice letters to birds: "A" → `"bluejay"`, "B" → `"cardinal"`, "C" → `"quail"`.  
+   * Find the choice letter corresponding to the bird with position value 1 and output it.

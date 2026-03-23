@@ -1,0 +1,36 @@
+1.  **Set Up the Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven vehicles as variables: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, `"convertible"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, and **7 = newest**.
+    * Add all seven variables with the domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Add AllDifferentConstraint:**
+    * Enforce that all vehicles have distinct age ranks using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The station wagon is the fourth-newest" → `station_wagon == 4` (since newest = 7, fourth-newest = position 4).
+    * "The minivan is the third-newest" → `minivan == 5`.
+    * "The tractor is the second-oldest" → `tractor == 2`.
+    * "The convertible is older than the station wagon" → `convertible < station_wagon`.
+    * "The truck is newer than the bus" → `bus < truck`.
+    * "The hatchback is older than the convertible" → `hatchback < convertible`.
+
+5.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments.
+    * Since the problem is well-constrained, there should be a unique solution; extract it (e.g., `solutions[0]`).
+
+6.  **Identify the Second-Newest Vehicle:**
+    * The question asks for the vehicle at the second-newest position, which corresponds to rank **6** (since 7 is newest, 6 is second-newest).
+    * Create a mapping from choice letters to vehicle names:  
+        `'A' → "truck"`,  
+        `'B' → "hatchback"`,  
+        `'C' → "minivan"`,  
+        `'D' → "bus"`,  
+        `'E' → "tractor"`,  
+        `'F' → "station_wagon"`,  
+        `'G' → "convertible"`.
+    * Iterate over the choice letters; for each, check if `solution[vehicle_name] == 6`.
+    * Return (or print) the letter corresponding to the vehicle with rank 6.

@@ -1,0 +1,32 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * The seven books are: `"red"`, `"white"`, `"purple"`, `"black"`, `"gray"`, `"orange"`, and `"blue"` — these are the variables.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Add AllDifferentConstraint:**  
+   * Enforce that all books occupy distinct positions using `AllDifferentConstraint()`.
+
+4. **Translate Each Statement into Formal Constraints Using Lambda Functions:**  
+   * "The red book is to the right of the white book" → `red > white`  
+   * "The gray book is to the left of the orange book" → `gray < orange`  
+   * "The gray book is to the right of the blue book" → `gray > blue`  
+   * "The red book is the second from the right" → `red == 6` (since position 7 is rightmost, 6 is second-rightmost)  
+   * "The black book is the fourth from the left" → `black == 4`  
+   * "The orange book is to the left of the white book" → `orange < white`
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Given consistency and fixed order, expect exactly one solution.
+
+6. **Identify the Third-from-the-Right Book:**  
+   * In a 1–7 scale (left to right), the **third-from-the-right** corresponds to position `5` (since 7 = 1st right, 6 = 2nd right, **5 = 3rd right**).  
+   * Retrieve the book assigned to position `5` in the solution dictionary.
+
+7. **Map Answer to Choice Letters:**  
+   * Create a mapping: `"A" → "red"`, `"B" → "white"`, `"C" → "purple"`, `"D" → "black"`, `"E" → "gray"`, `"F" → "orange"`, `"G" → "blue"`  
+   * Find which choice letter’s corresponding book has position `5` in the solution.  
+   * Return that letter as the final answer.

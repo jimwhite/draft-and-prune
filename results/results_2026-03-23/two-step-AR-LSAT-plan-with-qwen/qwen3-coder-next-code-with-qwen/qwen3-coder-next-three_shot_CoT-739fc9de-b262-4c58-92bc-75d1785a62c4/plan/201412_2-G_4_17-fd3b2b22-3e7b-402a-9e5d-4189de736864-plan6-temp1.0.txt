@@ -1,0 +1,11 @@
+1. Enumerate the six photographers and assign them integer indices (0: Frost, 1: Gonzalez, 2: Heideck, 3: Knutson, 4: Lai, 5: Mays).  
+2. Create Boolean variables for each photographer and ceremony: `S[i]` (True if photographer i assigned to Silva), `T[i]` (True if photographer i assigned to Thorne).  
+3. Add **mutual exclusivity constraints**: no photographer assigned to both ceremonies: `S[i] == True → T[i] == False`, and vice versa (or equivalently: `S[i] && T[i] == False` for all i).  
+4. Add **at-least-two constraint per ceremony**: at least two photographers assigned to Silva (`sum(S[i]) >= 2`) and at least two to Thorne (`sum(T[i]) >= 2`).  
+5. Add **Frost–Heideck together constraint**: Frost and Heideck must be assigned to the *same* ceremony and *to one of them*: `(S[0] == S[2]) && (T[0] == T[2]) && ((S[0] || S[2]) == True)`.  
+6. Add **Lai–Mays separation constraint**: If both assigned, they must be at different ceremonies: `(S[4] && S[5]) == False`, `T[4] && T[5] == False` (i.e., cannot both be at Silva or both at Thorne).  
+7. Add **Gonzalez → Lai conditional**: If Gonzalez is at Silva, then Lai must be at Thorne: `S[1] → T[4]` (i.e., `¬S[1] ∨ T[4]`).  
+8. Add **Knutson conditional**: If Knutson is *not* at Thorne, then both Heideck and Mays must be at Thorne: `¬T[3] → (S[2] == False ∧ S[5] == False)`? Wait—re-express: “If Knutson is not assigned to Thorne, then both Heideck and Mays must be assigned *to it*.” → `¬T[3] → (T[2] == True ∧ T[5] == True)`. Since Knutson not at Thorne implies he *must* be at Silva (if assigned), but the constraint only applies when Knutson is unassigned to Thorne — he may be unassigned entirely. Actually: If Knutson is *not* assigned to Thorne (i.e., T[3] == False), then Heideck and Mays *must* be assigned to Thorne (T[2] ∧ T[5]). So: `(¬T[3]) → (T[2] ∧ T[5])`.  
+9. Parse each answer choice and construct candidate models: for each choice, create a fresh solver and assert exact assignments per ceremony (set S[i] or T[i] True/False as specified), and check if all constraints hold.  
+10. Among the five choices, identify the one(s) for which the model is SAT — that is acceptable. The question asks "Which one ... is an acceptable assignment?", so only one should be SAT; record its index.  
+11. Return the index of the acceptable assignment.

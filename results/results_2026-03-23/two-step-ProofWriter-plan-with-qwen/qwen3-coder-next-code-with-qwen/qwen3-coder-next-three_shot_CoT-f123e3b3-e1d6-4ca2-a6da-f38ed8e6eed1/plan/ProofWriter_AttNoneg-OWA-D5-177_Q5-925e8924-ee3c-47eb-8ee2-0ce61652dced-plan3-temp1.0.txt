@@ -1,0 +1,19 @@
+1. Identify all individuals: Anne, Bob, Charlie, Gary.
+2. Encode all directly stated facts using ternary predicates:
+   - is_furry("Anne", True), is_smart("Anne", True)
+   - is_kind("Bob", True), is_nice("Bob", True)
+   - is_big("Charlie", True), is_green("Charlie", True), is_nice("Charlie", True), is_young("Charlie", True)
+   - is_furry("Gary", True), is_kind("Gary", True), is_nice(" Gary", True), is_young("Gary", True)
+3. Translate each conditional into a rule using PyKe syntax:
+   • If something is young → it is nice.
+   • If Anne is green → Anne is big.
+   • All smart things are nice.
+   • All smart, kind things are green.
+   • Young, big things are kind.
+   • Kind, smart things are furry.
+   • If something is nice and big → it is young.
+   • All nice things are kind.
+   • If Anne is young and big → Anne is nice.
+4. For each rule, define a `foreach` block with the premise and an `assert` clause for the conclusion.
+5. Query whether Anne is kind:
+   → Use facts.is_kind("Anne", True)

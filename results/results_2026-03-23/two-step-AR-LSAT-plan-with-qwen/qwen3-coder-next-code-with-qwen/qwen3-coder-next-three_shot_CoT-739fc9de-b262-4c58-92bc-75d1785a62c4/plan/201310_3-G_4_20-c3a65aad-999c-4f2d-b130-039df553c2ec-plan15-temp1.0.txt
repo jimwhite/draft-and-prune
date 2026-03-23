@@ -1,0 +1,19 @@
+1. Enumerate the five bird types and assign them integer codes (0 to 4).  
+2. Create Boolean variables for each lecture slot (1 to 5) and hall assignment: `hall[i]` is True if lecture *i* is in Gladwyn Hall, False if Howard Auditorium.  
+3. Add **global constraints**:  
+   - `hall[1] == True` (first lecture in Gladwyn Hall).  
+   - `hall[4] == False` (fourth lecture in Howard Auditorium).  
+   - Exactly three lectures are in Gladwyn Hall: sum(hall[i] for i=1..5) == 3.  
+4. Assign integer position variables to each bird type (lecture order: `pos_oystercatchers`, etc.), each between 1 and 5, all distinct.  
+5. Add **location ordering constraints**:  
+   - Sandpipers lecture is in Howard Auditorium (`hall[pos_sandpipers] == False`) and earlier than oystercatchers (`pos_sandpipers < pos_oystercatchers`).  
+   - Terns lecture is earlier than petrels (`pos_terns < pos_petrels`) and petrels lecture is in Gladwyn Hall (`hall[pos_petrels] == True`).  
+6. Encode the five answer choices as logical statements about hall assignments at specific positions:  
+   - Choice 0: `hall[1] == True ∧ hall[2] == True`  
+   - Choice 1: `hall[2] == False ∧ hall[3] == False`  
+   - Choice 2: `hall[2] == True ∧ hall[5] == True`  
+   - Choice 3: `hall[3] == False ∧ hall[4] == False`  
+   - Choice 4: `hall[3] == True ∧ hall[5] == True`  
+7. For each choice (0 to 4), clone the base constraints into a fresh solver and add the conjunction of the choice’s hall conditions.  
+8. If a cloned model is UNSAT, then that choice **must be false**; record its index in `answer_index_list`.  
+9. Output the single answer index (only one choice must be false).

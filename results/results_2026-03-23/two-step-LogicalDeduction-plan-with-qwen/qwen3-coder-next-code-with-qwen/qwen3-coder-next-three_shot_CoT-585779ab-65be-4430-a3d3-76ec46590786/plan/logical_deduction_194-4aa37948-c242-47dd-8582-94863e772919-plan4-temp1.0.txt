@@ -1,0 +1,29 @@
+1.  **Initialize the Constraint Satisfaction Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the puzzle.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, and `"green"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost** position.  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each statement into a constraint:  
+        * "The red book is to the right of the yellow book" → `yellow < red`  
+        * "The white book is the second from the right" → `white == 6` (since position 7 is rightmost, second-rightmost is 6)  
+        * "The red book is to the left of the green book" → `red < green`  
+        * "The blue book is to the right of the black book" → `black < blue`  
+        * "The black book is the third from the right" → `black == 5` (positions: 7=rightmost, 6=second-rightmost, 5=third-rightmost)  
+        * "The orange book is the leftmost" → `orange == 1`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments of positions to books.  
+    * Since the constraints uniquely determine the arrangement, extract the single solution (or iterate through solutions if multiple exist—though uniqueness is expected).
+
+5.  **Interpret the Question and Select the Correct Choice:**  
+    * The question asks which book is the **third from the left**, i.e., position **3**.  
+    * Map each choice letter (A–G) to its corresponding book:  
+        A → "black", B → "orange", C → "yellow", D → "white", E → "blue", F → "red", G → "green"  
+    * In the solved solution, find which book has position 3.  
+    * Return the letter corresponding to that book as the answer.

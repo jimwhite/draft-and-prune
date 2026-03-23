@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven vehicles as variables: `"bus"`, `"motorcycle"`, `"hatchback"`, `"station_wagon"`, `"minivan"`, `"truck"`, and `"limousine"`.  
+    * Define the domain as integers from **1 to 7**, where **1 = oldest** and **7 = newest**.  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age rankings.  
+    * Translate each statement into a constraint:  
+        - "The station wagon is the fourth-newest" → `station_wagon == 4` (since 1=oldest, 7=newest; fourth-newest = position 4).  
+        - "The motorcycle is newer than the truck" → `motorcycle < truck`.  
+        - "The station wagon is older than the hatchback" → `station_wagon > hatchback`.  
+        - "The minivan is newer than the hatchback" → `minivan < hatchback`.  
+        - "The bus is newer than the minivan" → `bus < minivan`.  
+        - "The truck is newer than the limousine" → `truck < limousine`.
+
+4.  **Solve for Valid Arrangement(s):**  
+    * Use `getSolutions()` to find all solutions satisfying the constraints.  
+    * Extract the unique solution (as implied by logical consistency).
+
+5.  **Determine the Second-Newest Vehicle:**  
+    * The second-newest corresponds to position **6** (since 7 = newest, so 6 = second-newest).  
+    * Create a mapping from choice letters ("A" through "G") to vehicle names:  
+        A → `"bus"`, B → `"motorcycle"`, C → `"hatchback"`, D → `"station_wagon"`, E → `"minivan"`, F → `"truck"`, G → `"limousine"`.  
+    * Iterate through the solution dictionary to find which vehicle has rank 6.  
+    * Return the corresponding choice letter for that vehicle.

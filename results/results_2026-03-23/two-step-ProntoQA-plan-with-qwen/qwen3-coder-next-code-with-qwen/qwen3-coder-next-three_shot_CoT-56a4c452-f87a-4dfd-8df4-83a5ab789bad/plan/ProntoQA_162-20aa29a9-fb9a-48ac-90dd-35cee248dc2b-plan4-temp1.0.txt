@@ -1,0 +1,25 @@
+1.  Identify all entities and types: Wren, dumpus, yumpus, rompus, vumpus, numpus, zumpus, tumpus, impus, wumpus, jompus.  
+2.  Identify all properties: earthy, transparent, mean, brown, temperate, bitter, shy, wooden, mean (again—note duplicate property name with conflicting potential; but *mean* is a property here), and confirm all unary predicates (small, hot, brown, etc. become `is_<property>(x)`).  
+3.  Represent "Wren is a numpus" as a base fact: `is_a("Wren", "numpus", True)`.  
+4.  Translate all class properties and subclass relationships into rules:  
+    - Dumpuses are not earthy. → `is_earthy(x, False)` for all x if `is_a(x, "dumpus", True)`.  
+    - Each dumpus is a yumpus. → `is_a(x, "yumpus", True)` for all x if `is_a(x, "dumpus", True)`.  
+    - Yumpuses are transparent. → `is_transparent(x, True)` for all x if `is_a(x, "yumpus", True)`.  
+    - Each rompus is not mean. → `is_mean(x, False)` for all x if `is_a(x, "rompus", True)`.  
+    - Yumpuses are vumpuses. → `is_a(x, "vumpus", True)` for all x if `is_a(x, "yumpus", True)`.  
+    - Vumpuses are not brown. → `is_brown(x, False)` for all x if `is_a(x, "vumpus", True)`.  
+    - Vumpuses are numpuses. → `is_a(x, "numpus", True)` for all x if `is_a(x, "vumpus", True)`.  
+    - Numpuses are not temperate. → `is_temperate(x, False)` for all x if `is_a(x, "numpus", True)`.  
+    - Every numpus is a zumpus. → `is_a(x, "zumpus", True)` for all x if `is_a(x, "numpus", True)`.  
+    - Each zumpus is bitter. → `is_bitter(x, True)` for all x if `is_a(x, "zumpus", True)`.  
+    - Zumpuses are tumpuses. → `is_a(x, "tumpus", True)` for all x if `is_a(x, "zumpus", True)`.  
+    - Tumpuses are shy. → `is_shy(x, True)` for all x if `is_a(x, "tumpus", True)`.  
+    - Tumpuses are impuses. → `is_a(x, "impus", True)` for all x if `is_a(x, "tumpus", True)`.  
+    - Impuses are wooden. → `is_wooden(x, True)` for all x if `is_a(x, "impus", True)`.  
+    - Each impus is a wumpus. → `is_a(x, "wumpus", True)` for all x if `is_a(x, "impus", True)`.  
+    - Each wumpus is mean. → `is_mean(x, True)` for all x if `is_a(x, "wumpus", True)`.  
+    - Every wumpus is a jompus. → `is_a(x, "jompus", True)` for all x if `is_a(x, "wumpus", True)`.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (ensuring chaining of subclass relationships and property inheritance).  
+6.  Note conflict: `is_mean(x, False)` from rompus rule and `is_mean(x, True)` from wumpus rule. Since Wren is proven to be a numpus → zumpus → tumpus → impus → wumpus, and *wumpuses are mean*, Wren must be mean. The rompus rule does not apply unless Wren is a rompus (which it isn’t by the chain). So no contradiction—property assignment depends on classification.  
+7.  The query tests if the statement "Wren is not mean" is provable:  
+    → Use `facts.is_mean("Wren", False)`.

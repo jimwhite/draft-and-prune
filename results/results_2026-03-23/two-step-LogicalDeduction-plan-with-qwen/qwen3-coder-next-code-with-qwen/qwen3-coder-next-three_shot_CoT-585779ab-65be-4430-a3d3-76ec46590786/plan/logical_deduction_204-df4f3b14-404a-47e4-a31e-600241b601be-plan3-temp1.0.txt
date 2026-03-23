@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven birds as variables: `"quail"`, `"raven"`, `"hummingbird"`, `"robin"`, `"falcon"`, `"owl"`, and `"bluejay"` (using lowercase and concatenating "blue jay" into one token for simplicity).
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+    * Translate each statement into a constraint:
+        * "The blue jay is to the left of the falcon" → `bluejay < falcon`.
+        * "The blue jay is the second from the right" → `bluejay == 6` (since position 7 is rightmost, second from right = 6).
+        * "The raven is to the left of the robin" → `raven < robin`.
+        * "The owl is the third from the right" → `owl == 5` (positions: 7=rightmost, 6=second-rightmost, 5=third-rightmost).
+        * "The hummingbird is to the left of the quail" → `hummingbird < quail`.
+        * "The raven is the third from the left" → `raven == 3`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.
+    * Since the problem is well-defined and consistent, expect a single solution (or find one if multiple exist); extract the first solution.
+
+5.  **Determine Which Bird Is Fourth from the Left:**
+    * The question asks which bird is at position 4 (since fourth from left = index 4 in a 1-based left-to-right numbering).
+    * Examine the solution dictionary: find which variable has value `4`.
+    * Create a mapping from the choice letters ("A" through "G") to the corresponding bird names:
+        * A → quail, B → raven, C → hummingbird, D → robin, E → falcon, F → owl, G → bluejay
+    * Identify the bird at position 4 and return its corresponding choice letter.

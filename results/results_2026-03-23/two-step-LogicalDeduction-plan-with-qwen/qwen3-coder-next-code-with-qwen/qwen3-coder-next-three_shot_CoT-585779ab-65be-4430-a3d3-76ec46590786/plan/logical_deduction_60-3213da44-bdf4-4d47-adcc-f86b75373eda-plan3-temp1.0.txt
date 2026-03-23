@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicles as variables: `"bus"`, `"truck"`, `"motorcycle"`, `"sedan"`, and `"hatchback"`.  
+   * Assign a numerical rank domain from 1 to 5, where **1 = oldest** and **5 = newest**.  
+   * Add all variables to the problem with this domain using `addVariable()`.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce unique ranks for each vehicle.  
+   * Translate each statement into a constraint:  
+     - "The sedan is the second-oldest" → `sedan == 2`  
+     - "The hatchback is newer than the motorcycle" → `hatchback > motorcycle`  
+     - "The motorcycle is newer than the sedan" → `motorcycle > sedan`  
+     - "The hatchback is older than the truck" → `hatchback < truck`
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments of ranks to vehicles.  
+   * Since the problem is deterministic (consistent and fully constrained), expect exactly one solution.
+
+5. **Verify Answer Against Choices:**  
+   * The question asks which vehicle is second-oldest (i.e., rank 2).  
+   * Compare each choice: extract the vehicle name associated with choice letter and check if its rank equals 2 in the solution.  
+   * Return the correct choice letter (A–E) corresponding to the vehicle confirmed to be at rank 2.

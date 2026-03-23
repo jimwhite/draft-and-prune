@@ -1,0 +1,31 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five books as string variables: `"white"`, `"orange"`, `"yellow"`, `"blue"`, and `"red"`.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost**, **5 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Translate Rules into Constraints:**  
+   * Add `AllDifferentConstraint()` to ensure each book occupies a unique position.  
+   * Add constraints using lambda functions based on the statements:  
+     - "The yellow book is to the left of the white book" → `yellow < white`  
+     - "The red book is to the right of the blue book" → `blue < red`  
+     - "The yellow book is to the right of the orange book" → `orange < yellow`  
+     - "The blue book is to the right of the white book" → `white < blue`
+
+4. **Solve for Valid Arrangements:**  
+   * Use `getSolutions()` to compute all solutions satisfying the constraints.  
+   * Extract the unique solution (as the problem is guaranteed consistent and uniquely determined).
+
+5. **Determine Which Book Is Second from the Right:**  
+   * The second-from-the-right position corresponds to index **4** (since positions are 1=leftmost to 5=rightmost).  
+   * Create a mapping from choice letters to book names:  
+     - "A" → `"white"`  
+     - "B" → `"orange"`  
+     - "C" → `"yellow"`  
+     - "D" → `"blue"`  
+     - "E" → `"red"`  
+   * Find the book with position value 4 in the solution.  
+   * Output the corresponding choice letter (A–E) as the answer.

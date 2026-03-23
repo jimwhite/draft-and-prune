@@ -1,0 +1,19 @@
+1. Enumerate the five bird types and assign each an integer code (e.g., oystercatchers=0, petrels=1, rails=2, sandpipers=3, terns=4).  
+2. Create integer variables for the lecture order: positions 1 through 5, each assigned to one bird type (all-distinct constraint).  
+3. Create Boolean variables for the venue of each lecture position: hall[i] = True if lecture at position i is in Gladwyn Hall, False otherwise (Howard Auditorium).  
+4. Add **fixed-venue constraints**:  
+   - hall[1] = True (first lecture in Gladwyn).  
+   - hall[4] = False (fourth lecture in Howard).  
+5. Add **count constraint**: exactly three lectures are in Gladwyn Hall → sum(hall[i] for i=1..5) = 3.  
+6. Add **sandpiper constraint**:  
+   - sandpipers lecture is in Howard Auditorium → venue of sandpipers = False.  
+   - sandpipers lecture occurs earlier than oystercatchers lecture → pos[sandpipers] < pos[oystercatchers].  
+7. Add **terns/petrels constraint**:  
+   - terns lecture occurs before petrels → pos[terns] < pos[petrels].  
+   - petrels lecture is in Gladwyn Hall → venue of petrels = True.  
+8. Encode each answer choice as a logical condition on hall[2], hall[3], etc. (e.g., “first and second lectures both in Gladwyn” → hall[1] ∧ hall[2], but note positions are 1-indexed in constraints, so adjust indexing carefully).  
+9. For each answer choice:  
+   - Assume the statement is true (add constraints as above).  
+   - Check consistency with all existing constraints using Z3.  
+10. The answer choice that is **unsatisfiable** (i.e., leads to UNSAT) is the one that *must be false*.  
+11. Return the index (0–4) of that unsatisfiable choice as the final answer.

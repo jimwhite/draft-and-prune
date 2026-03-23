@@ -1,0 +1,21 @@
+1. Enumerate the seven articles and assign each an integer index: G, H, J → finance (F); Q, R, S → nutrition (N); Y → wildlife (W).  
+2. Create integer variables `pos[article]` for positions 1 to 7 (each article edited exactly once).  
+3. Add **domain and uniqueness constraints**: all `pos[article]` ∈ {1,…,7} and pairwise distinct.  
+4. Add **topic constraints**:  
+   - Define `topic(article)` as a function returning 'F', 'N', or 'W'.  
+   - For all consecutive positions i and i+1 (i from 1 to 6), if `pos[a] = i` and `pos[b] = i+1`, then `topic(a) ≠ topic(b)`.  
+5. Add **conditional constraint for S and Q**:  
+   - If `pos[S] < pos[Q]`, then `pos[Q] == 3`.  
+   - Equivalent: `pos[S] < pos[Q] → pos[Q] == 3`.  
+6. Add **S before Y**: `pos[S] < pos[Y]`.  
+7. Add **J < G < R**: `pos[J] < pos[G] ∧ pos[G] < pos[R]`.  
+8. Translate answer choices into conditions: e.g., “H is fourth” → `pos[H] == 4`.  
+9. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert the condition from the choice (e.g., `pos[H] == 4`).  
+   - Check if the model is SAT.  
+   - If SAT, count how many distinct solutions (full permutations) satisfy the constraints *and* this condition.  
+   - A choice makes the order **fully determined** iff there is exactly one satisfying assignment (i.e., only 1 valid permutation).  
+10. Among the choices, select those where the number of satisfying permutations is exactly 1; collect their indices.  
+11. Output the index (0-based) of the *first* such choice that yields a unique solution — or if multiple, output all indices (depending on problem phrasing: “which one” → likely unique; but plan should confirm uniqueness per choice).  
+12. Since the question asks “is fully determined if which one is true?”, the plan must find exactly one choice that forces uniqueness.

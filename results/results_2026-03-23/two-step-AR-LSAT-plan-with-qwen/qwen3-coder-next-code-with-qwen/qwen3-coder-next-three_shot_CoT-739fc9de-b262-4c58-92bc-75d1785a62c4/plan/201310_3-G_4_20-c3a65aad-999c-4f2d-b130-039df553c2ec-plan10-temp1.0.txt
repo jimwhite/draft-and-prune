@@ -1,0 +1,26 @@
+1. Enumerate the five lecture types (oystercatchers, petrels, rails, sandpipers, terns) and assign integer codes.  
+2. Enumerate the five time slots (1 through 5) and create integer variables for which lecture type is given in each slot.  
+3. Create Boolean variables `hall[i]` for i = 1..5 to indicate whether lecture at slot i is in Gladwyn (True) or Howard (False).  
+4. Add **domain constraints**:  
+    - Each slot has a distinct lecture type (permutation of 5 bird types).  
+    - `hall[i] ∈ {True, False}` for all i.  
+5. Add **fixed constraints**:  
+    - `hall[1] = True` (first lecture in Gladwyn).  
+    - `hall[4] = False` (fourth lecture in Howard).  
+    - Exactly three lectures in Gladwyn Hall → sum of `hall[i]` over i=1..5 equals 3.  
+6. Add **sandpiper constraints**:  
+    - Sandpipers lecture is in Howard → `hall[slot_of_sandpiper] = False`.  
+    - Sandpipers lecture occurs earlier than oystercatchers → `pos(sandpiper) < pos(oystercatcher)`.  
+7. Add **tern/petrel constraints**:  
+    - Terns lecture occurs earlier than petrels → `pos(tern) < pos(petrel)`.  
+    - Petrels lecture is in Gladwyn Hall → `hall[slot_of_petrel] = True`.  
+8. Translate the five answer choices into logical conditions on `hall[1..5]`:  
+    - Choice A: `hall[1] = True ∧ hall[2] = True`.  
+    - Choice B: `hall[2] = False ∧ hall[3] = False`.  
+    - Choice C: `hall[2] = True ∧ hall[5] = True`.  
+    - Choice D: `hall[3] = False ∧ hall[4] = False`.  
+    - Choice E: `hall[3] = True ∧ hall[5] = True`.  
+9. For each choice, clone the base solver and add its condition as a constraint.  
+10. If adding the condition makes the instance UNSAT, then that choice **must be false**; record its index.  
+11. Since exactly one answer must be correct (i.e., exactly one choice *must* be false), the answer index list will contain one element—the index of the impossible configuration.  
+12. Output that index (0-indexed or as per problem choice order).

@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to define and solve the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the five bird types as variables: `"owl"`, `"cardinal"`, `"robin"`, `"hummingbird"`, and `"crow"`.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost position** and **5 = rightmost position**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.  
+   * Convert each relative-position statement into a `LambdaConstraint` using `addConstraint(lambda...):  
+     * "The hummingbird is to the left of the owl" → `hummingbird < owl`  
+     * "The hummingbird is to the right of the cardinal" → `cardinal < hummingbird`  
+     * "The crow is to the left of the robin" → `crow < robin`  
+     * "The owl is to the left of the crow" → `owl < crow`
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to retrieve all valid arrangements satisfying all constraints.  
+   * Since the problem states consistency and has a unique linear order, expect exactly one solution; retrieve it (e.g., `solutions[0]`).
+
+5. **Identify the Leftmost Bird and Match to Choices:**  
+   * The leftmost bird is the one with position value **1** in the solution.  
+   * Create a mapping from choice letters to bird names: `{'A': 'owl', 'B': 'cardinal', 'C': 'robin', 'D': 'hummingbird', 'E': 'crow'}`.  
+   * Iterate through the choices: for each choice letter, check if the corresponding bird's position equals 1 in the solution.  
+   * Return (or print) the correct choice letter where this condition holds true.

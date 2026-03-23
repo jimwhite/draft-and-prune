@@ -1,0 +1,13 @@
+1. Identify all entities: Bob, Charlie, Dave, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates: is_cold("Bob", True), is_quiet("Bob", True), ..., is_kind("Charlie", True), etc.  
+3. Translate each conditional statement into a PyKe rule:  
+   • If something is quiet and cold → it is smart.  
+   • If something is red and cold → it is round.  
+   • If something is kind and rough → it is red.  
+   • All quiet things are rough.  
+   • If something is cold and smart → it is red.  
+   • All rough things are cold.  
+   • All red things are rough.  
+   • If Dave is smart and kind → Dave is quiet.  
+4. For each rule, construct a `foreach` block specifying the preconditions and an `assert` block for the consequent.  
+5. The query verifies whether Charlie is kind, which is directly asserted as a fact: → Use facts.is_kind("Charlie", True)

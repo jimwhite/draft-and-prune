@@ -1,0 +1,12 @@
+1. Enumerate the seven articles and assign integer indices to them: G, H, J (finance); Q, R, S (nutrition); Y (wildlife).  
+2. Create integer position variables `pos[article]` ∈ {1, 2, ..., 7} for each article.  
+3. Add **distinctness constraint**: all seven positions are pairwise distinct (permutation of 1..7).  
+4. Add **topic constraints**: define topic labels (finance, nutrition, wildlife) for each article.  
+5. Add **no consecutive same-topic constraint**: for all i from 1 to 6, if `pos[a] = k` and `pos[b] = k+1`, then topic(a) ≠ topic(b).  
+6. Add **conditional constraint**: S earlier than Q implies Q is third — i.e., `(pos_S < pos_Q) → (pos_Q == 3)`.  
+7. Add **S before Y constraint**: `pos_S < pos_Y`.  
+8. Add **J–G–R chain constraint**: `pos_J < pos_G` and `pos_G < pos_R`.  
+9. Translate answer choices into propositions: each choice asserts a specific article is in a specific position (e.g., “G is second” = `pos_G == 2`).  
+10. For each answer choice, clone the base solver and assert its condition (e.g., `pos_G == 2`).  
+11. If the augmented solver returns SAT, then that choice **could be true**; collect its index into `answer_index_list`.  
+12. Output the index of any SAT-verified choice (the question implies exactly one is possible).

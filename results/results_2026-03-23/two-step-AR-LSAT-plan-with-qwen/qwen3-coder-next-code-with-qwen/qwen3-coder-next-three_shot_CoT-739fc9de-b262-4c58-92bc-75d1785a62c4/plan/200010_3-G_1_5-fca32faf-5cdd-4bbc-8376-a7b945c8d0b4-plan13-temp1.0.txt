@@ -1,0 +1,34 @@
+1. Enumerate the eight students and assign integer codes (George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Enumerate the three days (Monday=0, Tuesday=1, Wednesday=2) and two slots per day (morning=0, afternoon=1), yielding 6 total report slots: M_morn=0, M_aft=1, T_morn=2, T_aft=3, W_morn=4, W_aft=5.  
+3. Create integer variables `slot[s]` for each report slot s (0..5), indicating which student occupies that slot.  
+4. Add **domain constraints**: `slot[s]` ∈ {0,1,2,3,4,5,6,7} for all s.  
+5. Add **exactly six distinct students** constraint: all `slot[s]` values must be pairwise distinct (no repeats), and only six students are used.  
+6. Add **fixed constraints from the scenario**:  
+    - Kyle gives the afternoon report on Tuesday → `slot[3] = 3` (since T_aft = slot index 3, Kyle=3).  
+    - Helen gives the afternoon report on Wednesday → `slot[5] = 1` (W_aft=slot index 5, Helen=1).  
+7. Add **temporal and conditional constraints**:  
+    - Tuesday is the only day George can give a report → George may only appear in slot 2 (T_morn) or 3 (T_aft); but T_aft is Kyle, so George can only be in slot 2 if used → add: if `slot[s] == 0`, then s ∈ {2,3}, and since slot[3]=3≠0, only s=2 is possible. So: `slot[s]==0 ⇒ s==2`.  
+    - Neither Olivia nor Robert can give an afternoon report → for all slots in afternoon positions (1,3,5), `slot[s] ≠ 6` and `slot[s] ≠ 7`. Specifically: slot[1], slot[3], slot[5] ∉ {6,7}. (slot[3]=Kyle=3 and slot[5]=Helen=1 already satisfy; enforce for slot[1] and slot[5] explicitly.)  
+    - Nina conditional: If Nina (7) gives a report, then:  
+        - If her slot s ∈ {0,1} (Mon), then Helen & Irving must both report on Tue → both slots 2 and 3 ∈ {1,2} (but slot[3]=3=Kyle≠1,2 ⇒ contradiction unless Nina does not report on Mon).  
+        - If her slot s=3 (Tue_aft) → impossible (slot[3]=Kyle).  
+        - If her slot s=2 (Tue_morn), then Helen & Irving must both report on Wed → slots 4,5 ∈ {1,2} (slot[5]=Helen=1 satisfies; need slot[4] = Irving=2 or Helen, but Helen already used in slot[5], so slot[4] must be Irving=2).  
+        - If her slot s=4 (Wed_morn), then next day is Thu — no day, so condition “unless Nina’s report is on Wednesday” applies → no requirement.  
+        - If her slot s=5 (Wed_aft), same as above: no requirement.  
+        - Therefore, Nina may only report if placed in slot 2 (Tue_morn) → then slot[4] must be Irving=2, or placed in slot 4 or 5 → no extra constraints.  
+        - Formalize as: if `exists s ∈ {0,1,2}` such that `slot[s]==5`, then:  
+            - if s=0 or 1: impossible due to slot[3]=Kyle ≠ Helen/Irving ⇒ add UNSAT condition, so effectively Nina cannot be on Mon.  
+            - if s=2: then `(slot[4]==1 ∨ slot[4]==2) ∧ (slot[5]==1 ∨ slot[5]==2)` but slot[5]=Helen=1, so only require `slot[4] ∈ {1,2}`.  
+            - if s=4 or 5: no constraint.  
+        - Since Mon morning/afternoon (slots 0,1) would force Helen/Irving on Tue, but Tue_aft is Kyle (≠Helen,Irving), we add: `slot[0] ≠ 5 ∧ slot[1] ≠ 5`.  
+        - Also, if `slot[s]==5` for s=2, then enforce `slot[4] ∈ {1,2}`.  
+8. Add **each day has exactly two reports** — already covered by 6 slots with distinct students.  
+9. Interpret the answer choices as candidate lists of morning reports: (Mon_morn, Tue_morn, Wed_morn) = (slot[0], slot[2], slot[4]).  
+10. For each answer choice (list of three student names), convert to indices and construct a tuple `chosen_mornings = [idx0, idx2, idx4]`.  
+11. For each candidate tuple:  
+    - Create a fresh solver with base constraints (steps 3–7).  
+    - Add constraints: `slot[0] == idx0`, `slot[2] == idx2`, `slot[4] == idx4`.  
+    - Note: slot[3]=3, slot[5]=1 already fixed.  
+    - Check SAT. If SAT is possible (model exists), then this morning-report list is viable; record the choice index.  
+12. The correct answer corresponds to the viable choice(s); return the matching option(s) from the list of choices.  
+13. Since only one choice is asked, the answer index list will contain exactly one element — the index of the feasible option.

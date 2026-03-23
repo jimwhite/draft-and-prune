@@ -1,0 +1,18 @@
+1. Identify all entities and types: Rex, zumpus, vumpus, dumpus, tumpus, wumpus, rompus, numpus.  
+2. Identify all properties: temperate, large, feisty, opaque, floral.  
+3. Represent "Rex is a zumpus" as a base fact: `is_a("Rex", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Each zumpus is not temperate.  
+   * Every zumpus is a vumpus.  
+   * Vumpuses are large.  
+   * Each vumpus is a dumpus.  
+   * Every dumpus is feisty.  
+   * Tumpuses are not opaque.  
+   * Dumpuses are wumpuses.  
+   * Every wumpus is floral.  
+   * Wumpuses are rompuses.  
+   * Rompuses are opaque.  
+   * Rompuses are numpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Rex is not opaque" is provable:  
+   → Use `facts.is_opaque("Rex", False)`.

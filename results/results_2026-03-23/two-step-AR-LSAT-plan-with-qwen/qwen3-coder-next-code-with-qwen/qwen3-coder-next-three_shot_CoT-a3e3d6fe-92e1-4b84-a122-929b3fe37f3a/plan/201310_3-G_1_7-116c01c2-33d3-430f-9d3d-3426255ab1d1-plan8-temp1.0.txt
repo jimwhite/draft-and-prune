@@ -1,0 +1,19 @@
+1. Enumerate the six bands and assign integer indices.  
+2. Create integer variables for each band's performance slot (1 to 6), with all slots distinct.  
+3. Add the original constraints:  
+   - Vegemite before Zircon: `slot_Vegemite < slot_Zircon`.  
+   - Wellspring before Xpert and Zircon before Xpert: `slot_Wellspring < slot_Xpert` and `slot_Zircon < slot_Xpert`.  
+   - Uneasy in one of last three slots: `slot_Uneasy ≥ 4`.  
+   - Yardsign in one of first three slots: `slot_Yardsign ≤ 3`.  
+4. For each choice in the answer options, construct a fresh solver with the original constraints **except** the Wellspring/Zircon-before-Xpert constraint.  
+5. In each cloned solver, replace the removed constraint with the constraint described in that choice.  
+6. Check whether the new set of constraints is logically equivalent to the original by verifying:  
+   - The model sets (i.e., valid orderings) under the original constraint set and under the modified set are identical.  
+   - Practically, test two directions:  
+     a) Add original constraints + choice constraint and ensure it is SAT, then verify that all valid solutions satisfy the original Wellspring/Zircon-before-Xpert constraint.  
+     b) Add modified constraints (original minus Wellspring/Zircon-before-Xpert, plus choice constraint) and ensure they imply the original Wellspring/Zircon-before-Xpert constraint (i.e., any solution to modified constraints must satisfy `slot_Wellspring < slot_Xpert` and `slot_Zircon < slot_Xpert`).  
+7. Use Z3 to check for counterexamples:  
+   - For each choice, attempt to find a model satisfying the modified constraints where either `slot_Wellspring ≥ slot_Xpert` or `slot_Zircon ≥ slot_Xpert`.  
+   - If such a model exists, the choice does NOT preserve the effect.  
+8. Among all choices, identify the one(s) for which no such counterexample exists — meaning the modified constraints are equivalent to the original Wellspring/Zircon-before-Xpert condition.  
+9. Return the index of the correct choice as a single-element list `[index]`, where indices are 0-based for the given choices.

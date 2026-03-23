@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven golfers as variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"Joe"` (note: case-sensitivity must match exactly as in input; "Joe" capitalized, others lowercase per original list).  
+    * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place**.  
+    * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Translate Statements into Constraints:**  
+    * Add `AllDifferentConstraint()` to ensure each golfer has a unique finishing position.  
+    * "Amy finished below Joe" → Amy’s position number > Joe’s position number (`amy > joe`).  
+    * "Dan finished above Mya" → Dan’s position number < Mya’s position number (`dan < mya`).  
+    * "Eli finished third" → `eli == 3`.  
+    * "Ana finished first" → `ana == 1`.  
+    * "Amy finished second-to-last" → Amy is in position 6 (since last is 7) → `amy == 6`.  
+    * "Mya finished fourth" → `mya == 4`.
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to find all valid assignments. Given the problem states consistency, there should be exactly one solution (or at least one satisfying assignment).  
+    * Extract the first solution from the list of solutions.
+
+5.  **Compute the Third-to-Last Position:**  
+    * With 7 golfers, third-to-last corresponds to position `7 - 3 + 1 = 5`. So identify the golfer whose assigned position is **5**.
+
+6.  **Map to Answer Choices:**  
+    * Create a dictionary mapping the choice letters (A through G) to the corresponding golfer names:  
+        A → "mya", B → "eli", C → "ana", D → "amy", E → "mel", F → "dan", G → "Joe".  
+    * Iterate through the choices, and for each golfer in the solution, check if their position == 5.  
+    * Output the letter (e.g., 'E') corresponding to the golfer in position 5.

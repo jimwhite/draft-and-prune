@@ -1,0 +1,35 @@
+1. Enumerate the four art historians and assign them integer codes (e.g., Farley=0, Garcia=1, Holden=2, Jiang=3).  
+2. Enumerate the four topics and assign them integer codes (e.g., lithographs=0, oil paintings=1, sculptures=2, watercolors=3).  
+3. Create integer variables for lecture *order positions*: `pos_historian[i]` for when historian i gives their lecture (1 to 4), and `pos_topic[t]` for when topic t is covered (1 to 4).  
+   - Alternatively, model assignment using permutation variables: let `hist_topic[i]` be the topic given by historian i (bijection), and `order[t]` be the position when topic t is scheduled (also a permutation of 1..4).  
+   - Choose model: define `schedule[p]` = (historian, topic) for position p=1..4. But more efficient: define two permutations:  
+     - `order_hist[p]` = historian at position p (0..3), distinct.  
+     - `order_topic[p]` = topic at position p (0..3), distinct.  
+     - Also enforce that for each historian i, there exists exactly one p where `order_hist[p] == i`, and that historian’s topic is the same as `order_topic[p]`.  
+4. Simpler: model via assignment: let `assignment[i][t]` be Boolean (historian i gives topic t). Add:  
+   - Each historian assigned exactly one topic.  
+   - Each topic assigned to exactly one historian.  
+5. Model order: let `pos[i]` = position (1..4) when historian i gives their lecture; similarly `topic_pos[t]` = position when topic t is taught.  
+   - Ensure `pos[i]` and `topic_pos[t]` are permutations of 1..4.  
+   - Enforce consistency: for each historian i and topic t, if `assignment[i][t]` is true, then `pos[i] == topic_pos[t]`.  
+   - Or avoid explicit assignment matrix: instead, use `topic_at_pos[p]` (topic at position p), and `historian_at_pos[p]` (historian at position p). Then `pos[historian] = unique p where historian_at_pos[p]==historian`, etc.  
+6. Use the cleaner approach: define arrays of length 4 for positions (1-indexed):  
+   - `hist_pos[0..3]`: position of Farley, Garcia, Holden, Jiang.  
+   - `topic_pos[0..3]`: position of lithographs, oil paintings, sculptures, watercolors.  
+   - Add: `AllDifferent(hist_pos)`, `AllDifferent(topic_pos)`.  
+7. Relate historian and topic via the lecture pairing constraint: since each historian gives exactly one topic, define a bijection mapping `h2t[i]` = topic given by historian i (0..3), with `AllDifferent(h2t)`.  
+   - Then enforce: `hist_pos[i] == topic_pos[h2t[i]]` for all i.  
+8. Add ordering constraints:  
+   - "oil paintings lecture and watercolors lecture must both be earlier than the lithographs lecture":  
+     `topic_pos[1] < topic_pos[0]` and `topic_pos[3] < topic_pos[0]`.  
+   - "Farley's lecture must be earlier than the oil paintings lecture":  
+     `hist_pos[0] < topic_pos[1]`.  
+   - "Holden's lecture must be earlier than both Garcia's lecture and Jiang's lecture":  
+     `hist_pos[2] < hist_pos[1]` and `hist_pos[2] < hist_pos[3]`.  
+9. Translate answer choices into logical formulas: each choice is a statement of the form "X earlier than Y". For each, extract the two events and their positions:  
+   - E.g., "Farley's lecture is earlier than the sculptures lecture" → `hist_pos[0] < topic_pos[2]`.  
+10. To find which statement **must be true**, use proof by contradiction on each:  
+    - For each choice k, create a fresh solver with all base constraints plus `NOT(choice_k)`.  
+    - If UNSAT, then choice_k **must** be true. Collect all such must-be-true choices.  
+11. Since only one choice is correct, the plan expects exactly one UNSAT instance.  
+12. Print index (or indices) of must-be-true choices.

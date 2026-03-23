@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the five birds as variables: `"cardinal"`, `"robin"`, `"blue jay"`, `"quail"`, and `"raven"`.  
+   * Define the domain as integer positions 1 through 5, where **1 = leftmost**, 2 = second from left, ..., **5 = rightmost**.  
+   * Add all five birds to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Formulate and Add Constraints:**  
+   * Add `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint using `addConstraint()` with lambda functions:  
+     - "The robin is to the right of the raven" → `robin > raven`  
+     - "The cardinal is the leftmost" → `cardinal == 1`  
+     - "The raven is to the right of the blue jay" → `raven > blue_jay`  
+     - "The blue jay is the third from the left" → `blue_jay == 3`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (as the constraints are consistent and deterministic).
+
+5. **Determine Which Bird is Second From the Left (Position 2):**  
+   * The question asks which bird occupies position 2.  
+   * Create a mapping from choice letters to birds: `"A" → "cardinal"`, `"B" → "robin"`, `"C" → "blue jay"`, `"D" → "quail"`, `"E" → "raven"`.  
+   * Iterate through the solution dictionary to find which bird has position value `2`.  
+   * Return the choice letter corresponding to that bird.

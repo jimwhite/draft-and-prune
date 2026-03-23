@@ -1,0 +1,16 @@
+1. Enumerate the six lab assistants and assign them integer indices.  
+2. Define three days: Wednesday (day 0), Thursday (day 1), Friday (day 2); and two sessions per day: morning (session 0) and afternoon (session 1). Represent each session as a tuple (day, slot), where day ∈ {0,1,2} and slot ∈ {0,1}.  
+3. Create integer variables `pos[i]` for each lab assistant i, representing the session index assigned to them (from 0 to 5), where sessions are ordered e.g., Wednesday morning=0, Wednesday afternoon=1, Thursday morning=2, Thursday afternoon=3, Friday morning=4, Friday afternoon=5.  
+4. Add **domain constraints**: each `pos[i]` ∈ {0,1,2,3,4,5}, and all `pos[i]` are distinct (bijection between assistants and sessions).  
+5. Add **day/slot extraction constraints**: define helper integer expressions for day and slot: `day[i] = pos[i] // 2`, `slot[i] = pos[i] % 2`.  
+6. Add **Kevin/Rebecca same-day constraint**: `day[Kevin] == day[Rebecca]`.  
+7. Add **Lan/Olivia different-day constraint**: `day[Lan] != day[Olivia]`.  
+8. Add **Nessa afternoon constraint**: `slot[Nessa] == 1`.  
+9. Add **Julio earlier-day than Olivia constraint**: `day[Julio] < day[Olivia]`.  
+10. Add **premise constraint**: Lan does *not* lead a Wednesday session → `day[Lan] != 0`.  
+11. Translate answer choices into assistant indices: Rebecca, Olivia, Nessa, Kevin, Julio.  
+12. Define an answer index list `answer_index_list = []`. For each candidate assistant in the choices (in order), check if they *must* lead a Thursday session (day=1) under the above constraints:  
+    - Clone base constraints + premise into fresh solver.  
+    - Assert assistant is *not* on Thursday: `day[assistant] != 1`.  
+    - If UNSAT, then Thursday is forced; append assistant index to `answer_index_list`.  
+13. Return/record the answer index list.

@@ -1,0 +1,609 @@
+{
+  "problem": {
+    "context": "A loading dock consists of exactly six bays numbered 1 through 6 consecutively from one side of the dock to the other. Each bay is holding a different one of exactly six types of cargo—fuel, grain, livestock, machinery, produce, or textiles. The following apply: The bay holding grain has a higher number than the bay holding livestock. The bay holding livestock has a higher number than the bay holding textiles. The bay holding produce has a higher number than the bay holding fuel. The bay holding textiles is next to the bay holding produce.",
+    "question": "If there is exactly one bay between the bay holding machinery and the bay holding grain, then for exactly how many of the six bays is the type of cargo that bay is holding completely determined?",
+    "answers": [
+      "two",
+      "three",
+      "four",
+      "five",
+      "six"
+    ],
+    "label": 2,
+    "id_string": "200312_1-G_2_8"
+  },
+  "timing": 516.4885854721069,
+  "all_solver_outputs": [
+    "four",
+    "four",
+    "four",
+    "four",
+    "4",
+    "4",
+    "four",
+    "4",
+    "4",
+    "four",
+    "four",
+    "four",
+    "four",
+    "4",
+    "four"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 522,
+        "total_tokens": 2165
+      },
+      "plan_generation_api_time_only": 16.146312713623047,
+      "code_generation_usage": {
+        "prompt_tokens": 3535,
+        "completion_tokens": 620,
+        "total_tokens": 4155
+      },
+      "code_generation_api_time_only": 18.615824222564697,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5178,
+        "completion_tokens": 1142,
+        "total_tokens": 6320
+      },
+      "path_api_time_only": 34.762136936187744,
+      "solver_time_only": 0.12627005577087402
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 421,
+        "total_tokens": 2064
+      },
+      "plan_generation_api_time_only": 11.841875314712524,
+      "code_generation_usage": {
+        "prompt_tokens": 3434,
+        "completion_tokens": 526,
+        "total_tokens": 3960
+      },
+      "code_generation_api_time_only": 17.22055673599243,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5077,
+        "completion_tokens": 947,
+        "total_tokens": 6024
+      },
+      "path_api_time_only": 29.062432050704956,
+      "solver_time_only": 0.07731032371520996
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 410,
+        "total_tokens": 2053
+      },
+      "plan_generation_api_time_only": 12.829530000686646,
+      "code_generation_usage": {
+        "prompt_tokens": 3423,
+        "completion_tokens": 470,
+        "total_tokens": 3893
+      },
+      "code_generation_api_time_only": 14.46822476387024,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5066,
+        "completion_tokens": 880,
+        "total_tokens": 5946
+      },
+      "path_api_time_only": 27.297754764556885,
+      "solver_time_only": 0.11908936500549316
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 585,
+        "total_tokens": 2228
+      },
+      "plan_generation_api_time_only": 15.013148546218872,
+      "code_generation_usage": {
+        "prompt_tokens": 3598,
+        "completion_tokens": 575,
+        "total_tokens": 4173
+      },
+      "code_generation_api_time_only": 18.065119981765747,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5241,
+        "completion_tokens": 1160,
+        "total_tokens": 6401
+      },
+      "path_api_time_only": 33.07826852798462,
+      "solver_time_only": 0.07482314109802246
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 326,
+        "total_tokens": 1969
+      },
+      "plan_generation_api_time_only": 10.535578727722168,
+      "code_generation_usage": {
+        "prompt_tokens": 3339,
+        "completion_tokens": 492,
+        "total_tokens": 3831
+      },
+      "code_generation_api_time_only": 14.167655944824219,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4982,
+        "completion_tokens": 818,
+        "total_tokens": 5800
+      },
+      "path_api_time_only": 24.703234672546387,
+      "solver_time_only": 0.07524967193603516
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 318,
+        "total_tokens": 1961
+      },
+      "plan_generation_api_time_only": 10.429440259933472,
+      "code_generation_usage": {
+        "prompt_tokens": 3331,
+        "completion_tokens": 449,
+        "total_tokens": 3780
+      },
+      "code_generation_api_time_only": 13.421206712722778,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4974,
+        "completion_tokens": 767,
+        "total_tokens": 5741
+      },
+      "path_api_time_only": 23.85064697265625,
+      "solver_time_only": 0.07482433319091797
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 502,
+        "total_tokens": 2145
+      },
+      "plan_generation_api_time_only": 13.060403108596802,
+      "code_generation_usage": {
+        "prompt_tokens": 3515,
+        "completion_tokens": 539,
+        "total_tokens": 4054
+      },
+      "code_generation_api_time_only": 17.38740038871765,
+      "repair_usage_total": {
+        "prompt_tokens": 669,
+        "completion_tokens": 542,
+        "total_tokens": 1211
+      },
+      "repair_api_time_only_total": 15.146114587783813,
+      "path_usage_total": {
+        "prompt_tokens": 5827,
+        "completion_tokens": 1583,
+        "total_tokens": 7410
+      },
+      "path_api_time_only": 45.59391808509827,
+      "solver_time_only": 0.09463286399841309
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 407,
+        "total_tokens": 2050
+      },
+      "plan_generation_api_time_only": 11.436733961105347,
+      "code_generation_usage": {
+        "prompt_tokens": 3420,
+        "completion_tokens": 629,
+        "total_tokens": 4049
+      },
+      "code_generation_api_time_only": 19.253102779388428,
+      "repair_usage_total": {
+        "prompt_tokens": 758,
+        "completion_tokens": 632,
+        "total_tokens": 1390
+      },
+      "repair_api_time_only_total": 18.280160427093506,
+      "path_usage_total": {
+        "prompt_tokens": 5821,
+        "completion_tokens": 1668,
+        "total_tokens": 7489
+      },
+      "path_api_time_only": 48.96999716758728,
+      "solver_time_only": 0.11707472801208496
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 339,
+        "total_tokens": 1982
+      },
+      "plan_generation_api_time_only": 10.796749353408813,
+      "code_generation_usage": {
+        "prompt_tokens": 3352,
+        "completion_tokens": 505,
+        "total_tokens": 3857
+      },
+      "code_generation_api_time_only": 14.747182369232178,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4995,
+        "completion_tokens": 844,
+        "total_tokens": 5839
+      },
+      "path_api_time_only": 25.54393172264099,
+      "solver_time_only": 0.07757568359375
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 318,
+        "total_tokens": 1961
+      },
+      "plan_generation_api_time_only": 10.625335693359375,
+      "code_generation_usage": {
+        "prompt_tokens": 3331,
+        "completion_tokens": 489,
+        "total_tokens": 3820
+      },
+      "code_generation_api_time_only": 14.515899896621704,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 4974,
+        "completion_tokens": 807,
+        "total_tokens": 5781
+      },
+      "path_api_time_only": 25.14123558998108,
+      "solver_time_only": 0.07557916641235352
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 561,
+        "total_tokens": 2204
+      },
+      "plan_generation_api_time_only": 16.241650104522705,
+      "code_generation_usage": {
+        "prompt_tokens": 3574,
+        "completion_tokens": 544,
+        "total_tokens": 4118
+      },
+      "code_generation_api_time_only": 15.876824378967285,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5217,
+        "completion_tokens": 1105,
+        "total_tokens": 6322
+      },
+      "path_api_time_only": 32.11847448348999,
+      "solver_time_only": 0.07533001899719238
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 576,
+        "total_tokens": 2219
+      },
+      "plan_generation_api_time_only": 17.5294132232666,
+      "code_generation_usage": {
+        "prompt_tokens": 3589,
+        "completion_tokens": 539,
+        "total_tokens": 4128
+      },
+      "code_generation_api_time_only": 14.622718334197998,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5232,
+        "completion_tokens": 1115,
+        "total_tokens": 6347
+      },
+      "path_api_time_only": 32.1521315574646,
+      "solver_time_only": 0.07246541976928711
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 455,
+        "total_tokens": 2098
+      },
+      "plan_generation_api_time_only": 14.328300714492798,
+      "code_generation_usage": {
+        "prompt_tokens": 3467,
+        "completion_tokens": 530,
+        "total_tokens": 3997
+      },
+      "code_generation_api_time_only": 14.510435581207275,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5110,
+        "completion_tokens": 985,
+        "total_tokens": 6095
+      },
+      "path_api_time_only": 28.838736295700073,
+      "solver_time_only": 0.08571362495422363
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 493,
+        "total_tokens": 2136
+      },
+      "plan_generation_api_time_only": 14.023890495300293,
+      "code_generation_usage": {
+        "prompt_tokens": 3506,
+        "completion_tokens": 429,
+        "total_tokens": 3935
+      },
+      "code_generation_api_time_only": 15.60117506980896,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5149,
+        "completion_tokens": 922,
+        "total_tokens": 6071
+      },
+      "path_api_time_only": 29.625065565109253,
+      "solver_time_only": 0.07633757591247559
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1643,
+        "completion_tokens": 792,
+        "total_tokens": 2435
+      },
+      "plan_generation_api_time_only": 23.03130078315735,
+      "code_generation_usage": {
+        "prompt_tokens": 3804,
+        "completion_tokens": 460,
+        "total_tokens": 4264
+      },
+      "code_generation_api_time_only": 16.009106874465942,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5447,
+        "completion_tokens": 1252,
+        "total_tokens": 6699
+      },
+      "path_api_time_only": 39.04040765762329,
+      "solver_time_only": 0.11038327217102051
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 78290,
+    "completion_tokens": 15995,
+    "total_tokens": 94285
+  },
+  "api_time_only_total": 479.77837204933167,
+  "solver_time_only_total": 1.3326592445373535,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Cargo types: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\n\n# bay[i] = bay number (1-6) for cargo type i\nbay = [Int(f\"bay_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each bay number between 1 and 6, all distinct\nsolver.add(Distinct(bay))\nfor i in range(6):\n    solver.add(bay[i] >= 1, bay[i] <= 6)\n\n# Ordering constraints\nsolver.add(bay[1] > bay[2])      # grain > livestock\nsolver.add(bay[2] > bay[5])      # livestock > textiles\nsolver.add(bay[4] > bay[0])      # produce > fuel\n\n# Textiles and produce are adjacent\nsolver.add(Or(bay[4] == bay[5] + 1, bay[5] == bay[4] + 1))\n\n# Extra condition: exactly one bay between machinery and grain\nsolver.add(Or(bay[1] == bay[3] + 2, bay[3] == bay[1] + 2))\n\n# Collect all solutions\nsolutions = []\nwhile solver.check() == sat:\n    model = solver.model()\n    # Record assignment\n    assignment = [model.eval(bay[i]).as_long() for i in range(6)]\n    solutions.append(assignment)\n    \n    # Add constraint to exclude current solution\n    solver.add(Or(*[bay[i] != assignment[i] for i in range(6)]))\n\n# Build mapping: bay_number -> set of cargo types that appear there across all solutions\nbay_to_types = {b: set() for b in range(1, 7)}\nfor assignment in solutions:\n    for cargo_type_idx in range(6):\n        bay_num = assignment[cargo_type_idx]\n        bay_to_types[bay_num].add(cargo_type_idx)\n\n# Count how many bays have exactly one possible cargo type\nfixed_bays = sum(1 for b in range(1, 7) if len(bay_to_types[b]) == 1)\n\n# Map to answer string\nanswer_map = {2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}\nprint(answer_map[fixed_bays])\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Cargo types: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\n\n# bay[i] = bay number (1-6) for cargo type i\nbay = [Int(f\"bay_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each bay number between 1 and 6, all distinct\nsolver.add(Distinct(bay))\nfor i in range(6):\n    solver.add(bay[i] >= 1, bay[i] <= 6)\n\n# Ordering constraints\nsolver.add(bay[1] > bay[2])      # grain > livestock\nsolver.add(bay[2] > bay[5])      # livestock > textiles\nsolver.add(bay[4] > bay[0])      # produce > fuel\n\n# Textiles and produce are adjacent\nsolver.add(Or(bay[4] == bay[5] + 1, bay[5] == bay[4] + 1))\n\n# Extra condition: exactly one bay between machinery and grain\nsolver.add(Or(bay[1] == bay[3] + 2, bay[3] == bay[1] + 2))\n\n# Collect all solutions\nsolutions = []\nwhile solver.check() == sat:\n    model = solver.model()\n    # Record assignment\n    assignment = [model.eval(bay[i]).as_long() for i in range(6)]\n    solutions.append(assignment)\n    \n    # Add constraint to exclude current solution\n    solver.add(Or(*[bay[i] != assignment[i] for i in range(6)]))\n\n# Build mapping: bay_number -> set of cargo types that appear there across all solutions\nbay_to_types = {b: set() for b in range(1, 7)}\nfor assignment in solutions:\n    for cargo_type_idx in range(6):\n        bay_num = assignment[cargo_type_idx]\n        bay_to_types[bay_num].add(cargo_type_idx)\n\n# Count how many bays have exactly one possible cargo type\nfixed_bays = sum(1 for b in range(1, 7) if len(bay_to_types[b]) == 1)\n\n# Map to answer string\nanswer_map = {2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}\nprint(answer_map[fixed_bays])\n```\nError message from solver:\nZ3 execution error (return code 1).\nStderr:   File \"/tmp/tmprbht_7xb.py\", line 51\n    ```\n    ^\nSyntaxError: invalid syntax\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Cargo types: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\n\n# bay[i] = bay number (1-6) for cargo type i\nbay = [Int(f\"bay_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each bay number between 1 and 6, all distinct\nsolver.add(Distinct(bay))\nfor i in range(6):\n    solver.add(bay[i] >= 1, bay[i] <= 6)\n\n# Ordering constraints\nsolver.add(bay[1] > bay[2])      # grain > livestock\nsolver.add(bay[2] > bay[5])      # livestock > textiles\nsolver.add(bay[4] > bay[0])      # produce > fuel\n\n# Textiles and produce are adjacent\nsolver.add(Or(bay[4] == bay[5] + 1, bay[5] == bay[4] + 1))\n\n# Extra condition: exactly one bay between machinery and grain\nsolver.add(Or(bay[1] == bay[3] + 2, bay[3] == bay[1] + 2))\n\n# Collect all solutions\nsolutions = []\nwhile solver.check() == sat:\n    model = solver.model()\n    # Record assignment\n    assignment = [model.eval(bay[i]).as_long() for i in range(6)]\n    solutions.append(assignment)\n    \n    # Add constraint to exclude current solution\n    solver.add(Or(*[bay[i] != assignment[i] for i in range(6)]))\n\n# Build mapping: bay_number -> set of cargo types that appear there across all solutions\nbay_to_types = {b: set() for b in range(1, 7)}\nfor assignment in solutions:\n    for cargo_type_idx in range(6):\n        bay_num = assignment[cargo_type_idx]\n        bay_to_types[bay_num].add(cargo_type_idx)\n\n# Count how many bays have exactly one possible cargo type\nfixed_bays = sum(1 for b in range(1, 7) if len(bay_to_types[b]) == 1)\n\n# Map to answer string\nanswer_map = {2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}\nprint(answer_map[fixed_bays])",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "four",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 669,
+            "completion_tokens": 542,
+            "total_tokens": 1211
+          },
+          "api_time_only": 15.146114587783813,
+          "solver_time_only": 0.06998205184936523
+        }
+      ]
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Cargo types: 0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\npos = {ct: Int(f\"pos_{ct}\") for ct in cargo_types}\n\nsolver = Solver()\n\n# Domain constraints: positions 1-6, all distinct\nfor ct in cargo_types:\n    solver.add(pos[ct] >= 1, pos[ct] <= 6)\nsolver.add(Distinct(*pos.values()))\n\n# Ordering constraints\nsolver.add(pos[\"grain\"] > pos[\"livestock\"])\nsolver.add(pos[\"livestock\"] > pos[\"textiles\"])\nsolver.add(pos[\"produce\"] > pos[\"fuel\"])\n\n# Textiles adjacent to produce: |pos[textiles] - pos[produce]| = 1\nsolver.add(Or(\n    pos[\"textiles\"] == pos[\"produce\"] + 1,\n    pos[\"produce\"] == pos[\"textiles\"] + 1\n))\n\n# Extra condition: exactly one bay between machinery and grain → |pos[machinery] - pos[grain]| = 2\nsolver.add(Or(\n    pos[\"machinery\"] == pos[\"grain\"] + 2,\n    pos[\"grain\"] == pos[\"machinery\"] + 2\n))\n\n# To find how many positions are fixed across all solutions:\n# We'll collect all satisfying assignments and check which bay positions have consistent cargo\n\ndef get_model():\n    s = Solver()\n    s.add(solver.assertions())\n    if s.check() == sat:\n        return s.model()\n    else:\n        return None\n\n# First, get one model to see possible assignments\nmodel = get_model()\nif model is None:\n    print(0)  # No solution exists\nelse:\n    # For each bay position (1-6), determine if the cargo type is fixed\n    fixed_count = 0\n    \n    for bay in range(1, 7):\n        # Collect all possible cargoes at this bay across solutions\n        possible_cargoes = set()\n        \n        # We'll enumerate all solutions (up to 720, but constraints should limit this)\n        s = Solver()\n        s.add(solver.assertions())\n        \n        while s.check() == sat:\n            m = s.model()\n            # Get cargo at this bay\n            for ct in cargo_types:\n                if m.eval(pos[ct]).as_long() == bay:\n                    possible_cargoes.add(ct)\n                    break\n            \n            # Add constraint to exclude this assignment\n            s.add(Or(*[pos[ct] != m.eval(pos[ct]).as_long() for ct in cargo_types]))\n        \n        # If only one possible cargo at this bay, it's fixed\n        if len(possible_cargoes) == 1:\n            fixed_count += 1\n    \n    print(fixed_count)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Cargo types: 0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\npos = {ct: Int(f\"pos_{ct}\") for ct in cargo_types}\n\nsolver = Solver()\n\n# Domain constraints: positions 1-6, all distinct\nfor ct in cargo_types:\n    solver.add(pos[ct] >= 1, pos[ct] <= 6)\nsolver.add(Distinct(*pos.values()))\n\n# Ordering constraints\nsolver.add(pos[\"grain\"] > pos[\"livestock\"])\nsolver.add(pos[\"livestock\"] > pos[\"textiles\"])\nsolver.add(pos[\"produce\"] > pos[\"fuel\"])\n\n# Textiles adjacent to produce: |pos[textiles] - pos[produce]| = 1\nsolver.add(Or(\n    pos[\"textiles\"] == pos[\"produce\"] + 1,\n    pos[\"produce\"] == pos[\"textiles\"] + 1\n))\n\n# Extra condition: exactly one bay between machinery and grain → |pos[machinery] - pos[grain]| = 2\nsolver.add(Or(\n    pos[\"machinery\"] == pos[\"grain\"] + 2,\n    pos[\"grain\"] == pos[\"machinery\"] + 2\n))\n\n# To find how many positions are fixed across all solutions:\n# We'll collect all satisfying assignments and check which bay positions have consistent cargo\n\ndef get_model():\n    s = Solver()\n    s.add(solver.assertions())\n    if s.check() == sat:\n        return s.model()\n    else:\n        return None\n\n# First, get one model to see possible assignments\nmodel = get_model()\nif model is None:\n    print(0)  # No solution exists\nelse:\n    # For each bay position (1-6), determine if the cargo type is fixed\n    fixed_count = 0\n    \n    for bay in range(1, 7):\n        # Collect all possible cargoes at this bay across solutions\n        possible_cargoes = set()\n        \n        # We'll enumerate all solutions (up to 720, but constraints should limit this)\n        s = Solver()\n        s.add(solver.assertions())\n        \n        while s.check() == sat:\n            m = s.model()\n            # Get cargo at this bay\n            for ct in cargo_types:\n                if m.eval(pos[ct]).as_long() == bay:\n                    possible_cargoes.add(ct)\n                    break\n            \n            # Add constraint to exclude this assignment\n            s.add(Or(*[pos[ct] != m.eval(pos[ct]).as_long() for ct in cargo_types]))\n        \n        # If only one possible cargo at this bay, it's fixed\n        if len(possible_cargoes) == 1:\n            fixed_count += 1\n    \n    print(fixed_count)\n```\nError message from solver:\nZ3 execution error (return code 1).\nStderr:   File \"/tmp/tmpuw1y8aul.py\", line 74\n    ```\n    ^\nSyntaxError: invalid syntax\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Cargo types: 0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles\ncargo_types = [\"fuel\", \"grain\", \"livestock\", \"machinery\", \"produce\", \"textiles\"]\npos = {ct: Int(f\"pos_{ct}\") for ct in cargo_types}\n\nsolver = Solver()\n\n# Domain constraints: positions 1-6, all distinct\nfor ct in cargo_types:\n    solver.add(pos[ct] >= 1, pos[ct] <= 6)\nsolver.add(Distinct(*pos.values()))\n\n# Ordering constraints\nsolver.add(pos[\"grain\"] > pos[\"livestock\"])\nsolver.add(pos[\"livestock\"] > pos[\"textiles\"])\nsolver.add(pos[\"produce\"] > pos[\"fuel\"])\n\n# Textiles adjacent to produce: |pos[textiles] - pos[produce]| = 1\nsolver.add(Or(\n    pos[\"textiles\"] == pos[\"produce\"] + 1,\n    pos[\"produce\"] == pos[\"textiles\"] + 1\n))\n\n# Extra condition: exactly one bay between machinery and grain → |pos[machinery] - pos[grain]| = 2\nsolver.add(Or(\n    pos[\"machinery\"] == pos[\"grain\"] + 2,\n    pos[\"grain\"] == pos[\"machinery\"] + 2\n))\n\n# To find how many positions are fixed across all solutions:\n# We'll collect all satisfying assignments and check which bay positions have consistent cargo\n\ndef get_model():\n    s = Solver()\n    s.add(solver.assertions())\n    if s.check() == sat:\n        return s.model()\n    else:\n        return None\n\n# First, get one model to see possible assignments\nmodel = get_model()\nif model is None:\n    print(0)  # No solution exists\nelse:\n    # For each bay position (1-6), determine if the cargo type is fixed\n    fixed_count = 0\n    \n    for bay in range(1, 7):\n        # Collect all possible cargoes at this bay across solutions\n        possible_cargoes = set()\n        \n        # We'll enumerate all solutions (up to 720, but constraints should limit this)\n        s = Solver()\n        s.add(solver.assertions())\n        \n        while s.check() == sat:\n            m = s.model()\n            # Get cargo at this bay\n            for ct in cargo_types:\n                if m.eval(pos[ct]).as_long() == bay:\n                    possible_cargoes.add(ct)\n                    break\n            \n            # Add constraint to exclude this assignment\n            s.add(Or(*[pos[ct] != m.eval(pos[ct]).as_long() for ct in cargo_types]))\n        \n        # If only one possible cargo at this bay, it's fixed\n        if len(possible_cargoes) == 1:\n            fixed_count += 1\n    \n    print(fixed_count)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "4",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 758,
+            "completion_tokens": 632,
+            "total_tokens": 1390
+          },
+          "api_time_only": 18.280160427093506,
+          "solver_time_only": 0.09342241287231445
+        }
+      ]
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

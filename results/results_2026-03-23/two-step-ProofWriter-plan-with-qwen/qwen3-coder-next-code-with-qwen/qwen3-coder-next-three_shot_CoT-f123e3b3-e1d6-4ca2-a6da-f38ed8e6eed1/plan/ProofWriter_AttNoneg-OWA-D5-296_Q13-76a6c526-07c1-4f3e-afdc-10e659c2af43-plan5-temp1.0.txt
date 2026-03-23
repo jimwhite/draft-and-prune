@@ -1,0 +1,19 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.
+2. Encode all directly stated explicit facts using ternary predicates of the form predicate(entity, True/False):
+   - is_green("Anne", True)
+   - is_big("Charlie", True), is_quiet("Charlie", True), is_round("Charlie", True)
+   - is_green("Erin", True), is_kind("Erin", True), is_nice("Erin", True), is_quiet("Erin", True)
+   - is_blue("Fiona", True), is_kind("Fiona", True), is_quiet("Fiona", True)
+3. Translate all contextual implications into PyKe rules using `foreach` blocks and `assert` clauses:
+   • If something is kind → it is nice.
+   • If something is round and quiet → it is blue.
+   • If Charlie is kind → Charlie is big. (Note: Charlie is already known to be big, but include rule for completeness)
+   • All big and blue things are kind.
+   • Nice things are quiet.
+   • All green things are big.
+   • Quiet things are kind.
+   • Big things are kind.
+   • If Anne is green → Anne is round.
+4. For each rule, use `foreach` to match premises and `assert` the conclusion with appropriate variable bindings.
+5. The query tests whether Erin is *not* blue:
+   → Use facts.is_blue("Erin", False)

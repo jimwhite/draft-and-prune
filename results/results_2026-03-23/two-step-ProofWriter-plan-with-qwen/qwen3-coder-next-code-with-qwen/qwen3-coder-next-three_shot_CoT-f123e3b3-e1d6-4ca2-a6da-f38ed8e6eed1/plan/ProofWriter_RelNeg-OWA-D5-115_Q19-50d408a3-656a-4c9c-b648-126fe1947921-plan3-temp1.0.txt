@@ -1,0 +1,19 @@
+1. Identify all entities: bald_eagle, lion, bear, dog.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_blue("bald_eagle", True), needs("dog", "bear", False), etc.), including both positive and negative facts (e.g., “not blue”, “does not need”).
+3. Explicitly assert negative ground facts:  
+   - is_blue("bear", False)  
+   - needs("dog", "bear", False)  
+   - likes("lion", "bear", False)  
+4. Translate each conditional into PyKe rules:  
+   • If something likes the lion and is not red → it chases the lion.  
+   • If something is red and needs the bald eagle → the bald eagle needs the lion.  
+   • If something is round → it does not like the dog.  
+   • If bald_eagle needs the dog → the dog is round.  
+   • If something likes the dog → it likes the bald_eagle.  
+   • If something chases the lion and the lion likes the dog → the dog does not like the lion.  
+   • If bear likes the lion → lion likes the dog.  
+   • If something likes the bear → bear likes the lion.  
+   • If something is round → it likes the bear.  
+5. For each rule, implement a `foreach` block with the preconditions and an `assert` for the consequence (note: consequences may be facts involving other predicates like chases, likes, needs, is_round).  
+6. For rules with negative conclusions (e.g., “does not like the lion”, “the dog does not need the dog”), ensure negative facts are asserted via negation-as-failure or explicit `not` conditions in the `foreach`, and assert corresponding negative ground facts.  
+7. Specifically, the query is: “The dog does not need the dog.” → Use `facts.needs("dog", "dog", False)` as the query goal.

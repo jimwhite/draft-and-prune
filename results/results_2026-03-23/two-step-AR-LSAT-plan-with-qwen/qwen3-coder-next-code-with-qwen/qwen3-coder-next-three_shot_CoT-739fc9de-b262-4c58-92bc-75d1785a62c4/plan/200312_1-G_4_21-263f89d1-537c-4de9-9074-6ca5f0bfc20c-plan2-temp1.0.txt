@@ -1,0 +1,21 @@
+1. Enumerate the five students and assign integer indices.  
+2. Enumerate the three plays (Sunset, Tamerlane, Undulation) and assign integer indices.  
+3. Create Boolean variables `review[i][j]` for each student i and play j (True if student i reviews play j).  
+4. Add **at-least-one-play constraint**: each student reviews at least one play (no empty sets).  
+5. Add **Kramer-Lopez-Megregian constraint**: Kramer and Lopez each review fewer plays than Megregian.  
+    - For each student, compute the number of reviews (sum of Boolean variables); enforce `reviews(Kramer) < reviews(Megregian)` and `reviews(Lopez) < reviews(Megregian)`.  
+6. Add **Jiang-Lopez/Megregian disjointness constraint**: Lopez and Megregian share no plays with Jiang.  
+    - For each play j, `review[Jiang][j] → ¬review[Lopez][j]` and `review[Jiang][j] → ¬review[Megregian][j]`.  
+7. Add **Kramer-O'Neill-Tamerlane constraint**: Kramer and O'Neill both review Tamerlane.  
+    - Set `review[Kramer][Tamerlane] = True` and `review[O'Neill][Tamerlane] = True`.  
+8. Add **exactly-two-students-identical constraint**: exactly two students have identical review sets (same Boolean vector), and no other pairs do.  
+    - Introduce Boolean indicators for each pair having identical review sets; enforce exactly one such pair exists (i.e., sum of pairwise equality indicators = 1).  
+9. Add **fixed assumption**: exactly three students review Undulation (i.e., sum of `review[i][Undulation]` over i = 3).  
+10. For each answer choice (as a proposition), add it as an extra constraint to the base solver and test satisfiability:  
+    - a) "Megregian does not review Undulation": add `¬review[Megregian][Undulation]`.  
+    - b) "O'Neill does not review Undulation": add `¬review[O'Neill][Undulation]`.  
+    - c) "Jiang reviews Undulation": add `review[Jiang][Undulation]`.  
+    - d) "Lopez reviews Tamerlane": add `review[Lopez][Tamerlane]`.  
+    - e) "O'Neill reviews Sunset": add `review[O'Neill][Sunset]`.  
+11. Collect all choices for which the augmented solver returns SAT.  
+12. Output the index (or indices) of satisfied choices.

@@ -1,0 +1,17 @@
+1. Enumerate the five witnesses and assign them integer codes.  
+2. Create integer variables for each witness’s assigned day (e.g., 0 = Monday, 1 = Tuesday, 2 = Wednesday).  
+3. Add **domain constraints**: each witness’s day must be in {0, 1, 2}.  
+4. Add **global schedule constraints**:  
+    - Exactly two witnesses testify on Tuesday (sum of witnesses with day=1 equals 2).  
+    - At least one witness testify on Monday (sum of witnesses with day=0 ≥ 1).  
+5. Add **fixed constraints**:  
+    - Iturbe testifies on Wednesday (Iturbe_day = 2).  
+    - Hong does not testify on Monday (Hong_day ≠ 0 ⇒ Hong_day ∈ {1, 2}).  
+    - Franco does not testify on same day as Garcia (Franco_day ≠ Garcia_day).  
+6. Add **conditional constraint** for the hypothetical: Franco and Hong testify on the same day (Franco_day = Hong_day).  
+7. Translate the answer choices into logical statements about the day assignments (e.g., “Franco is on Wednesday” ⇒ Franco_day = 2; “Garcia is on Monday” ⇒ Garcia_day = 0, etc.).  
+8. For each answer choice:  
+    - Clone the base + conditional constraints into a fresh solver.  
+    - Assert the negation of the answer choice (i.e., assume it is *not* true).  
+    - Check satisfiability: if UNSAT, then the answer choice **must** be true; record its index.  
+9. Return the list of indices for which the negation leads to unsatisfiability (i.e., forced truths).

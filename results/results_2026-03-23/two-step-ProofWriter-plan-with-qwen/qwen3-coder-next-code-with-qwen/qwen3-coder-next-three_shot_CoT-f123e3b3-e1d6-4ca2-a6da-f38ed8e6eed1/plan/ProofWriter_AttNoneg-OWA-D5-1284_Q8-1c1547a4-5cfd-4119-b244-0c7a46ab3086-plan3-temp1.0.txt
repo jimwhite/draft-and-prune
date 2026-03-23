@@ -1,0 +1,14 @@
+1. Identify all entities involved: Anne, Bob, Erin, Harry.
+2. Encode all explicitly stated atomic facts using ternary predicates: is_furry("Anne", True), is_nice("Anne", True), is_smart("Anne", True), is_young("Bob", True), is_nice("Erin", True), is_smart("Harry", True), is_young("Harry", True).
+3. Translate all universal conditionals and implications into PyKe rules using `foreach` blocks:
+   - Young things are furry: `foreach (X) is_young(X, True) → assert is_furry(X, True)`
+   - Nice and furry things are green: `foreach (X) is_nice(X, True), is_furry(X, True) → assert is_green(X, True)`
+   - All green things are nice: `foreach (X) is_green(X, True) → assert is_nice(X, True)`
+   - Nice and green things are big: `foreach (X) is_nice(X, True), is_green(X, True) → assert is_big(X, True)`
+   - All green things are smart: `foreach (X) is_green(X, True) → assert is_smart(X, True)`
+   - If something is big and young then it is round: `foreach (X) is_big(X, True), is_young(X, True) → assert is_round(X, True)`
+   - All green things are big: `foreach (X) is_green(X, True) → assert is_big(X, True)`
+   - If Harry is young then Harry is furry: This is a ground rule; can be encoded as `assert(is_furry("Harry", True))` if `is_young("Harry", True)` is known, or use a rule: `foreach () is_young("Harry", True) → assert(is_furry("Harry", True))`
+   - Furry, smart things are nice: `foreach (X) is_furry(X, True), is_smart(X, True) → assert is_nice(X, True)`
+4. Note: Several rules may be redundant (e.g., "All green things are big" and "Nice, green things are big")—include all as given.
+5. The query checks whether Harry is NOT green, i.e., `is_green("Harry", False)`. Determine via backward chaining or fact assertion if `is_green("Harry", True)` is provable (making the statement false), or if neither `is_green("Harry", True)` nor `is_green("Harry", False)` can be derived (unknown).

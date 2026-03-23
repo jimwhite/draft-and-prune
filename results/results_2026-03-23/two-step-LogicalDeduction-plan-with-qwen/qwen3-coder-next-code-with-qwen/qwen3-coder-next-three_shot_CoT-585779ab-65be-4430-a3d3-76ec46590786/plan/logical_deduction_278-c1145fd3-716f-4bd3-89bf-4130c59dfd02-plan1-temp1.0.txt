@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Identify the three vehicles as variables: `"convertible"`, `"tractor"`, and `"hatchback"`.  
+    * Define the domain as integers from 1 to 3, where **1 = newest**, **2 = second-newest**, and **3 = oldest** (consistent with age ranking where smaller numbers denote newer items).  
+    * Add these variables and their domain (1, 2, 3) to the problem.
+
+3.  **Add Constraints Based on Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Convert "The hatchback is older than the convertible" to a constraint: `hatchback > convertible` (since older means larger rank number under the 1=newest convention).  
+    * Convert "The tractor is the newest" to a constraint: `tractor == 1`.
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments of ranks to vehicles.  
+    * Extract the unique solution (only one solution exists due to consistency and limited possibilities).
+
+5.  **Determine Which Statement is True:**  
+    * The question asks which vehicle is the *second-newest*, i.e., rank = 2.  
+    * Create a mapping from choice letters to vehicle names: `"A"` → `"convertible"`, `"B"` → `"tractor"`, `"C"` → `"hatchback"`.  
+    * Inspect the solution to find which vehicle has rank 2.  
+    * Return the corresponding choice letter (e.g., `"C"` if hatchback has rank 2).

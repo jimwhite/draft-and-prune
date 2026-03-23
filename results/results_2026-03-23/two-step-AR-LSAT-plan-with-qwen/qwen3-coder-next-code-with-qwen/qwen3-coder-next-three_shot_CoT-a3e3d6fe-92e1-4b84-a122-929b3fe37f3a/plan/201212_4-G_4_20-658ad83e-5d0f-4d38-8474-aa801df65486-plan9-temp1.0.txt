@@ -1,0 +1,20 @@
+1. Enumerate the seven articles and assign integer indices: G=0, H=1, J=2 (finance); Q=3, R=4, S=5 (nutrition); Y=6 (wildlife).  
+2. Create integer position variables `pos[0..6]` for each article’s editing order (1 to 7).  
+3. Add **domain and uniqueness constraints**: each `pos[i] ∈ [1,7]`, all positions distinct (using `Distinct(pos)`).  
+4. Add **topic grouping**: Map articles to topics: finance=[0,1,2], nutrition=[3,4,5], wildlife=[6].  
+5. Add **no-consecutive-same-topic constraint**: For every pair of consecutive positions k and k+1 (k=1..6), ensure no two articles at those positions share the same topic. Implement by: for each article i, introduce boolean `is_k[i]` meaning article i is at position k; then for each k=1..6 and for each topic t, sum of `is_k[i]` over i with topic t at positions k and k+1 ≤ 1. Alternatively, use pairwise constraints: for any i≠j with same topic, |pos[i] - pos[j]| ≠ 1.  
+6. Add **S-before-Y constraint**: `pos[S] < pos[Y]` (i.e., `pos[5] < pos[6]`).  
+7. Add **J-before-G-before-R constraint**: `pos[J] < pos[G]` and `pos[G] < pos[R]`, i.e., `pos[2] < pos[0] < pos[4]`.  
+8. Add **S-before-Q conditional constraint**: “S can be earlier than Q only if Q is third” = logically: If `pos[S] < pos[Q]`, then `pos[Q] == 3`. Equivalently, `(pos[S] < pos[Q]) ⇒ (pos[Q] == 3)`, which is `(pos[S] >= pos[Q]) ∨ (pos[Q] == 3)`.  
+9. Translate answer choices to article indices and target positions:  
+   - 'G is second' → pos[0] == 2  
+   - 'H is second' → pos[1] == 2  
+   - 'S is second' → pos[5] == 2  
+   - 'R is third' → pos[4] == 3  
+   - 'Y is third' → pos[6] == 3  
+10. Define answer index list `answer_index_list = []`. For each choice (i from 0 to 4):  
+    - Clone base solver.  
+    - Assert the positional constraint for that choice (e.g., `pos[G] == 2` for first choice).  
+    - Solve the cloned solver.  
+    - If SAT is possible (model exists), then this choice **could be true**; append index i to `answer_index_list`.  
+11. Print the answer index list (list of indices where choice is satisfiable).

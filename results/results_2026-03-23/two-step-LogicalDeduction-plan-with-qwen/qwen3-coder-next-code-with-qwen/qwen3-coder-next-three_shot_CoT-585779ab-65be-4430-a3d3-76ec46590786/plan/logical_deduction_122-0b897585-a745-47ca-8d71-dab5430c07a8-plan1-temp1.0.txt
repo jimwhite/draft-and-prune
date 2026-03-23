@@ -1,0 +1,39 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the seven bird variables as strings: `"hawk"`, `"crow"`, `"owl"`, `"raven"`, `"falcon"`, `"quail"`, and `"hummingbird"`.
+    * Define the domain as integers from 1 to 7, where position 1 is leftmost and position 7 is rightmost.
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The hummingbird is the second from the left" → `hummingbird == 2`
+    * "The raven is the fourth from the left" → `raven == 4`
+    * "The raven is to the right of the hawk" → `hawk < raven` (since lower number = left)
+    * "The owl is to the right of the crow" → `crow < owl`
+    * "The falcon is the rightmost" → `falcon == 7`
+    * "The hawk is to the right of the hummingbird" → `hummingbird < hawk`
+    * "The quail is the second from the right" → `quail == 6`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Since the problem is well-defined and consistent, expect exactly one solution; retrieve it.
+
+6.  **Interpret the Question:**
+    * The question asks which bird is third from the left, i.e., has position value 3.
+    * Review the solved assignment to find which bird has value 3.
+
+7.  **Match to Given Choices:**
+    * Map the choice letters (A through G) to their respective birds:
+        - A: hawk
+        - B: crow
+        - C: owl
+        - D: raven (already fixed at 4)
+        - E: falcon (fixed at 7)
+        - F: quail (fixed at 6)
+        - G: hummingbird (fixed at 2)
+    * Identify which choice corresponds to the bird found in position 3, and output that letter.

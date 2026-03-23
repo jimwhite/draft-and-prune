@@ -1,0 +1,24 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the pricing order constraints.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the three variables: `"apples"`, `"peaches"`, and `"loquats"`.  
+    * Define a domain of integers from 1 to 3, where **1 = cheapest** and **3 = most expensive** (i.e., higher number means more expensive).  
+    * Add these variables with the domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a distinct price rank.  
+    * Translate the statements into constraints:  
+        * "The loquats are less expensive than the apples" → `loquats < apples` (since lower rank = cheaper).  
+        * "The peaches are more expensive than the apples" → `apples < peaches` (since higher rank = more expensive).  
+
+4.  **Solve for the Ranking:**  
+    * Call `getSolutions()` to obtain all valid price orderings.  
+    * Since the problem has a unique solution, extract the single solution (e.g., `solutions[0]`).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which fruit is the **second-most expensive**, i.e., rank 2 in our system (1=cheapest, 2=middle, 3=most expensive).  
+    * Create a mapping from choice letters to fruit names: `{'A': 'apples', 'B': 'peaches', 'C': 'loquats'}`.  
+    * Iterate over the choices: for each choice letter, check if the corresponding fruit’s rank in the solution equals 2.  
+    * Return (or print) the letter of the choice where this condition holds true.

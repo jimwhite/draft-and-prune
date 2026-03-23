@@ -1,0 +1,20 @@
+1. Enumerate the seven articles and assign each a unique integer index (0–6).  
+2. Create integer position variables `pos[article]` for each article (0-based or 1-based consistently).  
+3. Add **domain constraints**: each `pos[article]` ∈ {0,1,2,3,4,5,6}, and all positions are distinct (using `Distinct` or pairwise inequalities).  
+4. Add **topic groupings** for constraints: finance = {G, H, J}, nutrition = {Q, R, S}, wildlife = {Y}.  
+5. Add **consecutive-topic constraint**: for all adjacent positions i and i+1 (0 ≤ i < 6), if articles A and B occupy those positions, then topic(A) ≠ topic(B). Implement via logical implication: for all pairs of articles (A,B), if |pos[A] - pos[B]| = 1, then topic(A) ≠ topic(B).  
+6. Add **S-before-Q conditional**: `S < Q → (Q == 2)` (using 0-based indexing; adjust if using 1-based: `S < Q → Q == 3`).  
+7. Add **S-before-Y constraint**: `pos[S] < pos[Y]`.  
+8. Add **J-G-R ordering**: `pos[J] < pos[G]` and `pos[G] < pos[R]`.  
+9. Translate each answer choice into an additional constraint (e.g., `pos[H] == 3` for "H is fourth" in 0-based).  
+10. For each answer choice:  
+    a. Clone the base solver into a fresh solver.  
+    b. Add the choice-specific constraint (e.g., `pos[H] == 3`).  
+    c. Check satisfiability with Z3.  
+    d. If SAT, check whether the solution is **unique** by asserting a second model and requiring it to differ:  
+        - Solve once, extract a satisfying assignment.  
+        - Add constraint that at least one position variable differs from the first solution (e.g., `Or([pos[A] != val_A for A in articles])`).  
+        - Re-solve; if UNSAT, then the model is unique.  
+    e. Track which choices yield **exactly one** valid order (i.e., original SAT and uniqueness check UNSAT).  
+11. Append the index of each choice that yields a fully determined order (unique solution) to `answer_index_list`.  
+12. Output the `answer_index_list` containing indices of choices that fully determine the editing order.

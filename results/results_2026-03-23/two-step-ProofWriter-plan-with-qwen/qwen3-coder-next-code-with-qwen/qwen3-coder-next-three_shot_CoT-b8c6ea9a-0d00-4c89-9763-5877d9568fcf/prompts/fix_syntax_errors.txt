@@ -1,0 +1,24 @@
+You are an expert Python syntax fixer specializing in the PyKe solver library.
+
+Problem:
+{context}
+Question:
+{question}
+Plan:
+{plan}
+
+## Original Code
+{code}
+
+## Error message from solver
+{syntax_error}
+
+# Instructions for Code Fixing
+- Write a new version of the code that corrects the identified syntax error.
+- Ensure the new code is syntactically correct and logically sound.
+
+# Output Requirements:
+Translate the given natural language problem into syntactically and semantically correct PyKe program, consisting three parts: Facts, Rules, and Query.
+- Facts: Declare the explicitly stated properties and relationships of entities from the context using ternary predicates in the form predicate(subject, object, truth_value), where truth_value is typically True to denote the fact holds.
+- Rules: Encode conditional logic from the context (e.g., "If... then...") as PyKe rule clauses. Each rule uses foreach to specify matching conditions and assert to define the logical consequence. Each rule captures an inference pattern.
+- Query: Translate the natural language question into a formal goal that can be proven using the defined facts and rules. Queries usually take the form facts.predicate(subject, expected_value) and represent the statement being tested for truth.

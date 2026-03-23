@@ -1,0 +1,11 @@
+1. Enumerate the seven articles and assign each a unique position variable (1 to 7).  
+2. Assign topic types to articles: finance (G, H, J), nutrition (Q, R, S), wildlife (Y).  
+3. Add **domain constraints**: each article occupies exactly one position from 1 to 7; all positions are distinct.  
+4. Add **topic-consecutive constraint**: for every pair of consecutive positions (i, i+1), the articles at those positions must be of different topics.  
+5. Add **S-before-Q conditional**: If S is earlier than Q, then Q must be third. Equivalently: (S_pos < Q_pos) → (Q_pos == 3).  
+6. Add **S-before-Y constraint**: S_pos < Y_pos.  
+7. Add **J-G-R chain**: J_pos < G_pos and G_pos < R_pos (i.e., J < G < R).  
+8. Translate answer choices into constraints: for each option, assume the given article is in the specified position (e.g., G_pos == 2 for “G is second”).  
+9. For each choice, clone base constraints into a fresh solver and assert the choice-specific position constraint.  
+10. Check satisfiability for each cloned solver: if SAT, the choice *could* be true; collect all such valid choices.  
+11. Return the list of indices corresponding to the SAT choices (or the first one if only one is required).

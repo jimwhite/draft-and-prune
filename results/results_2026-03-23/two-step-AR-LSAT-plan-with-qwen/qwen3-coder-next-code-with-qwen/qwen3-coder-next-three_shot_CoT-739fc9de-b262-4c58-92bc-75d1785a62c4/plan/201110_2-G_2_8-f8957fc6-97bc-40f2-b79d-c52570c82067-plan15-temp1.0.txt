@@ -1,0 +1,21 @@
+1. Enumerate the five candidates and assign integer indices (0: Jaramillo, 1: Kayne, 2: Landon, 3: Novetzke, 4: Ong).  
+2. Create Boolean variables `assigned[i]` for each candidate i indicating whether they are assigned to *some* country.  
+3. Create integer position variables `amb[i]` for each candidate i: 0 if not assigned, or country index (1: Venezuela, 2: Yemen, 3: Zambia) if assigned.  
+4. Add **exactly-three-assigned** constraint: Exactly three candidates are assigned (since 3 countries and one per country).  
+5. Add **one-per-country** constraint: Each country receives exactly one ambassador → For each country c ∈ {1,2,3}, exactly one i has `amb[i] == c`.  
+6. Add **mutual exclusivity for assignment**: If a candidate is assigned, they hold exactly one country; if not assigned, `amb[i] == 0`.  
+7. Add **constraint A (exclusive Kayne/Novetzke)**: `(Kayne_assigned XOR Novetzke_assigned)` → i.e., exactly one of Kayne or Novetzke is assigned.  
+8. Add **constraint B (Jaramillo ⇒ Kayne)**: If Jaramillo is assigned, then Kayne must be assigned (`assigned[0] → assigned[1]`).  
+9. Add **constraint C (Ong→Venezuela ⇒ ¬Kayne→Yemen)**: If Ong is assigned to Venezuela (`amb[4] == 1`) AND Kayne is assigned to Yemen (`amb[1] == 2`), then contradiction; encode as `¬(amb[4]==1 ∧ amb[1]==2)`.  
+10. Add **constraint D (Landon → Zambia)**: If Landon is assigned, then `amb[2] == 3`.  
+11. Translate the five answer choices into pairs of candidate indices:  
+    - Choice 0: Jaramillo & Novetzke → [0,3]  
+    - Choice 1: Jaramillo & Ong → [0,4]  
+    - Choice 2: Kayne & Landon → [1,2]  
+    - Choice 3: Kayne & Novetzke → [1,3]  
+    - Choice 4: Landon & Ong → [2,4]  
+12. For each answer choice pair (i,j), define a clone of base constraints + assert that *only* i and j are unassigned (i.e., `¬assigned[i] ∧ ¬assigned[j] ∧ assigned[k]` for all other k ∉ {i,j}).  
+13. For each pair, check satisfiability: if UNSAT, then that pair *could not* be the unassigned pair — but the question asks “could be the pair of candidates who are **not assigned**”, so we want SAT cases.  
+14. Collect indices of all pairs for which the model is SAT; append those pair indices to `answer_index_list`.  
+15. Map the collected indices back to the corresponding answer strings and output the list of possible pairs (but per instructions, only produce raw plan).  
+16. Print `answer_index_list`.

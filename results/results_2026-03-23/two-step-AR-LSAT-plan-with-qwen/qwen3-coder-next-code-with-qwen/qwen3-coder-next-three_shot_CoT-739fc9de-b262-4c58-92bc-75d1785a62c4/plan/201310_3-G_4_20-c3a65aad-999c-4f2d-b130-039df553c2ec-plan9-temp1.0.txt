@@ -1,0 +1,23 @@
+1. Enumerate the five bird types and assign each an integer index.  
+2. Create Boolean variables for lecture hall assignments: `hall[i]` is True if lecture *i* (i = 0..4) is in Gladwyn Hall, False for Howard Auditorium.  
+3. Add **fixed constraints**:  
+   - Lecture 0 (first) is in Gladwyn Hall: `hall[0] == True`.  
+   - Lecture 3 (fourth) is in Howard Auditorium: `hall[3] == False`.  
+   - Exactly three lectures are in Gladwyn Hall: sum of `hall[i]` over i=0..4 equals 3.  
+4. Add **sandpiper constraint**: sandpiper lecture is in Howard Auditorium (`hall_sandpiper == False`) and occurs earlier than oystercatcher lecture. Encode via positions: create integer variables `pos[bird]` (0..4) for each bird’s lecture slot, all distinct. Then: `pos[sandpiper] < pos[oystercatcher]` and `hall[pos_sandpiper] == False`.  
+5. Add **tern-petrel constraint**: tern lecture occurs earlier than petrel lecture (`pos[tern] < pos[petrel]`) and petrel lecture is in Gladwyn Hall (`hall[pos_petrel] == True`).  
+6. Ensure all bird positions are a permutation of 0..4 (use `Alldistinct(pos[bird])`).  
+7. Map each lecture hall assignment to the bird at that position: for each slot `i`, `bird_at[i] = b` iff `pos[b] == i`. Then enforce hall constraints via: `hall[i] == (bird_at[i] ∈ {oystercatcher, rails, terns})` where applicable—but better: for each bird `b`, set `hall[pos[b]] == bird_hall[b]`, where `bird_hall` is a Boolean variable per bird indicating its hall assignment. Introduce variables `bird_hall[b]` for each bird, link to `hall[pos[b]]`.  
+8. Alternatively, more simply: define 5 Boolean variables per bird (hall assignments at each slot), but that’s redundant. Preferred: define `bird_hall[b]` as the hall of bird *b*, and link via position: for each bird `b`, for all slots `i`, if `pos[b] == i` then `bird_hall[b] == hall[i]`. Implement using implications or equality constraints: since positions are bijective, set `bird_hall[b] == hall[pos[b]]` using Z3’s `If(pos[b]==i, hall[i], ...)`—but more efficiently: assert for all `b`, `bird_hall[b] == hall[pos[b]]`.  
+9. Add unary constraints for birds with fixed halls: sandpiper must be in Howard → `bird_hall[sandpiper] == False`.  
+10. Add ordering constraints for tern < petrel and sandpiper < oystercatcher using `pos` variables.  
+11. Translate the five answer choices (each a logical statement about hall assignments at specific slots) into Z3 constraints. Each choice describes whether two *slots* are both in Gladwyn Hall: e.g., “first and second lectures are both in Gladwyn Hall” → `hall[0] ∧ hall[1]`.  
+12. For each choice, check if it **must be false**:  
+    - Clone base solver.  
+    - Assert the choice’s condition (e.g., `hall[0] and hall[1]`).  
+    - If the model is UNSAT, then that choice **must be false**—i.e., it violates constraints.  
+13. Collect all such choices that are UNSAT; those are the “must be false” statements.  
+14. Since only one choice is correct (the required output), return the index of the first (or唯一) unsatisfiable choice—wait, per instructions: “Which one of the following **must be false**?” → find all unsatisfiable choices; exactly one will be UNSAT.  
+15. Instead of multiple answers, use a single pass: for each choice in order, test if it can be true (SAT). The choice that is *never* satisfiable (i.e., UNSAT when assumed) is the answer.  
+16. Therefore: for each choice, assert its condition in a fresh solver; if UNSAT, record that choice as the answer. Exactly one will be UNSAT.  
+17. Return the index of that choice (or directly the string).

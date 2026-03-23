@@ -1,0 +1,26 @@
+1. Identify all entities involved: bear, cow, rabbit, tiger.
+2. Define all explicit properties and relations using ternary predicates of the form predicate(subject, object, True).
+   - Properties like is_blue, is_green, is_red, is_cold, is_nice take a boolean as the object.
+   - Relations like sees, needs, visits take another entity (string) as the object.
+3. Encode all directly stated facts as facts.pred(subj, obj, True):
+   - is_blue("bear", True), is_green("bear", True), is_red("bear", True)
+   - sees("bear", "rabbit", True)
+   - is_blue("cow", True)
+   - needs("cow", "tiger", True), visits("cow", "rabbit", True)
+   - is_cold("rabbit", True), is_nice("rabbit", True)
+   - needs("rabbit", "cow", True), sees("rabbit", "cow", True), sees("rabbit", "tiger", True)
+   - needs("tiger", "bear", True), needs("tiger", "rabbit", True)
+   - visits("tiger", "bear", True), visits("tiger", "cow", True)
+4. Translate each conditional sentence into a PyKe rule using `foreach` and `assert`:
+   - If something is green → it visits the tiger.
+   - If something sees the bear and it is cold → the bear is green.
+   - If cow needs rabbit AND rabbit needs cow → rabbit is red.
+   - If something is green → it needs the cow.
+   - If something visits the tiger → tiger is red.
+   - If something needs the tiger AND tiger sees cow → that thing needs bear.
+   - If something sees bear AND needs bear → it sees cow.
+   - If something visits rabbit → rabbit needs tiger.
+   - If something needs bear AND bear visits tiger → it sees bear.
+5. For rules with conditions involving specific entities (e.g., cow/rabbit needing each other), use concrete predicates in `foreach` rather than universal quantification.
+6. The query checks whether the cow visits the rabbit:
+   → Use facts.visits("cow", "rabbit", True)

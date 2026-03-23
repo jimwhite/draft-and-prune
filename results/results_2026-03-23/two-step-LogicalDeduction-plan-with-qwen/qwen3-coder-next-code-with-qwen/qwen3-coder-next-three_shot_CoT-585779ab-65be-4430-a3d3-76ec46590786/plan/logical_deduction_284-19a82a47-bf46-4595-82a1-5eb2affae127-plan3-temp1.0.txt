@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: `"cantaloupe"`, `"apple"`, and `"loquat"` (three fruits).  
+   * Define the domain for ranking: integers 1, 2, and 3, where **1 = cheapest**, **2 = middle price**, **3 = most expensive**.  
+   * Add all three variables to the problem with domain `{1, 2, 3}`.
+
+3. **Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a distinct price rank.  
+   * Translate "The loquats are more expensive than the apples" → `loquat > apple` (since higher rank = more expensive).  
+   * Translate "The cantaloupes are less expensive than the apples" → `cantaloupe < apple`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.  
+   * Extract the unique solution (only one arrangement will satisfy all conditions).
+
+5. **Identify the Most Expensive Fruit:**  
+   * Determine which fruit has rank `3` (most expensive) in the solution.  
+   * Map the result to the provided choices:  
+     - Choice A: cantaloupe is most expensive → rank(cantaloupe) == 3  
+     - Choice B: apple is most expensive → rank(apple) == 3  
+     - Choice C: loquat is most expensive → rank(loquat) == 3  
+   * Select and return the correct choice letter based on which condition holds.

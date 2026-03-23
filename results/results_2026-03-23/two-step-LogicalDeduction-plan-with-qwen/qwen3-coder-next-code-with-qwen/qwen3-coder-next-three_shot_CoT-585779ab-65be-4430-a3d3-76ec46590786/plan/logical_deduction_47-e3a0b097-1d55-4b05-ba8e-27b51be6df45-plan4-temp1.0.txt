@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the five birds as string variables: `"blue jay"`, `"robin"`, `"cardinal"`, `"hawk"`, `"falcon"`.  
+    * Define the domain as integers from 1 to 5, where **1 = leftmost**, **5 = rightmost**.  
+    * Add all variables with domain {1, 2, 3, 4, 5} to the problem.
+
+3.  **Add Constraints:**  
+    * Add `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each statement:  
+        * "The blue jay is the rightmost" → `blue_jay == 5`  
+        * "The robin is to the right of the falcon" → `falcon < robin`  
+        * "The cardinal is to the left of the hawk" → `cardinal < hawk`  
+        * "The falcon is to the right of the hawk" → `hawk < falcon`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the (unique) solution dictionary.
+
+5.  **Determine the Correct Choice:**  
+    * The question asks which statement is true; all choices are of the form "[Bird] is the rightmost", i.e., position == 5.  
+    * Since "The blue jay is the rightmost" is explicitly given as a constraint and must hold in all solutions, choice A is guaranteed true.  
+    * However, to be rigorous: iterate through the solution’s key-value pairs and identify which bird has value 5.  
+    * Map that bird to the corresponding choice letter using a dictionary:  
+        - 'blue jay' → "A", 'robin' → "B", etc.  
+    * Return the mapped choice letter (which will be "A", consistent with the given constraint).

@@ -1,0 +1,18 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J); assign integer indices 0–3 to each.  
+2. Create Boolean variables for assignments: `first[i][b]` = True if rider i tests bicycle b on day 1; `second[i][b]` = True if rider i tests bicycle b on day 2.  
+3. Add **day1-permutation constraints**: for each rider i, exactly one bicycle is assigned on day 1; for each bicycle b, exactly one rider is assigned on day 1.  
+4. Add **day2-permutation constraints**: for each rider i, exactly one bicycle is assigned on day 2; for each bicycle b, exactly one rider is assigned on day 2.  
+5. Add **individual constraints**:  
+    - Reynaldo cannot test F on either day: `¬first[0][F]` ∧ `¬second[0][F]`.  
+    - Yuki cannot test J on either day: `¬first[3][J]` ∧ `¬second[3][J]`.  
+    - Theresa must test H on *at least one* of the two days: `first[2][H] ∨ second[2][H]`.  
+6. Add **Yuki-Seamus dependency**: the bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all bicycles b, `first[3][b] → second[1][b]`.  
+7. Translate each answer choice into a Boolean condition and add it as an assertion to test feasibility:  
+    - A. Reynaldo tests J on day 1 → `first[0][J]`.  
+    - B. Reynaldo tests J on day 2 → `second[0][J]`.  
+    - C. Seamus tests H on day 1 → `first[1][H]`.  
+    - D. Yuki tests H on day 1 → `first[3][H]`.  
+    - E. Yuki tests H on day 2 → `second[3][H]`.  
+8. For each answer choice, clone the base constraints into a fresh solver, add the choice’s condition, and check SAT.  
+9. Collect the indices of answer choices that are UNSAT (i.e., cannot be true); these correspond to the “EXCEPT” option(s).  
+10. Return the index (or indices) of the infeasible choice(s); only one will exist per problem logic.

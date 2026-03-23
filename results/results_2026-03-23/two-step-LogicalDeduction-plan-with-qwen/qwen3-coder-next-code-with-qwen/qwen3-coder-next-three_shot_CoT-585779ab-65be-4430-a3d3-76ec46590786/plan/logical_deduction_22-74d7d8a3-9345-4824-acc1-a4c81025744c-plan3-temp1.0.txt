@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five books: `"green"`, `"blue"`, `"brown"`, `"gray"`, and `"red"`.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * "The green book is to the left of the brown book" → `green < brown`  
+   * "The gray book is to the left of the blue book" → `gray < blue`  
+   * "The green book is to the right of the blue book" → `blue < green`  
+   * "The red book is the leftmost" → `red == 1`
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments satisfying the constraints.  
+   * Since the problem is well-posed and consistent, there should be exactly one solution; extract it.
+
+6. **Analyze the Solution to Answer the Question:**  
+   * The question asks which book is the **second from the right**, i.e., at position 4 (since 5 = rightmost).  
+   * Create a mapping from choice letters to book names:  
+     - "A" → `"green"`  
+     - "B" → `"blue"`  
+     - "C" → `"brown"`  
+     - "D" → `"gray"`  
+     - "E" → `"red"`  
+   * For the found solution, locate which book has position 4.  
+   * Return the corresponding choice letter as the final answer.

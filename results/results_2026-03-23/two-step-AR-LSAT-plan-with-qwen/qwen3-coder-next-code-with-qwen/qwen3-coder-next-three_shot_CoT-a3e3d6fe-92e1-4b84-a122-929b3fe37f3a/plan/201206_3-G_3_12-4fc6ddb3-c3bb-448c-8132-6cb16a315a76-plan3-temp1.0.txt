@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Create integer variables `zone[i]` for each representative i, with domain {1, 2, 3}.  
+3. Add **mutual exclusion and coverage**: each representative assigned exactly one zone (already ensured by `zone[i] ∈ {1,2,3}`).  
+4. Add **Parra/Tiao Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+5. Add **Tiao/Udall Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2: `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+6. Add **Parra and Quinn same zone**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey and Udall same zone**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone 3 size constraint**: number of representatives in Zone 3 > number in Zone 2. Compute counts via auxiliary integer variables or `If` expressions:  
+    - Let `cnt3 = Sum(1 if zone[i]==3 else 0 for i in reps)`  
+    - Let `cnt2 = Sum(1 if zone[i]==2 else 0 for i in reps)`  
+    - Assert `cnt3 > cnt2`.  
+9. Parse each answer choice into a list of zone assignments per representative (e.g., for Choice A: Kim→?, Parra→1, Stuckey→2, Udall→2, Mahr→?, Quinn→1, Tiao→3).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Add hard constraints enforcing the zone assignments implied by the choice (for all named representatives). For unmentioned reps like Kim or Mahr, leave `zone[i]` free.  
+    - Check satisfiability: if SAT, the choice is possible; record its index.  
+11. Collect indices of all choices that yield SAT, and output the corresponding choice string (only one will be SAT per LSAT-style logic game).  
+12. Print the index (or directly print the correct choice string) of the satisfiable answer.

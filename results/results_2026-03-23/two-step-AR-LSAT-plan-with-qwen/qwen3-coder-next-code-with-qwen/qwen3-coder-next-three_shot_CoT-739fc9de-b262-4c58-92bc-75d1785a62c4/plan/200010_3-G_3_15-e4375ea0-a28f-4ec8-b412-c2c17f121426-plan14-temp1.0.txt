@@ -1,0 +1,24 @@
+1. Enumerate the eight compositions and assign integer indices to them (e.g., F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7).  
+2. Create integer position variables `pos[c]` for each composition c ∈ {F, H, L, O, P, R, S, T}, ranging from 0 to 7 (representing positions 1–8).  
+3. Add **domain and uniqueness constraints**: All `pos[c]` are distinct integers in [0,7].  
+4. Add **ordering constraints** from the base conditions:  
+   - (a) T is performed either immediately before F or immediately after R: `(pos[T] == pos[F] - 1) ∨ (pos[T] == pos[R] + 1)`  
+   - (b) At least two compositions between F and R: `|pos[F] - pos[R]| ≥ 3`  
+   - (c) O is first or fifth: `pos[O] == 0 ∨ pos[O] == 4`  
+   - (d) Eighth composition is L or H: `pos[L] == 7 ∨ pos[H] == 7`  
+   - (e) P before S: `pos[P] < pos[S]`  
+   - (f) At least one composition between O and S: `|pos[O] - pos[S]| ≥ 2`  
+5. Add the **conditional assumption**: O is performed *immediately after* T ⇒ `pos[O] == pos[T] + 1`.  
+6. From (4a) and the new assumption, deduce a derived constraint: Since `pos[O] = pos[T] + 1`, and (4a) requires either `pos[T] = pos[F] - 1` or `pos[T] = pos[R] + 1`, substitute to get:  
+   - Case 1: `pos[O] = (pos[F] - 1) + 1 = pos[F]` → impossible (distinct positions), so discard.  
+   - Case 2: `pos[O] = (pos[R] + 1) + 1 = pos[R] + 2` ⇒ `pos[O] = pos[R] + 2`.  
+   Thus, under the assumption, we must have `pos[O] = pos[R] + 2`.  
+7. Now, incorporate this derived constraint into the solver: assert `pos[O] == pos[R] + 2`.  
+8. Add the other constraints (4b–f) and assumption (5) to the solver.  
+9. Translate answer choices into required position intervals for F (e.g., "first or second" → `pos[F] ∈ {0,1}`; "second or third" → `{1,2}`, etc.).  
+10. For each answer choice, create a fresh solver with all constraints above *plus* the disjunction of F’s allowed positions for that choice.  
+11. If the model is SAT, the choice is possible; if UNSAT, F cannot be in any of those positions under the assumption.  
+12. Identify which answer choice(s) force F to be in *only* the specified positions (i.e., only that set yields SAT when added, while any larger superset would be unnecessary).  
+13. Determine the choice where F *must* be (i.e., in all satisfying models, `pos[F]` lies strictly within the given interval of that choice), using model checking or universal quantification over solutions (via iterative constraint addition to enumerate all satisfying F positions and collect them).  
+14. Select the choice whose interval exactly matches the set of all possible F positions under the condition `pos[O] = pos[T] + 1`.  
+15. Output the correct choice as the final answer based on step 14.

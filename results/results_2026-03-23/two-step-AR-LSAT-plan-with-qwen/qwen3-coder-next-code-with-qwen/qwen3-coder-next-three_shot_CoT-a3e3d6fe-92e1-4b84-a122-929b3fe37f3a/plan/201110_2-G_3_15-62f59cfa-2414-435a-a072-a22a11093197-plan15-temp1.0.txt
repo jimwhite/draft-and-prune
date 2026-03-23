@@ -1,0 +1,21 @@
+1. Enumerate the four riders and four bicycles, assigning each rider and bicycle an integer index.  
+2. Create Boolean variables `r1[i][j]` and `r2[i][j]` for rider i testing bicycle j on day 1 and day 2 respectively.  
+3. Add **one-to-one assignment constraints for each day**:  
+    - For day 1: Each rider is assigned exactly one bicycle, and each bicycle is assigned to exactly one rider (bijection).  
+    - Same for day 2.  
+4. Add **fixed constraints**:  
+    - Reynaldo cannot test F (index 0): `¬r1[Reynaldo][F]` and `¬r2[Reynaldo][F]`.  
+    - Yuki cannot test J (index 3): `¬r1[Yuki][J]` and `¬r2[Yuki][J]`.  
+    - Theresa must test H (index 2) on at least one day: `r1[Theresa][H] ∨ r2[Theresa][H]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: `∀j, r1[Yuki][j] → r2[Seamus][j]`.  
+5. Translate each answer choice into a constraint:  
+    - A) Reynaldo tests J on day 1: `r1[Reynaldo][J]`.  
+    - B) Reynaldo tests J on day 2: `r2[Reynaldo][J]`.  
+    - C) Seamus tests H on day 1: `r1[Seamus][H]`.  
+    - D) Yuki tests H on day 1: `r1[Yuki][H]`.  
+    - E) Yuki tests H on day 2: `r2[Yuki][H]`.  
+6. Define an answer index list 'answer_index_list' []. For each answer choice in order (0 to 4):  
+    - Clone the base constraints into a fresh solver.  
+    - Add the constraint corresponding to that answer choice.  
+    - If this extended system is UNSAT, then this answer choice **cannot be true** and must be the EXCEPT answer; append its index to `answer_index_list`.  
+7. Output the single correct answer by selecting from the choices using `answer_index_list[0]`.

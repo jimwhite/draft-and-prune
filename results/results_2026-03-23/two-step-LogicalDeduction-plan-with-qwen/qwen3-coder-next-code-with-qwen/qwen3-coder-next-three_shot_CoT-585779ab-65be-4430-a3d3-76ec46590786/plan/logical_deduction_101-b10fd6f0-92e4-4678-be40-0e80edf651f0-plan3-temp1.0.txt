@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruit variables: `"apples"`, `"pears"`, `"mangoes"`, `"oranges"`, `"watermelons"`, `"peaches"`, and `"cantaloupes"`.  
+    * Define the domain as integers from **1 to 7**, where **1 = cheapest** and **7 = most expensive** (i.e., increasing numerical value corresponds to increasing cost).  
+    * Add all variables and their domain (1–7) to the problem.
+
+3.  **Add All-Different Constraint:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+
+4.  **Translate Cost-Relationship Statements into Constraints:**  
+    * "The pears are more expensive than the oranges" → `pears > oranges` (higher rank = more expensive).  
+    * "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`.  
+    * "The peaches are less expensive than the cantaloupes" → `peaches < cantaloupes`.  
+    * "The apples are the third-cheapest" → `apples == 3`.  
+    * "The watermelons are the second-most expensive" → since most expensive is 7, second-most is 6 → `watermelons == 6`.  
+    * "The mangoes are the fourth-most expensive" → positions: 7 (most), 6, 5, **4** → `mangoes == 4`.
+
+5.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to compute all valid assignments.  
+    * Extract the unique solution (since constraints fully determine the ordering, only one solution exists).
+
+6.  **Determine the Second-Cheapest Fruit:**  
+    * The second-cheapest corresponds to rank **2** (since 1 = cheapest, 2 = second-cheapest).  
+    * Iterate through the solved dictionary to find which fruit has value 2.
+
+7.  **Match to Given Choices:**  
+    * Create a mapping from choice letters (A–G) to fruit names:  
+        A → "apples", B → "pears", C → "mangoes", D → "oranges", E → "watermelons", F → "peaches", G → "cantaloupes".  
+    * Identify which fruit has rank 2 and return the corresponding choice letter.

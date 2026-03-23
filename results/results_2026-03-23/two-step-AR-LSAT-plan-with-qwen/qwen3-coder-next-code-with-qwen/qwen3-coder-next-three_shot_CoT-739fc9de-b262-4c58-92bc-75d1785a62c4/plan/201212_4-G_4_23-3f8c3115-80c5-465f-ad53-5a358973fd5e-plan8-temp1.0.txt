@@ -1,0 +1,15 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and create integer position variables for their editing order (1 to 7).  
+2. Add **domain and uniqueness constraints**: positions are integers in [1,7], all distinct (permutation).  
+3. Add **topic constraints**: identify topic types for each article: finance={G,H,J}, nutrition={Q,R,S}, wildlife={Y}.  
+4. Add **no-consecutive-same-topic constraint**: for every adjacent position pair (i, i+1), the articles at those positions must be of different topics.  
+5. Add **conditional constraint for S and Q**: if S is earlier than Q, then Q must be in position 3. Equivalently: (pos_S < pos_Q) → (pos_Q == 3).  
+6. Add **S before Y constraint**: pos_S < pos_Y.  
+7. Add **J → G → R ordering chain**: pos_J < pos_G and pos_G < pos_R.  
+8. Translate the answer choices into assertions: each choice fixes a specific article to a fixed position (e.g., "H is fourth" → pos_H == 4).  
+9. For each answer choice, do the following:  
+   a. Clone the base constraints into a fresh solver.  
+   b. Add the fixed-position assertion for that choice.  
+   c. Query the solver; if UNSAT, discard (invalid). If SAT, extract *all* satisfying assignments and count them.  
+   d. If there is exactly **one** satisfying assignment (i.e., the order is uniquely determined), then this choice satisfies the question.  
+10. Among the five choices, select the one(s) that uniquely determine the full editing order.  
+11. Return the single correct choice whose assertion leads to a uniquely determined order.

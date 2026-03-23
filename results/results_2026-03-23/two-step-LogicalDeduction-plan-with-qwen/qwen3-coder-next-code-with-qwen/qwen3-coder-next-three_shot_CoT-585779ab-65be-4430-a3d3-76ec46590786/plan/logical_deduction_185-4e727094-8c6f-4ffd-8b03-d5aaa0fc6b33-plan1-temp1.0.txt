@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven fruit variables: `"plums"`, `"kiwis"`, `"cantaloupes"`, `"pears"`, `"watermelons"`, `"apples"`, and `"loquats"`.
+    * Define a numerical domain of integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint using lambda functions:
+        * "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most expensive = 6).
+        * "The loquats are the third-cheapest" → `loquats == 3` (since cheapest = 1, second-cheapest = 2, third-cheapest = 3).
+        * "The plums are the cheapest" → `plums == 1`.
+        * "The watermelons are more expensive than the cantaloupes" → `cantaloupes < watermelons` (i.e., `cantaloupes < 6`).
+        * "The apples are less expensive than the cantaloupes" → `apples < cantaloupes`.
+        * "The loquats are less expensive than the kiwis" → `loquats < kiwis` (i.e., `3 < kiwis`).
+        * "The apples are more expensive than the loquats" → `loquats < apples` (i.e., `3 < apples`).
+
+4.  **Solve the Problem:**
+    * Use the `getSolutions()` method to compute all valid assignments satisfying all constraints.
+    * Extract the unique solution (or any one, since uniqueness is implied by consistency and problem design).
+
+5.  **Identify the Fourth-Most-Expensive Fruit:**
+    * The fourth-most-expensive corresponds to rank **4** (since 7=most, 6=second-most, 5=third-most, **4=fourth-most**).
+    * Create a mapping from choice letters to fruit names: 
+        - `"A" -> "plums"`, `"B" -> "kiwis"`, `"C" -> "cantaloupes"`, `"D" -> "pears"`, `"E" -> "watermelons"`, `"F" -> "apples"`, `"G" -> "loquats"`.
+    * Iterate over the solution dictionary to find which fruit has rank `4`.
+    * Return the corresponding choice letter from the mapping.

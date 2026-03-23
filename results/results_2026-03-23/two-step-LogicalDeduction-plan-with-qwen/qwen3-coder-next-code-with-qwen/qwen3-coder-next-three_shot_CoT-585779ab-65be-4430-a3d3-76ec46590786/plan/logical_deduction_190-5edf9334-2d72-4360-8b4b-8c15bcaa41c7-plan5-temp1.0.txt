@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the tournament finishing order.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven golfers as variables: `"dan"`, `"eve"`, `"mya"`, `"amy"`, `"rob"`, `"ada"`, and `"joe"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first (best)** and **7 = last (worst)** finish position.  
+    * Add all golfers as variables with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Formulate Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finish position.  
+    * Translate each statement into a precise constraint:  
+        - "Amy finished third" → `amy == 3`  
+        - "Joe finished last" → `joe == 7`  
+        - "Mya finished above Dan" → `mya < dan` (lower position number = better rank)  
+        - "Eve finished fourth" → `eve == 4`  
+        - "Amy finished above Rob" → `amy < rob` (and since amy = 3, this implies `rob > 3`)  
+        - "Ada finished third-to-last" → In a 7-person field, third-to-last is position 5 (since last=7, second-to-last=6, third-to-last=5), so `ada == 5`
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to compute all valid assignments satisfying all constraints.  
+    * Extract the unique solution (the solver should return exactly one solution, given consistency and uniqueness implied by the question format).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" with choices indicating who finished third.  
+    * From the solution, check which golfer has position value 3.  
+    * Map that golfer to the corresponding choice letter:  
+        - "dan" → A, "eve" → B, "mya" → C, "amy" → D, "rob" → E, "ada" → F, "joe" → G  
+    * Output the correct letter. (Note: The statement explicitly says "Amy finished third", so D is expected to be correct, but the plan ensures verification via solver.)

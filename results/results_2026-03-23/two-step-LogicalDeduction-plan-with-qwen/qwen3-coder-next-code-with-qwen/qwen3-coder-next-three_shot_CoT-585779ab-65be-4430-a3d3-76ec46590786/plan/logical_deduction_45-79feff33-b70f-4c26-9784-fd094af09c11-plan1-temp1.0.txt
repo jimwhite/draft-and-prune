@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold the variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * List the five birds as string variables: `"cardinal"`, `"robin"`, `"bluejay"`, `"quail"`, and `"raven"`.  
+   * Define the domain as integers 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add All-Different Constraint:**  
+   * Apply `AllDifferentConstraint()` to ensure each bird occupies a unique position.
+
+4. **Translate Statements into Formal Constraints:**  
+   * "The cardinal is the leftmost" → `cardinal == 1`.  
+   * "The blue jay is the third from the left" → `bluejay == 3`.  
+   * "The raven is to the right of the blue jay" → `raven > bluejay` (i.e., `raven > 3`).  
+   * "The robin is to the right of the raven" → `robin > raven`.
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (a dictionary mapping birds to positions).
+
+6. **Determine the Second-from-the-Right Bird:**  
+   * The second-from-the-right position corresponds to index **4** (since rightmost = 5).  
+   * Create a mapping from choice letters to birds:  
+     - `"A"` → `"cardinal"`, `"B"` → `"robin"`, `"C"` → `"bluejay"`, `"D"` → `"quail"`, `"E"` → `"raven"`.  
+   * Iterate through the choices; for each choice, check if its bird’s position equals 4 in the solution.  
+   * Return the letter of the first (and only) matching choice as the answer.

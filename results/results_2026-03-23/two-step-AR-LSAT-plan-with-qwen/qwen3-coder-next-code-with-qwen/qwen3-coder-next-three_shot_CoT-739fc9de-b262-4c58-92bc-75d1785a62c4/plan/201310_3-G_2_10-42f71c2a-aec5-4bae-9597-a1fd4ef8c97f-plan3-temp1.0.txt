@@ -1,0 +1,13 @@
+1. Enumerate the eight employees and assign them integer indices.  
+2. Create Boolean variables `m[i]` for each employee i indicating whether they are selected on the team.  
+3. Add **minimum size constraint**: at least four employees must be selected (sum of `m[i]` ≥ 4).  
+4. Add **Myers constraint**: if Myers is selected, then Ortega and Paine are not: `m[Myers] → (¬m[Ortega] ∧ ¬m[Paine])`.  
+5. Add **Schmidt constraint**: if Schmidt is selected, then both Paine and Thomson must be: `m[Schmidt] → (m[Paine] ∧ m[Thomson])`.  
+6. Add **Wong constraint**: if Wong is selected, then both Myers and Yoder must be: `m[Wong] → (m[Myers] ∧ m[Yoder])`.  
+7. Add the **given condition**: Yoder is not on the team: `¬m[Yoder]`.  
+8. Translate the answer choices into employee indices and note that the question asks for the one that **cannot** be on the team under the condition (i.e., forced to be excluded).  
+9. Define a forbidden index list `forbidden_list` []. For each candidate employee in the answer choices:  
+   - Clone the base constraints (including `¬m[Yoder]`) into a fresh solver.  
+   - Assert that the candidate employee *is* selected: `m[candidate] = True`.  
+   - If this extended constraint set is UNSAT, then the candidate cannot be on the team; append the employee index to `forbidden_list`.  
+10. Print the forbidden index list (should contain exactly one index—the correct answer).

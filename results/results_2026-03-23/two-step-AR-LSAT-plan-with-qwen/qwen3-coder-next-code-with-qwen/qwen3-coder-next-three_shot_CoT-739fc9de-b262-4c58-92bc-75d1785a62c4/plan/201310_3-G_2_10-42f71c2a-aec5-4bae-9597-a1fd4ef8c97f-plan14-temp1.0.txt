@@ -1,0 +1,25 @@
+1. Enumerate the eight employees and assign them integer indices (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables for team membership: `myers`, `orteaga`, `paine`, `schmidt`, `thomson`, `wong`, `yoder`, `zayre`.  
+3. Add the constraint that Yoder is not on the team: `¬yoder`.  
+4. Add the **at-least-four** constraint: sum of all eight Boolean variables ≥ 4.  
+5. Add **conditional constraints**:  
+    - If Myers is selected, then Ortega and Paine are not: `myers → (¬orteaga ∧ ¬paine)`.  
+    - If Schmidt is selected, then Paine and Thomson must be: `schmidt → (paine ∧ thomson)`.  
+    - If Wong is selected, then Myers and Yoder must be: `wong → (myers ∧ yoder)`.  
+6. Since Yoder is not on the team (`¬yoder`), simplify Wong’s constraint: `wong → (myers ∧ false)`, i.e., `¬wong`. So Wong cannot be on the team.  
+7. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+8. For each candidate employee in the answer choices (in order), determine if that employee *must be excluded* when Yoder is not on the team:  
+    a. For each candidate (e.g., Zayre), assume that employee *is* on the team (`zayre = True`) and keep Yoder off (`yoder = False`), plus all other constraints above.  
+    b. Check if the resulting system is SAT (i.e., whether a valid team of size ≥4 exists including that candidate).  
+    c. If SAT is possible, the candidate *could* be on the team (so it's not the answer).  
+    d. If UNSAT, that candidate *cannot* be on the team under the condition Yoder is absent — thus it is the EXCEPT answer.  
+9. However, note: the question asks for the one that *could NOT be on the team* when Yoder is excluded. So we collect all candidates for which UNSAT occurs — but only one such candidate should exist per the logic.  
+10. To find which one is impossible, for each candidate in order (Zayre, Thomson, Paine, Ortega, Myers):  
+    - Clone base solver (with Yoder = False and Wong = False from step 6).  
+    - Assert candidate = True.  
+    - Check satisfiability.  
+11. The first candidate (in order of choices) for which UNSAT occurs is the correct answer; but since only one can be impossible, we collect all impossible ones and select accordingly.  
+12. Define `impossible_candidates = []`. For each candidate in order (0:Myers, 1:Ortega, 2:Paine, 3:Schmidt, 4:Thomson, 5:Wong (skip, already forced False), 6:Yoder (skip), 7:Zayre), but only test the five given choices.  
+13. Append to `impossible_candidates` any choice whose model is UNSAT when forced into the team under Yoder=False.  
+14. Since the question says “EXCEPT”, and only one choice must be impossible, `impossible_candidates` should contain exactly one index.  
+15. Print the employee name corresponding to the first (or only) impossible candidate in `impossible_candidates`.

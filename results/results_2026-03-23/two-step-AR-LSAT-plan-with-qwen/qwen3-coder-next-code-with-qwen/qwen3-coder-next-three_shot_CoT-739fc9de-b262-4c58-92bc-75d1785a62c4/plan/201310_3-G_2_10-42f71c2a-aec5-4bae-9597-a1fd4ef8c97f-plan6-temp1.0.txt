@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign integer indices.  
+2. Create Boolean variables for each employee's inclusion in the team (True = selected, False = not selected).  
+3. Add **team-size constraint**: at least 4 employees are selected (sum of Boolean variables ≥ 4).  
+4. Add **conditional constraints**:  
+   - If Myers is selected, then Ortega and Paine are not: `Myers → (¬Ortega ∧ ¬Paine)`.  
+   - If Schmidt is selected, then Paine and Thomson must be: `Schmidt → (Paine ∧ Thomson)`.  
+   - If Wong is selected, then Myers and Yoder must be: `Wong → (Myers ∧ Yoder)`.  
+5. Add **Yoder exclusion constraint**: Yoder is not selected (`¬Yoder`).  
+6. Translate the answer choices into employee indices (Zayre, Thomson, Paine, Ortega, Myers).  
+7. Define a answer index list 'answer_index_list' []. For each candidate employee in the answer choices:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert that this candidate employee is selected (e.g., `candidate = True`).  
+   - Check satisfiability: if the model is SAT, then this employee *could* be on the team (i.e., not the exception).  
+   - If the model is UNSAT, then this employee *cannot* be on the team when Yoder is excluded; append the candidate index to `answer_index_list`.  
+8. Print the answer index list (which will contain exactly one index—the employee who cannot be on the team under the given condition).

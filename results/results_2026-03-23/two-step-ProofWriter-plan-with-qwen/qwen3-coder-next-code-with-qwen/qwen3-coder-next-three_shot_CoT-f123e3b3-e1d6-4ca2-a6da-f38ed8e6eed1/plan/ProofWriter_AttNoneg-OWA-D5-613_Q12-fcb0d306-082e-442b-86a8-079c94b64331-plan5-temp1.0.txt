@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Fiona, Gary, Harry.
+2. Represent all explicit unary properties using ternary predicates (e.g., is_blue("Anne", True), is_nice("Anne", True), etc.).
+3. Encode all direct property assignments from the problem as facts.pred(entity, True) where pred is the property name.
+4. Translate universal conditionals into PyKe rules:
+   • All big people are rough → if is_big(X, True) then is_rough(X, True)
+   • All blue, nice people are big → if is_blue(X, True) and is_nice(X, True) then is_big(X, True)
+   • If someone is rough → they are green → if is_rough(X, True) then is_green(X, True)
+   • All nice people are big → if is_nice(X, True) then is_big(X, True)
+   • Green people are blue → if is_green(X, True) then is_blue(X, True)
+   • Rough, white people are nice → if is_rough(X, True) and is_white(X, True) then is_nice(X, True)
+   • White people are nice → if is_white(X, True) then is_nice(X, True)
+   • Green people are nice → if is_green(X, True) then is_nice(X, True)
+5. For each rule, write a `foreach` block with condition conjunctions (using commas for AND) and an `assert` clause for the conclusion.
+6. To verify the query “Harry is not blue”, assert facts.is_blue("Harry", False) in the query goal.

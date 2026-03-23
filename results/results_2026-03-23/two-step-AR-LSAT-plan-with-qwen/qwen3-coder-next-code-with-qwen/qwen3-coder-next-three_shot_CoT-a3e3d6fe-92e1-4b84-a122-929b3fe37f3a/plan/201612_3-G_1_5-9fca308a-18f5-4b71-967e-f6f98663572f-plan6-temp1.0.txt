@@ -1,0 +1,41 @@
+1. Enumerate the five students and assign them integer indices: Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4.  
+2. Create Boolean variables for team assignments: `green[i]` (True if student i is on green team, False otherwise).  
+3. Add **team-size constraints**: exactly 2 students on one team and 3 on the other.  
+    - `sum(green[i] for i in range(5)) == 2 OR sum(green[i] for i in range(5)) == 3`.  
+    - Since Lateefah is on green, and we’re assuming Mei is also on green (premise), green team must have exactly 3 members: add `green[2] == True`, `green[3] == True`, and `sum(green[i]) == 3`.  
+4. Add **mutual exclusivity**: each student is on exactly one team: `green[i] != green[j]` for i ≠ j is not needed explicitly since Boolean assignment + fixed size suffices.  
+5. Add **Juana-Olga constraint**: Juana and Olga on different teams: `green[0] != green[4]`.  
+6. Add **Lateefah constraint**: `green[2] == True` (already used).  
+7. Add **Olga is facilitator** constraint:  
+    - If Olga is on green team (`green[4] == True`), then facilitator_green = Olga.  
+    - If Olga is on red team (`green[4] == False`), then facilitator_red = Olga.  
+    - Introduce Boolean `facilitator[i]` for each student, with exactly one facilitator per team:  
+        - `facilitator[i] == True` ⇒ student i’s team has exactly one facilitator.  
+        - Enforce: `sum(facilitator[i] for i in range(5) if green[i]) == 1` and `sum(facilitator[i] for i in range(5) if not green[i]) == 1`.  
+        - Add `facilitator[4] == True` (Olga is facilitator).  
+8. Add **Kelly not a facilitator**: `facilitator[1] == False`.  
+9. Preprocess: Given `green[2]=True`, `green[3]=True` (Mei on green), and total green = 3, so exactly one of Juana (0) or Olga (4) is also on green. But `green[0] != green[4]`. So possibilities:  
+    - Case A: `green[0]=True`, `green[4]=False` → green = {Lateefah, Mei, Juana}, red = {Kelly, Olga}  
+    - Case B: `green[0]=False`, `green[4]=True` → green = {Lateefah, Mei, Olga}, red = {Juana, Kelly}  
+10. For each answer choice, determine whether it **must be true** in all satisfying assignments:  
+    - Instantiate base constraints with `green[2]=True`, `green[3]=True`.  
+    - Enumerate both possible configurations (Case A and B) by adding disjunction via solver branching, or more efficiently:  
+        - Clone solver, add `green[0]==True` (Case A), check which answer choices hold in all models.  
+        - Clone solver, add `green[0]==False` (Case B), check which answer choices hold in all models.  
+        - An answer choice is **must be true** iff it holds in both cases.  
+11. Alternatively, use proof by exhaustion: since only 2 valid assignments exist, evaluate each answer choice in both.  
+12. Define `answer_index_list = []`. For each answer option (0–4), check if it is true in *both* Case A and Case B:  
+    - Option 0: Juana is on green → True in Case A, False in Case B ⇒ not must.  
+    - Option 1: Kelly is on red → In Case A: red = {Kelly, Olga} ⇒ True; in Case B: red = {Juana, Kelly} ⇒ True. So must be true.  
+    - Option 2: Olga on green → True in Case B, False in Case A ⇒ not must.  
+    - Option 3: Lateefah is facilitator → Depends on who facilitator is:  
+        - Case A: green = {Lateefah, Mei, Juana}, red = {Kelly, Olga (facilitator)}. So facilitators: one from green (Lateefah/Mei/Juana) and Olga. Kelly ≠ facilitator, so red facilitator is Olga ⇒ fine. Green facilitator could be Lateefah, Mei, or Juana — not forced to be Lateefah.  
+        - Check via solver: add constraints, set `facilitator[2] == False`, see if SAT. If SAT, then Lateefah need not be facilitator.  
+    - Option 4: Mei is facilitator → Same reasoning as above — not forced.  
+13. To be precise: For options 0,2 → false in one case ⇒ discard.  
+    - For options 3 and 4: check feasibility of *not* being true using solver.  
+        - For option 3 (Lateefah facilitator must be true), assume not: add `facilitator[2] == False`, keep all constraints, and see if model exists. If SAT, then not forced.  
+        - Similarly for option 4 (`facilitator[3] == False`).  
+14. Conclude only option 1 (Kelly on red) is always true.  
+15. Append index 1 to `answer_index_list`.  
+16. Print `answer_index_list`.

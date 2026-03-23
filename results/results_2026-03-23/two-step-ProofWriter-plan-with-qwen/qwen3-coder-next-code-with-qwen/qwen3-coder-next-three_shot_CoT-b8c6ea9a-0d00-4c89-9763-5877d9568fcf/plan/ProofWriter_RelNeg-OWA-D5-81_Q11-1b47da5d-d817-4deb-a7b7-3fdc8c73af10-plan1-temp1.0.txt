@@ -1,0 +1,15 @@
+1. Identify all entities: cat, cow, rabbit, squirrel.
+2. Define and encode all explicitly stated facts using ternary predicates (e.g., eats("cat", "squirrel", True), sees("cow", "cat", True), is_round("rabbit", True), is_cold("squirrel", True), needs("squirrel", "rabbit", True)).
+3. Translate each conditional statement into a PyKe rule:
+   • If someone sees the cat and is not green → they see the cow.
+   • If the rabbit is kind and sees the squirrel → the squirrel needs the rabbit (note: “kind” property not directly asserted; treat conditionally).
+   • Rough people are cold → ∀x: is_rough(x, True) ⇒ is_cold(x, True).
+   • If someone sees the rabbit → they are not round.
+   • If someone sees the squirrel and is not green → they need the squirrel.
+   • If someone eats the cow → they see the rabbit.
+   • If someone eats the squirrel → they are rough.
+   • If someone is cold → they eat the cow.
+4. For each rule, implement using `foreach` blocks with pattern matching for premises and an `assert` for the conclusion (including negations like “not green” via failed matches or explicit predicates, but since “green” is never mentioned, treat ¬is_green(x, True) as default assumption—i.e., if x is not explicitly green, assume it holds).
+5. Note: “green” is not referenced in any fact or rule conclusion; thus, unless needed for contradiction, ¬is_green(x, True) holds by closed-world assumption or default. However, PyKe uses negation as failure: rely on `not facts.is_green(x)` in the rule condition if supported, or use a workaround (e.g., assume no entity is green unless stated).
+6. The query: verify whether the cat is *not* round.
+   → Use `facts.is_round("cat", False)`.

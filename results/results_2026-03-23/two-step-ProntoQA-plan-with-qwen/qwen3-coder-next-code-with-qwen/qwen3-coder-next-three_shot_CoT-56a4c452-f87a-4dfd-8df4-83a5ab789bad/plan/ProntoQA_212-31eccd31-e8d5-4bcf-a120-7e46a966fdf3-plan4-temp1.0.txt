@@ -1,0 +1,48 @@
+1.  Identify all entities and types: Stella, tumpus, wumpus, vumpus, jompus, dumpus, numpus, rompus, yumpus, impus, zumpus.  
+2.  Identify all properties: red, sweet, small, aggressive, temperate, bright, luminous, opaque.  
+3.  Represent "Stella is a wumpus" as a base fact: `is_a("Stella", "wumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Every tumpus is red.  
+    - Each tumpus is a wumpus.  
+    - Every wumpus is sweet.  
+    - Wumpuses are vumpuses.  
+    - Vumpuses are small.  
+    - Every vumpus is a jompus.  
+    - Every jompus is not aggressive.  
+    - Zumpuses are temperate.  
+    - Each jompus is a dumpus.  
+    - Each dumpus is bright.  
+    - Every dumpus is a numpus.  
+    - Numpuses are not temperate.  
+    - Numpuses are rompuses.  
+    - Each rompus is not luminous.  
+    - Every rompus is a yumpus.  
+    - Yumpuses are opaque.  
+    - Every yumpus is an impus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - `foreach (t: tumpus) assert is_red(t, True)`  
+    - `foreach (t: tumpus) assert is_a(t, "wumpus", True)`  
+    - `foreach (w: wumpus) assert is_sweet(w, True)`  
+    - `foreach (w: wumpus) assert is_a(w, "vumpus", True)`  
+    - `foreach (v: vumpus) assert is_small(v, True)`  
+    - `foreach (v: vumpus) assert is_a(v, "jompus", True)`  
+    - `foreach (j: jompus) assert is_aggressive(j, False)`  
+    - `foreach (z: zumpus) assert is_temperate(z, True)`  
+    - `foreach (j: jompus) assert is_a(j, "dumpus", True)`  
+    - `foreach (d: dumpus) assert is_bright(d, True)`  
+    - `foreach (d: dumpus) assert is_a(d, "numpus", True)`  
+    - `foreach (n: numpus) assert is_temperate(n, False)`  
+    - `foreach (n: numpus) assert is_a(n, "rompus", True)`  
+    - `foreach (r: rompus) assert is_luminous(r, False)`  
+    - `foreach (r: rompus) assert is_a(r, "yumpus", True)`  
+    - `foreach (y: yumpus) assert is_opaque(y, True)`  
+    - `foreach (y: yumpus) assert is_a(y, "impus", True)`  
+6.  Derive the relevant chain for Stella:  
+    - From `is_a("Stella", "wumpus", True)` and rule "Every wumpus is sweet" → `is_sweet(Stella, True)`  
+    - From `is_a("Stella", "wumpus", True)` and rule "Wumpuses are vumpuses" → `is_a("Stella", "vumpus", True)`  
+    - From `is_a(Stella, "vumpus", True)` and rule "Every vumpus is a jompus" → `is_a(Stella, "jompus", True)`  
+    - From `is_a(Stella, "jompus", True)` and rule "Each jompus is a dumpus" → `is_a(Stella, "dumpus", True)`  
+    - From `is_a(Stella, "dumpus", True)` and rule "Every dumpus is a numpus" → `is_a(Stella, "numpus", True)`  
+    - From `is_a(Stella, "numpus", True)` and rule "Numpuses are not temperate" → `is_temperate(Stella, False)`  
+7.  The query tests if the statement "Stella is not temperate" is provable:  
+    → Use `facts.is_temperate("Stella", False)`.

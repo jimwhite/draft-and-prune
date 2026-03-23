@@ -1,0 +1,21 @@
+1. Enumerate the six lab assistants: Julio, Kevin, Lan, Nessa, Olivia, Rebecca → assign indices 0–5.  
+2. Enumerate the six sessions: Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA) → assign indices 0–5 in order.  
+3. Create integer variables `assign[i]` for each assistant i, indicating which session index (0–5) they lead.  
+4. Add **domain constraints**: `assign[i] ∈ {0,1,2,3,4,5}` for all i.  
+5. Add **bijection constraint**: all `assign[i]` are distinct (one session per assistant).  
+6. Add **fixed assignment**: Julio leads Thursday afternoon → `assign[0] == 3`.  
+7. Add **same-day constraint for Kevin and Rebecca**: `day(assign[1]) == day(assign[5])`, where `day(s)` = session // 2 (since each day has 2 sessions: morning=0,1→Wed; 2,3→Thu; 4,5→Fri).  
+8. Add **cannot-same-day constraint for Lan and Olivia**: `day(assign[2]) != day(assign[4])`.  
+9. Add **Nessa afternoon constraint**: `assign[3] % 2 == 1` (afternoon sessions are odd indices: WA=1, TA=3, FA=5).  
+10. Add **Julio earlier than Olivia**: `session_index(assign[0]) < session_index(assign[4])`. Since Julio is at 3 (TA), this implies Olivia must be at a session index > 3 → i.e., FM=4 or FA=5.  
+11. Compute the number of assistants (other than Julio) for whom `assign[i]` is uniquely determined across **all** satisfying assignments:  
+    - Create a base solver with all above constraints and `assign[0] == 3`.  
+    - For each other assistant i ∈ {1,2,3,4,5} (Kevin, Lan, Nessa, Olivia, Rebecca):  
+        - Query solver for all possible values of `assign[i]`.  
+        - To do this, collect all models (using incremental solving and blocking each found value), or use `solver.check()` repeatedly while adding constraints to exclude previously seen values for `assign[i]`.  
+        - Count how many distinct values `assign[i]` can take across all models.  
+    - An assistant’s session is *determined* iff they have exactly **one** possible value.  
+12. For each assistant i ∈ {1,2,3,4,5}, record if `len(distinct_assignments_for_i) == 1`.  
+13. Sum the count of such assistants → that is the number of other lab assistants whose sessions are uniquely determined.  
+14. Map this count to the answer string in ['one', 'two', 'three', 'four', 'five'] based on the count.  
+15. Output only that answer string.

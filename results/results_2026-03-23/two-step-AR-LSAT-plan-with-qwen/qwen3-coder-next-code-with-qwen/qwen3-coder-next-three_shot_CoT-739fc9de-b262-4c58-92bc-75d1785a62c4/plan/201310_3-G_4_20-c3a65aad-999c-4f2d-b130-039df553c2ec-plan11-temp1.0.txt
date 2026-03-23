@@ -1,0 +1,20 @@
+1. Enumerate the five bird types and assign them integer codes.  
+2. Create two arrays of five Boolean variables each: one for the location (Gladwyn Hall = True, Howard Auditorium = False) of each lecture slot (1 to 5), and one for the bird type assigned to each slot.  
+3. Add **location constraints**:  
+    - Slot 1 location = True (Gladwyn Hall).  
+    - Slot 4 location = False (Howard Auditorium).  
+    - Exactly three locations among slots 1–5 are True (Gladwyn Hall).  
+4. Add **bird-type constraints**:  
+    - All five bird types are used exactly once (all-different constraint on bird variables).  
+5. Add **sandpipers constraints**:  
+    - Sandpipers lecture location = False (Howard Auditorium).  
+    - Slot of sandpipers < slot of oystercatchers.  
+6. Add **terns and petrels constraints**:  
+    - Terns slot < petrels slot.  
+    - Petrels location = True (Gladwyn Hall).  
+7. Translate each answer choice into a conjunction of location constraints for the specified slots (e.g., “first and second both Gladwyn” → loc[0] ∧ loc[1]).  
+8. For each answer choice, construct a fresh solver with base constraints plus the negation of that choice’s location condition (i.e., assume the statement *is true* and check consistency; but the question asks which must be false, so we instead verify whether *assuming it is true leads to a contradiction*).  
+9. Specifically: for each answer choice, clone base constraints, add the condition (e.g., loc[0] ∧ loc[1]), and check satisfiability.  
+10. If the model is UNSAT, then that answer choice’s condition cannot hold — i.e., it **must be false**.  
+11. Collect indices of answer choices that lead to UNSAT (i.e., must-be-false statements) into an answer index list.  
+12. Output the answer index list (should contain exactly one index).

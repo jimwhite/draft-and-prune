@@ -1,0 +1,24 @@
+1. Identify all entities and types: Stella, tumpus, wumpus, vumpus, jompus, dumpus, numpus, rompus, yumpus, impus, zumpus.  
+2. Identify all properties: red, sweet, small, aggressive, temperate, bright, luminous, opaque.  
+3. Represent "Stella is a wumpus" as a base fact: `is_a("Stella", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every tumpus is red → if `is_a(X, "tumpus", True)` then `is_red(X, True)`.  
+   - Each tumpus is a wumpus → if `is_a(X, "tumpus", True)` then `is_a(X, "wumpus", True)`.  
+   - Every wumpus is sweet → if `is_a(X, "wumpus", True)` then `is_sweet(X, True)`.  
+   - Wumpuses are vumpuses → if `is_a(X, "wumpus", True)` then `is_a(X, "vumpus", True)`.  
+   - Vumpuses are small → if `is_a(X, "vumpus", True)` then `is_small(X, True)`.  
+   - Every vumpus is a jompus → if `is_a(X, "vumpus", True)` then `is_a(X, "jompus", True)`.  
+   - Every jompus is not aggressive → if `is_a(X, "jompus", True)` then `is_aggressive(X, False)`.  
+   - Zumpuses are temperate → if `is_a(X, "zumpus", True)` then `is_temperate(X, True)`.  
+   - Each jompus is a dumpus → if `is_a(X, "jompus", True)` then `is_a(X, "dumpus", True)`.  
+   - Every dumpus is bright → if `is_a(X, "dumpus", True)` then `is_bright(X, True)`.  
+   - Every dumpus is a numpus → if `is_a(X, "dumpus", True)` then `is_a(X, "numpus", True)`.  
+   - Numpuses are not temperate → if `is_a(X, "numpus", True)` then `is_temperate(X, False)`.  
+   - Numpuses are rompuses → if `is_a(X, "numpus", True)` then `is_a(X, "rompus", True)`.  
+   - Each rompus is not luminous → if `is_a(X, "rompus", True)` then `is_luminous(X, False)`.  
+   - Every rompus is a yumpus → if `is_a(X, "rompus", True)` then `is_a(X, "yumpus", True)`.  
+   - Yumpuses are opaque → if `is_a(X, "yumpus", True)` then `is_opaque(X, True)`.  
+   - Every yumpus is an impus → if `is_a(X, "yumpus", True)` then `is_a(X, "impus", True)`.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Stella is not temperate" is provable:  
+   → Use `facts.is_temperate("Stella", False)`.

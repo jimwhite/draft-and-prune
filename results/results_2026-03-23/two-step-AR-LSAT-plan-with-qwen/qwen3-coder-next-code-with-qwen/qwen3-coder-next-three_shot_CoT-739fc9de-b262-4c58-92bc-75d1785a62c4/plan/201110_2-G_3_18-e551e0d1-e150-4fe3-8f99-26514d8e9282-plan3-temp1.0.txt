@@ -1,0 +1,28 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables for day-1 assignment: `d1[r][b]` = True if rider r tests bicycle b on day 1 (for r, b ∈ {0,1,2,3}).  
+3. Create Boolean variables for day-2 assignment: `d2[r][b]` = True if rider r tests bicycle b on day 2.  
+4. Add **per-rider-day constraints**: Each rider tests exactly one bicycle per day: for each rider r, sum over b of `d1[r][b]` = 1 and `sum_b d2[r][b]` = 1.  
+5. Add **per-bicycle-day constraints**: Each bicycle is tested by exactly one rider per day: for each bicycle b, sum over r of `d1[r][b]` = 1 and `sum_r d2[r][b]` = 1.  
+6. Add **constraint: Reynaldo cannot test F**: `¬d1[Reynaldo][F]`.  
+7. Add **constraint: Yuki cannot test J**: `¬d1[Yuki][J]`.  
+8. Add **constraint: Theresa must test H on at least one day** (since "must be one of the testers for H" — interpreted as at least once over two days; but careful reading says each rider tests only one bike per day and all bikes tested each day → must test H on *one* of the two days): `d1[Theresa][H] ∨ d2[Theresa][H]`.  
+9. Add **constraint: Yuki’s day-1 bike must be tested by Seamus on day 2**: for each bicycle b, `d1[Yuki][b] ↔ d2[Seamus][b]`.  
+10. Translate each answer choice into a logical condition about possible assignments:  
+    - 'Both Reynaldo and Seamus test J': means ∃ day d ∈ {1,2} such that `d[r][J] ∧ d[s][J]` for r=Reynaldo, s=Seamus (but note: per-day constraint forbids two riders testing same bike on same day, so this is only possible if it’s *different days*? Wait — re-examining: each day all 4 bikes are tested, one per rider ⇒ on a given day, no two riders test same bike. So "both test J" must occur *on different days* — i.e., one on day1, the other on day2. But the phrasing "Both Reynaldo and Seamus test J" in LSAT-style logic games *typically* means each tests J (possibly on different days), but check answer wording: “CANNOT be true” — and the choices say “Both … test J”, implying same person tests same bike *at some point* (not necessarily same day). However, since each rider tests only one bike per day and all bikes tested each day, it's allowed for a rider to test same bike on both days? But the problem says: “each rider will then test a different one of the bicycles on the second day” — yes! Critical: “each rider will then test a **different** one of the bicycles on the second day” → so no rider repeats the same bike on both days.  
+    Therefore: For any rider r, for all b, `d1[r][b] → ¬d2[r][b]`.  
+    So “Both R and S test J” means R tests J on day1 and S tests J on day2, or vice versa.  
+    For each choice:  
+      - Construct constraint expressing that both named riders test the same bicycle (J or G or F).  
+      - Since bikes are unique per day, this must mean: rider1 tests b on one day, rider2 tests b on the other day.  
+      - But also respect rider-specific constraints (e.g., Reynaldo ≠ F on day1, Yuki ≠ J on day1).  
+      - Specifically:  
+        A. 'Both Reynaldo and Seamus test J': possible only if (d1[R][J] ∧ d2[S][J]) ∨ (d1[S][J] ∧ d2[R][J]).  
+        B. 'Both Reynaldo and Theresa test J': (d1[R][J] ∧ d2[T][J]) ∨ (d1[T][J] ∧ d2[R][J]).  
+        C. 'Both Reynaldo and Yuki test G': (d1[R][G] ∧ d2[Y][G]) ∨ (d1[Y][G] ∧ d2[R][G]).  
+        D. 'Both Seamus and Theresa test G': (d1[S][G] ∧ d2[T][G]) ∨ (d1[T][G] ∧ d2[S][G]).  
+        E. 'Both Theresa and Yuki test F': (d1[T][F] ∧ d2[Y][F]) ∨ (d1[Y][F] ∧ d2[T][F]).  
+    But also incorporate Yuki ≠ J on day1, and Reynaldo ≠ F on day1.  
+    Additionally note: Theresa must test H on at least one day (as above).  
+11. Define answer index list `answer_index_list = []`. For each choice (indexed 0–4), clone base constraints into fresh solver, assert the condition for that choice, and check SAT.  
+    - If UNSAT ⇒ this choice **cannot be true**, so append its index to `answer_index_list`.  
+12. Print `answer_index_list` — should contain exactly one index, the correct answer.

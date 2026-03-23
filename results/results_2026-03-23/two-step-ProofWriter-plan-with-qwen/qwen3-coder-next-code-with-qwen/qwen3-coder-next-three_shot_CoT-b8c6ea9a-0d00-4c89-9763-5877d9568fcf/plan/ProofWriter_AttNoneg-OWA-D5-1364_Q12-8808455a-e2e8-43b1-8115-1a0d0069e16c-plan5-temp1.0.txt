@@ -1,0 +1,31 @@
+1. Identify all entities: Charlie, Erin, Fiona, Harry.  
+2. Encode all explicitly stated properties of each entity using ternary predicates:  
+   - For Charlie: is_big("Charlie", True), is_cold("Charlie", True), is_kind("Charlie", True), is_quiet("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True), is_smart("Charlie", True)  
+   - For Erin: is_kind("Erin", True), is_quiet("Erin", False)? No—only kind is given; all other properties remain unknown unless derivable.  
+   - For Fiona: is_quiet("Fiona", True), is_rough("Fiona", True), and no other explicit properties.  
+   - For Harry: is_kind("Harry", True), is_rough("Harry", True).  
+3. Extract all universal rules from the context:  
+   • Kind → big  
+   • Kind ∧ smart → rough  
+   • Red ∧ quiet → big  
+   • Red → cold  
+   • Cold ∧ quiet → smart  
+   • Big ∧ smart → cold  
+   • Quiet → cold  
+   • Kind ∧ big → red  
+   • Cold ∧ smart → kind  
+4. For each rule, construct a `foreach` block with conditions using conjunctions (e.g., `forall X: is_kind(X, True), is_smart(X, True)`) and an `assert` for the conclusion (e.g., `is_rough(X, True)`).  
+5. Use PyKe’s forward-chaining to infer all derivable facts starting from the explicit predicates.  
+6. Specifically, for Fiona:  
+   - Known: is_quiet("Fiona", True), is_rough("Fiona", True)  
+   - From Quiet → cold: infer is_cold("Fiona", True)  
+   - From Cold ∧ quiet → smart: since Fiona is cold and quiet, infer is_smart("Fiona", True)  
+   - Now have: kind? Unknown; quiet=True, rough=True, cold=True, smart=True  
+   - From Kind ∧ big → red: need kind and big to infer red; we don’t have kind or big yet.  
+   - From Kind → big: can't apply without kind.  
+   - From Red ∧ quiet → big: need red to apply—circular.  
+   - From Cold ∧ smart → kind: Fiona is cold and smart ⇒ infer is_kind("Fiona", True)  
+   - Now with kind=True, apply Kind → big: infer is_big("Fiona", True)  
+   - Now with kind=True and big=True, apply Kind ∧ big → red: infer is_red("Fiona", True)  
+7. Conclude that Fiona *is* red; thus, the statement “Fiona is not red” is false.  
+8. The query: use facts.is_red("Fiona", False) to check—this will be proven false by contradiction or direct refutation.

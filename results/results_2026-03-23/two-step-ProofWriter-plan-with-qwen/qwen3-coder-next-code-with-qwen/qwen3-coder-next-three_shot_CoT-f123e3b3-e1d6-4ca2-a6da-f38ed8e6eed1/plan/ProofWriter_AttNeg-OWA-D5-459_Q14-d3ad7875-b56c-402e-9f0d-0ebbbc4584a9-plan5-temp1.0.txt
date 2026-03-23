@@ -1,0 +1,12 @@
+1. Identify all entities: Bob, Charlie, Erin, Gary.  
+2. Represent all explicit unary and binary facts using ternary predicates: e.g., is_cold("Bob", False), is_furry("Bob", True), is_big("Charlie", True), etc.  
+3. Encode all explicitly stated negative facts as predicates with False (e.g., is_cold("Bob", False), is_white("Charlie", False)).  
+4. Translate all conditional and universal statements into PyKe rules using `foreach`/`assert`:  
+   • If someone is red and cold → they are furry.  
+   • All furry people are round.  
+   • If Charlie is furry → Charlie is round (redundant but include as rule if needed; likely subsumed by previous universal).  
+   • Big people are red.  
+   • Round people are quiet.  
+   • If someone is red → they are cold.  
+5. For each rule, construct a `foreach` block over the subject variable, match preconditions, and assert the consequent.  
+6. The query checks whether Gary is white: → Use facts.is_white("Gary", False) to verify if the negated claim (" Gary is not white") holds, or equivalently test `not facts.is_white("Gary", True)`. Since the question is “Is Gary white?”, we query `facts.is_white("Gary", True)` and then report true/false/unknown based on inference. However, per the phrasing “The tiger is not young” style in prior problems, here we aim to prove `is_white("Gary", False)` i.e., test if Gary is *not* white — but the target statement is “Gary is white”, so we must evaluate `facts.is_white(" Gary", True)`. Clarify: the *statement* is “Gary is white”, so query `facts.is_white("Gary", True)`.

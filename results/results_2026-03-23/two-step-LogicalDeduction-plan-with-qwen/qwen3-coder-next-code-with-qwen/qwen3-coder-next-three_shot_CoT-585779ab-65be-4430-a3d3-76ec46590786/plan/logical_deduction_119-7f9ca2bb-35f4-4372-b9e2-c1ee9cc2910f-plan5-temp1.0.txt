@@ -1,0 +1,39 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven books as variables: `"brown"`, `"yellow"`, `"black"`, `"white"`, `"green"`, `"orange"`, and `"purple"`.
+    * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all variables to the problem with their domain (1–7 inclusive) using `addVariable`.
+
+3.  **Enforce Uniqueness:**
+    * Add an `AllDifferentConstraint` to ensure each book occupies a distinct position.
+
+4.  **Translate and Add Fixed-Position Constraints:**
+    * "The purple book is the rightmost" → position 7: add constraint `purple == 7`.
+    * "The yellow book is the leftmost" → position 1: add constraint `yellow == 1`.
+    * "The orange book is the second from the right" → position 6: add constraint `orange == 6`.
+    * "The white book is the fourth from the left" → position 4: add constraint `white == 4`.
+
+5.  **Translate and Add Relative-Order Constraints:**
+    * "The brown book is to the left of the green book" → `brown < green`.
+    * "The brown book is to the right of the black book" → `black < brown`.
+
+6.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments.
+    * Since the problem is deterministic, extract the single solution (e.g., `solutions[0]`).
+
+7.  **Determine the Book at Position 3:**
+    * The question asks which book is third from the left (i.e., position 3).
+    * Iterate over the solution dictionary items (book → position).
+    * Find the book `b` such that `solution[b] == 3`.
+    * Map that book to the corresponding choice letter:
+        - `"brown"` → A  
+        - `"yellow"` → B  
+        - `"black"` → C  
+        - `"white"` → D  
+        - `"green"` → E  
+        - `"orange"` → F  
+        - `"purple"` → G
+    * Return or output the correct choice letter.

@@ -1,0 +1,16 @@
+1. Enumerate the six lab assistants and assign integer indices: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: Wednesday morning=0, Wednesday afternoon=1, Thursday morning=2, Thursday afternoon=3, Friday morning=4, Friday afternoon=5.  
+3. Create integer variables `pos[i]` for each assistant i ∈ {0..5}, where `pos[i]` is the session index (0–5) they lead.  
+4. Add **domain constraints**: each `pos[i]` ∈ {0,1,2,3,4,5}, and all `pos[i]` are pairwise distinct (bijective assignment).  
+5. Add **fixed constraint**: Julio leads Thursday afternoon → `pos[0] == 3`.  
+6. Add **same-day constraint for Kevin and Rebecca**: `day(pos[1]) == day(pos[5])`, where `day(s)` = s // 2 (0=Wed, 1=Thu, 2=Fri).  
+7. Add **different-day constraint for Lan and Olivia**: `day(pos[2]) != day(pos[4])`.  
+8. Add **Nessa afternoon constraint**: `pos[3]` must be odd (1, 3, or 5).  
+9. Add **Julio earlier than Olivia**: `pos[0] < pos[4]`.  
+10. Since `pos[0]` is fixed to 3 (Thursday afternoon), the inequality becomes `3 < pos[4]`, so Olivia must lead Friday morning (4) or Friday afternoon (5).  
+11. Enumerate all possible assignments satisfying constraints 4–9 under `pos[0] = 3`.  
+12. For each assistant j ∈ {1,2,3,4,5} (i.e., excluding Julio), check whether `pos[j]` is uniquely determined across *all* valid assignments.  
+    - To do this, for each j, collect the set of values `{ pos[j] | model satisfies all constraints }`.  
+    - If the set size is 1, then assistant j’s session is forced; count such assistants.  
+13. Count the number of assistants (among Kevin, Lan, Nessa, Olivia, Rebecca) whose session is uniquely determined.  
+14. Return the count (an integer from 0 to 5), then map it to one of the answer choices.

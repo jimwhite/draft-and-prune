@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and assign them integer indices (0–6).  
+2. Create integer variables for each person’s recruitment position (1 to 7), all distinct.  
+3. Add **fixed constraint**: Peters is recruited fourth → `pos_Peters == 4`.  
+4. Add **Villas–White constraint**: Villas is immediately before White → `pos_Villas + 1 == pos_White`.  
+5. Add **Quinn–Rovero constraint**: Quinn was recruited earlier than Rovero → `pos_Quinn < pos_Rovero`.  
+6. Add **extra constraint for the conditional**: assume Quinn is immediately before Rovero → `pos_Quinn + 1 == pos_Rovero`.  
+7. Add **Stanton–Tao constraint**: Stanton is *not* immediately before or after Tao → `|pos_Stanton - pos_Tao| != 1`.  
+8. Translate the answer choices (positions: first=1, second=2, ..., seventh=7) into numeric values.  
+9. Define answer index list `answer_index_list = []`. For each candidate position in [1, 2, 3, 5, 7] (corresponding to "first", "second", etc.):  
+   - Clone the base constraints + conditional (Quinn immediately before Rovero) into a fresh solver.  
+   - Assert `pos_Stanton == candidate_position`.  
+   - If UNSAT, then Stanton **cannot** be recruited at that position; append the index of this choice to `answer_index_list`.  
+10. Print `answer_index_list`.

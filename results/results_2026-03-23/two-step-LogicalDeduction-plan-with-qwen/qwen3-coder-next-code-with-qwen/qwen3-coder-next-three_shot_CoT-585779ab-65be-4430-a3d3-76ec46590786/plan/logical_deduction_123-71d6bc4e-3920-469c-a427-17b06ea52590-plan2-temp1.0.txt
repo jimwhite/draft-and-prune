@@ -1,0 +1,37 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven book variables as strings: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.
+    * Define the domain as integer positions from 1 to 7 (inclusive), where position 1 is leftmost and position 7 is rightmost.
+    * Add all seven variables to the `Problem` instance with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add Global Constraint:**
+    * Add an `AllDifferentConstraint` to ensure each book occupies a distinct position.
+
+4.  **Add Specific Constraints from the Problem Statement:**
+    * Translate each statement into a constraint:
+        * "The yellow book is the rightmost" → `yellow == 7`
+        * "The blue book is to the left of the orange book" → `blue < orange`
+        * "The green book is to the right of the white book" → `white < green`
+        * "The blue book is to the right of the green book" → `green < blue`
+        * "The black book is the fourth from the left" → `black == 4`
+        * "The brown book is the third from the right" → In a 7-position sequence, third from the right = position 5 → `brown == 5`
+
+5.  **Solve the Problem:**
+    * Call the `getSolutions()` method to obtain all valid assignments of positions to books.
+    * Extract the single solution (since constraints uniquely determine the order).
+
+6.  **Identify the Leftmost Book:**
+    * Determine which book is assigned position 1 (leftmost).
+    * Create a mapping from choice letters to book names:
+        - A → "brown"
+        - B → "white"
+        - C → "black"
+        - D → "yellow"
+        - E → "orange"
+        - F → "blue"
+        - G → "green"
+    * For the found solution, locate which book has position value 1.
+    * Return the corresponding choice letter (A–G) for that book.

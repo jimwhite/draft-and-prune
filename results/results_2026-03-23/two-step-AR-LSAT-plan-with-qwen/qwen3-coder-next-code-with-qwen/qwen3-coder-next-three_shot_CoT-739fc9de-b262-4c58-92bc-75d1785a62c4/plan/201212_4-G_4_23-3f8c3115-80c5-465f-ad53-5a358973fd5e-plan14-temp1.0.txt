@@ -1,0 +1,13 @@
+1. Enumerate the seven articles and assign them indices: G, H, J (finance); Q, R, S (nutrition); Y (wildlife).  
+2. Create integer variables `pos[article]` for the position (1 to 7) of each article.  
+3. Add **domain constraints**: `pos[article] ∈ {1,2,...,7}` for all articles.  
+4. Add **all-different constraint**: all positions are distinct (each article edited exactly once).  
+5. Add **topic adjacency constraint**: for every pair of consecutive positions (i.e., |pos[a] - pos[b]| = 1), ensure the topics of a and b differ.  
+6. Add **S-before-Q conditional constraint**: if S is before Q, then Q must be in position 3. Formally: `(pos[S] < pos[Q]) → (pos[Q] == 3)`.  
+7. Add **S-before-Y constraint**: `pos[S] < pos[Y]`.  
+8. Add **J-before-G and G-before-R chain**: `pos[J] < pos[G] < pos[R]`.  
+9. Translate the answer choices into logical conditions (e.g., `pos[H] == 4`, etc.).  
+10. For each choice, create a fresh solver, assert the base constraints plus the choice condition (e.g., `pos[H] == 4`), and check if the model yields a **unique** solution (i.e., only one possible ordering).  
+    - To test uniqueness: after finding a satisfying assignment, add a constraint that at least one position differs from the found solution and recheck SAT. If UNSAT, the solution is unique.  
+11. Identify which choice(s) lead to a unique ordering; only one choice should satisfy this.  
+12. Return the index of the correct choice (the one for which uniqueness holds).

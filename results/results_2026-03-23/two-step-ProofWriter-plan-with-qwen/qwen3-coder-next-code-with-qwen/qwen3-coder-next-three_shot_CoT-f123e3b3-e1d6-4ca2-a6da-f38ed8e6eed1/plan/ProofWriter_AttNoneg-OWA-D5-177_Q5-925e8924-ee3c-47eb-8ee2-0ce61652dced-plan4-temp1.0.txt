@@ -1,0 +1,19 @@
+1. Identify all individuals: Anne, Bob, Charlie, Gary.
+2. Encode all directly stated facts using ternary predicates:
+   - is_furry("Anne", True), is_smart("Anne", True)
+   - is_kind("Bob", True), is_nice("Bob", True)
+   - is_big("Charlie", True), is_green("Charlie", True), is_nice("Charlie", True), is_young("Charlie", True)
+   - is_furry("Gary", True), is_kind("Gary", True), is_nice("Gary", True), is_young(" Gary", True)
+3. Translate all contextual implications into rules:
+   • If something is young → it is nice.
+   • If Anne is green → Anne is big.
+   • If something is smart → it is nice.
+   • If something is smart and kind → it is green.
+   • If something is young and big → it is kind.
+   • If something is kind and smart → it is furry.
+   • If something is nice and big → it is young.
+   • All nice things are kind (i.e., if something is nice → it is kind).
+   • If Anne is young and big → Anne is nice.
+4. For each rule, define a `foreach` block for the condition and an `assert` clause for the conclusion.
+5. The query checks whether Anne is kind:
+   → Use facts.is_kind("Anne", True)

@@ -1,0 +1,15 @@
+1. Identify all entities involved: Charlie, Erin, Fiona, Harry.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_green("Charlie", True), is_kind("Erin", True), etc.).
+3. Translate each universal conditional in the context into a PyKe rule:
+   • All rough, green people are quiet.
+   • If someone is green and rough → they are nice.
+   • All kind, smart people are green.
+   • If Erin is green and blue → Erin is quiet.
+   • All quiet people are smart.
+   • All kind people are green.
+   • If someone is smart → they are kind.
+   • All rough, nice people are blue.
+4. For each rule, construct a `foreach` block enumerating the condition(s) and an `assert` clause for the derived fact.
+5. Note that “Erin is rough” is *not* directly stated; we must infer it or determine if it follows (or contradicts) from the given facts and rules.
+6. The query checks whether Erin is rough:
+   → Use facts.is_rough("Erin", True) to verify truth, and optionally check for contradiction via negation.

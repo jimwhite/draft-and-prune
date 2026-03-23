@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the five vehicle variables: `"sedan"`, `"convertible"`, `"station_wagon"`, `"bus"`, and `"motorcycle"` (note: fix typo in variable name from "motorcyle" to "motorcycle").  
+    * Define the domain as integers 1 through 5, where **1 = oldest** and **5 = newest**, per standard interpretation of "newest/oldest" in such ordering puzzles (smaller number = older).  
+    * Add all five variables with domain {1,2,3,4,5} to the `Problem` instance.
+
+3.  **Add Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Translate each statement into a constraint:  
+        - "The sedan is the second-newest" → `sedan == 4` (since newest=5, second-newest=4).  
+        - "The station wagon is newer than the convertible" → `station_wagon < convertible` (younger means larger rank number, but wait: if 1=oldest, then newer = *larger* number. Correction: "newer" means smaller age rank? No—clarify semantics: If 1 is oldest, then newer = higher number (e.g., 2 is newer than 1). So "station_wagon is newer than convertible" → station_wagon > convertible.  
+        - "The sedan is older than the motorcycle" → `sedan < motorcycle` (older = smaller number).  
+        - "The bus is the oldest" → `bus == 1`.  
+
+4.  **Solve and Retrieve Solution:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the single solution (problem is well-constrained).
+
+5.  **Interpret Question and Match Choices:**  
+    * The question asks for the **second-oldest**, which corresponds to position **2** (since 1=oldest).  
+    * Create a mapping from choice letters to vehicle names: A→"sedan", B→"convertible", C→"station_wagon", D→"bus", E→"motorcycle".  
+    * Find which vehicle has value 2 in the solution.  
+    * Return the corresponding choice letter as the answer.

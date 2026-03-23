@@ -1,0 +1,19 @@
+1. Enumerate the six cargo types (fuel, grain, livestock, machinery, produce, textiles) and assign each an integer index.  
+2. Create six integer variables `b1..b6` where `bi` represents the cargo type at bay i (i ∈ {1,2,3,4,5,6}), or alternatively create permutation variables `pos[type]` for the position (1–6) of each cargo type. (Prefer `pos[type]` for easier ordering constraints.)  
+3. Add **domain constraint**: each `pos[cargo]` ∈ {1,2,3,4,5,6}, and all positions distinct (i.e., a permutation).  
+4. Add **given baseline constraints** (always true, not conditional):  
+    - `pos[grain] > pos[livestock]`  
+    - `pos[livestock] > pos[ textiles ]`  
+    - `pos[produce] > pos[fuel]`  
+    - `|pos[textiles] − pos[produce]| = 1` (textiles and produce are adjacent)  
+5. Add **conditional constraint** for the scenario: "If the bay holding produce is next to the bay holding livestock", i.e., `|pos[produce] − pos[livestock]| = 1`. Add this as an additional constraint to the solver for analysis.  
+6. Translate answer choices into constraints: for each choice, assert the stated cargo is in the stated bay (e.g., `'Bay 2 is holding fuel.'` → `pos[fuel] == 2`).  
+7. For each choice, create a fresh solver and add:  
+    - the baseline constraints (step 4),  
+    - the conditional adjacency constraint `|pos[produce] − pos[livestock]| = 1`,  
+    - the choice-specific constraint (step 6).  
+8. For each choice, check satisfiability:  
+    - If SAT → the choice *could be true* under the condition, so do NOT flag it.  
+    - If UNSAT → the choice *cannot be true* under the condition, so it is the EXCEPT answer.  
+9. Collect all unsatisfiable choices; there will be exactly one (the EXCEPT answer).  
+10. Return the index corresponding to that choice.

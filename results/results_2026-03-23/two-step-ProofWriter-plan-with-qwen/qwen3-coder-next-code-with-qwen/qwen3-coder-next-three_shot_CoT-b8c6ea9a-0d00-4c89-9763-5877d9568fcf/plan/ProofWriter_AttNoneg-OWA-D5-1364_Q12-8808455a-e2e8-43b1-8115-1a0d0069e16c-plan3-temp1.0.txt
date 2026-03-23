@@ -1,0 +1,14 @@
+1. Identify all entities: Charlie, Erin, Fiona, Harry.
+2. Encode all explicitly stated properties of each entity as facts.pred(entity, True) where pred is the property name (e.g., is_big("Charlie", True), is_cold("Charlie", True), ..., is_kind("Erin", True), etc.).
+3. Translate each universal conditional rule into a PyKe rule with `foreach` block:
+   • Kind things are big → foreach is_kind(?x, True) assert is_big(?x, True)
+   • All kind, smart things are rough → foreach is_kind(?x, True), is_smart(?x, True) assert is_rough(?x, True)
+   • If something is red and quiet then it is big → foreach is_red(?x, True), is_quiet(?x, True) assert is_big(?x, True)
+   • All red things are cold → foreach is_red(?x, True) assert is_cold(?x, True)
+   • All cold, quiet things are smart → foreach is_cold(?x, True), is_quiet(?x, True) assert is_smart(?x, True)
+   • If something is big and smart then it is cold → foreach is_big(?x, True), is_smart(?x, True) assert is_cold(?x, True)
+   • All quiet things are cold → foreach is_quiet(?x, True) assert is_cold(?x, True)
+   • Kind, big things are red → foreach is_kind(?x, True), is_big(?x, True) assert is_red(?x, True)
+   • All cold, smart things are kind → foreach is_cold(?x, True), is_smart(?x, True) assert is_kind(?x, True)
+4. Ensure that all direct facts (Charlie’s properties and the partial properties of Erin/Fiona/Harry) are asserted first before rules fire.
+5. The query tests whether Fiona is not red → Use facts.is_red("Fiona", False).

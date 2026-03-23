@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven variables corresponding to the fruits: `"oranges"`, `"plums"`, `"loquats"`, `"apples"`, `"kiwis"`, `"cantaloupes"`, and `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 represents the cheapest** (lowest price) and **7 represents the most expensive**.  
+   * Add all seven fruit variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each fruit has a unique price rank.  
+   * Translate each statement into a constraint using lambda functions or direct constraints:  
+      - "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+      - "The plums are the cheapest" → `plums == 1`  
+      - "The loquats are the fourth-most expensive" → `loquats == 4`  
+      - "The peaches are less expensive than the oranges" → `peaches < oranges`  
+      - "The peaches are more expensive than the kiwis" → `kiwis < peaches`  
+      - "The apples are the second-cheapest" → `apples == 2`
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to enumerate all possible assignments satisfying the constraints.  
+   * Extract the (unique) solution from the list of solutions.
+
+5. **Determine the Second-Most-Expensive Fruit:**  
+   * Identify the fruit assigned position 6, since 7 is most expensive and 6 is second-most expensive under our numbering (1 = cheapest, 7 = most expensive).  
+   * Create a mapping from choice letters to fruit names using the provided choices:  
+        A → "oranges", B → "plums", C → "loquats", D → "apples", E → "kiwis", F → "cantaloupes", G → "peaches".  
+   * For each choice, check if the corresponding fruit’s rank in the solution is 6.  
+   * Output the letter of the first (and only) choice where this holds true.

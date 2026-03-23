@@ -1,0 +1,21 @@
+1. Identify all entities: bear, mouse, squirrel, tiger.  
+2. Represent all explicitly stated facts using ternary predicates:  
+   - Properties (e.g., is_green, is_kind, is_cold, is_nice) as predicate(entity, True).  
+   - Relations (e.g., needs, visits, chases) as predicate(subject, object, True).  
+3. Encode direct facts:  
+   - is_green("bear", True), is_kind("bear", True)  
+   - needs("mouse", "bear", True), visits("mouse", "bear", True), visits("mouse", "squirrel", True), visits("mouse", "tiger", True)  
+   - chases("squirrel", "bear", True), is_cold("squirrel", True), is_nice("squirrel", True)  
+   - is_green("tiger", True), needs("tiger", "bear", True)  
+4. Translate each conditional rule into a `foreach`-`assert` block:  
+   • If X needs the mouse → X is kind.  
+   • If the mouse is young → the mouse needs the bear.  
+   • If X chases the bear → X needs the tiger.  
+   • If X needs the squirrel and X visits the mouse → the mouse needs the squirrel.  
+   • If X visits the squirrel → X needs the mouse.  
+   • If X chases the squirrel and the squirrel is nice → X is young.  
+   • If X visits the mouse and the mouse is green → X needs the tiger.  
+   • If X is kind and X visits the tiger → the tiger visits the squirrel.  
+   • If the bear needs the squirrel and the bear visits the tiger → the bear chases the tiger.  
+5. For each rule, implement with `foreach` matching on premises and `assert` for conclusion.  
+6. Query: check whether the squirrel chases the tiger → facts.chases("squirrel", "tiger", True).

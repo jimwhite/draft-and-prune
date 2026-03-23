@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven book variables as strings: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, and `"green"`.
+    * Define the position domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the `Problem` instance with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.
+    * Add the following constraints using `lambda` functions or direct equality/inequality rules:
+        * "The red book is to the right of the yellow book" → `red > yellow`
+        * "The white book is the second from the right" → `white == 6` (since position 7 is rightmost, second from right is 6)
+        * "The red book is to the left of the green book" → `red < green`
+        * "The blue book is to the right of the black book" → `blue > black`
+        * "The black book is the third from the right" → `black == 5` (positions: 7=rightmost, 6=second-rightmost, 5=third-rightmost)
+        * "The orange book is the leftmost" → `orange == 1`
+
+4.  **Solve the Constraint Problem:**
+    * Call `getSolutions()` on the `Problem` instance to retrieve all valid assignments.
+    * Since the constraints uniquely determine the arrangement, expect exactly one solution; extract it from the list (e.g., `solutions[0]`).
+
+5.  **Identify the Correct Choice:**
+    * The question asks which book is the rightmost, i.e., occupies position 7.
+    * Create a mapping from choice letters to book names: `"A" -> "black"`, `"B" -> "orange"`, `"C" -> "yellow"`, `"D" -> "white"`, `"E" -> "blue"`, `"F" -> "red"`, `"G" -> "green"`.
+    * Iterate through the solution dictionary to find which book has position 7.
+    * Output (return or print) the choice letter corresponding to that book.

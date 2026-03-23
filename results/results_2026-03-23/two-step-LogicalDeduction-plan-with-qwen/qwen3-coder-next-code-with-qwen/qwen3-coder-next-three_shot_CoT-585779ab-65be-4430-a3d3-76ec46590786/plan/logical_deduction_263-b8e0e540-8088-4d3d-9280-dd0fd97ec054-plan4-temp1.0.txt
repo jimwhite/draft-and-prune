@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: the three golfers `"Ana"`, `"Rob"`, and `"Joe"`.  
+   * Define a domain of integers from 1 to 3, where **1 = first place (leftmost/top)**, **2 = second place**, and **3 = third/last place (rightmost/bottom)**.  
+   * Add these variables with the domain {1, 2, 3} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a distinct finishing position.  
+   * Translate the statements into constraints using `lambda` functions:  
+     - "Joe finished above Ana" means Joe's position number is **less than** Ana's (`lambda a, j: j < a`).  
+     - "Rob finished second" means Rob's position is exactly **2** (`lambda r: r == 2`).
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to find all valid solutions.  
+   * Extract the single solution (since the constraints uniquely determine the ordering).
+
+5. **Determine Which Choice Is True:**  
+   * The question asks which golfer finished last (i.e., position 3).  
+   * Map the choice letters to golfers: `"A" → "Ana"`, `"B" → "Rob"`, `"C" → "Joe"`.  
+   * In the solution, find which golfer has position 3 and return the corresponding choice letter.

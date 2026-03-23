@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven bird variables as strings: `"hawk"`, `"hummingbird"`, `"falcon"`, `"cardinal"`, `"owl"`, `"robin"`, and `"blue jay"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven bird variables to the problem, each with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Add Global Constraint:**
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+
+4.  **Translate Each Statement into a Constraint:**
+    * "The hummingbird is to the left of the owl" → `hummingbird < owl`.
+    * "The robin is the rightmost" → `robin == 7`.
+    * "The blue jay is to the left of the hawk" → `blue jay < hawk`.
+    * "The blue jay is the third from the left" → `blue jay == 3`.
+    * "The falcon is the fourth from the left" → `falcon == 4`.
+    * "The cardinal is the second from the right" → `cardinal == 6` (since rightmost is 7, second from right is 6).
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Since the constraints uniquely determine the arrangement, there will be exactly one solution; extract it (e.g., `solutions[0]`).
+
+6.  **Analyze the Question and Choices:**
+    * The question asks which bird is "the third from the left", i.e., the bird with position value **3**.
+    * Create a mapping from choice letters to bird names:
+        - `'A'`: `"hawk"`
+        - `'B'`: `"hummingbird"`
+        - `'C'`: `"falcon"`
+        - `'D'`: `"cardinal"`
+        - `'E'`: `"owl"`
+        - `'F'`: `"robin"`
+        - `'G'`: `"blue jay"`
+
+7.  **Determine the Correct Answer:**
+    * For the solved position assignment, identify which bird has position 3.
+    * Find the corresponding choice letter from the mapping above.
+    * Return (or output) that letter as the answer.

@@ -1,0 +1,32 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven books as variables: `"purple"`, `"green"`, `"white"`, `"gray"`, `"red"`, `"black"`, `"brown"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+    * Translate each statement into a constraint:  
+        * "The gray book is to the left of the purple book" → `gray < purple`  
+        * "The white book is to the right of the brown book" → `brown < white`  
+        * "The black book is the third from the right" → black position = 5 (since positions 7,6,5 are rightmost, 2nd-rightmost=6, 3rd-rightmost=5)  
+        * "The purple book is to the left of the white book" → `purple < white`  
+        * "The white book is the second from the right" → white position = 6  
+        * "The gray book is the third from the left" → gray position = 3  
+        * "The brown book is to the right of the green book" → `green < brown`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid arrangements.  
+    * Extract the unique solution (expected to be the only one due to constraints being fully specifying).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which book is the second from the right → position 6.  
+    * Note: The statement "The white book is the second from the right" is explicitly given, and choice C states exactly that.  
+    * However, to verify consistency (and follow the plan rigorously), find which book has position 6 in the solution.  
+    * Create a dictionary mapping choice letters ("A" through "G") to their respective book names:  
+        A → `"purple"`, B → `"green"`, C → `"white"`, D → `"gray"`, E → `"red"`, F → `"black"`, G → `"brown"`  
+    * Find the book with value 6 in the solution dictionary.  
+    * Return the corresponding choice letter.

@@ -1,0 +1,11 @@
+1. Enumerate the six photographers and assign each a Boolean variable indicating assignment to Silva (True) or Thorne (False), or unassigned.  
+2. Represent each assignment choice as a 6-tuple of values: 0 = unassigned, 1 = Silva, 2 = Thorne.  
+3. Predefine the five answer choices as explicit assignments (mapping photographer names to ceremony labels).  
+4. For each choice, validate it against all constraints:  
+   - Constraint 1 (Frost & Heideck together): Frost and Heideck must have identical non-zero assignments (both Silva or both Thorne).  
+   - Constraint 2 (Lai & Mays separation): If both assigned to same ceremony, invalid.  
+   - Constraint 3 (Gonzalez→Thorne Lai): If Gonzalez assigned to Silva, then Lai must be assigned to Thorne.  
+   - Constraint 4 (Knutson → Thorne condition): If Knutson assigned to Silva, then both Heideck and Mays must be assigned to Thorne.  
+   - Constraint 5 (minimum two per ceremony): Each ceremony must have ≥2 assigned photographers.  
+5. For each choice, check if all constraints are satisfied; record the index of the first (and only) valid assignment.  
+6. Output the index of the acceptable assignment.

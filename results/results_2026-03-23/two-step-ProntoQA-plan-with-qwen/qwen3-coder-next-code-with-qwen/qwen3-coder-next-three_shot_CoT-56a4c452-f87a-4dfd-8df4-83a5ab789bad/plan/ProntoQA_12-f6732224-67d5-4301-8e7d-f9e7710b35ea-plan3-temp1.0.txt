@@ -1,0 +1,54 @@
+1. Identify all entities and types: Fae, tumpus, numpus, vumpus, dumpus, zumpus, yumpus, jompus, rompus, impus, wumpus.  
+2. Identify all properties: orange, small, sour, cold, dull, amenable, floral, opaque, not floral (note: "not floral" is a negative property; handle via closed-world assumption or explicit negation rules), luminous (none here), hot (none here), bright (none here), brown (none here), blue (none here), spicy (none here), sweet (none here), mean (none here).  
+3. Represent "Fae is a dumpus" as a base fact: `is_a("Fae", "dumpus", True)`.  
+4. Translate all class property and subclass relationships into logical rules:  
+   - Every tumpus is orange.  
+   - Tumpuses are numpuses (tumpus ⊆ numpus).  
+   - Numpuses are small.  
+   - Numpuses are vumpuses (numpus ⊆ vumpus).  
+   - Every vumpus is sour.  
+   - Vumpuses are dumpuses (vumpus ⊆ dumpus).  
+   - Each dumpus is cold.  
+   - Every dumpus is a zumpus (dumpus ⊆ zumpus).  
+   - Each zumpus is dull.  
+   - Zumpuses are yumpuses (zumpus ⊆ yumpus).  
+   - Jompuses are floral. *(Note: this is a fact about jompuses in general, but does not directly affect Fae unless Fae is a jompus—unlikely based on chain, but still encode.)*  
+   - Every yumpus is not amenable. *(i.e., if X is a yumpus, then X is ¬amenable)*  
+   - Each yumpus is a rompus (yumpus ⊆ rompus).  
+   - Every rompus is opaque.  
+   - Rompuses are impuses (rompus ⊆ impus).  
+   - Impuses are not floral. *(i.e., if X is an impus, then X is ¬floral)*  
+   - Impuses are wumpuses (impus ⊆ wumpus).  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` (or `neg_assert`) clause for the consequence:  
+   - Use positive assertions for properties like `is_orange`, `is_small`, `is_sour`, `is_cold`, `is_dull`, `is_opaque`.  
+   - Use explicit negative assertions (e.g., `not is_amenable`, `not is_floral`) where needed. For "X is not floral", assert `is_not_floral(X)` or use a predicate like `¬floral(X)`, depending on PyKe syntax—prefer `not is_floral("X")` via negation.  
+   - Specifically:  
+     * Rule 1: `forall X, is_a(X,"tumpus",True) => is_orange(X,True)`  
+     * Rule 2: `forall X, is_a(X,"tumpus",True) => is_a(X,"numpus",True)`  
+     * Rule 3: `forall X, is_a(X,"numpus",True) => is_small(X,True)`  
+     * Rule 4: `forall X, is_a(X,"numpus",True) => is_a(X,"vumpus",True)`  
+     * Rule 5: `forall X, is_a(X,"vumpus",True) => is_sour(X,True)`  
+     * Rule 6: `forall X, is_a(X,"vumpus",True) => is_a(X,"dumpus",True)`  
+     * Rule 7: `forall X, is_a(X,"dumpus",True) => is_cold(X,True)`  
+     * Rule 8: `forall X, is_a(X,"dumpus",True) => is_a(X,"zumpus",True)`  
+     * Rule 9: `forall X, is_a(X,"zumpus",True) => is_dull(X,True)`  
+     * Rule 10: `forall X, is_a(X,"zumpus",True) => is_a(X,"yumpus",True)`  
+     * Rule 11: `forall X, is_a(X,"jompus",True) => is_floral(X,True)` *(global fact)*  
+     * Rule 12: `forall X, is_a(X,"yumpus",True) => not is_amenable(X,True)` *(or: `is_not_amenable(X, True)`)*  
+     * Rule 13: `forall X, is_a(X,"yumpus",True) => is_a(X,"rompus",True)`  
+     * Rule 14: `forall X, is_a(X,"rompus",True) => is_opaque(X,True)`  
+     * Rule 15: `forall X, is_a(X,"rompus",True) => is_a(X,"impus",True)`  
+     * Rule 16: `forall X, is_a(X,"impus",True) => not is_floral(X,True)` *(key for Fae)*  
+     * Rule 17: `forall X, is_a(X,"impus",True) => is_a(X,"wumpus",True)`  
+6. Trace the chain for Fae:  
+   - `is_a(Fae, dumpus, True)` (given)  
+   - → `is_a(Fae, zumpus, True)` via Rule 8 (dumpus ⊆ zumpus)  
+   - → `is_a(Fae, yumpus, True)` via Rule 10 (zumpus ⊆ yumpus)  
+   - → `is_a(Fae, rompus, True)` via Rule 13 (yumpus ⊆ rompus)  
+   - → `is_a(Fae, impus, True)` via Rule 15 (rompus ⊆ impus)  
+   - → `not is_floral(Fae)` via Rule 16 (impus ⊆ ¬floral)  
+7. The query tests if "Fae is not floral" is provable:  
+   → Use `facts.is_floral("Fae", False)` or equivalent negated fact.  
+   *(Note: PyKe typically represents negation as absence of positive fact or via explicit `not` assertions—select consistent representation. Since Rule 16 gives explicit negation, assert `is_not_floral("Fae")` or use `not is_floral("Fae")` in query.)*  
+8. Final query: check if `is_floral("Fae", True)` is false (i.e., not provable), or directly ask for `not is_floral("Fae")`.  
+→ Use query: `facts.is_floral("Fae", False)` if PyKe supports negative facts, or a rule-based negation query.

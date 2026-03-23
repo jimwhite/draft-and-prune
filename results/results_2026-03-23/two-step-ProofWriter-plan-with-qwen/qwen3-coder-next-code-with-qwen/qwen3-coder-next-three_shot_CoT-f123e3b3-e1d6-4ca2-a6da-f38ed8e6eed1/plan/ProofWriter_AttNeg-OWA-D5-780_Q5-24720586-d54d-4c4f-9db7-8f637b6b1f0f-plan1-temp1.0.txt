@@ -1,0 +1,22 @@
+1. Identify all entities: Anne, Charlie, Dave, Harry.
+2. Encode all explicitly stated facts using ternary predicates:  
+   - is_big("Anne", True), is_blue("Anne", True), is_kind("Anne", True), is_nice("Anne", True)  
+   - is_big("Charlie", True), is_blue("Charlie", True), is_nice("Charlie", True)  
+   - is_blue("Dave", True), is_cold("Dave", True), is_nice("Dave", True)  
+   - is_blue("Harry", True)
+3. Translate each contextually implied rule into PyKe rules using `foreach` and `assert`:  
+   • If Charlie is cold → Charlie is nice. (explicit conditional, but note Charlie's coldness is not given; still encode rule)  
+   • If Harry is kind and Harry is nice → Harry is quiet.  
+   • All blue things are cold: foreach ?x, if is_blue(?x, True) then assert is_cold(?x, True).  
+   • If something is quiet → it is kind: foreach ?x, if is_quiet(?x, True) then assert is_kind(?x, True).  
+   • All kind things are big: foreach ?x, if is_kind(?x, True) then assert is_big(?x, True).  
+   • Cold things are nice: foreach ?x, if is_cold(?x, True) then assert is_nice(?x, True).  
+   • If Harry is nice and Harry is big → Harry is kind.  
+   • If something is nice → it is quiet: foreach ?x, if is_nice(?x, True) then assert is_quiet(?x, True).
+4. Add a derived fact check: since Dave and Charlie are blue, and all blue things are cold, infer is_cold("Charlie", True) and is_cold("Dave", True), then via cold→nice (already given for them but reinforces).
+5. Note: Charlie is blue → cold → nice (butCharlie is already known nice; this doesn’t add new info).
+6. To determine if Charlie is kind, consider necessary conditions:  
+   - Is Charlie quiet? Need to derive is_quiet("Charlie", True).  
+   - is_nice → is_quiet applies, and Charlie is nice → so Charlie is quiet.  
+   - Then quiet → kind (rule: if quiet then kind) → Charlie is kind.
+7. Query the goal: Use facts.is_kind("Charlie", True).

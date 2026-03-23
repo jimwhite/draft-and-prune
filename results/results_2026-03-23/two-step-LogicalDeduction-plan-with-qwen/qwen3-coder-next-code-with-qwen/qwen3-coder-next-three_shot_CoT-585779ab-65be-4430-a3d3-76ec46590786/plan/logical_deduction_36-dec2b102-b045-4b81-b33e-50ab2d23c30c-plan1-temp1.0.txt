@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the golf tournament finishing order.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the five golfers: `"Dan"`, `"Amy"`, `"Eve"`, `"Ana"`, and `"Mya"`.
+    * Define the domain as integers from 1 to 5, where **1 represents last place** (worst finishing position) and **5 represents first place** (best finishing position), consistent with standard tournament ranking conventions where lower numbers indicate worse placement *if counting backwards*, but given the phrasing "finished above/below", we use standard positional ordering: **1 = last (lowest rank), 5 = first (highest rank)**. This matches common usage where "above" means better (higher rank/lower position number in 1=best to 5=worst), but to avoid ambiguity, note: *Dan finished above Eve* means Dan’s position number < Eve’s position number **if we use 1=best**, but the choices ask who finished *last*, which is position 5. To resolve: we use **position = rank, where 1 = first place (best), 5 = last place (worst)**. This is standard: finishing *above* means smaller position number.
+        So, final mapping: **1 = first place (best), 5 = last place (worst)**.
+    * Add all golfers as variables with domain {1,2,3,4,5} to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two golfers share the same finishing position.
+    * Translate each statement into a constraint:
+        * "Dan finished above Eve" → Dan’s position < Eve’s position (`lambda d, e: d < e`).
+        * "Dan finished below Mya" → Mya’s position < Dan’s position (`lambda m, d: m < d`).
+        * "Amy finished third" → Amy’s position = 3.
+        * "Ana finished second-to-last" → In a field of 5, second-to-last is position 4.
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments.
+    * Extract the unique solution.
+
+5.  **Determine Who Finished Last (Position 5):**
+    * The question asks which golfer is at position 5.
+    * Create a mapping from choice letters to golfers: A→"Dan", B→"Amy", C→"Eve", D→"Ana", E→"Mya".
+    * In the solution, find which golfer has position value 5.
+    * Return the corresponding choice letter.

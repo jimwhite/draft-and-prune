@@ -1,0 +1,35 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven golfers as variables: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, `"Joe"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.  
+   * Add all seven variables to the problem, each with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add AllDifferentConstraint:**  
+   * Enforce that all golfers have distinct finishing positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * "Amy finished third" → `Amy == 3`  
+   * "Joe finished last" → `Joe == 7`  
+   * "Mya finished above Dan" → `Mya < Dan` (since lower rank number = better position)  
+   * "Eve finished fourth" → `Eve == 4`  
+   * "Amy finished above Rob" → `Amy < Rob` (and since Amy == 3, this implies Rob > 3)  
+   * "Ada finished third-to-last" → In a list of 7, third-to-last means position `7 - 2 = 5` (e.g., last=7, second-last=6, third-last=5), so `Ada == 5`.
+
+5. **Solve the Constraint Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Expect exactly one solution due to the specificity of constraints.
+
+6. **Identify Second-to-Last Finisher:**  
+   * The question asks who finished second-to-last → position `6`.  
+   * Iterate through the solution dictionary to find which golfer has position `6`.
+
+7. **Map Golfer Name to Answer Choice:**  
+   * Create a dictionary mapping choice letters (`['A','B','C','D','E','F','G']`) to golfers:  
+     `A→Dan, B→Eve, C→Mya, D→Amy, E→Rob, F→Ada, G→Joe`.  
+   * Find the choice letter corresponding to the golfer with position `6`.
+
+8. **Output Final Answer:**  
+   * Return (or print) the correct choice letter based on the identified golfer.

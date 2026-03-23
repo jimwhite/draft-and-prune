@@ -1,0 +1,22 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to begin modeling the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables: the three books — `"brown"`, `"yellow"`, and `"orange"`.  
+    * Define the domain as positions 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+    * Add all three variables to the problem with their domain (1, 2, or 3).
+
+3.  **Add Constraints:**  
+    * Add `AllDifferentConstraint` to ensure each book occupies a unique position.  
+    * Translate "The yellow book is the leftmost" → `yellow == 1`.  
+    * Translate "The orange book is to the right of the brown book" → `brown < orange`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments.  
+    * Extract the unique solution (a dictionary mapping book names to positions).
+
+5.  **Determine Which Statement Is True:**  
+    * The question asks which book is the **second from the left**, i.e., at position 2.  
+    * Map choice letters to books: `"A"` → `"brown"`, `"B"` → `"yellow"`, `"C"` → `"orange"`.  
+    * Check which book in the solution has position 2, and return its corresponding choice letter.

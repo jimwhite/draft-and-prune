@@ -1,0 +1,36 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * List the seven fruits as variables: `"oranges"`, `"loquats"`, `"apples"`, `"kiwis"`, `"mangoes"`, `"plums"`, `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest**, and **7 = most expensive** (i.e., increasing order corresponds to increasing price).  
+   * Add all variables with domain `{1,2,3,4,5,6,7}` to the `Problem`.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate the statements:  
+     - "The apples are the second-cheapest" → `apples == 2`  
+     - "The peaches are the cheapest" → `peaches == 1`  
+     - "The plums are the fourth-most expensive" → Since most expensive = 7, fourth-most expensive = position 4 from the *expensive* end → i.e., rank = 7 − (4 − 1) = **4** (since ranks are linear, 1=cheapest, 7=most expensive ⇒ 4th-most expensive = rank 4). So `plums == 4`.  
+     - "The loquats are the third-cheapest" → `loquats == 3`  
+     - "The kiwis are more expensive than the mangoes" → `mangoes < kiwis` (lower rank = cheaper)  
+     - "The oranges are less expensive than the mangoes" → `oranges < mangoes`
+
+4. **Solve for Valid Arrangement(s):**  
+   * Call `getSolutions()` to find all assignments satisfying the constraints.  
+   * Given consistency and uniqueness implied by the problem, extract the sole solution.
+
+5. **Identify Third-Most-Expensive Fruit:**  
+   * Since most expensive = 7, third-most-expensive = rank `7 − (3 − 1) = 5`.  
+     * Alternatively, since cheaper = lower number, third-most-expensive = **rank 5** (positions: 7=1st-most-exp, 6=2nd-most-exp, **5**=3rd-most-exp).  
+   * In the solution dictionary, find which fruit has value `5`.  
+   * Map that fruit to the corresponding choice letter:  
+        - A) oranges → check if `solution["oranges"] == 5`  
+        - B) loquats → check if `solution["loquats"] == 5`  
+        - C) apples → check if `solution["apples"] == 5` (but apples = 2, so unlikely)  
+        - D) kiwis  
+        - E) mangoes  
+        - F) plums (plums = 4, so no)  
+        - G) peaches (peaches = 1, so no)  
+   * Return the letter of the correct choice.

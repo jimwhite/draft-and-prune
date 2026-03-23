@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Create an instance of `Problem`.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicles as string variables: `"convertible"`, `"truck"`, `"tractor"`, `"limousine"`, `"motorcyle"`, `"hatchback"`, and `"sedan"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, and **7 = newest**.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Translate each statement into constraints using lambda functions:
+        * "The hatchback is the fourth-newest" → hatchback = 4 (since newest=7, fourth-newest is position 4).
+        * "The limousine is older than the motorcyle" → limousine < motorcyle.
+        * "The truck is newer than the motorcyle" → truck > motorcyle.
+        * "The sedan is the second-newest" → sedan = 6 (since newest=7, second-newest=6).
+        * "The tractor is newer than the convertible" → tractor > convertible.
+        * "The hatchback is older than the convertible" → hatchback < convertible.
+
+4.  **Solve for Valid Arrangements:**
+    * Call `getSolutions()` to find all solutions satisfying the constraints.
+    * Extract the first (and expected unique) solution from the list.
+
+5.  **Identify the Third-Newest Vehicle:**
+    * The question asks for the third-newest vehicle. In our numbering (1=oldest, 7=newest), third-newest corresponds to position **5** (positions: 1=oldest, ..., 5=third-newest, 6=second-newest, 7=newest).
+    * Create a mapping from choice letters to vehicle names using the options A–G.
+    * Iterate over choices; for each, check if that vehicle's position in the solution equals 5.
+    * Return the letter of the first (and only) matching choice.

@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * The variables are the three golfers: `"Ana"`, `"Dan"`, and `"Mel"`.  
+   * Define the domain as integers from 1 to 3, where **1 = first place (finishes before others)**, 2 = second place, and 3 = third place.  
+   * Add the variables to the problem with this domain.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure no two golfers share the same finishing position.  
+   * Add a constraint for "Dan finished second": `Dan == 2`.  
+   * Add a constraint for "Mel finished first": `Mel == 1`.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments. Due to the fixed statements, only one solution will exist.  
+   * Extract the unique solution.
+
+5. **Determine the Correct Answer:**  
+   * The question asks which statement is true: A) Ana first, B) Dan first, C) Mel first.  
+   * From the solved solution, check which golfer has position 1.  
+   * Since the statement "Mel finished first" is given as a constraint, the solution must have `Mel == 1`.  
+   * Match this to choice C and return it as the answer.

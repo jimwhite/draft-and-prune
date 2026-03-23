@@ -1,0 +1,15 @@
+1. Identify all individuals: Bob, Dave, Fiona, Harry.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_big("Bob", True), is_cold("Bob", True), etc.).
+3. Translate each universal implication into a rule:
+   • If someone is blue → they are cold.
+   • If someone is big → they are white.
+   • If Bob is rough and Bob is blue → Bob is big.
+   • All blue, smart people are big.
+   • If someone is blue and rough → they are quiet.
+   • All smart people are blue.
+   • Cold people are rough.
+   • If someone is quiet → they are big.
+4. For each rule, construct a `foreach` block capturing the premises and an `assert` block for the conclusion. For rule 3 (Bob-specific), use a dedicated rule with constant "Bob" rather than quantification.
+5. Infer properties of Fiona using the rules and facts: Derive whether is_blue("Fiona", True) holds from “All smart people are blue” and whether Fiona is smart (not given), then propagate via other rules (e.g., if blue → cold, blue & rough → quiet, etc.) to test is_big("Fiona", True).
+6. The query checks whether Fiona is big:
+   → Use facts.is_big("Fiona", True)

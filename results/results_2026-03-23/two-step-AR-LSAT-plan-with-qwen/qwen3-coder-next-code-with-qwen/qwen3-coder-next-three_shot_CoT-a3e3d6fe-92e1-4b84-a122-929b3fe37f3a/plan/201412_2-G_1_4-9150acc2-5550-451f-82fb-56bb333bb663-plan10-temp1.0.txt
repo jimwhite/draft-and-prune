@@ -1,0 +1,15 @@
+1. Enumerate the six roles and assign integer indices: [guitarist=0, keyboard player=1, percussionist=2, saxophonist=3, trumpeter=4, violinist=5].  
+2. Create integer position variables `pos[r]` for each role r, representing the solo order (1 to 6).  
+3. Add **domain constraints**: each `pos[r]` ∈ {1,2,3,4,5,6}, and all positions are distinct (using `Distinct([pos[r] for r in roles])`).  
+4. Add **guitarist constraint**: guitarist ≠ 4 → `pos[0] != 4`.  
+5. Add **percussionist-before-keyboard constraint**: `pos[2] < pos[1]`.  
+6. Add **violinist-before-keyboard and keyboard-before-guitarist constraints**: `pos[5] < pos[1]` and `pos[1] < pos[0]`.  
+7. Add **saxophonist constraint**: saxophonist performs after exactly one of (percussionist, trumpeter).  
+   - This is an exclusive OR: `(pos[3] > pos[2]) XOR (pos[3] > pos[4])`.  
+   - Encode as: `(pos[3] > pos[2]) + (pos[3] > pos[4]) == 1` (using integer arithmetic on booleans).  
+8. Translate answer choices to role indices: ['guitarist', 'keyboard player', 'saxophonist', 'trumpeter', 'violinist'] → indices [0,1,3,4,5].  
+9. Define `answer_index_list = []`. For each candidate role index i in [0,1,3,4,5]:  
+   - Clone base solver.  
+   - Add `pos[i] == 3`.  
+   - If UNSAT, then role i CANNOT perform third → append i to `answer_index_list`.  
+10. Print `answer_index_list`.

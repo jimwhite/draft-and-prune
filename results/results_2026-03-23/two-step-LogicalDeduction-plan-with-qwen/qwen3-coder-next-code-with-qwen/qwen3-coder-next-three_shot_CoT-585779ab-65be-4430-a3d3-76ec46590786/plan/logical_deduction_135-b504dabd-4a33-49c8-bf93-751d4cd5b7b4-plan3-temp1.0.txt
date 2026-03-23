@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruits as variables: `"plums"`, `"kiwis"`, `"pears"`, `"mangoes"`, `"apples"`, `"oranges"`, and `"loquats"`.  
+    * Define the domain as integers from **1 to 7**, where **1 = most expensive** and **7 = least expensive** (since "most expensive" implies highest value, and the constraints use comparative terms like "less/more expensive").  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into a constraint:  
+        - "The pears are less expensive than the oranges" → `pears > oranges` (since lower rank number = more expensive, so less expensive means higher numeric value).  
+        - "The mangoes are less expensive than the kiwis" → `mangoes > kiwis`.  
+        - "The plums are the second-most expensive" → `plums == 2`.  
+        - "The loquats are more expensive than the apples" → `loquats < apples`.  
+        - "The kiwis are less expensive than the apples" → `kiwis > apples`.  
+        - "The loquats are the fourth-most expensive" → `loquats == 4`.  
+
+4.  **Solve the Constraint System:**  
+    * Call `getSolutions()` to obtain all valid assignments.  
+    * Extract the unique solution (or any one solution, as the problem is well-defined).
+
+5.  **Determine the Most Expensive Fruit (Rank 1):**  
+    * The question asks which fruit is the **most expensive**, i.e., has rank **1**.  
+    * Create a mapping from choice letters (`'A'` to `'G'`) to their corresponding fruit names:  
+        `{'A': 'plums', 'B': 'kiwis', 'C': 'pears', 'D': 'mangoes', 'E': 'apples', 'F': 'oranges', 'G': 'loquats'}`.  
+    * Iterate through the solution dictionary to find which fruit has value `1`.  
+    * Return the choice letter associated with that fruit.

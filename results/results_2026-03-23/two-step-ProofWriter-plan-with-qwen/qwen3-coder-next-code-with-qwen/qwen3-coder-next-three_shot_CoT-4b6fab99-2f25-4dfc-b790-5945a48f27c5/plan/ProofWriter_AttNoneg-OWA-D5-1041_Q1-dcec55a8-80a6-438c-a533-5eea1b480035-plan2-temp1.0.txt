@@ -1,0 +1,19 @@
+1. Identify all entities: Bob, Charlie, Dave, Fiona.  
+2. Encode all explicitly stated facts as `facts.predicate(entity, boolean_or_object, True)` with ternary predicates:  
+   - Properties: is_cold, is_quiet, is_red, is_smart, is_kind, is_rough, is_round take boolean objects (True/False).  
+   - Encode direct facts:  
+     • is_cold("Bob", True), is_quiet("Bob", True), is_red("Bob", True), is_smart("Bob", True)  
+     • is_kind("Charlie", True), is_quiet("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True)  
+     • is_cold("Dave", True), is_kind("Dave", True), is_smart("Dave", True)  
+     • is_quiet("Fiona", True)  
+3. Translate all conditional rules into `foreach` + `assert` blocks:  
+   • If X is quiet and cold → X is smart.  
+   • If X is red and cold → X is round.  
+   • If X is kind and rough → X is red.  
+   • All quiet things are rough: if X is quiet → X is rough.  
+   • If X is cold and smart → X is red.  
+   • If X is rough → X is cold.  
+   • All red things are rough: if X is red → X is rough.  
+   • If Dave is smart and kind → Dave is quiet.  
+4. For each rule, construct a `foreach` block matching the antecedent conditions (using atomic facts or negated facts where needed) and an `assert` statement for the consequent.  
+5. The query verifies whether Charlie is kind: since `is_kind("Charlie", True)` is explicitly stated, the answer is directly derivable. Use facts.is_kind("Charlie", True).

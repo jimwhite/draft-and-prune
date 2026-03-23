@@ -1,0 +1,13 @@
+1. Identify all involved entities: cow, lion, mouse, tiger.  
+2. Encode all explicitly stated facts using ternary predicates (e.g., eats("cow", "lion", True), is_green("tiger", True), needs("tiger", "mouse", True), etc.).  
+3. Translate each conditional statement from the context into a PyKe rule:  
+   • If someone sees the lion → they are cold.  
+   • If someone needs the tiger and needs the mouse → they are cold.  
+   • If someone needs the tiger and the tiger eats the cow → the tiger needs the lion.  
+   • All round people are green (i.e., if is_round(X, True) → is_green(X, True)).  
+   • All young, green people are round (i.e., if is_young(X, True) ∧ is_green(X, True) → is_round(X, True)).  
+   • If someone eats the mouse and the mouse sees the lion → they are green.  
+   • If someone needs the tiger → the tiger sees the lion.  
+   • If someone is cold and sees the lion → they need the tiger.  
+4. For each rule, construct a `foreach` block capturing the antecedent conditions and an `assert` clause for the consequent conclusion.  
+5. The query tests whether the cow needs the tiger: → Use facts.needs("cow", "tiger", True).

@@ -1,0 +1,14 @@
+1. Identify all entities: Bob, Dave, Fiona, Harry.
+2. Encode all explicit unary property facts using ternary predicates: is_big("Bob", True), is_blue("Bob", True), ..., is_rough("Dave", True), is_blue("Fiona", True), etc.
+3. Encode all unary property facts for Harry: is_big("Harry", True), is_cold("Harry", True).
+4. Translate each conditional rule into PyKe `foreach` + `assert` rules:
+   • If X is blue → X is cold.
+   • If X is big → X is white.
+   • If Bob is rough AND Bob is blue → Bob is big. (Note: fact already given, but include as rule for completeness or redundancy handling.)
+   • If X is blue AND X is smart → X is big.
+   • If X is blue AND X is rough → X is quiet.
+   • If X is smart → X is blue.
+   • If X is cold → X is rough.
+   • If X is quiet → X is big.
+5. Ensure no conflicting facts or cycles cause inconsistency; verify all derivations are grounded from explicit facts.
+6. The query is: Is Fiona big? → Use facts.is_big("Fiona", True)

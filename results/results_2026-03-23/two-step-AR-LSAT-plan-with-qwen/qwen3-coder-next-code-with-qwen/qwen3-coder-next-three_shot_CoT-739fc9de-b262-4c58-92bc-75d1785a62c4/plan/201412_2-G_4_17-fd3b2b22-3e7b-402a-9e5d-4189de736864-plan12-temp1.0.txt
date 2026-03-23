@@ -1,0 +1,18 @@
+1. Enumerate the six photographers and assign each a Boolean variable indicating assignment to Silva University (assign_S[i] = True means assigned to Silva; otherwise assigned to Thorne or not assigned).  
+2. Derive assignment to Thorne as assign_T[i] = (assign_S[i] == False) ∧ (assigned flag), but better: introduce two Boolean per photographer: S_i for Silva, T_i for Thorne, with mutual exclusivity (¬(S_i ∧ T_i)) and optional participation (S_i ∨ T_i is not required, but we enforce minimum two per ceremony).  
+3. Add **minimum capacity constraints**: at least two photographers assigned to Silva (Σ S_i ≥ 2), and at least two assigned to Thorne (Σ T_i ≥ 2).  
+4. Add **mutual exclusivity**: for each photographer i, S_i ∧ T_i → False (i.e., ¬(S_i ∧ T_i)).  
+5. Add **Frost–Heideck together constraint**: Frost and Heideck must both be assigned to the same ceremony if assigned at all.  
+   - (S_F ∧ S_H) ∨ (T_F ∧ T_H) ∨ (¬S_F ∧ ¬T_F ∧ ¬S_H ∧ ¬T_H) → but more directly: (S_F ↔ S_H) ∧ (T_F ↔ T_H). Since if one is assigned, the other must be to same ceremony; alternatively enforce: (S_F ∧ ¬S_H) → False, (¬S_F ∧ S_H) → False, same for Thorne.  
+6. Add **Lai–Mays different-ceremony constraint**: If both assigned, they must be on opposite ceremonies.  
+   - This is equivalent to: ¬(S_L ∧ S_M) ∧ ¬(T_L ∧ T_M). (Because if both on Silva or both on Thorne, violates; not assigned is fine.)  
+7. Add **Gonzalez–Lai conditional**: If Gonzalez on Silva, then Lai must be on Thorne.  
+   - S_G → T_L (i.e., ¬S_G ∨ T_L).  
+8. Add **Knutson conditional**: If Knutson is NOT on Thorne, then Heideck and Mays must be on Thorne.  
+   - ¬T_K → (T_H ∧ T_M)  
+9. For each choice in the answer list:  
+   - Parse the assignment string to extract exactly who is assigned to Silva and Thorne.  
+   - Encode these as hard constraints (e.g., S_F = True, T_H = True, etc.) for all listed photographers. Unmentioned photographers have S_i = False and T_i = False.  
+   - Clone the base constraints into a fresh solver, add the choice-specific assignment constraints, and check SAT.  
+10. Collect indices of choices where the solver returns SAT — those are acceptable assignments. Since only one choice is correct, expect exactly one SAT.  
+11. Output the index (or full description) of the first/only acceptable choice as answer.

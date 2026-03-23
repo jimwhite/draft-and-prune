@@ -1,0 +1,23 @@
+1. Identify all entities involved: cat, dog, rabbit, tiger.  
+2. Define ternary predicates for unary properties (e.g., is_kind(subject, True), is_green(subject, True), is_big(subject, True)) and binary relations (e.g., needs(subject, object, True), eats(subject, object, True), chases(subject, object, True)).  
+3. Encode all explicitly stated facts as facts.pred(subj, obj, True):  
+   - needs("cat", "dog", True)  
+   - is_kind("dog", True)  
+   - needs("dog", "rabbit", True)  
+   - eats("rabbit", "dog", True)  
+   - is_green("rabbit", True)  
+   - chases("tiger", "rabbit", True)  
+   - is_big("tiger", True)  
+4. Translate each conditional statement into a PyKe rule using `foreach` (condition pattern) and `assert` (conclusion):  
+   • If something is nice and eats the tiger → it needs the dog.  
+   • If something chases the cat → it eats the cat.  
+   • If dog chases tiger → tiger needs rabbit.  
+   • If rabbit chases tiger → rabbit chases cat.  
+   • If something chases the cat → cat is kind.  
+   • If something eats the dog → it chases the cat.  
+   • If something is rough → it eats the dog.  
+   • If something is kind → it is rough.  
+   • If something eats the rabbit and rabbit is big → it is kind.  
+5. Note: The fact "is_big("rabbit", True)" is *not* given—only "is_big("tiger", True)" is stated, so the rule about eating rabbit requiring rabbit to be big will not trigger unless rabbit’s size is inferred (which it isn’t).  
+6. The query tests whether the cat is *not* rough:  
+   → Use facts.is_rough("cat", False)

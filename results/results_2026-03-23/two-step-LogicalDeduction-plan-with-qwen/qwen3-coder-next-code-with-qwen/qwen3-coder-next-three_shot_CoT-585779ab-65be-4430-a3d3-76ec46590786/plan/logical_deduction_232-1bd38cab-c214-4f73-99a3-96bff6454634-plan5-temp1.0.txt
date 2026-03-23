@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * List the seven books as variables: `"red"`, `"purple"`, `"green"`, `"white"`, `"orange"`, `"blue"`, and `"gray"`.
+   * Define the domain as integers from 1 to 7, where **1 = leftmost position** and **7 = rightmost position**.
+   * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+   * Translate each statement into a constraint:
+     - "The green book is to the left of the white book" → `green < white`
+     - "The red book is to the left of the purple book" → `red < purple`
+     - "The red book is to the right of the orange book" → `orange < red`
+     - "The gray book is the second from the left" → `gray == 2`
+     - "The purple book is to the left of the green book" → `purple < green`
+     - "The blue book is the fourth from the left" → `blue == 4`
+
+4. **Solve for All Valid Arrangements:**
+   * Call `getSolutions()` to obtain all solutions satisfying the constraints.
+   * Since the problem is deterministic and consistent, expect exactly one valid solution; extract it (e.g., `solutions[0]`).
+
+5. **Determine Which Book Is Rightmost (Position 7):**
+   * Create a mapping from choice letters to book names: `'A':'red'`, `'B':'purple'`, `'C':'green'`, `'D':'white'`, `'E':'orange'`, `'F':'blue'`, `'G':'gray'`.
+   * Iterate over the choices. For each choice letter, retrieve its corresponding book name and check if that book’s position in the solution is 7.
+   * Return (or print) the first choice letter whose book occupies position 7 — this is the correct answer.

@@ -1,0 +1,23 @@
+1. Enumerate the nine scientists and assign them integer indices: F=0, G=1, H=2 (botanists); K=3, L=4, M=5 (chemists); P=6, Q=7, R=8 (zoologists).  
+2. Create Boolean decision variables `s[i]` for each scientist i, where `s[i] == True` means scientist i is selected.  
+3. Add **panel size constraint**: exactly five scientists are selected: `sum(s[i] for i in range(9)) == 5`.  
+4. Add **representation constraints**:  
+   - At least one botanist: `s[0] + s[1] + s[2] >= 1`.  
+   - At least one chemist: `s[3] + s[4] + s[5] >= 1`.  
+   - At least one zoologist: `s[6] + s[7] + s[8] >= 1`.  
+5. Add **conditional constraints**:  
+   - If >1 botanist selected, then ≤1 zoologist: `(s[0]+s[1]+s[2] > 1) → (s[6]+s[7]+s[8] <= 1)`.  
+   - F and K cannot both be selected: `¬(s[0] ∧ s[3])`.  
+   - K and M cannot both be selected: `¬(s[3] ∧ s[5])`.  
+   - If M is selected, both P and R must be selected: `s[5] → (s[6] ∧ s[8])`.  
+6. Translate each answer choice into a Boolean combination of selections:  
+   - Choice 0: F, G, K, P, Q → s[0]=T, s[1]=T, s[3]=T, s[6]=T, s[7]=T (others F).  
+   - Choice 1: G, H, K, L, M → s[1]=T, s[2]=T, s[3]=T, s[4]=T, s[5]=T.  
+   - Choice 2: G, H, K, L, R → s[1]=T, s[2]=T, s[3]=T, s[4]=T, s[8]=T.  
+   - Choice 3: H, K, M, P, R → s[2]=T, s[3]=T, s[5]=T, s[6]=T, s[8]=T.  
+   - Choice 4: H, L, M, P, Q → s[2]=T, s[4]=T, s[5]=T, s[6]=T, s[7]=T.  
+7. For each choice (0 to 4):  
+   - Clone the base constraints into a fresh solver.  
+   - Assert the specific selections (set `s[i]` to True for selected scientists, False for unselected).  
+   - Check satisfiability.  
+8. The first (and only) choice that yields SAT is the acceptable selection; record its index and output it.

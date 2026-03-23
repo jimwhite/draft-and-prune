@@ -1,0 +1,19 @@
+1. Identify all entities: bear, cow, rabbit, tiger.  
+2. Encode all explicitly stated facts as ternary predicates of the form predicate(subject, object, True):  
+   - Properties: is_blue("bear", True), is_green("bear", True), is_red("bear", True), is_blue("cow", True), is_cold("rabbit", True), is_nice("rabbit", True)  
+   - Relations: sees("bear", "rabbit", True), needs("cow", "tiger", True), visits("cow", "rabbit", True), needs("rabbit", "cow", True), sees("rabbit", "cow", True), sees("rabbit", "tiger", True), needs("tiger", "bear", True), needs("tiger", "rabbit", True), visits("tiger", "bear", True), visits("tiger", "cow", True)  
+3. Encode all explicitly stated facts directly using `facts.pred(subject, object, True)` syntax in PyKe.  
+4. Translate each conditional rule into a `foreach` + `assert` block:  
+   • If something is green → it visits the tiger.  
+   • If something sees the bear and is cold → the bear is green.  
+   • If cow needs rabbit AND rabbit needs cow → rabbit is red.  
+   • If something is green → it needs the cow.  
+   • If something visits the tiger → the tiger is red.  
+   • If something needs the tiger AND tiger sees cow → cow needs bear.  
+   • If something sees bear AND needs bear → it sees cow.  
+   • If something visits rabbit → rabbit needs tiger.  
+   • If something needs bear AND bear visits tiger → it sees bear.  
+5. For rules involving specific entities (e.g., "cow needs rabbit"), use concrete constants in the `foreach` condition; for universal rules, use variables.  
+6. Query whether "cow visits rabbit" is entailed:  
+   → Use facts.visits("cow", "rabbit", True)  
+7. Since this fact is explicitly stated as a premise, it should be directly asserted — verification reduces to confirming consistency with inference rules (but direct fact is sufficient for truth).

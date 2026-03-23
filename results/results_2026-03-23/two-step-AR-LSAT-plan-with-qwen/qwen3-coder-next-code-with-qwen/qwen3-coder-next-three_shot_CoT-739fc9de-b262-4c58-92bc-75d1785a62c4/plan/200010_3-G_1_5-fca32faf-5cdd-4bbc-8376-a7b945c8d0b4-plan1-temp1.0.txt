@@ -1,0 +1,35 @@
+1. Enumerate the eight students and assign integer codes (e.g., George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Define six report slots: Monday Morning (MM), Monday Afternoon (MA), Tuesday Morning (TM), Tuesday Afternoon (TA), Wednesday Morning (WM), Wednesday Afternoon (WA).  
+3. Create integer variables `slot[i]` for each student i ∈ {0..7}, where `slot[i] = -1` if the student does not give a report, otherwise `slot[i] ∈ {0..5}` encoding the six slots in order.  
+4. Add **domain constraints**: for each student i, `slot[i] = -1` OR `0 ≤ slot[i] ≤ 5`. Exactly six students have `slot[i] ≠ -1`.  
+5. Add **exactly two reports per day** constraints:  
+    - Monday: slots 0 and 1 → exactly two students assigned to {0,1}  
+    - Tuesday: slots 2 and 3 → exactly two students assigned to {2,3}  
+    - Wednesday: slots 4 and 5 → exactly two students assigned to {4,5}  
+6. Add **given conditions**:  
+    - Tuesday is the only day George can report → if George reports, his slot must be 2 or 3.  
+    - Olivia and Robert cannot give afternoon reports → their slot must be in {0, 2, 4} (morning slots) if they report.  
+    - Kyle gives afternoon report on Tuesday → `slot[Kyle] = 3`.  
+    - Helen gives afternoon report on Wednesday → `slot[Helen] = 5`.  
+7. Add **Nina conditional constraint**: if Nina reports on Monday or Tuesday, then Helen and Irving must both report the next day. If Nina reports on Wednesday, no constraint.  
+    - Encode: Let nina_slot = slot[Nina]. If `nina_slot ≠ -1`:  
+        - If `nina_slot == 0` (Mon AM), then Helen and Irving must be assigned to Tuesday slots {2,3}.  
+        - If `nina_slot == 1` (Mon PM), same as above.  
+        - If `nina_slot == 2` (Tue AM), then Helen and Irving must be assigned to Wednesday slots {4,5}.  
+        - If `nina_slot == 3` (Tue PM), impossible since Kyle already occupies TA; but enforce anyway.  
+        - If `nina_slot == 4` (Wed AM) or `5` (Wed PM), no constraint.  
+8. Add **slot uniqueness and assignment consistency** constraints:  
+    - Exactly six distinct students have non-(-1) slots; the six assigned slots must be all different (no two students share a slot).  
+9. Translate answer choices into lists of three student indices for Monday Morning, Tuesday Morning, Wednesday Morning (MA/TA and WM/WA are fixed: TA=Kyle, WA=Helen).  
+    - Each choice gives the morning reporters for M, T, W.  
+10. For each answer choice:  
+    - Clone base constraints into fresh solver.  
+    - Assert that the listed students occupy the specified morning slots:  
+        - MM = first student in list (slot = 0)  
+        - TM = second student in list (slot = 2)  
+        - WM = third student in list (slot = 4)  
+    - Also enforce the given fixed assignments: Kyle → slot 3, Helen → slot 5.  
+    - Ensure all assigned slots are distinct and within valid ranges (0–5).  
+    - Add that no other constraints are violated.  
+11. If the model is SAT, then this list is possible; collect its index in the answer choices.  
+12. Output the index (or the list itself) of the correct answer choice(s).

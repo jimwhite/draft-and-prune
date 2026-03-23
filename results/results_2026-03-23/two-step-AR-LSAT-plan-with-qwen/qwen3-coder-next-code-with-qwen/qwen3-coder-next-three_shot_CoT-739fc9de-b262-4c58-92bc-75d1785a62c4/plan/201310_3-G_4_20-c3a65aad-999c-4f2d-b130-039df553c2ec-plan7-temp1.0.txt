@@ -1,0 +1,25 @@
+1. Enumerate the five bird types: oystercatchers (O), petrels (P), rails (R), sandpipers (S), terns (T).  
+2. Enumerate the five lecture slots: 1 to 5 (positions), and two venues: Gladwyn Hall (G = True) or Howard Auditorium (H = False).  
+3. Create Boolean variables `venue[i]` for each lecture slot i ∈ {1,2,3,4,5}, where `venue[i] = True` means Gladwyn Hall.  
+4. Create integer variables `slot[bird]` for each bird type, mapping to the lecture slot (1–5) it appears in. All `slot[bird]` must be distinct (permutation).  
+5. Add **fixed venue constraints**:  
+    - `venue[1] = True` (first lecture in Gladwyn Hall).  
+    - `venue[4] = False` (fourth in Howard).  
+6. Add **count constraint**: exactly three Gladwyn lectures → sum(venue[i] for i=1..5) = 3.  
+7. Add **sandpiper constraints**:  
+    - `venue[slot[S]] = False` (S in Howard).  
+    - `slot[S] < slot[O]` (S earlier than O).  
+8. Add **tern/petrel constraints**:  
+    - `slot[T] < slot[P]` (T earlier than P).  
+    - `venue[slot[P]] = True` (P in Gladwyn).  
+9. Translate each answer choice into a logical condition on venues of specific slots:  
+    - A: `venue[1] ∧ venue[2]`  
+    - B: `¬venue[2] ∧ ¬venue[3]`  
+    - C: `venue[2] ∧ venue[5]`  
+    - D: `¬venue[3] ∧ ¬venue[4]`  
+    - E: `venue[3] ∧ venue[5]`  
+10. Define `must_be_false_index_list = []`. For each answer choice index j (0–4):  
+    - Clone base constraints into fresh solver.  
+    - Add the condition corresponding to choice j as a conjunct (e.g., for A: `venue[1] & venue[2]`).  
+    - If the model is UNSAT, then this choice **must be false**; append j to `must_be_false_index_list`.  
+11. Output the single index in `must_be_false_index_list` (exactly one must be false).

@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruit variables: `"kiwis"`, `"cantaloupes"`, `"oranges"`, `"loquats"`, `"pears"`, `"watermelons"`, and `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, consistent with the problem's use of "third-cheapest" (which corresponds to rank 3).  
+   * Add all seven fruit variables with this domain to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each fruit has a unique price rank.  
+   * Translate each statement into constraints using `addConstraint` with appropriate lambda functions:  
+     - "The loquats are less expensive than the peaches" → `loquats < peaches`  
+     - "The pears are the third-cheapest" → `pears == 3`  
+     - "The oranges are less expensive than the cantaloupes" → `oranges < cantaloupes`  
+     - "The loquats are more expensive than the watermelons" → `loquats > watermelons`  
+     - "The peaches are less expensive than the oranges" → `peaches < oranges`  
+     - "The kiwis are the second-most expensive" → Since most expensive is rank 7, second-most expensive is rank **6**, so `kiwis == 6`
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to compute all valid rank assignments satisfying the constraints.  
+   * Extract the sole solution (since the problem states consistency and implies uniqueness), represented as a dictionary mapping fruits to integer ranks.
+
+5. **Determine the Third-Most-Expensive Fruit:**  
+   * The question asks for the fruit that is **third-most expensive**. In a 7-item ranking from cheapest=1 to most expensive=7, the third-most expensive corresponds to rank **5** (since 7 = 1st most expensive, 6 = 2nd most, 5 = 3rd most).  
+   * Create a mapping from choice letters to fruit names: `{'A': 'kiwis', 'B': 'cantaloupes', 'C': 'oranges', 'D': 'loquats', 'E': 'pears', 'F': 'watermelons', 'G': 'peaches'}`  
+   * Iterate through the choices, check if `solution[fruit] == 5`. Return the corresponding choice letter.

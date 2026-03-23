@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five vehicles as variables: `"bus"`, `"truck"`, `"motorcyle"`, `"sedan"`, and `"hatchback"`.  
+    * Define the domain as integers from 1 to 5, where **1 = oldest**, **5 = newest**.  
+    * Add all vehicle variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.  
+    * Convert each statement into a lambda constraint:  
+        * "The sedan is the second-oldest" → `sedan == 2`  
+        * "The hatchback is newer than the motorcyle" → `hatchback > motorcyle`  
+        * "The motorcyle is newer than the sedan" → `motorcyle > sedan`  
+        * "The hatchback is older than the truck" → `hatchback < truck`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution from the returned list (since the problem is deterministic).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" about who is second-oldest (rank 2).  
+    * Note: The statement "The sedan is the second-oldest" is explicitly given, and choice D directly states this.  
+    * To be rigorous: extract the vehicle with rank 2 from the solution dictionary and compare it against the choices.  
+    * Map each choice letter to its vehicle:  
+        A → "bus", B → "truck", C → "motorcyle", D → "sedan", E → "hatchback".  
+    * Find which vehicle has position 2 in the solution, then return its corresponding choice letter.

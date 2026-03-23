@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, to match the problem's "most/least expensive" phrasing.
+    * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+    * Translate each statement into a constraint using `lambda` functions or direct value assignments:
+        * "The oranges are more expensive than the peaches" → `oranges > peaches`
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`
+        * "The pears are less expensive than the cantaloupes" → `pears < 4` (since cantaloupes = 4, and lower number = cheaper)
+        * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6)
+        * "The mangoes are the cheapest" → `mangoes == 1`
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest = 1, second-cheapest = 2, third-cheapest = 3)
+
+4.  **Solve for the Arrangement:**
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (as the problem is deterministic).
+
+5.  **Determine the Third-Most-Expensive Item:**
+    * In our ranking (1=cheapest, 7=most expensive), third-most-expensive corresponds to rank **5** (positions: 1=7th cheapest? Wait—no: most expensive = 7, second-most = 6, third-most = 5).
+    * Correct interpretation: "third-most expensive" = rank **5** (since 7=1st most exp., 6=2nd, 5=3rd).
+    * Identify which fruit has rank 5 in the solution.
+    * Map that fruit to the correct choice letter by creating a dictionary: {"A": "watermelons", "B": "mangoes", "C": "kiwis", "D": "pears", "E": "cantaloupes", "F": "oranges", "G": "peaches"}.
+    * Return the choice letter corresponding to the fruit with rank 5.

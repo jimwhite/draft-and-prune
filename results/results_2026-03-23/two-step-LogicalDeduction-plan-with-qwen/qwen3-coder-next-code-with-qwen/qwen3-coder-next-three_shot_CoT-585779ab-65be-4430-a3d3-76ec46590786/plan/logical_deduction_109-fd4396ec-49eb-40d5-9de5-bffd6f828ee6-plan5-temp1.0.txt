@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruits as variables: `"mangoes"`, `"kiwis"`, `"oranges"`, `"watermelons"`, `"apples"`, `"pears"`, and `"loquats"`.  
+   * Assign a domain of integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.  
+   * Add all variables to the `Problem` instance with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique prices (positions) for each fruit.  
+   * Translate each statement into a constraint using lambda functions or direct value constraints:  
+     - "The loquats are less expensive than the oranges" → `loquats < oranges`.  
+     - "The oranges are the third-most expensive" → `oranges == 5` (since most expensive = 7, so third-most expensive = position 5).  
+     - "The apples are the cheapest" → `apples == 1`.  
+     - "The kiwis are more expensive than the pears" → `kiwis > pears`.  
+     - "The mangoes are more expensive than the watermelons" → `mangoes > watermelons`.  
+     - "The loquats are more expensive than the kiwis" → `loquats > kiwis`.
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to find all assignments satisfying all constraints.  
+   * Extract the (presumed unique) solution dictionary from the returned list.
+
+5. **Determine Fourth-Most-Expensive Fruit:**  
+   * In our ranking system, the fourth-most expensive corresponds to position 4.  
+   * Create a mapping from choice letters (`"A"` through `"G"`) to fruit names:  
+     `{"A": "mangoes", "B": "kiwis", "C": "oranges", "D": "watermelons", "E": "apples", "F": "pears", "G": "loquats"}`.  
+   * Iterate through choices; for each choice, check if the corresponding fruit’s assigned position in the solution is 4.  
+   * Return (or print) the first matching choice letter as the correct answer.

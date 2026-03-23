@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and create integer variables for their recruitment positions (1 to 7).  
+2. Add **domain constraints**: each position must be an integer in [1, 7], and all positions are distinct (bijection).  
+3. Add **fixed constraint**: Peters is fourth (`pos_Peters == 4`).  
+4. Add **Villas-White adjacency constraint**: Villas is immediately before White (`pos_Villas + 1 == pos_White`).  
+5. Add **Quinn-Rovero precedence constraint**: Quinn recruited earlier than Rovero (`pos_Quinn < pos_Rovero`).  
+6. Add **Quinn-Rovero adjacency constraint (assumed for this scenario)**: Quinn is immediately before Rovero (`pos_Quinn + 1 == pos_Rovero`).  
+7. Add **Stanton-Tao non-adjacency constraint**: Stanton is neither immediately before nor after Tao (`abs(pos_Stanton - pos_Tao) != 1`).  
+8. Translate the answer choices into position indices: first=1, second=2, third=3, fifth=5, seventh=7.  
+9. For each candidate position in the answer choices:  
+    - Clone the base + scenario constraints into a fresh solver.  
+    - Add constraint that Stanton is recruited at that position (`pos_Stanton == candidate_position`).  
+    - If the model is UNSAT, then Stanton **cannot** be at that position; append the position index to the answer index list.  
+10. Print the answer index list.

@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the seven vehicle names as string variables: `"convertible"`, `"truck"`, `"tractor"`, `"limousine"`, `"motorcyle"`, `"hatchback"`, and `"sedan"`.  
+    * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**, to represent chronological age ranking.  
+    * Add all variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**  
+    * Enforce that all vehicles have distinct age ranks using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**  
+    * "The hatchback is the fourth-newest" → hatchback's rank = 4 (since 7 is newest, 6 is second-newest, 5 is third-newest, 4 is fourth-newest).  
+    * "The limousine is older than the motorcyle" → limousine rank < motorcyle rank.  
+    * "The truck is newer than the motorcyle" → truck rank > motorcyle rank.  
+    * "The sedan is the second-newest" → sedan rank = 6.  
+    * "The tractor is newer than the convertible" → tractor rank > convertible rank.  
+    * "The hatchback is older than the convertible" → hatchback rank < convertible rank (i.e., 4 < convertible_rank).
+
+5.  **Solve the Constraint Problem:**  
+    * Use `getSolutions()` to retrieve all valid assignments.  
+    * Extract the first (and likely only) solution from the returned list.
+
+6.  **Interpret the Question and Identify the Answer:**  
+    * The question asks which vehicle is the **third-newest**, i.e., rank = 5 (since 7=newest, 6=second-newest, 5=third-newest).  
+    * Create a mapping from choice letters ("A" through "G") to the corresponding vehicle names as per the choices.  
+    * Iterate over the solution dictionary and find which vehicle has rank 5.  
+    * Return the choice letter associated with that vehicle as the final answer.

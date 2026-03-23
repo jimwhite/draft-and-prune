@@ -1,0 +1,19 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign them integer indices.  
+2. Create integer variables for their editing positions (1 to 7).  
+3. Add **domain constraints**: each position is an integer in [1,7], and all positions are distinct.  
+4. Add **topic constraints**: assign each article to its topic (finance: G, H, J; nutrition: Q, R, S; wildlife: Y).  
+5. Add **no-consecutive-same-topic constraint**: for any two consecutive positions i and i+1, the articles at those positions must be of different topics.  
+6. Add **S-before-Q conditional constraint**: if S is earlier than Q, then Q must be in position 3. Equivalently: (pos_S < pos_Q) ⇒ (pos_Q == 3).  
+7. Add **S-before-Y constraint**: pos_S < pos_Y.  
+8. Add **J-before-G and G-before-R chain constraint**: pos_J < pos_G < pos_R.  
+9. Translate the answer choices (H is 4th, H is 6th, R is 4th, R is 7th, Y is 5th) into constraints.  
+10. For each answer choice:  
+    - Clone the base solver with all above constraints.  
+    - Add the specific constraint from the answer choice (e.g., pos_H == 4).  
+    - Check satisfiability.  
+    - If SAT, record whether the solution is unique (i.e., *no other* distinct assignment satisfies all constraints with that condition). To check uniqueness:  
+        - After finding a satisfying assignment, add a constraint forbidding that exact permutation (by disjunction over all articles having different positions), and re-check SAT.  
+        - If the modified solver is UNSAT, then the solution is unique under that condition; this choice makes the order fully determined.  
+    - Alternatively, generate all solutions under the condition and count them; if exactly one solution exists, mark as valid.  
+11. Collect the answer choices for which the order is fully determined (exactly one valid schedule exists).  
+12. Output the index of the correct choice from the list ['H is fourth.', 'H is sixth.', 'R is fourth.', 'R is seventh.', 'Y is fifth.'].

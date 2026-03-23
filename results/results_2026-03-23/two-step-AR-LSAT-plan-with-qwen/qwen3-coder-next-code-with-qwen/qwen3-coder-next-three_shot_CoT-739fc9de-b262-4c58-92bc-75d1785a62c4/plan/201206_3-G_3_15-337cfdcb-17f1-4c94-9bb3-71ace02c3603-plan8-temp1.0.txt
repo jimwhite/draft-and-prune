@@ -1,0 +1,20 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables `zone[i]` for each representative i, with domain {1, 2, 3}.  
+3. Add **mutual exclusivity constraints**: each zone must receive at least one representative? No—only enforce that assignments are valid; zones can be empty (but later constraints will restrict viability).  
+4. Add **Parra/Tiao Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1:  
+    - `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+5. Add **Tiao/Udall Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2:  
+    - `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+6. Add **Parra/Quinn same zone constraint**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey/Udall same zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone 3 > Zone 2 size constraint**:  
+    - Count representatives in Zone 3 and Zone 2; assert `count_zone3 > count_zone2`.  
+9. Compute total per zone: Use auxiliary integer counts or directly compare counts via `sum([zone[i]==z for i in range(7)])`.  
+10. Translate each answer choice into a set of representatives; for a candidate list L, assert that *exactly* the representatives in L are in Zone 3 (i.e., zone[i] == 3 iff rep i ∈ L), and all others are not in Zone 3.  
+11. For each answer choice:  
+    - Clone base constraints into a fresh solver.  
+    - Add the constraint encoding "Zone 3 = L" precisely: for each rep, if rep ∈ L then `zone[i] == 3`, else `zone[i] != 3`.  
+    - (Note: implied that others must be in Zone 1 or 2, but no further restriction—domain is already {1,2,3}, so `zone[i] != 3` suffices.)  
+    - Check SAT. If SAT, the choice is possible; record index.  
+12. The correct answer is the one with SAT—output its index as final result (only one should be SAT per LSAT-style question).  
+13. Return the corresponding choice string from the list of choices for the SAT case.

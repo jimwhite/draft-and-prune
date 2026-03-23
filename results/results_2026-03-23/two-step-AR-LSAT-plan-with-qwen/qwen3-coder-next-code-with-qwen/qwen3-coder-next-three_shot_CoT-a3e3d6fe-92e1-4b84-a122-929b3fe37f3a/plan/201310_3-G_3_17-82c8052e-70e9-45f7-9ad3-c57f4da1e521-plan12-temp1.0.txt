@@ -1,0 +1,34 @@
+1. Enumerate the five movies and assign each an integer code: horror=0, mystery=1, romance=2, sci-fi=3, western=4.  
+2. Enumerate the three screens: screen1=0, screen2=1, screen3=2.  
+3. For each movie, create two integer variables: `screen[m]` (which screen it's on) and `time[m]` (start time: 7=0, 8=1, 9=2).  
+4. Add **screen assignment constraints** based on capacity:  
+   - Exactly two movies on screen 1, exactly two on screen 2, exactly one on screen 3.  
+   - Equivalently: `sum_{m} [screen[m] == 0] == 2`, `sum_{m} [screen[m] == 1] == 2`, `sum_{m} [screen[m] == 2] == 1`.  
+5. Add **time-to-screen mapping constraints**:  
+   - Screen 1: movies must have times 7 and 9 (i.e., if `screen[m] == 0`, then `time[m] ∈ {0,2}`), and exactly one at each time.  
+   - Screen 2: movies must have times 7 and 9 (i.e., if `screen[m] == 1`, then `time[m] ∈ {0,2}`), and exactly one at each time.  
+   - Screen 3: movie must have time 8 (i.e., if `screen[m] == 2`, then `time[m] == 1`).  
+6. Add **global time uniqueness**: no two movies share the same (screen, time) slot → `(screen[m1] == screen[m2]) ∧ (time[m1] == time[m2]) ⇒ m1 == m2`.  
+7. Add **ordering constraints**:  
+   - Western before horror: if same screen, `time[western] < time[horror]`; else compare global times: map `(screen, time)` to a linear order (e.g., screen1@7=0, screen2@7=1, screen3@8=2, screen1@9=3, screen2@9=4), then `global_time[western] < global_time[horror]`.  
+     Alternatively: define `global_order = 2*screen[m] + (1 if time[m]==1 else 0)` but better: directly use lexicographic ordering of (screen, time) with appropriate priority. Simpler: define 5 distinct global positions with ordering:  
+     - Position 0: screen1@7, position 1: screen2@7, position 2: screen3@8, position 3: screen1@9, position 4: screen2@9.  
+     → Create integer var `pos[m] ∈ {0,1,2,3,4}` for each movie, all distinct.  
+     → Map: pos=0 ↔ (screen1,7), pos=1 ↔ (screen2,7), pos=2 ↔ (screen3,8), pos=3 ↔ (screen1,9), pos=4 ↔ (screen2,9).  
+     Then enforce:  
+        - screen[m] = 0 ↔ pos[m] ∈ {0,3}  
+        - screen[m] = 1 ↔ pos[m] ∈ {1,4}  
+        - screen[m] = 2 ↔ pos[m] == 2  
+     And ordering: western < horror in position.  
+8. Add **screen-specific constraints**:  
+   - sci-fi not on screen 3: `screen[sci-fi] != 2` or equivalently `pos[sci-fi] != 2`.  
+   - romance not on screen 2: `screen[romance] != 1` or `pos[romance] ∉ {1,4}`.  
+   - horror and mystery on different screens: `screen[horror] != screen[mystery]`.  
+9. Translate answer choices into candidate screen-1 schedules: each choice gives 7PM and 9PM movies on screen 1.  
+   For each option, e.g., "sci-fi, horror" means: screen1 movies = {sci-fi, horror}, with sci-fi at 7PM (pos=0), horror at 9PM (pos=3).  
+10. For each answer option, define a fresh solver with base constraints + additional fixed assignments:  
+    - screen[food1] = 0, time[food1] = 7 (i.e., pos=0),  
+    - screen[food2] = 0, time[food2] = 9 (i.e., pos=3).  
+11. If the extended constraint system is UNSAT, then this option **cannot** be an accurate list for screen 1 → record it.  
+12. Since only one option must be the answer, collect all options for which UNSAT occurs → that is the correct choice.  
+13. Return the index of the option (from choices) which yields UNSAT when enforced as screen 1 list.

@@ -1,0 +1,34 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the seven vehicles as string variables: `"station_wagon"`, `"truck"`, `"sedan"`, `"limousine"`, `"convertible"`, `"bus"`, and `"hatchback"`.  
+   * Assign a numerical domain from 1 to 7, where **1 = oldest** and **7 = newest**, reflecting chronological age ranking.  
+   * Add all variables to the problem with this domain using `addVariable`.
+
+3. **Translate Each Statement into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique positions for all vehicles.  
+   * "The limousine is the newest" → limousine's position = 7.  
+   * "The bus is the third-newest" → bus's position = 5 (since newest=7, second-newest=6, third-newest=5).  
+   * "The bus is older than the convertible" → bus's position < convertible's position (i.e., 5 < convertible_pos).  
+   * "The sedan is the third-oldest" → sedan's position = 3 (oldest=1, second-oldest=2, third-oldest=3).  
+   * "The station wagon is older than the truck" → station_wagon_pos < truck_pos.  
+   * "The hatchback is the oldest" → hatchback's position = 1.
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Invoke `getSolutions()` to enumerate all valid configurations.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+5. **Identify Which Vehicle Has Rank 3 (Third-Oldest):**  
+   * The question asks which vehicle is third-oldest—i.e., has position = 3.  
+   * From the solution dictionary, find which key (vehicle name) has value `3`.  
+   * Map that vehicle to the corresponding choice letter by comparing against the given options:  
+     - 'A' → station_wagon  
+     - 'B' → truck  
+     - 'C' → sedan  
+     - 'D' → limousine  
+     - 'E' → convertible  
+     - 'F' → bus  
+     - 'G' → hatchback  
+   * Return the letter (e.g., `'C'`) corresponding to the vehicle at position 3.

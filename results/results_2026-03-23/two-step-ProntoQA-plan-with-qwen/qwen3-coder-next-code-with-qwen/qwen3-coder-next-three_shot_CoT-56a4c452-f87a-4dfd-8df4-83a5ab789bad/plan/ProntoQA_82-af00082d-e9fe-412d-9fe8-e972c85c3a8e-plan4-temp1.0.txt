@@ -1,0 +1,30 @@
+1. Identify all entities and types: Rex, impus, yumpus, wumpus, numpus, jompus, dumpus, tumpus, vumpus, rompus, zumpus.  
+2. Identify all properties: mean, blue, hot, fruity, bright?, dull, happy, opaque, metallic. (Note: "bright" does not appear; properties are mean, blue, hot, fruity, dull, happy, opaque, metallic.)  
+3. Represent "Rex is a yumpus" as a base fact: `is_a("Rex", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Impuses are mean.  
+   - Each impus is a yumpus.  
+   - Yumpuses are blue.  
+   - Yumpuses are wumpuses.  
+   - Wumpuses are hot.  
+   - Every wumpus is a numpus.  
+   - Jompuses are happy.  
+   - Numpuses are fruity.  
+   - Numpuses are dumpuses.  
+   - Every dumpus is not dull.  
+   - Every dumpus is a tumpus.  
+   - Tumpuses are not happy.  
+   - Every tumpus is a vumpus.  
+   - Vumpuses are not opaque.  
+   - Every vumpus is a rompus.  
+   - Rompuses are metallic.  
+   - Each rompus is a zumpus.  
+5. Implement each rule using `foreach` (condition) and `assert` (consequence), respecting negated properties explicitly:  
+   - For negative predicates (e.g., "not happy", "not dull", "not opaque"), assert `is_happy(X, False)`, `is_dull(X, False)`, etc.  
+6. Derive the membership chain for Rex:  
+   - Rex is a yumpus → yumpus ⊆ wumpus → Rex is a wumpus  
+   - wumpus ⊆ numpus → Rex is a numpus  
+   - numpus ⊆ dumpus → Rex is a dumpus  
+   - dumpus ⊆ tumpus → Rex is a tumpus  
+   - tumpuses are not happy → Rex is not happy.  
+7. The query tests if "Rex is not happy" is provable: use `facts.is_happy("Rex", False)`.

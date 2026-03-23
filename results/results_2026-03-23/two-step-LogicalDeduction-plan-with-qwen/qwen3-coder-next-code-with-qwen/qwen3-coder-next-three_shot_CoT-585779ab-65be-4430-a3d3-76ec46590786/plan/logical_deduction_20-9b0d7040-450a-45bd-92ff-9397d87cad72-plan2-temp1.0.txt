@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the five birds as variables: `"blue jay"`, `"raven"`, `"crow"`, `"falcon"`, and `"quail"`.
+    * Assign positions as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.
+    * Add all variables with domain `{1, 2, 3, 4, 5}` to the problem.
+
+3.  **Add Constraints Based on Statements:**
+    * Add `AllDifferentConstraint()` to ensure each bird occupies a unique position.
+    * Add constraint for "The crow is to the left of the quail" → `crow < quail`.
+    * Add constraint for "The falcon is the leftmost" → `falcon == 1`.
+    * Add constraint for "The blue jay is to the right of the quail" → `quail < blue jay`.
+    * Add constraint for "The raven is the second from the left" → `raven == 2`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to compute all valid assignments of positions to birds.
+    * Since the problem is well-constrained, extract the unique solution.
+
+5.  **Determine Which Statement Is True:**
+    * The question asks which bird is the second from the left (i.e., position 2).
+    * Check the solved solution to find which bird has position = 2.
+    * Map this bird to the corresponding choice letter by comparing with the given choices:
+        - A: blue jay is second from left → position 2 == blue jay?
+        - B: raven is second from left → position 2 == raven? (Given as fact, but verify consistency)
+        - C: crow is second from left → position 2 == crow?
+        - D: falcon is second from left → position 2 == falcon? (Contradicts "falcon is leftmost")
+        - E: quail is second from left → position 2 == quail?
+    * Identify the choice whose description matches the solved configuration and return that letter.

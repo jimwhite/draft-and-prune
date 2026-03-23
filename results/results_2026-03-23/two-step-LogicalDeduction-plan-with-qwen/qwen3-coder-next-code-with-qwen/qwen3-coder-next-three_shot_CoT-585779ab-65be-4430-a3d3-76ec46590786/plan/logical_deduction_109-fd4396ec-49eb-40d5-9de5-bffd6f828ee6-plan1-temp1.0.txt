@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"mangoes"`, `"kiwis"`, `"oranges"`, `"watermelons"`, `"apples"`, `"pears"`, `"loquats"`.
+    * Define the domain for each variable as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.
+    * Add all seven fruit variables with the domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+    * Translate each statement into a constraint using lambda functions:
+        - "The loquats are less expensive than the oranges" → `loquats < oranges`
+        - "The oranges are the third-most expensive" → Since 7 is most expensive, third-most expensive means rank = 5 (because 7=1st, 6=2nd, **5=3rd**)
+        - "The apples are the cheapest" → `apples == 1`
+        - "The kiwis are more expensive than the pears" → `kiwis > pears`
+        - "The mangoes are more expensive than the watermelons" → `mangoes > watermelons`
+        - "The loquats are more expensive than the kiwis" → `loquats > kiwis`
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid price rank assignments.
+    * Extract the unique solution (since the problem states statements are logically consistent and imply a unique arrangement).
+
+5.  **Determine the Fourth-Most-Expensive Fruit:**
+    * Since most expensive = 7, fourth-most-expensive corresponds to rank **4** (7=1st, 6=2nd, 5=3rd, **4=4th**).
+    * Create a mapping from choice letters ("A" through "G") to fruit names:
+        A → "mangoes", B → "kiwis", C → "oranges", D → "watermelons", E → "apples", F → "pears", G → "loquats"
+    * Iterate over the solution dictionary to find the fruit with rank = 4.
+    * Output the corresponding choice letter.

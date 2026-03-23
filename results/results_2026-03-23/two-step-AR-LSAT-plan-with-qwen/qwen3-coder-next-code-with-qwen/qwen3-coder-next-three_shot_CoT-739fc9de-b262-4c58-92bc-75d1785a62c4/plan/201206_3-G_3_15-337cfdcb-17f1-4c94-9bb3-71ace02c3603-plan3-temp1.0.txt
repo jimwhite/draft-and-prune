@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative’s zone (1, 2, or 3).  
+3. Add **zone assignment constraints**: each representative is assigned exactly one zone (enforced by domain: variable ∈ {1,2,3}).  
+4. Add **mutual exclusion constraints** for Zone 1: either Parra or Tiao, but not both → (Parra_zone == 1) XOR (Tiao_zone == 1).  
+5. Add **mutual exclusion constraints** for Zone 2: either Tiao or Udall, but not both → (Tiao_zone == 2) XOR (Udall_zone == 2).  
+6. Add **grouping constraints**: Parra and Quinn must be in the same zone → Parra_zone == Quinn_zone.  
+7. Add **grouping constraints**: Stuckey and Udall must be in the same zone → Stuckey_zone == Udall_zone.  
+8. Add **zone size constraints**: let count(z) = number of representatives assigned to zone z; then count(Zone 3) > count(Zone 2).  
+9. Enumerate all representatives: [Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall].  
+10. Translate each answer choice into a list of representative indices representing those assigned to Zone 3 (others implicitly in Zones 1 or 2).  
+11. For each choice, define a list `zone3_members` (indices of reps claimed to be in Zone 3).  
+12. For each choice, clone the base solver and:  
+    - Assert that all reps in `zone3_members` are assigned to zone 3.  
+    - Assert that all reps *not* in `zone3_members` are assigned to zone 1 or 2 (i.e., ≠ 3).  
+    - Add the group and mutual exclusion constraints again in this cloned solver.  
+    - Check satisfiability.  
+13. If the model is SAT, then the choice is possible; record its index (0-based) in the answer index list.  
+14. After checking all choices, output the answer with the *lowest* recorded index (as per standard single-answer MCQ assumption).

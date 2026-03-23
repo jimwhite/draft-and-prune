@@ -1,0 +1,17 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign integer codes 0–5.  
+2. Create integer variables `bay[c]` for each cargo type c, denoting the bay (1–6) where it is stored.  
+3. Add **domain constraints**: each `bay[c]` ∈ {1,2,3,4,5,6}, and all `bay[c]` are distinct (six bays, six cargo types).  
+4. Add **ordering constraints**:  
+    - grain > livestock (i.e., `bay[grain] > bay[livestock]`).  
+    - livestock > textiles (i.e., `bay[livestock] > bay[textiles]`).  
+    - produce > fuel (i.e., `bay[produce] > bay[fuel]`).  
+    - textiles and produce are adjacent (i.e., `|bay[textiles] - bay[produce]| == 1`).  
+5. Add **conditional constraint** from the question: exactly one bay between machinery and grain ⇒ `|bay[ machinery] - bay[grain]| == 2`.  
+6. For each bay position p ∈ {1,2,3,4,5,6}, define a Boolean variable `determined[p]` that is true iff *all* valid assignments assign the same cargo type to bay p.  
+    - To check if cargo type c is forced at bay p: add constraint `bay[c] == p` and check if the model remains SAT *and* no other cargo type can occupy bay p (i.e., for all c' ≠ c, asserting `bay[c'] == p` yields UNSAT).  
+    - Alternatively (more robust): for each bay position p, collect the set S_p = {c | ∃ model satisfying all constraints with `bay[c] == p`}. Then `determined[p] = 1` iff |S_p| = 1.  
+7. Use a Z3 solver to compute all possible assignments (via multiple solver clones with blocking clauses) or use iterative query:  
+    - For each bay p (1–6), for each cargo type c, check if `bay[c] == p` is satisfiable.  
+    - Then for each p, count how many distinct c satisfy that; if count = 1, bay p is determined.  
+8. Sum over all bays the number where |S_p| = 1; this is the answer count.  
+9. Map the numeric count to one of the answer choices ['two', 'three', 'four', 'five', 'six'] and output that string.

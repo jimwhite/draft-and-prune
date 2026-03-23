@@ -1,0 +1,14 @@
+1. Enumerate the seven recruits and assign them integer indices: Peters=0, Quinn=1, Rovero=2, Stanton=3, Tao=4, Villas=5, White=6.  
+2. Create integer position variables `pos[0]` to `pos[6]`, each ranging from 1 to 7.  
+3. Add **distinctness constraint**: all position variables must be pairwise distinct (a permutation of 1..7).  
+4. Add **fixed constraint**: Peters was recruited fourth → `pos[0] == 4`.  
+5. Add **Villas-White adjacency constraint**: Villas immediately before White → `pos[5] + 1 == pos[6]`.  
+6. Add **Quinn before Rovero constraint**: `pos[1] < pos[2]`.  
+7. Add **Quinn immediately before Rovero constraint** (as part of the hypothetical assumption): `pos[1] + 1 == pos[2]`.  
+8. Add **Stanton-Tao non-adjacency constraint**: `|pos[3] - pos[4]| != 1`.  
+9. Translate the answer choices (positions: first=1, second=2, third=3, fifth=5, seventh=7) into target positions.  
+10. Define a list `forbidden_positions = []`. For each candidate position in [1, 2, 3, 5, 7]:  
+    - Clone the base + hypothetical (Quinn immediately before Rovero) constraints into a fresh solver.  
+    - Add constraint `pos[3] == candidate_position`.  
+    - If the model is UNSAT under this assumption, then Stanton cannot be at that position; append the candidate position to `forbidden_positions`.  
+11. Output `forbidden_positions`.

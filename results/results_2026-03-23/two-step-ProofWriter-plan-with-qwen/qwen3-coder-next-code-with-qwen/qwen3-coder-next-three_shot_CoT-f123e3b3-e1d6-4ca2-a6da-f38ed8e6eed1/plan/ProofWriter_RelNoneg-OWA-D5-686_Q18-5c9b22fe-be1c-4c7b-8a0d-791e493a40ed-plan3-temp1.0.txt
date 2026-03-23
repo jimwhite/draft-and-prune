@@ -1,0 +1,15 @@
+1. Identify all involved entities: bald_eagle, cow, lion, squirrel.  
+2. Encode all directly stated facts as ternary predicates of the form predicate(subject, object, True):  
+   - Properties: is_blue("bald_eagle", True), is_green("cow", True), is_big("squirrel", True), is_green("squirrel", True), is_red("squirrel", True)  
+   - Relations: chases("bald_eagle", "squirrel", True), likes("bald_eagle", "cow", True), likes("bald_eagle", "lion", True), chases("cow", "lion", True), likes("cow", "bald_eagle", True), likes("cow", "lion", True), likes("lion", "cow", True), chases("squirrel", "bald_eagle", True), sees("squirrel", "bald_eagle", True)  
+3. Translate each conditional in the context into a PyKe rule using `foreach` for preconditions and `assert` for conclusions:  
+   • If someone is red and chases the bald eagle → bald_eagle is green.  
+   • If someone likes the bald eagle → they like the lion.  
+   • If someone is green → they see the lion.  
+   • If the cow is blue → the cow likes the squirrel.  
+   • If the bald eagle sees the lion → the lion sees the squirrel.  
+   • If someone sees the squirrel → they are green.  
+   • If someone likes the bald eagle → the bald eagle is blue.  
+4. For each rule, express as a `foreach` block capturing the antecedent conditions and an `assert` statement for the consequent, using appropriate entity variables (e.g., ?x).  
+5. The query checks whether the bald eagle chases the lion:  
+   → Use facts.chases("bald_eagle", "lion", True)

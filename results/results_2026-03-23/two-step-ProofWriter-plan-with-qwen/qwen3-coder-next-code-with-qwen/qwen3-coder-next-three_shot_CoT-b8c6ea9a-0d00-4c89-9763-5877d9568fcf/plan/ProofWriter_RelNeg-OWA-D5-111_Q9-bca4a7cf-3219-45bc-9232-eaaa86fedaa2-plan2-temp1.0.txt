@@ -1,0 +1,30 @@
+1. Identify all entities involved: bald_eagle, mouse, squirrel, lion.  
+2. Encode all directly stated facts as ternary predicates:  
+   - Facts about properties (e.g., is_cold, is_red, is_blue) use `is_property(entity, True)`;  
+   - Facts about relations (e.g., chases, needs, visits) use `relation(subject, object, True)`;  
+   - Explicit negative facts (e.g., "does not chase", "does not visit") must be encoded as `relation(subject, object, False)` or via negation in rules if PyKe supports it—but since PyKe typically uses positive assertions only, encode known falsities as explicit `False`-valued facts where supported, otherwise derive via rules.  
+3. Specifically encode the following explicit positives:  
+   - chases("bald_eagle", "mouse", True), chases("bald_eagle", "squirrel", True), is_cold("bald_eagle", True)  
+   - chases("lion", "bald_eagle", True), chases("lion", "squirrel", True), is_blue("lion", True)  
+   - needs("lion", "squirrel", True), visits("lion", "squirrel", True)  
+   - is_cold("squirrel", True), is_red("squirrel", True)  
+4. Encode the explicit negatives using facts with False:  
+   - chases("lion", "mouse", False), visits("mouse", "bald_eagle", False), visits("mouse", "squirrel", False), visits("squirrel", "lion", False)  
+5. Translate all conditionals into PyKe rules using `foreach` + `assert`:  
+   - Rule 1: If X visits the mouse → mouse is green:  
+     `foreach facts.visits(X, "mouse", True) → assert facts.is_green("mouse", True)`  
+   - Rule 2: If mouse does *not* chase lion → mouse needs lion:  
+     First, encode `chases("mouse", "lion", False)` is *not* given, so this condition must be checked via negation; if PyKe supports `not facts.chases("mouse", "lion", True)` in the `foreach`, use it; otherwise, handle via assumption or defer as unknown.  
+     Assume PyKe supports negation: `foreach not facts.chases("mouse", "lion", True) → assert facts.needs("mouse", "lion", True)`  
+   - Rule 3: If X visits squirrel AND squirrel does not chase lion → lion is green:  
+     `foreach facts.visits(X, "squirrel", True), not facts.chases("squirrel", "lion", True) → assert facts.is_green("lion", True)`  
+     (Note: `chases("squirrel", "lion", False)` is not stated, so treat as unknown—this rule may not fire unless squirrel-chase-lion false can be derived or assumed.)  
+   - Rule 4: If X is young → X visits bald_eagle:  
+     `foreach facts.is_young(X, True) → assert facts.visits(X, "bald_eagle", True)`  
+   - Rule 5: If X visits bald_eagle → bald_eagle visits squirrel:  
+     `foreach facts.visits(X, "bald_eagle", True) → assert facts.visits("bald_eagle", "squirrel", True)`  
+   - Rule 6: If X visits squirrel AND squirrel is red → X is young:  
+     `foreach facts.visits(X, "squirrel", True), facts.is_red("squirrel", True) → assert facts.is_young(X, True)`  
+   - Rule 7: If X needs squirrel AND X is not cold → squirrel chases bald_eagle:  
+     `foreach facts.needs(X, "squirrel", True), not facts.is_cold(X, True) → assert facts.chases("squirrel", "bald_eagle", True)`  
+6. Goal: Determine whether the bald eagle is young; query `facts.is_young("bald_eagle", True)`.

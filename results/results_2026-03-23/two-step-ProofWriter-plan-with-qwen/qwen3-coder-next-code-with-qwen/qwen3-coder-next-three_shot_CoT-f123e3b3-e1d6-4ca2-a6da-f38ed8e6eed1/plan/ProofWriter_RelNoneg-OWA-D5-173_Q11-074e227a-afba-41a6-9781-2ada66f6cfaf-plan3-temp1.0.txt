@@ -1,0 +1,30 @@
+1. Identify all entities: bald_eagle, cat, cow, rabbit.  
+2. Encode all explicit facts using ternary predicates:  
+   - eats("bald_eagle", "cow", True)  
+   - is_blue("bald_eagle", True), is_blue("cow", True)  
+   - visits("cat", "bald_eagle", True), visits("cat", "rabbit", True)  
+   - is_cold("rabbit", True)  
+   - sees("cow", "rabbit", True), sees("rabbit", "cow", True)  
+   - eats("rabbit", "bald_eagle", True)  
+   - visits("rabbit", "cat", True)  
+3. Translate each conditional statement into a PyKe rule using `foreach` and `assert`:  
+   • If X visits cow ∧ X sees cow → X visits bald_eagle  
+   • If X is nice → X is big  
+   • If X visits bald_eagle → X is nice  
+   • If X is cold ∧ X visits cow → cow sees cat  
+   • If X is round ∧ X eats bald_eagle → X sees bald_eagle  
+   • If X visits cat → X visits rabbit  
+   • If X visits rabbit ∧ X sees cow → X visits cow  
+4. Note: The predicate `is_nice` does not appear in any fact; it must be inferred via rules (e.g., if something visits bald_eagle, then it is nice).  
+5. To answer the query “The rabbit is big”, we must determine if `is_big("rabbit", True)` can be derived.  
+   - This requires deriving `is_nice("rabbit", True)` via the rule: visits(bald_eagle) → nice, but rabbit does not visit bald_eagle directly.  
+   - Alternatively, check if rabbit visits cat (yes), then via rule: visit cat → visit rabbit (already given), but that doesn’t help.  
+   - rabbit visits cat ⇒ rabbit visits rabbit (via: visit cat → visit rabbit), but no rule about visiting rabbit implying nice.  
+   - rabbit is cold and visits cat ⇒ does not directly help. However, rabbit visits cat ⇒ rabbit visits rabbit (rule 6), but no rule uses visiting rabbit to infer nice.  
+   - rabbit visits cat ⇒ rabbit visits rabbit (via rule 6). Then, using rule 7: if X visits rabbit ∧ X sees cow ⇒ X visits cow.  
+     → rabbit visits rabbit (from rule 6), but does rabbit see cow? Yes: sees("rabbit", "cow", True).  
+     ⇒ Thus, rabbit visits cow (by rule 7).  
+   - Now: rabbit visits cow and sees cow ⇒ rabbit visits bald_eagle (rule 1).  
+   - Then: rabbit visits bald_eagle ⇒ rabbit is nice (rule 3).  
+   - Then: rabbit is nice ⇒ rabbit is big (rule 2).  
+6. Therefore, the query is answered by asserting: facts.is_big("rabbit", True)

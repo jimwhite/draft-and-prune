@@ -1,0 +1,13 @@
+1. Identify all entities: cow, mouse, rabbit, squirrel.
+2. Encode direct facts using ternary predicates: e.g., is_kind("cow", True), sees("cow", "mouse", True), eats("mouse", "cow", True), is_not_blue("rabbit", True), is_not_blue("squirrel", True), is_green("squirrel", True), is_rough("squirrel", True), needs("mouse", "squirrel", True), needs("squirrel", "mouse", True), sees("squirrel", "rabbit", True).
+3. Translate each conditional rule into PyKe `foreach` + `assert` format:
+   • If X sees the cow → X sees the squirrel.
+   • If X sees the rabbit → X eats the cow.
+   • If X needs the cow → the cow eats the mouse.
+   • If X needs the squirrel AND the squirrel needs the cow → the cow does not need the rabbit.
+   • If the mouse eats the rabbit AND the rabbit does NOT see the mouse → the rabbit is green.
+   • If the cow needs the rabbit → the rabbit does not eat the mouse.
+   • If X eats the squirrel AND the squirrel eats the cow → X needs the cow.
+   • If X eats the mouse → X eats the squirrel.
+4. Note: facts like `is_not_blue("rabbit", True)` must be explicitly encoded, as PyKe does not assume closed-world negation; represent “not blue” as a separate unary predicate (e.g., `is_not_blue`) or use a negative fact explicitly asserted.
+5. The query is: Does the rabbit need the cow? → Use facts.needs("rabbit", "cow", True) for verification.

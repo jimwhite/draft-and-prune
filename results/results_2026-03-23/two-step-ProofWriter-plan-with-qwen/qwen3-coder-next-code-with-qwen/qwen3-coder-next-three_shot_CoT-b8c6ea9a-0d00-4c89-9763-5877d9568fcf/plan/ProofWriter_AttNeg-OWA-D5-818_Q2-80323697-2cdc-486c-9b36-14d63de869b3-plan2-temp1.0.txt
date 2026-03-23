@@ -1,0 +1,20 @@
+1. Identify all entities: Charlie, Erin, Fiona, Gary.  
+2. Define all explicit properties and relations using ternary predicates of the form predicate(subject, object, True), where for unary properties (e.g., is_young, is_blue) the object is a boolean (True/False), and for binary relations (none present here explicitly) it would be another entity.  
+3. Encode all directly stated facts:  
+   - is_young("Charlie", True)  
+   - is_blue("Erin", True), not kind ("Erin") encoded as is_kind("Erin", False)  
+   - is_blue("Fiona", True), is_white("Fiona", True)  
+   - is_blue("Gary", True), is_kind("Gary", True)  
+4. Translate all conditional rules into PyKe `foreach` + `assert` blocks:  
+   • Furry and nice → white: foreach(is_furry(?x, True), is_nice(?x, True)) assert(is_white(?x, True))  
+   • Young and blue → smart: foreach(is_young(?x, True), is_blue(?x, True)) assert(is_smart(?x, True))  
+   • Blue and smart → furry: foreach(is_blue(?x, True), is_smart(?x, True)) assert(is_furry(?x, True))  
+   • Smart and white → furry: foreach(is_smart(?x, True), is_white(?x, True)) assert(is_furry(?x, True))  
+   • Young → nice: foreach(is_young(?x, True)) assert(is_nice(?x, True))  
+   • Fiona smart and young → not furry: foreach(is_smart("Fiona", True), is_young("Fiona", True)) assert(not_furry("Fiona") → i.e., is_furry("Fiona", False))  
+   • Erin kind → furry: foreach(is_kind("Erin", True)) assert(is_furry("Erin", True))  
+   • Gary smart and white → not kind: foreach(is_smart("Gary", True), is_white("Gary", True)) assert(is_kind("Gary", False))  
+   • Nice → blue: foreach(is_nice(?x, True)) assert(is_blue(?x, True))  
+5. Note: Some rules involve negated premises (e.g., “if someone is kind and not big → red” in prior examples), but none here use negated literals *in the condition* beyond explicit negative facts (e.g., is_kind("Erin", False)).  
+6. The query tests whether Fiona is *not* white:  
+   → Use facts.is_white("Fiona", False)

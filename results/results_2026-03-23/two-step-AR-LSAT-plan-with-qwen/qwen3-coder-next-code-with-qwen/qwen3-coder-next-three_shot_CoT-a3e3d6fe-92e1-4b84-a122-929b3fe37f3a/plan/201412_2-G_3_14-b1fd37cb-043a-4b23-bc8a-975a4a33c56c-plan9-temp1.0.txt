@@ -1,0 +1,24 @@
+1. Enumerate the six available colors and assign integer codes (e.g., forest=0, olive=1, peach=2, turquoise=3, white=4, yellow=5).  
+2. Since exactly five colors are used out of six, create Boolean variables `used[c]` for each color c ∈ {0..5}, and add constraint: exactly five `used[c]` are true.  
+3. Define three rugs (Rug0, Rug1, Rug2). For each rug, introduce Boolean variables `c_in_r[c][r]` indicating whether color c is used in rug r.  
+4. Add **usage constraint**: for each color c, if `used[c]` is true, then it appears in exactly one rug (i.e., sum over r of `c_in_r[c][r]` = 1); if `used[c]` is false, then it appears in no rug.  
+5. Add **solid/multicolored constraint**: exactly two rugs are solid, meaning for exactly two rugs r, there exists exactly one color c such that `c_in_r[c][r]` is true; for the remaining rug, at least two colors are used.  
+6. Add **rule constraints** per rug (applied only if involved colors are present in that rug):  
+   - White rule: For any rug r, if `white_in_r[r]`, then at least two other colors must be present in rug r (i.e., sum over c≠white of `c_in_r[c][r]` ≥ 2).  
+   - Olive→Peach: For any rug r, if `olive_in_r[r]`, then `peach_in_r[r]` must be true.  
+   - Forest–Turquoise incompatibility: For any rug r, ¬(`forest_in_r[r]` ∧ `turquoise_in_r[r]`).  
+   - Peach–Turquoise incompatibility: For any rug r, ¬(`peach_in_r[r]` ∧ `turquoise_in_r[r]`).  
+   - Peach–Yellow incompatibility: For any rug r, ¬(`peach_in_r[r]` ∧ `yellow_in_r[r]`).  
+7. Translate the answer choices into pairs of colors (indices):  
+   - Choice 0: forest (0) and peach (2) → solid rugs are {forest}, {peach}  
+   - Choice 1: forest (0) and yellow (5) → solid rugs are {forest}, {yellow}  
+   - Choice 2: peach (2) and turquoise (3) → solid rugs are {peach}, {turquoise}  
+   - Choice 3: peach (2) and yellow (5) → solid rugs are {peach}, {yellow}  
+   - Choice 4: turquoise (3) and yellow (5) → solid rugs are {turquoise}, {yellow}  
+8. For each choice, to test if it is **impossible**, create a fresh solver and:  
+   - Assert that two rugs are solid with the specified colors (e.g., for choice 0: `c_in_r[0][r0] = true` and all other `c≠0` false in r0; similarly for peach in r1),  
+   - Assert all previously defined constraints (exact 5 colors used, rules, exactly two solid rugs),  
+   - Assert the remaining rug (r2) must be multicolored (at least two colors),  
+   - Assert all unused color assignments consistent with the fixed solid rugs and total of 5 colors used.  
+9. If the model is UNSAT for a choice, then that pair **cannot** be the two solid rugs; collect its index into `answer_index_list`.  
+10. Output `answer_index_list`.

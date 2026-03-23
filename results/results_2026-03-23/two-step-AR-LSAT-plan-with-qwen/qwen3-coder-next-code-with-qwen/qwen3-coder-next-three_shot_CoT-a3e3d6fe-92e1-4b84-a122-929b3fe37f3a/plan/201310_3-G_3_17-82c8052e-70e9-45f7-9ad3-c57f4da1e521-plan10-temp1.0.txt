@@ -1,0 +1,30 @@
+1. Enumerate the five movies: horror, mystery, romance, sci-fi, western; assign integer indices 0–4.  
+2. Enumerate the three screens: screen 1, screen 2, screen 3; assign integer indices 0–2.  
+3. Enumerate the four time slots: (screen1, 7PM), (screen1, 9PM), (screen2, 7PM), (screen2, 9PM), (screen3, 8PM); assign integer indices 0–4 to represent the order of showing (global time: 7PM < 8PM < 9PM), but note screen3 at 8PM is between screen1/2’s 7PM and 9PM movies.  
+   - Alternative: Instead of global ordering, directly assign each movie to a (screen, time) pair, with time being either 7, 8, or 9, respecting screen capacities.  
+4. Define integer variables: `screen[i] ∈ {0,1,2}` and `time[i] ∈ {7,8,9}` for each movie i (horror=0, mystery=1, romance=2, sci-fi=3, western=4).  
+5. Add **capacity constraints**:  
+   - Screen 1 must have exactly two movies: count of `screen[i]==0` is 2.  
+   - Screen 2 must have exactly two movies: count of `screen[i]==1` is 2.  
+   - Screen 3 must have exactly one movie: count of `screen[i]==2` is 1.  
+6. Add **time-slot consistency constraints**:  
+   - Movies on screen 1 must have time=7 or 9.  
+   - Movies on screen 2 must have time=7 or 9.  
+   - Movie on screen 3 must have time=8.  
+7. Add **global temporal ordering constraints** (by mapping time values numerically: 7<8<9; screen1 and screen2 have two movies each at 7 and 9, but no constraint between same-time different screens—only relative order matters when scheduling):  
+   - “The western begins at some time before the horror film”: time[western] < time[horror].  
+   - “The sci-fi film is not shown on screen 3”: screen[sci-fi] ≠ 2.  
+   - “The romance is not shown on screen 2”: screen[romance] ≠ 1.  
+   - “The horror film and the mystery are shown on different screens”: screen[horror] ≠ screen[mystery].  
+8. Translate the answer choices into movie pairs for screen 1, in 7PM then 9PM order:  
+   - Choice A: sci-fi (7), horror (9)  
+   - Choice B: sci-fi (7), mystery (9)  
+   - Choice C: western (7), horror (9)  
+   - Choice D: western (7), mystery (9)  
+   - Choice E: western (7), sci-fi (9)  
+9. For each answer choice, encode constraints that screen 1 has exactly those two movies at the specified times:  
+   - For choice X: assign screen=0 for both movies, and enforce time=7 for first movie, time=9 for second.  
+   - Ensure the remaining three movies are assigned to screens 2 and 3 per capacity/time rules.  
+10. For each choice, clone base constraints into fresh solver and add the specific screen 1 assignment.  
+11. If the model is UNSAT, that choice CANNOT be accurate; collect its index in `answer_index_list`.  
+12. Print the answer index list (only one expected).

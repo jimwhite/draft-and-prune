@@ -1,0 +1,18 @@
+1. Enumerate the six students and assign integer codes to them.  
+2. Create integer variables for each year’s assigned student (1921–1924), with domain {0,1,2,3,4,5} corresponding to [Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio].  
+3. Add **distinctness constraint**: all four year-assignments must be distinct (since each student assigned at most once).  
+4. Add **only Louis or Tiffany can be 1923**: the student assigned to year 1923 must be Louis or Tiffany.  
+5. Add **Mollie constraint**: if Mollie is assigned to any year (i.e., appears in the 4 assignments), then she must be assigned to 1921 or 1922.  
+6. Add **Tiffany–Ryan dependency**: if Tiffany is assigned to any year, then Ryan must also be assigned (i.e., Tiffany ∈ assignments ⇒ Ryan ∈ assignments).  
+7. Add **Ryan–Onyx adjacency**: if Ryan is assigned, then Onyx must be assigned to the year immediately before Ryan’s (i.e., if pos_Ryan = i, then pos_Onyx = i−1; note: positions are 1-indexed years).  
+8. Add **given condition**: both Ryan and Yoshio are assigned to the project (i.e., Ryan ∈ assignments ∧ Yoshio ∈ assignments).  
+9. Since the question asks "which one of the following *could* be true", translate each choice into a Boolean condition about assignments:  
+   - A: Louis assigned to 1923.  
+   - B: Mollie assigned to 1921.  
+   - C: Onyx assigned to 1922.  
+   - D: Tiffany assigned to 1924.  
+   - E: Yoshio assigned to 1922.  
+10. For each choice, clone the base constraints (steps 3–8) plus the choice condition, and check satisfiability with Z3.  
+11. Collect all choices that yield a SAT model — those are the “could be true” options.  
+12. Among them, identify the correct answer as per the multiple-choice format (only one correct choice in LSAT-style logic games).  
+13. Output the index of the correct choice (e.g., 0 for first option, etc.) based on which one is satisfiable and satisfies all constraints.

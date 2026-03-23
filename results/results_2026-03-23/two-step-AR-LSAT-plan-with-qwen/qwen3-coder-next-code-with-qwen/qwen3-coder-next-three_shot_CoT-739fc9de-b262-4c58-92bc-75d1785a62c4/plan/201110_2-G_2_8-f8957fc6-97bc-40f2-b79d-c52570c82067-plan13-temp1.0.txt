@@ -1,0 +1,28 @@
+1. Enumerate the five candidates and assign them integer indices (0 to 4 for Jaramillo, Kayne, Landon, Novetzke, Ong).  
+2. Create integer variables for the assignment of each candidate: `assign[i] ∈ {0, 1, 2, -1}`, where `-1` means unassigned, and `0`, `1`, `2` represent Venezuela, Yemen, Zambia respectively.  
+3. Add **assignment constraints**: Exactly three candidates are assigned (one per country), and each assigned candidate gets exactly one country.  
+    - Introduce binary indicator variables `assigned[i] ∈ {0,1}` to indicate if candidate `i` is assigned.  
+    - Constraint: `sum(assigned[i] for i in range(5)) == 3`.  
+    - For each `i`, if `assigned[i] = 1`, then `assign[i] ∈ {0,1,2}`; if `assigned[i] = 0`, then `assign[i] = -1`.  
+4. Add **one-ambassador-per-country constraints**: For each country `c ∈ {0,1,2}`, exactly one candidate has `assign[i] = c`.  
+5. Add **constraint A (Kayne/Novetzke XOR)**: Exactly one of Kayne and Novetzke is assigned.  
+    - `assigned[1] + assigned[3] == 1`.  
+6. Add **constraint B (Jaramillo ⇒ Kayne)**: If Jaramillo is assigned, then Kayne must be assigned and assigned to the same or different country.  
+    - `assigned[0] ≤ assigned[1]`.  
+7. Add **constraint C (Ong in Venezuela ⇒ Kayne not in Yemen)**:  
+    - If `assign[4] == 0` (Ong to Venezuela), then `assign[1] != 1`.  
+    - Encode as: `(assign[4] == 0) → (assign[1] != 1)`; use implication via `Or(assign[4] != 0, assign[1] != 1)`.  
+8. Add **constraint D (Landon → Zambia)**: If Landon is assigned, then `assign[2] == 2`.  
+    - `assigned[2] = 1 → assign[2] == 2`; encoded as `Or(assigned[2] == 0, assign[2] == 2)`.  
+9. Translate each answer choice (pair of unassigned candidates) into a pair of candidate indices:  
+    - ['Jaramillo and Novetzke'] → unassigned indices [0,3]  
+    - ['Jaramillo and Ong'] → [0,4]  
+    - ['Kayne and Landon'] → [1,2]  
+    - ['Kayne and Novetzke'] → [1,3]  
+    - ['Landon and Ong'] → [2,4]  
+10. Define `answer_index_list = []`. For each answer choice index `idx` (0 to 4):  
+    - Clone base constraints into a fresh solver.  
+    - Assert that the two candidates in the pair are unassigned: for each candidate `i` in pair, set `assigned[i] == 0`.  
+    - Ensure that the remaining three candidates are assigned to distinct countries (already covered by earlier constraints, but explicit distinctness of assignments per country is needed).  
+    - Check satisfiability. If SAT, then this pair **could** be the unassigned pair; append `idx` to `answer_index_list`.  
+11. Print the answer index list (indices of feasible unassigned pairs).

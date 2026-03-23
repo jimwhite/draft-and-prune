@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruit variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.  
+   * Assign a domain of integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, reflecting the pricing hierarchy.  
+   * Add all seven fruit variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+   * Translate each statement into constraints using `lambda` functions or direct value assignments:  
+     - "The pears are more expensive than the kiwis" → `kiwis < pears` (lower rank number means cheaper).  
+     - "The watermelons are less expensive than the peaches" → `watermelons < peaches`.  
+     - "The mangoes are the third-cheapest" → `mangoes == 3`.  
+     - "The watermelons are the third-most expensive" → Since most expensive is rank 7, third-most expensive is rank `7 - 3 + 1 = 5`, so `watermelons == 5`.  
+     - "The plums are the second-most expensive" → rank `7 - 2 + 1 = 6`, so `plums == 6`.  
+     - "The loquats are the second-cheapest" → `loquats == 2`.  
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to compute all valid assignments satisfying the constraints.  
+   * Extract the sole solution from the returned list (the problem has a unique solution).  
+
+5. **Identify the Correct Answer:**  
+   * The question asks: "Which of the following is true?" where each option claims a specific fruit is the third-cheapest (i.e., has rank `3`).  
+   * Predefine a mapping from choice letters to fruit names: `"A" → "loquats"`, `"B" → "peaches"`, `"C" → "watermelons"`, `"D" → "plums"`, `"E" → "kiwis"`, `"F" → "mangoes"`, `"G" → "pears"`.  
+   * Retrieve the rank of each fruit from the solution.  
+   * Check which fruit has rank `3`; find its corresponding choice letter using the mapping.  
+   * Output that choice letter as the final answer.

@@ -1,0 +1,18 @@
+1. Enumerate the six singers and assign each a unique integer index: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer variables `pos[i]` for each singer i ∈ {0,…,5}, representing their audition position (1 to 6).  
+3. Add **domain and uniqueness constraints**: all `pos[i] ∈ {1,2,3,4,5,6}` and pairwise distinct (all-different).  
+4. Add **recording constraints**:  
+   - Recorded auditions: Kammer (0) and Lugo (1).  
+   - 4th audition cannot be recorded → `pos[0] ≠ 4` and `pos[1] ≠ 4`.  
+   - 5th audition must be recorded → exactly one of `pos[0] == 5` or `pos[1] == 5` must hold.  
+   (Since only two are recorded, and exactly one must be in position 5.)  
+5. Add **ordering constraints**:  
+   - Waite (3) must be earlier than *both* recorded auditions: `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+   - Kammer (0) earlier than Trillo (2): `pos[0] < pos[2]`.  
+   - Zinn (5) earlier than Yoshida (4): `pos[5] < pos[4]`.  
+6. For each choice string in the answer list:  
+   - Parse the given order (e.g., `['Kammer', 'Trillo', ...]`) into a list of singer indices.  
+   - Clone the base solver and add constraints that `pos[singer] == index+1` for each position (0-indexed in list → 1-indexed position).  
+   - Check satisfiability with Z3.  
+7. Append the index (0 to 4) of each choice whose model is SAT to `answer_index_list`.  
+8. Print the smallest index in `answer_index_list` (as only one can be correct).

@@ -1,0 +1,15 @@
+1. Enumerate the six roles and assign them integer indices (e.g., 0=guitarist, 1=keyboard player, 2=percussionist, 3=saxophonist, 4=trumpeter, 5=violinist).  
+2. Create integer position variables `pos[i]` for each role i, ranging from 1 to 6 (1-indexed solo positions).  
+3. Add **distinctness constraint**: all `pos[i]` must be pairwise distinct (each role plays exactly one solo, no overlaps).  
+4. Add **guitarist constraint**: `pos[guitarist] != 4`.  
+5. Add **percussionist < keyboard player constraint**: `pos[percussionist] < pos[keyboard player]`.  
+6. Add **violinist < keyboard player < guitarist constraints**: `pos[violinist] < pos[keyboard player]` and `pos[keyboard player] < pos[guitarist]`.  
+7. Add **saxophonist XOR constraint**: saxophonist performs after exactly one of (percussionist, trumpeter).  
+    - Implement as: `(pos[percussionist] < pos[saxophonist]) XOR (pos[trumpeter] < pos[saxophonist])`, i.e., `(A and not B) or (not A and B)` where A = `pos[percussionist] < pos[saxophonist]`, B = `pos[trumpeter] < pos[saxophonist]`.  
+8. Translate the answer choices into role indices (guitarist=0, keyboard player=1, saxophonist=3, trumpeter=4, violinist=5). Note: percussionist is not in the choices.  
+9. Define an answer index list `answer_index_list = []`. For each candidate role in the choices (those who *could* be third), test whether it is *possible* for that role to perform the third solo:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert `pos[role] == 3`.  
+    - If the model is SAT, then this role *can* be third—so it is **not** the answer; if UNSAT, this role *cannot* be third—append its index to `answer_index_list`.  
+10. After checking all five candidates, the list `answer_index_list` will contain exactly one index (since exactly one choice cannot perform third).  
+11. Return the role name corresponding to that index as the final answer.

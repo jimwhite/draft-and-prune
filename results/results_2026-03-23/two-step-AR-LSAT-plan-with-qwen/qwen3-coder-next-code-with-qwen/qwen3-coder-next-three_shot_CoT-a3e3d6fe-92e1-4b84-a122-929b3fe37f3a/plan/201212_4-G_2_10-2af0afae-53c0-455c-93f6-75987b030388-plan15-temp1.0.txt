@@ -1,0 +1,14 @@
+1. Enumerate the five witnesses and assign them integer codes: Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4.  
+2. Define integer variables `day[f]` for each witness's testimony day (1=Monday, 2=Tuesday, 3=Wednesday).  
+3. Add **domain constraints**: each `day[w] ∈ {1,2,3}` for all witnesses.  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday ⇒ `day[Iturbe] == 3`.  
+5. Add **exactly-two-on-Tuesday constraint**: exactly two witnesses have `day[w] == 2`.  
+6. Add **Hong-not-Monday constraint**: `day[Hong] != 1`.  
+7. Add **at-least-one-on-Monday constraint**: at least one witness has `day[w] == 1`.  
+8. Add **Franco-Garcia-different-days constraint**: `day[Franco] != day[Garcia]`.  
+9. Add **problem-specific assumption**: Franco and Hong testify on the same day ⇒ `day[Franco] == day[Hong]`.  
+10. For each answer choice, define a constraint expressing the statement (e.g., `day[Franco] == 3`, `day[Garcia] == 1`, etc.), and check whether it **must** be true by verifying:  
+    - For each candidate statement S, add `day[Franco] == day[Hong]` and base constraints to a fresh solver.  
+    - Assert the negation of S (e.g., `day[Franco] != 3` for first choice).  
+    - If UNSAT, then S **must** be true; record the index of that choice.  
+11. Collect all indices of statements whose negation leads to UNSAT, and output the corresponding answer string(s).

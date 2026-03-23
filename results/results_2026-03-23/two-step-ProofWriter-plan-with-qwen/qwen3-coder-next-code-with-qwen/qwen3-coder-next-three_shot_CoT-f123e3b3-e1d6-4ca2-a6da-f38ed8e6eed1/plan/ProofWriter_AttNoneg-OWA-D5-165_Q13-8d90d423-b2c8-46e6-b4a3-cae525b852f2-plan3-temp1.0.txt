@@ -1,0 +1,35 @@
+1. Identify all entities: Anne, Erin, Fiona, Harry.
+2. Encode explicitly stated properties using ternary predicates of the form predicate(entity, True), e.g., is_furry("Anne", True), is_nice("Erin", False) for negated facts only if explicitly stated—but here, all given facts are positive assertions.
+3. Extract and encode direct factual statements as facts.pred(entity, True) for all mentioned positive properties:
+   - is_furry("Anne", True), is_nice("Anne", True), is_rough("Anne", True), is_white("Anne", True)
+   - is_furry("Erin", True), is_rough("Erin", True), is_white("Erin", True)
+   - is_big("Fiona", True), is_nice("Fiona", True), is_round("Fiona", True)
+   - is_nice("Harry", True), is_rough("Harry", True)
+4. Translate universal conditionals and rules into PyKe `foreach` + `assert` patterns:
+   • All furry things are white → foreach: is_furry(X, True) ⇒ assert is_white(X, True)
+   • If Harry is red → Harry is round → specific rule (handle as conditional on Harry, not general quantified; but in PyKe must be encoded universally with ground check or via special handling—note: PyKe supports grounding via constants in head, but safer to use foreach with X="Harry" guard)
+   • All round, red things are furry → foreach: is_round(X, True), is_red(X, True) ⇒ assert is_furry(X, True)
+   • If Harry is rough → Harry is round → again, ground-specific or universal with X="Harry"
+   • Nice, red things are big → foreach: is_nice(X, True), is_red(X, True) ⇒ assert is_big(X, True)
+   • Round, red things are white → foreach: is_round(X, True), is_red(X, True) ⇒ assert is_white(X, True)
+   • All nice, white things are red → foreach: is_nice(X, True), is_white(X, True) ⇒ assert is_red(X, True)
+   • If something is round → it is furry → foreach: is_round(X, True) ⇒ assert is_furry(X, True)
+5. Note: Since PyKe does not natively support negation-as-failure in forward chaining by default, and we have no explicit "not big" facts initially, to answer “Erin is not big” we must:
+   - Attempt to derive is_big("Erin", True) via rules; if it leads to contradiction or cannot be derived, and no rule implies is_big("Erin", True), then the query is unknown.
+   - However, PyKe’s backward chaining with goals allows querying negated facts using the `neg` operator or via explicit goal: not(is_big("Erin", True)) — but PyKe standard syntax uses `query(is_big("Erin", True))`, and the solver determines truth value (True/False/Unknown).
+6. The query is: does Erin not big hold?
+   → Use `query(not(is_big("Erin", True)))` or equivalently, in PyKe’s fact-based query style: check if `facts.is_big("Erin", False)` is derivable or inferable.
+   But standard PyKe practice: assert goal `is_big("Erin", True)` and see if provable; then answer "not big" is true iff `is_big("Erin", True)` is provably false (i.e., unreachable and closed world assumption holds only if explicitly handled).
+   However, PyKe typically assumes open world unless negation is enforced via rules.
+   Therefore:
+   → Encode query as: `query(is_big("Erin", True))` — then interpret result:
+      • If provable: "not big" is false.
+      • If not provable, and no rule can derive it, but also no explicit `is_big("Erin", False)` — then "not big" is unknown (unless closed-world assumption assumed).
+   Since the problem does not state explicit negative facts and rules do not produce `is_big("Erin", False)`, the query for “not big” is:
+   → Use `query(not(is_big("Erin", True)))`, which in PyKe is expressed by attempting to prove the negated goal — typically via `prove(not(is_big("Erin", True)))` or by checking provability of is_big("Erin", True) and then inverting.
+   However, per standard PyKe usage: define the query as a goal for `is_big("Erin", True)` and rely on solver to report True/False/Unknown; then the answer to “Erin is not big” is:
+      • True if solver reports `is_big("Erin", True)` is False.
+      • False if solver reports `is_big("Erin", True)` is True.
+      • Unknown otherwise.
+7. Therefore, final query step:
+   → Query `is_big("Erin", True)`; based on solver answer, determine truth of “Erin is not big”.

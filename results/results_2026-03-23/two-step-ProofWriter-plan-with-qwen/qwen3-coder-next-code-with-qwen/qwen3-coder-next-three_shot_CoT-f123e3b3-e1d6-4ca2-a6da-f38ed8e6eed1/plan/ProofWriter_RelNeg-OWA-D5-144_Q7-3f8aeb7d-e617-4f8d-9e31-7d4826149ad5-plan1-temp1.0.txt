@@ -1,0 +1,15 @@
+1. Identify all involved entities: bald_eagle, bear, lion, squirrel.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_big("bald_eagle", True), is_green("bear", True), likes("bald_eagle", "bear", True), chases("bear", "lion", True), etc.), with negated facts encoded as predicate(..., False).
+3. Translate each conditional statement into a PyKe rule:
+   • If someone is cold → they are not young.
+   • All big people are not green: i.e., if someone is big → they are not green.
+   • If the lion is big and green → the lion chases the bald eagle.
+   • If someone chases the bald eagle → they like the bear.
+   • If someone is round and visits the bald eagle → the bald eagle likes the squirrel. (Note: "round" is not explicitly mentioned for any entity; must be left conditional unless derived.)
+   • If someone visits the lion → they like the bald eagle.
+   • If the lion visits the squirrel and the squirrel chases the bear → the bear chases the bald eagle.
+   • If someone visits the lion → they are cold.
+   • If someone likes the bear → they chase the bear.
+4. For each rule, construct a `foreach` clause to match antecedents and an `assert` clause for the consequent.
+5. Determine whether bear_chases_bald_eagle holds:
+   → Query using facts.chases("bear", "bald_eagle", True) and/or facts.chases("bear", "bald_eagle", False). Since the question asks if “The bear chases the bald eagle” is true/false/unknown, we check for truth (True), falsity (False), or lack of derivation.

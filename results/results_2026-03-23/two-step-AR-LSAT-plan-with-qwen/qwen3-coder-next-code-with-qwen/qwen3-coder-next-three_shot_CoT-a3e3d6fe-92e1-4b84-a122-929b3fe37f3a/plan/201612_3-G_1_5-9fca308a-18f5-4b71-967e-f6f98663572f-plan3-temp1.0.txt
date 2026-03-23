@@ -1,0 +1,32 @@
+1. Enumerate the five students (Juana, Kelly, Lateefah, Mei, Olga) and assign them integer indices 0–4.  
+2. Create two Boolean team-assignment variables per student: `is_green[i]` and `is_red[i]`, with the constraint that exactly one is true for each student (`is_green[i] != is_red[i]`).  
+3. Add **team-size constraints**: exactly two students on one team and three on the other; this is equivalent to `sum(is_green) == 2` xor `sum(is_green) == 3`, but since one team must have exactly two and the other three, enforce `sum(is_green) == 2` OR `sum(is_green) == 3`. However, to handle the “exactly one team has size 2” condition, add both `sum(is_green) == 2` OR `sum(is_red) == 2`, which simplifies to `sum(is_green) in [2,3]`.  
+4. Add **fixed constraints**:  
+    - Juana ≠ Olga: `is_green[Juana] != is_green[Olga]`.  
+    - Lateefah ∈ green: `is_green[Lateefah] = True`.  
+    - Olga is a facilitator: need to model facilitator assignment.  
+5. Model facilitator assignment with two Boolean variables per team: `green_fac[i]` and `red_fac[i]`, indicating whether student i is facilitator of green/red team.  
+    - Facilitators must be members: `green_fac[i] ⇒ is_green[i]`, `red_fac[i] ⇒ is_red[i]`.  
+    - Exactly one facilitator per team: `sum(green_fac) == 1`, `sum(red_fac) == 1`.  
+6. Add **Olga is facilitator**: So either `green_fac[Olga] = True` or `red_fac[Olga] = True`. But since facilitator must belong to the team, this implies Olga’s team is the one for which she is facilitator; enforce `green_fac[Olga] ∨ red_fac[Olga]`, and the implications above will enforce membership.  
+7. Add **Kelly is not a facilitator**: `¬green_fac[Kelly] ∧ ¬red_fac[Kelly]`.  
+8. Add the **hypothetical condition**: Mei is assigned to green team: `is_green[Mei] = True`.  
+9. Under this condition, deduce implications:  
+    - Lateefah ∈ green (fixed), Mei ∈ green (assumed) → at least two in green. So green team size ≥2. Since one team has exactly 2, if green has ≥2 and red must have ≤3, the only possibilities are:  
+        - green = 2 (Mei & Lateefah) → red = 3 (Juana, Kelly, Olga), or  
+        - green = 3 → red = 2 (but then Mei, Lateefah + one more ∈ green).  
+    - Juana ≠ Olga ⇒ if both are not on same team. Since Lateefah & Mei are green, if Olga ∈ green → Juana ∈ red; if Olga ∈ red → Juana ∈ green.  
+    - Olga is a facilitator ⇒ her team’s facilitator is her; so `green_fac[Olga]` only possible if Olga ∈ green, else `red_fac[Olga]`.  
+10. Translate the five answer choices into logical statements about assignments and facilitator roles:  
+    - A: Juana ∈ green  
+    - B: Kelly ∈ red  
+    - C: Olga ∈ green  
+    - D: Lateefah is facilitator (i.e., `green_fac[Lateefah] = True`)  
+    - E: Mei is facilitator (`green_fac[Mei] = True` since she’s in green)  
+11. For each answer choice, check if it **must be true** under the assumptions (Mei ∈ green + all constraints).  
+    - Use proof by contradiction: for each choice, assume its negation and test satisfiability.  
+    - For each i in 0..4 (choices):  
+        - Clone base solver + `is_green[Mei] = True`  
+        - Add constraint that choice i is **false** (e.g., for A: `¬is_green[Juana]`)  
+        - If UNSAT → choice i is forced (must be true); record index.  
+12. The answer index list will contain indices of statements that must be true.

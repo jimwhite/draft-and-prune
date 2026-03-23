@@ -1,0 +1,15 @@
+1. Identify all entities involved: cat, cow, lion, mouse.
+2. Define explicit properties and relations using ternary predicates of the form predicate(subject, object, True), where binary properties use boolean objects (e.g., is_young("mouse", True)) and relations use entity names as objects (e.g., needs("lion", "mouse", True)).
+3. Encode all directly stated facts as facts.pred(subj, obj, True).
+4. Translate each conditional sentence into a PyKe rule:
+   • If something needs the cat and the cat is red → it is blue.
+   • Blue things are red: If something is blue → it is red.
+   • If something likes the mouse and the mouse likes the cat → the cat is blue.
+   • If something is cold and red → it likes the mouse.
+   • If something needs the cow and it is cold → it is young.
+   • If something is nice → it visits the lion.
+   • If something needs the lion → it likes the cat.
+   • If something visits the cat and it likes the lion → the cat is blue.
+   • If something is cold and blue → it needs the lion.
+5. For each rule, implement using `foreach` to match antecedents and `assert` to derive consequent predicates.
+6. The query tests whether the mouse needs itself: Use facts.needs("mouse", "mouse", True).

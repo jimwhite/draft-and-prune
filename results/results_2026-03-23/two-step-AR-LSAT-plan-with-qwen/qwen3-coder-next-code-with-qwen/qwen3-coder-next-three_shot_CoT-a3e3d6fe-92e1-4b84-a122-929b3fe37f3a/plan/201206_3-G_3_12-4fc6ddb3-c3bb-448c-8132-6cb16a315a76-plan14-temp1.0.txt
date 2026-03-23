@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Define integer variables `zone[person]` for each person, representing their assigned zone (1, 2, or 3).  
+3. Add **zone assignment constraints**: each `zone[person]` ∈ {1, 2, 3}.  
+4. Add **mutual exclusivity constraints** for zone assignments based on the conditions:  
+    - Either Parra or Tiao (but not both) is in Zone 1: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+    - Either Tiao or Udall (but not both) is in Zone 2: `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+    - Parra and Quinn are in the same zone: `zone[Parra] == zone[Quinn]`.  
+    - Stuckey and Udall are in the same zone: `zone[Stuckey] == zone[Udall]`.  
+5. Add **zone size constraint**: number of people in Zone 3 > number in Zone 2.  
+6. Translate each answer choice into a set of zone assignments (explicit equality constraints for all 7 people).  
+7. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific zone assignments from the answer choice.  
+    - Check satisfiability: if SAT, this choice is feasible; record it as a candidate.  
+8. Output the index of the first (or all) feasible answer choice(s).

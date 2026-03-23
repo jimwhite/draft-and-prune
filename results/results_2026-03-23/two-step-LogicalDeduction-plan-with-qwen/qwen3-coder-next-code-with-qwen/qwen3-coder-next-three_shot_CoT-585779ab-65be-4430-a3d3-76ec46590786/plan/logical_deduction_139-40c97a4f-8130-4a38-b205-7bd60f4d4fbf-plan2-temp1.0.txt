@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to begin building the constraint satisfaction solver for the seven-bird arrangement.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: the seven bird species — `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each natural-language statement into a precise constraint using lambda functions:  
+        - "The hummingbird is to the left of the crow" → `hummingbird < crow`  
+        - "The cardinal is to the right of the quail" → `cardinal > quail`  
+        - "The blue jay is the fourth from the left" → `bluejay == 4`  
+        - "The robin is the second from the left" → `robin == 2`  
+        - "The quail is to the right of the crow" → `quail > crow`  
+        - "The raven is to the left of the robin" → `raven < robin` (and since robin == 2, this implies raven ∈ {1})  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` on the problem instance to enumerate all valid assignments.  
+   * Since the problem states it is logically consistent and uniquely determined, there should be exactly one solution. Extract that unique solution dictionary.
+
+5. **Identify the Rightmost Bird (Position 7):**  
+   * The question asks which bird is rightmost, i.e., the one assigned position 7.  
+   * Create a mapping from choice letters to birds: `{"A": "robin", "B": "hummingbird", "C": "raven", "D": "bluejay", "E": "crow", "F": "cardinal", "G": "quail"}`.  
+   * Iterate over the choices, check in the solution dict whether each bird’s position == 7.  
+   * Return (or store) the letter corresponding to the bird at position 7 as the final answer.

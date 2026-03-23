@@ -1,0 +1,21 @@
+1. Enumerate the eight students: George, Helen, Irving, Kyle, Lenore, Nina, Olivia, Robert → assign integer indices 0 to 7.  
+2. Enumerate the three days: Monday (M), Tuesday (T), Wednesday (W) and two slots per day: morning (0) and afternoon (1). Total of 6 report slots.  
+3. Create Boolean variables `assigned[s][d][slot]` for student s ∈ [0..7], day d ∈ {Mon, Tue, Wed}, slot ∈ {morning, afternoon}, indicating whether student s gives a report in that slot.  
+4. Add **exactly-six-reporters constraint**: exactly six students are assigned to exactly one slot each (i.e., sum over all slots and days for each student ≤ 1, and total assigned students = 6).  
+5. Add **no extra reporters constraint**: only the sixReporters list (all except Kyle and Lenore in this subproblem) can be assigned; since Kyle and Lenore do *not* give reports, constrain `assigned[Kyle][d][slot] = false` and similarly for Lenore for all d, slot.  
+6. Add **Tuesday-only-for-George**: George can only be assigned on Tuesday → `assigned[George][Mon][slot] = false`, `assigned[George][Wed][slot] = false` for both slots.  
+7. Add **afternoon restriction for Olivia & Robert**: cannot give afternoon reports → `assigned[Olivia][d][afternoon] = false`, `assigned[Robert][d][afternoon] = false` for all d.  
+8. Add **Nina conditional constraint**: If Nina is assigned (i.e., `assigned[Nina][d][slot] = true` for some d, slot), then:  
+   - If d ≠ Wed (i.e., Monday or Tuesday), then Helen and Irving *must both* be assigned on the next day (i.e., all their slots on d+1 are unused unless filled by Helen and Irving — but we need precise logical translation: at least one slot per day for Helen and Irving? No — *exactly* two reports per day, but only one per person. Reinterpret: "Helen and Irving must both give reports" means both Helen and Irving are assigned to *some* slot(s) on the next day — but since each gives exactly one report, they must be assigned to the *two slots* (morning and afternoon) on that next day. So: if Nina reports on Monday, then Helen and Irving must both report on Tuesday (i.e., assigned[Helen][Tue][morning] ∧ assigned[Robert? no] → Helen and Irving occupy both Tuesday slots); similarly, if Nina reports on Tuesday, then Helen and Irving must both report on Wednesday.  
+   - If Nina reports on Wednesday, no constraint.  
+9. For the question: Kyle and Lenore do not give reports → active candidates = George, Helen, Irving, Nina, Olivia, Robert (6 people).  
+10. For each answer choice (a triple: morning reports on Mon, Tue, Wed), extract student indices:  
+    - Check that the three students are among active candidates and each appears only once across all six slots (but since morning slots differ per day, uniqueness is ensured if no student appears twice in any list).  
+11. For each choice, build a fresh solver and:  
+    - Assert that the specified students are assigned to the three morning slots (one per day).  
+    - Add all prior global constraints (6 reporters, Tuesday-only George, afternoon restrictions, Nina conditional, and now fixed morning slots).  
+    - Allow remaining three reports to fill afternoon slots as needed (ensuring each day has exactly two reports: one morning fixed by choice, one afternoon to assign).  
+12. If the resulting constraints are SAT, then that triple is possible → record its index as valid.  
+13. Return the list of valid indices — but since the question asks “Could be”, and only one choice is correct, we collect those whose model is SAT.  
+14. However, the plan output should *only* list steps for solving via Z3: no final answer, just algorithmic steps.  
+15. Final output is the plan as a list of step descriptions, strictly in order, as required.

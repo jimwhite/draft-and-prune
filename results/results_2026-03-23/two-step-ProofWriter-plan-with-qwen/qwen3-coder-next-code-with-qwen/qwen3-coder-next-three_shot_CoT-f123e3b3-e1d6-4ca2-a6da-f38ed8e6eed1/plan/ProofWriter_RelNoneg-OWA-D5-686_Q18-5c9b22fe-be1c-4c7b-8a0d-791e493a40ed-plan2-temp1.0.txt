@@ -1,0 +1,29 @@
+1. Identify all entities involved: bald_eagle, cow, lion, squirrel.  
+2. Define explicit unary properties (e.g., is_blue, is_green, is_big, is_red) and binary relations (e.g., chases, likes, sees) using ternary predicates of the form predicate(subject, object, True), where binary relations use entity names as objects and unary properties use boolean values (True/False) as the second argument.  
+3. Encode all directly stated facts:  
+   - chases("bald_eagle", "squirrel", True)  
+   - is_blue("bald_eagle", True)  
+   - likes("bald_eagle", "cow", True), likes("bald_eagle", "lion", True)  
+   - chases("cow", "lion", True)  
+   - is_green("cow", True)  
+   - likes("cow", "bald_eagle", True), likes("cow", "lion", True)  
+   - likes("lion", "cow", True)  
+   - chases("squirrel", "bald_eagle", True)  
+   - is_big("squirrel", True), is_green("squirrel", True), is_red("squirrel", True)  
+   - sees("squirrel", "bald_eagle", True)  
+4. Translate each conditional rule into PyKe `foreach` + `assert` blocks:  
+   • If something is red and chases the bald eagle → the bald eagle is green.  
+   • If someone likes the bald eagle → they like the lion.  
+   • If someone is green → they see the lion.  
+   • If the cow is blue → the cow likes the squirrel.  
+   • If the bald eagle sees the lion → the lion sees the squirrel.  
+   • If someone sees the squirrel → they are green.  
+   • If someone likes the bald eagle → the bald eagle is blue.  
+5. For each rule:  
+   - Use `foreach` to bind variables for the subject (and any additional subjects/conjuncts), e.g., `foreach(is_red(X, True) & chases(X, "bald_eagle", True))`  
+   - Follow with `assert(...)` for the conclusion (e.g., `is_green("bald_eagle", True)`).  
+   - Handle conditionals with multiple antecedents via `&` in the `foreach`.  
+6. For conditional rules involving specific entities (e.g., “If the cow is blue…”), instantiate directly using `"cow"` as the subject.  
+7. Query whether the bald eagle chases the lion:  
+   → Use `facts.chases("bald_eagle", "lion", True)` and check if this fact can be derived or contradicted.  
+8. Since the query is about chase relation (not a property), verify derivation using forward chaining on facts and rules; the result will be true if derivable, false only if explicitly contradicted or refuted by rules, otherwise unknown.

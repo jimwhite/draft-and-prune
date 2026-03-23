@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain for Seven Positions:**  
+   * Identify the seven books as variables: `"purple"`, `"brown"`, `"red"`, `"blue"`, `"gray"`, `"black"`, `"green"`.  
+   * Define the domain as integers from 1 to 7 (inclusive), where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven book variables to the problem with this domain.
+
+3. **Formulate Constraints from Statements:**  
+   * Add `AllDifferentConstraint()` to enforce that each book occupies a unique position.  
+   * Translate each statement into a constraint using lambda or relational constraints:  
+     - "The brown book is to the left of the green book" → `brown < green`  
+     - "The gray book is the second from the left" → `gray == 2`  
+     - "The black book is to the left of the gray book" → `black < gray`  
+     - "The blue book is to the left of the red book" → `blue < red`  
+     - "The blue book is the second from the right" → since positions 1–7, rightmost is 7 ⇒ second from right is 6 → `blue == 6`  
+     - "The green book is to the left of the purple book" → `green < purple`
+
+4. **Solve the Constraint System:**  
+   * Use `solver.getSolutions()` to enumerate all valid assignments.  
+   * Extract the unique solution (since the problem is fully constrained, exactly one solution exists).  
+
+5. **Determine Which Book Is Fourth from the Left:**  
+   * In our 1–7 indexing, "fourth from the left" corresponds to position **4**.  
+   * Create a mapping from choice letters ('A' through 'G') to the book names in order:  
+     - 'A' → `"purple"`, 'B' → `"brown"`, 'C' → `"red"`, 'D' → `"blue"`, 'E' → `"gray"`, 'F' → `"black"`, 'G' → `"green"`  
+   * Iterate over the solution dictionary to find which book has position value `4`.  
+   * Return (or output) the corresponding choice letter for that book as the answer.

@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the three birds as variables: `"hummingbird"`, `"owl"`, and `"falcon"`.  
+   * Define the domain for positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle (second from left)**, and **3 = rightmost**.  
+   * Add the variables and their domain (1–3) to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate "The falcon is to the right of the owl" into a constraint: `falcon > owl`.  
+   * Translate "The hummingbird is to the left of the owl" into a constraint: `hummingbird < owl`.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments of positions to birds.  
+   * Since the problem is small and constraints uniquely determine the order, expect exactly one solution.
+
+5. **Determine Which Statement is True:**  
+   * The question asks which bird is the **second from the left**, i.e., the bird with position = 2.  
+   * Create a mapping from choice letters to birds: `"A"` → `"hummingbird"`, `"B"` → `"owl"`, `"C"` → `"falcon"`.  
+   * Inspect the solution to identify which bird has position 2.  
+   * Return the corresponding choice letter as the answer.

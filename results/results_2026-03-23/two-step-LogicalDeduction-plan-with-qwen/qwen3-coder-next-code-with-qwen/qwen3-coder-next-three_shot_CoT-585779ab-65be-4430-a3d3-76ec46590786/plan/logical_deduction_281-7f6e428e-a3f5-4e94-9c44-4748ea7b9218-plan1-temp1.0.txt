@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: `"mangoes"`, `"watermelons"`, and `"kiwis"`.  
+   * Define a domain of integers from 1 to 3, where **1 = least expensive**, **2 = second-most expensive**, and **3 = most expensive**.  
+   * Add these variables and the domain (1–3) to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate "The watermelons are less expensive than the kiwis" into `watermelons < kiwis`.  
+   * Translate "The kiwis are the second-most expensive" into `kiwis == 2`.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments satisfying the constraints.  
+   * Extract the (unique) solution.
+
+5. **Determine the Correct Answer:**  
+   * The question asks which statement is true, and option C directly matches the given fact ("The kiwis are the second-most expensive").  
+   * Confirm that in the solved solution, `kiwis == 2` holds (as required by input), and verify no contradiction arises.  
+   * Since option C is identical to a premise, it must be true; no further inference needed beyond verifying consistency.  
+   * Output the choice letter `"C"`.

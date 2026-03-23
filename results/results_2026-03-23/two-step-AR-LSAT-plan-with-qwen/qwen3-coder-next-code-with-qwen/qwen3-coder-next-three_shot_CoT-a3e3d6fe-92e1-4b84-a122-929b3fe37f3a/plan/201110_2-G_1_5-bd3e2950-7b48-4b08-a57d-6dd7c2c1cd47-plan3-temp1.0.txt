@@ -1,0 +1,19 @@
+1. Enumerate the six employees and assign integer indices to each.  
+2. Create integer variables `pos[e]` for each employee `e`, representing their assigned parking space number (1 to 6).  
+3. Add **domain constraints**: each `pos[e] ∈ {1,2,3,4,5,6}`.  
+4. Add **distinctness constraint**: all `pos[e]` values must be pairwise distinct (six employees, six spaces).  
+5. Add **given ordering constraints** from rules:  
+   - Young > Togowa: `pos_Young > pos_Togowa`  
+   - Xu > Souza: `pos_Xu > pos_Souza`  
+   - Robertson > Young: `pos_Robertson > pos_Young`  
+   - Robertson ∈ {1,2,3,4}: `pos_Robertson ≤ 4`  
+6. Add **conditional assumption** for the scenario: Young > Souza (`pos_Young > pos_Souza`).  
+7. Translate each answer choice into a logical constraint:  
+   - Togowa = 1 → `pos_Togowa == 1`  
+   - Young = 2 → `pos_Young == 2`  
+   - Robertson = 3 → `pos_Robertson == 3`  
+   - Souza = 3 → `pos_Souza == 3`  
+   - Vaughn = 4 → `pos_Vaughn == 4`  
+8. For each choice, create a fresh solver instance with the base constraints plus the conditional (Young > Souza), and assert the choice's constraint.  
+9. Check satisfiability for each instance: if SAT, then that scenario is possible; record the index of that choice.  
+10. Return the list of indices corresponding to choices that yield SAT (i.e., could be true under the given condition).

@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven fruits as string variables: `"apples"`, `"pears"`, `"mangoes"`, `"oranges"`, `"watermelons"`, `"peaches"`, and `"cantaloupes"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, aligning with standard ranking conventions for "most/least expensive".  
+    * Add all variables and the domain [1, 2, ..., 7] to the problem.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+    * Translate each statement into a constraint:  
+        - "The pears are more expensive than the oranges" → `pears < oranges` (since lower rank = cheaper; *pear’s rank number is smaller than orange’s*).  
+        - "The oranges are more expensive than the cantaloupes" → `oranges < cantaloupes`.  
+        - "The peaches are less expensive than the cantaloupes" → `cantaloupes < peaches` (peaches are cheaper ⇒ higher rank number).  
+        - "The apples are the third-cheapest" → `apples == 3` (third-cheapest means rank = 3).  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (most expensive = 7, second-most = 6).  
+        - "The mangoes are the fourth-most expensive" → `mangoes == 4` (fourth-most = rank = 4, since 7 is most, 6 second-most, 5 third-most, 4 fourth-most).  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments.  
+    * Extract the unique solution (since the problem is fully constrained).  
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which fruit is the fourth-most expensive, i.e., rank = 4.  
+    * Since "mangoes are the fourth-most expensive" is given directly, verify via solution that mangoes have rank 4.  
+    * Match this to the choice list: Option **C) The mangoes are the fourth-most expensive.** is explicitly stated and confirmed by constraint `mangoes == 4`.  
+    * Return the corresponding letter **C** as the answer.

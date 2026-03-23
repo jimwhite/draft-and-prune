@@ -1,0 +1,26 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the arrangement.
+
+2. **Define Variables and Domain:**  
+   * Define the five birds as variables: `"crow"`, `"falcon"`, `"hawk"`, `"robin"`, and `"quail"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint:  
+     - "The robin is the second from the left" → `robin == 2`.  
+     - "The hawk is the second from the right" → `hawk == 4` (since positions are left-to-right: 1,2,3,4,5).  
+     - "The robin is to the right of the falcon" → `falcon < robin` (i.e., `falcon < 2`).  
+     - "The quail is to the left of the hawk" → `quail < hawk` (i.e., `quail < 4`).  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments. Given consistency and uniqueness, expect one solution.  
+   * Extract the unique solution (or first solution) from the result list.
+
+5. **Determine Which Bird Is Third From the Left:**  
+   * The question asks which bird is at **position 3**.  
+   * Create a mapping from choice letters to birds: `{"A": "crow", "B": "falcon", "C": "hawk", "D": "robin", "E": "quail"}`.  
+   * Iterate through the solution dictionary to find which bird has position value `3`.  
+   * Return the choice letter corresponding to that bird.

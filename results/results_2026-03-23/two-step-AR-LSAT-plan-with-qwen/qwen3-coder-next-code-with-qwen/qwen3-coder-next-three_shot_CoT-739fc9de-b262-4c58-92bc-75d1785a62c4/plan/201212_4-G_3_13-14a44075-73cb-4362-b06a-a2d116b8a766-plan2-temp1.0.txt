@@ -1,0 +1,22 @@
+1. Enumerate the six targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV). Assign each a variable over domain {1,2,3} representing days.  
+2. Add **domain constraints**: all six variables ∈ {1, 2, 3}.  
+3. Add **client-level ordering constraints**:  
+   - For each client, website target ≤ voicemail target:  
+     IW ≤ IV, SW ≤ SV, TW ≤ TV.  
+4. Add **Image voicemail constraint**: IV < SV and IV < TV (shorter than the others' voicemail targets).  
+5. Add **Solide–Truvest website constraint**: SW < TW (Solide’s website target is shorter than Truvest’s).  
+6. Add **given condition**: IW = 2.  
+7. From step 5 and step 6, deduce logically (or via Z3) the forced implications:  
+   - Since IW = 2 and IW ≤ IV, then IV ∈ {2,3}.  
+   - But IV must be strictly less than SV and TV ⇒ SV ≥ 3, TV ≥ 3.  
+   - Since SV, TV ∈ {1,2,3}, and > IV ≥ 2 ⇒ SV = 3 and TV = 3.  
+   - Also, SW < TW and TW ≤ TV = 3 ⇒ TW ∈ {1,2} (but TW > SW ≥ ?).  
+   - Moreover, SW ≤ SV = 3 and SW < TW. Possible (SW,TW) pairs: (1,2), (1,3), (2,3) — but TW ≤ 3 and SV=TV=3 are fixed.  
+8. Now query Z3 for which target **must** be 2 days given all constraints and IW=2.  
+   - For each answer choice (IV, SW, SV, TW, TV), clone the constraints and add an assertion that it ≠ 2.  
+   - If UNSAT, then it must be 2; collect such indices.  
+9. Since TV = SV = 3 is deduced, both SV and TV ≠ 2. IV ∈ {2,3} but cannot be 3 (since then SV>IV and TV>IV would need ≥4), so IV = 2? Wait: IV must be < SV and TV, which are 3 ⇒ IV ≤ 2. Combined with IW=2 ≤ IV ⇒ IV ≥ 2 ⇒ IV = 2.  
+   - Therefore, Image's voicemail target must be 2 days.  
+10. Confirm via Z3: assert IW=2, all constraints above, then for each answer option, check if forcing it ≠ 2 leads to UNSAT.  
+11. The only forced equality to 2 is IV (Image’s voicemail target).  
+12. Output answer index list containing only Image's voicemail target.

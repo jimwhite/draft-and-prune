@@ -1,0 +1,15 @@
+1. Enumerate the scientists: assign indices to botanists (F=0, G=1, H=2), chemists (K=3, L=4, M=5), zoologists (P=6, Q=7, R=8).  
+2. Create Boolean decision variables `b[i]` for each scientist i (True if selected).  
+3. Add **cardinality constraints**: total selected scientists = 5.  
+4. Add **type coverage constraint**: at least one botanist (b[0] ∨ b[1] ∨ b[2]), at least one chemist (b[3] ∨ b[4] ∨ b[5]), at least one zoologist (b[6] ∨ b[7] ∨ b[8]).  
+5. Add **conditional constraint 1**: if more than one botanist is selected, then at most one zoologist: (count(botanists) ≥ 2) → (count(zoologists) ≤ 1). Implement via `¬(b[0]+b[1]+b[2] ≥ 2) ∨ (b[6]+b[7]+b[8] ≤ 1)`.  
+6. Add **exclusion constraint 1**: F and K cannot both be selected: ¬(b[0] ∧ b[3]).  
+7. Add **exclusion constraint 2**: K and M cannot both be selected: ¬(b[3] ∧ b[5]).  
+8. Add **conditional constraint 2**: if M is selected, then both P and R must be selected: b[5] → (b[6] ∧ b[7]).  
+9. For each choice string in the answer choices:  
+    - Parse the list of names and set corresponding `b[i]` variables to True (and others implicitly False for model checking).  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the fixed selections (e.g., if choice contains 'F', assert `b[0] == True`, etc.).  
+    - Assert that unmentioned scientists are not selected (e.g., if 'L' is absent, assert `b[4] == False`).  
+    - Check satisfiability. If SAT and all constraints satisfied, this choice is acceptable; record its index.  
+10. Output the index of the first (or all) acceptable choice(s).

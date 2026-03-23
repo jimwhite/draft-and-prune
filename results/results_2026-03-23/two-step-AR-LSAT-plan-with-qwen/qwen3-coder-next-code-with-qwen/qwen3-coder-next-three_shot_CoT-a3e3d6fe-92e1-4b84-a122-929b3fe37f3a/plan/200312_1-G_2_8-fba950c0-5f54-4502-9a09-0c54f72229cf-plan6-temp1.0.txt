@@ -1,0 +1,12 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign them integer indices 0–5.  
+2. Create integer variables `bay[type_index]` for the bay number (1–6) where each cargo type is held; all `bay[]` values must be distinct.  
+3. Add **ordering constraints** from the base conditions:  
+   - grain > livestock: `bay[grain] > bay[livestock]`  
+   - livestock > textiles: `bay[livestock] > bay[textiles]`  
+   - produce > fuel: `bay[produce] > bay[fuel]`  
+   - textiles and produce are adjacent: `|bay[textiles] - bay[produce]| == 1`  
+4. Add the conditional constraint: exactly one bay between machinery and grain → `|bay[machinery] - bay[grain]| == 2`.  
+5. Since all variables must be integers in [1,6] and distinct, enumerate all satisfying assignments (or use Z3 to find all models).  
+6. For each valid assignment, count how many cargo types have their bay number uniquely determined across *all* solutions (i.e., the set of possible bays for each type has size 1).  
+7. Let `determined_count = number of cargo types with singleton solution sets`.  
+8. Return the value of `determined_count` (must be one of: 2,3,4,5,6).

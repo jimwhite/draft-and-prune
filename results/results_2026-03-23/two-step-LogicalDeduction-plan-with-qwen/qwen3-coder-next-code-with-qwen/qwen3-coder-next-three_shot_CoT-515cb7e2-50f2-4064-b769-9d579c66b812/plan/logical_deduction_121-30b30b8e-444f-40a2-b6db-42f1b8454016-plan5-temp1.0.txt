@@ -1,0 +1,31 @@
+1.  **Initialize the Constraint Satisfaction Problem:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the puzzle.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven variables: `"loquats"`, `"peaches"`, `"watermelons"`, `"plums"`, `"kiwis"`, `"mangoes"`, and `"pears"`.  
+    * Define the domain as integers 1 through 7, where **1 = cheapest** and **7 = most expensive**, reflecting a strict total ordering from least to greatest price.  
+    * Add all variables and the domain {1,2,3,4,5,6,7} to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that each fruit has a unique price rank.  
+    * Translate each statement into an explicit constraint:  
+        * "The pears are more expensive than the kiwis" → `kiwis < pears` (kiwis cheaper ⇒ lower rank number).  
+        * "The watermelons are less expensive than the peaches" → `watermelons < peaches`.  
+        * "The mangoes are the third-cheapest" → `mangoes == 3`.  
+        * "The watermelons are the third-most expensive" → since most expensive = 7, third-most expensive = 5 ⇒ `watermelons == 5`.  
+        * "The plums are the second-most expensive" → second-most expensive = 6 ⇒ `plums == 6`.  
+        * "The loquats are the second-cheapest" → `loquats == 2`.  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid assignments of ranks.  
+    * Extract the unique solution (the solver will return exactly one assignment satisfying all constraints).  
+
+5.  **Determine the Correct Answer:**  
+    * Note: The question asks which fruit is third-cheapest (i.e., rank 3).  
+    * Observe from constraints that `mangoes == 3` is explicitly stated.  
+    * Therefore, the correct choice is **F) The mangoes are the third-cheapest.**  
+    * Programmatically:  
+        - Create a mapping from choice letters to fruit names (A→loquats, B→peaches, ..., G→pears).  
+        - In the solution dictionary, find which fruit has value 3.  
+        - Return the corresponding choice letter — it will be "F".

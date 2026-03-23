@@ -1,0 +1,17 @@
+1. Identify all entities: Bob, Dave, Erin, Fiona.  
+2. Encode all directly stated facts using ternary predicates:  
+   - is_blue("Bob", True), is_cold("Bob", True), is_green("Bob", True)  
+   - is_blue("Dave", True), is_cold("Dave", True), is_green("Dave", True), is_kind("Dave", True), is_smart("Dave", True), is_white("Dave", True)  
+   - is_smart("Erin", True)  
+   - is_blue("Fiona", True)  
+3. Translate each universal conditional rule into a `foreach` + `assert` structure:  
+   • Blue people are smart → foreach is_blue(x, True) assert is_smart(x, True)  
+   • If Fiona is green and blue → Fiona is big → specific fact; if green/blue are not asserted, skip or handle via rule; but since Fiona is only known blue, this antecedent fails.  
+   • Smart people are cold → foreach is_smart(x, True) assert is_cold(x, True)  
+   • If Bob is kind and blue → Bob is not green → special case: needs handling via negation; use rule with condition on kind/blue and assert is_green(x, False). Note: Bob already has is_green(True), causing inconsistency unless rules handle grounding or closed-world for negation—PyKe may require explicit "not" facts or rely on rule conflict resolution.  
+   • If someone is blue → they are white → foreach is_blue(x, True) assert is_white(x, True)  
+   • Green people are white → foreach is_green(x, True) assert is_white(x, True)  
+   • All big people are kind → foreach is_big(x, True) assert is_kind(x, True)  
+   • If someone is cold → they are green → foreach is_cold(x, True) assert is_green(x, True)  
+4. Note potential contradictions: Bob is green (explicit), but rule "if cold → green" and others may reinforce or conflict; Dave already has is_green(True), consistent with rules.  
+5. The query checks whether Dave is big: → Use facts.is_big("Dave", True).

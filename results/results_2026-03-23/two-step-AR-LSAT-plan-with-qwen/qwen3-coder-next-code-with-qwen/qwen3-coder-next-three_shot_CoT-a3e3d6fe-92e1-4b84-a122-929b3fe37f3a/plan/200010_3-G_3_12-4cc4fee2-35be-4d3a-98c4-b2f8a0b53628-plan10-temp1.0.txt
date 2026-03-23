@@ -1,0 +1,17 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign each an integer index.  
+2. Create eight integer position variables (one per composition), constrained to be distinct integers in the range [1, 8].  
+3. Add **ordering constraints** from conditions:  
+   - T is immediately before F → pos_T + 1 == pos_F, OR T is immediately after R → pos_R + 1 == pos_T.  
+   - At least two compositions between F and R → |pos_F − pos_R| ≥ 3.  
+   - O is first or fifth → pos_O == 1 OR pos_O == 5.  
+   - Eighth composition is L or H → pos_L == 8 OR pos_H == 8.  
+   - P before S → pos_P < pos_S.  
+   - At least one composition between O and S → |pos_O − pos_S| ≥ 2.  
+4. Translate the five answer choices into lists of composition names (order from first to eighth).  
+5. For each choice:  
+   - Create a fresh solver.  
+   - Load base constraints (steps 2–3).  
+   - Assert that the position variables match the proposed order (e.g., if choice is [L, P, S, R, O, T, F, H], then pos_L=1, pos_P=2, ..., pos_H=8).  
+   - Check satisfiability with solver.check().  
+6. Collect all choices for which the model is SAT (i.e., feasible).  
+7. Return the index of the first feasible choice as the answer.

@@ -1,0 +1,38 @@
+1. Identify all entities involved: cat, cow, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True):
+   - Directly state binary relations and unary properties as:
+     eats("cat", "squirrel", True), sees("cat", "squirrel", True),
+     eats("cow", "squirrel", True), sees("cow", "cat", True),
+     is_round("rabbit", True), sees("rabbit", "cat", True),
+     eats("squirrel", "rabbit", True), is_cold("squirrel", True),
+     needs("squirrel", "rabbit", True), sees("squirrel", "cat", True).
+3. Translate all conditional statements into PyKe rules using foreach+assert blocks:
+   • If someone sees the cat and they are not green → they see the cow.
+     (Note: 'green' is not mentioned as a fact anywhere; treat is_green/2 as unused unless derived.)
+   • If the rabbit is kind and the rabbit sees the squirrel → the squirrel needs the rabbit.
+     (Note: 'kind' is not mentioned for rabbit; fact `needs("squirrel","rabbit",True)` is already asserted, but rule may be redundant or irrelevant unless rabbit is known kind.)
+   • Rough people are cold: If someone is rough → they are cold. (i.e., is_rough(X) ⇒ is_cold(X))
+   • If someone sees the rabbit → they are not round: sees(X, "rabbit") ⇒ ¬is_round(X)
+   • If someone sees the squirrel and they are not green → they need the squirrel.
+   • If someone eats the cow → they see the rabbit: eats(X, "cow") ⇒ sees(X, "rabbit")
+   • If someone eats the squirrel → they are rough: eats(X, "squirrel") ⇒ is_rough(X)
+   • If someone is cold → they eat the cow: is_cold(X) ⇒ eats(X, "cow")
+4. For rules involving negation (e.g., “not green”, “not round”), use the corresponding negative fact: e.g., `facts.is_round(X, False)` for conclusion "not round".
+5. The query checks whether the cat is not round: `facts.is_round("cat", False)`.
+6. Use forward-chaining inference to derive whether `is_round("cat", True)` can be concluded or contradicted:
+   - Check if any chain implies `is_round("cat", True)` (would make the query false), or `¬is_round("cat")` (true).
+   - Consider rules that might force roundness or non-roundness on the cat:
+     * `sees("rabbit", "cat")` is true, and rabbit sees the cat ⇒ by rule “if someone sees the cat and they are not green → they see the cow”, rabbit sees cow (but irrelevant to cat).
+     * `sees("squirrel", "cat")` and `is_cold("squirrel")` ⇒ via “cold ⇒ eats cow” ⇒ squirrel eats cow ⇒ eats cow ⇒ sees rabbit (so squirrel sees rabbit) ⇒ then rule “sees rabbit ⇒ not round” applies to squirrel, but squirrel is already cold (already known), and we know rabbit is round.
+     * For the cat: does anything imply `is_round("cat")` or `¬is_round("cat")`?
+       - Does cat see rabbit? Not stated. No rule directly connects cat to rabbit.
+       - Does cat see squirrel? Yes, and eats squirrel ⇒ from “eats squirrel ⇒ rough” ⇒ cat is rough ⇒ from “rough ⇒ cold” (rule) ⇒ cat is cold ⇒ from “cold ⇒ eats cow” ⇒ cat eats cow ⇒ from “eats cow ⇒ sees rabbit” ⇒ cat sees rabbit ⇒ then by “sees rabbit ⇒ not round” ⇒ cat is not round.
+7. Therefore, the plan must include step-by-step derivation path to conclude `is_round("cat", False)`:
+   a. sees("cat", "squirrel", True) — given.
+   b. eats("cat", "squirrel", True) — given.
+   c. From eats(X, "squirrel") ⇒ is_rough(X): infer `is_rough("cat", True)`.
+   d. From rough ⇒ cold: infer `is_cold("cat", True)`.
+   e. From cold ⇒ eats cow: infer `eats("cat", "cow", True)`.
+   f. From eats(X, "cow") ⇒ sees(X, "rabbit"): infer `sees("cat", "rabbit", True)`.
+   g. From sees(X, "rabbit") ⇒ not round(X): infer `is_round("cat", False)`.
+8. Final query: assert and verify facts.is_round("cat", False).

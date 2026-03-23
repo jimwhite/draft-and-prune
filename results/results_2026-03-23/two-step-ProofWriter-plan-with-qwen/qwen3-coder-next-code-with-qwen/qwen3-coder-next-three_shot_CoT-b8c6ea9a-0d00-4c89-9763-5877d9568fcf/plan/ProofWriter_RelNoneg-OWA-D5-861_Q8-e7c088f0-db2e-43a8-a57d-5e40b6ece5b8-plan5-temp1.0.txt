@@ -1,0 +1,15 @@
+1. Identify all entities involved: cat, dog, rabbit, tiger.  
+2. Define predicates for unary properties (e.g., is_kind, is_green, is_big, is_nice, is_rough) and binary relations (e.g., needs, eats, chases).  
+3. Encode all explicitly stated facts as ternary predicates of the form predicate(subject, object, True), where unary properties use `True` as the object (e.g., is_kind("dog", True)), binary relations use the target entity as the object (e.g., needs("cat", "dog", True)).  
+4. Translate each conditional rule into a `foreach` block with condition assertions and an `assert` for the conclusion:  
+   • If something is nice and eats the tiger → it needs the dog.  
+   • If something chases the cat → it eats the cat.  
+   • If dog chases tiger → tiger needs rabbit.  
+   • If rabbit chases tiger → rabbit chases cat.  
+   • If something chases the cat → the cat is kind.  
+   • If something eats the dog → it chases the cat.  
+   • If something is rough → it eats the dog.  
+   • If something is kind → it is rough.  
+   • If something eats the rabbit and rabbit is big → it is kind.  
+5. Encode all rules using PyKe’s `foreach` (conditions) → `assert` (conclusion) syntax.  
+6. To verify whether “the cat is not rough” holds, check the negation: assert `is_rough("cat", False)` and see if it is entailed.

@@ -1,0 +1,26 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the five fruits as variables: `"peaches"`, `"watermelons"`, `"pears"`, `"apples"`, and `"cantaloupes"`.  
+    * Define the domain as integers 1 to 5, where **1 = cheapest** and **5 = most expensive**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Add Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+    * Translate each statement into a constraint:  
+        - "The watermelons are the second-cheapest" → `watermelons == 2`  
+        - "The apples are the cheapest" → `apples == 1`  
+        - "The peaches are the most expensive" → `peaches == 5`  
+        - "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (since lower rank = cheaper)
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to find all valid assignments.  
+    * Since the constraints uniquely determine most positions, extract the single solution (or one solution if multiple exist—though uniqueness is implied).
+
+5.  **Verify and Select the Correct Choice:**  
+    * Examine the choices: each choice asserts a specific fruit is the most expensive (i.e., rank 5).  
+    * From the solution, identify which fruit has rank 5.  
+    * Match this fruit to the corresponding choice letter (e.g., if `"peaches"` has rank 5, then choice A is correct).  
+    * Output the letter of the true statement as the final answer.

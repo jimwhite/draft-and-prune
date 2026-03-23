@@ -1,0 +1,15 @@
+1. Enumerate the six cargo types: fuel, grain, livestock, machinery, produce, textiles; assign integer indices 0–5.  
+2. Create integer variables `pos[cargo_type]` for positions 1–6 (bay numbers).  
+3. Add **domain constraints**: all `pos[c]` are integers in [1,6], and pairwise distinct (bijection between cargo types and bays).  
+4. Add **order constraints** from stem:  
+   - grain > livestock > textiles → `pos[grain] > pos[livestock]`, `pos[livestock] > pos[textiles]`.  
+   - produce > fuel → `pos[produce] > pos[fuel]`.  
+   - textiles adjacent to produce → `|pos[produce] - pos[textiles]| == 1`.  
+5. Add **conditional constraint**: exactly one bay between machinery and grain → `|pos[grain] - pos[machinery]| == 2`.  
+6. Enumerate all six possible values for the "exactly one between" relation: both (grain = machinery + 2) and (machinery = grain + 2).  
+7. Use a Z3 solver to find **all models** satisfying all constraints (no need to maximize or minimize).  
+8. For each model, record the assignment of all six cargo types to bays.  
+9. Count, across **all models**, how many bays have the **same cargo type in every model** (i.e., positions 1–6 where `pos_inv[Bay i]` is identical across all solutions).  
+   - To compute this: for each bay position `b ∈ {1,2,3,4,5,6}`, check if for all models `M1`, `M2`, the cargo in bay `b` under `M1` equals that under `M2`.  
+10. The count of such universally determined bays is the answer (must be one of the choices).  
+11. Map the integer count to the corresponding choice string: 2→'two', 3→'three', etc., and output that string.

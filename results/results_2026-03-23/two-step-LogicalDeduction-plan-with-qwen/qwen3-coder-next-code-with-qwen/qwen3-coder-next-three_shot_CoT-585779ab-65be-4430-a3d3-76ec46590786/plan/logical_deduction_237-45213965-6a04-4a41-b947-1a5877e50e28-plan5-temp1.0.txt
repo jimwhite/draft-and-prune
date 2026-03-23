@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+   * Create a `Problem` instance to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * List the seven books as variables: `"red"`, `"white"`, `"purple"`, `"black"`, `"gray"`, `"orange"`, `"blue"`.  
+   * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3. **Translate Each Statement into Constraints:**  
+   * Add `AllDifferentConstraint()` to enforce unique positions.  
+   * "The red book is to the right of the white book" → `red > white`  
+   * "The gray book is to the left of the orange book" → `gray < orange`  
+   * "The gray book is to the right of the blue book" → `gray > blue`  
+   * "The red book is the second from the right" → `red == 6` (since position 7 is rightmost, 6 is second from right)  
+   * "The black book is the fourth from the left" → `black == 4`  
+   * "The orange book is to the left of the white book" → `orange < white`
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the solution (problem is uniquely determined); if multiple, any one suffices as all will agree on relative positions needed for the query.
+
+5. **Determine Which Book Is Third From the Right:**  
+   * The third-from-right position corresponds to index **5** (positions: 1=leftmost, ..., 5=third from right, 6=second from right, 7=rightmost).  
+   * In the solution dictionary, find which book has position value **5**.
+
+6. **Match to Given Choices:**  
+   * Create a mapping: `{'A': 'red', 'B': 'white', 'C': 'purple', 'D': 'black', 'E': 'gray', 'F': 'orange', 'G': 'blue'}`.  
+   * Iterate through the choices: for each choice letter, check if its associated book’s position in the solution is **5**.  
+   * Return (or record) the correct choice letter that satisfies this condition.

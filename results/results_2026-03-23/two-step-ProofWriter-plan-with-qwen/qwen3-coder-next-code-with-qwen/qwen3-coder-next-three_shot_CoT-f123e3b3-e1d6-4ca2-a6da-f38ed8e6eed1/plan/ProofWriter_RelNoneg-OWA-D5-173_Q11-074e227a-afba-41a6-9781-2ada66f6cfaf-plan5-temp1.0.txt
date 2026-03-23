@@ -1,0 +1,14 @@
+1. Identify all involved entities: bald_eagle, cat, cow, rabbit.
+2. Encode all directly stated facts using ternary predicates: is_blue("bald_eagle", True), visits("cat", "bald_eagle", True), is_cold("rabbit", True), etc.
+3. Translate each conditional rule in the context into PyKe rules:
+   • If something visits the cow and sees the cow → it visits the bald_eagle.
+   • If something is nice → it is big.
+   • If something visits the bald_eagle → it is nice.
+   • If something is cold and visits the cow → the cow sees the cat.
+   • If something is round and eats the bald_eagle → it sees the bald_eagle.
+   • If something visits the cat → it visits the rabbit.
+   • If something visits the rabbit and sees the cow → it visits the cow.
+4. Implement each rule using `foreach` blocks for antecedents and `assert` for consequents.
+5. Derive necessary facts by applying rules: Determine if the rabbit is nice (via visits to bald_eagle?) or big directly.
+6. Check whether is_big("rabbit", True) can be proven; since the only rule giving bigness is via nice, and nice comes from visiting bald_eagle—so verify whether rabbit visits bald_eagle is derivable.
+7. The query tests the negation: Use facts.is_big("rabbit", True).

@@ -1,0 +1,16 @@
+1. Enumerate the five students and assign them integer indices (e.g., Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4).  
+2. Create Boolean variables for team assignment: `team[i] == True` means student i is on the green team, `False` means red team.  
+3. Create Boolean variables for facilitator status: `fac[i] == True` means student i is a facilitator.  
+4. Add **team-size constraints**: exactly two students on green team, three on red team (or vice versa), but note Lateefah is on green → enforce `sum(team[i] for i in range(5)) == 2` or `==3`, then add `team[2] == True`.  
+5. Add **exactly one facilitator per team**: `sum(fac[i] for i in range(5)) == 2`, and enforce that facilitators are consistent with team membership: `fac[i] => team[i]` for green, and `fac[i] => ~team[i]` for red.  
+6. Add **given constraints**:  
+   - Juana ≠ Olga in team: `team[0] != team[4]`.  
+   - Lateefah on green: `team[2] == True`.  
+   - Kelly not facilitator: `fac[1] == False`.  
+   - Olga is facilitator: `fac[4] == True`.  
+7. Add **hypothesis constraint** for the conditional: Mei is on green team → `team[3] == True`.  
+8. Now for each answer choice, encode the statement as a Boolean condition and test whether it *must* be true under all satisfying assignments:  
+   - For each choice, define a constraint `C` corresponding to the statement (e.g., for "Juana is assigned to green", `C = team[0]`).  
+   - To check necessity: clone base constraints + hypothesis, then assert `~C`. If UNSAT, then C must be true; record index.  
+9. Build answer_index_list by iterating over the five choices in order: for index i, if ~choice_i is UNSAT (i.e., choice_i is forced), append i.  
+10. Return the list of indices of choices that *must* be true when Mei is on green team.

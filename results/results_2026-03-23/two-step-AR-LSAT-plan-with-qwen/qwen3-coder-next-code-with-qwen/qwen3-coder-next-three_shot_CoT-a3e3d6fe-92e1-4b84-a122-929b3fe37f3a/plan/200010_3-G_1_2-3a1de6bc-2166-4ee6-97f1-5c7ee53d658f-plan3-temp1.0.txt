@@ -1,0 +1,24 @@
+1. Enumerate the eight students: George, Helen, Irving, Kyle, Lenore, Nina, Olivia, Robert → assign integer indices 0–7.  
+2. Enumerate the three days: Monday (day=0), Tuesday (day=1), Wednesday (day=2); and two slots per day: morning (slot=0), afternoon (slot=1).  
+3. Create Boolean variables `assigned[s][d][p]` for each student s, day d ∈ {0,1,2}, period p ∈ {0,1} (morning/afternoon), indicating whether student s gives a report on day d at period p.  
+4. Add **exactly six reports** constraint: sum over all s,d,p of `assigned[s][d][p]` equals 6.  
+5. Add **at most one report per slot** constraint: for each (d,p), at most one student is assigned.  
+6. Add **exactly six students used**: exactly six students have `assigned[s][*][*] = True`.  
+7. Add **Kyle and Lenore not reporting** constraint (given condition): all their assignments are False.  
+8. Add **Tuesday-only-for-George** constraint: George can only report on Tuesday → for all d ≠ 1 or p, `assigned[George][d][p] = False`.  
+9. Add **Olivia/Robert no afternoon reports** constraint: `assigned[Olivia][d][1] = False` and `assigned[Robert][d][1] = False` for all d.  
+10. Add **Nina conditional constraint**: If Nina reports on Monday (d=0), then Helen and Irving must both report on Tuesday (d=1, any slots). If Nina reports on Tuesday (d=1), then Helen and Irving must both report on Wednesday (d=2). If Nina reports on Wednesday (d=2), no further constraint. Formulate as:  
+    - Let `nina_mon = assigned[Nina][0][0] ∨ assigned[Nina][0][1]`  
+    - Let `nina_tue = assigned[Nina][1][0] ∨ assigned[Nina][1][1]`  
+    - Let `nina_wed = assigned[Nina][2][0] ∨ assigned[Nina][2][1]`  
+    - If Nina_mon: then Helen_tue ∧ Irving_tue  
+    - If Nina_tue: then Helen_wed ∧ Irving_wed  
+    - (No constraint if Nina_wed)  
+11. For each answer choice, interpret the proposed morning report assignments: e.g., “Helen, George, and Nina” means Monday morning = Helen, Tuesday morning = George, Wednesday morning = Nina.  
+12. For each choice:  
+    - Clone base constraints (steps 4–10).  
+    - Add fixed assignment for the three morning slots as specified (e.g., `assigned[Helen][0][0] = True`, `assigned[George][1][0] = True`, `assigned[Nina][2][0] = True`).  
+    - Ensure no conflict with step 6 (only 6 reports) and other constraints.  
+    - Check feasibility: if SAT, the choice is possible; otherwise impossible.  
+13. Since the question asks “could be”, collect all valid choices. But note: problem asks for *which one could be* — so find the choice(s) that are feasible. However, the format implies exactly one correct answer; thus, identify which choice yields SAT.  
+14. Return the index (or string) of the feasible choice(s).

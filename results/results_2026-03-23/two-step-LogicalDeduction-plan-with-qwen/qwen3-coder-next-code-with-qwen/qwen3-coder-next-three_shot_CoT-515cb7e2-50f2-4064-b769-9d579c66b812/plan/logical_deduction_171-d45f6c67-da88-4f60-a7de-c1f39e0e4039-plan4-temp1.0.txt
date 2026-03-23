@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven golfers as variables: `"Ana"`, `"Eli"`, `"Mya"`, `"Amy"`, `"Joe"`, `"Mel"`, and `"Ada"`.  
+    * Define the domain for positions as integers from 1 to 7, where **1 = best (highest/first place)** and **7 = worst (lowest/seventh place)**.  
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique finishing positions.  
+    * Translate each statement into a constraint using `lambda` or direct equality/inequality:  
+        * "Ada finished above Mel" → Ada’s position < Mel’s position (`Ada < Mel`).  
+        * "Ada finished third-to-last" → With 7 golfers, third-to-last is position **5** (since last=7, second-to-last=6, third-to-last=5) → `Ada == 5`.  
+        * "Amy finished above Ana" → `Amy < Ana`.  
+        * "Mya finished second-to-last" → position 6 → `Mya == 6`.  
+        * "Joe finished above Amy" → `Joe < Amy`.  
+        * "Eli finished below Ana" → Eli’s position is worse (higher number) than Ana’s → `Eli > Ana`.
+
+4.  **Solve the Constraint Satisfaction Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments of positions.  
+    * Extract the unique solution (since the problem is fully constrained, exactly one solution exists).
+
+5.  **Determine Which Golfer Is in Third Place:**  
+    * The question asks which golfer has position **3**.  
+    * Create a mapping from choice letters to golfer names:  
+        `"A" -> "Ana"`, `"B" -> "Eli"`, `"C" -> "Mya"`, `"D" -> "Amy"`, `"E" -> "Joe"`, `"F" -> "Mel"`, `"G" -> "Ada"`.  
+    * In the solution dictionary, find the key (golfer name) whose value equals `3`.  
+    * Return the corresponding choice letter.

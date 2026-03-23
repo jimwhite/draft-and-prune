@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five bird variables: `"crow"`, `"robin"`, `"quail"`, `"bluejay"`, and `"falcon"`.  
+   * Set the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce unique positions for all birds.  
+   * Translate each logical statement into a constraint:  
+     - "The robin is to the left of the quail" → `robin < quail`  
+     - "The falcon is the third from the left" → `falcon == 3`  
+     - "The crow is to the left of the falcon" → `crow < falcon` (i.e., `crow < 3`)  
+     - "The blue jay is the leftmost" → `bluejay == 1`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+   * Extract the single unique solution (since the problem is fully constrained).
+
+5. **Determine Which Statement Is True:**  
+   * Note: The question asks which choice correctly identifies the bird in position 3 (third from left).  
+   * Create a mapping: `{"A": "crow", "B": "robin", "C": "quail", "D": "bluejay", "E": "falcon"}`  
+   * For each choice, check if the corresponding bird’s position in the solution equals 3.  
+   * Return the letter of the first (and only) choice where this holds.

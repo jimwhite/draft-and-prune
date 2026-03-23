@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicles as string variables: `"truck"`, `"station_wagon"`, `"motorcyle"`, `"limousine"`, and `"hatchback"`.  
+   * Assign a numerical rank domain from 1 to 5, where **1 = oldest**, **5 = newest**.  
+   * Add all variables with the domain `{1, 2, 3, 4, 5}` to the problem.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of ranks.  
+   * Translate each statement:  
+     - "The motorcyle is the second-newest" → `motorcyle == 4`  
+     - "The truck is newer than the limousine" → `truck > limousine`  
+     - "The motorcyle is older than the station wagon" → `motorcyle < station_wagon`  
+     - "The limousine is newer than the hatchback" → `limousine > hatchback`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since the problem is well-constrained and consistent).
+
+5. **Identify the Newest Vehicle:**  
+   * The question asks: "Which vehicle is the newest?" → i.e., rank = 5.  
+   * Create a mapping from choice letters (`"A"` to `"E"`) to vehicle names per the choices:  
+     - `"A"` → `"truck"`  
+     - `"B"` → `"station_wagon"`  
+     - `"C"` → `"motorcyle"`  
+     - `"D"` → `"limousine"`  
+     - `"E"` → `"hatchback"`  
+   * Iterate through the solution dictionary to find which vehicle has rank `5`.  
+   * Output the corresponding choice letter.

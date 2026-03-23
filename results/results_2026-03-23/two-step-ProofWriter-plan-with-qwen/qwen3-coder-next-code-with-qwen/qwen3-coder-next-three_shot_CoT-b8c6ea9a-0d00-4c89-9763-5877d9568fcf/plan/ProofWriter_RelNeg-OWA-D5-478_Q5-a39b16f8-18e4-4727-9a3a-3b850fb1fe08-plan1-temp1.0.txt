@@ -1,0 +1,17 @@
+1. Identify all entities: cow, mouse, rabbit, squirrel.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True) or predicate(subject, object, False):
+   - Properties: is_kind("cow", True), is_kind("mouse", True), is_green("squirrel", True), is_rough("squirrel", True), is_not_blue("rabbit", True), is_not_blue("squirrel", True).
+   - Relations: sees("cow", "mouse", True), eats("mouse", "cow", True), needs("mouse", "squirrel", True), eats("rabbit", "mouse", True), needs("squirrel", "mouse", True), sees("squirrel", "rabbit", True).
+3. Translate each conditional rule into a `foreach` block with the condition (using matched variables and existing facts) followed by an `assert` for the consequent:
+   • If X sees the cow → X sees the squirrel.
+   • If X sees the rabbit → X eats the cow.
+   • If X needs the cow → cow eats the mouse.
+   • If X needs the squirrel AND squirrel needs the cow → cow does NOT need rabbit (i.e., needs("cow", "rabbit", False)).
+   • If mouse eats the rabbit AND rabbit does NOT see mouse → rabbit is green (i.e., is_green("rabbit", True)).
+   • If cow needs rabbit → rabbit does NOT eat mouse (i.e., eats("rabbit", "mouse", False)).
+   • If X eats the squirrel AND squirrel eats the cow → X needs the cow.
+   • If X eats the mouse → X eats the squirrel.
+4. Note: Some rules involve negative conclusions (e.g., “does not need” or “is not blue”) and must be encoded as explicit `False` assertions using the appropriate predicate.
+5. Observe: The squirrel needs the cow is *not* directly stated — only that squirrel needs mouse; so we cannot assume squirrel needs cow unless derivable.
+6. The query asks whether rabbit needs cow: use facts.needs("rabbit", "cow", True).
+7. Additionally, verify if any chain of reasoning (e.g., via needs conditions or implications) can derive `needs("rabbit", "cow", True)` or its negation; otherwise, classify as unknown.

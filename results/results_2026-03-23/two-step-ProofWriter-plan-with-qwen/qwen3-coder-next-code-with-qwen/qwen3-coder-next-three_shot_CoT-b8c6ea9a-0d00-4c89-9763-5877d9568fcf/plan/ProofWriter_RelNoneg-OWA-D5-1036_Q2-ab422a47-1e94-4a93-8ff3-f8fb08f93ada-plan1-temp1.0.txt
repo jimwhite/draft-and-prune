@@ -1,0 +1,20 @@
+1. Identify all entities: bear, cat, lion, squirrel.  
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True):  
+   - is_eats("bear", "squirrel", True)  
+   - is_cold("bear", True), is_rough("bear", True), is_visits("bear", "lion", True)  
+   - is_eats("cat", "lion", True)  
+   - is_likes("lion", "cat", True), is_visits("lion", "bear", True)  
+   - is_eats("squirrel", "lion", True), is_cold("squirrel", True), is_rough("squirrel", True), is_likes("squirrel", "bear", True), is_visits("squirrel", "lion", True)  
+3. Translate all conditional rules into PyKe `foreach` + `assert` format:  
+   • Red people are green → (if is_red(X, True) then assert is_green(X, True))  
+   • If someone eats the lion → the lion is red → (if is_eats(X, "lion", True) then assert is_red("lion", True))  
+   • If someone is green and likes the lion → they eat the bear → (if is_green(X, True) ∧ is_likes(X, "lion", True) then assert is_eats(X, "bear", True))  
+   • If someone visits the bear → the bear likes the lion → (if is_visits(X, "bear", True) then assert is_likes("bear", "lion", True))  
+   • If someone likes the squirrel and likes the lion → they visit the lion → (if is_likes(X, "squirrel", True) ∧ is_likes(X, "lion", True) then assert is_visits(X, "lion", True))  
+   • If someone is green → they eat the squirrel → (if is_green(X, True) then assert is_eats(X, "squirrel", True))  
+   • If someone likes the lion → they visit the bear → (if is_likes(X, "lion", True) then assert is_visits(X, "bear", True))  
+   • If someone visits the lion and the lion is green → they are red → (if is_visits(X, "lion", True) ∧ is_green("lion", True) then assert is_red(X, True))  
+4. Note that "red people are green" must be interpreted as: if X is red → X is green. This is encoded directly as a rule with one premise and one conclusion (note: "people" maps to generic entity X).  
+5. The query is: “The squirrel is not rough” → i.e., is_rough("squirrel", False).  
+6. Since the fact `is_rough("squirrel", True)` is explicitly given, and no rule contradicts it (and no rule derives `is_rough("squirrel", False)`), the statement is to be evaluated by checking if `is_rough("squirrel", False)` can be proven or contradicted. In PyKe, we assert the query as `facts.is_rough("squirrel", False)`; since it directly contradicts an explicit fact, the answer will be **false**.  
+7. Therefore, in the final query step: assert `facts.is_rough("squirrel", False)` and verify whether PyKe proves it (it will not, and in fact the explicit fact falsifies it).

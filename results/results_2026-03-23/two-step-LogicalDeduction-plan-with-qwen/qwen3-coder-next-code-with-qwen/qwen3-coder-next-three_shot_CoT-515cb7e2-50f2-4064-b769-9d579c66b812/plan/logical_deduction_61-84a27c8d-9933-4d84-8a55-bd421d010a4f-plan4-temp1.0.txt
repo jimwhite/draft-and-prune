@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * Define the set of variables as the five books: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.
+   * Define the domain as integers from 1 to 5 (inclusive), where **1 = leftmost position** and **5 = rightmost position**.
+   * Add all variables to the problem with this domain using `addVariable()`.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.
+   * Translate each descriptive statement into a constraint:
+     - "The red book is to the right of the gray book" → `red > gray` (i.e., position(red) > position(gray)).
+     - "The black book is to the left of the blue book" → `black < blue`.
+     - "The blue book is to the left of the gray book" → `blue < gray`.
+     - "The purple book is the second from the right" → position(purple) = 4 (since 5 is rightmost, 4 is second-rightmost in a 1–5 left-to-right scale).
+   * Implement the first three relational constraints using `addConstraint()` with lambda functions (e.g., `lambda r, g: r > g` for red and gray).
+
+4. **Solve the Constraint Satisfaction Problem:**
+   * Call `getSolutions()` to retrieve all valid assignments.
+   * Extract the unique solution (as the problem is fully constrained, only one solution exists).
+
+5. **Evaluate and Select the Correct Choice:**
+   * Note that all answer choices reference "the second from the right", which corresponds to position 4.
+   * Create a mapping between choice letters (A–E) and book names as given in the choices:
+     - A: `"gray"`, B: `"red"`, C: `"purple"`, D: `"blue"`, E: `"black"`.
+   * Check which book in the solution has position value 4.
+   * Return (or print) the corresponding choice letter.

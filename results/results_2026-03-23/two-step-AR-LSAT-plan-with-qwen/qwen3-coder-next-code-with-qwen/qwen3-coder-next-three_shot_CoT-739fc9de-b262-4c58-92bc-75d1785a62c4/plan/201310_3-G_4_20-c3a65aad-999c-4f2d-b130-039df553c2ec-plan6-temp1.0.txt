@@ -1,0 +1,18 @@
+1. Enumerate the five bird types and assign them integer codes (e.g., oystercatchers=0, petrels=1, rails=2, sandpipers=3, terns=4).  
+2. Create integer variables for lecture positions (1 to 5) for each bird type, ensuring all positions are distinct and cover 1–5 exactly once.  
+3. Create Boolean variables `hall[i]` for i=1..5: `hall[i] == True` means lecture at position *i* is in Gladwyn Hall, `False` means Howard Auditorium.  
+4. Add **global hall constraints**:  
+   - First lecture (position 1) is in Gladwyn Hall: `hall[1] == True`.  
+   - Fourth lecture (position 4) is in Howard Auditorium: `hall[4] == False`.  
+   - Exactly three lectures are in Gladwyn Hall: sum of `hall[i]` for i=1..5 equals 3.  
+5. Add **sandpiper–oystercatcher constraints**:  
+   - Sandpipers lecture is in Howard Auditorium: if `pos_sandpipers = p`, then `hall[p] == False`.  
+   - Sandpipers lecture is earlier than oystercatchers: `pos_sandpipers < pos_oystercatchers`.  
+6. Add **terns–petrels constraints**:  
+   - Terns lecture is earlier than petrels: `pos_terns < pos_petrels`.  
+   - Petrels lecture is in Gladwyn Hall: if `pos_petrels = p`, then `hall[p] == True`.  
+7. Translate each answer choice into a conjunction of hall constraints:  
+   - e.g., "first and second lectures are both in Gladwyn Hall" → `hall[1] == True ∧ hall[2] == True`.  
+8. For each answer choice, create a fresh solver with the base constraints plus the choice’s hall constraint(s).  
+9. If any such model is UNSAT, then that choice **must be false**; collect its index into `answer_index_list`.  
+10. Print the answer index list (expected to contain exactly one index).

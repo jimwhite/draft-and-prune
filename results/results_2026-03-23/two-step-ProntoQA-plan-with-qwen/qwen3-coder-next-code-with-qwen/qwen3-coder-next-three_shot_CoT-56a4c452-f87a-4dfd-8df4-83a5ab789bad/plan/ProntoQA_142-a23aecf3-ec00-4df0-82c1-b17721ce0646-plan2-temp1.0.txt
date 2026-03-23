@@ -1,0 +1,27 @@
+1. Identify all entities and types: Stella, zumpus, wumpus, numpus, impus, rompus, vumpus, jompus, dumpus, yumpus, tumpus.  
+2. Identify all properties: metallic, floral, happy, kind, large, opaque, cold, spicy.  
+3. Represent "Stella is a numpus" as a base fact: `is_a("Stella", "numpus", True)`.  
+4. Convert all class property and subclass relationships into rules:  
+   - Every zumpus is metallic.  
+   - Each zumpus is a wumpus.  
+   - Wumpuses are not floral.  
+   - Every wumpus is a numpus.  
+   - Numpuses are happy.  
+   - Each numpus is an impus.  
+   - Impuses are kind.  
+   - Every impus is a rompus.  
+   - Every rompus is large.  
+   - Vumpuses are opaque.  
+   - Each rompus is a jompus.  
+   - Each jompus is cold.  
+   - Jompuses are dumpuses.  
+   - Each dumpus is not opaque.  
+   - Dumpuses are yumpuses.  
+   - Yumpuses are spicy.  
+   - Each yumpus is a tumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. Determine whether "Stella is opaque" can be proven:  
+   - From `is_a("Stella", "numpus")`, derive that Stella is an impus, then a rompus, then a jompus, then a dumpus.  
+   - Since every dumpus is not opaque, `is_opaque("Stella", False)` holds.  
+   - Thus, the statement "Stella is opaque" is false.  
+7. Query for provability of the negation: use `facts.is_opaque("Stella", True)` — if unsatisfiable, the original statement is false.

@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament finishing order.
+
+2.  **Define Variables and Domain:**  
+    * Set up variables for the five golfers: `"Eve"`, `"Eli"`, `"Joe"`, `"Rob"`, and `"Mya"`.  
+    * Define the domain as integers 1 through 5, where **1 = first (top)** and **5 = last (bottom)**.  
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.  
+    * Convert each statement into a constraint using `lambda` functions:  
+        * "Rob finished above Mya" → Rob's rank < Mya's rank (`lambda r, m: r < m`).  
+        * "Eve finished first" → Eve's rank = 1 (`lambda e: e == 1`).  
+        * "Joe finished above Eli" → Joe's rank < Eli's rank (`lambda j, e: j < e`).  
+        * "Joe finished below Mya" → Joe's rank > Mya's rank (`lambda j, m: j > m`).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the sole solution (since the puzzle is well-constrained, there will be exactly one valid arrangement).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks who finished last (rank = 5).  
+    * Build a mapping from choice letters to golfer names: `"A" → "Eve"`, `"B" → "Eli"`, `"C" → "Joe"`, `"D" → "Rob"`, `"E" → "Mya"`.  
+    * Examine the solution to find which golfer has rank 5.  
+    * Return the choice letter corresponding to that golfer as the final answer.

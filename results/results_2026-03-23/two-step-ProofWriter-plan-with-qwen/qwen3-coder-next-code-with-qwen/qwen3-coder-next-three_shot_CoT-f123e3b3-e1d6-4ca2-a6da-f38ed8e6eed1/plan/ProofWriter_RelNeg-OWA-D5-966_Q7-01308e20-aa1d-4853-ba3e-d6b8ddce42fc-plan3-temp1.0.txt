@@ -1,0 +1,23 @@
+1. Identify all entities: bald_eagle, cow, dog, tiger.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True):
+   - eats("bald_eagle", "cow", True)
+   - is_young("bald_eagle", True)
+   - is_nice("cow", True)
+   - sees("cow", "bald_eagle", True)
+   - eats("dog", "bald_eagle", True)
+   - eats("tiger", "cow", True)
+   - needs("tiger", "bald_eagle", True)
+3. Translate each conditional sentence into a PyKe rule using `foreach` (for conditionants) and `assert` (for conclusion), ensuring variables are universally quantified:
+   • If something is green and eats the cow → it does not see the bald eagle.
+   • If something eats the tiger → the tiger is young.
+   • If something is red → it eats the tiger.
+   • If something sees the bald eagle → it eats the cow.
+   • If something is green and needs the dog → it needs the bald eagle.
+   • If something sees the tiger → it needs the bald eagle.
+   • If something is red → it eats the bald eagle.
+   • If something is young → it is red.
+   • If something eats the dog and is red → the dog is young.
+4. Note: The ternary predicate `sees("tiger", "cow", True)` is *not* given explicitly, but may be inferred only if justified by a rule.
+5. For the query "The tiger is young", use facts.is_young("tiger", True).
+6. Since one direct fact is `is_young("bald_eagle", True)`, and rules may propagate properties, the rule "If something is young then it is red" will apply to bald_eagle, yielding `is_red("bald_eagle", True)`, which via "If something is red then it eats the tiger" gives `eats("bald_eagle", "tiger", True)`, and then via "If something eats the tiger then the tiger is young" yields `is_young("tiger", True)`. Thus the query should be provable.
+7. However, strictly follow plan for translation: do *not* perform inference during planning — only encode facts and rules; the solver will infer.

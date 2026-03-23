@@ -1,0 +1,16 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create six integer variables `bay[0]` to `bay[5]`, where `bay[i]` is the bay number (1–6) holding cargo type i.  
+3. Add **domain constraints**: each `bay[i] ∈ {1,2,3,4,5,6}`, and all six `bay[i]` must be distinct (a permutation).  
+4. Add **ordering constraints** from the problem:  
+    - grain > livestock ⇒ `bay[1] > bay[2]`  
+    - livestock > textiles ⇒ `bay[2] > bay[5]`  
+    - produce > fuel ⇒ `bay[4] > bay[0]`  
+    - textiles adjacent to produce ⇒ `|bay[5] - bay[4]| = 1`  
+5. Add **extra condition** for the question: exactly one bay between machinery and grain ⇒ `|bay[3] - bay[1]| = 2`.  
+6. For each cargo type i ∈ {0,1,2,3,4,5}, check if `bay[i]` is uniquely determined across all solutions:  
+    - Clone the base constraints into a fresh solver.  
+    - For each candidate position p ∈ {1,2,3,4,5,6}, add constraint `bay[i] == p`.  
+    - If exactly one such p yields SAT (and others UNSAT), then cargo type i is fixed in exactly one bay.  
+7. Count how many cargo types have a uniquely determined bay (i.e., only one possible position across all models).  
+8. Map this count to the answer choices: 2→'two', 3→'three', etc.  
+9. Output the final answer string.

@@ -1,0 +1,25 @@
+1. Enumerate the five bird types and assign them integer codes (e.g., oystercatchers=0, petrels=1, rails=2, sandpipers=3, terns=4).  
+2. Create integer variables for the lecture positions (1 to 5) for each bird type.  
+3. Create integer variables `hall[i]` (or Boolean `g[i]`) for the location of lecture position i: 1 = Gladwyn Hall, 0 = Howard Auditorium (or use Boolean `is_gladwyn[i]`).  
+4. Add **domain constraints**: each bird assigned a unique position from 1 to 5; each position has exactly one bird.  
+5. Add **fixed location constraints**:  
+    - Lecture 1 is in Gladwyn Hall: `hall[1] = G` (or `is_gladwyn[1] = True`).  
+    - Lecture 4 is in Howard Auditorium: `hall[4] = H` (or `is_gladwyn[4] = False`).  
+    - Exactly three lectures in Gladwyn Hall: sum of `is_gladwyn[i]` for i=1..5 equals 3.  
+6. Add **sandpipers constraints**:  
+    - Sandpipers lecture is in Howard Auditorium: `is_gladwyn[pos_sandpipers] = False`.  
+    - Sandpipers lecture occurs before oystercatchers: `pos_sandpipers < pos_oystercatchers`.  
+7. Add **terns and petrels constraints**:  
+    - Terns before petrels: `pos_terns < pos_petrels`.  
+    - Petrels lecture is in Gladwyn Hall: `is_gladwyn[pos_petrels] = True`.  
+8. Translate each answer choice into logical constraints about hall assignments at specific positions:  
+    - Option 1: `is_gladwyn[1] = True ∧ is_gladwyn[2] = True`  
+    - Option 2: `is_gladwyn[2] = False ∧ is_gladwyn[3] = False`  
+    - Option 3: `is_gladwyn[2] = True ∧ is_gladwyn[5] = True`  
+    - Option 4: `is_gladwyn[3] = False ∧ is_gladwyn[4] = False`  
+    - Option 5: `is_gladwyn[3] = True ∧ is_gladwyn[5] = True`  
+9. Define an answer index list `answer_index_list = []`. For each option (in order 0 to 4):  
+    - Clone base constraints into fresh solver.  
+    - Assert the conjunction of hall assignment conditions for that option.  
+    - If model is UNSAT, then this option **must be false**; append its index to `answer_index_list`.  
+10. Print the answer index list (should contain exactly one index).

@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin modeling the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the five books as variables: `"blue"`, `"red"`, `"brown"`, `"yellow"`, and `"orange"`.
+    * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.
+    * Add all variables with the domain [1, 2, 3, 4, 5] to the problem instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Translate each statement into a lambda constraint:
+        * "The red book is to the left of the brown book" → `lambda r, b: r < b` (red position < brown position).
+        * "The yellow book is to the right of the orange book" → `lambda o, y: o < y` (orange position < yellow position).
+        * "The brown book is the second from the left" → `lambda br: br == 2` (brown position = 2).
+        * "The yellow book is to the left of the blue book" → `lambda y, bl: y < bl` (yellow position < blue position).
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the sole solution from the list (since the constraints yield a unique arrangement).
+
+5.  **Determine Which Book Is Second from the Right:**
+    * In our position system, "second from the right" corresponds to position **4**.
+    * Create a mapping from choice letters to book names:  
+        `{"A": "blue", "B": "red", "C": "brown", "D": "yellow", "E": "orange"}`.
+    * Iterate through the choices: for each choice, check if the corresponding book’s position in the solution is 4.
+    * Return the letter of the first (and only) matching choice as the answer.

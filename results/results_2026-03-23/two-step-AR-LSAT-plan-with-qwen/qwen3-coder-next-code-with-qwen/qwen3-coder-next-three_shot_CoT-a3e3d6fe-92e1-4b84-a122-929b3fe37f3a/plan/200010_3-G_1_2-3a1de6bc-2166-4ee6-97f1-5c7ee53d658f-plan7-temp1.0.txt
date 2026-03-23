@@ -1,0 +1,20 @@
+1. Enumerate the eight students and assign integer indices.  
+2. Define Boolean variables `report[student][day][slot]` where day ∈ {Monday=0, Tuesday=1, Wednesday=2}, slot ∈ {morning=0, afternoon=1}; total of 8×3×2 = 48 variables.  
+3. Add **exactly-six-reports constraint**: sum over all students, days, slots of `report[student][day][slot]` equals 6.  
+4. Add **two-reports-per-day constraint**: for each day, exactly two students report (one morning, one afternoon), i.e., sum over students and slots for that day = 2.  
+5. Add **one-report-per-slot-per-student constraint**: for each student and day, at most one slot is reported (mutually exclusive morning/afternoon per day).  
+6. Add **Tuesday-only-George constraint**: if George reports, it must be on Tuesday; i.e., for all slots and days ≠ Tuesday, `report[George][day][slot] = false`.  
+7. Add **afternoon constraint**: Olivia and Robert cannot give afternoon reports; i.e., for both students, `report[student][day][1] = false` for all days.  
+8. Add **Nina conditional constraint**: if Nina reports on Monday or Tuesday, then Helen and Irving must both report the next day; if Nina reports on Wednesday, no constraint applies. Formalize:  
+   - Let `N_Mon`, `N_Tue`, `N_Wed` be Nina’s morning/afternoon variables on respective days (but only one slot possible per day due to earlier constraint).  
+   - For Monday: if Nina reports on Monday, then Helen and Irving must both report on Tuesday (any slot).  
+   - For Tuesday: if Nina reports on Tuesday, then Helen and Irving must both report on Wednesday.  
+   - For Wednesday: no constraint.  
+9. Add **Kyle and Lenore do not report**: set `report[Kyle][day][slot] = false` and `report[Lenore][day][slot] = false` for all days/slots.  
+10. Now, with Kyle and Lenore excluded, only six students remain: George, Helen, Irving, Nina, Olivia, Robert — so all must report exactly once (exactly six reports).  
+11. For each answer choice, which specifies morning reporters for Monday, Tuesday, Wednesday (in that order), do:  
+    - Clone base constraints.  
+    - Assert that the specified student reports on the specified day in the morning slot (i.e., `report[student][day][0] = true`).  
+    - Enforce that no other report occurs for those students on that day (since only one slot per day).  
+    - Check if the resulting system is SAT.  
+12. Collect indices of choices for which the model is SAT (i.e., feasible schedules exist); the plan outputs these indices.

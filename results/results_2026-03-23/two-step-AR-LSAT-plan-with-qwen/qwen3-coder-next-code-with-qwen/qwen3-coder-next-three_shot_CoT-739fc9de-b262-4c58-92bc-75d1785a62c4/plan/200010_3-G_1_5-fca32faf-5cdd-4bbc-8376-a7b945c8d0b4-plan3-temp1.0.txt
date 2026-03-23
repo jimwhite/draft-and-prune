@@ -1,0 +1,22 @@
+1. Enumerate the eight students and assign integer codes to them (e.g., George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Define Boolean variables for report assignment: ` Morning[d][s]` and `Afternoon[d][s]` for day d ∈ {Mon=0, Tue=1, Wed=2} and student s ∈ {0..7}, indicating whether student s gives a morning/afternoon report on day d.  
+3. Add **exactly six reports** constraint: sum over all (Morning[d][s] + Afternoon[d][s]) for d ∈ {0,1,2}, s ∈ {0..7} equals 6.  
+4. Add **one report per time slot** constraints: for each day d, exactly one student is assigned to morning and one to afternoon:  
+    - For each d: sum_s Morning[d][s] = 1, and sum_s Afternoon[d][s] = 1.  
+5. Add **no double reporting**: no student reports more than once (each student can appear in at most one Morning[d][*] or Afternoon[d][*]).  
+6. Add **Tuesday-only for George**: George can only report on Tuesday: `Morning[1][George] ∨ Afternoon[1][George]`, and for d ≠ 1: `¬Morning[d][George] ∧ ¬Afternoon[d][George]`.  
+7. Add **afternoon restriction**: Olivia and Robert cannot give afternoon reports: for s ∈ {Olivia, Robert}: `¬Afternoon[d][s]` for all d.  
+8. Add **Nina conditional constraint**: If Nina reports on day d, then:  
+    - If d = 0 (Monday): Helen and Irving must both report on Tuesday (d=1).  
+    - If d = 1 (Tuesday): Helen and Irving must both report on Wednesday (d=2).  
+    - If d = 2 (Wednesday): no further constraint.  
+   Implement via implications: `Nina_reports_on_day[d] → (Helen_and_Irving_report_on_day[d+1])`, where Nina_reports_on_day[d] = Morning[d][Nina] ∨ Afternoon[d][Nina]; and for d=2, implication is trivially true (vacuously satisfied).  
+9. Add **given assumptions**:  
+    - Kyle gives afternoon report on Tuesday: `Afternoon[1][Kyle] = True`.  
+    - Helen gives afternoon report on Wednesday: `Afternoon[2][Helen] = True`.  
+10. For each answer choice (list of three students for morning reports on Mon, Tue, Wed):  
+    - Clone base constraints.  
+    - Assert Morning[0][student0] = True, Morning[1][student1] = True, Morning[2][student2] = True.  
+    - Add consistency: ensure the same student isn't assigned elsewhere (i.e., if Morning[d][s] = True, then all other Morning/d’/s or Afternoon/* /s must be False).  
+    - Check satisfiability with Z3.  
+11. Collect all choice indices where the instance is SAT (i.e., possible), and output their list.

@@ -1,0 +1,28 @@
+1. Enumerate the eight students and assign integer codes (e.g., George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Enumerate the three days and two slots per day: total 6 report slots → label them as (Day, Slot) where Day ∈ {Mon=0, Tue=1, Wed=2}, Slot ∈ {Morning=0, Afternoon=1}.  
+3. Create integer variables `assigned[i]` for each student i, where `assigned[i] = -1` if not selected, otherwise the slot index (0 to 5) indicating when they report.  
+4. Add **selection constraint**: exactly six students are selected; i.e., exactly six of the `assigned[i]` variables are ≠ -1.  
+5. Add **slot uniqueness constraint**: no two students share the same slot; i.e., if `assigned[i] ≠ -1` and `assigned[j] ≠ -1` for i ≠ j, then `assigned[i] ≠ assigned[j]`.  
+6. Add **fixed assignments from prompt**:  
+   - Kyle gives afternoon report on Tuesday → slot index = (Tue=1, Afternoon=1) = 3 (since MonMorning=0, MonAfternoon=1, TueMorning=2, TueAfternoon=3, WedMorning=4, WedAfternoon=5).  
+   - Helen gives afternoon report on Wednesday → slot index = 5.  
+7. Add **day-specific constraints**:  
+   - George can only report on Tuesday → if `assigned[George] ≠ -1`, then day_of_slot(assigned[George]) = 1 (Tue).  
+   - Olivia and Robert cannot give afternoon reports → if `assigned[Olivia] ≠ -1`, then slot % 2 == 0 (Morning); same for Robert.  
+8. Add **Nina conditional constraint**:  
+   - If Nina reports (i.e., `assigned[Nina] ≠ -1`) and her slot is not WedAfternoon (slot=5), then Helen and Irving must both report the *next day* (i.e., both assigned to slots on the subsequent calendar day), unless Nina's slot is Wed (slot=4 or 5 — but only WedMorning=4 and WedAfternoon=5 exist; since Wed is last day, “next day” doesn’t apply → so constraint only applies when Nina reports on Mon or Tue).  
+   - Formally: if `assigned[Nina] = s`, and s < 4 (i.e., Mon or Tue), then `assigned[Helen] ≠ -1`, `assigned[Irving] ≠ -1`, and day_of_slot(assigned[Helen]) = day_of_slot(assigned[Irving]) = (day_of_slot(s) + 1).  
+   - Note: if Nina reports on Wed (slots 4 or 5), no requirement.  
+9. For each answer choice, translate the candidate list of morning reporters (Monday, Tuesday, Wednesday) into three students and their required slots:  
+   - MondayMorning = slot 0  
+   - TuesdayMorning = slot 2  
+   - WednesdayMorning = slot 4  
+   So each choice specifies: `assigned[morning_Mon] = s1`, `assigned[morning_Tue] = s2`, `assigned[morning_Wed] = s3`.  
+10. For each answer choice:  
+    - Clone the base constraints (steps 3–8) into a fresh solver.  
+    - Add equality constraints: `assigned[choice_student] == slot` for each of the three morning positions.  
+    - Also enforce Kyle=3 and Helen=5 as fixed.  
+    - Ensure no conflict with Olivia/Robert afternoon ban (e.g., if a choice includes Olivia or Robert as morning reporters, that's fine; but they cannot appear in afternoon slots—already enforced by step 7).  
+    - Check SAT. If SAT, the choice is possible; but question asks “which one could be” — so we expect exactly one SAT.  
+11. Collect indices (or the list) of choices that yield SAT and return only the valid one(s).  
+12. Since only one choice is correct, output that choice.

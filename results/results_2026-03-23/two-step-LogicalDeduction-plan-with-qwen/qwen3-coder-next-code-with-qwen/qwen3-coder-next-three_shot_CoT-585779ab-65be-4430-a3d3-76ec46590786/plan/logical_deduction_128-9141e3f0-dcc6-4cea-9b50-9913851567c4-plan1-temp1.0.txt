@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"` (note: combine "blue jay" into one token `"bluejay"` to avoid spaces).  
+   * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.  
+   * Add each logical statement as a constraint using `addConstraint` with a lambda function:  
+     - "The hummingbird is to the left of the crow" → `lambda h, c: h < c` (hummingbird position < crow position).  
+     - "The cardinal is to the right of the quail" → `lambda q, ca: q < ca` (quail position < cardinal position).  
+     - "The blue jay is the fourth from the left" → `lambda b: b == 4`.  
+     - "The robin is the second from the left" → `lambda r: r == 2`.  
+     - "The quail is to the right of the crow" → `lambda c, q: c < q` (crow position < quail position).  
+     - "The raven is to the left of the robin" → `lambda rv, r: rv < r` (raven position < robin position).  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (the problem has exactly one solution given consistent constraints).
+
+5. **Identify the Correct Answer Choice:**  
+   * Note: The question asks which statement is true, but several choices are direct restatements of given facts (e.g., A is explicitly stated). However, all statements are guaranteed consistent *within* the paragraph—so A ("The robin is the second from the left") is **explicitly given** and must be true.  
+   * Still, verify consistency by checking the solved solution: confirm robin’s position is indeed 2.  
+   * Since choice A matches a direct premise and the solution satisfies it, **A is unambiguously correct**.  
+   * Construct a mapping from choice letters to bird names (e.g., 'A' → "robin", etc.), but no iteration is needed—only confirm A holds.  
+   * Return 'A' as the final answer.

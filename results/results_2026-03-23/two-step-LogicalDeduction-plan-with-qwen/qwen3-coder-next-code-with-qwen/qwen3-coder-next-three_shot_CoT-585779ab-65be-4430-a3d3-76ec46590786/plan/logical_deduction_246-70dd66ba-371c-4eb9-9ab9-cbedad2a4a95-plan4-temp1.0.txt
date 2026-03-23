@@ -1,0 +1,24 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the three birds: `"owl"`, `"crow"`, and `"cardinal"`.  
+   * Define the domain of positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+   * Add these variables with their domain (1–3) to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.  
+   * Translate the statements into constraints using lambda functions:  
+     - "The crow is to the left of the owl" → `crow < owl` (position of crow strictly less than position of owl).  
+     - "The owl is the second from the left" → `owl == 2`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+5. **Determine Which Bird Is Rightmost:**  
+   * The question asks which bird is at position 3 (rightmost).  
+   * Create a mapping from choice letters to birds: `"A"` → `"owl"`, `"B"` → `"crow"`, `"C"` → `"cardinal"`.  
+   * Iterate through the choices and check which bird's position in the solution equals 3.  
+   * Return the corresponding choice letter as the answer.

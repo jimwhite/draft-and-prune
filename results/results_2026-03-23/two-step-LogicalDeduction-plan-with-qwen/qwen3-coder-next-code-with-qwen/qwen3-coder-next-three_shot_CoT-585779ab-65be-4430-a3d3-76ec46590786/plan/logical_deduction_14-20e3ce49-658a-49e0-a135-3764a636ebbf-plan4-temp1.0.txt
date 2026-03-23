@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Identify the five fruits as variables: `"mangoes"`, `"kiwis"`, `"plums"`, `"pears"`, and `"watermelons"`.  
+   * Define the domain for ranking: integers from 1 to 5, where **1 = cheapest**, **2 = second-cheapest**, ..., **5 = most expensive**.  
+   * Add all variables with domain `{1,2,3,4,5}` to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce unique rankings.  
+   * Translate each statement:  
+     - "The kiwis are less expensive than the plums" → `kiwis < plums`  
+     - "The pears are the third-most expensive" → `pears == 3`  
+     - "The kiwis are the second-cheapest" → `kiwis == 2`  
+     - "The watermelons are the most expensive" → `watermelons == 5`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (as constraints fully determine positions).
+
+5. **Determine Which Statement is True:**  
+   * The question asks: which fruit is the third-most expensive? → i.e., rank = 3.  
+   * In the solution, find which fruit has value `3`.  
+   * Map the fruit to the corresponding choice letter:  
+     - A) mangoes → 3?  
+     - B) kiwis → 3? (but kiwis = 2, so false)  
+     - C) plums → 3?  
+     - D) pears → 3? (we know pears == 3 from constraint)  
+     - E) watermelons → 3? (but watermelons = 5, so false)  
+   * Since "pears are the third-most expensive" is explicitly given as a constraint, it must be true. Verify consistency: pears = 3 always holds.  
+   * Output the choice letter corresponding to "The pears are the third-most expensive", which is **D**.

@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the five vehicles as variables: `"tractor"`, `"truck"`, `"bus"`, `"minivan"`, `"convertible"`.
+    * Use integer ranks from 1 to 5, where **1 = oldest**, **5 = newest**.
+    * Add all variables to the `Problem` with domain `{1, 2, 3, 4, 5}`.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each vehicle has a unique rank using `AllDifferentConstraint`.
+
+4.  **Translate and Add Age-Based Constraints:**
+    * "The bus is newer than the tractor" → `bus > tractor`
+    * "The convertible is older than the tractor" → `convertible < tractor`
+    * "The truck is the second-newest" → `truck == 4` (since 5 is newest, second-newest = position 4)
+    * "The minivan is older than the convertible" → `minivan < convertible`
+
+5.  **Solve the CSP:**
+    * Use `getSolutions()` to obtain all valid solutions.
+    * Since the problem is well-constrained, extract the unique solution.
+
+6.  **Determine "third-newest" and Match to Choices:**
+    * In our ranking, third-newest corresponds to rank **3** (since newest = 5, second-newest = 4, third-newest = 3).
+    * Create a mapping from choice letters to vehicle names:  
+        `"A" -> "tractor"`, `"B" -> "truck"`, `"C" -> "bus"`, `"D" -> "minivan"`, `"E" -> "convertible"`
+    * Find which vehicle has rank 3 in the solution.
+    * Return the corresponding choice letter.

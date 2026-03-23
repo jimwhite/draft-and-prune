@@ -1,0 +1,26 @@
+1. Enumerate the seven articles and assign each a unique integer index (G=0, H=1, J=2, Q=3, R=4, S=5, Y=6).  
+2. Create integer position variables `pos[0]` to `pos[6]`, where `pos[i] ∈ {1,2,…,7}` denotes the editing order of article i.  
+3. Add **domain constraints**: all `pos[i]` are integers in [1,7].  
+4. Add **distinctness constraint**: all `pos[i]` are pairwise distinct (use `Distinct(pos)`).  
+5. Define a helper function `topic(i)` to return topic string for article i (e.g., finance: G,H,J → 'F'; nutrition: Q,R,S → 'N'; wildlife: Y → 'W').  
+6. Add **no consecutive same-topic constraint**: for all adjacent positions `k` (1≤k≤6), if article A is at position k and article B at k+1, then `topic(A) ≠ topic(B)`. Implement by: for each pair of articles (i,j), if `pos[i] == k and pos[j] == k+1`, then `topic(i) ≠ topic(j)` — but better: for each adjacent slot pair (k, k+1), create Boolean variables indicating which article occupies them and enforce topic mismatch. Simpler: for all pairs (i,j), if `pos[i] == k and pos[j] == k+1`, add `topic(i) != topic(j)` using implication with `Or(Not(pos[i]==k), Not(pos[j]==k+1), topic(i)!=topic(j))` — but Z3 doesn’t support equality to constant directly in arithmetic; instead, use ordering constraints via `And(Or(pos[i]==1, pos[j]==2), topic(i)!=topic(j))` etc., but more efficiently: after obtaining a model, check adjacency. *Alternative*: Instead of modeling adjacency directly in constraints (complex), use *all-different* + logical constraints for adjacency via auxiliary variables or simply check in post-processing. Better: model using `Permutation` with constraints on consecutive positions — but Z3 supports `PbLe`, etc. Easiest: since only 7 articles, generate all permutations satisfying order constraints and check adjacency later. But for solver approach:  
+   - Use `And(Implies(And(pos[i] == k, pos[j] == k+1), topic(i) != topic(j)))` for all k=1..6 and all i≠j.  
+   - Implement `pos[i] == k` as Boolean variable or use `If(pos[i]==k, ..., ...)` — but equality to constant is allowed in Z3 integer logic. So: for each k from 1 to 6, and for every ordered pair (i,j), add `Or(Not(pos[i] == k), Not(pos[j] == k+1), topic(i) != topic(j))`.  
+7. Add **S before Q only if Q is third**: "S can be earlier than Q only if Q is third" means: If S < Q, then pos_Q = 3. Equivalent to: `S >= Q OR pos_Q == 3`. Add as: `Or(pos[S] >= pos[Q], pos[Q] == 3)`.  
+8. Add **S before Y**: `pos[S] < pos[Y]`.  
+9. Add **J before G, and G before R**: `pos[J] < pos[G]` and `pos[G] < pos[R]`.  
+10. Note: H is finance (like G,J), so topic(H) = 'F'.  
+11. Translate answer choices into article indices:  
+    - G is second → `pos[0] == 2`  
+    - H is second → `pos[1] == 2`  
+    - S is second → `pos[5] == 2`  
+    - R is third → `pos[4] == 3`  
+    - Y is third → `pos[6] == 3`  
+12. For each choice, clone base constraints + add the candidate constraint (e.g., `pos[1] == 2` for H second), and check SAT.  
+13. The choices that yield SAT are *possible*; the question asks "Which one could be true?" — only one is correct, so collect all SAT choices and output the corresponding string.  
+14. Define a list `sat_choices = []`. For each choice index i in 0..4:  
+    - Create fresh solver `s = Solver()`  
+    - Add all base constraints (steps 3–9)  
+    - Add candidate constraint (e.g., `s.add(pos[i] == 2)` for i-th choice’s article)  
+    - If `s.check() == sat`, append the choice string to `sat_choices`.  
+15. Print `sat_choices[0]` (since exactly one is correct per LSAT format).

@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * The variables are the seven vehicles: `"sedan"`, `"minivan"`, `"motorcycle"`, `"limousine"`, `"hatchback"`, `"truck"`, and `"tractor"`.  
+    * Define a domain of integers from 1 to 7, where **1 = oldest** and **7 = newest**, matching the ordering implied by "older/newer than" statements.  
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Translate each statement into a constraint using lambda functions:  
+        - "The motorcycle is older than the tractor" → `motorcycle < tractor` (since smaller rank = older).  
+        - "The hatchback is older than the limousine" → `hatchback < limousine`.  
+        - "The hatchback is newer than the truck" → `truck < hatchback` (newer = larger rank).  
+        - "The truck is newer than the tractor" → `tractor < truck`.  
+        - "The minivan is the second-newest" → `minivan == 6` (since newest = 7, second-newest = 6).  
+        - "The sedan is the third-newest" → `sedan == 5` (newest=7, second=6, third=5).
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Since the problem states the statements are logically consistent and implies a unique solution, extract the single solution from the list.
+
+5.  **Determine Which Statement is True:**  
+    * The question asks which vehicle is the **fourth-newest**. In our numbering (1=oldest, 7=newest), fourth-newest corresponds to rank **4**.  
+    * Create a mapping from choice letters (`'A'` through `'G'`) to the corresponding vehicle names as listed in the choices:  
+        A → "sedan", B → "minivan", C → "motorcycle", D → "limousine", E → "hatchback", F → "truck", G → "tractor".  
+    * Iterate through the solution dictionary to find which vehicle has position 4.  
+    * Return the choice letter (e.g., `'C'`) for that vehicle.

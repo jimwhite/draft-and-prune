@@ -1,0 +1,590 @@
+{
+  "problem": {
+    "context": "The manager of a photography business must assign at least two photographers to each of two graduation ceremonies—one at Silva University and the other at Thorne University. Exactly six photographers are available—Frost, Gonzalez, Heideck, Knutson, Lai, and Mays—but not all have to be assigned. No photographer can be assigned to both ceremonies. The following constraints apply: Frost must be assigned together with Heideck to one of the graduation ceremonies. If Lai and Mays are both assigned, it must be to different ceremonies. If Gonzalez is assigned to the Silva University ceremony, then Lai must be assigned to the Thorne University ceremony. If Knutson is not assigned to the Thorne University ceremony, then both Heideck and Mays must be assigned to it.",
+    "question": "Which one of the following is an acceptable assignment of photographers to the two graduation ceremonies?",
+    "answers": [
+      "Silva University: Gonzalez, Lai Thorne University: Frost, Heideck, Mays",
+      "Silva University: Gonzalez, Mays Thorne University: Knutson, Lai",
+      "Silva University: Frost, Gonzalez, Heideck Thorne University: Knutson, Lai, Mays",
+      "Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Lai",
+      "Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Knutson, Lai"
+    ],
+    "label": 4,
+    "id_string": "201412_2-G_4_17"
+  },
+  "timing": 699.6535224914551,
+  "all_solver_outputs": [
+    "1",
+    "4",
+    "[4]",
+    "1",
+    "[2, 4]",
+    "[4]",
+    "[1, 4]",
+    "1",
+    "1",
+    "[1, 4]",
+    "1",
+    "[1, 4]",
+    "[1, 4]",
+    "[1, 2, 3, 4]",
+    "[1, 4]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 283,
+        "total_tokens": 2053
+      },
+      "plan_generation_api_time_only": 7.9177093505859375,
+      "code_generation_usage": {
+        "prompt_tokens": 3423,
+        "completion_tokens": 1022,
+        "total_tokens": 4445
+      },
+      "code_generation_api_time_only": 29.033134937286377,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5193,
+        "completion_tokens": 1305,
+        "total_tokens": 6498
+      },
+      "path_api_time_only": 36.950844287872314,
+      "solver_time_only": 0.058771610260009766
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 567,
+        "total_tokens": 2337
+      },
+      "plan_generation_api_time_only": 15.180695533752441,
+      "code_generation_usage": {
+        "prompt_tokens": 3707,
+        "completion_tokens": 765,
+        "total_tokens": 4472
+      },
+      "code_generation_api_time_only": 21.432989597320557,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5477,
+        "completion_tokens": 1332,
+        "total_tokens": 6809
+      },
+      "path_api_time_only": 36.613685131073,
+      "solver_time_only": 0.06932640075683594
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 1441,
+        "total_tokens": 3211
+      },
+      "plan_generation_api_time_only": 39.337276220321655,
+      "code_generation_usage": {
+        "prompt_tokens": 4581,
+        "completion_tokens": 842,
+        "total_tokens": 5423
+      },
+      "code_generation_api_time_only": 23.596736907958984,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6351,
+        "completion_tokens": 2283,
+        "total_tokens": 8634
+      },
+      "path_api_time_only": 62.93401312828064,
+      "solver_time_only": 0.07661175727844238
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 624,
+        "total_tokens": 2394
+      },
+      "plan_generation_api_time_only": 19.1247661113739,
+      "code_generation_usage": {
+        "prompt_tokens": 3764,
+        "completion_tokens": 1066,
+        "total_tokens": 4830
+      },
+      "code_generation_api_time_only": 28.219695806503296,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5534,
+        "completion_tokens": 1690,
+        "total_tokens": 7224
+      },
+      "path_api_time_only": 47.3444619178772,
+      "solver_time_only": 0.0711669921875
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 853,
+        "total_tokens": 2623
+      },
+      "plan_generation_api_time_only": 23.825809478759766,
+      "code_generation_usage": {
+        "prompt_tokens": 3993,
+        "completion_tokens": 706,
+        "total_tokens": 4699
+      },
+      "code_generation_api_time_only": 21.722955465316772,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5763,
+        "completion_tokens": 1559,
+        "total_tokens": 7322
+      },
+      "path_api_time_only": 45.54876494407654,
+      "solver_time_only": 0.0720977783203125
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 719,
+        "total_tokens": 2489
+      },
+      "plan_generation_api_time_only": 19.0764479637146,
+      "code_generation_usage": {
+        "prompt_tokens": 3859,
+        "completion_tokens": 755,
+        "total_tokens": 4614
+      },
+      "code_generation_api_time_only": 21.77472734451294,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5629,
+        "completion_tokens": 1474,
+        "total_tokens": 7103
+      },
+      "path_api_time_only": 40.85117530822754,
+      "solver_time_only": 0.06994795799255371
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 677,
+        "total_tokens": 2447
+      },
+      "plan_generation_api_time_only": 19.875094413757324,
+      "code_generation_usage": {
+        "prompt_tokens": 3817,
+        "completion_tokens": 964,
+        "total_tokens": 4781
+      },
+      "code_generation_api_time_only": 28.576083183288574,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5587,
+        "completion_tokens": 1641,
+        "total_tokens": 7228
+      },
+      "path_api_time_only": 48.4511775970459,
+      "solver_time_only": 0.07580709457397461
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 1026,
+        "total_tokens": 2796
+      },
+      "plan_generation_api_time_only": 28.15782928466797,
+      "code_generation_usage": {
+        "prompt_tokens": 4166,
+        "completion_tokens": 823,
+        "total_tokens": 4989
+      },
+      "code_generation_api_time_only": 22.16307306289673,
+      "repair_usage_total": {
+        "prompt_tokens": 1189,
+        "completion_tokens": 825,
+        "total_tokens": 2014
+      },
+      "repair_api_time_only_total": 23.334540843963623,
+      "path_usage_total": {
+        "prompt_tokens": 7125,
+        "completion_tokens": 2674,
+        "total_tokens": 9799
+      },
+      "path_api_time_only": 73.65544319152832,
+      "solver_time_only": 0.15119624137878418
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 411,
+        "total_tokens": 2181
+      },
+      "plan_generation_api_time_only": 12.75657033920288,
+      "code_generation_usage": {
+        "prompt_tokens": 3551,
+        "completion_tokens": 901,
+        "total_tokens": 4452
+      },
+      "code_generation_api_time_only": 23.963170766830444,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5321,
+        "completion_tokens": 1312,
+        "total_tokens": 6633
+      },
+      "path_api_time_only": 36.719741106033325,
+      "solver_time_only": 0.07971501350402832
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 573,
+        "total_tokens": 2343
+      },
+      "plan_generation_api_time_only": 15.602654457092285,
+      "code_generation_usage": {
+        "prompt_tokens": 3713,
+        "completion_tokens": 664,
+        "total_tokens": 4377
+      },
+      "code_generation_api_time_only": 19.031771898269653,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5483,
+        "completion_tokens": 1237,
+        "total_tokens": 6720
+      },
+      "path_api_time_only": 34.63442635536194,
+      "solver_time_only": 0.07039618492126465
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 705,
+        "total_tokens": 2475
+      },
+      "plan_generation_api_time_only": 22.4111328125,
+      "code_generation_usage": {
+        "prompt_tokens": 3845,
+        "completion_tokens": 875,
+        "total_tokens": 4720
+      },
+      "code_generation_api_time_only": 23.82547903060913,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5615,
+        "completion_tokens": 1580,
+        "total_tokens": 7195
+      },
+      "path_api_time_only": 46.23661184310913,
+      "solver_time_only": 0.0778656005859375
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 645,
+        "total_tokens": 2415
+      },
+      "plan_generation_api_time_only": 18.404428720474243,
+      "code_generation_usage": {
+        "prompt_tokens": 3785,
+        "completion_tokens": 973,
+        "total_tokens": 4758
+      },
+      "code_generation_api_time_only": 28.08948850631714,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5555,
+        "completion_tokens": 1618,
+        "total_tokens": 7173
+      },
+      "path_api_time_only": 46.49391722679138,
+      "solver_time_only": 0.07521605491638184
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 570,
+        "total_tokens": 2340
+      },
+      "plan_generation_api_time_only": 16.130298137664795,
+      "code_generation_usage": {
+        "prompt_tokens": 3710,
+        "completion_tokens": 829,
+        "total_tokens": 4539
+      },
+      "code_generation_api_time_only": 23.405089139938354,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5480,
+        "completion_tokens": 1399,
+        "total_tokens": 6879
+      },
+      "path_api_time_only": 39.53538727760315,
+      "solver_time_only": 0.07435131072998047
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 392,
+        "total_tokens": 2162
+      },
+      "plan_generation_api_time_only": 10.317902326583862,
+      "code_generation_usage": {
+        "prompt_tokens": 3532,
+        "completion_tokens": 697,
+        "total_tokens": 4229
+      },
+      "code_generation_api_time_only": 21.17804217338562,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5302,
+        "completion_tokens": 1089,
+        "total_tokens": 6391
+      },
+      "path_api_time_only": 31.495944499969482,
+      "solver_time_only": 0.08962798118591309
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1770,
+        "completion_tokens": 417,
+        "total_tokens": 2187
+      },
+      "plan_generation_api_time_only": 12.250452756881714,
+      "code_generation_usage": {
+        "prompt_tokens": 3557,
+        "completion_tokens": 859,
+        "total_tokens": 4416
+      },
+      "code_generation_api_time_only": 24.431840896606445,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5327,
+        "completion_tokens": 1276,
+        "total_tokens": 6603
+      },
+      "path_api_time_only": 36.68229365348816,
+      "solver_time_only": 0.08147311210632324
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 84742,
+    "completion_tokens": 23469,
+    "total_tokens": 108211
+  },
+  "api_time_only_total": 664.147887468338,
+  "solver_time_only_total": 1.1935710906982422,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Photographer indices: 0=Frost, 1=Gonzalez, 2=Heideck, 3=Knutson, 4=Lai, 5=Mays\nS = [Bool(f\"S_{i}\") for i in range(6)]\nT = [Bool(f\"T_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Mutual exclusion: no photographer assigned to both ceremonies\nfor i in range(6):\n    solver.add(Not(And(S[i], T[i])))\n\n# At least two photographers per ceremony\nsolver.add(Sum([If(S[i], 1, 0) for i in range(6)]) >= 2)\nsolver.add(Sum([If(T[i], 1, 0) for i in range(6)]) >= 2)\n\n# Frost and Heideck must be assigned together to the same ceremony\nsolver.add(S[0] == S[2])\nsolver.add(T[0] == T[2])\n\n# Lai and Mays: if both are assigned, they must be on different ceremonies\nsolver.add(Implies(\n    And(Sum([If(S[i] + T[i], 1, 0) for i in [4,5]]) == 2),\n    S[4] != S[5]\n))\n\n# If Gonzalez is at Silva, then Lai must be at Thorne\nsolver.add(Implies(S[1], T[4]))\n\n# If Knutson is not at Thorne, then both Heideck and Mays must be at Thorne\nsolver.add(Implies(Not(T[3]), And(T[2], T[5])))\n\n# Answer choices\nanswer_choices = [\n    (\"Silva University: Gonzalez, Lai Thorne University: Frost, Heideck, Mays\",\n     {\"Silva\": [\"Gonzalez\", \"Lai\"], \"Thorne\": [\"Frost\", \"Heideck\", \"Mays\"]}),\n    (\"Silva University: Gonzalez, Mays Thorne University: Knutson, Lai\",\n     {\"Silva\": [\"Gonzalez\", \"Mays\"], \"Thorne\": [\"Knutson\", \"Lai\"]}),\n    (\"Silva University: Frost, Gonzalez, Heideck Thorne University: Knutson, Lai, Mays\",\n     {\"Silva\": [\"Frost\", \"Gonzalez\", \"Heideck\"], \"Thorne\": [\"Knutson\", \"Lai\", \"Mays\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Lai\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Knutson, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Knutson\", \"Lai\"]})\n]\n\n# Map names to indices\nname_to_idx = {\n    \"Frost\": 0,\n    \"Gonzalez\": 1,\n    \"Heideck\": 2,\n    \"Knutson\": 3,\n    \"Lai\": 4,\n    \"Mays\": 5\n}\n\n# Check each answer choice\nfor idx, (desc, assignment) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set assignments for this choice\n    for ceremony, photographers in assignment.items():\n        for name in photographers:\n            i = name_to_idx[name]\n            if ceremony == \"Silva\":\n                s_chk.add(S[i])\n            else:  # Thorne\n                s_chk.add(T[i])\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Photographer indices: 0=Frost, 1=Gonzalez, 2=Heideck, 3=Knutson, 4=Lai, 5=Mays\nS = [Bool(f\"S_{i}\") for i in range(6)]\nT = [Bool(f\"T_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Mutual exclusion: no photographer assigned to both ceremonies\nfor i in range(6):\n    solver.add(Not(And(S[i], T[i])))\n\n# At least two photographers per ceremony\nsolver.add(Sum([If(S[i], 1, 0) for i in range(6)]) >= 2)\nsolver.add(Sum([If(T[i], 1, 0) for i in range(6)]) >= 2)\n\n# Frost and Heideck must be assigned together to the same ceremony\nsolver.add(S[0] == S[2])\nsolver.add(T[0] == T[2])\n\n# Lai and Mays: if both are assigned, they must be on different ceremonies\nsolver.add(Implies(\n    And(Sum([If(S[i] + T[i], 1, 0) for i in [4,5]]) == 2),\n    S[4] != S[5]\n))\n\n# If Gonzalez is at Silva, then Lai must be at Thorne\nsolver.add(Implies(S[1], T[4]))\n\n# If Knutson is not at Thorne, then both Heideck and Mays must be at Thorne\nsolver.add(Implies(Not(T[3]), And(T[2], T[5])))\n\n# Answer choices\nanswer_choices = [\n    (\"Silva University: Gonzalez, Lai Thorne University: Frost, Heideck, Mays\",\n     {\"Silva\": [\"Gonzalez\", \"Lai\"], \"Thorne\": [\"Frost\", \"Heideck\", \"Mays\"]}),\n    (\"Silva University: Gonzalez, Mays Thorne University: Knutson, Lai\",\n     {\"Silva\": [\"Gonzalez\", \"Mays\"], \"Thorne\": [\"Knutson\", \"Lai\"]}),\n    (\"Silva University: Frost, Gonzalez, Heideck Thorne University: Knutson, Lai, Mays\",\n     {\"Silva\": [\"Frost\", \"Gonzalez\", \"Heideck\"], \"Thorne\": [\"Knutson\", \"Lai\", \"Mays\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Lai\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Knutson, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Knutson\", \"Lai\"]})\n]\n\n# Map names to indices\nname_to_idx = {\n    \"Frost\": 0,\n    \"Gonzalez\": 1,\n    \"Heideck\": 2,\n    \"Knutson\": 3,\n    \"Lai\": 4,\n    \"Mays\": 5\n}\n\n# Check each answer choice\nfor idx, (desc, assignment) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set assignments for this choice\n    for ceremony, photographers in assignment.items():\n        for name in photographers:\n            i = name_to_idx[name]\n            if ceremony == \"Silva\":\n                s_chk.add(S[i])\n            else:  # Thorne\n                s_chk.add(T[i])\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpuqvw6x0s.py\", line 23, in <module>\n    And(Sum([If(S[i] + T[i], 1, 0) for i in [4,5]]) == 2),\n             ~~^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1440, in If\n    a = s.cast(a)\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1579, in cast\n    _z3_assert(self.eq(val.sort()), \"Value cannot be converted into a Z3 Boolean value\")\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 115, in _z3_assert\n    raise Z3Exception(msg)\nz3.z3types.Z3Exception: Value cannot be converted into a Z3 Boolean value\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Photographer indices: 0=Frost, 1=Gonzalez, 2=Heideck, 3=Knutson, 4=Lai, 5=Mays\nS = [Bool(f\"S_{i}\") for i in range(6)]\nT = [Bool(f\"T_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Mutual exclusion: no photographer assigned to both ceremonies\nfor i in range(6):\n    solver.add(Not(And(S[i], T[i])))\n\n# At least two photographers per ceremony\nsolver.add(Sum([If(S[i], 1, 0) for i in range(6)]) >= 2)\nsolver.add(Sum([If(T[i], 1, 0) for i in range(6)]) >= 2)\n\n# Frost and Heideck must be assigned together to the same ceremony\nsolver.add(S[0] == S[2])\nsolver.add(T[0] == T[2])\n\n# Lai and Mays: if both are assigned, they must be on different ceremonies\nsolver.add(Implies(\n    And(S[4] + T[4] == 1, S[5] + T[5] == 1),\n    S[4] != S[5]\n))\n\n# If Gonzalez is at Silva, then Lai must be at Thorne\nsolver.add(Implies(S[1], T[4]))\n\n# If Knutson is not at Thorne, then both Heideck and Mays must be at Thorne\nsolver.add(Implies(Not(T[3]), And(T[2], T[5])))\n\n# Answer choices\nanswer_choices = [\n    (\"Silva University: Gonzalez, Lai Thorne University: Frost, Heideck, Mays\",\n     {\"Silva\": [\"Gonzalez\", \"Lai\"], \"Thorne\": [\"Frost\", \"Heideck\", \"Mays\"]}),\n    (\"Silva University: Gonzalez, Mays Thorne University: Knutson, Lai\",\n     {\"Silva\": [\"Gonzalez\", \"Mays\"], \"Thorne\": [\"Knutson\", \"Lai\"]}),\n    (\"Silva University: Frost, Gonzalez, Heideck Thorne University: Knutson, Lai, Mays\",\n     {\"Silva\": [\"Frost\", \"Gonzalez\", \"Heideck\"], \"Thorne\": [\"Knutson\", \"Lai\", \"Mays\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Lai\"]}),\n    (\"Silva University: Frost, Heideck, Mays Thorne University: Gonzalez, Knutson, Lai\",\n     {\"Silva\": [\"Frost\", \"Heideck\", \"Mays\"], \"Thorne\": [\"Gonzalez\", \"Knutson\", \"Lai\"]})\n]\n\n# Map names to indices\nname_to_idx = {\n    \"Frost\": 0,\n    \"Gonzalez\": 1,\n    \"Heideck\": 2,\n    \"Knutson\": 3,\n    \"Lai\": 4,\n    \"Mays\": 5\n}\n\n# Check each answer choice\nfor idx, (desc, assignment) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set assignments for this choice\n    for ceremony, photographers in assignment.items():\n        for name in photographers:\n            i = name_to_idx[name]\n            if ceremony == \"Silva\":\n                s_chk.add(S[i])\n            else:  # Thorne\n                s_chk.add(T[i])\n    \n    if s_chk.check() == sat:\n        print(idx)\n        break",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "1",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1189,
+            "completion_tokens": 825,
+            "total_tokens": 2014
+          },
+          "api_time_only": 23.334540843963623,
+          "solver_time_only": 0.07554411888122559
+        }
+      ]
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

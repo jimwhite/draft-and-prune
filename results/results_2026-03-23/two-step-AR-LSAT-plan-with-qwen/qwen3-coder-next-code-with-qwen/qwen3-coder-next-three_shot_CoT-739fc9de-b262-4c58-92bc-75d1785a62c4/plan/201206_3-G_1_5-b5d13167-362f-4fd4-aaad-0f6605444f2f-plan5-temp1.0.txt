@@ -1,0 +1,45 @@
+1. Enumerate the six lab assistants and assign integer indices: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: assign fixed indices for days and times: Wednesday AM=0, Wednesday PM=1, Thursday AM=2, Thursday PM=3, Friday AM=4, Friday PM=5.  
+3. Create integer variables `pos[i]` for each assistant i, representing the session index they lead (0 to 5), all distinct.  
+4. Add **session-to-time constraints**: define helper Boolean or integer mappings:  
+   - For each assistant, determine day and time from session index (e.g., AM sessions have even index, PM odd; Wed: indices 0–1, Thu: 2–3, Fri: 4–5).  
+   - Alternatively, define day and time flags per session (e.g., `is_afternoon[s] = (s % 2 == 1)`, `day_of[s] = s // 2`).  
+5. Add **fixed condition**: Julio leads Thursday PM → `pos[0] == 3`.  
+6. Add **Kevin-Rebecca same-day constraint**: `day_of[pos[1]] == day_of[pos[5]]`.  
+7. Add **Lan-Olivia different-day constraint**: `day_of[pos[2]] != day_of[pos[4]]`.  
+8. Add **Nessa afternoon constraint**: `is_afternoon[pos[3]] == True`.  
+9. Add **Julio earlier than Olivia constraint**: `pos[0] < pos[4]`. Since `pos[0]=3`, this implies `pos[4] > 3` → Olivia must be in Friday AM (4) or PM (5).  
+10. Deduce implications:  
+   - Olivia ∈ {4, 5} (Fri sessions).  
+   - Since Lan and Olivia are on different days, Lan ∉ Friday → Lan ∈ Wed or Thu (sessions 0–3).  
+   - Nessa must be in PM session: ∈ {1, 3, 5}. But session 3 (Thu PM) is taken by Julio ⇒ Nessa ∈ {1, 5}.  
+   - Kevin and Rebecca must share a day: possible days left: Wed (0–1), Thu (2, but 3 taken), Fri (4–5, but Olivia occupies one).  
+     - Thu has only session 2 left (AM) if Kevin/Rebecca are on Thu, but then one of them would have to take session 2, and the other would need another Thu slot—none left ⇒ Kevin/Rebecca cannot be on Thu.  
+     - So Kevin and Rebecca must both be on Wed (sessions 0 and 1), or one on Wed AM/PM and the other... only two Wed sessions exist. So both must occupy {0,1} in some order.  
+     - Thus Kevin and Rebecca ∈ {0, 1}.  
+   - Remaining sessions after assigning Julio=3: available sessions = {0,1,2,4,5}.  
+     - Kevin & Rebecca take two of them ⇒ must be exactly {0,1} (since no other day has ≥2 free sessions).  
+     - So sessions 0 and 1 are assigned to Kevin and Rebecca (order unknown).  
+   - Remaining free sessions: {2,4,5}.  
+     - Assignments left: Lan, Nessa, Olivia (3 people for 3 sessions).  
+     - Olivia ∈ {4,5} (from Julio < Olivia), and Nessa must be PM ⇒ ∈ {1,5}, but 1 taken by Kevin/Rebecca ⇒ Nessa ∈ {5} (since session 5 is Fri PM, and session 1 is taken). So Nessa must be session 5.  
+     - Thus Olivia must be session 4 (since only sessions 2 and 4 remain after assigning Nessa=5, but Olivia ∈ {4,5}, so Olivia=4).  
+     - Then Lan must take session 2 (Thu AM), as only one left. Check: Lan (session 2 = Thu AM) and Olivia (session 4 = Fri AM) are on different days ⇒ OK.  
+11. Summarize deduced assignments:  
+    - Julio = session 3 (Thu PM) — given.  
+    - Kevin & Rebecca = {session 0,1} (Wed AM/PM) — order unknown.  
+    - Nessa = session 5 (Fri PM) — forced.  
+    - Olivia = session 4 (Fri AM) — forced.  
+    - Lan = session 2 (Thu AM) — forced.  
+12. Thus, after Julio=Thu PM:  
+    - Kevin & Rebecca: undetermined order (2 possibilities), but both fixed to Wed sessions.  
+    - Nessa, Olivia, Lan: each assigned exactly one session (session 5, 4, and 2 respectively).  
+13. Therefore, for assistants:  
+    - Kevin: assigned to Wed (2 possible sessions), but not a unique session → not fully determined.  
+    - Rebecca: same as Kevin — not uniquely assigned to a specific session.  
+    - Lan: session 2 (Thu AM) — determined.  
+    - Nessa: session 5 (Fri PM) — determined.  
+    - Olivia: session 4 (Fri AM) — determined.  
+14. So among the other 5 assistants, exactly **three** (Lan, Nessa, Olivia) have their sessions uniquely determined.  
+15. Define `determined_count = 3`.  
+16. Return the answer choice corresponding to `'three'`.

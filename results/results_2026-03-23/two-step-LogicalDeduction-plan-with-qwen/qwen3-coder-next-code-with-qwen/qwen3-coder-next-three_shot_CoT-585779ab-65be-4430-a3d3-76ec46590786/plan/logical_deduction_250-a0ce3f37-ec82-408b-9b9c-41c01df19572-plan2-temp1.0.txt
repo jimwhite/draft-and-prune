@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the three variables: `"white"`, `"black"`, and `"purple"` (representing the books).  
+    * Define the domain for positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+    * Add the variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+    * Translate the logical statements into constraints:  
+        * "The black book is to the left of the purple book" → `black < purple` (using a lambda constraint: `lambda b, p: b < p`).  
+        * "The purple book is to the left of the white book" → `purple < white` (using a lambda constraint: `lambda p, w: p < w`).  
+    * Add both constraints to the problem.
+
+4.  **Solve for the Arrangement:**  
+    * Call `getSolutions()` to retrieve all valid solutions.  
+    * Since the constraints enforce a strict ordering (`black < purple < white`), there is exactly one solution: positions `[1, 2, 3]` for `["black", "purple", "white"]`.
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which statement is true, specifically about rightmost position (position 3).  
+    * From the solution, identify that `"white"` is at position 3 → rightmost.  
+    * Match this to the choices: Choice **A** states "The white book is the rightmost", which matches.  
+    * Output the letter **A** as the final answer.

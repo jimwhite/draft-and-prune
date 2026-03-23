@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven vehicle types as variables: `"sedan"`, `"minivan"`, `"motorcycle"`, `"limousine"`, `"hatchback"`, `"truck"`, `"tractor"`.  
+   * Define the domain as integers from 1 to 7, where **1 = oldest**, **7 = newest** (since statements use "older/newer", chronological age ordering is required).  
+   * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3. **Translate Rules into Constraints:**  
+   * Add `AllDifferentConstraint()` to enforce unique age ranks.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - "The motorcycle is older than the tractor" → `motorcycle < tractor`  
+     - "The hatchback is older than the limousine" → `hatchback < limousine`  
+     - "The hatchback is newer than the truck" → `truck < hatchback` (since *newer* means higher rank number)  
+     - "The truck is newer than the tractor" → `tractor < truck`  
+     - "The minivan is the second-newest" → `minivan == 6` (since newest=7, second-newest=6)  
+     - "The sedan is the third-newest" → `sedan == 5`  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (or first one, as uniqueness is implied).
+
+5. **Determine the Fourth-Newest Vehicle:**  
+   * Since "fourth-newest" = 7 − 4 + 1 = **4** (i.e., position 4 in the rank where 1=oldest, 7=newest).  
+   * Map choice letters to vehicle names: A→sedan, B→minivan, C→motorcycle, D→limousine, E→hatchback, F→truck, G→tractor.  
+   * From the solution, find which vehicle has rank = 4.  
+   * Output the corresponding choice letter.

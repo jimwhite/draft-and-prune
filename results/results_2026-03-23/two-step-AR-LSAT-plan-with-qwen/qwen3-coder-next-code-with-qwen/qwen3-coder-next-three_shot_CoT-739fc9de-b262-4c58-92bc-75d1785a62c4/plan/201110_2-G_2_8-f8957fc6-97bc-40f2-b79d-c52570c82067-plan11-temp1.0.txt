@@ -1,0 +1,16 @@
+1. Enumerate the five candidates and assign integer codes (e.g., 0=Jaramillo, 1=Kayne, 2=Landon, 3=Novetzke, 4=Ong).  
+2. Create Boolean decision variables `assigned[i][c]` for each candidate i and country c ∈ {Venezuela, Yemen, Zambia}, indicating if candidate i is assigned to country c.  
+3. Add **one-per-country constraints**: each country has exactly one ambassador: for each country c, exactly one i such that `assigned[i][c]` is true.  
+4. Add **one-per-candidate constraints**: each candidate receives at most one assignment: for each i, sum over c of `assigned[i][c]` ≤ 1.  
+5. Add **exactly three ambassadors assigned**, so exactly two candidates are unassigned (implicitly satisfied by constraints 3 and 4 with 3 countries and ≤1 per candidate).  
+6. Add **XOR constraint**: (Kayne assigned) XOR (Novetzke assigned).  
+7. Add **implication constraint**: if Jaramillo is assigned (to any country), then Kayne must be assigned.  
+8. Add **conditional constraint**: if Ong is assigned to Venezuela, then Kayne is *not* assigned to Yemen.  
+9. Add **location constraint**: if Landon is assigned (to any country), then he must be assigned to Zambia.  
+10. Translate the five answer choices into candidate pairs (each pair is two indices).  
+11. For each answer choice (i.e., candidate pair P = [a,b]), do:  
+    - Clone base constraints into a fresh solver.  
+    - Assert that candidates *a* and *b* are the two unassigned: for i ∈ {a,b}, require sum over c of `assigned[i][c]` == 0; for i ∉ {a,b}, require sum over c of `assigned[i][c]` == 1 (since exactly three assigned).  
+    - Check satisfiability: if UNSAT, then this pair *cannot* be the unassigned pair; skip; else (SAT), record that this pair is possible.  
+12. Among the choices, select the one(s) for which the model was SAT — but the question asks "The pair of candidates who are *not assigned* ... **could** be", so collect all SAT pairs; however, the format expects a single answer. Since the plan must output the index of the correct choice (0-based) where SAT holds *and* the question implies uniqueness, assume only one satisfies. Append the index of any SAT pair to `answer_index_list`.  
+13. Print `answer_index_list` (expected single index).

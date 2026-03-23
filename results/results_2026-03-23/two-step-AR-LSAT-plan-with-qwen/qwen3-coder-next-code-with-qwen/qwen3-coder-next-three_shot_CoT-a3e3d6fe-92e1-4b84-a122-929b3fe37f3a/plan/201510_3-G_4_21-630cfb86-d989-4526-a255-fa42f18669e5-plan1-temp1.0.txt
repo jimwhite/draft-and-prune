@@ -1,0 +1,24 @@
+1. Enumerate the six cookbooks and assign each an integer index (e.g., K=0, L=1, M=2, N=3, O=4, P=5).  
+2. Create Boolean variables for each cookbook indicating season: e.g., `fall[k] = True` means K is published in fall (and `spring[k] = not fall[k]`).  
+3. Add **mutual exclusivity constraints**: for each cookbook, exactly one of fall or spring is true (i.e., `fall[i] != spring[i]`, and only one variable needed per book).  
+4. Add **M and P constraint**: M and P cannot be in same season → `fall[M] != fall[P]`.  
+5. Add **K and N constraint**: K and N must be in same season → `fall[K] == fall[N]`.  
+6. Add **conditional constraint 1**: If K is in fall, then O must be in fall → `fall[K] -> fall[O]` (i.e., `not fall[K] or fall[O]`).  
+7. Add **conditional constraint 2**: If M is in fall, then N must be in spring → `fall[M] -> not fall[N]` (i.e., `not fall[M] or not fall[N]`).  
+8. Add **given assumption**: N is published in fall → `fall[N] = True`.  
+9. From step 5, since `fall[K] == fall[N]`, deduce `fall[K] = True`.  
+10. From step 6, since `fall[K] = True`, deduce `fall[O] = True`.  
+11. From step 8 and constraint 2 (`not fall[M] or not fall[N]`) with `fall[N]=True`, deduce `not fall[M]` must hold → `fall[M] = False` (so M in spring).  
+12. From constraint 4 (`fall[M] != fall[P]`) and `fall[M]=False`, deduce `fall[P] = True` (P in fall).  
+13. At this point, we know forced values: N=fall, K=fall, O=fall, M=spring, P=fall. L is unconstrained.  
+14. Translate answer choices into logical statements about season assignments:  
+    - A: K in spring → false (K is forced to fall)  
+    - B: L in fall → possible (L has no constraints)  
+    - C: M in fall → false (M forced to spring)  
+    - D: O in spring → false (O forced to fall)  
+    - E: P in spring → false (P forced to fall)  
+15. Since only choice B is not contradicted by deductions, the plan must verify via Z3 that a model exists where N=fall and L=fall (or equivalently, check satisfiability of assumptions + `fall[L]=True`).  
+16. Define a base solver with steps 1–7 plus `fall[N]=True`.  
+17. For each choice, clone the solver and add the corresponding assumption (e.g., for B: `fall[L] = True`).  
+18. If the clone is SAT, append that choice index to `answer_index_list`.  
+19. Print `answer_index_list` (expected: only index 1 for "L is published in the fall").

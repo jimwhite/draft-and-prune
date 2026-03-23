@@ -1,0 +1,27 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices.  
+3. Create integer variables for the lecture order positions: one variable per person (e.g., `pos_F`, `pos_G`, `pos_H`, `pos_J`) representing when each historian gives their lecture; positions are 1–4 and all distinct.  
+4. Create a mapping from historian to topic using integer variables (e.g., `topic_F`, `topic_G`, `topic_H`, `topic_J`) where each topic appears exactly once (all-different constraint on topics).  
+5. Add **topic uniqueness and domain constraints**: each historian is assigned a distinct topic from {0: lithographs, 1: oil paintings, 2: sculptures, 3: watercolors}.  
+6. Add **order constraints** based on the conditions:  
+   - Oil paintings and watercolors lectures are earlier than lithographs lecture:  
+     If `topic_X == oil_painting`, then `pos_X < pos_Y` where `Y` is the historian with topic `lithographs`.  
+     Similarly for watercolors: if `topic_X == watercolors`, then `pos_X < pos_Y` where `Y` is the historian with topic `lithographs`.  
+     Implement via auxiliary implications or by enumerating all possible assignments of topics to historians and encoding constraints per assignment.  
+   - Farley's lecture is earlier than the oil paintings lecture: `pos_F < pos_X` where `X` is the historian with topic `oil_painting`.  
+   - Holden's lecture is earlier than both Garcia’s and Jiang’s: `pos_H < pos_G` and `pos_H < pos_J`.  
+7. Alternatively, since only 4! = 24 possible topic assignments and 4! = 24 possible historian orderings (total 576 combinations), generate all bijections of historians→topics and all permutations of positions, then filter those satisfying constraints.  
+8. For each valid schedule (hist_assign × pos_assign), record which statement among the answer choices is true.  
+9. The question asks what **must be true** in all valid schedules; thus, find the intersection of truth values across all models.  
+10. Translate each answer choice into a logical condition:  
+    - A: `pos_F < pos_of_sculptures_lecturer`  
+    - B: `pos_H < pos_of_lithographs_lecturer`  
+    - C: `pos_of_sculptures_lecturer < pos_G`  
+    - D: `pos_of_sculptures_lecturer < pos_J`  
+    - E: `pos_of_watercolors_lecturer < pos_G`  
+11. For each choice, check whether it holds in every valid schedule; if yes, that is the answer.  
+12. Since Z3 may be overkill for tiny finite domain, but per instructions use Z3:  
+    - Model as above with integer variables for positions and topic assignments, add constraints.  
+    - Use `solve()` or enumerate models via solver with blocking clauses to collect all satisfying assignments.  
+    - For each answer choice, verify universality across all models.  
+13. Output the index (or string) of the choice that holds in *all* valid schedules.

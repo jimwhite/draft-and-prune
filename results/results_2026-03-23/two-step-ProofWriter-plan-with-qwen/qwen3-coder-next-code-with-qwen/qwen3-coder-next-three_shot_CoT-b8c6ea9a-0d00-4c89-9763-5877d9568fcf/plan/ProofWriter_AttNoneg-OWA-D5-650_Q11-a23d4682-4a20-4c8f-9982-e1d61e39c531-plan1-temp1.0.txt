@@ -1,0 +1,21 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_smart("Anne", True)
+   - is_nice("Charlie", True)
+   - is_furry("Erin", True)
+   - is_white("Erin", True)
+   - is_smart("Fiona", True)
+   - is_white("Fiona", True)
+   - is_young("Fiona", True)
+3. Translate all logical rules into PyKe rules using `foreach` blocks:
+   • Nice and smart → young.
+   • Young and white → cold.
+   • White → red.
+   • Furry and red → nice.
+   • Young → white. (Note: stated twice; encode once)
+   • Smart and cold → furry.
+   • Nice and white → smart.
+   • If Anne is furry and white → red.
+4. Ensure rule order accounts for dependencies (e.g., derive properties stepwise).
+5. The query tests whether Erin is cold:
+   → Use facts.is_cold("Erin", True)

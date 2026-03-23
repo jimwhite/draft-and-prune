@@ -1,0 +1,28 @@
+1. Enumerate the five students and assign them integer codes (0: Jiang, 1: Kramer, 2: Lopez, 3: Megregian, 4: O'Neill).  
+2. Enumerate the three plays and assign them integer codes (0: Sunset, 1: Tamerlane, 2: Undulation).  
+3. Create Boolean variables `review[i][j]` for student i reviewing play j (i ∈ {0,…,4}, j ∈ {0,1,2}).  
+4. Add **nonempty constraint**: each student reviews at least one play: for each i, `review[i][0] ∨ review[i][1] ∨ review[i][2]`.  
+5. Add **Kramer–Lopez vs Megregian constraint**: Kramer and Lopez each review fewer plays than Megregian:  
+   - Let `count[i] = (if review[i][0] then 1 else 0) + (if review[i][1] then 1 else 0) + (if review[i][2] then 1 else 0)` (express via integer variables or bit-counting with helper constraints).  
+   - Assert `count[1] < count[3]` and `count[2] < count[3]`.  
+6. Add **Jiang–Lopez/Megregian disjointness**: Lopez and Megregian review no play Jiang does:  
+   - `¬(review[0][j] ∧ review[2][j])` and `¬(review[0][j] ∧ review[3][j])` for j ∈ {0,1,2}.  
+7. Add **Kramer & O'Neill review Tamerlane**: `review[1][1] = true` and `review[4][1] = true`.  
+8. Add **exactly-two-same-group constraint**: exactly two students have identical review sets (and no others share that set):  
+   - Enumerate all 7 possible nonempty subsets of {0,1,2} (excluding empty).  
+   - For each subset S, define indicator `same_S[i] = ∧_{j∈S} review[i][j] ∧ ∧_{j∉S} ¬review[i][j]`.  
+   - Assert that exactly one subset S has exactly two students with `same_S[i] = true`, and all other subsets have ≤1 such student.  
+9. Add **global condition**: exactly three students review Undulation: `∑_{i=0}^{4} (if review[i][2] then 1 else 0) = 3`.  
+10. Translate answer choices into logical conditions and test each for satisfiability (without asserting truth—just check if “could be true” is possible):  
+    - For each choice:  
+      a. Clone base constraints into fresh solver.  
+      b. Add the condition described in the choice (e.g., for first choice: `review[3][2] = false`).  
+      c. If UNSAT, discard; if SAT, the choice *could* be true—note its index.  
+    - Choices:  
+      0: Megregian does not review Undulation → `¬review[3][2]`  
+      1: O'Neill does not review Undulation → `¬review[4][2]`  
+      2: Jiang reviews Undulation → `review[0][2] = true`  
+      3: Lopez reviews Tamerlane → `review[2][1] = true`  
+      4: O'Neill reviews Sunset → `review[4][0] = true`  
+11. Collect indices of all satisfiable choices into `answer_index_list`.  
+12. Output `answer_index_list` (contains indices of choices that *could* be true under given conditions).

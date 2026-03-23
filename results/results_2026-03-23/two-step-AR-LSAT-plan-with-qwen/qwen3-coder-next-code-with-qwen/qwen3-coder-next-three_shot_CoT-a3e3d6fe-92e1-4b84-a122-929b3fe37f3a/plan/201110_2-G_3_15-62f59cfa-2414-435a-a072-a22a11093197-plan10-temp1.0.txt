@@ -1,0 +1,24 @@
+1. Enumerate riders (Reynaldo, Seamus, Theresa, Yuki) and bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables `first[i][j]` (rider i tests bicycle j on day 1) and `second[i][j]` (rider i tests bicycle j on day 2).  
+3. Add **day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider i, exactly one `first[i][j]` is true.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle j, exactly one `first[i][j]` is true.  
+4. Add **day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider i, exactly one `second[i][j]` is true.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle j, exactly one `second[i][j]` is true.  
+5. Add **basic restriction constraints**:  
+   - Reynaldo cannot test F on either day: `¬first[0][F_idx]` and `¬second[0][F_idx]`.  
+   - Yuki cannot test J on either day: `¬first[3][J_idx]` and `¬second[3][J_idx]`.  
+6. Add **Theresa must test H constraint**: Theresa tests H on *some* day, i.e., `first[2][H_idx] ∨ second[2][H_idx]`.  
+7. Add **Yuki-Seamus linkage constraint**: the bicycle Yuki tests on day 1 must be exactly the one Seamus tests on day 2: for all bicycles j, `first[3][j] ↔ second[1][j]`.  
+8. Translate answer choices into logical assertions about assignments:  
+   - Choice 0: `first[0][J_idx]` is true.  
+   - Choice 1: `second[0][J_idx]` is true.  
+   - Choice 2: `first[1][H_idx]` is true.  
+   - Choice 3: `first[3][H_idx]` is true.  
+   - Choice 4: `second[3][H_idx]` is true.  
+9. For each answer choice (0 to 4), clone the base constraints into a fresh solver and assert the choice’s condition.  
+10. Record which choices yield SAT (possible) and which yield UNSAT (impossible).  
+11. Since the question asks “EXCEPT” (i.e., which *cannot* be true), identify the choice(s) that are UNSAT and return its index as the answer.  
+12. Construct `answer_index_list` containing indices of impossible choices; the problem implies exactly one, so expect a singleton.  
+13. Output the answer index list (e.g., `[i]` where choice i is impossible).

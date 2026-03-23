@@ -1,0 +1,16 @@
+1. Enumerate the seven sales representatives and assign integer indices.  
+2. Define integer variables `zone[i]` for each representative i, with domain {1, 2, 3} (Zone 1, Zone 2, Zone 3).  
+3. Add **mutual exclusivity constraint**: each representative assigned to exactly one zone (enforced by `zone[i] ∈ {1,2,3}`).  
+4. Add **Parra-or-Tiao-in-Zone-1 constraint**: Exactly one of Parra or Tiao is in Zone 1: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+5. Add **Tiao-or-Udall-in-Zone-2 constraint**: Exactly one of Tiao or Udall is in Zone 2: `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+6. Add **Parra-Quinn-same-zone constraint**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey-Udall-same-zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone-3-majority constraint**: Number of representatives in Zone 3 > number in Zone 2.  
+   - Count variables: let `c1 = Sum([If(zone[i]==1,1,0) for i])`, similarly `c2`, `c3`; assert `c3 > c2`.  
+9. Translate each choice into the expected composition of Zone 3 (i.e., list of representatives that must be in Zone 3 and all others not in Zone 3).  
+10. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that exactly the representatives listed in the choice are assigned to Zone 3 (i.e., for each rep in choice: `zone[rep] == 3`; for each rep not in choice: `zone[rep] != 3`).  
+    - If the model is SAT, the choice is possible; record it.  
+11. Among the choices that yield SAT, select those matching a valid assignment (note: only one choice can be correct per question).  
+12. Output the index of the correct choice (as per list order: 0 for ['Kim, Mahr'], etc.).

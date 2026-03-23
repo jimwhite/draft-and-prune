@@ -1,0 +1,22 @@
+1. Enumerate the six bands and assign each an integer index.  
+2. Create integer variables for each band's slot position (1 through 6), ensuring all positions are distinct.  
+3. Add **base constraints** from original problem:  
+    - Vegemite before Zircon: `pos_Vegemite < pos_Zircon`.  
+    - Wellspring and Zircon each before Xpert: `pos_Wellspring < pos_Xpert` and `pos_Zircon < pos_Xpert`.  
+    - Uneasy in last three slots: `4 ≤ pos_Uneasy ≤ 6`.  
+    - Yardsign in first three slots: `1 ≤ pos_Yardsign ≤ 3`.  
+4. For each answer choice, construct a modified constraint set by:  
+    - Removing original Wellspring/Zircon-before-Xpert constraints.  
+    - Adding the new constraint from the answer choice (expressed in terms of positional inequalities).  
+5. Check **logical equivalence** between original constraint set and each modified set:  
+    - For each candidate answer choice, create two solvers:  
+        a) Solver1 with original constraints.  
+        b) Solver2 with original constraints *plus* the answer choice's new constraint (but without original Wellspring/Zircon-before-Xpert constraints).  
+    - To verify equivalence:  
+        i. Check that Solver1 ⊨ Solver2: add Solver1 constraints and negation of Solver2’s new constraint; if UNSAT, then original implies the choice.  
+        ii. Check that Solver2 ⊨ Solver1: add Solver2 constraints and negation of *either* Wellspring-before-Xpert or Zircon-before-Xpert; if UNSAT for both, then choice implies original constraints.  
+    - Alternatively, test all 720 permutations of the six bands (or use quantifier-free verification):  
+        - For each permutation satisfying Solver1, verify it also satisfies the new constraint.  
+        - For each permutation satisfying Solver2, verify it satisfies both `Wellspring < Xpert` and `Zircon < Xpert`.  
+6. A choice is correct iff **every model** (valid ordering) of the original constraints satisfies the new constraint, and the new constraint (combined with other given constraints) does not eliminate any model that satisfied the original constraints.  
+7. Only one choice will satisfy both directions; select it as the answer index list containing its 0-based index.

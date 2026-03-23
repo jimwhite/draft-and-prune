@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven variables as strings: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define the domain as integers 1 through 7, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into constraints using `lambda` functions:  
+     - "The oranges are more expensive than the peaches" → `oranges > peaches`  
+     - "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`  
+     - "The pears are less expensive than the cantaloupes" → `pears < 4` (since cantaloupes == 4)  
+     - "The peaches are the second-most expensive" → `peaches == 6` (because most expensive = 7, so second-most = 6)  
+     - "The mangoes are the cheapest" → `mangoes == 1`  
+     - "The kiwis are the third-cheapest" → `kiwis == 3` (since cheapest = 1, second-cheapest = 2, third-cheapest = 3)  
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the single solution (problem is well-constrained and consistent).  
+
+5. **Determine Which Option Is True:**  
+   * The question asks for which fruit is the **third-most expensive**. Since 7 = most expensive, third-most expensive corresponds to rank **5** (7 - 3 + 1 = 5).  
+   * Create a mapping from choice letters to fruit names:  
+     `{'A': 'watermelons', 'B': 'mangoes', 'C': 'kiwis', 'D': 'pears', 'E': 'cantaloupes', 'F': 'oranges', 'G': 'peaches'}`  
+   * In the solution, find which fruit has rank 5.  
+   * Return the corresponding choice letter (e.g., `'A'` if watermelons are rank 5).

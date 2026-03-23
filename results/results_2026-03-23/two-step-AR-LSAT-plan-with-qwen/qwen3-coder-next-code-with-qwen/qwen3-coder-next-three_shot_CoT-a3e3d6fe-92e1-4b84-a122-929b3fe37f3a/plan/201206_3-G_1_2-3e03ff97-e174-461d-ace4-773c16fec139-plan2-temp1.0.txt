@@ -1,0 +1,18 @@
+1. Enumerate the six lab assistants and assign them integer indices: Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5.  
+2. Enumerate the six sessions: Wednesday morning = 0, Wednesday afternoon = 1, Thursday morning = 2, Thursday afternoon = 3, Friday morning = 4, Friday afternoon = 5.  
+3. Create integer variables `assign[i]` for each assistant i (0–5), where `assign[i] ∈ {0,1,2,3,4,5}` indicates which session they lead.  
+4. Add **distinctness constraint**: all `assign[i]` must be pairwise distinct (each session led by exactly one assistant).  
+5. Add **day-of-week constraints**: define helper functions or bitwise logic to map session index → day (0=Wed, 1=Thu, 2=Fri) and period (0=morning, 1=afternoon):  
+    - day = session // 2  
+    - period = session % 2  
+6. Add constraint: Kevin and Rebecca must be assigned sessions on the same day ⇒ `assign[Kevin] // 2 == assign[Rebecca] // 2`.  
+7. Add constraint: Lan and Olivia cannot be on the same day ⇒ `assign[Lan] // 2 != assign[Olivia] // 2`.  
+8. Add constraint: Nessa must lead an afternoon session ⇒ `assign[Nessa] % 2 == 1`.  
+9. Add constraint: Julio’s session must be on an earlier day than Olivia’s ⇒ `assign[Julio] // 2 < assign[Olivia] // 2`.  
+10. Add the *conditional premise* as a hard constraint: Lan does **not** lead a Wednesday session ⇒ `assign[Lan] // 2 != 0`.  
+11. Translate the answer choices into assistant indices: Rebecca=5, Olivia=4, Nessa=3, Kevin=1, Julio=0.  
+12. Define an empty `answer_index_list = []`. For each assistant in the answer choices:  
+    - Clone base constraints (steps 4–10) into a fresh solver.  
+    - Assert that this assistant leads **no Thursday session** (i.e., `assign[i] // 2 != 1`).  
+    - Check satisfiability: if UNSAT, then this assistant **must** lead a Thursday session in every valid assignment; append their index to `answer_index_list`.  
+13. Return the assistant index list (indices 0–5); map back to names using the enumeration in step 1.

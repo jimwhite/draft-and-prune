@@ -1,0 +1,24 @@
+1. Identify all entities and types: Rex, impus, yumpus, wumpus, numpus, jompus, dumpus, tumpus, vumpus, rompus, zumpus.  
+2. Identify all properties: mean, blue, hot, fruity, dumpuses (note: "dumpus" is both a type and used in subclass relation; keep consistent as types), dull, happy, opaque, metallic.  
+3. Represent "Rex is a yumpus" as a base fact: `is_a("Rex", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules, ensuring each is expressed as a logical implication (if X is of type A, then X has property P and/or X is of type B):  
+   - Every impus is mean.  
+   - Each impus is a yumpus.  
+   - Yumpuses are blue.  
+   - Yumpuses are wumpuses.  
+   - Wumpuses are hot.  
+   - Every wumpus is a numpus.  
+   - Jompuses are happy.  
+   - Numpuses are fruity.  
+   - Numpuses are dumpuses. *(Note: interpret as “every numpus is a dumpus”)*  
+   - Every dumpus is not dull.  
+   - Every dumpus is a tumpus.  
+   - Tumpuses are not happy.  
+   - Every tumpus is a vumpus.  
+   - Vumpuses are not opaque.  
+   - Every vumpus is a rompus.  
+   - Rompuses are metallic.  
+   - Each rompus is a zumpus.  
+5. Implement each rule using `foreach` for the antecedent (e.g., `foreach x: is_a(x, "impus")`) and `assert` for the consequent (e.g., `is_property(x, "mean", True)`, `is_a(x, "yumpus", True)`). Use `assert_not` or negated property atoms for negative facts (e.g., `is_property(x, "dull", False)` or `~is_dull(x)` depending on PyKe’s convention—standard is separate predicates like `is_not_dull` or negated facts).  
+6. The query tests if “Rex is not happy” is provable: since `is_a(Rex, yumpus)` and `yumpus ⊆ wumpus ⊆ numpus ⊆ dumpus ⊆ tumpus`, and all tumpuses are not happy, we can derive `is_not_happy(Rex)`; thus, `is_happy("Rex", False)` or equivalent must be provable.  
+   → Use `facts.is_happy("Rex", False)`.

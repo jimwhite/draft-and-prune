@@ -1,0 +1,17 @@
+1. Enumerate the six singers and assign them integer codes (e.g., Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5).  
+2. Create integer variables `pos[0..5]` for the audition positions (1 to 6) of each singer.  
+3. Add **domain constraints**: all `pos[i]` ∈ {1,2,3,4,5,6}, and all distinct (injective).  
+4. Add **recorded constraints**: Kammer and Lugo are recorded, others not; so recorded auditions must be exactly positions 4 or 5. Since the fourth cannot be recorded and the fifth *must* be recorded, only position 5 is available for a recorded audition — but two auditions must be recorded. Contradiction unless the other recorded audition is also at position 5? → *Re-evaluate*: Actually, only two auditions are recorded (Kammer and Lugo), and the conditions say:  
+   - The fourth audition cannot be recorded ⇒ position 4 ≠ Kammer and ≠ Lugo.  
+   - The fifth audition must be recorded ⇒ position 5 = Kammer or Lugo (exactly one of them, since only two recorded total and both must be placed somewhere non-4th).  
+   So among Kammer and Lugo, exactly one is at position 5, the other must be at a position ≠4 (so ∈{1,2,3,5,6}), but since 5 is taken by one of them, the other must be at ∈{1,2,3,6}.  
+5. Add **Waite constraint**: Waite’s position < min(pos[Kammer], pos[Lugo]) (since Waite must be earlier than *both* recorded auditions).  
+6. Add **Kammer < Trillo**: `pos[Kammer] < pos[Trillo]`.  
+7. Add **Zinn < Yoshida**: `pos[Zinn] < pos[Yoshida]`.  
+8. For each choice string in the answer list:  
+   a. Parse the ordering (e.g., split by ", " to get 6 singer names).  
+   b. For each position i (0-indexed), set `pos[singer_index] = i+1`.  
+   c. Add these unit constraints to a fresh solver with all the above general constraints.  
+   d. Check SAT; if SAT, this ordering is possible.  
+9. Collect all choices that yield SAT and output their indices (or list them directly, per problem requirement: “Which one of the following could be...” implies expect exactly one SAT). Since the plan asks for a dry run of logic, but input gives explicit choices, simulate evaluation per choice.  
+10. Return the index (or list of indices) of choices that satisfy all constraints — but note problem asks for “Which one...”, so plan must isolate the unique SAT choice. Since Z3 is used, we evaluate each candidate assignment as a model and verify feasibility.

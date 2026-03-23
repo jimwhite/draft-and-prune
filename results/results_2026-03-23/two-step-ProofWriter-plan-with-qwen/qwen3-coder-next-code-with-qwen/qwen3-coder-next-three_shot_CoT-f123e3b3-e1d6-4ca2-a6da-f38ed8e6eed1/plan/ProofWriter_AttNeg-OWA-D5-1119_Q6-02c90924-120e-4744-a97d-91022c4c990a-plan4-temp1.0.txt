@@ -1,0 +1,12 @@
+1. Identify all individuals: Anne, Bob, Dave, Fiona.
+2. Represent all explicitly stated atomic facts using ternary predicates: e.g., is_blue("Anne", True), is_cold("Anne", True), is_kind("Anne", True), is_quiet("Anne", True), is_blue("Bob", True), is_kind("Bob", True), is_nice("Bob", True), is_quiet("Bob", False), is_furry("Dave", False), is_green("Dave", True), is_quiet("Dave", True), is_cold("Fiona", True).
+3. Translate each universal conditional in the context into a PyKe rule using `foreach` and `assert`:
+   • All cold people are blue: foreach person, if is_cold(person, True) then assert is_blue(person, True).
+   • Green, nice people are kind: foreach person, if is_green(person, True) and is_nice(person, True) then assert is_kind(person, True).
+   • All blue people are kind: foreach person, if is_blue(person, True) then assert is_kind(person, True).
+   • Kind, cold people are nice: foreach person, if is_kind(person, True) and is_cold(person, True) then assert is_nice(person, True).
+   • If someone is nice then they are green: foreach person, if is_nice(person, True) then assert is_green(person, True).
+   • Cold, green people are quiet: foreach person, if is_cold(person, True) and is_green(person, True) then assert is_quiet(person, True).
+4. For negative literals (e.g., “not quiet”), use facts with False as the third argument: e.g., is_quiet("Bob", False).
+5. Use rule-based forward chaining to derive additional facts; note that PyKe will automatically infer consequences of the rules and facts.
+6. Query whether Fiona is not kind by checking if facts.is_kind("Fiona", False) holds — i.e., assert is_kind("Fiona", False) and see if it can be proven false via contradiction or direct derivation.

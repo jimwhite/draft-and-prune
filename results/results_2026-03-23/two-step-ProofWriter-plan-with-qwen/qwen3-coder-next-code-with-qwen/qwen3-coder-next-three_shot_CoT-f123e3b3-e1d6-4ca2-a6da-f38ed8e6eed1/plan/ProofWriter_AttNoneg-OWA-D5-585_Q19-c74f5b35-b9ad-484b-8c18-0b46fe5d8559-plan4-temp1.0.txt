@@ -1,0 +1,25 @@
+1. Identify all individuals: Anne, Bob, Erin, Fiona.
+2. Represent all explicitly stated facts using ternary predicates (e.g., is_round("Anne", True), is_red("Bob", True), etc.).
+3. Encode all unconditional properties from the list:
+   - Anne: is_round(True)
+   - Bob: is_red(True), is_smart(True)
+   - Erin: is_furry(True), is_red(True), is_rough(True), is_smart(True)
+   - Fiona: is_big(True), is_furry(True), is_smart(True)
+4. Translate all universal conditionals into rules:
+   • All smart things are furry → foreach is_smart(X, True) ⇒ assert is_furry(X, True)
+   • All furry things are red → foreach is_furry(X, True) ⇒ assert is_red(X, True)
+   • All round things are rough → foreach is_round(X, True) ⇒ assert is_rough(X, True)
+   • If Bob is white then Bob is furry → conditionally assert based on assumed fact (note: not a universal rule; handle via backward-chaining assumption or leave as implication only when antecedent holds)
+   • All red, rough things are big → foreach is_red(X, True) and is_rough(X, True) ⇒ assert is_big(X, True)
+   • All rough things are smart → foreach is_rough(X, True) ⇒ assert is_smart(X, True)
+   • If Fiona is furry then Fiona is red → conditionally assert (already true per facts, but rule applies generally)
+   • If Bob is round and big then Bob is furry → conditional on both properties
+   • If Fiona is red and white then Fiona is smart → conditional (note: is_smart(Fiona) already known, but include rule for completeness)
+5. Note that “white” is a new unary property not asserted for any individual, and no rule produces it directly; therefore, white is unknown for all individuals unless assumed.
+6. The query asks whether “Bob is not white”, i.e., whether ¬is_white("Bob", True) holds.
+   → Since no fact or rule implies is_white("Bob", True), and PyKe does *not* assume closed-world, we cannot conclude ¬is_white("Bob", True) directly from absence.
+   → Therefore, to encode the query: Use facts.is_white("Bob", False) — but this must be interpreted as checking if the negation can be *proven*.
+7. Final step: Formulate the query as a goal and let PyKe attempt to prove or disprove it — output should reflect whether the system can deduce is_white("Bob", False) via negation-as-failure or explicit contradiction (but PyKe typically does not support direct negation unless encoded via rules).
+8. However, per the problem’s requirement: only output the plan — no results.
+9. Thus: Encode query as facts.is_white("Bob", False) and let PyKe attempt to infer it. Since no rule asserts white for Bob, the answer will be unknown.
+10. Note: To be safe, do *not* assume any external negation mechanism beyond what PyKe provides; rely on explicit proof only.

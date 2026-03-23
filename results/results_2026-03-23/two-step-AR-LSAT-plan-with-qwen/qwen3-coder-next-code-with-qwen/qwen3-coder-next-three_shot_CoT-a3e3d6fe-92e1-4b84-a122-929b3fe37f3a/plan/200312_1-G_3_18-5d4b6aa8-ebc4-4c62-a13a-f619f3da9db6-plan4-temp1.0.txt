@@ -1,0 +1,26 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and assign integer codes 0,1,2 respectively.  
+2. Enumerate days Monday through Friday and assign integer codes 0–4 (Mon=0, Tue=1, ..., Fri=4).  
+3. Create integer variables `o[0], o[1], o[2]` for oatmeal batch days (first, second, third), `p[0], p[1], p[2]` for peanut butter, and `s[0], s[1], s[2]` for sugar.  
+4. Add **domain constraints**: all variables ∈ {0,1,2,3,4}.  
+5. Add **distinctness per type**: for each cookie type, its three batch days are pairwise distinct.  
+6. Add **global constraint**: at least one batch on Monday (i.e., min over all 9 batch variables ≤ 0).  
+7. Add **given-day constraint**: second sugar batch is Thursday → `s[1] == 4`.  
+8. Add **cross-type constraint**: second oatmeal batch = first peanut butter batch → `o[1] == p[0]`.  
+9. Add **hypothesis condition**: assume there exists a pair of cookie types (A,B) and indices i,j such that A’s first batch day = B’s third batch day. Formally:  
+   - For each ordered pair of distinct types (A,B) ∈ {(o,p), (o,s), (p,o), (p,s), (s,o), (s,p)}:  
+     - Introduce Boolean slack variables to encode `A[0] == B[2]`.  
+     - Add disjunction over all such pairs (so at least one such equality holds).  
+10. Define the five answer options as logical statements about the batch schedule:  
+   - Option 0: All days have ≥1 batch → ∧_{d=0..4} ∨_{b ∈ all batches} [b == d]  
+   - Option 1: Wednesday (day=2) has ≥2 batches → count({b | b == 2}) ≥ 2  
+   - Option 2: Monday (day=0) has exactly 1 batch → count({b | b == 0}) == 1  
+   - Option 3: Tuesday (day=1) has exactly 2 batches → count({b | b == 1}) == 2  
+   - Option 4: Friday (day=4) has exactly 1 batch → count({b | b == 4}) == 1  
+11. For each option i (0 to 4):  
+   - Clone base constraints + hypothesis condition into fresh solver S_i.  
+   - Assert option i is true.  
+   - Check SAT.  
+   - Then assert option i is false and check SAT again: if SAT, then the option *could* be false under the hypothesis.  
+12. Collect indices of options for which “option false + base + hypothesis” is SAT → these are candidates that *could* be false.  
+13. Since the question asks “which one could be false” (singular), but options may allow multiple SAT assignments, verify uniqueness by checking if exactly one option satisfies the “could be false” condition under all valid models. If multiple, recheck consistency constraints (e.g., ensure hypothesis is realized via at least one model).  
+14. Output the index (0–4) of the option that could be false — i.e., for which there exists at least one model satisfying base+ h ypothesis + option false.

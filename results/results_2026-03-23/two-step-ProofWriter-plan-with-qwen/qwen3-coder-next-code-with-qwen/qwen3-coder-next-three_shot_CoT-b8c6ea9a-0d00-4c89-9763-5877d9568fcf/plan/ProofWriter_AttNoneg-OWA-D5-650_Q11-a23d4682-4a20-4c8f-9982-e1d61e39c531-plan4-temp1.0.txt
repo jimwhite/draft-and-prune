@@ -1,0 +1,14 @@
+1. Identify all individuals: Anne, Charlie, Erin, Fiona.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(entity, True), e.g., is_smart("Anne", True), is_nice("Charlie", True), is_furry("Erin", True), is_white("Erin", True), etc.
+3. Translate all contextual implications into PyKe rules:
+   • Nice, smart things are young.
+   • All young, white things are cold.
+   • White things are red.
+   • All furry, red things are nice.
+   • All young things are white. (Note: duplicated in prompt; encode once)
+   • All smart, cold things are furry.
+   • If something is nice and white → it is smart.
+   • If Anne is furry and white → Anne is red.
+4. For each rule, write a `foreach` block specifying the antecedent conditions and an `assert` clause for the consequent.
+5. Determine whether Erin is cold:
+   → Query with facts.is_cold("Erin", True) and verify whether it can be derived or contradicted by the encoded facts and rules.

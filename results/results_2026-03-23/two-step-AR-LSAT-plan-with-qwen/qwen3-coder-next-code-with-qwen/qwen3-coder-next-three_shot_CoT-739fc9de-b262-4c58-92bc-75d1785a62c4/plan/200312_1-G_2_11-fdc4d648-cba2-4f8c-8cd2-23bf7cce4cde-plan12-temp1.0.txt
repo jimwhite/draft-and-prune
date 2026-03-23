@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types and assign integer codes (e.g., fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5).  
+2. Create integer position variables for each cargo type (1 to 6), representing the bay number.  
+3. Add **domain constraints**: each position is an integer in [1,6], and all positions are distinct (using `Distinct` or permutation constraints).  
+4. Add **given inequality constraints**:  
+   - grain > livestock, livestock > textiles ⇒ pos_grain > pos_livestock > pos_textiles  
+   - produce > fuel ⇒ pos_produce > pos_fuel  
+   - textiles and produce are adjacent: |pos_textiles − pos_produce| = 1  
+5. Add **additional constraint for the conditional scenario**: produce is next to livestock ⇒ |pos_produce − pos_livestock| = 1  
+6. Translate each answer choice into a logical assertion:  
+   - "Bay 2 is holding fuel" ⇒ pos_fuel == 2  
+   - "Bay 4 is holding produce" ⇒ pos_produce == 4  
+   - "Bay 4 is holding textiles" ⇒ pos_textiles == 4  
+   - "Bay 5 is holding grain" ⇒ pos_grain == 5  
+   - "Bay 5 is holding machinery" ⇒ pos_machinery == 5  
+7. Define answer index list `answer_index_list = []`. For each choice (in order), clone base constraints + conditional constraint into a fresh solver, add the specific assertion for that choice, and check satisfiability:  
+   - If model is SAT → the choice *could* be true; do NOT add to answer list.  
+   - If model is UNSAT → the choice *cannot* be true under given conditions; append its index to `answer_index_list`.  
+8. Since the question asks for the *EXCEPT* (i.e., the one that **cannot** be true), the answer is the first (and only) unsatisfiable case; but robustly, collect all UNSAT indices.  
+9. The question expects exactly one EXCEPT; so the final answer corresponds to the first unsatisfiable index (or only unsatisfiable one).  
+10. Print the answer index (typically 0-indexed; adjust to match choices if needed).

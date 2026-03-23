@@ -1,0 +1,154 @@
+1. Enumerate the five solos (positions 1 to 5) and assign each a pianist (Wayne or Zara) and a type (modern or traditional).  
+2. Create Boolean variables:  
+   - `p[i]`: True if Wayne performs solo i, False if Zara (for i = 1..5).  
+   - `t[i]`: True if solo i is traditional, False if modern (for i = 1..5).  
+3. Add **fixed constraint**: Third solo is traditional: `t[2] = True`.  
+4. Add **exactly two consecutive traditional constraint**: There exists exactly one pair of consecutive positions (j, j+1) such that `t[j] = True` and `t[j+1] = True`, and no other traditional solos are adjacent (i.e., at most one such run of length ≥2, and it must be exactly length 2).  
+   - This can be encoded by enumerating all possible positions for the consecutive pair: (1,2), (2,3), (3,4), (4,5); require exactly one such pair holds, and no third adjacent traditional.  
+   - Alternatively: Count total tradtional solos = k; ensure there is a run of exactly two and all other traditional solos are isolated. Since only one run allowed, enforce:  
+     - `t[0] & t[1] & !t[2] & !t[3] & !t[4]` OR  
+     - `!t[0] & t[1] & t[2] & !t[3] & !t[4]` OR  
+     - `!t[0] & !t[1] & t[2] & t[3] & !t[4]` OR  
+     - `!t[0] & !t[1] & !t[2] & t[3] & t[4]`,  
+     AND total traditional count = 2 + (# isolated tradtional) — but given constraint “exactly two of the traditional pieces are performed consecutively”, implies total tradtional solos = 2, and they *must* be consecutive. (Interpret standard LSAT logic: "exactly two of the traditional pieces are performed consecutively" means there is one pair of consecutive tradtional solos and no others — so total traditional = 2.)  
+     Therefore: `sum(t) == 2` and `(t[0] & t[1]) | (t[1] & t[2]) | (t[2] & t[3]) | (t[3] & t[4])`.  
+5. Add **fourth solo constraint**: In solo 4: `p[3] == True => t[3] == False` (if Wayne plays, then not tradtional), or `p[3] == False => t[3] == True` (if Zara plays, then tradtional) — wait no:  
+   - Statement: “In the fourth solo, either Wayne performs a traditional piece or Zara performs a modern piece.”  
+     That is: `(p[3] == True ∧ t[3] == True) ∨ (p[3] == False ∧ t[3] == False)`  
+     Equivalently: `t[3] == p[3]`.  
+6. Add **no-repeat pianist constraint**: The pianist of solo 2 ≠ pianist of solo 5: `p[1] != p[4]`.  
+7. Add **no tradtional before Wayne’s modern constraint**: No traditional piece occurs until Wayne has performed at least one modern piece.  
+   - That is: For all i where `t[i] == True`, there exists some j < i such that `p[j] == True` and `t[j] == False`.  
+   - Equivalently: The first solo cannot be tradtional unless Wayne performed it (but that’s allowed only if he performed a modern before? No — the clause says *no tradtional piece is performed until Wayne performs at least one modern piece*. So before the first tradtional solo, there must be a Wayne-modern solo.  
+     Let `first_tradtional =` smallest i such that `t[i] == True`. Then require:  
+       - There exists j < first_tradtional such that `p[j] == True ∧ t[j] == False`.  
+     Since there are only 2 tradtional solos (from step 4) and they’re consecutive, and `t[2] = True` (third solo is tradtional), the first tradtional must be at position ≤ 2 or ≥3. But `t[2] = True`, so the earliest tradtional is position 1 or 2.  
+     If first tradtional = pos 1: then no earlier solo → violates constraint. So `t[0]` must be False.  
+     If first tradtional = pos 2: then solo 1 must be Wayne-modern: `p[0] == True ∧ t[0] == False`.  
+     If first tradtional = pos 3: solo 1 or 2 must be Wayne-modern.  
+     Since `t[2] = True`, the first tradtional is at index 0,1, or 2. But `t[0] = True` impossible (violates constraint). So only possibilities:  
+        - `t[0] = False`, and if `t[1] = True` then solo 1 must be Wayne-modern; or  
+        - `t[0] = t[1] = False`, `t[2] = True`, and solo 1 or 2 must contain Wayne-modern.  
+     We’ll encode: `if t[i] == True then (∃ j < i : p[j] == True ∧ t[j] == False)` → for each i, `t[i] => (t[0]==False ∧ p[0]==True) ∨ ... ∨ (t[i-1]==False ∧ p[i-1]==True)`  
+     But since total tradtional = 2 and they’re consecutive, and `t[2]` fixed True, possible tradtional positions:  
+        - (1,2): indices 1 & 2 → first tradtional at index 1 ⇒ need solo 0 = Wayne-modern  
+        - (2,3): indices 2 & 3 → first tradtional at index 2 ⇒ need solo 0 or 1 = Wayne-modern  
+        - (3,4): indices 2 & 3? No — wait `t[2]` fixed True, so tradtional pair must include index 2. So only possible consecutive pairs including index 2 are: (1,2) and (2,3).  
+        - So only two cases: tradtional solos = {1,2} (i.e., solo 2 & 3 in 1-based) or {2,3} (solo 3 & 4).  
+     So enforce: `(t[1] & t[2]) ∨ (t[2] & t[3])`, and `sum(t) == 2` (so only one such pair), and `t[2] = True`.  
+8. Add the **given condition for the scenario**: Fifth solo, Wayne performs a tradtional piece: `p[4] == True ∧ t[4] == True`.  
+9. Note: From step 7, tradtional solos = exactly two consecutive; fifth solo is tradtional ⇒ tradtional pair must be (4,5) — but `t[2] = True`, so conflict unless tradtional pair is (4,5) but that excludes t[2]=True.  
+    Wait — contradiction? Let’s reexamine:  
+    - Condition: “The third solo is a traditional piece.” ⇒ `t[2] = True`  
+    - “Exactly two of the traditional pieces are performed consecutively.” ⇒ there is *one* pair of consecutive tradtional solos, and no other tradtional solos. So total tradtional = 2.  
+    - Therefore, the two tradtional solos must be at positions (1,2), (2,3), or (3,4) in 0-based indexing (since `t[2]` must be one of them).  
+    - But if fifth solo (`t[4]`) is tradtional, and total tradtional = 2, then the pair must be (3,4) or (4,5). Only (3,4) possible ⇒ tradtional at indices 3 and 4 (solo 4 & 5 in 1-based).  
+    - But `t[2] = True` → contradicts unless tradtional set = {2,3} and t[4] also True? But that would make 3 tradtional solos.  
+    So the assumption "fifth solo Wayne performs a tradtional piece" + above constraints may be impossible *unless* our interpretation of “exactly two...consecutively” is wrong.  
+    Standard LSAT phrasing: “exactly two of the traditional pieces are performed consecutively” means: among all tradtional solos, there is precisely one instance of two in a row, and no three-in-a-row; total tradtional solos can be ≥2. For example: tradtional at positions 2,3,5 → only (2,3) is consecutive pair; 5 is isolated — but then “exactly two...consecutively” could be interpreted as *there are two tradtional solos that are consecutive, and all other tradtional solos (if any) are not adjacent to anything*. But "exactly two" often means total tradtional = 2. However, in LSAT logic games, sometimes it allows >2 total tradtional as long as only *one* adjacent pair exists.  
+    Let’s check official phrasing: “exactly two of the traditional pieces are performed consecutively” is ambiguous. But in context: “The third solo is a traditional piece.” and then asking about fifth being tradtional, it must be possible. So likely interpretation: total tradtional solos = 2 (just one pair). But then fifth solo being tradtional + third being tradtional is impossible unless we reinterpret indexing.  
+    Wait — positions: solo 1,2,**3**,4,5 → third is index 2 (0-based). If tradtional solos = positions 3 and 4 (1-based), that’s indices 2 and 3 → matches `t[2]=True`, so tradtional at indices 2 & 3 (solo 3 and 4). Then fifth solo (index 4) is modern. But the hypothetical says “fifth solo Wayne performs a tradtional piece” → so index 4 = tradtional. That contradicts `sum(t)=2` and `t[2]=True`.  
+    Unless “exactly two of the traditional pieces are performed consecutively” means there is *a* pair of consecutive tradtional solos, and that’s the only adjacency, but total tradtional could be 3 (e.g., T,T,M,T → pairs at (1,2), and last T isolated). But then “exactly two” could refer to the *number of solos in the consecutive pair*, not total tradtional.  
+    Re-read: “Exactly two of the traditional pieces are performed consecutively.” → This means there is a block of exactly two tradtional solos in a row, and no other adjacent tradtional solos. Total tradtional solos could be 2,3,... but with only one adjacent pair and others isolated.  
+    Since third solo is tradtional, the block could be (2,3) or (3,4) in 1-based. If fifth solo is tradtional and Wayne plays it, and we want to see which options could be true, it’s possible if tradtional solos are at positions 2,3 and 5 (i.e., solos 3 & 4 are tradtional? No — third solo is position 3 → index 2. So block (2,3) = solos 3 & 4; then solo 5 could be another tradtional, isolated → tradtional at indices 2,3,4 (solo 3,4,5) — but then there are two consecutive pairs: (2,3) and (3,4), i.e., three in a row — violates “exactly two...consecutively” (would be a block of three).  
+    Alternative: tradtional solos at indices 1,2 (solos 2 & 3) and index 4 (solo 5). Then consecutive pair = (1,2), solo 5 isolated. That’s allowed: exactly one *pair* of consecutive tradtional solos, and two other tradtional solos? No — total tradtional = 3: two consecutive and one isolated. The phrase “exactly two of the traditional pieces are performed consecutively” suggests only *two* tradtional solos exist and they’re consecutive. But then fifth solo tradtional contradicts third being tradtional unless we reconsider indexing or re-read.  
+    Let’s assume standard interpretation: total tradtional solos = 2, consecutive. Then `t[2]=True` implies the pair is (1,2) or (2,3) in 0-based.  
+    - Pair (1,2): t[1]=T, t[2]=T → solos 2 & 3 tradtional  
+    - Pair (2,3): t[2]=T, t[3]=T → solos 3 & 4 tradtional  
+    In both cases, t[4] (solo 5) is False. So the hypothetical “fifth solo Wayne performs a tradtional piece” (`t[4]=True`) is impossible — meaning the scenario is unsatisfiable unless our interpretation is wrong. But since it’s a LSAT-style question, the scenario *must* be satisfiable for some interpretation.  
+    Therefore, reinterpret “exactly two of the traditional pieces are performed consecutively” as: there is at least one instance where exactly two tradtional solos are consecutive (i.e., not three in a row), and there may be other tradtional solos as long as they are not adjacent to another tradtional. So total tradtional solos could be 3 (two consecutive, one separate).  
+    Given that, with `t[2]=True`, and fifth solo tradtional (`t[4]=True`), possible:  
+      - tradtional at indices 2,3 (consecutive pair), and index 4 is isolated → but then t[3] & t[4] both True ⇒ adjacent pair (3,4), so now two consecutive pairs: (2,3) and (3,4). Unless t[3] is modern — but then how are tradtional at 2 and 4 with no adjacency? That’s isolated pair — but then only one consecutive tradtional? No, there is no consecutive tradtional at all.  
+      To have fifth solo tradtional and third tradtional without adjacency: need t[2]=T, t[4]=T, and t[3]=F. Then tradtional solos = {2,4} — no consecutive pair. Contradicts “exactly two...consecutively” (implies there *is* a consecutive pair).  
+      To have a consecutive pair including one of them: if tradtional at 2 and 3, then t[4] can be T only if not adjacent to another T — but t[3]=T ⇒ t[4] adjacent.  
+    Thus, the only way is if the consecutive pair does not include index 2 — but `t[2]` must be True, so impossible.  
+    This suggests a misinterpretation of “exactly two of the traditional pieces are performed consecutively” — maybe it means *there is a run of exactly two consecutive tradtional solos, and all other tradtional solos (if any) are not part of a run*, but total tradtional solos could be ≥2. So with `t[2]=T`, and fifth solo tradtional, possible arrangement:  
+      t = [F, T, T, F, T] → pairs at (1,2), and solo 4 isolated? No — index 4 is T, index 3=F, so isolated. That’s allowed: one run of exactly two consecutive tradtional solos (positions 2 & 3 in 1-based: solos 2 and 3), and one isolated tradtional (solo 5). But then “exactly two of the traditional pieces are performed consecutively” — yes, only solos 2 & 3 are consecutive. The other tradtional (solo 5) is alone. So total tradtional = 3, with exactly one *pair* of consecutive ones. This matches standard LSAT phrasing.  
+    So: total tradtional solos = 3, with exactly one adjacent pair (i.e., a run of two), and one isolated tradtional.  
+    Now constraints:  
+      - `t[2] = True` (third solo tradtional)  
+      - Fifth solo: `p[4] = True ∧ t[4] = True` (Wayne plays tradtional)  
+      - Exactly one adjacent pair among t[i]: possibilities: (1,2), (2,3), or (3,4) in 0-based indices.  
+        - If pair = (1,2): t[1]=T, t[2]=T → then isolated T must be at 0 or 3 or 4; but t[4]=T → possible (isolated if t[3]=F)  
+        - If pair = (2,3): t[2]=T, t[3]=T → isolated T at 0 or 4; t[4]=T allowed if t[3]=F? No — t[3]=T in this case, so t[4] adjacent to T ⇒ not isolated. So only possible if pair = (1,2) and isolated at 4: t[0]=F, t[1]=T, t[2]=T, t[3]=F, t[4]=T  
+    So fix: `t = [False, True, True, False, True]` (0-based indices 1,2,4).  
+8. Add the fixed t array: `t[0]=False, t[1]=True, t[2]=True, t[3]=False, t[4]=True`.  
+9. Add scenario-specific constraint: `p[4] = True` and `t[4] = True`.  
+10. Re-evaluate other constraints with this t:  
+    - Fourth solo constraint: `t[3] == p[3]` (since `t[3]=False`, then `p[3] = False` → Zara performs solo 4).  
+    - Solo 2 pianist ≠ solo 5 pianist: `p[1] != p[4] = True` → `p[1] = False` (Zara performs solo 2).  
+    - No tradtional until Wayne performs modern: first tradtional at index 1 (solo 2). So need a Wayne-modern before it → solo 1 must be Wayne-modern: `p[0] = True ∧ t[0] = False` — already `t[0]=False`, so require `p[0] = True`.  
+11. Now answer choices are statements that *could be true* in this scenario:  
+    - A: Zara performs the first solo → `p[0] = False` — but we just deduced `p[0] = True`, so impossible.  
+    - B: Wayne performs the second solo → `p[1] = True` — but from step 10, `p[1] != p[4] = True` ⇒ `p[1] = False`, so impossible.  
+    - C: Zara performs the third solo → `p[2] = False` — not yet constrained; possible if consistent.  
+    - D: The second solo is a modern piece → `t[1] = False` — but we fixed `t[1]=True`, impossible.  
+    - E: The fourth solo is a tradtional piece → `t[3] = True` — but we fixed `t[3]=False`, impossible.  
+    But wait — the question is *which could be true*, meaning in *some* model satisfying all conditions + hypothesis. So maybe t isn’t forced to [F,T,T,F,T] — perhaps other arrangements allow t[4]=T with third solt tradtional.  
+    Let’s not fix t early; instead:  
+      - Use general Boolean vars for p[0..4], t[0..4]  
+      - Add: `t[2] = True` (third solo tradtional)  
+      - Add: total consecutive tradtional pairs = 1, and no run >2 (i.e., not three in a row).  
+        This can be encoded:  
+          Let `run2[i] = t[i] & t[i+1] & !t[i-1 if i>0 else True] & !t[i+2 if i<3 else True]` for i=0..3  
+          But simpler: enumerate all possible t arrays of length 5 with `t[2]=True`, exactly one pair of consecutive Trues, no three consecutive Trues.  
+          Since small, just enumerate via Z3 or logic:  
+            Possible t:  
+              - [F,F,T,F,T] — no consecutive pair → invalid  
+              - [F,T,T,F,F] — one pair (1,2)  
+              - [T,T,F,F,T] — one pair (0,1), isolated at 4  
+              - [F,T,T,F,T] — pair (1,2), isolated at 4  
+              - [F,F,T,T,F] — pair (2,3)  
+              - [T,F,T,T,F] — three consecutive (invalid)  
+          So valid t with `t[2]=True`:  
+            A: [F,T,T,F,F] — indices 1,2  
+            B: [T,T,F,F,T] — indices 0,1 and 4 → but then pair (0,1) only, isolated at 4  
+            C: [F,T,T,F,T] — pair (1,2), isolated at 4  
+            D: [F,F,T,T,F] — pair (2,3)  
+          Now hypothesis: fifth solo tradtional and Wayne plays it → `t[4]=True` & `p[4]=True`.  
+          Among A,B,C,D, only B and C have t[4]=True. So possible t:  
+            B: [T,T,F,F,T] → tradtional at 0,1,4; pair (0,1), isolated at 4  
+            C: [F,T,T,F,T] → tradtional at 1,2,4; pair (1,2), isolated at 4  
+          Now check “no tradtional until Wayne performs modern”:  
+            - In B: first tradtional at index 0 ⇒ no prior solo ⇒ violates constraint unless index 0 is Wayne-modern? But t[0]=True, so tradtional at solo 1 ⇒ violation. So B invalid.  
+            - In C: first tradtional at index 1 (solo 2). So need solo 0 = Wayne-modern: `p[0]=True ∧ t[0]=False` — t[0]=False holds.  
+          So only C is valid: `t = [F,T,T,F,T]`  
+12. Now with fixed t, derive p constraints:  
+    - `t[0]=F` (solo 1 modern)  
+    - `t[1]=T`, `t[2]=T` (solos 2 & 3 tradtional)  
+    - `t[3]=F` (solo 4 modern)  
+    - `t[4]=T` (solo 5 tradtional)  
+    Constraints:  
+      - Fourth solo: `t[3] == p[3]` ⇒ `F == p[3]` ⇒ `p[3]=False` (Zara solo 4)  
+      - Solo 2 pianist ≠ solo 5 pianist: `p[1] != p[4]`  
+      - No tradtional before Wayne-modern: solo 0 = Wayne-modern ⇒ `p[0]=True ∧ t[0]=False` — satisfied  
+      - Also, each solo performed once → no issue  
+13. Now answer choices:  
+    A: Zara performs the first solo → `p[0]=False` — contradicts above (`p[0] must be True`) → impossible  
+    B: Wayne performs the second solo → `p[1]=True` — possible only if consistent. Then from `p[1] != p[4]`, we get `p[4]=False`. But hypothesis says fifth solo Wayne performs tradtional ⇒ `p[4]=True` — contradiction. So if B is true, `p[1]=True`, then `p[4]=False`, violating hypothesis. But the question is: “If fifth solo Wayne performs tradtional, which *could* be true?” — so under that assumption, `p[4]=True`, so `p[1]` must be False. Thus B is impossible.  
+    C: Zara performs the third solo → `p[2]=False` — no direct constraint yet. Let’s check: t[2]=True (solo 3 tradtional), p[2] can be Wayne or Zara. Is it possible? Yes, unless other constraints forbid.  
+    D: The second solo is a modern piece → `t[1]=False` — but t[1] must be True (from valid t above) → impossible  
+    E: The fourth solo is a tradtional piece → `t[3]=True` — but t[3] must be False (valid t) → impossible  
+14. So only C is possible: Zara performs the third solo (`p[2]=False`).  
+15. Plan steps:  
+    - Enumerate solos 0..4, create `p[0..4]` (Wayne boolean) and `t[0..4]` (traditional boolean).  
+    - Add: `t[2] = True`  
+    - Enumerate all t assignments (via Z3 or logic) satisfying:  
+        - Exactly one adjacent pair of True in t, no three consecutive Trues  
+        - `t[4] = True` (hypothesis)  
+      But better to encode directly:  
+        - `sum(t) == 3` (from analysis, only possible when total tradtional=3)  
+        - Exactly one i where `t[i] & t[i+1]` is True  
+        - Not (t[0]&t[1]&t[2]) etc. (avoid three in a row)  
+    - Add hypothesis: `p[4] = True` and `t[4] = True`  
+    - Add constraints:  
+        - `p[0] == True` (Wayne-modern first to satisfy “no tradtional until Wayne-modern”)  
+        - `p[1] != p[4]` (so `p[1]=False`)  
+        - `t[3] == p[3]` (fourth solo constraint)  
+    - For each answer choice:  
+        A: `p[0] == False` → assert and check SAT with base constraints.  
+        B: `p[1] == True` → assert and check SAT.  
+        C: `p[2] == False` → assert and check SAT.  
+        D: `t[1] == False` → assert and check SAT.  
+        E: `t[3] == True` → assert and check SAT.  
+    - Choose the answer choice for which the model is SAT (could be true).

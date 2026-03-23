@@ -1,0 +1,36 @@
+1.  Identify all entities and types: Sam, numpus, wumpus, rompus, vumpus, jompus, yumpus, zumpus.  
+2.  Identify all properties: wooden, small, floral, blue, dull.  
+3.  Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Numpuses are not wooden.  
+    * Numpuses are wumpuses.  
+    * Wumpuses are small.  
+    * Wumpuses are rompuses.  
+    * Rompuses are not floral.  
+    * Rompuses are vumpuses.  
+    * Each vumpus is blue.  
+    * Jompuses are not dull.  
+    * Each vumpus is a yumpus.  
+    * Each yumpus is dull.  
+    * Yumpuses are zumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    * `forall(X, is_a(X, "numpus", True) => ~is_wooden(X, True))`  
+    * `forall(X, is_a(X, "numpus", True) => is_a(X, "wumpus", True))`  
+    * `forall(X, is_a(X, "wumpus", True) => is_small(X, True))`  
+    * `forall(X, is_a(X, "wumpus", True) => is_a(X, "rompus", True))`  
+    * `forall(X, is_a(X, "rompus", True) => ~is_floral(X, True))`  
+    * `forall(X, is_a(X, "rompus", True) => is_a(X, "vumpus", True))`  
+    * `forall(X, is_a(X, "vumpus", True) => is_blue(X, True))`  
+    * `forall(X, is_a(X, "jompus", True) => ~is_dull(X, True))`  
+    * `forall(X, is_a(X, "vumpus", True) => is_a(X, "yumpus", True))`  
+    * `forall(X, is_a(X, "yumpus", True) => is_dull(X, True))`  
+    * `forall(X, is_a(X, "yumpus", True) => is_a(X, "zumpus", True))`  
+6.  Derive consequences for Sam:  
+    - From `is_a(Sam, "numpus", True)` and rule 2 ⇒ `is_a(Sam, "wumpus", True)`  
+    - From that and rule 3 ⇒ `is_small(Sam, True)`  
+    - From that and rule 4 ⇒ `is_a(Sam, "rompus", True)`  
+    - From that and rule 6 ⇒ `is_a(Sam, "vumpus", True)`  
+    - From that and rule 9 ⇒ `is_a(Sam, "yumpus", True)`  
+    - From that and rule 10 ⇒ `is_dull(Sam, True)`  
+7.  The query tests if the statement "Sam is not dull" is provable:  
+    → Use `facts.is_dull("Sam", False)`.

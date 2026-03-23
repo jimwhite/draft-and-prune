@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven vehicle types as variables: `"sedan"`, `"minivan"`, `"motorcyle"`, `"limousine"`, `"hatchback"`, `"truck"`, `"tractor"`.  
+    * Define the domain as integers 1 through 7, where **1 = oldest** and **7 = newest**, to represent age ranking.  
+    * Add all seven variables with domain `{1,2,3,4,5,6,7}` to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.  
+    * Convert each natural-language statement into a precise constraint using `addConstraint` with lambda functions:  
+        - "The motorcyle is older than the tractor" → `motorcyle < tractor`  
+        - "The hatchback is older than the limousine" → `hatchback < limousine`  
+        - "The hatchback is newer than the truck" → `truck < hatchback`  
+        - "The truck is newer than the tractor" → `tractor < truck`  
+        - "The minivan is the second-newest" → `minivan == 6`  
+        - "The sedan is the third-newest" → `sedan == 5`
+
+4.  **Solve for All Valid Arrangements:**  
+    * Call `getSolutions()` to enumerate all solutions satisfying the constraints.  
+    * Since the problem is deterministic, there will be exactly one valid solution; retrieve it.
+
+5.  **Determine the Fourth-Newest Vehicle:**  
+    * Under our ranking (1=oldest, 7=newest), "fourth-newest" corresponds to rank **4** (since 1st-newest=7, 2nd-newest=6, 3rd-newest=5, **4th-newest=4**).  
+    * Examine the solved solution dictionary to find which vehicle has rank 4.  
+    * Create a mapping from choice letters (`'A'` through `'G'`) to vehicle names:  
+        `'A': 'sedan', 'B': 'minivan', 'C': 'motorcyle', 'D': 'limousine', 'E': 'hatchback', 'F': 'truck', 'G': 'tractor'`.  
+    * Identify the choice letter whose corresponding vehicle has rank 4. Output that letter as the answer.

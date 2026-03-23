@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign integer indices (e.g., Peters=0, Quinn=1, Rovero=2, Stanton=3, Tao=4, Villas=5, White=6).  
+2. Create integer variables `pos[i]` for each accomplice i, representing their recruitment position (1 to 7).  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,...,7}, and all `pos[i]` are pairwise distinct.  
+4. Add **fixed constraint**: Peters is recruited fourth ⇒ `pos[Peters] == 4`.  
+5. Add **Villas-White constraint**: Villas is recruited immediately before White ⇒ `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero constraint (premise)**: Quinn earlier than Rovero ⇒ `pos[Quinn] < pos[Rovero]`.  
+7. Add **modified Quinn-Rovero constraint (additional premise)**: Quinn immediately before Rovero ⇒ `pos[Quinn] + 1 == pos[Rovero]`.  
+8. Add **Stanton-Tao constraint**: Stanton is *not* immediately before or after Tao ⇒ `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+9. Translate answer choices into positions: `['first', 'second', 'third', 'fifth', 'seventh']` → positions [1, 2, 3, 5, 7].  
+10. Define answer index list `answer_index_list = []`. For each position in [1,2,3,5,7]:  
+    - Clone base constraints (steps 3–8) into a fresh solver.  
+    - Add constraint `pos[Stanton] == candidate_position`.  
+    - If the model is UNSAT, then Stanton **cannot** be in that position; append corresponding index (0 for 'first', 1 for 'second', etc.) to `answer_index_list`.  
+11. Return the answer index list (or just the satisfying position indices for "CANNOT have been").

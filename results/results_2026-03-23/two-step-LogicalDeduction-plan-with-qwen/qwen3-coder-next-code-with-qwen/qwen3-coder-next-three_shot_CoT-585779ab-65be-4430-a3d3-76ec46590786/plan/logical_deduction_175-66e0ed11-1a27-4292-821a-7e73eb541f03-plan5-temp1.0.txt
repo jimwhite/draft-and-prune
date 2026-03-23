@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * The variables are the seven books: `"red"`, `"purple"`, `"green"`, `"white"`, `"orange"`, `"blue"`, and `"gray"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each natural-language statement into a constraint using `addConstraint` with lambda functions:  
+     - "The green book is to the left of the white book" → `lambda g, w: g < w`  
+     - "The red book is to the left of the purple book" → `lambda r, p: r < p`  
+     - "The red book is to the right of the orange book" → `lambda o, r: o < r`  
+     - "The gray book is the second from the left" → `lambda g: g == 2` (assign gray position = 2)  
+     - "The purple book is to the left of the green book" → `lambda p, g_: p < g_`  
+     - "The blue book is the fourth from the left" → `lambda b: b == 4` (assign blue position = 4)  
+   * Note: Use distinct variable names in lambdas to avoid shadowing (e.g., `g_` for green instead of `g` if gray is already `g`). Alternatively, pass variables explicitly to avoid ambiguity.
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all satisfying assignments.  
+   * Extract the unique solution (or iterate solutions if multiple exist, but problem states logical consistency implies uniqueness).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is **second from the right**, i.e., position **6** (since 7 is rightmost).  
+   * Create a mapping from choice letters to book names: `{'A': 'red', 'B': 'purple', 'C': 'green', 'D': 'white', 'E': 'orange', 'F': 'blue', 'G': 'gray'}`.  
+   * For each choice letter, check if the corresponding book’s position in the solution equals 6.  
+   * Return the first (and correct) choice letter that satisfies this condition.

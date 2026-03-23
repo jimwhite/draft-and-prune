@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the seven birds as variable names: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"` (note: use "bluejay" without space to avoid parsing issues).  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables to the problem with this domain.
+
+3.  **Add Constraints:**  
+    * Add an `AllDifferentConstraint()` to enforce uniqueness of positions.  
+    * Translate each natural-language statement into a constraint using `addConstraint` with lambda functions:  
+        - "The hummingbird is to the left of the crow" → `lambda h, c: h < c`  
+        - "The cardinal is to the right of the quail" → `lambda q, ca: q < ca` (i.e., quail is left of cardinal)  
+        - "The blue jay is the fourth from the left" → `lambda b: b == 4`  
+        - "The robin is the second from the left" → `lambda r: r == 2`  
+        - "The quail is to the right of the crow" → `lambda c, q: c < q` (i.e., crow is left of quail)  
+        - "The raven is to the left of the robin" → `lambda ra, r: ra < r`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments.  
+    * Since the problem is constrained and consistent, expect exactly one solution; extract it (e.g., `solutions[0]`).
+
+5.  **Determine the Rightmost Bird (Position 7):**  
+    * Create a mapping from choice letters (`"A"` to `"G"`) to the corresponding bird names as per the choices:  
+        `{"A": "robin", "B": "hummingbird", "C": "raven", "D": "bluejay", "E": "crow", "F": "cardinal", "G": "quail"}`  
+    * Iterate through the dictionary of choices. For each letter, check if the bird's position (value in the solution dict) equals 7.  
+    * Return (or print) the letter where this condition holds true — that is the correct answer.

@@ -1,0 +1,20 @@
+1. Enumerate the eight students and assign integer indices.  
+2. Create Boolean variables for each student-day-slot combination: `assigned[s][d][t]` where s ∈ {George, Helen, Irving, Kyle, Lenore, Nina, Olivia, Robert}, d ∈ {Mon, Tue, Wed}, t ∈ {morning, afternoon}.  
+3. Add **exactly-six-reporters constraint**: exactly six students have `assigned[s][*][*] = True`.  
+4. Add **two-reports-per-day constraint**: for each day d, exactly two students are assigned (one morning, one afternoon).  
+5. Add **George-only-on-Tuesday constraint**: George can only be assigned on Tuesday (i.e., `assigned[George][Mon][*] = False`, `assigned[George][Wed][*] = False`).  
+6. Add **Olivia/Robert-no-afternoon constraint**: `assigned[Olivia][d][afternoon] = False` and `assigned[Robert][d][afternoon] = False` for all d.  
+7. Add **Nina-immediate-followers constraint**: If Nina gives a report on Monday → Helen and Irving must both give reports on Tuesday. If Nina gives a report on Tuesday → Helen and Irving must both give reports on Wednesday. Nina cannot be on Wednesday with no following day (so if Nina is assigned, her report must be Monday or Tuesday). Formally:  
+    - If `assigned[Nina][Mon][*] = True`, then both Helen and Irving must be assigned on Tue (any slot).  
+    - If `assigned[Nina][Tue][*] = True`, then both Helen and Irving must be assigned on Wed (any slot).  
+    - If `assigned[Nina][Wed][*] = True`, constraint is violated (so add `¬assigned[Nina][Wed][*]`).  
+8. Add **given assignment constraints**:  
+    - Kyle gives afternoon report on Tuesday: `assigned[Kyle][Tue][afternoon] = True`.  
+    - Helen gives afternoon report on Wednesday: `assigned[Helen][Wed][afternoon] = True`.  
+9. For each answer choice (a triple: morning reports on Mon, Tue, Wed), extract the three students.  
+10. Define a solver and clone base constraints into it for each choice.  
+11. Add constraint that morning report on Monday is student A, Tuesday is student B, Wednesday is student C (i.e., for each student S in the triple, set `assigned[S][day][morning] = True`, and ensure no other student is assigned to that slot).  
+12. Ensure consistency: the three morning-report students must be distinct and different from Kyle (already assigned to Tue afternoon) and Helen (assigned to Wed afternoon), and also must respect the six-reporter total (so remaining three reporters will be fillers, including George possibly).  
+13. Add constraint that each slot (e.g., Mon morning, Tue afternoon is Kyle, Wed afternoon is Helen) has exactly one student.  
+14. For each choice: check if model is SAT; collect indices of valid choices where SAT holds.  
+15. Return the index (or list) of valid choice(s).

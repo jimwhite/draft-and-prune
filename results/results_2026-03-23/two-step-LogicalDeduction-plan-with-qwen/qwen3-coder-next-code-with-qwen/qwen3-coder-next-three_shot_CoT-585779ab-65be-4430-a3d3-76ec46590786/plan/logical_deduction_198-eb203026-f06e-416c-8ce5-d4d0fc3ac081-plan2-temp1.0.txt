@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to create a constraint satisfaction problem for the golfers.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the seven golfers: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, and `"Ana"`.  
+   * Define the domain as integers from **1 to 7**, where **1 = first place (leftmost/earliest)** and **7 = last place (rightmost/latest)**.  
+   * Add all seven golfer variables and the domain [1, 2, 3, 4, 5, 6, 7] to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Add the following constraints using `addConstraint` with lambda functions:  
+     - "Joe finished first" → Joe's position = 1.  
+     - "Mel finished second-to-last" → Mel's position = 6 (since last is 7).  
+     - "Rob finished above Eve" → Rob's position < Eve's position.  
+     - "Mel finished above Eli" → Mel's position < Eli's position.  
+     - "Rob finished below Ada" → Rob's position > Ada's position (i.e., Ada < Rob).  
+     - "Eve finished fourth" → Eve's position = 4.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to retrieve all valid solutions. Given the constraints, there will be exactly one solution.  
+   * Extract the sole solution from the list (e.g., `solutions[0]`).
+
+5. **Determine Which Golfer Is Fourth (Position 4):**  
+   * Since the question asks "Which of the following is true?" and the choices list who finished fourth, locate the golfer whose position value in the solution is 4.  
+   * Create a mapping from choice letters to golfer names:  
+     `{"A": "Joe", "B": "Eli", "C": "Ada", "D": "Mel", "E": "Eve", "F": "Rob", "G": "Ana"}`  
+   * Iterate through the choices, check if `solution[golfer] == 4`, and return the corresponding letter.  
+   *(Note: Based on explicit constraint "Eve finished fourth", Eve must be at position 4, so choice E will be correct—but the plan remains general to deduce it programmatically.)*

@@ -1,0 +1,21 @@
+1. Identify all individuals: Dave, Erin, Fiona, Gary.
+2. Encode explicit facts using ternary predicates:
+   - is_big("Dave", True)
+   - is_furry("Dave", True)
+   - is_blue("Erin", True)
+   - is_cold("Erin", True)
+   - is_round("Erin", True)
+   - is_quiet("Fiona", True)
+   - is_rough("Gary", True)
+3. Translate contextual rules into PyKe `foreach` + `assert` form:
+   - If something is rough and cold → it is furry.
+   - If something is quiet and big → it is not round (i.e., is_round(subject, False)).
+   - If Dave is blue → Dave is furry.
+   - All quiet and blue things are big (i.e., if X is quiet and blue, then is_big(X, True)).
+   - If Fiona is furry → Fiona is blue.
+   - All quiet things are cold (i.e., if X is quiet, then is_cold(X, True)).
+   - All big things are cold (i.e., if X is big, then is_cold(X, True)).
+   - All blue and round things are not quiet (i.e., if X is blue and round, then is_quiet(X, False)).
+   - All cold things are rough (i.e., if X is cold, then is_rough(X, True)).
+4. For each rule, construct a `foreach` block capturing the antecedent conditions and an `assert` statement for the consequent.
+5. Query: determine whether `is_furry("Erin", True)` holds — use `facts.is_furry("Erin", True)`.

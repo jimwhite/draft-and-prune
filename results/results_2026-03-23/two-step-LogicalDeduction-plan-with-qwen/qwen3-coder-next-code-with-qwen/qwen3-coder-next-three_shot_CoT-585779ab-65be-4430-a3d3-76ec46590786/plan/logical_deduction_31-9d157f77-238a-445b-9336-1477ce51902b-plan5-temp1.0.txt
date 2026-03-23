@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the five birds as variables: `"owl"`, `"cardinal"`, `"robin"`, `"hummingbird"`, and `"crow"`.
+    * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.
+    * Add all five variable names to the problem with domain [1, 2, 3, 4, 5].
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each bird occupies a unique position by adding an `AllDifferentConstraint` over all five variables.
+
+4.  **Translate Ordering Statements into Constraints:**
+    * "The hummingbird is to the left of the owl" → `hummingbird < owl`
+    * "The hummingbird is to the right of the cardinal" → `cardinal < hummingbird`
+    * "The crow is to the left of the robin" → `crow < robin`
+    * "The owl is to the left of the crow" → `owl < crow`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (since the problem is well-constrained and consistent).
+
+6.  **Identify the Leftmost Bird:**
+    * Determine which bird has position value = 1 in the solution.
+    * Map that bird to the corresponding choice letter (A: owl, B: cardinal, C: robin, D: hummingbird, E: crow).
+    * Output the choice letter (e.g., "B" if cardinal is leftmost).

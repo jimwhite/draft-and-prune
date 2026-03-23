@@ -1,0 +1,19 @@
+1. Identify all entities: Charlie, Dave, Gary, Harry.  
+2. Encode all directly stated property facts as ternary predicates: is_furry("Charlie", True), is_green("Charlie", True), is_white("Charlie", True), is_blue("Dave", True), is_cold("Dave", True), etc.  
+3. Translate each universal conditional into a PyKe rule using `foreach` and `assert`:  
+   - Nice, cold people are green.  
+   - Rough people are green.  
+   - Green people are blue.  
+   - If someone is blue → they are nice.  
+   - Furry, green people are rough.  
+   - Green, nice people are furry.  
+   - White people are nice.  
+   - Cold people are blue.  
+   - All rough, nice people are white.  
+4. For each rule:  
+   • Extract condition (conjunction of properties or relations),  
+   • Convert to `foreach` with variable bindings and conditions,  
+   • Append `assert` for the consequent property with True.  
+5. Note: Properties are unary (e.g., is_blue(x, True)), and no binary relations beyond those explicitly named; all context involves unary properties of individuals.  
+6. The query tests “Dave is not furry”:  
+   → Use facts.is_furry("Dave", False) as the query goal.

@@ -1,0 +1,18 @@
+1. Enumerate the six available students and assign integer indices.  
+2. Create integer variables for each student's assigned year (or a special "unassigned" value, e.g., -1).  
+3. Add **domain constraints**: each assigned student’s year must be in {1921, 1922, 1923, 1924}, and unassigned students have value -1.  
+4. Add **exactly-one-year constraint**: the four selected students must have distinct years covering all of 1921–1924.  
+5. Add **selection constraints**: exactly four students are assigned (i.e., exactly four have year ≠ -1).  
+6. Add **fixed scenario constraint**: both Ryan and Yoshio are assigned (i.e., their year ≠ -1).  
+7. Add **conditional constraints**:  
+   - Only Louis or Tiffany can be assigned to 1923 → if any student is assigned to 1923, that student must be Louis or Tiffany.  
+   - If Mollie is assigned, her year ∈ {1921, 1922}.  
+   - If Tiffany is assigned, then Ryan must be assigned (already satisfied under scenario).  
+   - If Ryan is assigned, Onyx must be assigned to the year immediately prior (i.e., year_Onyx = year_Ryan - 1).  
+8. Translate the answer choices into logical statements about assignments (e.g., Louis → 1923, Mollie → 1921, etc.).  
+9. Define a list of indices for answer choices. For each choice:  
+   - Clone the base scenario solver (with Ryan and Yoshio assigned + all constraints).  
+   - Add constraint asserting the specific assignment in the choice (e.g., year_Louis == 1923).  
+   - Check satisfiability.  
+   - If SAT, the choice is possible; record its index.  
+10. Return the list of possible choices (by index).

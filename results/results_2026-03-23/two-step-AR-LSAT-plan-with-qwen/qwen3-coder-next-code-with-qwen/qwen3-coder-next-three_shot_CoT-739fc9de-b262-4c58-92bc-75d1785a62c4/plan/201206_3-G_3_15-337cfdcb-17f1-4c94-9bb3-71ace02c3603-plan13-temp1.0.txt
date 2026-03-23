@@ -1,0 +1,13 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative's zone (1, 2, or 3).  
+3. Add **zone domain constraints**: each representative’s zone variable ∈ {1, 2, 3}.  
+4. Add **mutual exclusion constraints**: each representative assigned to exactly one zone (enforced by domain + assignment).  
+5. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1 (XOR).  
+6. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2 (XOR).  
+7. Add **Parra–Quinn constraint**: Parra and Quinn are in the same zone.  
+8. Add **Stuckey–Udall constraint**: Stuckey and Udall are in the same zone.  
+9. Add **Zone size constraint**: count(representatives in Zone 3) > count(representatives in Zone 2).  
+10. Translate each answer choice into a candidate set of representatives for Zone 3 (and derive implied zone assignments for others).  
+11. For each choice, create a fresh solver and assert the exact membership of Zone 3 (i.e., for each rep: in Zone 3 iff in the candidate list), while enforcing all other constraints (Steps 3–9).  
+12. If the model is SAT for a choice, it is possible; collect all such valid choices.  
+13. Since only one answer choice matches, select the unique SAT outcome and map back to original string choice.

@@ -1,0 +1,21 @@
+1. Enumerate the four riders and four bicycles, assigning each an integer index (riders: 0=Reynaldo, 1=Seamus, 2=Theresa, 3=Yuki; bicycles: 0=F, 1=G, 2=H, 3=J).  
+2. Create integer variables `r1[i]` and `r2[i]` for the bicycle tested by rider i on day 1 and day 2 respectively.  
+3. Add **domain constraints**: For each rider i, `r1[i]` and `r2[i]` ∈ {0,1,2,3}.  
+4. Add **one-per-bicycle-per-day constraints**: For each day d ∈ {1,2}, the map from riders to `rd[i]` must be a permutation (i.e., all `r1[i]` distinct, and all `r2[i]` distinct).  
+5. Add **conditional constraints**:  
+    - Reynaldo cannot test F on either day: `r1[0] ≠ 0` and `r2[0] ≠ 0`.  
+    - Yuki cannot test J on either day: `r1[3] ≠ 3` and `r2[3] ≠ 3`.  
+    - Theresa must test H on *some* day: `r1[2] = 2` or `r2[2] = 2`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: `r2[1] = r1[3]`.  
+6. Translate the five answer choices into logical statements and encode each as a constraint to test feasibility:  
+    - Choice 0 ("Reynaldo tests J on the first day"): `r1[0] == 3`.  
+    - Choice 1 ("Reynaldo tests J on the second day"): `r2[0] == 3`.  
+    - Choice 2 ("Seamus tests H on the first day"): `r1[1] == 2`.  
+    - Choice 3 ("Yuki tests H on the first day"): `r1[3] == 2`.  
+    - Choice 4 ("Yuki tests H on the second day"): `r2[3] == 2`.  
+7. Define an answer index list `answer_index_list = []`. For each choice index i ∈ {0,1,2,3,4}:  
+    - Clone base constraints into a fresh solver.  
+    - Assert the constraint for choice i.  
+    - Solve; if UNSAT, then this choice **cannot** be true—append i to `answer_index_list`.  
+8. The correct answer is the *only* index in `answer_index_list` (since question asks "EXCEPT").  
+9. Output the answer index list containing the single EXCEPT index.

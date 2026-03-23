@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * The seven birds are the variables: `"hawk"`, `"hummingbird"`, `"falcon"`, `"cardinal"`, `"owl"`, `"robin"`, and `"blue jay"`.  
+   * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem`.
+
+3. **Add AllDifferent Constraint:**  
+   * Apply `AllDifferentConstraint()` to ensure each bird occupies a unique position.
+
+4. **Translate Each Statement into Formal Constraints:**  
+   * "The hummingbird is to the left of the owl" → `hummingbird < owl` (using lambda: `lambda h, o: h < o`).  
+   * "The robin is the rightmost" → `robin == 7`.  
+   * "The blue jay is to the left of the hawk" → `blue jay < hawk`.  
+   * "The blue jay is the third from the left" → `blue_jay == 3`.  
+   * "The falcon is the fourth from the left" → `falcon == 4`.  
+   * "The cardinal is the second from the right" → `cardinal == 6` (since positions: 1(leftmost)...6(second rightmost),7(rightmost)).
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all satisfying assignments.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+6. **Interpret the Question and Match to Choices:**  
+   * The question asks: which bird is *second from the right*? This corresponds to position **6**.  
+   * Observe that choice D is "The cardinal is the second from the right." From constraint #6 above, `cardinal == 6` directly satisfies this.  
+   * No need to check other choices — the constraints fix cardinal at position 6, and all birds are distinct, so no conflict.  
+   * Therefore, the correct answer is **D**.
+
+7. **Output the Final Answer Letter:**  
+   * Return `'D'` as the final result (no need to iterate if deduction is direct and constraints are exhaustive).

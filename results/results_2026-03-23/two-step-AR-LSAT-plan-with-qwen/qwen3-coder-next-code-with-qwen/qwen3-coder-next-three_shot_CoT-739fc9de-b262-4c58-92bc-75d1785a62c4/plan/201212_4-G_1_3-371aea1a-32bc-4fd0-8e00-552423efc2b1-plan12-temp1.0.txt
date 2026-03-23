@@ -1,0 +1,15 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables `pos[h]` for the showing position (1 to 7) of each house h.  
+3. Add **domain constraints**: positions are distinct integers in {1,2,...,7}.  
+4. Add **session constraints** based on time-of-day groups:  
+    - Morning: positions 1–2; Afternoon: positions 3–5; Evening: positions 6–7.  
+5. Add **J constraint**: J must be shown in the evening → `pos_J ∈ {6,7}`.  
+6. Add **K constraint**: K cannot be shown in the morning → `pos_K ∉ {1,2}` (i.e., `pos_K ≥ 3`).  
+7. Add **L-K-M ordering constraints**: L after K and before M → `pos_K < pos_L < pos_M`.  
+8. Translate the five answer choices into logical statements (e.g., "K is shown in the evening" ↔ `pos_K ∈ {6,7}`).  
+9. Define a list `must_be_true_choices` (to collect indices of statements that are logically forced).  
+10. For each answer choice statement S:  
+    - Clone the base constraints into a fresh solver `s₂`.  
+    - Assert the *negation* of S (e.g., if S is "K in evening", assert `pos_K ∉ {6,7}`).  
+    - If `s₂.check()` is UNSAT, then S must be true; append its index to `must_be_true_choices`.  
+11. Return the list of indices for which S is forced (i.e., `must_be_true_choices`).

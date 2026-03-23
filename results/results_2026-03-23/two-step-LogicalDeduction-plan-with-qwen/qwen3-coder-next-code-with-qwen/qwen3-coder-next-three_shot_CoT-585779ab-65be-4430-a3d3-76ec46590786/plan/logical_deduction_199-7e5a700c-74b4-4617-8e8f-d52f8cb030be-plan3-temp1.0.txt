@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as variables: `"red"`, `"purple"`, `"green"`, `"white"`, `"orange"`, `"blue"`, and `"gray"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with this domain to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint:  
+     - *"The green book is to the left of the white book"* → `green < white`  
+     - *"The red book is to the left of the purple book"* → `red < purple`  
+     - *"The red book is to the right of the orange book"* → `orange < red`  
+     - *"The gray book is the second from the left"* → `gray == 2`  
+     - *"The purple book is to the left of the green book"* → `purple < green`  
+     - *"The blue book is the fourth from the left"* → `blue == 4`  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Since the problem is well-constrained, expect a unique solution; retrieve it (e.g., take the first solution from the list or assume uniqueness).
+
+5. **Evaluate the Answer Choices:**  
+   * The question asks which book is second from the left (i.e., has position value 2).  
+   * Note: One of the choices explicitly states “The gray book is the second from the left” (Choice G), and we already have constraint `gray == 2`, so **G must be true** regardless of solving — but to follow the plan:  
+     * Create a mapping from choice letters (‘A’ through ‘G’) to book names:  
+       A→"red", B→"purple", C→"green", D→"white", E→"orange", F→"blue", G→"gray".  
+     * Search the solution dictionary for the book with value 2.  
+     * Return the corresponding choice letter (which will be 'G').

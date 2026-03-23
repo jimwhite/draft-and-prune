@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Define the seven birds as variables: `"hawk"`, `"raven"`, `"hummingbird"`, `"falcon"`, `"owl"`, `"quail"`, and `"cardinal"`.  
+    * Define the domain as integers 1 through 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.  
+
+3.  **Add All-Different Constraint:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+
+4.  **Translate Statements into Formal Constraints (Using Lambda Functions):**  
+    * "The quail is to the left of the hummingbird" → `quail < hummingbird`.  
+    * "The raven is to the right of the hummingbird" → `hummingbird < raven`.  
+    * "The cardinal is the second from the left" → `cardinal == 2`.  
+    * "The owl is to the left of the cardinal" → `owl < cardinal` (i.e., `owl < 2`, so `owl == 1`).  
+    * "The raven is the third from the right" → Since positions go left-to-right as 1→7, "third from the right" means position `7 - 2 = 5`, so `raven == 5`.  
+    * "The falcon is the rightmost" → `falcon == 7`.  
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments of positions to birds.  
+    * Extract the unique solution (as the problem is deterministic).  
+
+6.  **Evaluate the Question and Choices:**  
+    * The question asks which bird is **third from the left**, i.e., position `3`.  
+    * Create a mapping from choice letters to birds:  
+        - `'A'` → `"hawk"`,  
+        - `'B'` → `"raven"`,  
+        - `'C'` → `"hummingbird"`,  
+        - `'D'` → `"falcon"`,  
+        - `'E'` → `"owl"`,  
+        - `'F'` → `"quail"`,  
+        - `'G'` → `"cardinal"`.  
+    * Iterate through the choices; for each, check if that bird's position in the solution is `3`.  
+    * Return (or print) the letter of the first matching choice.

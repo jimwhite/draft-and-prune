@@ -1,0 +1,14 @@
+1. Identify all entities: bald_eagle, lion, mouse, squirrel.
+2. Encode explicit positive facts using ternary predicates: e.g., chases("bald_eagle", "mouse", True), is_cold("bald_eagle", True), needs("lion", "squirrel", True), etc.
+3. Encode explicit negative facts as negations: e.g., chases("lion", "mouse", False), visits("mouse", "bald_eagle", False), etc.
+4. Translate all conditional rules into PyKe `foreach` + `assert` blocks:
+   • If something visits the mouse → the mouse is green.
+   • If the mouse does not chase the lion → the mouse needs the lion.
+   • If something visits the squirrel and the squirrel does not chase the lion → the lion is green.
+   • If something is young → it visits the bald eagle.
+   • If something visits the bald eagle → the bald eagle visits the squirrel.
+   • If something visits the squirrel and the squirrel is red → it is young.
+   • If something needs the squirrel and it is not cold → the squirrel chases the bald eagle.
+5. For rules involving negated conditions (e.g., "does not chase", "not cold"), use `foreach` with negated predicates (e.g., ¬chases("mouse", "lion", True) or `not chases("mouse", " lion")`) as supported by PyKe’s logic, or encode via explicit fact negation if predicates are defined as boolean relations (e.g., chases("mouse", "lion") = False).
+6. The query checks whether the bald eagle is young:
+   → Use facts.is_young("bald_eagle", True)

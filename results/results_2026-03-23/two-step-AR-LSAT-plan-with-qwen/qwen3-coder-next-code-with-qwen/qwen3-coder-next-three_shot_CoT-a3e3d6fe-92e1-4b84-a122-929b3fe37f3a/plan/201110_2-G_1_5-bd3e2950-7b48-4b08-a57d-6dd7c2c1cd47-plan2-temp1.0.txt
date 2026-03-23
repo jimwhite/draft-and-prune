@@ -1,0 +1,15 @@
+1. Enumerate the six employees and create integer variables for their assigned parking space numbers (1 to 6).  
+2. Add **domain constraints**: each employee's space is in [1,6], and all six spaces are distinct (a permutation of 1–6).  
+3. Add **base ordering constraints**:  
+   - Young > Togowa (`pos_Young > pos_Togowa`)  
+   - Xu > Souza (`pos_Xu > pos_Souza`)  
+   - Robertson > Young (`pos_Robertson > pos_Young`)  
+   - Robertson ∈ {1,2,3,4} (model via disjunction: `(pos_Robertson == 1) ∨ ... ∨ (pos_Robertson == 4)`, or use `Or` in Z3).  
+4. Add **extra condition** for the scenario: Young > Souza (`pos_Young > pos_Souza`).  
+5. Translate each choice into a propositional condition:  
+   - Togowa = 1, Young = 2, Robertson = 3, Souza = 3, Vaughn = 4.  
+6. For each choice:  
+   - Clone the base constraints plus the extra Young > Souza condition into a fresh solver.  
+   - Assert the specific assignment for that choice (e.g., `pos_Togowa == 1`).  
+   - Check SAT; if SAT, then the choice **could be true**, and record its index.  
+7. Output the list of indices corresponding to choices that yield SAT (i.e., are possible under the given condition).

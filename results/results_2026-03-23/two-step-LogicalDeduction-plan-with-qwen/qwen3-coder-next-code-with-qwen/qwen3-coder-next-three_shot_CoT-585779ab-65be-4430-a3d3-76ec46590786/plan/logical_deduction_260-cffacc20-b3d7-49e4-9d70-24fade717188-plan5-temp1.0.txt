@@ -1,0 +1,22 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the three variables: `"tractor"`, `"station_wagon"`, and `"limousine"` (note underscore for `"station wagon"` to avoid space).  
+    * Define the domain as integers 1, 2, and 3, where **1 = newest**, **2 = second-newest**, **3 = oldest** (consistent with "newest" being smallest rank in prior plans — but double-check: problem says *"The station wagon is the newest"* and *"The tractor is newer than the limousine"*, so ordering by age: newest → oldest means smaller number = newer).  
+    * Add all three variables with domain `{1, 2, 3}` to the problem.
+
+3.  **Formulate and Add Constraints:**  
+    * Add `AllDifferentConstraint()` to ensure each vehicle has a unique rank.  
+    * Translate "The station wagon is the newest" → `station_wagon == 1`.  
+    * Translate "The tractor is newer than the limousine" → `tractor < limousine` (since smaller rank = newer).  
+    * This fully determines the assignment: `station_wagon=1`, then `tractor` must be 2 and `limousine=3`.
+
+4.  **Solve the Problem:**  
+    * Use `getSolutions()` to obtain the solution(s); given uniqueness, expect a single dictionary.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: which vehicle is the second-newest? → rank = 2.  
+    * Map choices to vehicles: `{"A": "tractor", "B": "station_wagon", "C": "limousine"}`.  
+    * Find the vehicle with rank 2 in the solution and return its choice letter (A, B, or C).

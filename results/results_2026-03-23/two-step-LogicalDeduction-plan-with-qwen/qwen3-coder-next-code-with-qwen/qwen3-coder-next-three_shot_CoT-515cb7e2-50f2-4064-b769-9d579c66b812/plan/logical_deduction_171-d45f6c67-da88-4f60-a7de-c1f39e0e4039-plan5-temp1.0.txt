@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the golf tournament rankings.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the seven golfers as variables: `"Ana"`, `"Eli"`, `"Mya"`, `"Amy"`, `"Joe"`, `"Mel"`, and `"Ada"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the highest rank (first place)** and **7 represents the lowest rank (last place)**.
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.
+    * Convert each statement into a constraint:
+        * "Ada finished above Mel" → `Ada < Mel` (since lower rank number = better/above).
+        * "Ada finished third-to-last" → In a field of 7, third-to-last is position **5** (positions from end: 1st-last=7, 2nd-last=6, 3rd-last=5). So `Ada == 5`.
+        * "Amy finished above Ana" → `Amy < Ana`.
+        * "Mya finished second-to-last" → Position **6** (since 7th is last, 6th is second-to-last). So `Mya == 6`.
+        * "Joe finished above Amy" → `Joe < Amy`.
+        * "Eli finished below Ana" → `Eli > Ana`.
+
+4.  **Solve for the Ranking Order:**
+    * Use `getSolutions()` to find all valid assignments of ranks satisfying the constraints.
+    * Since the problem is deterministic, there should be exactly one solution. Retrieve it.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which golfer finished in **third place**, i.e., rank = 3.
+    * Create a dictionary mapping the choice letters (A–G) to their respective golfers:
+        A → "Ana", B → "Eli", C → "Mya", D → "Amy", E → "Joe", F → "Mel", G → "Ada".
+    * From the solved solution, find which golfer has rank 3.
+    * Return the corresponding choice letter.

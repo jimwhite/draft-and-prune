@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the puzzle.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the five vehicles as string variables: `"tractor"`, `"station_wagon"`, `"bus"`, `"motorcycle"`, `"minivan"`.  
+    * Assign a numerical domain of integers from 1 to 5, where **1 = oldest** and **5 = newest**, reflecting age ranking (since "newest" is used in statements).  
+    * Add these variables with domain {1, 2, 3, 4, 5} to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique positions (age ranks) for each vehicle.  
+    * Convert each statement into a constraint:  
+        - "The minivan is older than the motorcycle" → `minivan < motorcycle` (smaller rank = older).  
+        - "The bus is the newest" → `bus == 5`.  
+        - "The tractor is the third-newest" → Since newest=5, third-newest = position 3 (5−2=3), so `tractor == 3`.  
+        - "The station wagon is the second-oldest" → oldest=1, so second-oldest = position 2; thus `station_wagon == 2`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid solutions.  
+    * Extract the sole solution (as the problem is constrained uniquely).
+
+5.  **Determine Which Statement Is True:**  
+    * The question asks which vehicle is the newest (i.e., rank = 5).  
+    * Map choices to vehicles:  
+        - A → "tractor", B → "station_wagon", C → "bus", D → "motorcycle", E → "minivan".  
+    * Check the solved solution to identify which vehicle has rank 5.  
+    * Return the letter (A–E) corresponding to that vehicle.

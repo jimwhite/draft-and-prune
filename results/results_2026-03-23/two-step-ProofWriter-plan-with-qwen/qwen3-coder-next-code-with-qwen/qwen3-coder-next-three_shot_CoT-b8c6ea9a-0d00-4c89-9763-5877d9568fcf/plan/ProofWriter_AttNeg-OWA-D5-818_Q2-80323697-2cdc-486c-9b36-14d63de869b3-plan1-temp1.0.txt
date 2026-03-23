@@ -1,0 +1,38 @@
+1. Identify all entities: Charlie, Erin, Fiona, Gary.
+2. Encode direct facts as ternary predicates (subject, object, True), where properties use boolean objects and relations use entity names:
+   - is_young("Charlie", True)
+   - is_blue("Erin", True), is_not_kind("Erin", True) [or use ¬is_kind via negation; note: PyKe may require positive predicates only, so define is_kind and assert False for Erin]
+   - Similarly encode: is_blue("Fiona", True), is_white("Fiona", True), is_blue("Gary", True), is_kind("Gary", True)
+3. Clarify handling of negated predicates: Since PyKe typically works with positive literals, define is_kind, is_white, etc., and assert False for negative facts via `facts.is_kind("Erin", False)` — but check PyKe syntax: usually use ternary `is_kind(entity, True/False)`. Proceed using `facts.is_kind("Erin", False)`, etc.
+4. Translate all conditional rules into PyKe `foreach` + `assert` form:
+   • Furry ∧ nice → white
+   • young ∧ blue → smart
+   • blue ∧ smart → furry
+   • smart ∧ white → furry
+   • young → nice
+   • (Fiona is smart ∧ Fiona is young) → ¬furry  → encode as: if is_smart("Fiona", True) ∧ is_young("Fiona", True) then assert facts.is_furry("Fiona", False)
+   • is_kind("Erin") → is_furry("Erin")
+   • (Gary smart ∧ Gary white) → ¬kind(Gary)
+   • nice → blue
+5. For each rule, ensure correct variable scoping and quantification over entities; use generic variables (e.g., ?x) in `foreach`.
+6. The query asks whether "Fiona is not white" — i.e., ¬is_white("Fiona"). Since the fact `is_white("Fiona", True)` is explicitly given, conclude that `facts.is_white("Fiona", False)` must be tested.
+7. However, note that PyKe queries test if a specific fact (e.g., `facts.is_white("Fiona", False)`) can be derived. Since the initial fact is `is_white("Fiona", True)`, and no rule contradicts this (and no derivation yields `is_white("Fiona", False)`), the statement "Fiona is not white" is false.
+8. Therefore, the query should be: `facts.is_white("Fiona", False)` — and we expect it to be refutable (i.e., false), but per instructions, just produce the plan.
+
+Plan:  
+1. Identify entities: Charlie, Erin, Fiona, Gary.  
+2. Encode all explicit positive facts as `facts.predicate(entity, True)` (e.g., `facts.is_young("Charlie", True)`, `facts.is_blue("Erin", True)`, etc.).  
+3. For explicit negations (e.g., "Erin is not kind"), encode as `facts.is_kind("Erin", False)`.  
+4. Translate each implication into a rule:  
+   • `foreach is_furry(?x, True) ∧ is_nice(?x, True) → assert facts.is_white(?x, True)`  
+   • `foreach is_young(?x, True) ∧ is_blue(?x, True) → assert facts.is_smart(?x, True)`  
+   • `foreach is_blue(?x, True) ∧ is_smart(?x, True) → assert facts.is_furry(?x, True)`  
+   • `foreach is_smart(?x, True) ∧ is_white(?x, True) → assert facts.is_furry(?x, True)`  
+   • `foreach is_young(?x, True) → assert facts.is_nice(?x, True)`  
+   • `foreach is_smart("Fiona", True) ∧ is_young("Fiona", True) → assert facts.is_furry("Fiona", False)`  
+   • `foreach is_kind("Erin", True) → assert facts.is_furry("Erin", True)`  
+   • `foreach is_smart("Gary", True) ∧ is_white("Gary", True) → assert facts.is_kind("Gary", False)`  
+   • `foreach is_nice(?x, True) → assert facts.is_blue(?x, True)`  
+5. Ensure no rule introduces inconsistency (e.g., if `is_white("Fiona", True)` is fact, and no rule concludes `¬white`, then consistency holds).  
+6. The query tests: `facts.is_white("Fiona", False)`.  
+7. Since `is_white("Fiona", True)` is given and no rule derives its negation, the statement "Fiona is not white" is false.

@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Bob, Gary, Harry.
+2. Encode all directly stated facts using ternary predicates (e.g., is_furry("Anne", True), is_blue("Gary", True), etc.).
+3. Translate each conditional rule into a `foreach` + `assert` rule:
+   • If something is cold and blue → it is quiet.
+   • All round, furry things are quiet.
+   • If Bob is blue and round → Bob is young.
+   • If something is round → it is blue.
+   • If something is young and round → it is blue.
+   • If Harry is quiet and furry → Harry is blue.
+   • Furry things are cold.
+   • Cold things are round.
+   • If something is young and furry → it is rough.
+4. For each rule, implement with `foreach` block for the antecedent condition(s) and `assert` for the consequent.
+5. The query tests whether Harry is furry: → Use facts.is_furry("Harry", True)

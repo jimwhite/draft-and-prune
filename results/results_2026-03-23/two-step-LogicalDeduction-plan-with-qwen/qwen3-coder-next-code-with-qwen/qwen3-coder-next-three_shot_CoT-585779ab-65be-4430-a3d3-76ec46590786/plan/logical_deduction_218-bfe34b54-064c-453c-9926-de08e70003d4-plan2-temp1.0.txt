@@ -1,0 +1,40 @@
+"  
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to hold variables and constraints.
+
+2. **Define Variables and Their Domain:**  
+   * List the seven bird names as variables: `"bluejay"`, `"owl"`, `"hawk"`, `"falcon"`, `"hummingbird"`, `"robin"`, `"quail"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, 7 = rightmost.  
+   * Add all variables to the problem with the domain [1, 2, 3, 4, 5, 6, 7].
+
+3. **Add the AllDifferent Constraint:**  
+   * Add `AllDifferentConstraint()` to ensure each bird occupies a unique position.
+
+4. **Translate Each Statement into a Constraint (using lambda functions):**  
+   * "The hummingbird is to the left of the falcon" → `hummingbird < falcon`  
+   * "The owl is the second from the left" → `owl == 2`  
+   * "The robin is to the left of the hummingbird" → `robin < hummingbird`  
+   * "The quail is to the right of the falcon" → `falcon < quail`  
+   * "The robin is to the right of the owl" → `owl < robin`  
+   * "The blue jay is the third from the right" → Since 7 is rightmost, third from right = position 5 (`7 - 3 + 1 = 5`) → `bluejay == 5`
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments. Given the constraints, there should be exactly one solution.
+
+6. **Identify the Leftmost Bird (position 1):**  
+   * Extract the solution dictionary.  
+   * Find which bird has position value 1.  
+   * Map this bird name to the corresponding choice letter:  
+        - `"bluejay"` → A (but note: blue jay is at 5, so not this)  
+        - `"owl"` → B (but owl = 2)  
+        - `"hawk"` → C  
+        - `"falcon"` → D  
+        - `"hummingbird"` → E  
+        - `"robin"` → F (but robin > owl = 2, so ≥3)  
+        - `"quail"` → G (but quail > falcon, so likely not leftmost)  
+   * Determine the bird at position 1 and return its choice letter (C if hawk, etc.).
+
+7. **Output the Correct Choice Letter:**  
+   * Print or return the letter (e.g., `'C'`) corresponding to the leftmost bird based on the solution.
+"

@@ -1,0 +1,23 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices 0–3.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices 0–3.  
+3. Create integer variables `hist[i]` for each historian i (Farley=0, Garcia=1, Holden=2, Jiang=3) representing the lecture slot (position 1–4) they give.  
+4. Create integer variables `topic[j]` for each topic j (lithographs=0, oil paintings=1, sculptures=2, watercolors=3) representing the lecture slot (position 1–4) for that topic.  
+5. Add **bijective constraints**: each historian gives exactly one lecture (so `hist` is a permutation of 1–4), and each topic is assigned to exactly one slot (so `topic` is also a permutation of 1–4).  
+6. Add **cross-constraint linking historians and topics**: each historian talks on exactly one topic, and each topic is presented by exactly one historian — model this using a 4×4 Boolean assignment matrix `assign[i][t]` where `assign[i][t] = True` iff historian i gives the lecture on topic t. Alternatively, enforce consistency via: for each slot s (1–4), there is exactly one historian h and one topic t such that `hist[h] = s` ∧ `topic[t] = s`. But more efficiently: introduce slot variables `slot_s` (for s=1..4) and let each `slot_s` be a pair `(h, t)` with h ∈ {0..3}, t ∈ {0..3}; use AllDifferent on historians and topics per slot. Simpler: model each slot 1–4 by a `(hist_var_s, topic_var_s)` pair — create 8 integer variables: `h1,h2,h3,h4` (historians per slot), `t1,t2,t3,t4` (topics per slot). Then:  
+   - AllDifferent(h1..h4), AllDifferent(t1..t4).  
+7. Add **topic-based ordering constraints** using topic slot variables:  
+   - oil paintings and watercolors lectures must both be earlier than lithographs lecture: `topic[oil] < topic[litho]` and `topic[water] < topic[litho]`.  
+   - Farley's lecture must be earlier than oil paintings lecture: `hist[Farley] < topic[oil]`.  
+   - Holden's lecture must be earlier than both Garcia’s and Jiang’s lectures: `hist[Holden] < hist[Garcia]` and `hist[Holden] < hist[Jiang]`.  
+8. Translate the five answer choices into logical statements about slot positions or relative orders:  
+   - A: `hist[Farley] < topic[sculptures]`  
+   - B: `hist[Holden] < topic[lithographs]`  
+   - C: `topic[sculptures] < hist[Garcia]`  
+   - D: `topic[sculptures] < hist[Jiang]`  
+   - E: `topic[watercolors] < hist[Garcia]`  
+9. For each answer choice, to check necessity:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert the negation of the statement (e.g., for B, assert `hist[Holden] >= topic[lithographs]`).  
+   - If UNSAT, then the statement **must be true**; record its index.  
+10. Since only one choice must be true, expect exactly one index in the answer index list.  
+11. Return (or print) the index of the only necessarily true statement.

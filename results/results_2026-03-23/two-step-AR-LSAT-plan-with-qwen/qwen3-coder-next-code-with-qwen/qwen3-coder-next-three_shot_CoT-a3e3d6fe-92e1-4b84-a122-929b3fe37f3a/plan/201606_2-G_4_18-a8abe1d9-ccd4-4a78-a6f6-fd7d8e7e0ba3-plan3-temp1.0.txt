@@ -1,0 +1,14 @@
+1. Enumerate the six singers and assign each an integer index (0–5).  
+2. Create integer position variables for each singer, representing their audition order (1 to 6), with all positions distinct.  
+3. Add **domain constraints**: each singer’s position ∈ {1, 2, ..., 6}; all positions distinct (using `Distinct()`).  
+4. Identify recorded singers: Kammer and Lugo; unrecorded: Trillo, Waite, Yoshida, Zinn.  
+5. Add **recording position constraints**:  
+    - Fourth audition is unrecorded → singer at position 4 ≠ Kammer and ≠ Lugo.  
+    - Fifth audition is recorded → singer at position 5 must be Kammer or Lugo.  
+6. Add **Waite constraint**: Waite’s position < Kammer’s position and Waite’s position < Lugo’s position.  
+7. Add **Kammer–Trillo constraint**: Kammer’s position < Trillo’s position.  
+8. Add **Zinn–Yoshida constraint**: Zinn’s position < Yoshida’s position.  
+9. For each choice (each a list of 6 singer names in order), convert the list into positions: assign position 1 to first singer, ..., position 6 to last.  
+10. For each choice, clone the base solver, assert exact assignments (e.g., `pos_Kammer == 1`, `pos_Lugo == 5`, etc.), and check satisfiability.  
+11. Collect all choices where the augmented solver returns `SAT`; only one such choice is expected (the answer).  
+12. Output the index (or string) of the satisfiable choice as the answer.

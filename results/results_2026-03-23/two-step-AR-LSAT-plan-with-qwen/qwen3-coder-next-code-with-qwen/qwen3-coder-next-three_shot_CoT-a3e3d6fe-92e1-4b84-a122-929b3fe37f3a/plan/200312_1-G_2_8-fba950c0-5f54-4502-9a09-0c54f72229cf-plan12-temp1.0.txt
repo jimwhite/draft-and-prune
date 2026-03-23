@@ -1,0 +1,22 @@
+1. Enumerate the six cargo types and assign each an integer code: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `bay[i]` for each cargo type i, representing the bay number (1–6) where it is stored.  
+3. Add **domain constraints**: for each cargo type, `1 <= bay[i] <= 6`, and all `bay[i]` must be distinct (since each bay holds exactly one cargo type).  
+4. Add **relative ordering constraints** from the problem:  
+    - grain > livestock ⇒ `bay[grain] > bay[livestock]`  
+    - livestock > textiles ⇒ `bay[livestock] > bay[textiles]`  
+    - produce > fuel ⇒ `bay[produce] > bay[fuel]`  
+    - textiles is adjacent to produce ⇒ `|bay[textiles] - bay[produce]| == 1`  
+5. Add **additional constraint** for the conditional: exactly one bay between machinery and grain ⇒ `|bay[machinery] - bay[grain]| == 2`.  
+6. Introduce six auxiliary Boolean (or integer) variables to indicate which cargo types have uniquely determined bay positions. For each cargo type c, define a flag `fixed[c]` that is true iff in *all* satisfying assignments, `bay[c]` takes the same value.  
+7. To compute uniqueness for each cargo type:  
+    - For each cargo c ∈ {0..5}, clone the base constraints into a fresh solver S.  
+    - Let v be an integer variable representing bay[c]. Add constraint `v == bay[c]`.  
+    - Query two models: one with constraint `bay[c] == 1`, another with `bay[c] == 2`, ..., up to `bay[c] == 6`.  
+    - Count how many distinct values `v ∈ {1..6}` yield a SAT assignment.  
+    - If exactly one value yields SAT, then cargo c has a uniquely determined bay; set `fixed[c] = True`.  
+8. Alternatively (more efficiently), for each cargo type c:  
+    - Query SAT with current constraints. Record all values of `bay[c]` across *all* satisfying assignments (enumerate via blocking clauses).  
+    - If only one value appears, c is fixed.  
+9. Count how many cargo types have `fixed[c] == True`. This count is the answer to "how many bays are completely determined".  
+10. Map this count to one of the answer choices: `['two', 'three', 'four', 'five', 'six']`.  
+11. Output the answer string.

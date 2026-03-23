@@ -1,0 +1,22 @@
+1. Enumerate the six employees and assign integer indices (e.g., Robertson=0, Souza=1, Togowa=2, Vaughn=3, Xu=4, Young=5).  
+2. Create integer variables `pos[e]` for each employee e ∈ {0..5}, representing their assigned parking space number (1 to 6).  
+3. Add **domain constraints**: each `pos[e] ∈ {1,2,3,4,5,6}`.  
+4. Add **distinctness constraint**: all `pos[e]` must be pairwise distinct (use `Distinct([pos[0], ..., pos[5]])`).  
+5. Add **base constraints** (from problem statement, always true):  
+   - Young > Togowa: `pos[Young] > pos[Togowa]`  
+   - Xu > Souza: `pos[Xu] > pos[Souza]`  
+   - Robertson > Young: `pos[Robertson] > pos[Young]`  
+   - Robertson ∈ {1,2,3,4}: `Or(pos[Robertson] == 1, pos[Robertson] == 2, pos[Robertson] == 3, pos[Robertson] == 4)`  
+6. Add **additional conditional constraint** (given in the scenario): Young > Souza ⇒ `pos[Young] > pos[Souza]`.  
+7. Translate each answer choice into a Boolean condition about positions:  
+   - A: `pos[Togowa] == 1`  
+   - B: `pos[Young] == 2`  
+   - C: `pos[Robertson] == 3`  
+   - D: `pos[Souza] == 3`  
+   - E: `pos[Vaughn] == 4`  
+8. For each answer choice i (0 to 4):  
+   - Clone the full constraint set (base + conditional + domain+distinct) into a fresh solver.  
+   - Assert the specific condition for choice i (e.g., `pos[0] == 1` for A).  
+   - Check satisfiability.  
+   - If SAT is returned, then the choice **could be true**; record it as a valid option.  
+9. Collect and output the index (or indices) of choices that yield SAT — these represent possible truths under the condition.

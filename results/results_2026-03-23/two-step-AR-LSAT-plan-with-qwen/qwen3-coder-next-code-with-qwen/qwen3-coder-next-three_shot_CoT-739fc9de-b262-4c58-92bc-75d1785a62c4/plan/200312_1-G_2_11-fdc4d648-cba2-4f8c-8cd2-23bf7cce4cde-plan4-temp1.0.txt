@@ -1,0 +1,21 @@
+1. Enumerate the six cargo types and assign integer codes: fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5.  
+2. Create integer variables `pos[c]` for each cargo type c, representing the bay number (1 to 6) it occupies.  
+3. Add **domain constraints**: each `pos[c] ∈ {1,2,3,4,5,6}`, and all positions are distinct (all-different constraint).  
+4. Add **given ordering constraints**:  
+   - Grain > livestock: `pos[grain] > pos[livestock]`  
+   - Livestock > textiles: `pos[livestock] > pos[textiles]`  
+   - Produce > fuel: `pos[produce] > pos[fuel]`  
+   - Textiles adjacent to produce: `|pos[produce] - pos[textiles]| = 1`  
+5. Add **conditional constraint** (the "if" premise): produce is next to livestock → `|pos[produce] - pos[livestock]| = 1`.  
+6. Translate the five answer choices into logical statements about positions:  
+   - A: `pos[fuel] == 2`  
+   - B: `pos[produce] == 4`  
+   - C: `pos[textiles] == 4`  
+   - D: `pos[grain] == 5`  
+   - E: `pos[machinery] == 5`  
+7. For each answer choice, use proof by contradiction:  
+   - Clone the base constraints (steps 3–5) into a fresh solver.  
+   - Assert the choice’s condition holds (e.g., `pos[fuel] == 2`).  
+   - If the model is UNSAT, then this choice **cannot** be true under the premise; mark it as the EXCEPT answer.  
+8. Among the five, exactly one will be UNSAT under the premise; collect its index (0–4) into `answer_index_list`.  
+9. Print the final answer string corresponding to the index in `answer_index_list` using the choices list.

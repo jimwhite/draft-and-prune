@@ -1,0 +1,19 @@
+1. Enumerate the six employees and assign them integer indices: 0=Robertson, 1=Souza, 2=Togowa, 3=Vaughn, 4=Xu, 5=Young.  
+2. Create integer variables `pos[0]` to `pos[5]`, each representing the parking space (1–6) assigned to the corresponding employee.  
+3. Add **domain constraints**: each `pos[i]` must be an integer in [1, 6].  
+4. Add **uniqueness constraint**: all six `pos[i]` must be distinct (using `Distinct(pos)` or pairwise inequalities).  
+5. Add **fixed constraints** from the base rules:  
+   - Young > Togowa: `pos[5] > pos[2]`  
+   - Xu > Souza: `pos[4] > pos[1]`  
+   - Robertson > Young: `pos[0] > pos[5]`  
+   - Robertson ∈ {1,2,3,4}: `Or(pos[0]==1, pos[0]==2, pos[0]==3, pos[0]==4)`  
+6. Add **conditional premise constraint**: Young > Souza (`pos[5] > pos[1]`).  
+7. Translate the answer choices into employee indices and space values:  
+   - Togowa in #1 → `pos[2] == 1`  
+   - Young in #2 → `pos[5] == 2`  
+   - Robertson in #3 → `pos[0] == 3`  
+   - Souza in #3 → `pos[1] == 3`  
+   - Vaughn in #4 → `pos[3] == 4`  
+8. For each choice, clone the base + premise constraints into a fresh solver, add the specific choice constraint (e.g., `pos[2] == 1`), and check satisfiability.  
+9. For each choice, if the solver returns SAT, then that choice *could* be true under the given condition; collect those indices into `answer_index_list`.  
+10. Print `answer_index_list`.

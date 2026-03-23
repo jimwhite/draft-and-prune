@@ -1,0 +1,25 @@
+1. Enumerate the five solos (positions 1 to 5) and assign integer indices.  
+2. Create Boolean variables: `wayne[i]` for whether Wayne performs solo i, and `modern[i]` for whether solo i is modern (so traditional = not modern).  
+3. Add **domain constraints**: For each solo i, exactly one of `wayne[i]` or `not wayne[i]` holds (i.e., Wayne or Zara performs it), and `modern[i]` is Boolean.  
+4. Add **fixed constraint**: Solo 3 is traditional → `not modern[2]` (0-indexed: position 2).  
+5. Add **exactly two consecutive traditional pieces**: There exists exactly one index j ∈ {0,1,2,3} such that `not modern[j] and not modern[j+1]`, and all other traditional pieces are isolated (i.e., no three consecutive, and at most one adjacent pair).  
+    - Implement by enumerating all possible positions for the double-traditional block and using XOR-like constraints: exactly one pair of consecutive trads, and no third adjacent to it.  
+6. Add **fourth-solo constraint**: In solo 4 (index 3), either Wayne performs traditional (`wayne[3] and not modern[3]`) or Zara performs modern (`not wayne[3] and modern[3]`).  
+7. Add **different-pianist constraint**: The pianist of solo 2 does not perform solo 5 → `wayne[1] != wayne[4]`.  
+8. Add **no-early-traditional constraint**: No traditional piece occurs before Wayne performs at least one modern piece.  
+    - Let `wayne_modern_before[i]` = there exists k < i such that `wayne[k] and modern[k]`.  
+    - Then for all i where `not modern[i]`, it must be that `wayne_modern_before[i+1]` is true.  
+    - Equivalently: the first traditional solo must come after some solo where Wayne performs a modern piece.  
+9. Add **assumption constraint for the hypothetical**: Fifth solo is traditional and performed by Wayne → `wayne[4] and not modern[4]`.  
+10. Now evaluate each answer choice under this assumption:  
+    - For each option, add the corresponding constraint:  
+        a. `not wayne[0]` (Zara performs first solo)  
+        b. `wayne[1]` (Wayne performs second solo)  
+        c. `not wayne[2]` (Zara performs third solo — since Wayne performing third is possible but *not required*; the option says Zara performs third)  
+        d. `modern[1]` (second solo is modern)  
+        e. `not modern[3]` (fourth solo is traditional)  
+    - For each, clone base + assumption constraints and the option constraint.  
+11. Record which options yield a SAT model (i.e., could be true).  
+12. Output the index of the option(s) that are SAT (but question asks “which one could be true”, implying one answer; the plan identifies all that satisfy).  
+13. Since only one may hold, select the SAT option as answer index list — but keep in mind that plan must allow for possibility of multiple; problem context suggests only one is possible.  
+14. Print the answer index list (0-based index of choice).

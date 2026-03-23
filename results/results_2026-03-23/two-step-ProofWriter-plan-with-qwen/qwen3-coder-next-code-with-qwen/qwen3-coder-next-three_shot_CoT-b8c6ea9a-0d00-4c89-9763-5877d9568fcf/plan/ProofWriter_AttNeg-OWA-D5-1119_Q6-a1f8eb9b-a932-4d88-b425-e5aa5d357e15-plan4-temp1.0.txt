@@ -1,0 +1,15 @@
+1. Identify all entities involved: Anne, Bob, Dave, Fiona.
+2. Encode explicit facts using ternary predicates of the form predicate(entity, boolean_value):
+   - is_blue("Anne", True), is_cold("Anne", True), is_kind("Anne", True), is_quiet("Anne", True)
+   - is_blue("Bob", True), is_kind("Bob", True), is_nice("Bob", True), is_quiet("Bob", False)
+   - is_furry("Dave", False), is_green("Dave", True), is_quiet("Dave", True)
+   - is_cold("Fiona", True)
+3. Encode all universal conditional rules as PyKe `foreach` + `assert` blocks:
+   • All cold people are blue: foreach (X) if is_cold(X, True) then is_blue(X, True)
+   • Green, nice people are kind: foreach (X) if is_green(X, True) and is_nice(X, True) then is_kind(X, True)
+   • All blue people are kind: foreach (X) if is_blue(X, True) then is_kind(X, True)
+   • Kind, cold people are nice: foreach (X) if is_kind(X, True) and is_cold(X, True) then is_nice(X, True)
+   • If someone is nice then they are green: foreach (X) if is_nice(X, True) then is_green(X, True)
+   • Cold, green people are quiet: foreach (X) if is_cold(X, True) and is_green(X, True) then is_quiet(X, True)
+4. The query tests whether Fiona is not kind:
+   → Use facts.is_kind("Fiona", False)

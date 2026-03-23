@@ -1,0 +1,29 @@
+1. Enumerate the eight students and assign integer indices; define three days (Monday, Tuesday, Wednesday) and two slots per day (morning=0, afternoon=1), making 6 total report slots.  
+2. Create integer variables `slot[student]` ∈ {0,1,...,5} to denote which report slot each student occupies (if they speak); define `speaks[student]` ∈ {True, False} to indicate whether a student gives a report (exactly six `speaks[s] = True`).  
+3. Enforce that each slot is assigned to exactly one student: all `slot[s]` for speakers must be distinct, and non-speakers can be assigned a dummy value (e.g., -1 or constrained to be outside [0,5]).  
+4. Add **day-and-slot mapping**: map slot index to (day, time):  
+    - Slot 0: Monday morning  
+    - Slot 1: Monday afternoon  
+    - Slot 2: Tuesday morning  
+    - Slot 3: Tuesday afternoon  
+    - Slot 4: Wednesday morning  
+    - Slot 5: Wednesday afternoon  
+5. Add constraints from problem statement:  
+    - Tuesday is the only day George can speak → if `speaks[George] = True`, then `slot[George] ∈ {2,3}`.  
+    - Olivia and Robert cannot give afternoon reports → if they speak, `slot ∈ {0,2,4}` (i.e., not 1,3,5).  
+    - Conditional: If Nina speaks on Monday or Tuesday (i.e., slot < 4), then Helen *and* Irving must both speak, and their slots must be strictly after Nina’s slot (i.e., in the next day: if Nina on Monday, Helen/Irving must be on Tuesday; if Nina on Tuesday, Helen/Irving on Wednesday).  
+        - Implement as: `speaks[Nina] → ( (slot[Nina] < 2 ∧ slot[Helen] ∈ {2,3} ∧ slot[Irving] ∈ {2,3}) ∨ (slot[Nina] ∈ {2,3} ∧ slot[Helen] ∈ {4,5} ∧ slot[Irving] ∈ {4,5}) ∨ (slot[Nina] ≥ 4 → True) )`.  
+        - To avoid big disjunctions, encode using implications and boolean combinations: e.g., define `nina_mon = speaks[Nina] ∧ (slot[Nina] == 0 ∨ slot[Nina] == 1)`, `nina_tue = speaks[Nina] ∧ (slot[Nina] == 2 ∨ slot[Nina] == 3)`, then assert:  
+            `nina_mon → (speaks[Helen] ∧ speaks[Irving] ∧ slot[Helen] ∈ {2,3} ∧ slot[Irving] ∈ {2,3})`  
+            `nina_tue → (speaks[Helen] ∧ speaks[Irving] ∧ slot[Helen] ∈ {4,5} ∧ slot[Irving] ∈ {4,5})`  
+    - Exactly 6 students speak → sum(speaks) == 6.  
+6. Given additional condition: Kyle and Lenore do *not* speak → `speaks[Kyle] = False`, `speaks[Lenore] = False`. So the 6 speakers must be chosen from {George, Helen, Irving, Nina, Olivia, Robert}.  
+7. Now evaluate each answer choice: for a triple (M_morning, T_morning, W_morning), check whether this is possible:  
+    - Extract the three students assigned to slots 0 (Mon AM), 2 (Tue AM), and 4 (Wed AM).  
+    - For each choice, clone the current solver (with Kyle/Lenore silent + other constraints), and assert:  
+        `slot[student1] == 0`, `slot[student2] == 2`, `slot[student3] == 4`  
+        (and implicitly: those three must speak, and total speakers = 6 including possibly others in afternoon slots).  
+    - Solve for satisfiability. If SAT, the triple is possible.  
+8. The question asks: “could be the morning reports… respectively”, so collect all answer indices for which the model is SAT.  
+9. Note: choices are given as strings; map each choice to three students and their fixed morning slots.  
+10. Return the list of indices (0-based) of choices that are feasible.

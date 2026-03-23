@@ -1,0 +1,22 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates:  
+   - is_smart("Anne", True)  
+   - is_nice("Charlie", True)  
+   - is_furry("Erin", True)  
+   - is_white("Erin", True)  
+   - is_smart("Fiona", True)  
+   - is_white("Fiona", True)  
+   - is_young("Fiona", True)  
+3. Identify and encode all logical implications as rules (note: duplicate premise “All young things are white” appears twice—encode once):  
+   • Nice and smart → young  
+   • Young and white → cold  
+   • White → red  
+   • Furry and red → nice  
+   • Young → white  
+   • Smart and cold → furry  
+   • Nice and white → smart  
+   • If Anne is furry and white → red  
+4. For each rule, define a `foreach` block matching the antecedent conditions (e.g., is_nice(X, True), is_smart(X, True)) and an `assert` clause for the consequent (e.g., is_young(X, True)).  
+5. Note: Some rules have implications with combined predicates on the same subject (unary properties only); no binary relations involved.  
+6. The query checks whether Erin is cold:  
+   → Use facts.is_cold("Erin", True)

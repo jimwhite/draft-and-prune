@@ -1,0 +1,32 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices.  
+2. Enumerate the four lecture topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices.  
+3. Create integer variables `h[i]` for each historian i ∈ {Farley, Garcia, Holden, Jiang}, representing the lecture slot (1 to 4) in which they give their lecture.  
+4. Create integer variables `t[j]` for each topic j ∈ {lithographs, oil paintings, sculptures, watercolors}, representing the lecture slot in which topic j is covered.  
+5. Add **bijection constraints**: each historian gives exactly one lecture in a unique slot, and each topic is covered in exactly one slot; i.e., all `h[i]` are distinct, all `t[j]` are distinct, and since each historian lectures on one topic, assign a bijective mapping: there exists a permutation π such that `h[i] = t[π(topic_of_i)]`. Instead of introducing π, enforce: for each slot s ∈ {1..4}, exactly one historian and exactly one topic are assigned to that slot — equivalently, model as a single permutation of 4 slots mapping historians→slots and topics→slots with a consistency constraint via an auxiliary assignment variable per slot. However, a simpler approach:  
+    - Use a 4×4 Boolean matrix `x[s][i]` indicating historian i gives a lecture in slot s.  
+    - Use a 4×4 Boolean matrix `y[s][j]` indicating topic j is covered in slot s.  
+    - Add that each slot has exactly one historian and exactly one topic: for all s, Σ_i x[s][i] = 1 and Σ_j y[s][j] = 1.  
+    - Add cross-indicator: if historian i lectures in slot s, then the topic covered in slot s is the one assigned to i. Introduce Boolean variables `assign[i][j]` meaning historian i lectures on topic j; enforce Σ_j assign[i][j] = 1 and Σ_i assign[i][j] = 1 (bijective assignment). Then add constraint: for all s, i, j, if x[s][i] and y[s][j], then assign[i][j] must be true — but this can be simplified by modeling only assignments and ordering directly.  
+6. Simplify by modeling only the lecture order: Let slot 1 to 4 be ordered; assign each historian a distinct slot (via permutation), and assign each topic a distinct slot. The constraint linking historians to topics is that *each historian lectures on exactly one topic*, but the problem does not fix which historian speaks on which topic — it only constrains relative orderings of lectures *by type* and *by speaker*. So we need:  
+    - Each historian gives exactly one lecture (so their slot is unique).  
+    - Each topic is covered in exactly one lecture (so topic slots are unique).  
+    - The mapping between historian and topic is free, but constrained implicitly by the problem: since each historian lectures on a different topic, we can treat it as a bijection — but for logical constraints, it's easier to assign for each historian i a topic `topic_of[i]` via Boolean assignment, as above.  
+7. Instead, more efficiently: assign each historian a lecture slot (int var `h[i] ∈ {1..4}`, all distinct), and assign each topic a lecture slot (int var `t[j] ∈ {1..4}`, all distinct), and introduce Boolean `assign[i][j]` for historian i giving topic j, with constraints:  
+    - For each i: exactly one j such that `assign[i][j]` is true.  
+    - For each j: exactly one i such that `assign[i][j]` is true.  
+    - For each s, the historian who lectures in slot s and topic covered in slot s must satisfy: if `h[i] = s` and `t[j] = s`, then `assign[i][j]` must be true. This can be enforced via: for all i,j,s, if `assign[i][j]` is true, then `h[i] = t[j]`.  
+8. Add **topic-order constraints**:  
+    - oil paintings and watercolors lectures both earlier than lithographs: `t[oil] < t[litho]` and `t[water] < t[litho]`.  
+9. Add **speaker-order constraints**:  
+    - Farley’s lecture earlier than oil paintings lecture: `h[Farley] < t[oil]`.  
+    - Holden’s lecture earlier than Garcia’s and Jiang’s: `h[Holden] < h[Garcia]` and `h[Holden] < h[Jiang]`.  
+10. Translate the five answer choices into logical statements about the variables:  
+    - A: `h[Farley] < t[scurpture]`  
+    - B: `h[Holden] < t[litho]`  
+    - C: `t[scurpture] < h[Garcia]`  
+    - D: `t[scurpture] < h[Jiang]`  
+    - E: `t[water] < h[Garcia]`  
+11. For each choice, use proof of necessity: clone the base constraints into a fresh solver, assert that the statement is false (i.e., negate it), and check unsatisfiability.  
+    - If UNSAT when assuming the statement is false, then the statement **must be true**.  
+12. Collect all indices of statements that are logically entailed (i.e., their negation is UNSAT), and return the corresponding choice.  
+13. Since only one must be true, the answer index list should contain exactly one element; output that choice.

@@ -1,0 +1,25 @@
+1. Enumerate the six targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV). Assign integer indices 0 to 5.  
+2. Create integer variables for each target, restricted to domain {1, 2, 3}.  
+3. Add **website ≤ voicemail constraints** for each client:  
+   - IW ≤ IV (Image)  
+   - SW ≤ SV (Solide)  
+   - TW ≤ TV (Truvest)  
+4. Add **Image voicemail is shortest among all voicemails**: IV < SV and IV < TV.  
+5. Add **Solide website shorter than Truvest website**: SW < TW.  
+6. Add the given condition: IW = 2.  
+7. Define answer choices as target indices: ["IV", "SW", "SV", "TW", "TV"] → indices [1, 2, 3, 4, 5].  
+8. For each target index i in [1,2,3,4,5], do:  
+   - Clone base constraints into fresh solver.  
+   - Assert the target i has value 2 (e.g., if i=1, assert IV = 2).  
+   - Check satisfiability.  
+   - If *every* satisfying assignment (for the original constraints + IW=2) forces target i to be 2, then target i is forced → record i.  
+   - To check "must be 2", verify that in *all* models of the base constraints + IW=2, target i = 2. Implement via:  
+        * Create solver1 with base constraints + IW=2.  
+        * Check if solver1 is UNSAT (then skip; impossible scenario).  
+        * Otherwise, find all satisfying assignments (via model enumeration or use complement: add constraint target i ≠ 2 and check UNSAT).  
+        * Specifically, for each candidate target i:  
+            - Create solver2 = clone of base + IW=2.  
+            - Assert target i ≠ 2 (i.e., target i ∈ {1,3}).  
+            - If solver2 is UNSAT, then target i *must* be 2 → record i.  
+9. Collect all indices i where target i must be 2 in answer_index_list.  
+10. Map answer_index_list to corresponding choice strings and output the list of forced targets.

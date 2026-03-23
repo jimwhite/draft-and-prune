@@ -1,0 +1,22 @@
+1. Enumerate the eight students: George (0), Helen (1), Irving (2), Kyle (3), Lenore (4), Nina (5), Olivia (6), Robert (7).  
+2. Represent the six report-givers as a set (since Kyle and Lenore are excluded, only George, Helen, Irving, Nina, Olivia, Robert remain eligible).  
+3. Define Boolean variables for each student and day/time slot: `slot[s][d][t]` where s ∈ {0..7}, d ∈ {Mon=0, Tue=1, Wed=2}, t ∈ {morning=0, afternoon=1}.  
+4. Add **exactly-six-reports** constraint: sum over all s,d,t of `slot[s][d][t]` == 6.  
+5. Add **one-report-per-slot** constraint: at most one student per slot (i.e., for each d,t, sum_s `slot[s][d][t]` ≤ 1).  
+6. Add **two-reports-per-day** constraint: for each day d, sum_{s,t} `slot[s][d][t]` == 2.  
+7. Add **Tuesday-only-for-George** constraint: George can only give a report on Tuesday: `slot[0][1][t] == slot[0][1][0] or slot[0][1][1]` and `slot[0][d][t] == false` for d≠1.  
+8. Add **no-afternoon-for-Olivia/Robert** constraint: Olivia (6) and Robert (7) cannot give afternoon reports: for d, `slot[6][d][1] == false` and `slot[7][d][1] == false`.  
+9. Add **Nina conditional constraint**: If Nina (5) gives a report on Monday (d=0), then Helen and Irving must both give reports on Tuesday; if Nina gives on Tuesday (d=1), then Helen and Irving must both give reports on Wednesday; if Nina gives on Wednesday (d=2), no further constraint. This is modeled via implication using disjunctions over slots for Helen (1) and Irving (2).  
+10. Since Kyle (3) and Lenore (4) do *not* give reports: for all d,t, `slot[3][d][t] == false` and `slot[4][d][t] == false`.  
+11. For each choice in the answer options, extract the proposed morning reporters for Mon/Tue/Wed (3 students). Let these be (M, T, W).  
+12. For each choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Enforce that *only* George, Helen, Irving, Nina, Olivia, Robert are used (already enforced via exclusions of Kyle/Lenore and six-report total).  
+    - Add constraint that the morning slot on Monday is taken by M: `slot[M][0][0] == true`.  
+    - Add constraint that the morning slot on Tuesday is taken by T: `slot[T][1][0] == true`.  
+    - Add constraint that the morning slot on Wednesday is taken by W: `slot[W][2][0] == true`.  
+    - Add constraint that each afternoon slot on Monday, Tuesday, Wednesday is filled by *some* remaining eligible person (automatically enforced via two-reports-per-day and uniqueness).  
+    - Optionally, enforce that no one else gives a report beyond the six required (handled by total=6 and slot uniqueness).  
+    - Check satisfiability. If SAT, the choice is *possible*.  
+13. Identify which choice(s) yield SAT; the question asks for the one that *could* be — but we must output only those consistent with being a valid possibility. Since the prompt implies single-answer, collect all SAT choices and return their indices (the plan expects returning list of valid indices).  
+14. Return the list of answer choice indices that are SAT under the scenario (Kyle and Lenore excluded + morning slots fixed as per choice).

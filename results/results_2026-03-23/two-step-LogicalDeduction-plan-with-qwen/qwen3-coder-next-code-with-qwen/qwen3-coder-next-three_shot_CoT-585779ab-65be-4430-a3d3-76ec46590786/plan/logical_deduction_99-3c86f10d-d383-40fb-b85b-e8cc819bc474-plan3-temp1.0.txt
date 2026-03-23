@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Define the variables as the five vehicles: `"convertible"`, `"truck"`, `"bus"`, `"sedan"`, and `"motorcyle"`.
+    * Use a domain of integers 1 to 5, where **1 represents the oldest** vehicle and **5 represents the newest**, consistent with age-based ordering in prior problems.
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Convert each statement into a constraint:
+        * "The bus is newer than the truck" → `bus > truck` (since newer = larger rank number in our system).
+        * "The truck is newer than the convertible" → `truck > convertible`.
+        * "The sedan is the second-oldest" → `sedan == 2` (since oldest = rank 1, second-oldest = rank 2).
+        * "The motorcyle is newer than the bus" → `motorcyle > bus`.
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to obtain all valid assignments of ranks to vehicles.
+    * Extract the unique solution (as the constraints should determine a single ordering).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which vehicle is "third-newest". In our ranking system, **newest = 5**, so third-newest corresponds to rank **3** (since: 5=newest, 4=second-newest, 3=third-newest).
+    * Create a mapping from choice letters to vehicle names: `{"A": "convertible", "B": "truck", "C": "bus", "D": "sedan", "E": "motorcyle"}`.
+    * In the solution, identify which vehicle has rank `3`.
+    * Return the choice letter corresponding to that vehicle.

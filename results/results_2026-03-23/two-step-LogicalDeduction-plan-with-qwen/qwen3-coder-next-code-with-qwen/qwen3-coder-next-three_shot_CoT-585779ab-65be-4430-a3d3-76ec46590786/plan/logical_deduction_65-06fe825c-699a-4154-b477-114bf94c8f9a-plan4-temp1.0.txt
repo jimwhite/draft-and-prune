@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the five vehicle variables: `"tractor"`, `"station_wagon"`, `"minivan"`, `"sedan"`, and `"hatchback"`.  
+    * Use integer positions 1 to 5 where **1 = oldest** and **5 = newest**, consistent with age-based ranking.  
+    * Add all variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+    * Convert each statement into a constraint using `lambda` functions:  
+        - "The minivan is older than the sedan" → `minivan < sedan`  
+        - "The tractor is older than the hatchback" → `tractor < hatchback`  
+        - "The minivan is the third-newest" → `minivan == 3` (since newest=5, second-newest=4, third-newest=3)  
+        - "The station wagon is the second-newest" → `station_wagon == 4`
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to enumerate all valid solutions.  
+    * Extract the sole solution (as implied by logical consistency).
+
+5.  **Determine Which Statement is True:**  
+    * The question asks: "Which vehicle is the second-newest?" — i.e., which has rank **4**.  
+    * The choices directly reference "second-newest", and the problem states *"The station wagon is the second-newest."* as a premise.  
+    * Verify via solution: check which vehicle has position 4.  
+    * Match that vehicle to the choice letter(s) — specifically, **B)** says *"The station wagon is the second-newest."*, which aligns with constraint `station_wagon == 4`.  
+    * Return choice **B** as the correct answer.

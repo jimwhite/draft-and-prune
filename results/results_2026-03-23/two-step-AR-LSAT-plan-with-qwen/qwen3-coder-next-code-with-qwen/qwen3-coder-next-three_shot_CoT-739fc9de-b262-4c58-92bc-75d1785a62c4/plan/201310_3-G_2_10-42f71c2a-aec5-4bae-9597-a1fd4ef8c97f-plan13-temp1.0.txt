@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign them integer indices.  
+2. Create Boolean variables for each employee indicating whether they are selected (True = on team, False = not on team).  
+3. Add **minimum size constraint**: at least four employees must be selected (sum of Boolean variables ≥ 4).  
+4. Add **conditional constraints**:  
+    - If Myers is selected, then Ortega and Paine are not: `Myers ⇒ (¬Ortega ∧ ¬Paine)` → encoded as `(¬Myers ∨ ¬Ortega)` and `(¬Myers ∨ ¬Paine)`.  
+    - If Schmidt is selected, then both Paine and Thomson must be: `Schmidt ⇒ (Paine ∧ Thomson)` → encoded as `(¬Schmidt ∨ Paine)` and `(¬Schmidt ∨ Thomson)`.  
+    - If Wong is selected, then both Myers and Yoder must be: `Wong ⇒ (Myers ∧ Yoder)` → encoded as `(¬Wong ∨ Myers)` and `(¬Wong ∨ Yoder)`.  
+5. Add **given assumption**: Yoder is *not* on the team → set `Yoder = False`.  
+6. Translate the answer choices into employee indices.  
+7. Define a `forbidden_index_list` []. For each candidate employee in the answer choices:  
+    - Clone the base constraints (including Yoder = False) into a fresh solver.  
+    - Assert that this candidate *is* selected (set `candidate = True`).  
+    - Check satisfiability.  
+    - If UNSAT, then the candidate *cannot* be on the team when Yoder is excluded; thus this employee is the EXCEPT answer candidate → append index to `forbidden_index_list`.  
+8. Return the employee corresponding to the index in `forbidden_index_list` as the answer.

@@ -1,0 +1,21 @@
+1. Identify all entities: Bob, Charlie, Fiona, Gary.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, True):
+   - is_kind("Bob", True)
+   - is_quiet("Charlie", True)
+   - is_rough("Charlie", True)
+   - is_kind("Fiona", True)
+   - is_rough("Fiona", True)
+   - is_white("Fiona", True)
+   - is_nice("Gary", True)
+3. Translate each conditional statement in the context into a rule using PyKe’s `foreach` + `assert` syntax:
+   • If Gary is red and white → Gary is quiet.
+   • All white things are rough: if X is white → X is rough.
+   • If X is rough → X is red.
+   • If X is nice → X is white.
+   • All smart things are white: if X is smart → X is white.
+   • Rough, quiet things are not kind: if X is rough and quiet → not is_kind(X, True) (i.e., assert is_kind(X, False)).
+   • If X is quiet and not smart → X is kind: if X is quiet and not is_smart(X, True) → is_kind(X, True).
+   • Smart things are quiet: if X is smart → X is quiet.
+   • If X is smart and not rough → X is quiet (note: this may be redundant given previous rules, but encode as stated).
+4. Since no direct facts about "smart" or "red" are given, and only properties of Gary (nice) and Fiona/Charlie/Bob are stated explicitly, infer additional facts via rule propagation where possible.
+5. The query tests whether the tiger is not young in previous problems, but here: test whether Gary is not quiet → assert facts.is_quiet("Gary", False).

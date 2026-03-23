@@ -1,0 +1,21 @@
+1. Enumerate the five witnesses and assign integer indices: Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4.  
+2. Enumerate the three days: Monday=0, Tuesday=1, Wednesday=2.  
+3. Create integer variables `day[w]` for each witness w ∈ {0,1,2,3,4}, representing the day they testify.  
+4. Add **domain constraints**: each `day[w]` ∈ {0,1,2}.  
+5. Add **fixed constraint**: Iturbe testifies on Wednesday → `day[3] == 2`.  
+6. Add **Tuesday count constraint**: exactly two witnesses testify on Tuesday → sum of indicators `([day[w] == 1 for w in range(5)]) == 2`.  
+7. Add **Monday at-least-one constraint**: at least one witness testifies on Monday → sum of indicators `([day[w] == 0 for w in range(5)]) >= 1`.  
+8. Add **Hong not Monday constraint**: Hong does not testify on Monday → `day[2] != 0`.  
+9. Add **Franco-Garcia different day constraint**: Franco and Garcia do not testify on same day → `day[0] != day[1]`.  
+10. Add **assumed condition**: Franco testifies on same day as Hong → `day[0] == day[2]`.  
+11. Translate each answer choice into a Boolean condition to be checked for *necessity* under the above constraints:  
+    - Choice 0: `day[0] == 2` (Franco on Wednesday)  
+    - Choice 1: `day[1] == 0` (Garcia on Monday)  
+    - Choice 2: `day[1] == 2` (Garcia on Wednesday)  
+    - Choice 3: `day[2] == 1` (Hong on Tuesday)  
+    - Choice 4: `(sum([day[w] == 2 for w in range(5)]) == 1)` (Iturbe is only one on Wednesday)  
+12. For each choice index i ∈ {0,1,2,3,4}:  
+    - Clone the base + assumed condition constraints into a fresh solver.  
+    - Assert the negation of choice i (e.g., for i=0, assert `day[0] != 2`).  
+    - If the resulting system is UNSAT, then choice i *must* be true → append i to `answer_index_list`.  
+13. Output `answer_index_list` (should be a singleton).

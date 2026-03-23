@@ -1,0 +1,28 @@
+1. Enumerate the five students and assign them integer indices: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays and assign integer indices: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[i][p]` for each student i and play p (True if student i reviews play p).  
+4. Add **non-empty review constraint**: each student reviews at least one play.  
+    - For each student i, `review[i][0] ∨ review[i][1] ∨ review[i][2]`.  
+5. Add **Kramer & Lopez fewer reviews than Megregian**:  
+    - Let `count[i] = review[i][0] + review[i][1] + review[i][2]`.  
+    - Add constraints: `count[1] < count[3]` and `count[2] < count[3]`.  
+6. Add **Lopez & Megregian no overlap with Jiang**:  
+    - For each play p: `review[0][p] → ¬review[2][p]` and `review[0][p] → ¬review[3][p]`.  
+7. Add **Kramer & O'Neill both review Tamerlane**:  
+    - `review[1][1] = True`, `review[4][1] = True`.  
+8. Add **exactly two students have identical review sets**:  
+    - For all unordered pairs (i,j), i<j, define `identical[i][j] = (review[i][0] ↔ review[j][0]) ∧ (review[i][1] ↔ review[j][1]) ∧ (review[i][2] ↔ review[j][2])`.  
+    - Exactly one of the 10 pairwise `identical[i][j]` is True.  
+9. Add **exactly three students review Undulation**: `review[0][2] + review[1][2] + review[2][2] + review[3][2] + review[4][2] == 3`.  
+10. Translate each answer choice into a logical condition on the `review` variables:  
+    - Choice 0: ¬review[3][2] (Megregian does not review Undulation).  
+    - Choice 1: ¬review[4][2] (O'Neill does not review Undulation).  
+    - Choice 2: review[0][2] (Jiang reviews Undulation).  
+    - Choice 3: review[2][1] (Lopez reviews Tamerlane).  
+    - Choice 4: review[4][0] (O'Neill reviews Sunset).  
+11. For each answer choice index k in [0..4]:  
+    - Clone the base constraints (including step 8 and step 9) into a fresh solver.  
+    - Add the k-th answer condition (e.g., for k=0, add `¬review[3][2]`).  
+    - If the model is SAT (i.e., a consistent assignment exists), then this choice *could be true*.  
+12. Collect the indices of all answer choices for which the solver returns SAT; these are the valid options.  
+13. Among the SAT cases, return the choice (as a string) that corresponds to the plan's output requirement.

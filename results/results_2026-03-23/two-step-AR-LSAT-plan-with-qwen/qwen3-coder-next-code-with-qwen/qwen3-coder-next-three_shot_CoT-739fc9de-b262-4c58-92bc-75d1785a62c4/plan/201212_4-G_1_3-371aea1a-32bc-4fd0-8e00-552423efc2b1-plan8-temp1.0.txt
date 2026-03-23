@@ -1,0 +1,18 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables `pos[house]` for the showing position (1 to 7) of each house.  
+3. Add **domain constraints**: `pos[house] ∈ {1,2,3,4,5,6,7}` for all houses.  
+4. Add **distinctness constraint**: all `pos[house]` must be pairwise distinct (a permutation).  
+5. Add **time-slot constraints** based on showing时段:  
+    - Morning: positions 1–2; Afternoon: 3–5; Evening: 6–7.  
+6. Add **fixed constraints**:  
+    - J must be shown in the evening: `pos[J] ∈ {6,7}`.  
+    - K cannot be shown in the morning: `pos[K] ∉ {1,2}` → `pos[K] ≥ 3`.  
+7. Add **ordering constraints**:  
+    - L after K and before M: `pos[K] < pos[L] < pos[M]`.  
+8. Translate answer choices into logical conditions (e.g., “K is shown in the evening” = `pos[K] ∈ {6,7}`).  
+9. For each answer choice, define the corresponding constraint and check whether it **must be true** across all feasible solutions:  
+    - Clone base constraints into a fresh solver.  
+    - Assert the *negation* of the answer choice (e.g., for “K is shown in the evening”, assert `pos[K] ∉ {6,7}` → i.e., `pos[K] ≤ 5`).  
+    - If this negated instance is UNSAT, then the original answer choice **must be true**.  
+10. Collect all answer choices that are forced (i.e., their negations yield UNSAT).  
+11. Output the index of the unique forced answer choice.

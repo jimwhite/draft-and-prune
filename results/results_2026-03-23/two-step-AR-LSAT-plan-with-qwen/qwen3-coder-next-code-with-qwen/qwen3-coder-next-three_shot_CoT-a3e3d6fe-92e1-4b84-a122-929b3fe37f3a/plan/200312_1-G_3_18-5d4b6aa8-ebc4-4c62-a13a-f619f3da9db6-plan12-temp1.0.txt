@@ -1,0 +1,20 @@
+1. Enumerate cookie types (oatmeal, peanut butter, sugar) and batch numbers (1st, 2nd, 3rd), assigning integer indices: oatmeal=0, peanut butter=1, sugar=2; batch 1=0, batch 2=1, batch 3=2.  
+2. Create integer variables `day[type][batch]` for the day each batch is made (days: Monday=1 to Friday=5).  
+3. Add **domain constraints**: all `day[type][batch]` ∈ {1,2,3,4,5}.  
+4. Add **distinct-day constraint** per cookie type: `day[type][0] < day[type][1] < day[type][2]` (batches ordered within type).  
+5. Add **no-two-same-day-per-type constraint**: already enforced by strict ordering above.  
+6. Add **at-least-Monday constraint**: at least one `day[type][batch] == 1`.  
+7. Add **fixed constraint**: second batch of sugar is on Thursday ⇒ `day[2][1] == 4`.  
+8. Add **cross-type constraint**: second batch of oatmeal same day as first batch of peanut butter ⇒ `day[0][1] == day[1][0]`.  
+9. Define a fresh solver S for the *main* problem (without the conditional premise).  
+10. Add all constraints 3–8 to S; verify S is SAT (sanity check).  
+11. Now incorporate the **conditional premise**: assume there exists a type A and type B (A ≠ B) such that `day[A][0] == day[B][2]`.  
+12. To reason about the *conditional* question, extend S with the premise: introduce auxiliary boolean variables and disjunctions to encode “∃A≠B, day[A][0] == day[B][2]”, but instead use model enumeration: generate *all* valid assignments satisfying constraints 3–8, then filter only those where the premise holds.  
+13. For each such valid assignment satisfying the premise, compute for that assignment:  
+    - count[day] = number of batches made on each day d ∈ {1..5}.  
+    - evaluate each answer choice as a boolean statement under that assignment.  
+14. Identify which answer choices are **true in all** assignments satisfying the premise (i.e., must be true).  
+15. The question asks: *which one could be false* — i.e., the choice that is **not always true** under the premise (i.e., at least one assignment satisfying the premise makes it false).  
+16. Implement by iterating over all models (via iterative constraint blocking) of S plus the premise, collect truth values for each choice across all models.  
+17. Select the choice that is false in **at least one** valid model — i.e., the one that *could be false*.  
+18. Map that choice back to its string representation and output as the answer index list (length 1).

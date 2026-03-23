@@ -1,0 +1,27 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Create integer variables `zone[i]` for each representative `i`, representing the zone (1, 2, or 3) they are assigned to.  
+3. Add **domain constraints**: each `zone[i]` ∈ {1, 2, 3}.  
+4. Add **mutual exclusivity constraints**: represent each zone assignment conditionally using Boolean indicator variables if needed, but more efficiently, use auxiliary integer counting (e.g., via `AtMost`/`AtLeast` or explicit counts).  
+5. Add constraint: *Either Parra or Tiao (but not both) in Zone 1*.  
+   - Let `p = zone[Parra]`, `t = zone[Tiao]`.  
+   - Add: `(p == 1) != (t == 1)` (exclusive OR).  
+6. Add constraint: *Either Tiao or Udall (but not both) in Zone 2*.  
+   - Let `u = zone[Udall]`.  
+   - Add: `(t == 2) != (u == 2)`.  
+7. Add constraint: *Parra and Quinn in the same zone*.  
+   - Let `q = zone[Quinn]`. Add: `p == q`.  
+8. Add constraint: *Stuckey and Udall in the same zone*.  
+   - Let `s = zone[Stuckey]`. Add: `s == u`.  
+9. Add constraint: *Zone 3 has more representatives than Zone 2*.  
+   - Count number of reps in each zone (via `Sum([If(zone[i]==1,1,0) for i])`, etc.).  
+   - Add: `count_zone3 > count_zone2`.  
+10. For each answer choice (list of zone assignments), encode it as constraints:  
+    - For every rep in the description, assert `zone[rep] == specified_zone`.  
+    - Also ensure no rep is omitted and assignments are consistent (e.g., if "Zone 1: Kim, Parra", then `zone[Kim]==1`, `zone[Parra]==1`, and no other rep assigned to zone 1 by this choice).  
+    - Note: Since choices fully specify zones, assignments are disjoint and cover all 7 reps.  
+11. For each answer choice:  
+    - Clone base constraints into a fresh solver.  
+    - Add the specific zone assignment constraints from the choice.  
+    - Check satisfiability (SAT/UNSAT).  
+12. Collect indices of choices that yield SAT; the first SAT choice (or all SAT choices) is valid.  
+13. Return the index of the valid answer choice (as per typical LSAT-style format, exactly one will be SAT).

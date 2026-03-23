@@ -1,0 +1,24 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: the three golfers `"amy"`, `"eli"`, and `"eve"`.  
+   * Define the domain as integers from 1 to 3, where **1 = highest rank (finished first/above)** and **3 = lowest rank (finished last/below)** — consistent with the phrasing "above" meaning better/placed higher, and "below" meaning worse/lower placement.  
+   * Add the variables and domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a distinct finishing position.  
+   * Translate the statements into constraints using lambda functions:  
+        * "Eve finished above Amy" means Eve's position number is **less than** Amy's (`eve < amy`).  
+        * "Eli finished below Amy" means Eli's position number is **greater than** Amy's (`eli > amy`).  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid permutations satisfying the constraints.  
+   * Extract the unique solution (as the problem is well-constrained and consistent).  
+
+5. **Determine the Correct Answer:**  
+   * The question asks who finished last — i.e., has position **3**.  
+   * Create a dictionary mapping choice letters to golfer names: `"A" → "amy"`, `"B" → "eli"`, `"C" → "eve"`.  
+   * Inspect the solution to find which golfer has position 3.  
+   * Return the corresponding choice letter as the answer.

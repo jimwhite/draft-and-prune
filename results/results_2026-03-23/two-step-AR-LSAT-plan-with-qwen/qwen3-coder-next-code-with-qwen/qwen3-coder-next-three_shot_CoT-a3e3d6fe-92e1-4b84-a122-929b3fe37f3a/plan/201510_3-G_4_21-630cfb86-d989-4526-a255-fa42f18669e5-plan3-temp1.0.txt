@@ -1,0 +1,28 @@
+1. Enumerate the six cookbooks (K, L, M, N, O, P) and assign them integer indices.  
+2. Create Boolean variables for each cookbook indicating season: e.g., `K_fall`, `L_fall`, ..., where `X_fall = True` means cookbook X is published in fall; otherwise spring.  
+3. Add **mutual-exclusion constraint**: each cookbook is published in exactly one season → for each cookbook X, `X_fall XOR (not X_fall)` is implicitly handled by Boolean semantics; enforce no ambiguity.  
+4. Add **premise constraint**: N is published in the fall → assert `N_fall = True`.  
+5. Add **given logical constraints**:  
+   - M and P cannot be published in the same season → `M_fall != P_fall`.  
+   - K and N must be published in the same season → `K_fall == N_fall` (and since `N_fall = True`, this implies `K_fall = True`).  
+   - If K is published in the fall, O must also be published in the fall → `K_fall == True` ⇒ `O_fall = True`. Since K_fall is forced to True, assert `O_fall = True`.  
+   - If M is published in the fall, N must be published in the spring → `M_fall == True` ⇒ `N_fall = False`. But `N_fall = True`, so this implication forces `M_fall != True` → i.e., `M_fall = False`.  
+6. Summarize derived fixed assignments under the premise:  
+   - `N_fall = True` (premise)  
+   - `K_fall = True` (from K and N same season)  
+   - `O_fall = True` (from K in fall ⇒ O in fall)  
+   - `M_fall = False` (contrapositive of "M in fall ⇒ N in spring", since N is in fall)  
+   - Then `P_fall = True` (since M and P must differ, and M is in spring ⇒ P must be in fall).  
+7. So far: K, N, O, P are in fall; M is in spring. L remains unconstrained (only constraints involving L are none; no condition mentions L).  
+8. Translate the answer choices into logical conditions:  
+   - 'K is published in the spring.' → `K_fall = False` — but already forced to True → impossible.  
+   - 'L is published in the fall.' → `L_fall = True` — possible, since L has no constraints.  
+   - 'M is published in the fall.' → `M_fall = True` — contradicts derived `M_fall = False`.  
+   - 'O is published in the spring.' → `O_fall = False` — contradicts derived `O_fall = True`.  
+   - 'P is published in the spring.' → `P_fall = False` — contradicts derived `P_fall = True`.  
+9. Define answer options as Boolean expressions. For each choice, create a fresh solver with base constraints + premise (`N_fall = True`) + derived implications (steps 5–6). Then:  
+   - Assert the specific condition of the choice.  
+   - Check satisfiability: if SAT, then that choice *could* be true (i.e., consistent with all constraints).  
+10. Among the five choices, only "L is published in the fall." yields a satisfiable model (since L is free), others directly contradict forced assignments.  
+11. Append the index of the satisfiable choice to `answer_index_list`.  
+12. Print `answer_index_list`.

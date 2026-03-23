@@ -1,0 +1,35 @@
+1. Identify all entities involved: bald_eagle, rabbit, lion, tiger.
+2. Define binary relations (chases, needs, visits) and unary properties (big, green) using ternary predicates of the form relation(subject, object, True); for negated literals like "does not chase", use predicate(subject, object, False) in the rule condition (via `forall` with negation or explicit negative fact assertion), but PyKe typically handles only positive literals—so encode known negatives as facts like not_chase("rabbit", "lion", True) if supported, otherwise model via rules and existing facts.
+3. Encode all explicitly stated positive atomic facts as facts.relation("subject", "object", True), and explicitly stated negative facts (e.g., “The rabbit does not chase the lion”) as facts.not_chase("rabbit", "lion", True) — but check if PyKe supports negative predicates; if not, assume only positive facts are asserted and encode negations as derived or use only positive predicate names (e.g., has_chased does not need a separate "does_not_chase" predicate; instead, absence is inferred).
+   • Since PyKe typically assumes closed-world only for derived facts and open-world for ground facts, explicitly state negatives only if PyKe supports negative literals in rules (which it does not natively for inference); thus, assume the statement “The rabbit does not chase the lion” must be encoded as a fact `not_chase("rabbit", "lion", True)` *if* the solver supports such predicates; otherwise, omit or treat as unknown unless derivable. Given prior problems used `facts.is_smart(...)` etc., assume only positive predicates are used, and “does not chase” is treated as a separate predicate: `not_chase`.
+4. Translate each conditional:
+   • If X chases the rabbit → X is big.
+   • If X needs the tiger → X is big.
+   • If X needs the lion AND X visits the rabbit → X chases the lion.
+   • If X is big → X chases the lion.
+   • If X chases the tiger → the tiger needs the rabbit. (note: not X, but constant tiger)
+   • If X visits the tiger → the tiger is not green. → encode as: if X visits tiger, then ¬is_green(tiger) → model via `not_green("tiger", True)` if supported; otherwise, use implication to derive not_green as conclusion.
+   • If X chases the lion → the lion chases the rabbit.
+   • If X chases the tiger → X visits the bald eagle.
+   • If X chases the rabbit AND X does NOT visit the lion → the lion does NOT need the rabbit.
+5. For rules with negated conditions (e.g., “does not visit the lion”), PyKe does not support direct negation in rule conditions; therefore, restructure: either introduce a new predicate `does_not_visit(X, lion)` and assert it as fact for relevant cases (e.g., if rabbit does not visit lion, then `not_visit("rabbit", "lion", True)`), or ensure the condition is only applicable when `not_visit` fact exists. Given prior examples used positive facts, assume negated relations are represented with a separate predicate (e.g., `not_visit`, `not_need`, etc.).
+6. Apply **only the rules and facts provided**; note that “The rabbit does not chase the lion” may be encoded as `not_chase("rabbit", "lion", True)`, but this predicate does not appear elsewhere—so check if any rule references `not_chase`. It is only used in the last rule’s condition (“does not visit the lion” → likely also a `not_visit` predicate). So convert “X does not [relation] Y” → introduce distinct predicate names: `not_visit`, `not_chase`, `not_need`.
+7. Encode all rules with `foreach` and `assert` blocks, where:
+   - Conditions may include positive facts (e.g., chase("x", "rabbit", True)) and possibly negative facts (e.g., not_visit("x", "lion", True)), assuming PyKe supports conjunction of positive and negative literals (PyKe’s `foreach` matches facts; to include negative, use a rule that asserts a derived positive literal *when the negative fact exists*, or rely on PyKe’s support for `not` in conditions only if explicitly enabled—otherwise, the plan must assume negated literals are represented as standalone predicates).
+8. Query: test whether `chase("lion", "lion", True)` holds.
+9. Derive reachable conclusions step-by-step:
+   - From bald_eagle chases rabbit → bald_eagle is big.
+   - bald_eagle is big → bald_eagle chases lion.
+   - bald_eagle chases lion → lion chases rabbit (not lion, so not directly helpful yet).
+   - bald_eagle chases tiger → tiger needs rabbit.
+   - Also: X = bald_eagle visits tiger (since bald_eagle chases tiger ⇒ visits bald_eagle? No—rule: if X chases tiger ⇒ X visits bald_eagle. So bald_eagle chases tiger ⇒ bald_eagle visits bald_eagle.
+   - Check lion chasing itself: need rule “if X is big ⇒ X chases lion” → if lion is big, then lion chases lion.
+   - So: can we prove lion is big? lion needs tiger? No fact; lion needs rabbit and lion needs lion? But we have lion needs the rabbit (explicit). Also tiger is visited by whom? Only tiger visits rabbit (fact), so X = tiger: tiger needs lion AND tiger visits rabbit ⇒ tiger chases lion. Then tiger is big? Not yet.
+   - From tiger chases lion ⇒ ? No direct rule, but “if X chases the lion ⇒ the lion chases rabbit”.
+   - To get lion big: need X such that X needs tiger ⇒ X is big (tiger needs rabbit, not lion needing tiger).
+   - Alternatively: if X chases lion ⇒ X is big? No direct.
+   - So lion big may not be provable → lion chasing lion unknown unless derived via other paths.
+   - Also, last rule: if X chases rabbit AND not_visit(X, lion) ⇒ not_need(lion, rabbit). Rabbit chases lion? No; bald_eagle chases rabbit. Does bald_eagle visit lion? Unknown — no fact about visiting lion, so assume not_visit(bald_eagle, lion) is unknown → cannot apply rule.
+   - Conclusion: likely `chase("lion", "lion", True)` is unknown.
+
+10. Final query encoding: `facts.chase("lion", "lion", True)`

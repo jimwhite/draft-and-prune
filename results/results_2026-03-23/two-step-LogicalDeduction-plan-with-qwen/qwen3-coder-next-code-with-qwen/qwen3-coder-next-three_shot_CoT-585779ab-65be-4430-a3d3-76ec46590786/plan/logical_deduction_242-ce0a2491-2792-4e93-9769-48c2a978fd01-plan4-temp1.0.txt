@@ -1,0 +1,24 @@
+1.  **Initialize the Problem Environment:**
+    * Import the necessary `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold the variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables of the problem, which are the three vehicles: `"minivan"`, `"bus"`, and `"sedan"`.
+    * Define a numerical domain to represent age ranking. Use integers from 1 to 3, where **1 represents the oldest** and **3 represents the newest** vehicle.
+    * Add the vehicle variables and their rank domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two vehicles have the same age rank.
+    * Convert each rule from the problem description into a formal constraint using a `lambda` function:
+        * "The minivan is newer than the sedan" means the minivan's rank is a larger number than the sedan's rank (`minivan > sedan`).
+        * "The minivan is older than the bus" means the minivan's rank is a smaller number than the bus's rank (`minivan < bus`).
+
+4.  **Solve for the Arrangement:**
+    * Use the `getSolutions()` method to find all possible valid arrangements that satisfy every constraint.
+    * Since the problem is well-defined with three vehicles and two ordering constraints, extract the single unique solution from the list of solutions.
+
+5.  **Identify the Correct Answer:**
+    * Analyze the question: "Which of the following is the oldest?". Based on our ranking system (1=oldest), this corresponds to the vehicle with **rank 1**.
+    * Create a dictionary that maps the choice letters ("A", "B", "C") to the vehicle names: "A" → "minivan", "B" → "bus", "C" → "sedan".
+    * Iterate through the solved arrangement to find which vehicle has rank 1.
+    * Return or print the letter corresponding to that vehicle.

@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament ranking puzzle.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the seven golfers as variables: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, `"Dan"`.  
+    * Define the domain of positions as integers from 1 to 7, where **1 = first place (highest/best rank)** and **7 = last place (worst rank)**.  
+    * Add all seven variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Translate each statement into constraints using `addConstraint` with appropriate lambda functions:  
+        - "Rob finished first" → Rob's position = 1.  
+        - "Eve finished last" → Eve's position = 7.  
+        - "Dan finished above Ada" → Dan’s position number < Ada’s position number (since lower rank number = better finish).  
+        - "Mel finished above Mya" → Mel’s position number < Mya’s position number.  
+        - "Joe finished second-to-last" → Joe’s position = 6 (positions: 1st, ..., 5th, **6th**, 7th).  
+        - "Mya finished third" → Mya’s position = 3.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Extract the unique solution (since the problem is fully constrained), which will be a dictionary mapping each golfer to their position.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" with choices specifying who finished third.  
+    * Since Mya's position is explicitly given as 3, option C) "Mya finished third." must be true.  
+    * To verify with the solver: inspect the solution dictionary to confirm Mya’s position is 3 (already enforced), and check that no other golfer has position 3.  
+    * Map the answer: Choice C corresponds to Mya → output "C".

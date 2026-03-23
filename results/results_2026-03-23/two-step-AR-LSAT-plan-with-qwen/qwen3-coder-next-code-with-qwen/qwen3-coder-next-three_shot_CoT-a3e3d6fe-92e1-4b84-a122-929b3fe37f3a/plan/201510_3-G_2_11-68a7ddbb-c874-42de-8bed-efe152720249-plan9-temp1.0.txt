@@ -1,0 +1,43 @@
+1. Enumerate the three photographers and assign integer codes (0=Fuentes, 1=Gagnon, 2=Hue).  
+2. Enumerate the three sections: Lifestyle (L), Metro (M), Sports (S), and assign indices (0,1,2).  
+3. Create integer variables `count[i][j]` for number of photographs by photographer i in section j, where i ∈ {0,1,2}, j ∈ {0,1,2}.  
+4. Add **global sum constraint**: total photographs = 6 ⇒ sum over i,j of `count[i][j]` = 6.  
+5. Add **per-section constraint**: each section has exactly 2 photos ⇒ for each j, sum over i of `count[i][j]` = 2.  
+6. Add **per-photographer constraints**: for each photographer i, 1 ≤ sum over j of `count[i][j]` ≤ 3.  
+7. Add **Gagnon constraint**: no photos by Gagnon in Sports ⇒ `count[1][2] = 0`.  
+8. Add **Lifestyle/Metro overlap constraint**: there exists at least one photographer i such that `count[i][0] > 0` and `count[i][1] > 0`.  
+9. Add **Hue/Fuentes correspondence constraint**: `count[2][0] = count[0][2]`.  
+10. Add **given condition**: Lifestyle section has exactly one Fuentes and one Hue ⇒ `count[0][0] = 1`, `count[2][0] = 1`.  
+11. From step 10 and per-section constraint, Lifestyle is fully determined: `count[1][0] = 0` (since two photos total, one Fuentes + one Hue).  
+12. Use the correspondence constraint to deduce `count[0][2] = count[2][0] = 1`.  
+13. Now deduce Sports: since `count[0][2] = 1` and total per section = 2, the other photo in Sports is either Gagnon or Hue. But `count[1][2] = 0`, so Sports must be {Fuentes, Hue} ⇒ `count[0][2] = 1`, `count[2][2] = 1`, and `count[1][2] = 0`.  
+14. Now update photographer totals:  
+    - Fuentes: `count[0][0] + count[0][1] + count[0][2] = 1 + count[0][1] + 1 = 2 + count[0][1]`. Must be ≤3 ⇒ `count[0][1] ≤ 1`. Also ≥1 → satisfied.  
+    - Hue: `count[2][0] + count[2][1] + count[2][2] = 1 + count[2][1] + 1 = 2 + count[2][1]`. Must be ≤3 ⇒ `count[2][1] ≤ 1`.  
+    - Gagnon: `count[1][0]=0`, `count[1][2]=0`, so `count[1][1]` = total for Gagnon, must be ≥1 and ≤3 ⇒ `count[1][1] ∈ {1,2}`.  
+15. Metro section sum: `count[0][1] + count[1][1] + count[2][1] = 2`.  
+    - With `count[0][1] ≤ 1`, `count[2][1] ≤ 1`, and `count[1][1] ≥ 1`, the only possible integer solutions are:  
+        (a) `count[0][1]=0`, `count[1][1]=2`, `count[2][1]=0`  
+        (b) `count[0][1]=1`, `count[1][1]=1`, `count[2][1]=0`  
+        (c) `count[0][1]=0`, `count[1][1]=1`, `count[2][1]=1`  
+        (d) `count[0][1]=1`, `count[1][1]=0`, `count[2][1]=1` — invalid because Gagnon total = 0 <1  
+        ⇒ discard (d). So only (a), (b), (c) are feasible.  
+16. Check Lifestyle/Metro overlap constraint for each case:  
+    - (a): Metro = {Gagnon×2}, Lifestyle = {Fuentes, Hue} → no photographer appears in both L and M → violates constraint. Discard (a).  
+    - (b): Metro = {Fuentes, Gagnon}, Lifestyle = {Fuentes, Hue} → Fuentes in both ⇒ OK.  
+    - (c): Metro = {Gagnon, Hue}, Lifestyle = {Fuentes, Hue} → Hue in both ⇒ OK.  
+17. So only (b) and (c) remain feasible.  
+18. Now translate the answer choices into constraints:  
+    - A: Metro both Fuentes ⇒ `count[0][1]=2` — but from step 14, `count[0][1] ≤1`, impossible ⇒ A cannot be true.  
+    - B: Metro both Gagnon ⇒ `count[1][1]=2`, `count[0][1]=0`, `count[2][1]=0` ⇒ case (a) — invalid (no overlap) ⇒ B cannot be true.  
+    - C: Exactly one Metro by Hue ⇒ `count[2][1]=1` — occurs in case (c) only. In case (c), Metro = {Gagnon, Hue} → valid and satisfies overlap (Hue in both L and M). So C could be true.  
+    - D: Sports both Hue ⇒ but from step 14, we deduced `count[2][2]=1` (since Sports must have one Fuentes and one Hue). Contradiction ⇒ D impossible.  
+    - E: Neither Sport by Hue ⇒ `count[2][2]=0` — but from correspondence `count[2][2] = count[0][2] = 1` ⇒ contradiction ⇒ E impossible.  
+19. Therefore, only choice C is possible.  
+20. Construct a solver with all base constraints + condition (Lifestyle = {Fuentes, Hue}), then iterate through each answer choice and check satisfiability with the corresponding additional constraint (e.g., for C: `count[2][1] == 1` and `count[0][1] + count[1][1] = 1`, or just assert `count[2][1] == 1` since total Metro = 2).  
+21. For each choice index i ∈ {0,1,2,3,4}:  
+    - Clone base solver + Lifestyle condition.  
+    - Add constraint encoding choice i (e.g., for i=2: `count[2][1] == 1`).  
+    - If SAT, record index i.  
+22. The answer is the list of indices where model is SAT — only [2] should satisfy.  
+23. Return the answer index list (0-based: [2]).

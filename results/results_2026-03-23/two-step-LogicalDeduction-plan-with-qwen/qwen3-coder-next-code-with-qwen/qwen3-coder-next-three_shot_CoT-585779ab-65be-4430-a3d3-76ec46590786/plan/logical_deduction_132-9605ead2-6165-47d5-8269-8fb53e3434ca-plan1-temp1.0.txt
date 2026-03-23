@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * The variables are the seven vehicles: `"minivan"`, `"bus"`, `"limousine"`, `"truck"`, `"convertible"`, `"tractor"`, and `"motorcycle"` (note the typo "motorcyle" in problem → correct to `"motorcycle"`).
+    * Define a numerical domain for age ranking: integers from 1 (oldest) to 7 (newest).
+    * Add all seven vehicle variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Convert each statement into constraints using lambda functions:
+        * "The limousine is older than the minivan" → `limousine < minivan`
+        * "The tractor is older than the limousine" → `tractor < limousine`
+        * "The bus is the newest" → `bus == 7`
+        * "The truck is the third-newest" → `truck == 5` (since newest=7, second-newest=6, third-newest=5)
+        * "The motorcycle is the fourth-newest" → `motorcycle == 4`
+        * "The convertible is older than the tractor" → `convertible < tractor`
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (or first solution, as constraints uniquely determine it).
+
+5.  **Identify the Correct Answer:**
+    * The question asks which vehicle is the third-oldest. Since rank 1 = oldest, third-oldest corresponds to rank = 3.
+    * Map the answer choices: A→minivan, B→bus, C→limousine, D→truck, E→convertible, F→tractor, G→motorcycle.
+    * Find which vehicle in the solution has rank 3 and return its corresponding choice letter.

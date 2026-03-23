@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the three variables as the books: `"white"`, `"green"`, and `"orange"`.  
+   * Define the domain for positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle (second from left)**, and **3 = rightmost**.  
+   * Add all three variables with domain {1, 2, 3} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.  
+   * Translate "The green book is to the right of the white book" into a constraint: `white < green`.  
+   * Translate "The orange book is the rightmost" into a constraint: `orange == 3`.  
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to retrieve all valid assignments. Since the problem is constrained enough, there will be exactly one solution.  
+   * Extract the single solution (e.g., via `solutions[0]`).
+
+5. **Determine Which Choice Is True:**  
+   * The question asks: "Which of the following is true?" with options about being second from the left (i.e., position 2).  
+   * Create a mapping: `{"A": "white", "B": "green", "C": "orange"}`.  
+   * In the solution, identify which book has position `2`.  
+   * Return (or print) the corresponding choice letter for that book.

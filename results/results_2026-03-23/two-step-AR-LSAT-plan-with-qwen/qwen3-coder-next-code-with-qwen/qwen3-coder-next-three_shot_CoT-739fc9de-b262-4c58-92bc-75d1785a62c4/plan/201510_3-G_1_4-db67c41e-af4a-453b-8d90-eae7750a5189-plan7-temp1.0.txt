@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign integer indices (0=Peters, 1=Quinn, 2=Rovero, 3=Stanton, 4=Tao, 5=Villas, 6=White).  
+2. Create integer variables `pos[0]` through `pos[6]` representing recruitment order positions (1 to 7).  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6,7} and all `pos[i]` are pairwise distinct.  
+4. Add **fixed constraint**: Peters is recruited fourth ⇒ `pos[Peters] == 4`.  
+5. Add **Villas-White constraint**: Villas is immediately before White ⇒ `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero constraint (premise)**: Quinn recruited earlier than Rovero ⇒ `pos[Quinn] < pos[Rovero]`.  
+7. Add **immediate-premise constraint**: Quinn is immediately before Rovero ⇒ `pos[Quinn] + 1 == pos[Rovero]`.  
+8. Add **Stanton-Tao constraint**: Stanton is neither immediately before nor after Tao ⇒ `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+9. Translate answer choices to positions: ['first', 'second', 'third', 'fifth', 'seventh'] ⇒ positions 1,2,3,5,7.  
+10. Define `forbidden_positions` list []. For each candidate position p ∈ {1,2,3,5,7}:  
+    - Clone base constraints into a fresh solver.  
+    - Assert `pos[Stanton] == p`.  
+    - If model is UNSAT, then Stanton cannot be in position p; append p (or its index in choices) to `forbidden_positions`.  
+11. Return the list of positions (as strings or indices) where Stanton cannot be, based on UNSAT results.

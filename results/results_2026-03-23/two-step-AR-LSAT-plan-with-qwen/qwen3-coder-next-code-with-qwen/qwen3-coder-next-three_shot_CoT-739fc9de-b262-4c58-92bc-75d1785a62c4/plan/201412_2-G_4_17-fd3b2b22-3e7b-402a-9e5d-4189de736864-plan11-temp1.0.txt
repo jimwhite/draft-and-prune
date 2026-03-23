@@ -1,0 +1,13 @@
+1. Enumerate the six photographers and assign each an integer index: Frost=0, Gonzalez=1, Heideck=2, Knutson=3, Lai=4, Mays=5.  
+2. Create Boolean variables: for each photographer i and ceremony c ∈ {0 (Silva), 1 (Thorne)}, let `assigned[i][c]` be True if photographer i is assigned to ceremony c.  
+3. Add **non-overlap constraint**: each photographer can be assigned to at most one ceremony: `assigned[i][0] == !assigned[i][1]` (or equivalently, at most one is True; allow unassigned).  
+4. Add **minimum assignment constraint**: each ceremony must have at least two photographers: `sum(assigned[i][0] for i) >= 2` and `sum(assigned[i][1] for i) >= 2`.  
+5. Add **Frost–Heideck constraint**: Frost and Heideck must be assigned together to the *same* ceremony: `assigned[0][c] == assigned[2][c]` for both c=0 and c=1 (i.e., `assigned[0][0] == assigned[2][0]` and `assigned[0][1] == assigned[2][1]`; but since only one ceremony per person, it's enough to enforce `assigned[0][0] == assigned[2][0]`).  
+6. Add **Lai–Mays separation constraint**: if both Lai and Mays are assigned, they must be on *different* ceremonies: `(assigned[4][0] ∧ assigned[5][0]) ∨ (assigned[4][1] ∧ assigned[5][1]) → False`. Equivalently: `¬(assigned[4][0] ∧ assigned[5][0]) ∧ ¬(assigned[4][1] ∧ assigned[5][1])`.  
+7. Add **Gonzalez–Lai implication**: If Gonzalez is at Silva (c=0), then Lai must be at Thorne (c=1): `assigned[1][0] → assigned[4][1]`.  
+8. Add **Knutson–conditional constraint**: If Knutson is *not* at Thorne (i.e., at Silva or unassigned), then both Heideck and Mays *must* be at Thorne: `¬assigned[3][1] → (assigned[2][1] ∧ assigned[5][1])`.  
+9. Parse each choice string into sets of photographers per ceremony: extract names and map to indices; build lists of assignments per choice.  
+10. For each choice, construct a fresh solver with all base constraints (steps 3–8), then *add* the specific assignments implied by the choice: for each photographer in "Silva", assert `assigned[i][0] = True`; for each in "Thorne", assert `assigned[i][1] = True`; ensure no overlap (already handled by base constraints, but make explicit).  
+11. Check satisfiability: if SAT, the assignment is acceptable; record its index (0–4).  
+12. Append all acceptable choice indices to `answer_index_list`.  
+13. Output the first (and only) index in `answer_index_list` as the answer.

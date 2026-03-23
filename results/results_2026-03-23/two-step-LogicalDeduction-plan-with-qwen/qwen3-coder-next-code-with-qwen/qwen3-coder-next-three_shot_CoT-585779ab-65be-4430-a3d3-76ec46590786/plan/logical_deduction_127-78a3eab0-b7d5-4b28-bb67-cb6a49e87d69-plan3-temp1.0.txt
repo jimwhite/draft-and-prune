@@ -1,0 +1,37 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven vehicles: `"sedan"`, `"minivan"`, `"motorcycle"`, `"limousine"`, `"hatchback"`, `"truck"`, and `"tractor"`.
+    * Define the domain as integers 1 through 7, where **1 = oldest** and **7 = newest** (since "newest" indicates a higher rank number).
+    * Add all variables with domain [1, 2, ..., 7] to the `Problem`.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint()` to ensure each vehicle receives a unique age rank.
+
+4.  **Translate Given Statements into Constraints:**
+    * "The motorcycle is older than the tractor" → `motorcycle < tractor`
+    * "The hatchback is older than the limousine" → `hatchback < limousine`
+    * "The hatchback is newer than the truck" → `truck < hatchback` (since newer means higher rank number)
+    * "The truck is newer than the tractor" → `tractor < truck`
+    * "The minivan is the second-newest" → `minivan == 6` (since newest = 7, second-newest = 6)
+    * "The sedan is the third-newest" → `sedan == 5` (newest=7, second=6, third=5)
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` on the problem instance to obtain all valid assignments of ranks.
+    * Extract the (unique) solution from the list.
+
+6.  **Interpret "fourth-newest" for Answer Mapping:**
+    * Since numbering is 1=oldest, 7=newest, then:
+        - 1 = seventh-newest (i.e., oldest)
+        - 2 = sixth-newest
+        - ...
+        - **4 = fourth-newest**
+    * Therefore, the correct answer corresponds to the vehicle with rank 4.
+
+7.  **Map Choices and Identify Correct Answer:**
+    * Create a dictionary mapping choice letters ("A"–"G") to vehicle names as per the choices:
+        A → "sedan", B → "minivan", C → "motorcycle", D → "limousine", E → "hatchback", F → "truck", G → "tractor"
+    * From the solved solution dictionary, find which vehicle has rank 4.
+    * Return the choice letter associated with that vehicle.

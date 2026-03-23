@@ -1,0 +1,32 @@
+1.  Identify all entities and types: Sally, wumpus, dumpus, zumpus, rompus, impus, numpus, jompus, tumpus, vumpus, yumpus.  
+2.  Identify all properties: transparent, shy, cold, red, metallic, fruity, dull, spicy.  
+3.  Represent "Sally is a wumpus" as a base fact: `is_a("Sally", "wumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+   - Wumpuses are transparent.  
+   - Each wumpus is a dumpus.  
+   - Dumpuses are shy.  
+   - Every dumpus is a zumpus.  
+   - Each zumpus is cold.  
+   - Zumpuses are rompuses.  
+   - Every rompus is not red.  
+   - Rompuses are impuses.  
+   - Each impus is metallic.  
+   - Each impus is a numpus.  
+   - Every numpus is fruity.  
+   - Numpuses are jompuses.  
+   - Tumpuses are not metallic. *(Note: Tumpus type is introduced but no instance of it is given or derived; this rule remains inactive unless a tumpus is proven, but none occurs in this derivation chain.)*  
+   - Jompuses are dull.  
+   - Jompuses are vumpuses.  
+   - Vumpuses are spicy.  
+   - Every vumpus is a yumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+   - Example: `foreach(x, is_a(x,"wumpus",True) ⇒ is_property(x,"transparent",True))`  
+   - Continue similarly for all given unary (property) and binary (is_a) implications.  
+6.  Trace the derivation chain from Sally:  
+   - Sally is a wumpus → Sally is a dumpus (by rule "Each wumpus is a dumpus")  
+   - Sally is a dumpus → Sally is a zumpus (by "Every dumpus is a zumpus")  
+   - Sally is a zumpus → Sally is a rompus (by "Zumpuses are rompuses")  
+   - Sally is a rompus → Sally is an impus (by "Rompuses are impuses")  
+   - Sally is an impus → Sally is metallic (by "Each impus is metallic")  
+7.  The query tests if the statement "Sally is metallic" is provable:  
+    → Use `facts.is_metallic("Sally", True)`.

@@ -1,0 +1,20 @@
+1. Identify all entities: bald_eagle, lion, rabbit, tiger.
+2. Encode all explicitly stated facts using ternary predicates:
+   - Chase relations: chase("bald_eagle", "rabbit", True), chase("bald_eagle", "tiger", True)
+   - Need relations: need("lion", "rabbit", True), need("rabbit", "bald_eagle", True), need("rabbit", "lion", True)
+   - Visit relation: visit("tiger", "rabbit", True)
+   - Negated chase fact: encode as a rule or fact using `not` in condition (e.g., `foreach chase("rabbit", "lion", False)` or use conditional negation appropriately)
+3. Translate all conditional statements into PyKe rules:
+   • If something chases the rabbit → it is big.
+   • If something needs the tiger → it is big.
+   • If something needs the lion and visits the rabbit → it chases the lion.
+   • If something is big → it chases the lion.
+   • If something chases the tiger → the tiger needs the rabbit.
+   • If something visits the tiger → the tiger is not green. (Note: irrelevant if green not mentioned elsewhere)
+   • If something chases the lion → the lion chases the rabbit.
+   • If something chases the tiger → it visits the bald eagle.
+   • If something chases the rabbit and does not visit the lion → the lion does not need the rabbit.
+4. For each rule, implement using `foreach` to match antecedent conditions and `assert` for consequent conclusions; use negated facts appropriately in patterns (e.g., `not visit("something", "lion", True)` via conditional handling).
+5. Derive all reachable facts using forward chaining.
+6. Query whether the lion chases itself: check if `chase("lion", "lion", True)` can be derived.
+7. If derivable → answer is true; if derivable negated (`chase("lion", "lion", False)`) → false; else unknown.

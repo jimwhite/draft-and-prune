@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the tournament ranking puzzle.  
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the five golfers: `"Eve"`, `"Rob"`, `"Ana"`, `"Eli"`, and `"Mya"`.  
+    * Define the domain as integers from 1 to 5, where **1 = first place (highest rank / best)** and **5 = fifth place (lowest rank / worst)**.  
+    * Add all variables with this domain to the `Problem` instance.  
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that no two golfers share the same rank.  
+    * Add constraints using `lambda` functions for each statement:  
+        * "Eli finished below Mya" → Eli's rank number > Mya's rank number (`lambda e, m: e > m`).  
+        * "Eve finished first" → Eve's rank = 1 (`lambda e: e == 1`).  
+        * "Ana finished below Eli" → Ana's rank > Eli's rank (`lambda a, e: a > e`).  
+        * "Rob finished second" → Rob's rank = 2 (`lambda r: r == 2`).  
+
+4.  **Solve for the Unique Arrangement:**  
+    * Call `getSolutions()` to find all valid rankings satisfying the constraints.  
+    * Extract the sole solution (since the problem guarantees consistency and uniqueness).  
+
+5.  **Determine Which Golfer is Third:**  
+    * The question asks who finished third (rank = 3).  
+    * Create a mapping from choice letters to golfer names: `{'A': 'Eve', 'B': 'Rob', 'C': 'Ana', 'D': 'Eli', 'E': 'Mya'}`.  
+    * Iterate through the solution dictionary to identify which golfer has rank 3.  
+    * Return the letter corresponding to that golfer as the final answer.

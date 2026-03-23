@@ -1,0 +1,15 @@
+1. Enumerate the seven recruits: Peters, Quinn, Rovero, Stanton, Tao, Villas, White and assign integer indices.  
+2. Create integer variables `pos[p]` for each recruit `p`, representing their recruitment position (1 to 7).  
+3. Add **domain constraints**: each `pos[p] ∈ {1,2,...,7}` and all positions are distinct (all-different).  
+4. Add **fixed constraint**: Peters is fourth → `pos[Peters] == 4`.  
+5. Add **Villas-White constraint**: Villas is immediately before White → `pos[Villas] + 1 == pos[White]`.  
+6. Add **Quinn-Rovero constraint (given in the conditional)**: Quinn immediately before Rovero → `pos[Quinn] + 1 == pos[Rovero]`.  
+7. Add **Stanton-Tao constraint (general)**: Stanton not immediately before or after Tao → `|pos[Stanton] - pos[Tao]| ≠ 1`.  
+8. Add **original Quinn-Rovero constraint (weaker)**: Quinn earlier than Rovero → `pos[Quinn] < pos[Rovero]` (redundant with immediate, but keep for clarity).  
+9. Translate the answer choices into position labels: first=1, second=2, third=3, fifth=5, seventh=7.  
+10. Define an answer index list `answer_index_list = []`. For each candidate position in the choices:  
+    - Clone base constraints into fresh solver.  
+    - Add constraint that Stanton is recruited at that position: `pos[Stanton] == candidate_position`.  
+    - Add constraint that Quinn is immediately before Rovero (i.e., `pos[Quinn] + 1 == pos[Rovero]`).  
+    - If the model is UNSAT under these assumptions, then Stanton **cannot** be at that position; append the index of the candidate position to `answer_index_list`.  
+11. Return the list of positions (as strings from choices) corresponding to indices in `answer_index_list`.

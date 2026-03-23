@@ -1,0 +1,30 @@
+1. Enumerate the eight students and assign integer codes (0–7) for George, Helen, Irving, Kyle, Lenore, Nina, Olivia, Robert.  
+2. Enumerate the six report slots: M_morn (Mon morning), M_after (Mon afternoon), T_morn (Tue morning), T_after (Tue afternoon), W_morn (Wed morning), W_after (Wed afternoon).  
+3. Create integer decision variables `slot[i]` for each student i ∈ {0,…,7}, denoting which of the six slots they occupy (or a special value like -1 if not selected); alternatively, create Boolean variables `assigned[i][s]` indicating student i gives report at slot s.  
+4. Add **selection constraints**: exactly six students are selected (sum of all assigned[i][*] = 6).  
+5. Add **slot occupancy constraints**: each of the six slots is assigned to exactly one student (for each slot s, exactly one i has assigned[i][s] = true).  
+6. Add **day/time constraints**:  
+   - Tuesday is the only day George can report: if assigned[George][s] = true, then s must be T_morn or T_after.  
+   - Neither Olivia nor Robert can give an afternoon report: for s ∈ {M_after, T_after, W_after}, assigned[Olivia][s] = false and assigned[Robert][s] = false.  
+7. Add **conditional constraint**: If Nina gives a report (on Monday or Tuesday), then Helen and Irving must both give reports the next day, unless Nina reports on Wednesday.  
+   - Formalize: If assigned[Nina][M_morn] or assigned[Nina][M_after], then assigned[Helen][T_morn] ∨ assigned[Helen][T_after] AND assigned[Irving][T_morn] ∨ assigned[Irving][T_after].  
+   - If assigned[Nina][T_morn] or assigned[Nina][T_after], then assigned[Helen][W_morn] ∨ assigned[Helen][W_after] AND assigned[Irving][W_morn] ∨ assigned[Irving][W_after].  
+   - If assigned[Nina][W_morn] or assigned[Nina][W_after], no further condition.  
+8. Add **given scenario constraints**:  
+   - Kyle gives afternoon report on Tuesday: assigned[Kyle][T_after] = true.  
+   - Helen gives afternoon report on Wednesday: assigned[Helen][W_after] = true.  
+9. Infer additional fixed assignments from constraints:  
+   - Since Kyle is assigned to T_after, that slot is taken; T_morn remains free (for morning report on Tue).  
+   - Helen is assigned to W_after, so her only slot is fixed; ensure she isn’t used elsewhere.  
+   - Since Helen reports (at W_after), Nina *could* be reporting on Tuesday (which would require Helen & Irving to report Wednesday—but Helen already does, so Irving must also report on Wednesday).  
+   - However, since Tuesday afternoon is taken by Kyle, if Nina reports on Monday (morning or afternoon), then Helen and Irving must both report Tuesday—but Tuesday afternoon is occupied by Kyle, so only one slot remains (T_morn); cannot fit two people → Nina *cannot* report on Monday.  
+   - So possible Nina slots: Tuesday (but T_after is taken → only T_morn), or Wednesday.  
+     - If Nina on Tuesday morning: then Helen & Irving must report Wednesday → possible since W_after is Helen, so Irving must take W_morn.  
+     - If Nina on Wednesday: no requirement for Helen/Irving next day (since no next day), so allowed.  
+10. Define morning slots: M_morn, T_morn, W_morn (three positions to fill with three distinct students).  
+11. Translate each choice into candidate morning-triple (M_morn student, T_morn student, W_morn student).  
+12. For each choice:  
+    - Clone base constraints (including scenario + logic constraints).  
+    - Assert that the three students in the choice occupy M_morn, T_morn, W_morn respectively (i.e., assigned[i][M_morn] = true for first student, etc.).  
+    - Check satisfiability. If SAT, the choice is possible; record its index.  
+13. Collect all satisfiable choices and output their indices as the answer list.

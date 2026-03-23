@@ -1,0 +1,21 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning each an integer index (0–3).  
+2. Create integer variables for the bicycle assigned to each rider on day 1: `d1_R`, `d1_S`, `d1_T`, `d1_Y` ∈ {0,1,2,3}.  
+3. Create integer variables for the bicycle assigned to each rider on day 2: `d2_R`, `d2_S`, `d2_T`, `d2_Y` ∈ {0,1,2,3}.  
+4. Add **per-day permutation constraints**:  
+   - Day 1: All of `d1_R`, `d1_S`, `d1_T`, `d1_Y` are distinct (bijective assignment).  
+   - Day 2: All of `d2_R`, `d2_S`, `d2_T`, `d2_Y` are distinct.  
+5. Add **global constraint**: Each bicycle is tested exactly twice (once per day), i.e., the multiset union of day-1 and day-2 assignments contains each bicycle exactly twice — but this is implied by the two permutations above, so it need not be asserted separately.  
+6. Add **individual constraints**:  
+   - Reynaldo cannot test F: `d1_R ≠ 0`.  
+   - Yuki cannot test J: `d1_Y ≠ 3`.  
+   - Theresa must test H on *at least one* day: `(d1_T == 2) ∨ (d2_T == 2)`.  
+   - The bicycle Yuki tests on day1 must be tested by Seamus on day2: `d2_S == d1_Y`.  
+7. Translate the five answer choices into logical conjunctions about what is *asserted to be true* (i.e., conditions that *could* be true), then test which one **must be false** (i.e., makes the model UNSAT). For each choice:  
+   - **Choice A**: “Both Reynaldo and Seamus test J” → `d1_R == 3 ∧ d1_S == 3`.  
+   - **Choice B**: “Both Reynaldo and Theresa test J” → `d1_R == 3 ∧ d1_T == 3`.  
+   - **Choice C**: “Both Reynaldo and Yuki test G” → `d1_R == 1 ∧ d1_Y == 1`.  
+   - **Choice D**: “Both Seamus and Theresa test G” → `d1_S == 1 ∧ d1_T == 1`.  
+   - **Choice E**: “Both Theresa and Yuki test F” → `d1_T == 0 ∧ d1_Y == 0`.  
+8. For each choice (in order), clone the base constraints, add the choice-specific condition, and check satisfiability with Z3.  
+9. Identify which choice yields UNSAT — this is the one that **CANNOT be true**.  
+10. Return the index of the first (and only) UNSAT choice as the answer.

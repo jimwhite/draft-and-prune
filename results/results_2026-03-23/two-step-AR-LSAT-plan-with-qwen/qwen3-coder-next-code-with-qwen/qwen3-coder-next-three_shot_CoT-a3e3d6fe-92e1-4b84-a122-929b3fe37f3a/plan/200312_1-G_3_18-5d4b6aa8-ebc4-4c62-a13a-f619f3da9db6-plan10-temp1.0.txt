@@ -1,0 +1,21 @@
+1. Enumerate the three cookie types and assign integer codes: oatmeal = 0, peanut butter = 1, sugar = 2.  
+2. Enumerate the five days and assign integer codes: Monday = 0, Tuesday = 1, Wednesday = 2, Thursday = 3, Friday = 4.  
+3. Create integer variables `o1, o2, o3` (days of 1st, 2nd, 3rd oatmeal batches), `p1, p2, p3` (peanut butter), and `s1, s2, s3` (sugar).  
+4. Add **domain constraints**: all variables ∈ {0,1,2,3,4}.  
+5. Add **no same-day repeats** per cookie type: `o1 ≠ o2`, `o2 ≠ o3`, `o1 ≠ o3`, and similarly for peanut butter and sugar.  
+6. Add **fixed constraint**: second sugar batch is Thursday → `s2 == 3`.  
+7. Add **at-least-one-on-Monday** constraint: at least one of all nine batch variables equals 0.  
+8. Add **cross-batch constraint**: second oatmeal batch same day as first peanut butter batch → `o2 == p1`.  
+9. Add **global consistency**: count how many batches are made each day (using helper integer counts or explicit sums of indicator Booleans).  
+10. Add the **hypothetical condition** (premise): there exists a pair of cookie types A ≠ B and indices i, j ∈ {1,2,3} such that A's first batch day = B's third batch day. Implement via disjunction over all 6 (3×2) type pairs and valid (i=1, j=3) combinations, each encoded as `day_A1 == day_B3`.  
+11. For each answer choice, define the Boolean condition:  
+    - A: "≥1 batch per day" → all five days have count ≥ 1.  
+    - B: "≥2 batches on Wednesday (day=2)".  
+    - C: "exactly 1 batch on Monday".  
+    - D: "exactly 2 batches on Tuesday".  
+    - E: "exactly 1 batch on Friday".  
+12. For each answer choice (A to E), clone the base constraints into a fresh solver, add the hypothetical condition, then check if that answer choice's Boolean condition **must be true**.  
+    - To test whether a choice *could* be false, assert that the condition is **false**, and check SAT.  
+    - If the modified model is SAT, then the choice *could* be false → it's a valid answer candidate.  
+13. Collect all answer indices where the statement *could* be false (i.e., its negation is satisfiable under the premise).  
+14. Return that list of answer indices (likely one or more, but expected single in LSAT-style).

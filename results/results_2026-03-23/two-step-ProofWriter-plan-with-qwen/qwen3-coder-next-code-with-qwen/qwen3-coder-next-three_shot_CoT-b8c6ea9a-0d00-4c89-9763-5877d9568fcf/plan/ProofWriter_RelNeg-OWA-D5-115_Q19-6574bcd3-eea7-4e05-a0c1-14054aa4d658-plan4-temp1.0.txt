@@ -1,0 +1,44 @@
+1. Identify all entities: bald_eagle, lion, bear, dog.
+2. Define binary predicates using ternary encoding with boolean objects (e.g., is_blue(entity, True/False), needs(entity1, entity2, True/False)), and unary properties as binary predicates with boolean second argument.
+3. Encode all explicitly stated facts (both positive and negative) as facts.pred(entity1, entity2/boolean, True):
+   - is_blue("bald_eagle", True)
+   - is_red("bald_eagle", True)
+   - likes("bald_eagle", "lion", True)
+   - needs("bald_eagle", "bear", True)
+   - needs("bald_eagle", "dog", True)
+   - is_blue("bear", False) → encoded as facts.is_blue("bear", False), but PyKe does not support negative literals directly in facts; instead, encode negations explicitly using separate predicates or use negation-as-failure via rules (see step 4).
+   - is_nice("bear", True)
+   - needs("bear", "dog", True)
+   - chases("dog", "bald_eagle", True)
+   - is_red("dog", True)
+   - needs("bear", "dog", True) [already listed]
+   - needs("dog", "bear", False) → encode explicitly as facts.needs("dog", "bear", False)
+   - likes("lion", "bear", False) → facts.likes("lion", "bear", False)
+   - needs("dog", "dog", ?) — query goal is about not needing self; do not assume yet.
+4. For negative facts, since PyKe typically asserts positive literals only, reframe negations using explicit predicates like "not_blue", "not_red", etc., or assert their falsehood via rules that derive negation only when provable (but here facts explicitly state “X is not Y”, so we introduce negated predicates: e.g., facts.is_not_blue("bear", True), facts.is_not_red(...) if needed). Alternatively, for the binary relations with object entities (e.g., needs), use negated ground facts directly: facts.needs("dog", "bear", False).
+5. Translate each conditional rule into `foreach` + `assert`, carefully handling conjunctions and negations in the antecedent:
+   • If X likes lion ∧ ¬red(X) → chases(X, lion)
+      → foreach: likes(X, "lion", True), is_red(X, False)  => assert chases(X, "lion", True)
+   • If X is red ∧ needs(X, bald_eagle) → needs(bald_eagle, lion)
+      → foreach: is_red(X, True), needs(X, "bald_eagle", True) => assert needs("bald_eagle", "lion", True)
+   • If X is round → ¬likes(X, dog)
+      → Use: foreach: is_round(X, True) => assert likes(X, "dog", False)
+   • If bald_eagle needs dog → dog is round
+      → facts.needs("bald_eagle", "dog", True) ⇒ assert is_round("dog", True)
+   • If X likes dog → X likes bald_eagle
+      → foreach: likes(X, "dog", True) => assert likes(X, "bald_eagle", True)
+   • If X chases lion ∧ lion likes dog → ¬likes(dog, lion)
+      → foreach: chases(X, "lion", True), likes("lion", "dog", True) => assert likes("dog", "lion", False)
+   • If bear likes lion → lion likes dog
+      → facts.likes("bear", "lion", True) ⇒ assert likes("lion", "dog", True)
+   • If X likes bear → bear likes lion
+      → foreach: likes(X, "bear", True) => assert likes("bear", "lion", True)
+   • If X is round → X likes bear
+      → foreach: is_round(X, True) => assert likes(X, "bear", True)
+6. Note that facts like “X is not blue” or “X does not like Y” must be encoded as explicit ground facts with False, i.e., facts.is_blue(X, False), facts.likes(X, Y, False). Since PyKe only infers positive conclusions from rules and known positives, negative ground facts must be explicitly asserted at the start if they are given directly.
+7. The query asks: “The dog does not need the dog.” → this is equivalent to ¬needs(dog, dog).
+   → Since PyKe cannot assert negative ground facts directly unless defined as such, encode query as checking whether needs("dog", "dog", True) can be inferred. If not inferable, and no explicit fact states needs("dog", "dog", False), then answer is unknown. But since the problem says “the dog does not need the bear” explicitly as a fact, we assume that explicit negative facts like needs("dog", "dog", False) are not provided unless stated.
+   → So query: try to prove facts.needs("dog", "dog", True). If contradiction (i.e., also can prove False) → false; if proves True → true; else unknown.
+   But the problem asks for truth of “dog does not need dog”, i.e., needs("dog", "dog", False). So final query is: facts.needs("dog", "dog", False)
+   However, if we have no rule or fact implying needs(dog,dog) or ¬needs(dog,dog), answer is unknown.
+8. Encode query using facts.needs("dog", "dog", False) and check consistency with the knowledge base.

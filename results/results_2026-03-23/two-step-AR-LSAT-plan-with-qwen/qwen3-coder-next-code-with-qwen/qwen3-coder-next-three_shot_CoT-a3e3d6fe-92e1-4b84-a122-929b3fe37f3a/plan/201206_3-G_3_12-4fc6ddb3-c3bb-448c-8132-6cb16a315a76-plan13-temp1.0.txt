@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign integer indices to them.  
+2. Create integer variables `zone[rep]` for each representative, representing their assigned zone (1, 2, or 3).  
+3. Add **domain constraints**: each `zone[rep]` ∈ {1, 2, 3}.  
+4. Add **mutual exclusivity of zone assignments**: no two representatives share the same zone assignment variable unless constrained (handled implicitly by per-representative variable and later equality constraints).  
+5. Add **Parra/Tiao Zone 1 constraint**: Exactly one of Parra or Tiao is in Zone 1.  
+    - Implement as `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+6. Add **Tiao/Udall Zone 2 constraint**: Exactly one of Tiao or Udall is in Zone 2.  
+    - Implement as `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+7. Add **Parra–Quinn same zone constraint**: `zone[Parra] == zone[Quinn]`.  
+8. Add **Stuckey–Udall same zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+9. Add **Zone 3 size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+    - Count via auxiliary integer variables or using `If` expressions: let `count_zone1 = Sum(If(zone[r]==1,1,0) for r in reps)` etc., then `count_zone3 > count_zone2`.  
+10. Parse each answer choice and extract the zone assignments (Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall).  
+11. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert equality constraints matching the proposed assignment (e.g., `zone[Kim] == Zone1_index`, etc.).  
+    - If the model is SAT, then this assignment is possible; record its index.  
+12. Return the index of the SAT answer choice(s).

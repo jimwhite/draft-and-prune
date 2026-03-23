@@ -1,0 +1,17 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign each an integer index (0–4).  
+2. Create Boolean variables for each candidate-country assignment: e.g., `J_V`, `J_Y`, `J_Z`, ..., `O_V`, `O_Y`, `O_Z` (15 variables total), where each variable is True iff that candidate serves in that country.  
+3. Add **one-assignment-per-candidate** constraints: For each candidate, at most one of their three country variables is True.  
+4. Add **one-candidate-per-country** constraints: For each country, exactly one of the five candidate variables for that country is True.  
+5. Add **Kayne/Novetzke XOR constraint**: Exactly one of (Kayne assigned anywhere) and (Novetzke assigned anywhere) is True.  
+6. Add **Jaramillo→Kayne constraint**: If any of J_V, J_Y, J_Z is True, then at least one of K_V, K_Y, K_Z must be True.  
+7. Add **Ong→Kayne (Venezuela-Yemen) constraint**: If O_V is True, then none of K_V, K_Y, K_Z for Kayne in Yemen (i.e., K_Y is False); equivalently: `O_V ⇒ ¬K_Y`.  
+8. Add **Landon→Zambia constraint**: If any of L_V, L_Y is True, the assignment is invalid; i.e., only L_Z may be True (so `L_V = False`, `L_Y = False`, and `L_Z` may be True).  
+9. Translate each answer choice pair (e.g., “Jaramillo and Novetzke”) into the two candidate indices.  
+10. For each answer choice pair (A, B), form a constraint that A and B are the two unassigned candidates:  
+    - For candidate X, enforce ¬(X_V ∨ X_Y ∨ X_Z).  
+    - For the other three candidates, enforce that exactly one country is assigned per candidate and country (already covered by global constraints), but implicitly this forces A and B to be the only unassigned.  
+11. For each pair:  
+    - Clone base constraints into a fresh solver.  
+    - Add the “A and B unassigned” constraints.  
+    - Check satisfiability: if SAT, then this pair **is possible** as the unassigned pair; record its index.  
+12. Collect all feasible pairs and output their indices.

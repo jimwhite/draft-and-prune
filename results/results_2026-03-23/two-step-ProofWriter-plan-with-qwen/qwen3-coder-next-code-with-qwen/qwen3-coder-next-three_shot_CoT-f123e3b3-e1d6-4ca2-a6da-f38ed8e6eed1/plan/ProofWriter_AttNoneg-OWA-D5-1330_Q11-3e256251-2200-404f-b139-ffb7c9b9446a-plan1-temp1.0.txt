@@ -1,0 +1,32 @@
+1. Identify all entities: Bob, Charlie, Dave, Harry.  
+2. Encode all explicit unary and binary facts using ternary predicates:  
+   - Unary properties like is_red, is_big, etc. as pred(entity, True) or pred(entity, False).  
+   - Binary relations (none present beyond properties here), but only unary facts given.  
+3. Directly assert known property values:  
+   - is_red("Bob", True), is_young("Bob", True)  
+   - is_big("Charlie", True), is_green("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True), is_young("Charlie", True)  
+   - is_big("Dave", True) (explicitly stated)  
+   - is_rough("Harry", True), is_round("Harry", True), is_young("Harry", True)  
+4. Translate all universal conditionals into PyKe rules:  
+   • All rough, white things are young → foreach(is_rough(X), is_white(X)) ⇒ assert(is_young(X, True))  
+   • All big things are round → foreach(is_big(X)) ⇒ assert(is_round(X, True))  
+   • All white, red things are rough → foreach(is_white(X), is_red(X)) ⇒ assert(is_rough(X, True))  
+   • All round things are green → foreach(is_round(X)) ⇒ assert(is_green(X, True))  
+   • All big things are white → foreach(is_big(X)) ⇒ assert(is_white(X, True))  
+   • If Harry is round then Harry is big → special case for named constant: assert(is_big("Harry", True)) if is_round("Harry", True) (but can encode via rule or direct fact after reasoning; PyKe handles named constants, so better to use a specific implication: is_round("Harry") → is_big("Harry"))  
+   • All rough, young things are red → foreach(is_rough(X), is_young(X)) ⇒ assert(is_red(X, True))  
+   • If something is young then it is green → foreach(is_young(X)) ⇒ assert(is_green(X, True))  
+   • All green things are red → foreach(is_green(X)) ⇒ assert(is_red(X, True))  
+5. For implications with named constants (e.g., Harry), either encode as specific rule or rely on fact propagation after applying general rules. Since PyKe uses backward chaining, encode generic rules and let ground instances fire via unification.  
+6. Query: determine is_young("Dave", True) or not. Since Dave is only explicitly big, apply chain:  
+   - is_big("Dave") → via "all big things are white" ⇒ is_white("Dave")  
+   - is_big("Dave") → via "all big things are round" ⇒ is_round("Dave")  
+   - is_round("Dave") → via "all round things are green" ⇒ is_green("Dave")  
+   - is_green("Dave") → via "all green things are red" ⇒ is_red("Dave")  
+   - Now: is_white("Dave"), is_red("Dave") → via "white, red things are rough" ⇒ is_rough("Dave")  
+   - So: is_white("Dave"), is_red("Dave") ⇒ is_rough("Dave"); and from above: is_round("Dave"), but need is_young.  
+   - To get young, need rough + white (→ young) — we have both, so is_young("Dave")  
+   - Alternatively: via "all big things are white" → is_white; "all round things are green", and "all green things are red"; but key chain is:  
+     big → white, round; round → green; green → red. Also: white + red → rough. Now have big ⇒ white, and big ⇒ round ⇒ green ⇒ red; plus white + red ⇒ rough.  
+     Now with rough and white (both true for Dave) → young.  
+7. Encode final query as facts.is_young("Dave", True).

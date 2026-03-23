@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Domain:**
+    * List the seven birds as string variables: `"hawk"`, `"hummingbird"`, `"quail"`, `"owl"`, `"crow"`, `"robin"`, and `"cardinal"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven bird variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+    * Translate each statement into a constraint using `addConstraint` with lambda functions:
+        * "The cardinal is the second from the right" → `cardinal == 6`.
+        * "The hawk is the rightmost" → `hawk == 7`.
+        * "The owl is to the left of the hummingbird" → `owl < hummingbird`.
+        * "The robin is to the left of the quail" → `robin < quail`.
+        * "The owl is to the right of the crow" → `crow < owl`.
+        * "The robin is the fourth from the left" → `robin == 4`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Since the constraints uniquely determine positions, extract the single solution from the list.
+
+5.  **Determine the Leftmost Bird:**
+    * Identify which bird has position 1 (leftmost) in the solution.
+    * Create a mapping from choice letters ("A" to "G") to corresponding bird names:
+        - "A" → "hawk"
+        - "B" → "hummingbird"
+        - "C" → "quail"
+        - "D" → "owl"
+        - "E" → "crow"
+        - "F" → "robin"
+        - "G" → "cardinal"
+    * Find the choice letter whose mapped bird has position 1.
+    * Output that choice letter as the answer.

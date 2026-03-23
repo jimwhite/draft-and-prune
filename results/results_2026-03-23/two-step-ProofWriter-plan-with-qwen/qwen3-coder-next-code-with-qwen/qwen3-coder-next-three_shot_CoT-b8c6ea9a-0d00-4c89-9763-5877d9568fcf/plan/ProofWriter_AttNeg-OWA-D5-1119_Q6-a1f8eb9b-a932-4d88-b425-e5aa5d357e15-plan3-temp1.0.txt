@@ -1,0 +1,18 @@
+1. Identify all individuals: Anne, Bob, Dave, Fiona.
+2. Encode all explicit factual assertions using ternary predicates of the form predicate(subject, True/False/obj, True).
+   - For unary properties (is_blue, is_cold, is_kind, is_quiet, is_green, is_furry, is_nice), use property(subject, True) or property(subject, False) as needed (e.g., is_quiet("Bob", False), is_furry("Dave", False)).
+3. Translate all direct factual statements:
+   - Anne: is_blue("Anne", True), is_cold("Anne", True), is_kind("Anne", True), is_quiet("Anne", True)
+   - Bob: is_blue("Bob", True), is_kind("Bob", True), is_nice("Bob", True), is_quiet("Bob", False)
+   - Dave: is_furry("Dave", False), is_green("Dave", True), is_quiet("Dave", True)
+   - Fiona: is_cold("Fiona", True) — no other direct properties stated.
+4. Convert all universal conditionals and implications into PyKe rules:
+   • All cold people are blue → foreach(is_cold(X, True)) assert(is_blue(X, True))
+   • Green, nice people are kind → foreach(and(is_green(X, True), is_nice(X, True))) assert(is_kind(X, True))
+   • All blue people are kind → foreach(is_blue(X, True)) assert(is_kind(X, True))
+   • Kind, cold people are nice → foreach(and(is_kind(X, True), is_cold(X, True))) assert(is_nice(X, True))
+   • If someone is nice then they are green → foreach(is_nice(X, True)) assert(is_green(X, True))
+   • Cold, green people are quiet → foreach(and(is_cold(X, True), is_green(X, True))) assert(is_quiet(X, True))
+5. For implications involving logical conjunction in the antecedent, use appropriate `foreach` syntax with `and(...)` or nested conditions if PyKe supports it; otherwise, define intermediate rules.
+6. The query tests whether Fiona is not kind:
+   → Use facts.is_kind("Fiona", False)

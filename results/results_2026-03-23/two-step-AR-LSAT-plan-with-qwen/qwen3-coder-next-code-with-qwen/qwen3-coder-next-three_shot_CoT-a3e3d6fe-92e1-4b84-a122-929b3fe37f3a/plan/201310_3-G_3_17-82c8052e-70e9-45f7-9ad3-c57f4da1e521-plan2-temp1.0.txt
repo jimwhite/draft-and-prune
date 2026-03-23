@@ -1,0 +1,31 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign integer codes.  
+2. Enumerate the three screens (1, 2, 3) and time slots per screen:  
+   - Screen 1: slot0 (7 P.M.), slot1 (9 P.M.)  
+   - Screen 2: slot0 (7 P.M.), slot1 (9 P.M.)  
+   - Screen 3: slot0 (8 P.M., only slot)  
+3. Create integer variables `screen[i]` and `slot[i]` for each movie i (0..4), where:  
+   - `screen[i] ∈ {1, 2, 3}`  
+   - `slot[i]` is constrained by screen: if screen=1 or 2, slot ∈ {0,1}; if screen=3, slot=0  
+4. Add **distinctness constraints**: each (screen, slot) pair is used at most once across all movies.  
+5. Add **capacity constraints**:  
+   - Screens 1 and 2 each have exactly two movies (i.e., for screen 1: count of movies with `screen[i]==1` is 2; same for screen 2).  
+   - Screen 3 has exactly one movie.  
+6. Add **ordering constraints** (based on real-time order):  
+   - Define absolute time for each movie:  
+     - Screen 1, slot0 → 7 PM = 7  
+     - Screen 1, slot1 → 9 PM = 9  
+     - Screen 2, slot0 → 7 PM = 7  
+     - Screen 2, slot1 → 9 PM = 9  
+     - Screen 3, slot0 → 8 PM = 8  
+   - Impose `time[western] < time[horror]`  
+7. Add **screen-specific constraints**:  
+   - Sci-fi ≠ screen 3 → `screen[sci-fi] != 3`  
+   - Romance ≠ screen 2 → `screen[romance] != 2`  
+   - Horror and mystery on different screens → `screen[horror] != screen[mystery]`  
+8. Translate each answer choice into the required movie pair for screen 1, in order (7 P.M. first, then 9 P.M.).  
+   - For each choice: e.g., ['sci-fi', 'horror'] means: screen[sci-fi] = 1, slot[sci-fi] = 0; screen[horror] = 1, slot[horror] = 1.  
+9. Define answer index list `answer_index_list`. For each choice (index j):  
+   - Clone base constraints into fresh solver.  
+   - Add constraints encoding that choice as the screen 1 schedule (two movies, correct order).  
+   - Check SAT. If UNSAT, then this choice **cannot** be accurate → append j to `answer_index_list`.  
+10. Return the list of indices of choices that cannot be accurate (i.e., forced impossibilities).

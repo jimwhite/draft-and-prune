@@ -1,0 +1,16 @@
+1. Enumerate the nine scientists: [F, G, H] for botanists, [K, L, M] for chemists, [P, Q, R] for zoologists.  
+2. Create Boolean decision variables: `b_f`, `b_g`, `b_h` for botanist selection; `c_k`, `c_l`, `c_m` for chemist selection; `z_p`, `z_q`, `z_r` for zoologist selection.  
+3. Add **panel-size constraint**: exactly five scientists are selected: `b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5`.  
+4. Add **type-covering constraint**: at least one from each group:  
+   - Botanist: `b_f + b_g + b_h >= 1`  
+   - Chemist: `c_k + c_l + c_m >= 1`  
+   - Zoologist: `z_p + z_q + z_r >= 1`.  
+5. Add **conditional constraint**: if >1 botanist, then ≤1 zoologist: `(b_f + b_g + b_h > 1) → (z_p + z_q + z_r <= 1)`. Implement as: `b_f + b_g + b_h <= 1 OR z_p + z_q + z_r <= 1`. Use auxiliary Boolean `cond_bot2` and big-M encoding or direct implication: `(b_f + b_g + b_h - 2) + (z_p + z_q + z_r - 1) >= 0 ⇒ UNSAT`. Better: use `Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1)`.  
+6. Add **F–K incompatibility**: `¬(b_f ∧ c_k)` ⇒ `b_f + c_k <= 1`.  
+7. Add **K–M incompatibility**: `¬(c_k ∧ c_m)` ⇒ `c_k + c_m <= 1`.  
+8. Add **M→P∧R dependency**: `c_m → (z_p ∧ z_r)` ⇒ `c_m <= z_p`, `c_m <= z_r`.  
+9. For each answer choice, create a fresh solver and add constraints fixing selection to exactly the scientists in that choice:  
+   - For “F, G, K, P, Q”: set `b_f=1, b_g=1, b_h=0, c_k=1, c_l=0, c_m=0, z_p=1, z_q=1, z_r=0`.  
+   - Repeat similarly for each choice.  
+10. Check satisfiability: if SAT, that selection is acceptable; record its index (0 to 4).  
+11. Return the index of the first acceptable selection found (since only one is correct per LSAT-style logic).

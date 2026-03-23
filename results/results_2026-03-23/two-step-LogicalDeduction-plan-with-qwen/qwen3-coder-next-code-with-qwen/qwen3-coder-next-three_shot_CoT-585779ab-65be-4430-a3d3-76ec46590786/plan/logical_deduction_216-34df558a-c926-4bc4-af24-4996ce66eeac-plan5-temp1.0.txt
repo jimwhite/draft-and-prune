@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Define the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Assign a numerical domain from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, consistent with standard ranking conventions for "most/least expensive".
+    * Add all variables to the problem with this domain.
+
+3.  **Add Constraints from the Statements:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint:
+        * "The oranges are more expensive than the peaches" → `oranges > peaches`.
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.
+        * "The pears are less expensive than the cantaloupes" → `pears < 4` (since cantaloupes == 4 and less expensive = lower rank number).
+        * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = rank 7, second-most = rank 6).
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest=1, second-cheapest=2, third-cheapest=3).
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (since constraints are tight, only one solution exists).
+
+5.  **Identify the Second-Cheapest Fruit and Match to Choices:**
+    * The question asks which fruit is second-cheapest, i.e., rank = 2.
+    * Create a mapping from choice letters to fruit names:
+        A → watermelons, B → mangoes, C → kiwis, D → pears, E → cantaloupes, F → oranges, G → peaches.
+    * Examine the solved solution: locate which fruit has position 2.
+    * Return the corresponding choice letter as the answer.

@@ -1,0 +1,22 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel (0), grain (1), livestock (2), machinery (3), produce (4), textiles (5).  
+2. Create integer variables `pos[cargo]` for the position (1–6) of each cargo type.  
+3. Add **domain and uniqueness constraints**:  
+   - Each `pos[cargo]` ∈ {1,2,3,4,5,6}.  
+   - All positions are distinct (via `Distinct([pos_fuel, pos_grain, ..., pos_textiles])`).  
+4. Add **base ordering constraints** from the problem:  
+   - `pos_grain > pos_livestock`  
+   - `pos_livestock > pos_textiles`  
+   - `pos_produce > pos_fuel`  
+   - Textiles is next to produce: `abs(pos_textiles - pos_produce) == 1`  
+5. Add **conditional constraint** (the "if" premise): produce is next to livestock: `abs(pos_produce - pos_livestock) == 1`  
+6. Translate answer choices into constraints by negating each (to apply proof-by-contradiction for the EXCEPT question):  
+   - A. Bay 2 is holding fuel → constraint `pos_fuel == 2`  
+   - B. Bay 4 is holding produce → constraint `pos_produce == 4`  
+   - C. Bay 4 is holding textiles → constraint `pos_textiles == 4`  
+   - D. Bay 5 is holding grain → constraint `pos_grain == 5`  
+   - E. Bay 5 is holding machinery → constraint `pos_machinery == 5`  
+7. Define `impossible_indices = []`. For each answer choice *i* (0 to 4):  
+   - Clone the base + conditional constraints into a fresh solver.  
+   - Assert the specific position constraint for that choice (e.g., `pos_fuel == 2`).  
+   - If the solver returns UNSAT, then this choice **cannot** be true under the premise; thus it is a candidate for the EXCEPT answer. Append index *i* to `impossible_indices`.  
+8. The correct EXCEPT answer corresponds to the index in `impossible_indices` (there should be exactly one such index), and the plan outputs that list.

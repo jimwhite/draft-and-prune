@@ -1,0 +1,19 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables for the showing position (1 through 7) of each house.  
+3. Add **domain and uniqueness constraints**: all position variables must be integers in [1,7] and pairwise distinct.  
+4. Define time-slot constraints based on position ranges:  
+    - Morning slots: positions 1–2, Afternoon slots: positions 3–5, Evening slots: positions 6–7.  
+5. Add **J constraint**: J must be in evening ⇒ position_J ∈ {6,7}.  
+6. Add **K constraint**: K cannot be in morning ⇒ position_K ∉ {1,2} (i.e., ≥3).  
+7. Add **L constraint**: L after K and before M ⇒ position_K < position_L < position_M.  
+8. Translate each answer choice into a logical condition:  
+    - "K is shown in the evening" ⇔ position_K ∈ {6,7}  
+    - "L is shown in the afternoon" ⇔ position_L ∈ {3,4,5}  
+    - "L is shown in the evening" ⇔ position_L ∈ {6,7}  
+    - "M is shown in the morning" ⇔ position_M ∈ {1,2}  
+    - "M is shown in the afternoon" ⇔ position_M ∈ {3,4,5}  
+9. For each choice, check if it **must** be true by verifying that the constraints *together with* the negation of the choice are UNSAT:  
+    - Clone base constraints into fresh solver.  
+    - Assert the negation of the choice (e.g., for "K is shown in evening", assert position_K ∉ {6,7}).  
+    - If UNSAT, then the choice is forced ⇒ append its index to answer_index_list.  
+10. Print the answer index list (the one choice proven necessary).

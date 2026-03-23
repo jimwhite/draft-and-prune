@@ -1,0 +1,30 @@
+1. Identify all entities and types: Stella, tumpus, rompus, numpus, yumpus, zumpus, impus, dumpus, vumpus, jompus, wumpus.  
+2. Identify all properties: angry, bright, luminous, transparent, bitter, red, happy, large.  
+3. Represent "Stella is a yumpus" as a base fact: `is_a("Stella", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every tumpus is not angry.  
+   - Tumpuses are rompuses.  
+   - Every numpus is not bright.  
+   - Rompuses are not luminous.  
+   - Rompuses are yumpuses.  
+   - Yumpuses are transparent.  
+   - Yumpuses are zumpuses.  
+   - Each zumpus is not bitter.  
+   - Zumpuses are impuses.  
+   - Impuses are red.  
+   - Each impus is a dumpus.  
+   - Every dumpus is happy.  
+   - Each dumpus is a vumpus.  
+   - Vumpuses are bright.  
+   - Every vumpus is a jompus.  
+   - Jompuses are large.  
+   - Each jompus is a wumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence. Note especially:  
+   - Since Stella is a yumpus, she is a zumpus (via "Yumpuses are zumpuses").  
+   - Since she is a zumpus, she is an impus (via "Zumpuses are impuses").  
+   - Since she is an impus, she is a dumpus (via "Each impus is a dumpus").  
+   - Since she is a dumpus, she is a vumpus (via "Each dumpus is a vumpus").  
+   - Since she is a vumpus, she is bright (via "Vumpuses are bright").  
+   - Thus, `is_bright("Stella", True)` is provable.  
+6. The query tests if the statement "Stella is bright" is provable:  
+   → Use `facts.is_bright("Stella", True)`.

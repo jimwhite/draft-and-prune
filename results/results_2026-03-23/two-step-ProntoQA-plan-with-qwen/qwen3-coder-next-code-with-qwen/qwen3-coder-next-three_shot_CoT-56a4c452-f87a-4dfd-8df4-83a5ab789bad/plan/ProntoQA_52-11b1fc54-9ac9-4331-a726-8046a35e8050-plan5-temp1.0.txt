@@ -1,0 +1,22 @@
+1.  Identify all entities and types: Polly, jompus, dumpus, zumpus, wumpus, impus, vumpus, tumpus, numpus.  
+2.  Identify all properties: spicy, transparent, feisty, dull, blue, floral.  
+3.  Represent "Polly is a jompus" as a base fact: `is_a("Polly", "jompus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+   - Every jompus is spicy.  
+   - Every jompus is a dumpus.  
+   - Each dumpus is not transparent.  
+   - Each dumpus is a zumpus.  
+   - Zumpuses are feisty.  
+   - Zumpuses are wumpuses.  
+   - Each wumpus is not dull.  
+   - Every wumpus is an impus.  
+   - Every vumpus is not blue. *(Note: irrelevant for Polly since no path from jompus to vumpus is supported by the rules; will be added but unused.)*  
+   - Impuses are blue.  
+   - Impuses are tumpuses.  
+   - Tumpuses are not floral.  
+   - Each tumpus is a numpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  Derive Polly’s type chain: jompus → dumpus → zumpus → wumpus → impus.  
+   - From "impuses are blue", infer Polly is blue.  
+7.  The query tests if the statement "Polly is blue" is provable:  
+   → Use `facts.is_blue("Polly", True)`.

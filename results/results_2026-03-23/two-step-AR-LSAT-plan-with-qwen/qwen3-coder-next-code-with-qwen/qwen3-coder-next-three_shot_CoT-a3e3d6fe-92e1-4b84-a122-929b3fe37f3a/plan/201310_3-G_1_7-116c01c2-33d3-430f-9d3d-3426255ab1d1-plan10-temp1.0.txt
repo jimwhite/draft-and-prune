@@ -1,0 +1,36 @@
+1. Enumerate the six bands: Uneasy, Vegemite, Wellspring, Xpert, Yardsign, Zircon → assign integer indices 0 to 5.  
+2. Create integer variables `pos[band]` for each band’s slot (1 to 6).  
+3. Add **domain constraints**: all `pos[band]` are integers in [1,6], and pairwise distinct (a permutation).  
+4. Add **original constraints**:  
+   - Vegemite < Zircon (`pos[Vegemite] < pos[Zircon]`)  
+   - Wellspring < Xpert AND Zircon < Xpert (`pos[Wellspring] < pos[Xpert]` ∧ `pos[Zircon] < pos[Xpert]`)  
+   - Uneasy ∈ {4,5,6} (`pos[Uneasy] ≥ 4`)  
+   - Yardsign ∈ {1,2,3} (`pos[Yardsign] ≤ 3`)  
+5. For each choice (each proposed replacement constraint), generate a fresh solver and:  
+   - Add the six original constraints *except* `Wellspring < Xpert ∧ Zircon < Xpert`.  
+   - Add the proposed replacement constraint.  
+   - Check if the *set of all possible orderings* (i.e., satisfying assignments) is identical to that under the original constraints.  
+   - To test equivalence:  
+     a. Enumerate *all* satisfying permutations under the original constraints (by adding constraints that exclude previously found models iteratively until UNSAT).  
+     b. For each such permutation, verify it satisfies the modified constraint set (original + replacement), and vice versa.  
+   - Practically in Z3: for each candidate, assert that the two constraint systems are logically equivalent by checking:  
+     - `(original_constraints ∧ replacement_constraint) ⇒ original_constraints` is tautology (always SAT when original holds), and  
+     - `original_constraints ⇒ (replacement_constraint ∧ ¬(Wellspring < Xpert ∧ Zircon < Xpert))` is unsatisfiable — i.e., the replacement constraint *entirely replaces* the two inequalities.  
+   - More robust: For each candidate, construct solver1 with original constraints (including the two original precedence constraints), and solver2 with original constraints *minus* those two, plus the replacement constraint. Then check:  
+     - `solver1.is_sat() == solver2.is_sat()` for all partial assignments? → No, instead:  
+     - Check that the *sets of models are identical* by verifying:  
+       (i) every model of solver1 satisfies solver2’s constraints, and  
+       (ii) every model of solver2 satisfies solver1’s constraints.  
+     - Since Z3 can’t universally quantify, instead sample exhaustively (only 6! = 720 permutations) by iterating over all permutations, filtering those satisfying original constraints, and checking which also satisfy the replacement.  
+   - Implementation: Precompute list `original_models` = all permutations of [1..6] satisfying original constraints (including `Wellspring < Xpert` and `Zircon < Xpert`).  
+   - For each candidate replacement, compute `replacement_models` = permutations satisfying original constraints *except* the two Xpert precedences, but satisfying the candidate constraint.  
+   - If `original_models == replacement_models`, then the candidate is equivalent.  
+6. Translate choices to conditions:  
+   - Choice 0: “Only Uneasy can perform in a later slot than Xpert” → means `pos[b] < pos[Xpert]` for all b ≠ Uneasy, and `pos[Uneasy] > pos[Xpert]`.  
+   - Choice 1: “Vegemite < Wellspring < Zircon” → add two strict inequalities.  
+   - Choice 2: “Vegemite < Xpert ∧ Wellspring < Xpert” (missing Zircon < Xpert) — likely insufficient.  
+   - Choice 3: “|pos[Xpert] − pos[Uneasy]| = 1” — adjacency.  
+   - Choice 4: `pos[Xpert] ∈ {5,6}` — a bound.  
+7. For each choice (i=0..4), build `replacement_models` as above and compare to `original_models`.  
+8. Append the index of the choice whose replacement yields identical model sets to `answer_index_list`.  
+9. Print `answer_index_list`.

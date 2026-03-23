@@ -1,0 +1,23 @@
+1. Enumerate the five students and assign integer indices: Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4.  
+2. Define Boolean team variables: `team[i]` is True if student i is on green team, False for red team.  
+3. Define Boolean facilitator variables: `fac[i]` is True if student i is a facilitator.  
+4. Add **team-size constraint**: Exactly two students on green, three on red (or vice versa), but per problem one team has 2, other has 3 — enforce `sum(team) == 2` or `sum(team) == 3`; use auxiliary variable or disjunction, but better: enforce `sum(team) == 2` (green=2, red=3) without loss of generality since colors are symmetric except for given assignments. However, note Lateefah is *fixed* to green — so enforce `sum(team) == 2` with `team[2] = True`.  
+5. Add **given assignments**:  
+   - Lateefah → green: `team[2] == True`.  
+   - Olga and Juana on different teams: `team[0] != team[4]`.  
+   - Olga is a facilitator: `fac[4] == True`.  
+6. Add **team-facilitator constraints**:  
+   - Each team has exactly one facilitator:  
+     - If green team has size S = sum(team), then `sum(fac[i] for i in range(5) if team[i]) == 1`.  
+     - Similarly, `sum(fac[i] for i in range(5) if not team[i]) == 1`.  
+7. Add **Kelly is not a facilitator**: `fac[1] == False`.  
+8. Impose the conditional assumption: **Mei is on green team**, i.e., `team[3] == True`.  
+9. With all constraints fixed, enumerate all satisfying assignments (or just reason symbolically), and for each of the five answer options:  
+   - Interpret option as a logical condition (e.g., “Juana is assigned to green” ↔ `team[0] == True`).  
+   - Check if that condition holds in **every** satisfying assignment.  
+10. To do this via Z3: For each answer choice option j (j=0..4):  
+    - Clone the current solver (with Mei-on-green assumption).  
+    - Assert the negation of option j (e.g., `team[0] != True` for first option).  
+    - If UNSAT, then option j **must be true**.  
+11. Collect all indices j where the option is forced (i.e., UNSAT on negation).  
+12. Output the index list (expected to have exactly one element).

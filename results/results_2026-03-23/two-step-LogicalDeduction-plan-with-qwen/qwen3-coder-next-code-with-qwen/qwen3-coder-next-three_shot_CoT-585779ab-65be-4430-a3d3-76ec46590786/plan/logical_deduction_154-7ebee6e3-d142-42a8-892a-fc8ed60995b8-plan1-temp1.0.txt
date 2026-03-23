@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a new `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven golfers as string variables: `"Amy"`, `"Eve"`, `"Ada"`, `"Rob"`, `"Dan"`, `"Mel"`, and `"Joe"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (best/final position)** and **7 = last place**.
+    * Add all seven golfers as variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct finish positions.
+    * Translate each statement into a constraint:
+        * "Joe finished third" → ` Joe == 3 `
+        * "Dan finished last" → ` Dan == 7 `
+        * "Eve finished first" → ` Eve == 1 `
+        * "Mel finished below Rob" → Mel’s position number is greater than Rob’s (` Mel > Rob `), since higher numbers mean worse (lower/further down) finish.
+        * "Ada finished above Joe" → Ada’s position number is less than Joe’s (` Ada < 3 `), since higher rank means smaller position number.
+        * "Rob finished third-to-last" → Third-to-last in 7 golfers is position `7 - 3 + 1 = 5`, so ` Rob == 5 `. (Confirm: last=7, second-last=6, third-last=5)
+
+4.  **Solve the Constraint Problem:**
+    * Invoke `getSolutions()` to enumerate all valid assignments of positions to golfers satisfying the constraints.
+    * Extract the unique solution (as the problem is deterministic) from the returned list of solutions.
+
+5.  **Identify Who Finished Fourth:**
+    * The question asks which golfer finished fourth, i.e., has position value `4`.
+    * Map each choice letter to the corresponding golfer name (A→Amy, B→Eve, etc.).
+    * Examine the solution dictionary to find which golfer has position `4`.
+    * Return the choice letter (A–G) corresponding to that golfer as the answer.

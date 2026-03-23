@@ -1,0 +1,21 @@
+1. Identify all entities and types: Rex, zumpus, vumpus, dumpus, tumpus, wumpus, rompus, numpus.  
+2. Identify all properties: temperate, large, feisty, opaque, floral.  
+3. Represent "Rex is a zumpus" as a base fact: `is_a("Rex", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every zumpus is not temperate.  
+   - Every zumpus is a vumpus.  
+   - Vumpuses are large.  
+   - Each vumpus is a dumpus.  
+   - Every dumpus is feisty.  
+   - Tumpuses are not opaque. *(Note: tumpus does not appear in the chain from Rex, so this rule is irrelevant for proving properties of Rex.)*  
+   - Dumpuses are wumpuses.  
+   - Every wumpus is floral.  
+   - Wumpuses are rompuses.  
+   - Rompuses are opaque.  
+   - Rompuses are numpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (including negative facts like `is_temperate(x, False)`, `is_opaque(r, True)` etc.).  
+6. The query tests if the statement "Rex is not opaque" is provable:  
+   → First, derive that `is_a("Rex", "zumpus")` implies `is_a("Rex", "vumpus")`, then `is_a("Rex", "dumpus")`, then `is_a("Rex", "wumpus")`, then `is_a("Rex", "rompus")`.  
+   → Since every rompus is opaque, conclude `is_opaque("Rex", True)`.  
+   → Therefore, `is_opaque("Rex", False)` is *not* provable, and in fact contradicts derived knowledge.  
+   → Use `facts.is_opaque("Rex", False)` to check the query — if it cannot be proven, and the opposite is provable, then the statement "Rex is not opaque" is false.

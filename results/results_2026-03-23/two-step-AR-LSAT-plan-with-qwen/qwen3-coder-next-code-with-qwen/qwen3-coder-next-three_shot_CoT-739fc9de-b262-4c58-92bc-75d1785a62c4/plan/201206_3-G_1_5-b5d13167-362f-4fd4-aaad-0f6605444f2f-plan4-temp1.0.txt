@@ -1,0 +1,17 @@
+1. Enumerate the six lab assistants and assign each an integer index (e.g., Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5).  
+2. Enumerate the six sessions: Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA); assign each a unique position index 0–5 in chronological order.  
+3. Create integer variables `pos[i]` for each assistant i (0–5), indicating the session position (0–5) they lead.  
+4. Add **domain constraints**: all `pos[i]` must be distinct integers in [0, 5].  
+5. Add **fixed assignment constraint**: Julio leads Thursday afternoon → `pos[Julio] == 3` (since positions: 0=WM,1=WA,2=TM,3=TA,4=FM,5=FA).  
+6. Add **same-day constraints** for Kevin and Rebecca: `day(pos[Kevin]) == day(pos[Rebecca])`, where `day(p) = p // 2`.  
+7. Add **different-day constraint** for Lan and Olivia: `day(pos[Lan]) != day(pos[Olivia])`.  
+8. Add **Nessa-afternoon constraint**: `pos[Nessa] % 2 == 1` (odd positions correspond to afternoons).  
+9. Add **Julio-before-Olivia constraint**: `pos[Julio] < pos[Olivia]`.  
+10. For each of the five *other* assistants (Kevin, Lan, Nessa, Olivia, Rebecca), determine if their session position is uniquely determined given all constraints and `pos[Julio] == 3`.  
+    - To check uniqueness for assistant X:  
+        a. Clone the base solver with all constraints and `pos[Julio] == 3`.  
+        b. Query for all satisfying models of `pos[X]` (e.g., by iteratively adding `pos[X] != k` for each candidate k until UNSAT, or collect all solutions via solver models).  
+        c. If the set of possible values for `pos[X]` has size 1, then X's session is determined.  
+11. Count the number of assistants (among Kevin, Lan, Nessa, Olivia, Rebecca) whose session position is uniquely determined.  
+12. Map this count to the answer choices: return the string corresponding to that count (e.g., if 2 assistants have determined sessions, answer "two").  
+13. Output the final answer string.

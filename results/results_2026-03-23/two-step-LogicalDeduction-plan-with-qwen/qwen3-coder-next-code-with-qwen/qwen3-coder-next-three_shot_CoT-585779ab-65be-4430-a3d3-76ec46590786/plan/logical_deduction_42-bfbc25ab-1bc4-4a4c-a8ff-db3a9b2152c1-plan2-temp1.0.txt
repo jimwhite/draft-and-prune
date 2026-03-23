@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Set up the variables as the five vehicles: `"minivan"`, `"limousine"`, `"sedan"`, `"tractor"`, and `"hatchback"`.  
+    * Define the domain as integers from 1 to 5, where **1 represents the oldest** and **5 represents the newest**.  
+    * Add all five vehicle variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+    * Convert each statement into a constraint using lambda functions:  
+        * "The tractor is the second-newest" → `tractor == 4` (since 5 = newest, so 4 = second-newest).  
+        * "The limousine is newer than the hatchback" → `limousine < hatchback` (younger = larger number, so newer means higher rank value; wait—no: our mapping is 1=oldest, 5=newest. So *newer* means a larger number, i.e., `limousine > hatchback` is incorrect—actually: if limo is newer than hatchback, then limo's age rank > hatchback's. So `limousine > hatchback`).  
+        * Correction: **Double-check mapping logic.** If 1 = oldest, then higher number = newer. So:  
+            - "X is newer than Y" ⇔ `rank(X) > rank(Y)`  
+            - "X is older than Y" ⇔ `rank(X) < rank(Y)`  
+        * So:  
+            - "The limousine is newer than the hatchback" → `limousine > hatchback`  
+            - "The limousine is older than the sedan" → `limousine < sedan`  
+            - "The minivan is newer than the sedan" → `minivan > sedan`  
+        * And: "The tractor is the second-newest" → `tractor == 4` (positions: 1=oldest, 2, 3, 4=second-newest, 5=newest)
+
+4.  **Solve for the Arrangement:**  
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Since the problem is well-constrained, extract the single solution (or first solution) from the result list.
+
+5.  **Determine Which Vehicle Is Oldest (Rank 1):**  
+    * Examine the solution dictionary to find which vehicle has rank 1 (i.e., position value == 1).  
+    * Map the identified vehicle to the corresponding choice letter using the choices:  
+        - A) minivan  
+        - B) limousine  
+        - C) sedan  
+        - D) tractor  
+        - E) hatchback  
+    * Return the letter (A–E) of the choice whose vehicle is assigned rank 1.

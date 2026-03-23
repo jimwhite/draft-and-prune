@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven bird variables: `"cardinal"`, `"crow"`, `"hummingbird"`, `"blue jay"`, `"owl"`, `"robin"`, and `"quail"`.
+    * Define the domain as integers from 1 to 7, where position 1 is leftmost and position 7 is rightmost.
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+    * Translate each statement into a constraint using lambda functions or direct value constraints:
+        * "The cardinal is to the right of the crow" → `cardinal > crow`
+        * "The quail is the third from the left" → `quail == 3`
+        * "The owl is to the right of the robin" → `owl > robin`
+        * "The hummingbird is to the right of the blue jay" → `hummingbird > blue jay`
+        * "The cardinal is the second from the left" → `cardinal == 2`
+        * "The owl is the third from the right" → `owl == 5` (since positions: leftmost=1, ..., third from right = 7−2 = 5)
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments satisfying all constraints.
+    * Extract the unique solution (the list will contain one dictionary mapping birds to positions).
+
+5.  **Determine Which Option is True:**
+    * The question asks which bird is third from the right, i.e., position 5 (since 7−2=5).
+    * Create a dictionary mapping choice letters ("A" through "G") to their respective bird names:  
+      `{"A": "cardinal", "B": "crow", "C": "hummingbird", "D": "blue jay", "E": "owl", "F": "robin", "G": "quail"}`
+    * For each choice letter, check if the bird's position in the solution is exactly 5.
+    * Return (or print) the choice letter whose bird satisfies `position == 5`.

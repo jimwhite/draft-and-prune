@@ -1,0 +1,26 @@
+1. Enumerate the three photographers (Fuentes, Gagnon, Hue) and assign them integer codes 0, 1, 2 respectively.  
+2. Enumerate the three sections (Lifestyle, Metro, Sports) and assign them integer codes 0, 1, 2 respectively.  
+3. Create integer variables `count[section][photographer]` for the number of photographs by each photographer in each section (domain: 0–3).  
+4. Add **section size constraints**: for each section, the sum of counts across photographers equals 2.  
+5. Add **photographer total constraints**: for each photographer, total count across all sections is between 1 and 3 inclusive.  
+6. Add **Gagnon constraint**: `count[Sports][1] == 0`.  
+7. Add **Lifestyle-Metro overlap constraint**: at least one photographer who appears in Lifestyle (count > 0) also appears in Metro (count > 0).  
+8. Add **Hue-Fuentes balance constraint**: `count[Lifestyle][2] == count[Sports][0]`.  
+9. Add **given condition**: Lifestyle section has exactly one Fuentes and one Hue photograph → `count[Lifestyle][0] == 1` and `count[Lifestyle][2] == 1`.  
+10. From the Lifestyle constraint, deduce implicitly: `count[Lifestyle][1] == 0` (since exactly two photos, one Fuentes and one Hue).  
+11. From photographer total constraints:  
+    - Fuentes: `count[Lifestyle][0] + count[Metro][0] + count[Sports][0] ∈ [1,3]` → `1 + m0 + s0 ∈ [1,3]` ⇒ `m0 + s0 ∈ [0,2]`.  
+    - Hue: `1 + m2 + s2 ∈ [1,3]` ⇒ `m2 + s2 ∈ [0,2]`.  
+    - Gagnon: `m1 + s1 ∈ [1,3]`, and `s1 = 0` (from Gagnon constraint), so `m1 ∈ [1,3]`, but since Metro has only 2 photos, `m1 ≤ 2` ⇒ `m1 = 1 or 2`.  
+12. Translate each answer choice into a constraint:  
+    - Choice A: Metro both Fuentes → `count[Metro][0] == 2`, so `m1 = 0, m2 = 0`.  
+    - Choice B: Metro both Gagnon → `count[Metro][1] == 2`.  
+    - Choice C: Exactly one Metro by Hue → `count[Metro][2] == 1`.  
+    - Choice D: Sports both Hue → `count[Sports][2] == 2`.  
+    - Choice E: Sports neither Hue → `count[Sports][2] == 0`.  
+13. For each answer choice:  
+    - Clone the base constraints + given condition into a fresh solver.  
+    - Add the specific constraint for that choice.  
+    - Check satisfiability with Z3.  
+14. Collect the indices of all choices that yield SAT (i.e., could be true).  
+15. Output the list of valid choice indices.

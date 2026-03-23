@@ -1,0 +1,20 @@
+1. Enumerate the five solos (positions 1 to 5) and create two integer variables per solo: `pianist[i]` (0=Wayne, 1=Zara) and `type[i]` (0=modern, 1=traditional) for i in 0..4.  
+2. Add **domain constraints**: `pianist[i] ∈ {0,1}`, `type[i] ∈ {0,1}` for all i.  
+3. Add **fixed constraints** from conditions:  
+   - Third solo is traditional: `type[2] == 1`.  
+   - Exactly two traditional pieces are consecutive (i.e., there exists exactly one index j such that `type[j] == type[j+1] == 1` and no other adjacent pair of 1s exists).  
+   - In fourth solo, either Wayne performs traditional or Zara performs modern: `(pianist[3] == 0 ∧ type[3] == 1) ∨ (pianist[3] == 1 ∧ type[3] == 0)`.  
+   - Pianist of second solo ≠ pianist of fifth solo: `pianist[1] != pianist[4]`.  
+   - No traditional piece before Wayne performs at least one modern piece: ∃k ≤ m such that `pianist[k] == 0 ∧ type[k] == 0`, and for all i < m, `type[i] == 0` (equivalently: the first traditional solo occurs after the first modern solo by Wayne).  
+4. Add **problem-specific assumption**: fifth solo is Wayne performing traditional: `pianist[4] == 0 ∧ type[4] == 1`.  
+5. Translate the five answer choices into logical constraints:  
+   - A: Zara performs first solo → `pianist[0] == 1`  
+   - B: Wayne performs second solo → `pianist[1] == 0`  
+   - C: Zara performs third solo → `pianist[2] == 1`  
+   - D: Second solo is modern → `type[1] == 0`  
+   - E: Fourth solo is traditional → `type[3] == 1`  
+6. Define answer index list `answer_index_list = []`. For each choice index j in 0..4:  
+   - Clone base constraints + assumption into fresh solver S.  
+   - Add constraint for choice j.  
+   - If S.check() == sat, append j to `answer_index_list`.  
+7. Output `answer_index_list`.

@@ -1,0 +1,65 @@
+1. Identify all individuals: Dave, Erin, Fiona, Harry.  
+2. Encode all directly stated facts using ternary predicates of the form predicate(subject, value, True), where:  
+   - For unary properties (e.g., is_red, is_quiet, is_white, is_big, is_green), the object is True;  
+   - For negated facts (e.g., Harry is *not* green), encode as not(is_green("Harry", True)) or equivalently use facts.is_green("Harry", False) in the query setup, but in facts.pred style assert as facts.pred("Harry", "green", False) if PyKe supports negative facts — otherwise derive via rules or leave out and infer later. In standard PyKe, only positive atomic facts are asserted; negation is handled via rules or via query. Since PyKe uses forward chaining with positive facts, assume only positive atomic facts are added directly: e.g., is_red("Harry", True), is_white("Fiona", True), etc. The statement "Harry is not green" must be encoded as a fact pred("Harry", "not_green", True) *or* handled via rule-based negation — but since PyKe does not natively support negative facts, the standard workaround is to introduce a separate predicate like is_not_green and assert is_not_green("Harry", True). However, the problem says to use ternary predicates of the form predicate(subject, object, True); thus for negation we treat "not green" as a property with its own predicate: define is_not_green("Harry", True).  
+   Alternatively, more conventionally in logic programming with negation-as-failure, we avoid asserting negative facts directly and instead rely on rules. But PyKe supports *rules* that conclude *positive* facts only; negative conclusions are not directly supported. Therefore, to represent "Harry is not green", introduce a distinct predicate: e.g., pred("Harry", "not_green", True).  
+   → For consistency and compatibility, encode the sentence "Harry is not green" as facts.pred("Harry", "not_green", True) using a custom predicate `is_not_green`. So define: is_not_green("Harry", True).  
+3. List and encode all explicit facts as positive predicates:  
+   - is_red("Dave", True)  
+   - is_quiet("Erin", True)  
+   - is_white("Fiona", True)  
+   - is_big("Harry", True)  
+   - is_not_green("Harry", True)  // for "Harry is not green"  
+   - is_quiet("Harry", True)  
+   - is_red("Harry", True)  
+4. Identify and encode all rules using `foreach` + `assert`:  
+   • Rule 1: Quiet, red people are smart.  
+     → If is_quiet(x) and is_red(x), then is_smart(x).  
+   • Rule 2: If someone is quiet → they are smart. (Redundant with Rule 1, but keep if both stated; include anyway for completeness.)  
+     → is_quiet(x) → is_smart(x)  
+   • Rule 3: If Dave is red → Dave is big.  
+     → Since Dave is red, this implies is_big("Dave", True); but can encode as conditional rule: if is_red("Dave") then is_big("Dave").  
+   • Rule 4: If Dave is smart and Dave is white → Dave is big.  
+     → is_smart("Dave") ∧ is_white("Dave") → is_big("Dave")  
+   • Rule 5: If Fiona is white and Fiona is red → Fiona is rough.  
+     → Note: Fiona is only stated as white, not red — so premise may never hold. Still encode rule.  
+   • Rule 6: If someone is white → they are quiet.  
+     → is_white(x) → is_quiet(x)  
+   • Rule 7: Rough people are green.  
+     → is_rough(x) → is_green(x)  
+   • Rule 8: All smart people are red.  
+     → is_smart(x) → is_red(x)  
+5. Note: Rule 7 (rough ⇒ green) combined with "Harry is not green" implies Harry is not rough. This can be used in backward reasoning or to prevent contradictions, but PyKe only asserts forward — so if is_rough(x) gets derived, then is_green(x) follows, which would contradict the known fact that Harry is not green. However, since PyKe doesn’t support contradiction detection by default (unless using backdoor mechanisms), we focus on what *must* be derived.  
+6. The query is: "Harry is not red" — i.e., whether ¬is_red("Harry").  
+   Since Harry is explicitly stated as *red* (fact: is_red("Harry", True)), and redness is stable under forward-chaining unless overridden, the query conclusion should be **false**.  
+   To check in PyKe: assert that is_red("Harry", True) is a fact; then attempt to prove is_red("Harry", False) — which should be impossible.  
+   → Query: facts.is_red("Harry", False).  
+7. Ensure no rule derives is_not_red("Harry") or contradicts the known redness of Harry — check each rule:  
+   - Rule 2 & 1: Quiet ⇒ smart; red is consistent with smart (via Rule 8: smart ⇒ red, which aligns).  
+   - Rule 7: Rough ⇒ green; but Harry is not green, so Harry cannot be rough — and no rule derives roughness for Harry (Fiona is not red, so Rule 5 doesn’t apply; others don’t mention Harry being rough).  
+   - No rule causes Harry to lose redness.  
+   Therefore, is_red("Harry", True) remains true; ¬is_red("Harry") is false.  
+8. Final query setup: use facts.is_red("Harry", False) as the target assertion to test.
+  
+Plan:
+1. Identify individuals: Dave, Erin, Fiona, Harry.
+2. Encode explicit positive facts using ternary predicates:  
+   - is_red("Dave", True)  
+   - is_quiet("Erin", True)  
+   - is_white("Fiona", True)  
+   - is_big("Harry", True)  
+   - is_not_green("Harry", True)  // Represent "not green" via a new predicate  
+   - is_quiet("Harry", True)  
+   - is_red("Harry", True)
+3. Encode all conditional rules as PyKe foreach/ assert blocks:  
+   • If is_quiet(x) and is_red(x), then is_smart(x).  
+   • If is_quiet(x), then is_smart(x).  
+   • If is_red("Dave"), then is_big("Dave").  
+   • If is_smart("Dave") and is_white("Dave"), then is_big("Dave").  
+   • If is_white("Fiona") and is_red("Fiona"), then is_rough("Fiona").  
+   • If is_white(x), then is_quiet(x).  
+   • If is_rough(x), then is_green(x).  
+   • If is_smart(x), then is_red(x).
+4. Do not assert any negative facts (e.g., is_not_smart, etc.) — only positive predicates.
+5. The query checks whether the tiger (here, Harry) is *not* red:  
+   → Use facts.is_red("Harry", False).

@@ -1,0 +1,22 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to initialize the constraint satisfaction problem.
+
+2. **Define Variables and the Domain:**  
+   * Identify the variables: `"red"`, `"gray"`, and `"white"` (representing the three books).  
+   * Define the domain as integers from 1 to 3, where **1 = leftmost**, **2 = middle (second from left)**, and **3 = rightmost**.  
+   * Add these variables with their domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a constraint:  
+     - "The white book is to the left of the gray book" → `white < gray` (using a lambda constraint).  
+     - "The red book is the second from the left" → `red == 2`.
+
+4. **Solve for the Final Arrangement:**  
+   * Use `getSolutions()` to find all valid solutions. Given the constraints, there will be exactly one solution.
+
+5. **Determine the Correct Answer:**  
+   * Observe that choice A directly states "The red book is the second from the left," which matches the explicit constraint `red == 2`.  
+   * Since this is guaranteed by the input statements and enforced in the model, choice A must be true.  
+   * Return "A" as the answer without needing further analysis of other choices, as the question asks which statement is true and A is exactly the given fact.

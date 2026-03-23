@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven variables representing the fruits: `"mangoes"`, `"kiwis"`, `"oranges"`, `"watermelons"`, `"apples"`, `"pears"`, and `"loquats"`.  
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.  
+    * Add all variables with domain {1, 2, ..., 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of prices (each fruit has a distinct price rank).  
+    * Translate each statement into constraints using lambda functions:  
+        - "The loquats are less expensive than the oranges" → `loquats < oranges`  
+        - "The oranges are the third-most expensive" → `oranges == 5` (since most expensive = 7, so 3rd-most expensive = 7−2 = 5)  
+        - "The apples are the cheapest" → `apples == 1`  
+        - "The kiwis are more expensive than the pears" → `kiwis > pears`  
+        - "The mangoes are more expensive than the watermelons" → `mangoes > watermelons`  
+        - "The loquats are more expensive than the kiwis" → `loquats > kiwis`  
+
+4.  **Solve for the Complete Ordering:**  
+    * Call `getSolutions()` to enumerate all valid assignments of ranks satisfying the constraints.  
+    * Since the problem is well-constrained and consistent, there will be exactly one solution; extract it.
+
+5.  **Determine the Most Expensive Fruit:**  
+    * The question asks which fruit is the most expensive, i.e., rank 7.  
+    * Build a mapping from choice letters to fruit names:  
+        `'A' → "mangoes"`, `'B' → "kiwis"`, `'C' → "oranges"`, `'D' → "watermelons"`, `'E' → "apples"`, `'F' → "pears"`, `'G' → "loquats"`  
+    * Search the solution dictionary for the fruit with rank value 7.  
+    * Output the corresponding choice letter as the answer.

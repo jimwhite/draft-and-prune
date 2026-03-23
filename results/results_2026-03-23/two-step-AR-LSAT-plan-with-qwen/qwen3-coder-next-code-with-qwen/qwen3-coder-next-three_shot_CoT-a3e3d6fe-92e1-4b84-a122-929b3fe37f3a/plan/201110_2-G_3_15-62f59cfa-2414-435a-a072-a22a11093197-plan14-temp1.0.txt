@@ -1,0 +1,24 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables: `r1[i][j]` = True if rider i tests bicycle j on Day 1; `r2[i][j]` = True if rider i tests bicycle j on Day 2.  
+3. Add **Day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on Day 1: for each rider i, exactly one `r1[i][j]` is True.  
+   - Each bicycle is tested by exactly one rider on Day 1: for each bicycle j, exactly one `r1[i][j]` is True.  
+4. Add **Day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on Day 2: for each rider i, exactly one `r2[i][j]` is True.  
+   - Each bicycle is tested by exactly one rider on Day 2: for each bicycle j, exactly one `r2[i][j]` is True.  
+5. Add **repetition restriction**: each rider tests a *different* bicycle on Day 2 than on Day 1: for all i, j, if `r1[i][j]` is True then `r2[i][j]` must be False.  
+6. Add **exclusion constraints**:  
+   - Reynaldo cannot test F on Day 1: `r1[Reynaldo][F]` = False.  
+   - Yuki cannot test J on Day 1: `r1[Yuki][J]` = False.  
+   - Theresa must test H on *some* day (Day 1 or Day 2): `r1[Theresa][H] ∨ r2[Theresa][H]` must be True.  
+7. Add **Yuki–Seamus dependency constraint**: the bicycle Yuki tests on Day 1 must be tested by Seamus on Day 2: for all j, `r1[Yuki][j]` ⇒ `r2[Seamus][j]`. Since each rider tests exactly one bicycle per day, this enforces `r1[Yuki][j] ↔ r2[Seamus][j]` for the unique j where `r1[Yuki][j]` holds.  
+8. Translate the five answer choices into logical assertions about rider–bicycle–day assignments:  
+   - A. Reynaldo tests J on Day 1 → `r1[Reynaldo][J]` = True  
+   - B. Reynaldo tests J on Day 2 → `r2[Reynaldo][J]` = True  
+   - C. Seamus tests H on Day 1 → `r1[Seamus][H]` = True  
+   - D. Yuki tests H on Day 1 → `r1[Yuki][H]` = True  
+   - E. Yuki tests H on Day 2 → `r2[Yuki][H]` = True  
+9. For each choice i (0 to 4), define a fresh solver, add all base constraints (3–7), and assert the specific choice condition.  
+10. If the model is SAT, then the choice *could* be true (so it’s not the answer to the "EXCEPT" question). If UNSAT, then the choice *cannot* be true — thus it is the correct EXCEPT answer.  
+11. Collect indices of choices that yield UNSAT in a list `except_index_list`. Since only one choice must be impossible, the first (or sole) index in `except_index_list` is the answer.  
+12. Return the list of indices corresponding to impossible choices (only one should exist).

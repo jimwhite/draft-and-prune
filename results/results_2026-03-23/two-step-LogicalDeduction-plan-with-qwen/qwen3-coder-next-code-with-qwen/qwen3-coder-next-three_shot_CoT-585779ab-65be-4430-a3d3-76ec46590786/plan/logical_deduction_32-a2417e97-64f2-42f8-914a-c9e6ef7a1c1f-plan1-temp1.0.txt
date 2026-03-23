@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament ranking constraints.
+
+2.  **Define Variables and Domain:**  
+    * The variables are the five golfers: `"Rob"`, `"Eve"`, `"Eli"`, `"Amy"`, and `"Dan"`.  
+    * Define the domain as integers from 1 to 5, where **1 represents first place (highest/best)** and **5 represents fifth place (lowest/worst)**.  
+    * Add all golfers as variables to the `Problem` instance, each with domain `{1, 2, 3, 4, 5}`.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.  
+    * Translate each statement into a constraint using `lambda` functions or direct assignment:  
+        * "Dan finished second" → Dan's position = 2.  
+        * "Amy finished below Eve" → Amy’s position number > Eve’s position number (since higher number = worse/below).  
+        * "Dan finished above Eve" → Dan’s position number < Eve’s position number (Dan = 2, so Eve > 2).  
+        * "Amy finished above Eli" → Amy’s position number < Eli’s position number.  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid rankings satisfying all constraints.  
+    * Extract the unique solution (or one solution, if multiple exist—though logic suggests uniqueness here).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks: who finished third? (i.e., position = 3).  
+    * Create a mapping from choice letters to golfer names: `{'A': 'Rob', 'B': 'Eve', 'C': 'Eli', 'D': 'Amy', 'E': 'Dan'}`.  
+    * In the solution dictionary, find which golfer has position 3.  
+    * Return the corresponding choice letter (e.g., if Eve is in position 3, return "B").

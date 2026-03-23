@@ -1,0 +1,21 @@
+1. Enumerate the six employees and assign them integer indices: e.g., [Robertson, Souza, Togowa, Vaughn, Xu, Young] → [0,1,2,3,4,5].  
+2. Create integer variables for each employee’s assigned parking space: `pos[0]` to `pos[5]`, one per employee.  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6}.  
+4. Add **distinctness constraint**: all `pos[i]` values are pairwise distinct (using `Distinct(pos)`).  
+5. Add **base ordering constraints**:  
+   - Young > Togowa: `pos[Young] > pos[Togowa]`  
+   - Xu > Souza: `pos[Xu] > pos[Souza]`  
+   - Robertson > Young: `pos[Robertson] > pos[Young]`  
+   - Robertson ∈ {1,2,3,4}: `pos[Robertson] <= 4`  
+6. Add **conditional constraint** for the scenario: Young > Souza (`pos[Young] > pos[Souza]`).  
+7. For each answer choice, extract the employee and space:  
+   - Choice 0: Togowa → #1 → `pos[Togowa] == 1`  
+   - Choice 1: Young → #2 → `pos[Young] == 2`  
+   - Choice 2: Robertson → #3 → `pos[Robertson] == 3`  
+   - Choice 3: Souza → #3 → `pos[Souza] == 3`  
+   - Choice 4: Vaughn → #4 → `pos[Vaughn] == 4`  
+8. Define an answer index list `answer_index_list = []`. For each choice *i*:  
+   - Clone the base solver into a fresh solver.  
+   - Assert all base + conditional constraints plus `pos[employee] == space` for choice *i*.  
+   - Check satisfiability; if SAT (model exists), then the statement **could be true**, so append *i* to `answer_index_list`.  
+9. Output the resulting `answer_index_list` (list of indices of choices that could be true under the given condition).

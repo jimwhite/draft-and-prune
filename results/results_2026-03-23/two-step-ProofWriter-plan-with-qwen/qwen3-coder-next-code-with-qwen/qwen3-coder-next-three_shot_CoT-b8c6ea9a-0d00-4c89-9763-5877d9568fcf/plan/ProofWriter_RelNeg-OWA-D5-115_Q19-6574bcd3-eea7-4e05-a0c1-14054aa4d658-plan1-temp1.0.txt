@@ -1,0 +1,24 @@
+1. Identify all entities: bald_eagle, lion, bear, dog.
+2. Define ternary predicates for all unary properties (e.g., is_blue, is_red, is_nice, is_round) and binary relations (e.g., likes, needs, chases), using the third argument as True for assertions.
+3. Encode all explicit facts as facts.pred(subject, object, True):
+   - is_blue("bald_eagle", True), is_red("bald_eagle", True), likes("bald_eagle", "lion", True)
+   - needs("bald_eagle", "bear", True), needs("bald_eagle", "dog", True)
+   - is_blue("bear", False), is_nice("bear", True), needs("bear", "dog", True)
+   - chases("dog", "bald_eagle", True), is_red("dog", True), needs("dog", "bear", False)
+   - likes("lion", "bear", False), etc. (i.e., explicitly state negated properties using facts.pred(..., False))
+4. For each conditional rule:
+   - Convert "If P then Q" into a `foreach` block matching P and an `assert` clause for Q.
+   - Handle negated atoms (e.g., "not red", "does not need") as conditions using negation-as-failure or explicit negative facts.
+5. Specifically, encode rules:
+   • If X likes lion ∧ ¬is_red(X) → chases(X, lion)
+   • If X is red ∧ needs(X, bald_eagle) → needs(bald_eagle, lion)
+   • If X is round → ¬likes(X, dog) (i.e., likes(X, dog, False))
+   • If needs(bald_eagle, dog) → is_round(dog)
+   • If X likes dog → likes(X, bald_eagle)
+   • If X chases lion ∧ likes(lion, dog) → ¬likes(dog, lion)
+   • If bear likes lion → likes(lion, dog)
+   • If X likes bear → likes(bear, lion)
+   • If X is round → likes(X, bear)
+6. Encode explicit negations as negative facts (e.g., facts.is_red("bear", False), facts.likes("lion", "bear", False), facts.needs("dog", "bear", False) is *not* given, but "dog does not need the bear" means needs("dog", "bear", False); similarly, "dog does not need the dog" is the query target).
+7. Query whether the tiger (here, dog) does *not* need itself:
+   → Use facts.needs("dog", "dog", False)

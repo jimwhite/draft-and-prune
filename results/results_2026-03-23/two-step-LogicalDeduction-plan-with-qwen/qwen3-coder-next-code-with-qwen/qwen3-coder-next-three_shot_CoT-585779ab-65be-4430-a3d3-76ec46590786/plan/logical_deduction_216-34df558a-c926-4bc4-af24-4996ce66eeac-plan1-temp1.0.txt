@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the seven fruits as variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define the domain as integers 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit (to align with typical ordering of cost from lowest to highest).  
+   * Add all seven variables and their domain (1–7) to the `Problem` instance.
+
+3. **Translate Each Statement into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert each statement into a constraint using `lambda` functions:  
+     - *"The oranges are more expensive than the peaches"* → oranges’ rank > peaches’ rank (`oranges > peaches`).  
+     - *"The cantaloupes are the fourth-most expensive"* → cantaloupes’ rank = 4.  
+     - *"The pears are less expensive than the cantaloupes"* → pears’ rank < cantaloupes’ rank (`pears < 4`).  
+     - *"The peaches are the second-most expensive"* → peaches’ rank = 6 (since most expensive = 7).  
+     - *"The mangoes are the cheapest"* → mangoes’ rank = 1.  
+     - *"The kiwis are the third-cheapest"* → kiwis’ rank = 3.
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Invoke `getSolutions()` to compute all valid assignments satisfying all constraints.  
+   * Extract the unique solution (since the problem is fully constrained and consistent, only one solution should exist).
+
+5. **Identify the Second-Cheapest Fruit:**  
+   * The question asks for the fruit with rank 2 (second-cheapest in our 1=cheapest numbering).  
+   * Build a dictionary mapping choice letters (A through G) to the corresponding fruit names:  
+     - A → `"watermelons"`, B → `"mangoes"`, C → `"kiwis"`, D → `"pears"`, E → `"cantaloupes"`, F → `"oranges"`, G → `"peaches"`.  
+   * Inspect the solved solution dictionary to find which fruit has position/rank = 2.  
+   * Output the choice letter corresponding to that fruit as the answer.

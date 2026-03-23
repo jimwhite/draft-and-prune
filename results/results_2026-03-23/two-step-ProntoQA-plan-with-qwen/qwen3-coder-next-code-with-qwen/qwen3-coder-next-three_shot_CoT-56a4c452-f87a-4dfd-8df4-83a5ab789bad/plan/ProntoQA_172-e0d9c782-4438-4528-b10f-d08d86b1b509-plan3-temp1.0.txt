@@ -1,0 +1,36 @@
+1. Identify all entities and types: Rex, zumpus, vumpus, dumpus, tumpus, wumpus, rompus, numpus.  
+2. Identify all properties: temperate, large, feisty, opaque, floral.  
+3. Represent "Rex is a zumpus" as a base fact: `is_a("Rex", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every zumpus is not temperate.  
+   - Every zumpus is a vumpus.  
+   - Vumpuses are large.  
+   - Each vumpus is a dumpus.  
+   - Every dumpus is feisty.  
+   - Tumpuses are not opaque. *(Note: tumpuses is disjoint; no assertion about Rex involves tumpus, so this rule may not affect the query—但仍 record it for completeness.)*  
+   - Dumpuses are wumpuses.  
+   - Every wumpus is floral.  
+   - Wumpuses are rompuses.  
+   - Rompuses are opaque.  
+   - Rompuses are numpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+   - `foreach (x) is_a(x, "zumpus", True) → ¬is_temperate(x)`  
+   - `foreach (x) is_a(x, "zumpus", True) → is_a(x, "vumpus", True)`  
+   - `foreach (x) is_a(x, "vumpus", True) → is_large(x)`  
+   - `foreach (x) is_a(x, "vumpus", True) → is_a(x, "dumpus", True)`  
+   - `foreach (x) is_a(x, "dumpus", True) → is_feisty(x)`  
+   - `foreach (x) is_a(x, "tumpus", True) → ¬is_opaque(x)`  
+   - `foreach (x) is_a(x, "dumpus", True) → is_a(x, "wumpus", True)`  
+   - `foreach (x) is_a(x, "wumpus", True) → is_floral(x)`  
+   - `foreach (x) is_a(x, "wumpus", True) → is_a(x, "rompus", True)`  
+   - `foreach (x) is_a(x, "rompus", True) → is_opaque(x)`  
+   - `foreach (x) is_a(x, "rompus", True) → is_a(x, "numpus", True)`  
+6. Derive properties for Rex step-by-step:  
+   - From `is_a(Rex, "zumpus", True)` and rule 4.2 → `is_a(Rex, "vumpus", True)`  
+   - From `is_a(Rex, "vumpus", True)` and rule 4.5 → `is_a(Rex, "dumpus", True)`  
+   - From `is_a(Rex, "dumpus", True)` and rule 4.8 → `is_a(Rex, "wumpus", True)`  
+   - From `is_a(Rex, "wumpus", True)` and rule 4.10 → `is_a(Rex, "rompus", True)`  
+   - From `is_a(Rex, "rompus", True)` and rule 4.11 → `is_opaque(Rex)`  
+7. The query tests whether "Rex is not opaque" is provable:  
+   → Since we derive `is_opaque(Rex)`, the negation `¬is_opaque(Rex)` is *not* provable.  
+   → Use `facts.is_opaque("Rex", False)` to check if the negated statement holds (it does not).

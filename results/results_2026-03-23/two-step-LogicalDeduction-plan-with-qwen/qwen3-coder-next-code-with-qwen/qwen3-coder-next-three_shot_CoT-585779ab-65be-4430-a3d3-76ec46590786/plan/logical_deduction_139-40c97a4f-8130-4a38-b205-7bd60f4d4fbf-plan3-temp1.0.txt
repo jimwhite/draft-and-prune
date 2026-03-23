@@ -1,0 +1,35 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven bird variables: `"robin"`, `"hummingbird"`, `"raven"`, `"blue jay"`, `"crow"`, `"cardinal"`, and `"quail"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven bird variables to the `Problem` with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add All Different Constraint:**  
+   * Enforce that all birds occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * `"The hummingbird is to the left of the crow"` → `hummingbird < crow` (using `lambda hummingbird, crow: hummingbird < crow`).  
+   * `"The cardinal is to the right of the quail"` → `quail < cardinal` (i.e., `cardinal > quail`).  
+   * `"The blue jay is the fourth from the left"` → `blue jay == 4`.  
+   * `"The robin is the second from the left"` → `robin == 2`.  
+   * `"The quail is to the right of the crow"` → `crow < quail`.  
+   * `"The raven is to the left of the robin"` → `raven < robin`, and since `robin == 2`, this implies `raven < 2`, so `raven == 1`.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions.  
+   * Extract the unique solution (since the problem is deterministic and consistent).
+
+6. **Identify the Rightmost Bird (Position 7):**  
+   * Examine the solution dictionary to find which bird has position value **7**.  
+   * Map the correct bird name to its corresponding choice letter:  
+     - `'A) The robin is the rightmost.'` → check if `solution['robin'] == 7`  
+     - `'B) The hummingbird is the rightmost.'` → check if `solution['hummingbird'] == 7`  
+     - `'C) The raven is the rightmost.'` → check if `solution['raven'] == 7`  
+     - `'D) The blue jay is the rightmost.'` → check if `solution['blue jay'] == 7`  
+     - `'E) The crow is the rightmost.'` → check if `solution['crow'] == 7`  
+     - `'F) The cardinal is the rightmost.'` → check if `solution['cardinal'] == 7`  
+     - `'G) The quail is the rightmost.'` → check if `solution['quail'] == 7`  
+   * Return the letter (e.g., `'G'`) of the first/true condition.

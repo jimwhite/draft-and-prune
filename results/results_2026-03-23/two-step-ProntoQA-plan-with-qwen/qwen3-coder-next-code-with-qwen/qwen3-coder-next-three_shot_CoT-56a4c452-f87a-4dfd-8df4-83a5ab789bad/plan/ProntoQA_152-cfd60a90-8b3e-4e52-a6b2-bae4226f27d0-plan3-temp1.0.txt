@@ -1,0 +1,34 @@
+1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+3. Represent "Wren is a yumpus" as a base fact: `is_a("Wren", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every jompus is bright.  
+   - Every jompus is a vumpus.  
+   - Vumpuses are floral.  
+   - Every vumpus is a yumpus.  
+   - Every yumpus is not temperate.  
+   - Each yumpus is a numpus.  
+   - Every numpus is sweet.  
+   - Each numpus is a zumpus.  
+   - Zumpuses are mean.  
+   - Zumpuses are rompuses.  
+   - Each rompus is not feisty.  
+   - Every impus is not transparent.  
+   - Each rompus is a wumpus.  
+   - Wumpuses are transparent.  
+   - Each wumpus is a dumpus.  
+   - Dumpuses are large.  
+   - Each dumpus is a tumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence—ensuring to handle negative properties (e.g., “not transparent”, “not temperate”, “not feisty”) as separate facts (e.g., `is_transparent(X, False)`).  
+6. Derive transitive memberships and properties step by step:  
+   - From Wren is a yumpus → Wren is a numpus (via yumpus→numpus)  
+   - → Wren is a zumpus (via numpus→zumpus)  
+   - → Wren is a rompus (via zumpus→rompus)  
+   - → Wren is a wumpus (via rompus→wumpus)  
+   - From wumpuses are transparent → Wren is transparent.  
+7. However, also note: rompus→wumpus→dumpus→tumpus (but that does not affect transparency).  
+8. Check for conflicting facts:  
+   - “Every impus is not transparent” does not apply unless Wren is an impus (not derivable here).  
+   - No contradiction: wumpuses are explicitly transparent, and Wren is a wumpus.  
+9. The query tests if the statement "Wren is transparent" is provable:  
+   → Use `facts.is_transparent("Wren", True)`.

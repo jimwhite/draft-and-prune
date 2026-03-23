@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven vehicles as variables: `"convertible"`, `"limousine"`, `"hatchback"`, `"bus"`, `"station_wagon"`, `"tractor"`, and `"minivan"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**.
+    * Add all variables with the domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle receives a unique age rank.
+    * Add constraints derived from the problem statements using `addConstraint` with lambda functions:
+        - "The station wagon is the fourth-newest" → `station_wagon == 4` (since 1=oldest, 7=newest; fourth-newest = position 4).
+        - "The hatchback is older than the bus" → `hatchback < bus`.
+        - "The hatchback is the second-newest" → `hatchback == 6` (second-newest = rank 6).
+        - "The minivan is newer than the limousine" → `limousine < minivan`.
+        - "The convertible is older than the limousine" → `convertible < limousine`.
+        - "The tractor is the second-oldest" → `tractor == 2`.
+
+4.  **Solve for Valid Arrangements:**
+    * Use `getSolutions()` to find all assignments satisfying all constraints.
+    * Since the problem is deterministic, extract the single solution (or first one if multiple exist).
+
+5.  **Determine Which Vehicle Is Third-Newest:**
+    * Note that third-newest corresponds to rank = 5 (since newest=7, second-newest=6, third-newest=5).
+    * For the found solution, locate the vehicle with rank 5.
+    * Map the identified vehicle to the correct choice letter:
+        - Convertible → 'A'
+        - Limousine → 'B'
+        - Hatchback → 'C' (but already fixed at 6, so will be invalid)
+        - Bus → 'D'
+        - Station wagon → 'E' (fixed at 4, invalid)
+        - Tractor → 'F' (fixed at 2, invalid)
+        - Minivan → 'G'
+    * Output the letter corresponding to the vehicle assigned position 5.

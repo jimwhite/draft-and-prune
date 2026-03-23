@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"Ana"`, `"Eli"`, `"Mya"`, `"Amy"`, `"Joe"`, `"Mel"`, `"Ada"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first (topmost/finish position)** and **7 = seventh (last/bottommost)**.  
+   * Add all variables with this domain to the `Problem`.
+
+3. **Formulate Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Translate the remaining statements into equality or inequality constraints:  
+     - "Ada finished above Mel" → `ada_pos < mel_pos` (since smaller rank = higher finish)  
+     - "Ada finished third-to-last" → with 7 golfers, third-to-last = position 5 (positions: 1st=best, 2nd, ..., 5th=third-to-last, 6th=second-to-last, 7th=last)  
+     - "Amy finished above Ana" → `amy_pos < ana_pos`  
+     - "Mya finished second-to-last" → `mya_pos = 6`  
+     - "Joe finished above Amy" → `joe_pos < amy_pos`  
+     - "Eli finished below Ana" → `eli_pos > ana_pos`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions.  
+   * Extract the unique solution (the problem has a single consistent arrangement).
+
+5. **Evaluate the Answer Choices:**  
+   * The question asks which golfer finished **third**, i.e., has position value 3.  
+   * Map the answer choices to golfers: `{'A': 'Ana', 'B': 'Eli', 'C': 'Mya', 'D': 'Amy', 'E': 'Joe', 'F': 'Mel', 'G': 'Ada'}`  
+   * For each choice letter, check if the corresponding golfer’s position in the solution is 3.  
+   * Output the letter of the choice where this condition holds true.

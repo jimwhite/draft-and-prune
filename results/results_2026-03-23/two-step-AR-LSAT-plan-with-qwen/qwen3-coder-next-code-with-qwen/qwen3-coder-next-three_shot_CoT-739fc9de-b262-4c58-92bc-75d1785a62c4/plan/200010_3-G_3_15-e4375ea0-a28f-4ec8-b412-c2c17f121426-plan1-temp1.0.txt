@@ -1,0 +1,42 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign them integer indices.  
+2. Create integer variables `pos[composition]` for the position (1 to 8) of each composition.  
+3. Add **domain constraints**: `pos[c] ∈ {1,2,...,8}` for all compositions `c`.  
+4. Add **distinctness constraint**: All `pos[c]` must be pairwise distinct (use `Distinct()` or encode via binary variables).  
+5. Add **order constraints** from the problem:  
+   - (a) `T` is immediately before `F` OR immediately after `R`:  
+       - `(pos[T] + 1 == pos[F]) ∨ (pos[R] + 1 == pos[T])`  
+   - (b) At least two compositions between `F` and `R`:  
+       - `(pos[F] + 3 ≤ pos[R]) ∨ (pos[R] + 3 ≤ pos[F])`  
+   - (c) `O` is first or fifth: `(pos[O] == 1) ∨ (pos[O] == 5)`  
+   - (d) Eighth composition is `L` or `H`: `(pos[L] == 8) ∨ (pos[H] == 8)`  
+   - (e) `P` before `S`: `pos[P] < pos[S]`  
+   - (f) At least one composition between `O` and `S`:  
+       - `(pos[O] + 2 ≤ pos[S]) ∨ (pos[S] + 2 ≤ pos[O])`  
+6. Add the **conditional assumption**: *If* `O` is performed immediately after `T`, then enforce:  
+   - `(pos[T] + 1 == pos[O])` (this is the antecedent condition).  
+7. Now, under this assumption (`pos[T] + 1 == pos[O]`), derive implications for where `F` can be:  
+   - Combine the assumption with constraint (5a): since `(pos[T] + 1 == pos[O])` and from (5a) we have `(pos[T] + 1 == pos[F]) ∨ (pos[R] + 1 == pos[T])`, substitute:  
+       - Either `pos[O] == pos[F]` → impossible (distinct positions), so must have `pos[R] + 1 == pos[T]`, i.e., `R` immediately before `T`.  
+       - Thus: `pos[R] + 1 == pos[T]` and `pos[T] + 1 == pos[O]`, so `R, T, O` are three consecutive compositions in that order.  
+   - So we know `pos[R] = p`, `pos[T] = p+1`, `pos[O] = p+2` for some `p ∈ {1,2,3,4,5,6}`. But since `pos[O] ∈ {1,5}` (from 5c), and `pos[O] = p+2 ≥ 3`, only possibility is `pos[O] = 5` → then `p = 3`.  
+   - Therefore: `pos[R] = 3`, `pos[T] = 4`, `pos[O] = 5`.  
+8. Now, under this fixed ordering (R=3, T=4, O=5), apply remaining constraints to deduce possible positions of `F`:  
+   - From (5a) again: since `T=4`, and we already used the second disjunct (`R` before `T`), the first disjunct `pos[T] + 1 == pos[F]` becomes `pos[F] = 5`. But `pos[O] = 5`, conflict! So the only valid way to satisfy (5a) is the *other* disjunct, which we already used. But wait—(5a) is satisfied by `R` immediately before `T`, so the “OR” is satisfied regardless of `F`. However, (5a) says *T is either immediately before F OR immediately after R* — satisfying the second part alone suffices, so `F` can be anywhere *unless* other constraints constrain it.  
+   - But recall: (5f): at least one composition between `O` and `S`. Since `pos[O] = 5`, this means `pos[S] ∉ {4,6}` → `pos[S] ∈ {1,2,3,7,8}`, and `S ≠ 4` (already taken by T), `S ≠ 5` (O).  
+   - Also, `P < S`.  
+9. Now, to find where `F` *must* be given the assumption, we will use Z3 to check possibilities for `pos[F]`:  
+   - Create a solver, assert all constraints *plus* the antecedent: `pos[T] + 1 == pos[O]`.  
+   - From step 7, we deduced `pos[R]=3`, `pos[T]=4`, `pos[O]=5` must hold — we can either enforce this explicitly (via linear arithmetic) or let Z3 deduce it. To be safe, *explicitly enforce* these: `pos[R]==3`, `pos[T]==4`, `pos[O]==5`.  
+   - Add remaining constraints (b–f, plus distinctness and domain).  
+10. For each possible position of `F` (i.e., positions 1–8 excluding used ones: 3,4,5), check feasibility:  
+    - Clone solver, add `pos[F] == k` for candidate `k ∈ {1,2,6,7,8}`.  
+    - Check SAT. Record which `k` yield SAT.  
+11. Based on the feasible positions for `F`, map them to answer choices:  
+    - “first or second” → `{1,2}`  
+    - “second or third” → `{2,3}` — but `3` is taken by R, so only 2 possible  
+    - “fourth or sixth” → `{4,6}` — `4` is taken by T  
+    - “fourth or seventh” → `{4,7}` — `4` taken  
+    - “sixth or seventh” → `{6,7}`  
+12. The correct answer is the choice whose set of positions includes *all* feasible positions for `F`.  
+13. Define answer index list `answer_index_list = []`, iterate over choices, for each choice check if every feasible `pos[F]` lies in that choice’s set — but the question asks *“F must be performed either X or Y”*, so we need positions that are *forced*; actually, the answer choices describe possible intervals. The correct choice is the one where all feasible `F` positions fall within that option, and the option matches exactly the possible values.  
+14. Use Z3 to compute feasible `pos[F]` set under the assumption, then match to choices.

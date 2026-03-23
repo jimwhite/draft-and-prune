@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.  
+
+2. **Define Variables and Their Domain:**  
+   * Identify the five vehicles as variables: `"tractor"`, `"truck"`, `"bus"`, `"minivan"`, and `"convertible"`.  
+   * Define a numerical domain of integers from 1 to 5, where **1 = oldest**, **5 = newest** (consistent with previous antique car show problems in the prompt).  
+   * Add all vehicle variables to the `Problem` instance with domain `{1, 2, 3, 4, 5}`.  
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Convert each statement into a lambda or arithmetic constraint:  
+     - "The bus is newer than the tractor" ⇒ `bus > tractor` (newer means higher rank number).  
+     - "The convertible is older than the tractor" ⇒ `convertible < tractor`.  
+     - "The truck is the second-newest" ⇒ `truck == 4` (since newest = 5, second-newest = 4).  
+     - "The minivan is older than the convertible" ⇒ `minivan < convertible`.  
+
+4. **Solve for Valid Arrangement(s):**  
+   * Call `solver.getSolutions()` to enumerate all solutions satisfying the constraints.  
+   * Since the problem is deterministic, extract the unique solution (e.g., `solutions[0]`).  
+
+5. **Identify the Correct Answer:**  
+   * The question asks which vehicle is the **third-newest**, i.e., rank = 3 (since newest=5, second-newest=4 ⇒ third-newest=3).  
+   * Build a dictionary mapping choice letters to vehicle names:  
+     `{'A': 'tractor', 'B': 'truck', 'C': 'bus', 'D': 'minivan', 'E': 'convertible'}`.  
+   * For each choice letter in order, check if the corresponding vehicle’s rank in the solution equals 3.  
+   * Return (or print) the first matching choice letter as the final answer.

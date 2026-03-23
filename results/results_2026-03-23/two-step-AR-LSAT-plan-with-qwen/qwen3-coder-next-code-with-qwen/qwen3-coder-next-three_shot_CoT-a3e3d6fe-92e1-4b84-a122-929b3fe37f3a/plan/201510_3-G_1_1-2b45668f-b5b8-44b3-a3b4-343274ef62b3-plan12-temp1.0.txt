@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and assign each a unique index (0 to 6).  
+2. Create integer position variables for each accomplice: pos_Peters, pos_Quinn, pos_Rovero, pos_Stanton, pos_Tao, pos_Villas, pos_White, each ranging from 1 to 7.  
+3. Add **distinctness constraint**: all seven position variables must be pairwise distinct (a permutation of [1,2,3,4,5,6,7]).  
+4. Add **Peters fixed constraint**: pos_Peters == 4 (recruited fourth).  
+5. Add **Villas-White adjacency constraint**: Villas is immediately before White → pos_Villas + 1 == pos_White.  
+6. Add **Quinn-before-Rovero constraint**: pos_Quinn < pos_Rovero.  
+7. Add **Stanton-Tao separation constraint**: |pos_Stanton - pos_Tao| ≠ 1 (neither immediately before nor after).  
+8. Translate each answer choice into a list of names in order; for each choice:  
+   - Clone the base constraints into a fresh solver.  
+   - For position i (1-indexed), assert that the accomplice at position i matches the name in the choice.  
+   - Check satisfiability with Z3.  
+9. Identify all choices for which the constrained model is SAT; among the five options, select the one(s) that are possible (the question asks for "could be", so only SAT cases are valid).  
+10. Return the index of the first (or only) valid choice, matching the answer format: the string in the choices list that satisfies all constraints.

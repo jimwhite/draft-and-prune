@@ -1,0 +1,24 @@
+1.  Identify all entities and types: Fae, rompus, dumpus, numpus, jompus, tumpus, impus, yumpus, zumpus, wumpus, vumpus.  
+2.  Identify all properties: metallic, blue, fruity, mean, temperate, dull, transparent, sweet.  
+3.  Represent "Fae is a numpus" as a base fact: `is_a("Fae", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into logical rules:  
+    * Rompuses are metallic → `is_metallic(X, True)` for all `X` such that `is_a(X, "rompus", True)`.  
+    * Rompuses are dumpuses → `is_a(X, "dumpus", True)` for all such `X`.  
+    * Dumpuses are blue → `is_blue(X, True)` for all such `X`.  
+    * Every dumpus is a numpus → `is_a(X, "numpus", True)` for all dumpuses `X`.  
+    * Every numpus is fruity → `is_fruity(X, True)` for all such `X`.  
+    * Numpuses are jompuses → `is_a(X, "jompus", True)` for all numpuses `X`.  
+    * Every jompus is mean → `is_mean(X, True)` for all such `X`.  
+    * Jompuses are tumpuses → `is_a(X, "tumpus", True)` for all jompuses `X`.  
+    * Tumpuses are not temperate → `is_temperate(X, False)` for all such `X`.  
+    * Tumpuses are impuses → `is_a(X, "impus", True)` for all tumpuses `X`.  
+    * Impuses are not dull → `is_dull(X, False)` for all such `X`.  
+    * Each impus is a yumpus → `is_a(X, "yumpus", True)` for all impuses `X`.  
+    * Every yumpus is not transparent → `is_transparent(X, False)` for all such `X`.  
+    * Yumpuses are zumpuses → `is_a(X, "zumpus", True)` for all yumpuses `X`.  
+    * Wumpuses are transparent → `is_transparent(X, True)` for all such `X`.  
+    * Zumpuses are not sweet → `is_sweet(X, False)` for all such `X`.  
+    * Zumpuses are vumpuses → `is_a(X, "vumpus", True)` for all zumpuses `X`.  
+5.  Implement each rule using a `foreach` clause for the antecedent condition and an `assert` clause for the consequence (property or subclass relationship).  
+6.  The query tests whether "Fae is transparent" is provable; since the chain `Fae ∈ numpus ⇒ Fae ∈ jompus ⇒ Fae ∈ tumpus ⇒ Fae ∈ impus ⇒ Fae ∈ yumpus` and all yumpuses are not transparent, we expect `is_transparent("Fae", False)` to be provable, making the statement "Fae is transparent" false.  
+    → Use `facts.is_transparent("Fae", True)`.

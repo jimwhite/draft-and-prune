@@ -1,0 +1,17 @@
+1. Identify all individuals: Anne, Fiona, Gary, Harry.
+2. Encode explicit properties using ternary predicates of the form property("person", True):
+   - is_blue("Anne", True), is_nice("Anne", True), is_quiet("Anne", True), is_rough("Anne", True),
+   - is_big("Fiona", True), is_blue("Fiona", True), is_quiet("Fiona", True),
+   - is_blue("Gary", True), is_quiet("Gary", True), is_rough("Gary", True), is_white("Gary", True),
+   - is_white("Harry", True).
+3. Translate all universal statements and conditionals into rules:
+   • All big people are rough → foreach is_big(X, True) assert is_rough(X, True)
+   • All blue, nice people are big → foreach is_blue(X, True), is_nice(X, True) assert is_big(X, True)
+   • If someone is rough → they are green → foreach is_rough(X, True) assert is_green(X, True)
+   • All nice people are big → foreach is_nice(X, True) assert is_big(X, True)
+   • Green people are blue → foreach is_green(X, True) assert is_blue(X, True)
+   • Rough, white people are nice → foreach is_rough(X, True), is_white(X, True) assert is_nice(X, True)
+   • White people are nice → foreach is_white(X, True) assert is_nice(X, True)
+   • Green people are nice → foreach is_green(X, True) assert is_nice(X, True)
+4. Note: Some rules may be redundant or cause chains of inference (e.g., rough ⇒ green ⇒ blue ⇒ nice ⇒ big ⇒ rough), so the system will infer closure under these rules.
+5. The query tests whether Harry is not blue: assert facts.is_blue("Harry", False)

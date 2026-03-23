@@ -1,0 +1,39 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign integer codes.  
+2. Enumerate the three screens (1, 2, 3) and two time slots per screen:  
+   - Screen 1: slot 0 (7 P.M.), slot 1 (9 P.M.)  
+   - Screen 2: slot 0 (7 P.M.), slot 1 (9 P.M.)  
+   - Screen 3: slot 0 (8 P.M.).  
+3. Create integer variables `screen[m]` and `slot[m]` for each movie m, where `screen[m] ∈ {1,2,3}` and `slot[m]` is 0 or 1 for screens 1–2, and only 0 for screen 3.  
+4. Add **global constraints**:  
+   - Screen 1 has exactly 2 movies: sum over movies of `is_screen1[m]` = 2  
+   - Screen 2 has exactly 2 movies: sum over movies of `is_screen2[m]` = 2  
+   - Screen 3 has exactly 1 movie: sum over movies of `is_screen3[m]` = 1  
+   - All movies shown exactly once (implicit via assignment).  
+5. Add **ordering constraints** using explicit start times:  
+   - Assign absolute time indices:  
+     - Screen 1, slot 0 → t=0 (7 P.M.)  
+     - Screen 3, slot 0   → t=1 (8 P.M.)  
+     - Screen 1, slot 1 or Screen 2, slot 0 → t=2 (9 P.M.)  
+     - But better: define time ordering:  
+       • 7 P.M. < 8 P.M. < 9 P.M., regardless of screen  
+       → So: any movie on Screen 1 or 2 at slot 0 (7 P.M.) happens before screen 3 at 8 P.M., which happens before movies at slot 1 (9 P.M.) on screens 1 and 2.  
+   - So define time order:  
+     Let `time[m] = (screen[m]-1)*2 + slot[m]` for screens 1 and 2; but screen 3 breaks this.  
+   - Instead, define `start_time[m]` as integer:  
+     • If screen[m]=1 or 2 and slot[m]=0 → time=7  
+     • If screen[m]=3 → time=8  
+     • If screen[m]=1 or 2 and slot[m]=1 → time=9  
+   - Use relative ordering:  
+     • western < horror (i.e., start_time[western] < start_time[horror])  
+6. Add **screen-specific constraints**:  
+   - sci-fi not on screen 3: `screen[sci-fi] ≠ 3`  
+   - romance not on screen 2: `screen[romance] ≠ 2`  
+   - horror and mystery on different screens: `screen[hhorror] ≠ screen[mystery]`  
+7. Translate the five answer choices into screen-1 lists: each choice is a pair (movie_A at 7 P.M., movie_B at 9 P.M.) for screen 1.  
+   For each choice:  
+     • Assert `screen[movie_A] = 1`, `slot[movie_A] = 0`  
+     • Assert `screen[movie_B] = 1`, `slot[movie_B] = 1`  
+     • Assert no other movie is on screen 1: for all other movies X, `screen[X] ≠ 1`  
+8. For each choice (i.e., fixed assignment to screen-1 movies), clone base constraints and check SAT.  
+9. The choice for which the model is UNSAT is the answer (the list that CANNOT be accurate). Append its index to `answer_index_list`.  
+10. Print `answer_index_list`.

@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the seven fruits as variables: `"oranges"`, `"plums"`, `"loquats"`, `"apples"`, `"kiwis"`, `"cantaloupes"`, and `"peaches"`.  
+    * Define the domain for each variable as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, matching the ranking implied by "most expensive" hierarchy in the question.  
+    * Add all seven fruit variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique price rankings across all fruits.  
+    * Translate each statement into a constraint using `addConstraint` with lambda functions:  
+        - "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+        - "The plums are the cheapest" → `plums == 1`  
+        - "The loquats are the fourth-most expensive" → Since most-expensive = 7, fourth-most expensive = rank 4 from top; but note: if 1=cheapest, then 7=most expensive → fourth-most expensive = rank 4 in *descending* order → that corresponds to position **4 from the top** (most expensive = 7, second-most = 6, third-most = 5, fourth-most = **4**), so `loquats == 4`.  
+        - "The peaches are less expensive than the oranges" → `peaches < oranges`  
+        - "The peaches are more expensive than the kiwis" → `kiwis < peaches`  
+        - "The apples are the second-cheapest" → second-cheapest = rank 2 in ascending cost order → `apples == 2`
+
+4.  **Solve for the Arrangement:**  
+    * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+    * Extract the unique solution (assuming exactly one exists, as stated).
+
+5.  **Determine the Third-Most-Expensive Fruit:**  
+    * Map "third-most expensive" to position 5 in our numbering (since most=7, second=6, third=5).  
+    * Create a dictionary mapping choice letters (`['A','B','C','D','E','F','G']`) to their corresponding fruit names (`['oranges', 'plums', 'loquats', 'apples', 'kiwis', 'cantaloupes', 'peaches']`).  
+    * Iterate over the solution dictionary to find which fruit has rank `5`.  
+    * Return the choice letter associated with that fruit.

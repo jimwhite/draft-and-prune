@@ -1,0 +1,31 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven books as variables: `"red"`, `"white"`, `"purple"`, `"black"`, `"gray"`, `"orange"`, `"blue"`.  
+   * Define the domain for positions as integers from 1 to 7 (inclusive), where **1 = leftmost**, **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Add All-Different Constraint:**  
+   * Enforce that all books occupy distinct positions by adding an `AllDifferentConstraint` over the seven book variables.
+
+4. **Translate Each Statement into a Constraint:**  
+   * "The red book is to the right of the white book" → `red > white` (lambda: lambda r, w: r > w)  
+   * "The gray book is to the left of the orange book" → `gray < orange`  
+   * "The gray book is to the right of the blue book" → `gray > blue`  
+   * "The red book is the second from the right" → `red == 6` (since position 7 is rightmost, second-right = 6)  
+   * "The black book is the fourth from the left" → `black == 4`  
+   * "The orange book is to the left of the white book" → `orange < white`
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments. Given the problem’s uniqueness, expect exactly one solution.
+
+6. **Interpret the Question and Map Choices:**  
+   * The question asks: "Which book is third from the right?" → In a 1–7 indexing, third from the right = position `7 - 3 + 1 = 5`. So find which book has value `5`.
+
+7. **Match Solution to Correct Choice:**  
+   * Create a dictionary mapping choice letters (`"A"` through `"G"`) to the corresponding book names:  
+     `{"A": "red", "B": "white", "C": "purple", "D": "black", "E": "gray", "F": "orange", "G": "blue"}`  
+   * Iterate over the choices; for each choice letter, check if the solution’s position value for its book equals `5`.  
+   * Return the letter of the first (and only) matching choice as the answer.

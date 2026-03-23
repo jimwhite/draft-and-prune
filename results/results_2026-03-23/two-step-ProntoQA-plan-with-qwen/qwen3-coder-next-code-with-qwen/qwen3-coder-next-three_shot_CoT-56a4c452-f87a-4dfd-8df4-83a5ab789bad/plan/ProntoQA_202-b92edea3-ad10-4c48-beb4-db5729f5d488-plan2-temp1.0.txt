@@ -1,0 +1,34 @@
+1. Identify all entities and types: Wren, tumpus, impus, yumpus, zumpus, rompus, numpus, dumpus, wumpus, vumpus, jompus.  
+2. Identify all properties: temperate, orange, shy, bright, opaque, small, floral, aggressive, not floral (i.e., `¬floral`), not opaque (`¬opaque`).  
+3. Represent "Wren is a zumpus" as a base fact: `is_a("Wren", "zumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules, explicitly handling negations and avoiding contradictions:  
+   • Tumpuses are temperate. → `forall t: is_a(t, "tumpus", True) ⇒ is_temperate(t, True)`  
+   • Tumpuses are impuses. → `forall t: is_a(t, "tumpus", True) ⇒ is_a(t, "impus", True)`  
+   • Every impus is orange. → `forall i: is_a(i, "impus", True) ⇒ is_orange(i, True)`  
+   • Impuses are yumpuses. → `forall i: is_a(i, "impus", True) ⇒ is_a(i, "yumpus", True)`  
+   • Each yumpus is shy. → `forall y: is_a(y, "yumpus", True) ⇒ is_shy(y, True)`  
+   • Yumpuses are zumpuses. → `forall y: is_a(y, "yumpus", True) ⇒ is_a(y, "zumpus", True)`  
+   • Zumpuses are bright. → `forall z: is_a(z, "zumpus", True) ⇒ is_bright(z, True)`  
+   • Every zumpus is a rompus. → `forall z: is_a(z, "zumpus", True) ⇒ is_a(z, "rompus", True)`  
+   • Every numpus is opaque. → `forall n: is_a(n, "numpus", True) ⇒ is_opaque(n, True)`  
+   • Rompuses are small. → `forall r: is_a(r, "rompus", True) ⇒ is_small(r, True)`  
+   • Every rompus is a dumpus. → `forall r: is_a(r, "rompus", True) ⇒ is_a(r, "dumpus", True)`  
+   • Dumpuses are not floral. → `forall d: is_a(d, "dumpus", True) ⇒ is_floral(d, False)`  
+   • Each dumpus is a wumpus. → `forall d: is_a(d, "dumpus", True) ⇒ is_a(d, "wumpus", True)`  
+   • Each wumpus is aggressive. → `forall w: is_a(w, "wumpus", True) ⇒ is_aggressive(w, True)`  
+   • Wumpuses are vumpuses. → `forall w: is_a(w, "wumpus", True) ⇒ is_a(w, "vumpus", True)`  
+   • Each vumpus is not opaque. → `forall v: is_a(v, "vumpus", True) ⇒ is_opaque(v, False)`  
+   • Every vumpus is a jompus. → `forall v: is_a(v, "vumpus", True) ⇒ is_a(v, "jompus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the conclusion (including negative facts like `is_opaque(..., False)`).  
+6. Derive the chain for Wren:  
+   • From `is_a("Wren", "zumpus", True)` and rule "Every zumpus is a rompus" ⇒ `is_a("Wren", "rompus", True)`  
+   • From `is_a("Wren", "rompus", True)` and rule "Rompuses are small" ⇒ `is_small("Wren", True)`  
+   • From `is_a("Wren", "rompus", True)` and rule "Every rompus is a dumpus" ⇒ `is_a("Wren", "dumpus", True)`  
+   • From `is_a("Wren", "dumpus", True)` and rule "Dumpuses are not floral" ⇒ `is_floral("Wren", False)`  
+   • From `is_a("Wren", "dumpus", True)` and rule "Each dumpus is a wumpus" ⇒ `is_a("Wren", "wumpus", True)`  
+   • From `is_a("Wren", "wumpus", True)` and rule "Each vumpus is not opaque" *via* wumpus → vumpus chain:  
+        - `is_a("Wren", "wumpus", True)` ⇒ `is_a("Wren", "vumpus", True)` (via wumpus are vumpuses)  
+        - `is_a("Wren", "vumpus", True)` ⇒ `is_opaque("Wren", False)`  
+   • Alternatively, check if any rule forces opacity: Only numpuses are explicitly declared opaque; Wren is not proven a numpus (no path to numpus from zumpus in given rules).  
+7. The query tests if "Wren is opaque" is provable: Since `is_opaque("Wren", False)` is provable (via the vumpus path) and no rule implies `is_opaque("Wren", True)` (numpus requirement not met), the statement "Wren is opaque" is false.  
+   → Use `facts.is_opaque("Wren", True)`.

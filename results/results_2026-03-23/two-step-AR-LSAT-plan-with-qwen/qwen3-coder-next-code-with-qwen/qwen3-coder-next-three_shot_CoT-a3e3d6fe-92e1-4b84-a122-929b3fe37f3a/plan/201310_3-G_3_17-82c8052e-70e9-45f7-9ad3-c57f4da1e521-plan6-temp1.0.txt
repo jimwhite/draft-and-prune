@@ -1,0 +1,21 @@
+1. Enumerate the five movies (horror, mystery, romance, sci-fi, western) and assign each an integer index.  
+2. Create three pairs of Boolean variables for screen 1 (7pm, 9pm), screen 2 (7pm, 9pm), and screen 3 (8pm), plus a mapping to track which movie appears at which screen/time slot.  
+   - Let `S1_7`, `S1_9`, `S2_7`, `S2_9`, `S3_8` be Boolean variables; each will be true iff the corresponding slot is assigned a specific movie.  
+   - Alternatively, use integer variables `pos[movie] ∈ {1..6}` for the time-slot index (e.g., 1=7P M S1, 2=9P M S1, 3=7P M S2, 4=9P M S2, 5=8P M S3), and `screen[slot] ∈ {1,2,3}` to record screen.  
+   - Choose the former: define 5 binary variables per slot: e.g., `slot1_horror`, ..., `slot5_western`, with exactly one movie per slot, and each movie assigned to exactly one slot.  
+3. Add **slot constraints**:
+   - Exactly 2 movies per screen: Screen 1 = slots 1 & 2, Screen 2 = slots 3 & 4, Screen 3 = slot 5.  
+   - Each movie appears in exactly one slot (pairwise mutual exclusion per movie).  
+4. Add **ordering constraint**: western begins before horror film → `pos(western) < pos(horror)` (where position order is 1 < 2 < 3 < 4 < 5).  
+5. Add **screen constraint**: sci-fi ≠ screen 3 → sci-fi not in slot 5.  
+6. Add **screen constraint**: romance ≠ screen 2 → romance not in slots 3 or 4.  
+7. Add **screen constraint**: horror ≠ mystery (different screens) → `screen(horror) ≠ screen(mystery)`.  
+8. Translate answer choices into Boolean conjunctions describing the contents of screen 1 (slots 1 & 2):  
+   - e.g., Choice A: slot1=sci-fi ∧ slot2=horror  
+9. Define `forbidden_index_list = []`. For each answer choice (in order A–E):  
+   - Clone base constraints into fresh solver.  
+   - Assert the specific screen-1 assignment from that choice (e.g., `slot1 = sci-fi ∧ slot2 = horror`).  
+   - Add the screen-size constraint implicitly (slots 1 and 2 assigned to sci-fi/horror, others filled with remaining movies).  
+   - Check satisfiability. If UNSAT, then this list CANNOT be accurate → append its index (0-based) to `forbidden_index_list`.  
+10. Output the 0-based index of the first (and only) forbidden entry (as per question phrasing: "Which one... CANNOT"). Since exactly one answer is impossible, return that index (or map back to the string).  
+11. Return the list of forbidden indices (typically singleton), with interpretation that it corresponds to the answer choice string.

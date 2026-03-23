@@ -1,0 +1,35 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, `"green"`.  
+   * Assign positions as integers from 1 to 7, where **1 = leftmost**, **7 = rightmost**.  
+   * Add all seven variables to the problem with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Formal Constraints:**  
+   * "The red book is to the right of the yellow book" → `yellow < red`  
+   * "The white book is the second from the right" → `white == 6` (since position 7 is rightmost, second-rightmost is 6)  
+   * "The red book is to the left of the green book" → `red < green`  
+   * "The blue book is to the right of the black book" → `black < blue`  
+   * "The black book is the third from the right" → `black == 5` (positions from right: 7=1st-right, 6=2nd-right, 5=3rd-right)  
+   * "The orange book is the leftmost" → `orange == 1`
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to enumerate all valid assignments.  
+   * Since the problem is deterministic, extract the single solution.
+
+6. **Verify Against Choices and Identify Correct Answer:**  
+   * The question asks which statement is true — specifically, who occupies the **third-from-right** position (i.e., position 5).  
+   * Note: Statement A directly states "The black book is the third from the right", and we already enforced `black == 5`.  
+   * However, to be thorough:  
+     - Create a dictionary mapping choice letters ("A" through "G") to their claimed book:  
+       `{"A": "black", "B": "orange", "C": "yellow", "D": "white", "E": "blue", "F": "red", "G": "green"}`  
+     - For each choice, check if the claimed book’s position in the solution equals 5.  
+     - Return the first (and only) matching choice letter.
+
+7. **Output Final Answer:**  
+   * Print the correct choice letter (which will be "A", since black is explicitly constrained to position 5).

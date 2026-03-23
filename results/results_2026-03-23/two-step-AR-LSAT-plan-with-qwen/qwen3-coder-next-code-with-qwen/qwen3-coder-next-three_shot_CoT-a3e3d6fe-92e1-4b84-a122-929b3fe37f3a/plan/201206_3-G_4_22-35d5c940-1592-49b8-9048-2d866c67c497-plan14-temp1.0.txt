@@ -1,0 +1,23 @@
+1. Enumerate the five solos (positions 1 to 5) and two pianists (Wayne=0, Zara=1), and define Boolean variables for each solo: `pianist[i]` (True = Wayne, False = Zara) and `type[i]` (True = traditional, False = modern).  
+2. Add **domain constraints**: `pianist[i] ∈ {0,1}`, `type[i] ∈ {True,False}` for i = 1..5.  
+3. Add **fixed constraint**: third solo is traditional → `type[2] = True` (0-indexed: index 2).  
+4. Add **exactly two consecutive traditional pieces**:  
+    - There exists exactly one index i ∈ {0,1,2,3} such that `type[i] ∧ type[i+1] = True`, and all other traditional pieces are isolated (i.e., no three consecutive, and no additional adjacent pairs).  
+    - Implement by counting total traditional pieces = 2 or 3 (since two consecutive + possibly others not adjacent), but stricter: define adjacency pairs and enforce exactly one pair of consecutive trues, with no triple.  
+5. Add **fourth-solo constraint**: `(pianist[3] == 0 ∧ type[3] == True) ∨ (pianist[3] == 1 ∧ type[3] == False)`.  
+6. Add **non-repeat pianist constraint**: the pianist of solo 2 ≠ pianist of solo 5 → `pianist[1] != pianist[4]`.  
+7. Add **no-traditional-before-Wayne-modern constraint**:  
+    - Wayne must perform at least one modern piece before the first traditional solo.  
+    - Let `first_trad = min{i | type[i] = True}`; then ∃j < first_trad such that `pianist[j] == 0 ∧ type[j] == False`.  
+    - Encode via auxiliary constraint: if `type[0] = True`, then must have Wayne modern before → impossible unless j < 0, so `type[0]` cannot be True.  
+    - More robust: enumerate positions of Wayne modern solos and enforce at least one precedes first traditional solo.  
+8. Add **hypothetical condition**: fifth solo is Wayne *traditional* → `pianist[4] == 0 ∧ type[4] == True`.  
+9. For each answer choice, add the corresponding constraint to the current (hypothetical + base) solver:  
+    - A. `pianist[0] == 1` (Zara first)  
+    - B. `pianist[1] == 0` (Wayne second)  
+    - C. `pianist[2] == 1` (Zara third) — but note `type[2]=True`, and pianist may be independent.  
+    - D. `type[1] == False` (second solo modern)  
+    - E. `type[3] == True` (fourth solo traditional)  
+10. For each choice, clone the full solver, add its constraint, and check SAT.  
+11. Collect all indices where model is SAT → those options could be true under the hypothetical.  
+12. The question asks "which one *could* be true", so output the index (or name) of any SAT option — but per plan, return list of indices where SAT holds.

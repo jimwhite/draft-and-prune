@@ -1,0 +1,16 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign them integer indices.  
+2. Create integer variables `pos[article]` for the position (1 to 7) of each article.  
+3. Add **domain and uniqueness constraints**: all positions are integers in [1,7] and pairwise distinct.  
+4. Add **topic constraints**:  
+    - Finance: G, H, J; Nutrition: Q, R, S; Wildlife: Y.  
+5. Add **no-consecutive-same-topic constraint**: for all i, j, if `|pos_i - pos_j| == 1`, then topic(i) ≠ topic(j).  
+6. Add **S-before-Q conditional constraint**: If S is earlier than Q, then Q must be third. This is equivalent to: `pos_S < pos_Q → pos_Q == 3`.  
+7. Add **S-before-Y constraint**: `pos_S < pos_Y`.  
+8. Add **J-G-R ordering constraint**: `pos_J < pos_G` and `pos_G < pos_R`.  
+9. Translate the answer choices into assertions where a specific article is fixed at a specific position (e.g., “H is fourth” → `pos_H == 4`).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Add the position constraint for that choice.  
+    - Count the number of models (or check uniqueness) by iteratively blocking solutions until UNSAT or after finding ≥2 solutions.  
+    - If only one valid ordering exists (i.e., solver returns SAT once, and second query is UNSAT), then this choice fully determines the order; record its index.  
+11. Return the index of the choice(s) for which the ordering is uniquely determined (should be exactly one).

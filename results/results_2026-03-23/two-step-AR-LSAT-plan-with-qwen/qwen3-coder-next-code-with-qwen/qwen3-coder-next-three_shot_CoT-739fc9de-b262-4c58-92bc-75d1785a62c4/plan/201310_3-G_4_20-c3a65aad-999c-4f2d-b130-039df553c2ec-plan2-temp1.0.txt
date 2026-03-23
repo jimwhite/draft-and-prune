@@ -1,0 +1,17 @@
+1. Enumerate the five lecture slots (positions 1 to 5) and assign each a Boolean variable indicating whether it is in Gladwyn Hall (True) or Howard Auditorium (False).  
+2. Enumerate the five bird types and assign each an integer variable for its lecture slot (1–5); all slot variables must be distinct.  
+3. Add **fixed location constraints**:  
+    - Position 1 is in Gladwyn Hall (Gladwyn[1] = True).  
+    - Position 4 is in Howard Auditorium (Gladwyn[4] = False).  
+    - Exactly three positions are in Gladwyn Hall (sum of Gladwyn[1..5] == 3).  
+4. Add **sandpiper constraints**:  
+    - Sandpipers lecture is in Howard Auditorium (i.e., its slot position has Gladwyn[slot_sandpiper] = False).  
+    - Sandpipers lecture occurs before oystercatchers (slot_sandpiper < slot_oystercatcher).  
+5. Add **tern-petrel constraint**:  
+    - Petrels lecture is in Gladwyn Hall (Gladwyn[slot_petrel] = True).  
+    - Terns lecture occurs before petrels (slot_tern < slot_petrel).  
+6. Encode all five answer choices as logical conjunctions of location assignments:  
+    - For each choice, assert the specified positions are both in Gladwyn Hall (Gladwyn[i] ∧ Gladwyn[j]).  
+7. For each answer choice, clone the base constraints into a fresh solver and add the conjunction from step 6.  
+8. If the augmented model is UNSAT, then that choice **must be false**; record its index.  
+9. Output the list of indices where the choice must be false (exactly one such index).

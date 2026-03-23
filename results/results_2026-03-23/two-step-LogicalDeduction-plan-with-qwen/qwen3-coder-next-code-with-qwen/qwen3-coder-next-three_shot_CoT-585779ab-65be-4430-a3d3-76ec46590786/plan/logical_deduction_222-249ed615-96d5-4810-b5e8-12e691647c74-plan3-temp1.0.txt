@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold the variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Establish the variables as the seven vehicles: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.
+    * Define a numerical domain to represent age ranking. Use integers from 1 (oldest) to 7 (newest).
+    * Add the vehicle variables and their rank domain (1 through 7) to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Convert each rule into a formal constraint using `lambda` functions:
+        * "The station wagon is the fourth-newest" → position of station_wagon = 4 (since newer means higher number: 7=newest, so 4th-newest = rank 4).
+        * "The minivan is the third-newest" → position of minivan = 5 (7=newest, 6=2nd-newest, 5=3rd-newest).
+        * "The tractor is the second-oldest" → position of tractor = 2 (1=oldest, 2=second-oldest).
+        * "The convertible is older than the station wagon" → position of convertible < position of station_wagon.
+        * "The truck is newer than the bus" → position of bus < position of truck.
+        * "The hatchback is older than the convertible" → position of hatchback < position of convertible.
+
+4.  **Solve for the Arrangement:**
+    * Use `getSolutions()` to find all valid rank assignments satisfying all constraints.
+    * Extract the unique solution from the returned list of solutions.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which vehicle is the oldest (i.e., has rank 1).
+    * Create a dictionary mapping choice letters ('A' through 'G') to the corresponding vehicle names.
+    * Iterate over the solution dictionary, find which vehicle has rank 1.
+    * Return the choice letter associated with that vehicle as the final answer.

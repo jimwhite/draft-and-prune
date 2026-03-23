@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the seven books as variables: `["brown", "yellow", "black", "white", "green", "orange", "purple"]`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all variables with their domain (1–7) to the problem.
+
+3.  **Add AllDifferent Constraint:**  
+    * Enforce that all books occupy distinct positions using `AllDifferentConstraint()`.
+
+4.  **Translate Statements into Constraints (using lambda or direct assignment):**  
+    * "The purple book is the rightmost" → `purple == 7`  
+    * "The yellow book is the leftmost" → `yellow == 1`  
+    * "The orange book is the second from the right" → `orange == 6`  
+    * "The brown book is to the left of the green book" → `brown < green`  
+    * "The brown book is to the right of the black book" → `black < brown`  
+    * "The white book is the fourth from the left" → `white == 4`  
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid assignments. Given consistency, expect exactly one solution.  
+    * Extract the first (and only) solution dictionary.
+
+6.  **Identify the Third-from-Left Book:**  
+    * The question asks which book is at position **3** (third from left).  
+    * Iterate over the solution dictionary to find the book key where value == 3.  
+    * Map that book name to the corresponding choice letter using a predefined dictionary:  
+        - `"brown"` → "A", `"yellow"` → "B", `"black"` → "C", `"white"` → "D",  
+          `"green"` → "E", `"orange"` → "F", `"purple"` → "G"  
+    * Output the correct choice letter.

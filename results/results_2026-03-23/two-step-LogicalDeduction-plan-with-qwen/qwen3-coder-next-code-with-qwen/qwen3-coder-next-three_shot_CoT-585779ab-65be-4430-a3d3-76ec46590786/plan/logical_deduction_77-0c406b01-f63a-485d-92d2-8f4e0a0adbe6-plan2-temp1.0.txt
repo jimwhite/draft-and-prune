@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the variables as the five golfers: `"Rob"`, `"Amy"`, `"Eve"`, `"Mya"`, and `"Ana"`.  
+    * Define the domain as integers from 1 to 5, where **1 = first place (topmost/best)** and **5 = last place (worst position)**.  
+    * Add these variables with their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Convert each statement into a constraint using `lambda` functions:  
+        * "Mya finished below Rob" → Mya’s position number > Rob’s position number (`mya > rob`).  
+        * "Ana finished below Eve" → Ana’s position number > Eve’s position number (`ana > eve`).  
+        * "Amy finished second" → Amy’s position is exactly 2 (`amy == 2`).  
+        * "Eve finished below Mya" → Eve’s position number > Mya’s position number (`eve > mya`).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid arrangements satisfying the constraints.  
+    * Extract the unique solution (there should be only one valid assignment).
+
+5.  **Determine Which Golfer is Second-to-Last:**  
+    * The question asks who finished **second-to-last**, i.e., position 4 (since last is position 5).  
+    * Create a mapping from choice letters to golfer names: `"A" → "Rob"`, `"B" → "Amy"`, `"C" → "Eve"`, `"D" → "Mya"`, `"E" → "Ana"`.  
+    * In the solution dictionary, find which golfer has position 4.  
+    * Return the corresponding choice letter (e.g., `"D"` if `Mya` is at position 4).

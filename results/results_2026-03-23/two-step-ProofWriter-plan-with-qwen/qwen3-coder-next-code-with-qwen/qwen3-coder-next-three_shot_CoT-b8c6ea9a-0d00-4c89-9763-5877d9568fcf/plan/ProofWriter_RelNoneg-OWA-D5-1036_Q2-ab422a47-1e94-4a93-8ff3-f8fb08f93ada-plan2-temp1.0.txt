@@ -1,0 +1,18 @@
+1. Identify all entities involved: bear, cat, lion, squirrel.
+2. Define ternary predicates for properties and relations: is_red, is_green, is_cold, is_rough, likes, eats, visits take boolean or entity as second argument; properties like is_green, is_red take boolean.
+3. Encode all explicit facts directly using facts.pred("subject", "object"/boolean, True):
+   - eats("bear", "squirrel", True), is_cold("bear", True), is_rough("bear", True), visits("bear", "lion", True)
+   - eats("cat", "lion", True), likes("lion", "cat", True), visits("lion", "bear", True)
+   - eats("squirrel", "lion", True), is_cold("squirrel", True), is_rough("squirrel", True), likes("squirrel", "bear", True), visits("squirrel", "lion", True)
+4. Translate each conditional statement into a PyKe rule using foreach/assert syntax:
+   • If red(x, True) → green(x, True)
+   • If eats(x, "lion", True) → is_red("lion", True)
+   • If green(x, True) and likes(x, "lion", True) → eats(x, "bear", True)
+   • If visits(x, "bear", True) → likes("bear", "lion", True)
+   • If likes(x, "squirrel", True) and likes(x, "lion", True) → visits(x, "lion", True)
+   • If green(x, True) → eats(x, "squirrel", True)
+   • If likes(x, "lion", True) → visits(x, "bear", True)
+   • If visits(x, "lion", True) and is_green("lion", True) → is_red(x, True)
+5. Note: Rule "Red people are green" means is_red(x, True) → is_green(x, True); consistent with ternary predicate encoding.
+6. The query checks whether the squirrel is *not* rough:
+   → Use facts.is_rough("squirrel", False) to test falsity of the statement.

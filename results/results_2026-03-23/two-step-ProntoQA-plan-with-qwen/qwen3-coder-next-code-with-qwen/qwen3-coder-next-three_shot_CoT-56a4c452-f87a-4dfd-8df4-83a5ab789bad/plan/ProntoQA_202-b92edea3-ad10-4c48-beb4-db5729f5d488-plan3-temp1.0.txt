@@ -1,0 +1,24 @@
+1. Identify all entities and types: Wren, tumpus, impus, yumpus, zumpus, rompus, numpus, dumpus, wumpus, vumpus, jompus.  
+2. Identify all properties: temperate, orange, shy, bright, opaque, small, floral, aggressive, not floral (i.e., negation of "floral"), not opaque (i.e., negation of "opaque").  
+3. Represent "Wren is a zumpus" as a base fact: `is_a("Wren", "zumpus", True)`.  
+4. Translate each class property and subclass relationship into rules, distinguishing positive assertions from negations (e.g., “not floral” → `is_floral(X, False)`, “not opaque” → `is_opaque(X, False)`):  
+   - Tumpuses are temperate.  
+   - Tumpuses are impuses.  
+   - Every impus is orange.  
+   - Impuses are yumpuses.  
+   - Each yumpus is shy.  
+   - Yumpuses are zumpuses.  
+   - Zumpuses are bright.  
+   - Every zumpus is a rompus.  
+   - Every numpus is opaque.  
+   - Rompuses are small.  
+   - Every rompus is a dumpus.  
+   - Dumpuses are not floral.  
+   - Each dumpus is a wumpus.  
+   - Each wumpus is aggressive.  
+   - Wumpuses are vumpuses.  
+   - Each vumpus is not opaque.  
+   - Every vumpus is a jompus.  
+5. Implement each rule using `foreach` for the condition (e.g., `is_a(X, "tumpus", True)`) and `assert` for the consequence (positive or negative property, e.g., `is_temperate(X, True)` or `is_floral(X, False)`).  
+6. The query tests whether “Wren is opaque” can be *proven true*. However, the reasoning chain will instead show that Wren is *not opaque* (via: zumpus → rompus → dumpus → wumpus → vumpus, and vumpuses are not opaque). Since we can prove `is_opaque("Wren", False)`, the statement “Wren is opaque” is false.  
+   → Use `facts.is_opaque("Wren", True)`.

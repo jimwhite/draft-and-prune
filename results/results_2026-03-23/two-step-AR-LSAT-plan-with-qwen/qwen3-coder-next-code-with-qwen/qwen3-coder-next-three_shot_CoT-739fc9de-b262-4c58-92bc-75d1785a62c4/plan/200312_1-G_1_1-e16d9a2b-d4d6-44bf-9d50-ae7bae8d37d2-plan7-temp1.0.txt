@@ -1,0 +1,14 @@
+1. Enumerate all nine scientists: botanists [F, G, H], chemists [K, L, M], zoologists [P, Q, R].  
+2. Create Boolean selection variables for each scientist: `b_F`, `b_G`, `b_H` (botanists), `c_K`, `c_L`, `c_M` (chemists), `z_P`, `z_Q`, `z_R` (zoologists).  
+3. Add **panel size constraint**: exactly five scientists are selected: `b_F + b_G + b_H + c_K + c_L + c_M + z_P + z_Q + z_R == 5`.  
+4. Add **representation constraint**: at least one from each discipline:  
+    - Botanists: `b_F + b_G + b_H >= 1`  
+    - Chemists: `c_K + c_L + c_M >= 1`  
+    - Zoologists: `z_P + z_Q + z_R >= 1`  
+5. Add **conditional constraint**: if more than one botanist is selected (i.e., `b_F + b_G + b_H >= 2`), then at most one zoologist is selected (`z_P + z_Q + z_R <= 1`).  
+6. Add **exclusion constraint F & K**: `~(b_F and c_K)` → equivalently, `b_F + c_K <= 1`.  
+7. Add **exclusion constraint K & M**: `~(c_K and c_M)` → equivalently, `c_K + c_M <= 1`.  
+8. Add **conditional constraint M ⇒ P ∧ R**: if `c_M == 1`, then `z_P == 1` and `z_R == 1`. Implement as: `c_M <= z_P`, `c_M <= z_R`.  
+9. For each answer choice, create a fresh solver and assert the exact selection pattern (e.g., for 'F, G, K, P, Q': assert `b_F=1`, `b_G=1`, `c_K=1`, `z_P=1`, `z_Q=1`, and all others = 0).  
+10. Check satisfiability for each choice; the first (or all) that yields SAT is acceptable.  
+11. Return the index of the acceptable choice(s).

@@ -1,0 +1,33 @@
+1. Identify all entities and types: Rex, dumpus, tumpus, vumpus, zumpus, wumpus, numpus, rompus, jompus, yumpus, impus.  
+2. Identify all properties: dull, spicy, fruity, large, blue, kind, cold, transparent, spicy (repeated), amenable (not present), etc. — focus on: dull, spicy, fruity, large, blue, kind, cold, transparent.  
+3. Represent "Rex is a wumpus" as a base fact: `is_a("Rex", "wumpus", True)`.  
+4. Convert each class property and subclass relationship into logical rules:  
+   - Every dumpus is not dull → `foreach d, if is_a(d, "dumpus") then ¬is_dull(d)`  
+   - Every tumpus is not spicy → `foreach t, if is_a(t, "tumpus") then ¬is_spicy(t)`  
+   - Dumpuses are vumpuses → `foreach d, if is_a(d, "dumpus") then is_a(d, "vumpus")`  
+   - Vumpuses are fruity → `foreach v, if is_a(v, "vumpus") then is_fruity(v)`  
+   - Each vumpus is a zumpus → `foreach v, if is_a(v, "vumpus") then is_a(v, "zumpus")`  
+   - Each zumpus is large → `foreach z, if is_a(z, "zumpus") then is_large(z)`  
+   - Each zumpus is a wumpus → `foreach z, if is_a(z, "zumpus") then is_a(z, "wumpus")`  
+   - Wumpuses are blue → `foreach w, if is_a(w, "wumpus") then is_blue(w)`  
+   - Wumpuses are numpuses → `foreach w, if is_a(w, "wumpus") then is_a(w, "numpus")`  
+   - Each numpus is kind → `foreach n, if is_a(n, "numpus") then is_kind(n)`  
+   - Numpuses are rompuses → `foreach n, if is_a(n, "numpus") then is_a(n, "rompus")`  
+   - Rompuses are cold → `foreach r, if is_a(r, "rompus") then is_cold(r)`  
+   - Rompuses are jompuses → `foreach r, if is_a(r, "rompus") then is_a(r, "jompus")`  
+   - Jompuses are not transparent → `foreach j, if is_a(j, "jompus") then ¬is_transparent(j)`  
+   - Jompuses are yumpuses → `foreach j, if is_a(j, "jompus") then is_a(j, "yumpus")`  
+   - Yumpuses are spicy → `foreach y, if is_a(y, "yumpus") then is_spicy(y)`  
+   - Every yumpus is an impus → `foreach y, if is_a(y, "yumpus") then is_a(y, "impus")`  
+5. Implement each rule using `foreach` for the antecedent condition and `assert` (or negation via `not`) for the consequence—ensuring proper polarity:  
+   - Use positive facts (e.g., `is_spicy(y, True)`) and negative facts (e.g., `is_dull(d, False)`, encoded as `facts.is_dull(d, False)` or via negation rules depending on PyKe syntax).  
+   - For negated properties, encode as negative assertions: e.g., `facts.is_spicy(t, False)` for tumpuses.  
+6. Determine entailment: From base fact `is_a("Rex", "wumpus")`, derive:  
+   - Rex ∈ wumpus ⇒ Rex ∈ numpus (via "wumpuses are numpuses")  
+   - Rex ∈ numpus ⇒ Rex ∈ rompus (via "numpuses are rompuses")  
+   - Rex ∈ rompus ⇒ Rex ∈ jompus (via "rompuses are jompuses")  
+   - Rex ∈ jompus ⇒ Rex ∈ yumpus (via "jompuses are yumpuses")  
+   - Rex ∈ yumpus ⇒ is_spicy(Rex) (via "yumpuses are spicy")  
+   - Therefore, `is_spicy("Rex", True)` is provable.  
+7. The query asks whether "Rex is not spicy" is true → i.e., whether `is_spicy("Rex", False)` holds. Since `is_spicy("Rex", True)` is provable and the domain assumes consistency, this is false.  
+8. Final query: `facts.is_spicy("Rex", False)`.

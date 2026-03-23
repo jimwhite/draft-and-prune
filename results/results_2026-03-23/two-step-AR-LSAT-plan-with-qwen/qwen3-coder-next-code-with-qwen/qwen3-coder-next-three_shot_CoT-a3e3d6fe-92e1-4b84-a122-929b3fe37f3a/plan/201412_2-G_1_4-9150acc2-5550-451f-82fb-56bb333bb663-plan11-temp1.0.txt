@@ -1,0 +1,15 @@
+1. Enumerate the six performers and assign them integer indices (e.g., 0: guitarist, 1: keyboard player, 2: percussionist, 3: saxophonist, 4: trumpeter, 5: violinist).  
+2. Create integer variables `pos[0]` to `pos[5]` representing the solo position (1 through 6) for each performer.  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6}, and all `pos[i]` are distinct (use `Distinct(pos)`).  
+4. Add **guitarist constraint**: guitarist does not perform fourth → `pos[0] != 4`.  
+5. Add **percussionist < keyboard player** constraint: `pos[2] < pos[1]`.  
+6. Add **violinist < keyboard player < guitarist** constraints: `pos[5] < pos[1]` and `pos[1] < pos[0]`.  
+7. Add **saxophonist exclusive-or constraint**: saxophonist performs after *exactly one* of (percussionist, trumpeter).  
+    - Define booleans: `after_p = pos[3] > pos[2]`, `after_t = pos[3] > pos[4]`.  
+    - Enforce `(after_p and not after_t) or (not after_p and after_t)` → equivalent to `Xor(after_p, after_t)`.  
+8. Translate answer choices into indices: guitarist (0), keyboard player (1), saxophonist (3), trumpeter (4), violinist (5). Note: percussionist is 2, but not in options.  
+9. Define `forbidden_indices = []`. For each candidate performer index in `[0, 1, 3, 4, 5]`:  
+    - Clone base constraints into a fresh solver.  
+    - Assert `pos[candidate] == 3`.  
+    - If UNSAT, append candidate index to `forbidden_indices`.  
+10. Return the food (performer) name corresponding to the first (and only) index in `forbidden_indices`.

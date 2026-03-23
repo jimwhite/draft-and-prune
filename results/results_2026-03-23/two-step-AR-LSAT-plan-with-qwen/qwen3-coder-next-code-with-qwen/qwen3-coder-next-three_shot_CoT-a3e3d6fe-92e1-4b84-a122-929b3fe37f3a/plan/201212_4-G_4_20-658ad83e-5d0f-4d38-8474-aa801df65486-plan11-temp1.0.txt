@@ -1,0 +1,16 @@
+1. Enumerate the seven articles and assign each an integer index (e.g., G=0, H=1, J=2, Q=3, R=4, S=5, Y=6).  
+2. Create integer position variables `pos[0..6]` for each article’s editing order (1 to 7).  
+3. Add **domain constraints**: all `pos[i]` ∈ {1,2,3,4,5,6,7} and all distinct (use `Distinct(pos)`).  
+4. Add **topic assignment logic**: define a mapping from article index to topic: finance={G,H,J}, nutrition={Q,R,S}, wildlife={Y}.  
+5. Add **no-consecutive-same-topic constraint**: for all positions k from 1 to 6, if article A is at position k and article B at k+1, then topic(A) ≠ topic(B).  
+   - Encode by: for each pair of articles (i,j), if `pos[i] = k` and `pos[j] = k+1`, then topics differ; implemented via implications using auxiliary boolean variables or directly with `If(pos[i] == k, pos[j] != k+1, True)` but more efficiently use: for all i≠j, if `abs(pos[i] - pos[j]) == 1`, then topic(i) ≠ topic(j).  
+6. Add **S–Q conditional constraint**: `S earlier than Q ⇒ Q is third` i.e., `(pos[S] < pos[Q]) → (pos[Q] == 3)`.  
+7. Add **S before Y**: `pos[S] < pos[Y]`.  
+8. Add **J < G < R** chain: `pos[J] < pos[G]` and `pos[G] < pos[R]`.  
+9. Translate answer choices to article indices: G=0, H=1, S=5, R=4, Y=6.  
+10. Define `answer_index_list = []`. For each choice article i (0,1,5,4,6):  
+    - Clone base solver to new_solver.  
+    - Add `pos[i] == 2` (since choices are "X is second").  
+    - Check satisfiability.  
+    - If SAT, then this choice *could* be true; append its index (i) to `answer_index_list`.  
+11. Print `answer_index_list`.

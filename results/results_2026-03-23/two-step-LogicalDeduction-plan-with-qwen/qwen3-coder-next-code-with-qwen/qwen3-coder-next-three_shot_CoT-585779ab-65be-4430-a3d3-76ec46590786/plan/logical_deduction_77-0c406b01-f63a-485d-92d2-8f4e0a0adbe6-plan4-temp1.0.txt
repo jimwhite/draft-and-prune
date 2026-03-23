@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament ranking constraints.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables as the five golfers: `"Rob"`, `"Amy"`, `"Eve"`, `"Mya"`, and `"Ana"`.  
+    * Define the domain for rankings as integers from 1 to 5, where **1 = highest rank (first place)** and **5 = lowest rank (last place)**.  
+    * Add the golfer variables and their domain to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct rankings.  
+    * Translate each statement into a constraint:  
+        * "Mya finished below Rob" → Mya's rank is numerically greater than Rob's (`Mya > Rob`).  
+        * "Ana finished below Eve" → Ana's rank is numerically greater than Eve's (`Ana > Eve`).  
+        * "Amy finished second" → Amy's rank is exactly 2.  
+        * "Eve finished below Mya" → Eve's rank is numerically greater than Mya's (`Eve > Mya`).  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid rankings satisfying all constraints.  
+    * Extract the unique solution (as the problem is well-defined).  
+
+5.  **Determine Which Golfer Finished Second-to-Last:**  
+    * "Second-to-last" in a 5-person tournament means rank **4** (since ranks: 1=1st, 2=2nd, 3=3rd, 4=4th/second-to-last, 5=last).  
+    * Create a dictionary mapping choice letters ("A" to "E") to the respective golfer names in the choices.  
+    * Scan the solution dictionary for the golfer whose rank is 4.  
+    * Output the corresponding choice letter.

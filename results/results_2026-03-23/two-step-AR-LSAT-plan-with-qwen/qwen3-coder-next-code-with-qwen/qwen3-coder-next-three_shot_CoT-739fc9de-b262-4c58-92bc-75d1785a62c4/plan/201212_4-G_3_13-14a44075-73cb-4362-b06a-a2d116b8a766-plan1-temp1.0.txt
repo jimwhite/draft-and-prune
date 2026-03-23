@@ -1,0 +1,24 @@
+1. Enumerate the six targets: Image-Website (IW), Image-Voicemail (IV), Solide-Website (SW), Solide-Voicemail (SV), Truvest-Website (TW), Truvest-Voicemail (TV). Assign each an integer variable with domain {1, 2, 3} representing days.  
+2. Add **domain constraints**: all variables ∈ {1, 2, 3}.  
+3. Add ** Website ≤ Voicemail constraints per client**:  
+    - IW ≤ IV (Image)  
+    - SW ≤ SV (Solide)  
+    - TW ≤ TV (Truvest)  
+4. Add **Image’s voicemail is strictly shorter than others’ voicemail targets**:  
+    - IV < SV and IV < TV  
+5. Add **Solide’s website is shorter than Truvest’s website**: SW < TW  
+6. Add **given condition**: IW = 2  
+7. Since targets are integers in {1,2,3}, deduce implications step-by-step from constraints:  
+    - From IW = 2 and IW ≤ IV ⇒ IV ∈ {2,3}  
+    - From IV < SV and IV < TV ⇒ SV ≥ IV + 1, TV ≥ IV + 1  
+    - If IV = 2 ⇒ SV ≥ 3 and TV ≥ 3 ⇒ SV = TV = 3 (only possibility in domain)  
+    - If IV = 3 ⇒ SV > 3 and TV > 3, impossible (max is 3) ⇒ IV ≠ 3  
+    - Therefore IV must be 2.  
+8. Conclude Image’s voicemail target is forced to 2 days.  
+9. Verify consistency of remaining constraints with IV = 2 and IW = 2:  
+    - SW < TW and SW ≤ SV, TW ≤ TV  
+    - SV = TV = 3 (as deduced), so SW ≤ 3, TW ≤ 3, and SW < TW  
+    - Possible assignments: e.g., SW = 1, TW = 2 or 3; SW = 2, TW = 3  
+    - All constraints satisfied → model is consistent.  
+10. Identify which choice matches the forced target: Image’s voicemail target = 2 days.  
+11. Return index of "Image's voicemail target" as the answer.

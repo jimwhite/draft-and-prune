@@ -1,0 +1,56 @@
+1. Enumerate the six lab assistants and assign them integer indices (e.g., Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5).  
+2. Enumerate the six sessions: assign each a unique index 0 to 5, where indices 0–2 correspond to Wednesday (session 0 = Wed AM, session 1 = Wed PM, session 2 = Thu AM), and indices 3–5 correspond to Thursday/Friday (session 3 = Thu PM, session 4 = Fri AM, session 5 = Fri PM)—but more systematically: define day and time per session explicitly using two arrays or a mapping.  
+3. Create integer variables `assistant[i]` for session i (i = 0..5), denoting which assistant leads that session.  
+4. Add **domain constraints**: `assistant[i] ∈ {0,1,2,3,4,5}` for all i, and all `assistant[i]` are pairwise distinct (a permutation of the six assistants).  
+5. Define helper constraints for day and time: map each session index to (day, slot) where day ∈ {0=Wed, 1=Thu, 2=Fri} and slot ∈ {0=AM, 1=PM}. For example:  
+   - Session 0 → (Wed, AM) = (0,0)  
+   - Session 1 → (Wed, PM) = (0,1)  
+   - Session 2 → (Thu, AM) = (1,0)  
+   - Session 3 → (Thu, PM) = (1,1)  
+   - Session 4 → (Fri, AM) = (2,0)  
+   - Session 5 → (Fri, PM) = (2,1).  
+6. Add fixed constraint: Julio leads Thursday afternoon → session index 3 is assigned to Julio (assistant[3] = 0).  
+7. Add constraint: Kevin and Rebecca must lead sessions on the same day → `day[assistant_inv[Kevin]] == day[assistant_inv[Rebecca]]`, where `assistant_inv[j]` is the session index assigned to assistant j (introduce inverse mapping variables or use `assistant[i] == k` to derive session indices). Implement via: for each assistant pair, enforce `day_of_session[i] == day_of_session[j]` if `assistant[i]==Kevin and assistant[j]==Rebecca`, but better: create variables `session_of[assistant] ∈ {0..5}`, enforce distinctness, and then enforce `day(session_of[Kevin]) == day(session_of[Rebecca])`.  
+8. Add constraint: Lan and Olivia cannot lead sessions on the same day → `day(session_of[Lan]) != day(session_of[Olivia])`.  
+9. Add constraint: Nessa must lead an afternoon session → `slot(session_of[Nessa]) == 1`.  
+10. Add constraint: Julio’s session must be on an earlier day than Olivia’s → `day(session_of[Julio]) < day(session_of[Olivia])`. Since Julio is fixed to Thu PM (day=1), this implies Olivia must be on Friday (day=2). So `day(session_of[Olivia]) == 2`.  
+11. Now fix all knowns: Julio → session 3 (Thu PM), so `session_of[Julio] = 3`. From step 10, Olivia must be on Friday (session 4 or 5).  
+12. Use the fixed assignments to propagate constraints:  
+    - From step 10, Olivia ∈ {4,5}.  
+    - Nessa must be afternoon: possible slots are session 1 (Wed PM), 3 (Thu PM, taken by Julio), or 5 (Fri PM). So Nessa ∈ {1,5}.  
+    - Kevin and Rebecca must share same day: possible days are Wed (sessions 0,1), Thu (session 2 or 3—3 taken), Fri (4,5). Since session 3 is taken, Thu only has session 2 left. So Kevin & Rebecca can be both on Wed (sessions 0,1), or both on Fri (4,5).  
+    - Lan and Olivia not same day: Olivia is Fri (day=2), so Lan cannot be Friday → Lan ∈ {0,1,2} (Wed AM/PMTue or Thu AM).  
+    - Julio is Thu PM (day=1), so Olivia must be day>1 → only possible: Friday. So Olivia ∈ {4,5} is confirmed.  
+    - Remaining assistants to assign: Kevin, Lan, Nessa, Olivia, Rebecca (5 left), to sessions {0,1,2,4,5} (since 3 is taken).  
+    - Olivia uses one of {4,5}; Nessa must be afternoon: options left are session 1 (Wed PM) or 5 (Fri PM—if Olivia not using it).  
+    - Kevin & Rebecca must share day: possible pairs of free sessions per day:  
+        • Wed: {0,1} — both available.  
+        • Thu: only session 2 left (Thu AM). Can’t place two assistants there.  
+        • Fri: if Olivia uses one of {4,5}, only one left for Rebecca/Kevin → can’t both fit.  
+        ⇒ Therefore, Kevin and Rebecca must be assigned to sessions 0 and 1 (Wed AM and PM), same day.  
+    - So sessions 0,1 → Kevin and Rebecca in some order.  
+    - Then remaining sessions: 2 (Thu AM), 4,5 (Fri AM/PM) for Lan, Nessa, Olivia.  
+    - Nessa must be afternoon: sessions 1 (taken), 3 (taken), or 5 → only session 5 available. So Nessa must be Friday PM (session 5).  
+    - Thus: Nessa → session 5.  
+    - Remaining sessions: 2 (Thu AM), 4 (Fri AM) for Lan and Olivia.  
+    - Olivia must be Friday → session 4 (Fri AM). So Olivia → session 4.  
+    - Then Lan must be Thursday AM: session 2.  
+    - Check constraints:  
+        • Lan (session 2 = Thu AM) and Olivia (session 4 = Fri AM): different days → OK.  
+        • Nessa (session 5) is afternoon → OK.  
+        • Kevin & Rebecca on Wed (0,1) → same day → OK.  
+        • Julio (Thu PM) before Olivia (Fri AM): day 1 < 2 → OK.  
+    - Final assignments:  
+        Session 0 (Wed AM): ? (Kevin/Rebecca)  
+        Session 1 (Wed PM): ? (the other of Kevin/Rebecca)  
+        Session 2 (Thu AM): Lan  
+        Session 3 (Thu PM): Julio (fixed)  
+        Session 4 (Fri AM): Olivia  
+        Session 5 (Fri PM): Nessa  
+    - So Lan, Julio, Olivia, Nessa are all fixed to exact sessions. Kevin and Rebecca are only determined up to swap between Wed AM and PM—so their specific sessions are not uniquely determined, but both are forced to Wed.  
+13. The question: “for how many of the other lab assistants can one determine which sessions they lead?”  
+    - “Other” = excluding Julio (who is given).  
+    - Assigned uniquely: Lan (session 2), Olivia (session 4), Nessa (session 5) → 3 assistants.  
+    - Kevin and Rebecca: only their day is fixed (Wed), but not the exact session (AM vs PM) → sessions not uniquely determined.  
+14. Therefore, exactly 3 other assistants have their sessions fully determined.  
+15. Output count = 3, so answer is 'three'.

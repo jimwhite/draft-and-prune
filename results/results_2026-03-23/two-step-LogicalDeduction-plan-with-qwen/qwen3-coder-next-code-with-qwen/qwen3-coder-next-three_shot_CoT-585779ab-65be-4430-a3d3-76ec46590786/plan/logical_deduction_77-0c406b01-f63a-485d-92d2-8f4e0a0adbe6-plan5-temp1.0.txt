@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five golfers: `"Rob"`, `"Amy"`, `"Eve"`, `"Mya"`, and `"Ana"`.  
+   * Define the domain as integers 1 through 5, where **1 = first (best/rank)** and **5 = last (worst rank)**. This reflects finishing order: lower number = better placement.  
+   * Add all variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each golfer has a unique rank.  
+   * Convert each statement into a constraint using `lambda` functions:  
+        * "Mya finished below Rob" means Mya’s rank is numerically greater than Rob’s → `lambda r, m: m > r`.  
+        * "Ana finished below Eve" means Ana’s rank is greater than Eve’s → `lambda e, a: a > e`.  
+        * "Amy finished second" means Amy’s rank is exactly 2 → `lambda a: a == 2`.  
+        * "Eve finished below Mya" means Eve’s rank is greater than Mya’s → `lambda m, e: e > m`.  
+   * Add all four constraints to the problem.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments of ranks.  
+   * Since the problem is deterministic, there should be exactly one solution; extract it.
+
+5. **Determine the Correct Answer:**  
+   * The question asks who finished *second-to-last*, i.e., rank 4 (since last is rank 5, second-to-last = position 4).  
+   * Create a mapping from choice letters to golfer names:  
+        A → "Rob", B → "Amy", C → "Eve", D → "Mya", E → "Ana".  
+   * For the solved assignment, find which golfer has rank 4.  
+   * Return the corresponding choice letter (A–E) as the final answer.

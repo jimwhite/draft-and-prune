@@ -1,0 +1,24 @@
+"1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the three vehicles as variables: `"tractor"`, `"convertible"`, and `"minivan"`.  
+    * Define the domain as integers from 1 to 3, where **1 = oldest**, **2 = second-newest**, and **3 = newest**.  
+    * Add these variables and their domain (1–3) to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a distinct age rank.  
+    * Convert the given statements to constraints using `addConstraint` with lambda functions:  
+        - "The tractor is the second-newest" → `tractor == 2` (since position 2 = second-newest).  
+        - "The minivan is newer than the convertible" → `minivan > convertible` (newer means higher rank number in our system).
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments satisfying the constraints.  
+    * Since the problem is small and consistent, expect exactly one solution; retrieve it.
+
+5.  **Identify the Correct Choice:**  
+    * Analyze the question: "Which vehicle is the newest?" → This corresponds to rank **3**.  
+    * Map the choices: "A" → tractor, "B" → convertible, "C" → minivan.  
+    * Check which vehicle has rank 3 in the solution, and output its corresponding choice letter.  
+"

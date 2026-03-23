@@ -1,0 +1,18 @@
+1. Enumerate the six cookbooks and assign them integer indices (K=0, L=1, M=2, N=3, O=4, P=5).  
+2. Create Boolean variables `season[i]` for each cookbook i: True means fall, False means spring.  
+3. Add **given constraint**: N is published in the fall → `season[3] = True`.  
+4. Add **M and P constraint**: They cannot be in the same season → `season[2] != season[5]`.  
+5. Add **K and N constraint**: They must be in the same season → `season[0] == season[3]` (and since N=fall, K must be fall).  
+6. Add **K→O constraint**: If K is in fall, O must be in fall → Since K is forced to fall (from step 5), this forces `season[4] = True`.  
+7. Add **M→¬N constraint**: If M is in fall, N must be in spring → But N is fixed to fall, so this implication forces M *cannot* be in fall (else contradiction). Therefore, add `season[2] = False` (M must be spring).  
+8. From step 4 (M≠P) and M=spring, infer P must be fall → `season[5] = True`.  
+9. Summarize known assignments: N=fall, K=fall, O=fall, M=spring, P=fall. L is unconstrained by the constraints (no rule mentions L directly), so `season[1]` remains free (can be fall or spring).  
+10. Translate each choice to a logical condition and check consistency with current constraints:  
+    - "K is published in the spring" → `season[0] = False` — contradicts step 5 (K=fall), so impossible.  
+    - "L is published in the fall" → `season[1] = True` — no constraint prevents this; model is SAT.  
+    - "M is published in the fall" → `season[2] = True` — contradicts step 7 (M must be spring); UNSAT.  
+    - "O is published in the spring" → `season[4] = False` — contradicts step 6 (O=fall); UNSAT.  
+    - "P is published in the spring" → `season[5] = False` — contradicts step 8 (P=fall); UNSAT.  
+11. The only choice that *could* be true is "L is published in the fall".  
+12. Append index of this choice (e.g., 1) to `answer_index_list`.  
+13. Print `answer_index_list`.

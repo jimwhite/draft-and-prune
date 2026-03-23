@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to build the constraint satisfaction model.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven bird variables: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, and `"raven"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all bird variables with the domain [1, 2, 3, 4, 5, 6, 7] to the problem.
+
+3.  **Add Constraints from Statements:**
+    * Add `AllDifferentConstraint` to ensure uniqueness of positions.
+    * Add constraint for "The falcon is to the right of the quail": `quail < falcon`.
+    * Add constraint for "The robin is to the right of the hummingbird": `hummingbird < robin`.
+    * Add constraint for "The raven is to the left of the quail": `raven < quail`.
+    * Add constraint for "The blue jay is the second from the left": `blue_jay == 2`.
+    * Add constraint for "The robin is the third from the left": `robin == 3`.
+    * Add constraint for "The cardinal is the third from the right": Since positions are 1 (leftmost) to 7 (rightmost), third from the right is position 5 (`7 - 3 + 1 = 5`), so `cardinal == 5`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to compute all valid assignments.
+    * Extract the unique solution (as the problem is well-constrained, there should be exactly one).
+
+5.  **Determine Which Bird Is Fourth from the Left:**
+    * The question asks for the bird at position 4.
+    * Create a mapping from choice letters to bird names: `'A' -> 'cardinal'`, `'B' -> 'blue jay'`, ..., `'G' -> 'raven'`.
+    * For each choice, check if the bird's position in the solution equals 4.
+    * Return the letter (e.g., `'F'`) corresponding to the bird at position 4.

@@ -1,0 +1,25 @@
+1. Enumerate the eight students and assign them integer codes.  
+2. Define Boolean variables for each student-day-slot combination: `report[s][d][t]` where `s` is student, `d ∈ {Mon, Tue, Wed}`, and `t ∈ {morning, afternoon}`; interpret as "student s gives a report on day d in slot t".  
+3. Add **exactly-six-reports** constraint: sum of all `report[s][d][t]` over 8 students × 3 days × 2 slots equals 6.  
+4. Add **two-reports-per-day** constraint: for each day, exactly two slots are used (i.e., sum over students and slots per day = 2).  
+5. Add **one-report-per-slot-per-student** constraints: each student gives at most one report (i.e., for each student, sum of `report[s][d][t]` over d,t ≤ 1); combined with total=6 and 6 slots selected, this implies exactly six students each give exactly one report.  
+6. Add **George-only-on-Tuesday** constraint: `report['George'][Mon][slot] = false` and `report['George'][Wed][slot] = false` for both slots.  
+7. Add **Olivia/Robert-no-afternoon** constraint: `report['Olivia'][d][afternoon] = false` and `report['Robert'][d][afternoon] = false` for all days d.  
+8. Add **Nina-conditional constraint**: if Nina reports on Monday (Tuesday), then Helen and Irving must report Tuesday (Wednesday) in both slots; if Nina reports on Wednesday, no restriction. Model this as:  
+   - If `report['Nina'][Mon][any]`, then for each slot in Tue, `report['Helen'][Tue][slot] ∧ report['Irving'][Tue][slot]` must hold (and similarly for Tuesday → Wednesday).  
+   - Use implications: `(report['Nina'][Mon][morning] ∨ report['Nina'][Mon][afternoon]) → (report['Helen'][Tue][morning] ∧ report['Helen'][Tue][afternoon] ∧ report['Irving'][Tue][morning] ∧ report['Irving'][Tue][afternoon])`  
+   - `(report['Nina'][Tue][morning] ∨ report['Nina'][Tue][afternoon]) → (report['Helen'][Wed][morning] ∧ report['Helen'][Wed][afternoon] ∧ report['Irving'][Wed][morning] ∧ report['Irving'][Wed][afternoon])`  
+   - Note: the "both slots" means Helen and Irving must occupy *both* morning/afternoon on the next day — i.e., they each give exactly one report, and both days’ slots are filled by them.  
+9. Add **fixed assignments from question**:  
+   - Kyle gives afternoon report on Tuesday: `report['Kyle'][Tue][afternoon] = true`.  
+   - Helen gives afternoon report on Wednesday: `report['Helen'][Wed][afternoon] = true`.  
+10. From step 8 and fixed Helen/Wed afternoon, deduce or enforce consistency:  
+    - Since Helen reports Wednesday afternoon, she *might* be the partner for Irving on Wednesday if Nina reported Tuesday. But note: Helen only needs to report *if* Nina reports Monday or Tuesday — the implication is one-way. We’ll keep the constraint and let Z3 resolve consistency.  
+11. Enumerate the answer choices; each choice is a triple: (Monday morning, Tuesday morning, Wednesday morning).  
+12. For each choice:  
+    - Clone the base + fixed constraints into a fresh solver.  
+    - Add constraint that the specified students occupy those three morning slots (i.e., assign `report[student][day][morning] = true` for each of the three mornings).  
+    - Add constraint that no other student occupies a morning slot (i.e., for each day, only the assigned morning student and some other (evening) student are true; but since two reports per day, this is implicitly handled by the "exactly two per day" + per-student ≤1 constraints).  
+    - Query satisfiability.  
+    - If SAT, the choice is possible; collect its index.  
+13. Return the list of indices for all possible choices (the correct answer is the one(s) with SAT).

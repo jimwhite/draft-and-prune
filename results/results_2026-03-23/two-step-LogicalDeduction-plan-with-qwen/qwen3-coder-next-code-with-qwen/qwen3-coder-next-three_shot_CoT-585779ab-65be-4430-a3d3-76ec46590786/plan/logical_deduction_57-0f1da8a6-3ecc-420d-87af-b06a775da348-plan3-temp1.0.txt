@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**
+   * Define the five vehicles as variables: `"hatchback"`, `"limousine"`, `"sedan"`, `"bus"`, and `"tractor"`.
+   * Assign a numerical domain of integers from 1 to 5, where **1 = oldest**, and **5 = newest** (consistent with ranking by age: smaller number = older).
+   * Add all five variables to the problem with this domain.
+
+3. **Translate Statements into Formal Constraints:**
+   * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique age rank.
+   * Convert each statement into a constraint using lambda functions:
+     - "The tractor is newer than the hatchback" → `tractor > hatchback` (since newer = higher rank number).
+     - "The bus is the second-oldest" → `bus == 2`.
+     - "The hatchback is newer than the sedan" → `hatchback > sedan`.
+     - "The limousine is the newest" → `limousine == 5`.
+
+4. **Solve the Constraint Satisfaction Problem:**
+   * Call `getSolutions()` to obtain all valid assignments of ranks satisfying all constraints.
+   * Extract the unique solution from the list (assuming uniqueness as stated).
+
+5. **Identify the Third-Newest Vehicle:**
+   * Since "third-newest" corresponds to rank **3** in the (1=oldest, 5=newest) scale, find which vehicle has rank `3` in the solution.
+   * Map the multiple-choice letters to their respective vehicles:
+     - A) hatchback
+     - B) limousine
+     - C) sedan
+     - D) bus
+     - E) tractor
+   * Determine which choice matches the vehicle at rank 3 and return the corresponding letter as the answer.

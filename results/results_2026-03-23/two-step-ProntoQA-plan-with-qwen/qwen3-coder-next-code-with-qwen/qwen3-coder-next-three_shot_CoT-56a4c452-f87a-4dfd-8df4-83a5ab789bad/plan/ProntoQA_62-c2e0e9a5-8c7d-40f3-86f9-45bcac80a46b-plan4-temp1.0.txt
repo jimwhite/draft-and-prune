@@ -1,0 +1,23 @@
+1. Identify all entities and types: Wren, zumpus, dumpus, rompus, vumpus, numpus, wumpus, yumpus, tumpus, impus.  
+2. Identify all properties: nervous, large, brown, transparent, bitter, floral, bright.  
+3. Represent "Wren is a dumpus" as a base fact: `is_a("Wren", "dumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Every zumpus is nervous.  
+   * Every zumpus is a dumpus.  
+   * Every dumpus is large.  
+   * Dumpuses are rompuses (i.e., every dumpus is a rompus).  
+   * Every rompus is brown.  
+   * Vumpuses are transparent.  
+   * Each rompus is a numpus.  
+   * Numpuses are not bitter.  
+   * Numpuses are wumpuses (i.e., every numpus is a wumpus).  
+   * Each wumpus is floral.  
+   * Every wumpus is a yumpus.  
+   * Every yumpus is not transparent.  
+   * Yumpuses are tumpuses (i.e., every yumpus is a tumpus).  
+   * Tumpuses are not bright.  
+   * Every tumpus is an impus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence—note that rules about membership (e.g., “Dumpuses are rompuses”) become subclass constraints: for all x, if `is_a(x, "dumpus", True)` then `is_a(x, "rompus", True)`.  
+6. Derive Wren’s type chain: from `is_a("Wren", "dumpus", True)`, apply rules to conclude `is_a("Wren", "rompus", True)`, then `is_a("Wren", "numpus", True)`, then `is_a("Wren", "wumpus", True)`, then `is_a("Wren", "yumpus", True)`.  
+7. From `is_a("Wren", "yumpus", True)` and rule “Every yumpus is not transparent”, infer `is_transparent("Wren", False)`.  
+8. The query tests if “Wren is not transparent” is provable: use `facts.is_transparent("Wren", False)`.

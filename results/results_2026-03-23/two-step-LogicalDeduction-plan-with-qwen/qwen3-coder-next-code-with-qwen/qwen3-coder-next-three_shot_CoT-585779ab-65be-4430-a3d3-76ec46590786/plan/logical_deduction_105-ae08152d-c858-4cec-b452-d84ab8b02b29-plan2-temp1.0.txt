@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * List the seven vehicles as variables: `"station_wagon"`, `"truck"`, `"sedan"`, `"limousine"`, `"convertible"`, `"bus"`, and `"hatchback"`.
+    * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**.
+    * Add all variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Add Constraints Based on Statements:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "The limousine is the newest" → `limousine == 7`
+        * "The bus is the third-newest" → `bus == 5` (since newest=7, second-newest=6, third-newest=5)
+        * "The bus is older than the convertible" → `bus < convertible`
+        * "The sedan is the third-oldest" → `sedan == 3` (since oldest=1, second-oldest=2, third-oldest=3)
+        * "The station wagon is older than the truck" → `station_wagon < truck`
+        * "The hatchback is the oldest" → `hatchback == 1`
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the single solution (the problem has a unique solution given all constraints).
+
+5.  **Determine Which Statement is True:**
+    * Note that the question asks: "Which of the following is true?" and each choice asserts a specific vehicle *is* the third-oldest.
+    * From statement #4, we know `"sedan"` must be at position 3 (third-oldest), so choice C is true.
+    * However, to follow the plan of verifying via code:
+        * Create a mapping from choice letters (A–G) to vehicle names as per the choices.
+        * In the solved solution, find which vehicle has rank 3.
+        * Identify and return the corresponding choice letter (which should be "C").

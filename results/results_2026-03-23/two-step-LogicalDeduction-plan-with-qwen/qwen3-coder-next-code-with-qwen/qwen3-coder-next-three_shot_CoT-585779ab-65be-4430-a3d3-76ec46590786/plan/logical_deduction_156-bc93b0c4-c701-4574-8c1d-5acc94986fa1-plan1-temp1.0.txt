@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Define the seven fruit variables: `"watermelons"`, `"oranges"`, `"mangoes"`, `"cantaloupes"`, `"kiwis"`, `"pears"`, and `"peaches"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (i.e., higher rank number means more expensive).  
+    * Add all fruit variables with this domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure no two fruits share the same price rank.  
+    * Convert each statement into a constraint using `lambda` functions or direct value assignment:  
+        - "The pears are the second-cheapest" → `pears == 2`.  
+        - "The oranges are the fourth-most expensive" → Note: *most expensive* corresponds to highest rank (7), so *fourth-most expensive* means 7 - 4 + 1 = **4** → `oranges == 4`.  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6).  
+        - "The peaches are more expensive than the cantaloupes" → `cantaloupes < peaches`.  
+        - "The peaches are less expensive than the mangoes" → `peaches < mangoes`.  
+        - "The cantaloupes are more expensive than the kiwis" → `kiwis < cantaloupes`.  
+    * Compile these constraints into the problem.
+
+4.  **Solve for the Unique Arrangement:**  
+    * Use `getSolutions()` to find all valid rank assignments.  
+    * Extract the first (and only) solution, since the constraints fully determine a unique ordering.
+
+5.  **Identify Which Fruit is Fourth-Most Expensive:**  
+    * The question asks: "Which of the following is true?" — specifically, which fruit holds rank 4 (fourth-most expensive).  
+    * Map the answer choices to fruits: `{'A': 'watermelons', 'B': 'oranges', 'C': 'mangoes', 'D': 'cantaloupes', 'E': 'kiwis', 'F': 'pears', 'G': 'peaches'}`.  
+    * From the solution, find the fruit with rank `4`.  
+    * Return the corresponding choice letter (e.g., if `'oranges'` is at rank 4, output `'B'`).

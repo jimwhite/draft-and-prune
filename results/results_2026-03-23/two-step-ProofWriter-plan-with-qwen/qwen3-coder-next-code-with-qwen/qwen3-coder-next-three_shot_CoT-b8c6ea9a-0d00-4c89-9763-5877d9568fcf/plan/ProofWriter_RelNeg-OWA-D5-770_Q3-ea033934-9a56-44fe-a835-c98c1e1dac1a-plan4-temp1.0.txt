@@ -1,0 +1,19 @@
+1. Identify all entities involved: bald_eagle, cat, lion, mouse.
+2. Encode all explicitly stated facts (including negative ones) using ternary predicates: assert positive relations with True, and encode negative facts as the negation of a predicate (e.g., for “X does not chase Y”, ensure ¬chases(X, Y) holds — but note: in PyKe, only positive facts are asserted; thus, negative facts must be *assumed* as defaults or explicitly declared unreachable via domain constraints—however, in standard PyKe modeling for such problems, only positive atomic facts are encoded; negative statements should be handled by *not asserting* the corresponding predicate and relying on closed-world assumption or explicit negation rules if supported—but since PyKe is Horn-clause based and does not natively support negation, interpret “does not chase” as *absence of fact*; thus only assert positive facts given, omit negatives).
+3. Translate each conditional rule into PyKe rules using `foreach` blocks with conjunctions of conditions and an `assert` for the conclusion:
+   • If something is kind → it is round.
+   • If something chases the bald eagle → it is round.
+   • If something is round → it sees the bald eagle.
+   • If something chases the cat and the cat chases the bald eagle → it eats the bald eagle.
+   • If something chases the cat → the cat sees the lion.
+   • If something sees the cat → it chases the bald eagle.
+   • If the bald eagle is young and the bald eagle chases the lion → the bald eagle sees the lion.
+   • If the mouse eats the cat and the mouse eats the bald eagle → the bald eagle eats the cat.
+   • If something sees the bald eagle and it chases the cat → the bald eagle sees the cat.
+4. Note: Only explicitly stated *positive* facts should be asserted; “does not chase”, “does not eat” etc. mean the corresponding fact is *not asserted*, and PyKe will treat them as unknown unless derivable.
+5. Query: Determine whether `sees("cat", "lion", True)` is provable, false, or unknown based on facts and rules.
+6. Specifically, the target statement is “The cat sees the lion.” → Check if `facts.sees("cat", "lion", True)` can be deduced.
+7. Observe: One rule directly yields this: `If something chases the cat → the cat sees the lion.` So if we can prove `chases(X, "cat", True)` for any X, then `sees("cat", "lion", True)` follows.
+8. From explicit facts: The lion chases the cat → assert `chases("lion", "cat", True)`.
+9. Therefore, apply the rule to X = lion → conclude `sees("cat", "lion", True)`.
+10. Final query: Assert and verify `facts.sees("cat", "lion", True)`.

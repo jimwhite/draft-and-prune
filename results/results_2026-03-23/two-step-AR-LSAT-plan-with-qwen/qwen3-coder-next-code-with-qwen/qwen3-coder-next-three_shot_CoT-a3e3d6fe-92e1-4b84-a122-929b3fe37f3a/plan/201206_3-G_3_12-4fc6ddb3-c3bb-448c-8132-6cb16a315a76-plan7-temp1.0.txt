@@ -1,0 +1,12 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative’s zone (1, 2, or 3).  
+3. Add **partition constraint**: each representative is assigned exactly one zone (implicit via domain).  
+4. Add **Zone 1 constraint**: Exactly one of Parra or Tiao is in Zone 1 (exclusive OR).  
+5. Add **Zone 2 constraint**: Exactly one of Tiao or Udall is in Zone 2 (exclusive OR).  
+6. Add **Parra–Quinn same zone constraint**: Parra and Quinn must be assigned to the same zone.  
+7. Add **Stuckey–Udall same zone constraint**: Stuckey and Udall must be assigned to the same zone.  
+8. Add **Zone size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+9. For each answer choice (a proposed assignment), parse the zone assignments and extract the zone index for each representative.  
+10. For each answer choice, clone the base constraints and add hard equality constraints forcing each representative into the zone specified in the answer choice.  
+11. Check satisfiability of each extended constraint set with Z3; collect the index (or directly record) of answer choices that yield SAT.  
+12. Output the list of indices (or directly select) of valid answer choices.

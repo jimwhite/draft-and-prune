@@ -1,0 +1,666 @@
+{
+  "problem": {
+    "context": "Four students will be assigned to a history project in which they will search archives from the years 1921, 1922, 1923, and 1924. Each of the four years will have exactly one student assigned to it. Six students—Louis, Mollie, Onyx, Ryan, Tiffany, and Yoshio—are available for this project. The following conditions apply: Only Louis or Tiffany can be assigned to 1923. If Mollie is assigned to the project, then she must be assigned to either 1921 or 1922. If Tiffany is assigned to the project, then Ryan must be assigned to the project. If Ryan is assigned to the project, then Onyx must be assigned to the year immediately prior to Ryan's.",
+    "question": "If both Ryan and Yoshio are assigned to the project, which one of the following could be true?",
+    "answers": [
+      "Louis is assigned to 1923.",
+      "Mollie is assigned to 1921.",
+      "Onyx is assigned to 1922.",
+      "Tiffany is assigned to 1924.",
+      "Yoshio is assigned to 1922."
+    ],
+    "label": 0,
+    "id_string": "201606_2-G_2_8"
+  },
+  "timing": 883.9296646118164,
+  "all_solver_outputs": [
+    "[]",
+    "0",
+    "[0, 1, 3, 4]",
+    "[]",
+    "[0]",
+    "[]",
+    "0",
+    "[]",
+    "[]",
+    "[0]",
+    "[0]",
+    "[0]",
+    "[0]",
+    "[0]",
+    "[0]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 1122,
+        "total_tokens": 2851
+      },
+      "plan_generation_api_time_only": 30.13765811920166,
+      "code_generation_usage": {
+        "prompt_tokens": 4221,
+        "completion_tokens": 781,
+        "total_tokens": 5002
+      },
+      "code_generation_api_time_only": 23.519618272781372,
+      "repair_usage_total": {
+        "prompt_tokens": 1015,
+        "completion_tokens": 812,
+        "total_tokens": 1827
+      },
+      "repair_api_time_only_total": 23.19931983947754,
+      "path_usage_total": {
+        "prompt_tokens": 6965,
+        "completion_tokens": 2715,
+        "total_tokens": 9680
+      },
+      "path_api_time_only": 76.85659623146057,
+      "solver_time_only": 0.15510892868041992
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 528,
+        "total_tokens": 2257
+      },
+      "plan_generation_api_time_only": 15.220577478408813,
+      "code_generation_usage": {
+        "prompt_tokens": 3627,
+        "completion_tokens": 775,
+        "total_tokens": 4402
+      },
+      "code_generation_api_time_only": 21.042552947998047,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5356,
+        "completion_tokens": 1303,
+        "total_tokens": 6659
+      },
+      "path_api_time_only": 36.26313042640686,
+      "solver_time_only": 0.07913780212402344
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 678,
+        "total_tokens": 2407
+      },
+      "plan_generation_api_time_only": 21.51119565963745,
+      "code_generation_usage": {
+        "prompt_tokens": 3777,
+        "completion_tokens": 692,
+        "total_tokens": 4469
+      },
+      "code_generation_api_time_only": 19.695984363555908,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5506,
+        "completion_tokens": 1370,
+        "total_tokens": 6876
+      },
+      "path_api_time_only": 41.20718002319336,
+      "solver_time_only": 0.08811354637145996
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 759,
+        "total_tokens": 2488
+      },
+      "plan_generation_api_time_only": 24.502180099487305,
+      "code_generation_usage": {
+        "prompt_tokens": 3858,
+        "completion_tokens": 936,
+        "total_tokens": 4794
+      },
+      "code_generation_api_time_only": 27.68242621421814,
+      "repair_usage_total": {
+        "prompt_tokens": 1166,
+        "completion_tokens": 944,
+        "total_tokens": 2110
+      },
+      "repair_api_time_only_total": 26.37381672859192,
+      "path_usage_total": {
+        "prompt_tokens": 6753,
+        "completion_tokens": 2639,
+        "total_tokens": 9392
+      },
+      "path_api_time_only": 78.55842304229736,
+      "solver_time_only": 0.15158724784851074
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 651,
+        "total_tokens": 2380
+      },
+      "plan_generation_api_time_only": 17.351186990737915,
+      "code_generation_usage": {
+        "prompt_tokens": 3750,
+        "completion_tokens": 850,
+        "total_tokens": 4600
+      },
+      "code_generation_api_time_only": 26.303649187088013,
+      "repair_usage_total": {
+        "prompt_tokens": 1083,
+        "completion_tokens": 1313,
+        "total_tokens": 2396
+      },
+      "repair_api_time_only_total": 35.80548858642578,
+      "path_usage_total": {
+        "prompt_tokens": 6562,
+        "completion_tokens": 2814,
+        "total_tokens": 9376
+      },
+      "path_api_time_only": 79.46032476425171,
+      "solver_time_only": 0.1616053581237793
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 430,
+        "total_tokens": 2159
+      },
+      "plan_generation_api_time_only": 11.0650053024292,
+      "code_generation_usage": {
+        "prompt_tokens": 3529,
+        "completion_tokens": 952,
+        "total_tokens": 4481
+      },
+      "code_generation_api_time_only": 30.101479053497314,
+      "repair_usage_total": {
+        "prompt_tokens": 1184,
+        "completion_tokens": 958,
+        "total_tokens": 2142
+      },
+      "repair_api_time_only_total": 27.424814701080322,
+      "path_usage_total": {
+        "prompt_tokens": 6442,
+        "completion_tokens": 2340,
+        "total_tokens": 8782
+      },
+      "path_api_time_only": 68.59129905700684,
+      "solver_time_only": 0.17017722129821777
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 847,
+        "total_tokens": 2576
+      },
+      "plan_generation_api_time_only": 24.02350091934204,
+      "code_generation_usage": {
+        "prompt_tokens": 3946,
+        "completion_tokens": 753,
+        "total_tokens": 4699
+      },
+      "code_generation_api_time_only": 22.958567142486572,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5675,
+        "completion_tokens": 1600,
+        "total_tokens": 7275
+      },
+      "path_api_time_only": 46.98206806182861,
+      "solver_time_only": 0.08093428611755371
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 722,
+        "total_tokens": 2451
+      },
+      "plan_generation_api_time_only": 22.549965620040894,
+      "code_generation_usage": {
+        "prompt_tokens": 3821,
+        "completion_tokens": 685,
+        "total_tokens": 4506
+      },
+      "code_generation_api_time_only": 19.74227523803711,
+      "repair_usage_total": {
+        "prompt_tokens": 917,
+        "completion_tokens": 660,
+        "total_tokens": 1577
+      },
+      "repair_api_time_only_total": 19.035995721817017,
+      "path_usage_total": {
+        "prompt_tokens": 6467,
+        "completion_tokens": 2067,
+        "total_tokens": 8534
+      },
+      "path_api_time_only": 61.32823657989502,
+      "solver_time_only": 0.14542555809020996
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 500,
+        "total_tokens": 2229
+      },
+      "plan_generation_api_time_only": 15.708690404891968,
+      "code_generation_usage": {
+        "prompt_tokens": 3599,
+        "completion_tokens": 933,
+        "total_tokens": 4532
+      },
+      "code_generation_api_time_only": 28.104867696762085,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5328,
+        "completion_tokens": 1433,
+        "total_tokens": 6761
+      },
+      "path_api_time_only": 43.81355810165405,
+      "solver_time_only": 0.08412814140319824
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 654,
+        "total_tokens": 2383
+      },
+      "plan_generation_api_time_only": 17.991576433181763,
+      "code_generation_usage": {
+        "prompt_tokens": 3753,
+        "completion_tokens": 701,
+        "total_tokens": 4454
+      },
+      "code_generation_api_time_only": 20.81941866874695,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5482,
+        "completion_tokens": 1355,
+        "total_tokens": 6837
+      },
+      "path_api_time_only": 38.81099510192871,
+      "solver_time_only": 0.09004735946655273
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 702,
+        "total_tokens": 2431
+      },
+      "plan_generation_api_time_only": 19.290698528289795,
+      "code_generation_usage": {
+        "prompt_tokens": 3801,
+        "completion_tokens": 1128,
+        "total_tokens": 4929
+      },
+      "code_generation_api_time_only": 33.54475212097168,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5530,
+        "completion_tokens": 1830,
+        "total_tokens": 7360
+      },
+      "path_api_time_only": 52.835450649261475,
+      "solver_time_only": 0.0836324691772461
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 972,
+        "total_tokens": 2701
+      },
+      "plan_generation_api_time_only": 26.5128436088562,
+      "code_generation_usage": {
+        "prompt_tokens": 4071,
+        "completion_tokens": 937,
+        "total_tokens": 5008
+      },
+      "code_generation_api_time_only": 26.353379726409912,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5800,
+        "completion_tokens": 1909,
+        "total_tokens": 7709
+      },
+      "path_api_time_only": 52.86622333526611,
+      "solver_time_only": 0.07997417449951172
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 797,
+        "total_tokens": 2526
+      },
+      "plan_generation_api_time_only": 22.99072241783142,
+      "code_generation_usage": {
+        "prompt_tokens": 3896,
+        "completion_tokens": 1053,
+        "total_tokens": 4949
+      },
+      "code_generation_api_time_only": 31.861145496368408,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5625,
+        "completion_tokens": 1850,
+        "total_tokens": 7475
+      },
+      "path_api_time_only": 54.85186791419983,
+      "solver_time_only": 0.0843958854675293
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 1252,
+        "total_tokens": 2981
+      },
+      "plan_generation_api_time_only": 34.083210706710815,
+      "code_generation_usage": {
+        "prompt_tokens": 4351,
+        "completion_tokens": 709,
+        "total_tokens": 5060
+      },
+      "code_generation_api_time_only": 21.912415027618408,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6080,
+        "completion_tokens": 1961,
+        "total_tokens": 8041
+      },
+      "path_api_time_only": 55.995625734329224,
+      "solver_time_only": 0.08140993118286133
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1729,
+        "completion_tokens": 1084,
+        "total_tokens": 2813
+      },
+      "plan_generation_api_time_only": 30.74709177017212,
+      "code_generation_usage": {
+        "prompt_tokens": 4183,
+        "completion_tokens": 787,
+        "total_tokens": 4970
+      },
+      "code_generation_api_time_only": 24.382264614105225,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5912,
+        "completion_tokens": 1871,
+        "total_tokens": 7783
+      },
+      "path_api_time_only": 55.129356384277344,
+      "solver_time_only": 0.09395337104797363
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 89483,
+    "completion_tokens": 29057,
+    "total_tokens": 118540
+  },
+  "api_time_only_total": 843.5503354072571,
+  "solver_time_only_total": 1.6296312808990479,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Each student assigned to -1 (unassigned) or 0-3 (years 1921-1924)\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Years are unique among assigned students\nyear_vals = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*year_vals))\n\n# Fixed: Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)  # Ryan\nsolver.add(assign[5] != -1)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany → Ryan constraint (Ryan is already assigned, so this holds trivially)\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan → Onyx immediately prior constraint\n# If Ryan is assigned to year y, then Onyx must be assigned to y-1 (so Ryan cannot be in 0)\nsolver.add(Implies(assign[3] != -1, assign[3] > 0))\nsolver.add(Implies(assign[3] != -1, assign[2] == assign[3] - 1))\n\n# Since Ryan is assigned, Onyx must be assigned (by the above constraint)\nsolver.add(assign[2] != -1)\n\n# Now test each answer choice\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", 0, 2),   # Louis (index 0) assigned to year 2\n    (\"Mollie is assigned to 1921.\", 1, 0),  # Mollie (index 1) assigned to year 0\n    (\"Onyx is assigned to 1922.\", 2, 1),    # Onyx (index 2) assigned to year 1\n    (\"Tiffany is assigned to 1924.\", 4, 3), # Tiffany (index 4) assigned to year 3\n    (\"Yoshio is assigned to 1922.\", 5, 1)   # Yoshio (index 5) assigned to year 1\n]\n\nanswer_index_list = []\nfor idx, (_, student_idx, year_val) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add the specific claim: student assigned to year_val\n    s_chk.add(assign[student_idx] == year_val)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Each student assigned to -1 (unassigned) or 0-3 (years 1921-1924)\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Years are unique among assigned students\nyear_vals = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*year_vals))\n\n# Fixed: Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)  # Ryan\nsolver.add(assign[5] != -1)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany → Ryan constraint (Ryan is already assigned, so this holds trivially)\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan → Onyx immediately prior constraint\n# If Ryan is assigned to year y, then Onyx must be assigned to y-1 (so Ryan cannot be in 0)\nsolver.add(Implies(assign[3] != -1, assign[3] > 0))\nsolver.add(Implies(assign[3] != -1, assign[2] == assign[3] - 1))\n\n# Since Ryan is assigned, Onyx must be assigned (by the above constraint)\nsolver.add(assign[2] != -1)\n\n# Now test each answer choice\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", 0, 2),   # Louis (index 0) assigned to year 2\n    (\"Mollie is assigned to 1921.\", 1, 0),  # Mollie (index 1) assigned to year 0\n    (\"Onyx is assigned to 1922.\", 2, 1),    # Onyx (index 2) assigned to year 1\n    (\"Tiffany is assigned to 1924.\", 4, 3), # Tiffany (index 4) assigned to year 3\n    (\"Yoshio is assigned to 1922.\", 5, 1)   # Yoshio (index 5) assigned to year 1\n]\n\nanswer_index_list = []\nfor idx, (_, student_idx, year_val) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add the specific claim: student assigned to year_val\n    s_chk.add(assign[student_idx] == year_val)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmppgw9oe_k.py\", line 18, in <module>\n    year_vals = [assign[i] for i in range(6) if assign[i] != -1]\n                                                ^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Each student assigned to -1 (unassigned) or 0-3 (years 1921-1924)\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Years are unique among assigned students\nyear_vals = []\nfor i in range(6):\n    year_var = Int(f\"year_{i}\")\n    solver.add(year_var == If(assign[i] != -1, assign[i], 0))\n    year_vals.append(year_var)\nsolver.add(Distinct(*year_vals))\n\n# Fixed: Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)  # Ryan\nsolver.add(assign[5] != -1)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany → Ryan constraint (Ryan is already assigned, so this holds trivially)\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan → Onyx immediately prior constraint\n# If Ryan is assigned to year y, then Onyx must be assigned to y-1 (so Ryan cannot be in 0)\nsolver.add(Implies(assign[3] != -1, assign[3] > 0))\nsolver.add(Implies(assign[3] != -1, assign[2] == assign[3] - 1))\n\n# Since Ryan is assigned, Onyx must be assigned (by the above constraint)\nsolver.add(assign[2] != -1)\n\n# Now test each answer choice\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", 0, 2),   # Louis (index 0) assigned to year 2\n    (\"Mollie is assigned to 1921.\", 1, 0),  # Mollie (index 1) assigned to year 0\n    (\"Onyx is assigned to 1922.\", 2, 1),    # Onyx (index 2) assigned to year 1\n    (\"Tiffany is assigned to 1924.\", 4, 3), # Tiffany (index 4) assigned to year 3\n    (\"Yoshio is assigned to 1922.\", 5, 1)   # Yoshio (index 5) assigned to year 1\n]\n\nanswer_index_list = []\nfor idx, (_, student_idx, year_val) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add the specific claim: student assigned to year_val\n    s_chk.add(assign[student_idx] == year_val)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1015,
+            "completion_tokens": 812,
+            "total_tokens": 1827
+          },
+          "api_time_only": 23.19931983947754,
+          "solver_time_only": 0.08380317687988281
+        }
+      ]
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyears = [0, 1, 2, 3]  # 1921, 1922, 1923, 1924\n\n# assign[i] = year assigned to student i, or -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year 0-3, unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students are assigned (4 non -1 values)\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Year uniqueness: assigned students must have distinct years\nyear_vars = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*[assign[i] for i in range(6) if assign[i] != -1]))\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nsolver.add(Implies(assign[0] == 2, True))  # Louis can be in 1923\nsolver.add(Implies(assign[4] == 2, True))  # Tiffany can be in 1923\nsolver.add(Implies(assign[1] == 2, False)) # Mollie cannot be in 1923\nsolver.add(Implies(assign[2] == 2, False)) # Onyx cannot be in 1923\nsolver.add(Implies(assign[3] == 2, False)) # Ryan cannot be in 1923\nsolver.add(Implies(assign[5] == 2, False)) # Yoshio cannot be in 1923\n\n# Mollie implication: if assigned, must be in 1921 or 1922\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany implication: if assigned, then Ryan must be assigned\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan-Onyx adjacency: if Ryan is assigned, then Onyx must be assigned to year immediately prior\n# This means: assign[Onyx] == assign[Ryan] - 1 AND assign[Ryan] > 0\nsolver.add(Implies(assign[3] != -1, And(\n    assign[2] == assign[3] - 1,\n    assign[3] > 0\n)))\n\n# Scenario assumption: Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)\nsolver.add(assign[5] != -1)\n\n# Answer choices\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", assign[5] == 1)\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    # Add the specific choice constraint\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyears = [0, 1, 2, 3]  # 1921, 1922, 1923, 1924\n\n# assign[i] = year assigned to student i, or -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year 0-3, unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students are assigned (4 non -1 values)\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Year uniqueness: assigned students must have distinct years\nyear_vars = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*[assign[i] for i in range(6) if assign[i] != -1]))\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nsolver.add(Implies(assign[0] == 2, True))  # Louis can be in 1923\nsolver.add(Implies(assign[4] == 2, True))  # Tiffany can be in 1923\nsolver.add(Implies(assign[1] == 2, False)) # Mollie cannot be in 1923\nsolver.add(Implies(assign[2] == 2, False)) # Onyx cannot be in 1923\nsolver.add(Implies(assign[3] == 2, False)) # Ryan cannot be in 1923\nsolver.add(Implies(assign[5] == 2, False)) # Yoshio cannot be in 1923\n\n# Mollie implication: if assigned, must be in 1921 or 1922\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany implication: if assigned, then Ryan must be assigned\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan-Onyx adjacency: if Ryan is assigned, then Onyx must be assigned to year immediately prior\n# This means: assign[Onyx] == assign[Ryan] - 1 AND assign[Ryan] > 0\nsolver.add(Implies(assign[3] != -1, And(\n    assign[2] == assign[3] - 1,\n    assign[3] > 0\n)))\n\n# Scenario assumption: Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)\nsolver.add(assign[5] != -1)\n\n# Answer choices\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", assign[5] == 1)\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    # Add the specific choice constraint\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp1fmjw8an.py\", line 23, in <module>\n    year_vars = [assign[i] for i in range(6) if assign[i] != -1]\n                                                ^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyears = [0, 1, 2, 3]  # 1921, 1922, 1923, 1924\n\n# assign[i] = year assigned to student i, or -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year 0-3, unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students are assigned (4 non -1 values)\nassigned_count = Sum([If(Not(assign[i] == -1), 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# Year uniqueness: assigned students must have distinct years\nyear_vars = [assign[i] for i in range(6)]\nsolver.add(Distinct(*[If(assign[i] == -1, -2, assign[i]) for i in range(6)]))\n\n# Only Louis or Tiffany can be assigned to 1923 (year index 2)\nsolver.add(Implies(assign[0] == 2, True))  # Louis can be in 1923\nsolver.add(Implies(assign[4] == 2, True))  # Tiffany can be in 1923\nsolver.add(Implies(assign[1] == 2, False)) # Mollie cannot be in 1923\nsolver.add(Implies(assign[2] == 2, False)) # Onyx cannot be in 1923\nsolver.add(Implies(assign[3] == 2, False)) # Ryan cannot be in 1923\nsolver.add(Implies(assign[5] == 2, False)) # Yoshio cannot be in 1923\n\n# Mollie implication: if assigned, must be in 1921 or 1922\nsolver.add(Implies(Not(assign[1] == -1), Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany implication: if assigned, then Ryan must be assigned\nsolver.add(Implies(Not(assign[4] == -1), Not(assign[3] == -1)))\n\n# Ryan-Onyx adjacency: if Ryan is assigned, then Onyx must be assigned to year immediately prior\n# This means: assign[Onyx] == assign[Ryan] - 1 AND assign[Ryan] > 0\nsolver.add(Implies(Not(assign[3] == -1), And(\n    assign[2] == assign[3] - 1,\n    assign[3] > 0\n)))\n\n# Scenario assumption: Ryan and Yoshio are assigned\nsolver.add(Not(assign[3] == -1))\nsolver.add(Not(assign[5] == -1))\n\n# Answer choices\nanswer_choices = [\n    (\"Louis is assigned to 1923.\", assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", assign[5] == 1)\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add all base constraints\n    for a in solver.assertions():\n        s_chk.add(a)\n    # Add the specific choice constraint\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1166,
+            "completion_tokens": 944,
+            "total_tokens": 2110
+          },
+          "api_time_only": 26.37381672859192,
+          "solver_time_only": 0.07960677146911621
+        }
+      ]
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio\n(L, M, O, R, T, Y) = range(6)\n\n# Year indices: 0->1921, 1->1922, 2->1923, 3->1924\n# assign[s] = year index if assigned, -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year in [0,3], unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nsolver.add(Sum([If(assign[i] != -1, 1, 0) for i in range(6)]) == 4)\n\n# Year uniqueness: assigned students get distinct years\nyear_vars = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*year_vars))\n\n# 1923 constraint: only Louis or Tiffany can be assigned to 1923\nfor i in range(6):\n    if i != L and i != T:\n        solver.add(assign[i] != 2)\n\n# Mollie constraint: if assigned, must be in 1921 or 1922\nsolver.add(Implies(assign[M] != -1, Or(assign[M] == 0, assign[M] == 1)))\n\n# Tiffany ⇒ Ryan constraint: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[T] != -1, assign[R] != -1))\n\n# Ryan ⇒ Onyx prior constraint: if Ryan assigned, then Onyx must be assigned and immediately before\nsolver.add(Implies(assign[R] != -1, And(\n    assign[O] != -1,\n    assign[O] == assign[R] - 1\n)))\n\n# Given assumption: Ryan and Yoshio are both assigned\nsolver.add(assign[R] != -1, assign[Y] != -1)\n\n# Answer choices indices: A=0 (Louis to 1923), B=1 (Mollie to 1921), C=2 (Onyx to 1922), D=3 (Tiffany to 1924), E=4 (Yoshio to 1922)\nanswer_index_list = []\n\n# Check each choice\n# A: Louis assigned to 1923 (year index 2)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[L] == 2)\nif s_chk.check() == sat:\n    answer_index_list.append(0)\n\n# B: Mollie assigned to 1921 (year index 0)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[M] == 0)\nif s_chk.check() == sat:\n    answer_index_list.append(1)\n\n# C: Onyx assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[O] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(2)\n\n# D: Tiffany assigned to 1924 (year index 3)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[T] == 3)\nif s_chk.check() == sat:\n    answer_index_list.append(3)\n\n# E: Yoshio assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[Y] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(4)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio\n(L, M, O, R, T, Y) = range(6)\n\n# Year indices: 0->1921, 1->1922, 2->1923, 3->1924\n# assign[s] = year index if assigned, -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year in [0,3], unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nsolver.add(Sum([If(assign[i] != -1, 1, 0) for i in range(6)]) == 4)\n\n# Year uniqueness: assigned students get distinct years\nyear_vars = [assign[i] for i in range(6) if assign[i] != -1]\nsolver.add(Distinct(*year_vars))\n\n# 1923 constraint: only Louis or Tiffany can be assigned to 1923\nfor i in range(6):\n    if i != L and i != T:\n        solver.add(assign[i] != 2)\n\n# Mollie constraint: if assigned, must be in 1921 or 1922\nsolver.add(Implies(assign[M] != -1, Or(assign[M] == 0, assign[M] == 1)))\n\n# Tiffany ⇒ Ryan constraint: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[T] != -1, assign[R] != -1))\n\n# Ryan ⇒ Onyx prior constraint: if Ryan assigned, then Onyx must be assigned and immediately before\nsolver.add(Implies(assign[R] != -1, And(\n    assign[O] != -1,\n    assign[O] == assign[R] - 1\n)))\n\n# Given assumption: Ryan and Yoshio are both assigned\nsolver.add(assign[R] != -1, assign[Y] != -1)\n\n# Answer choices indices: A=0 (Louis to 1923), B=1 (Mollie to 1921), C=2 (Onyx to 1922), D=3 (Tiffany to 1924), E=4 (Yoshio to 1922)\nanswer_index_list = []\n\n# Check each choice\n# A: Louis assigned to 1923 (year index 2)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[L] == 2)\nif s_chk.check() == sat:\n    answer_index_list.append(0)\n\n# B: Mollie assigned to 1921 (year index 0)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[M] == 0)\nif s_chk.check() == sat:\n    answer_index_list.append(1)\n\n# C: Onyx assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[O] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(2)\n\n# D: Tiffany assigned to 1924 (year index 3)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[T] == 3)\nif s_chk.check() == sat:\n    answer_index_list.append(3)\n\n# E: Yoshio assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[Y] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(4)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmptk9y5yfs.py\", line 21, in <module>\n    year_vars = [assign[i] for i in range(6) if assign[i] != -1]\n                                                ^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio\n(L, M, O, R, T, Y) = range(6)\n\n# Year indices: 0->1921, 1->1922, 2->1923, 3->1924\n# assign[s] = year index if assigned, -1 if not assigned\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each assigned student gets a year in [0,3], unassigned get -1\nfor i in range(6):\n    solver.add(Or(assign[i] == -1, And(assign[i] >= 0, assign[i] <= 3)))\n\n# Exactly four students assigned\nsolver.add(Sum([If(assign[i] != -1, 1, 0) for i in range(6)]) == 4)\n\n# Year uniqueness: assigned students get distinct years\nyear_vars = [assign[i] for i in range(6)]\nsolver.add(Implies(And(assign[0] != -1, assign[1] != -1), assign[0] != assign[1]))\nsolver.add(Implies(And(assign[0] != -1, assign[2] != -1), assign[0] != assign[2]))\nsolver.add(Implies(And(assign[0] != -1, assign[3] != -1), assign[0] != assign[3]))\nsolver.add(Implies(And(assign[0] != -1, assign[4] != -1), assign[0] != assign[4]))\nsolver.add(Implies(And(assign[0] != -1, assign[5] != -1), assign[0] != assign[5]))\nsolver.add(Implies(And(assign[1] != -1, assign[2] != -1), assign[1] != assign[2]))\nsolver.add(Implies(And(assign[1] != -1, assign[3] != -1), assign[1] != assign[3]))\nsolver.add(Implies(And(assign[1] != -1, assign[4] != -1), assign[1] != assign[4]))\nsolver.add(Implies(And(assign[1] != -1, assign[5] != -1), assign[1] != assign[5]))\nsolver.add(Implies(And(assign[2] != -1, assign[3] != -1), assign[2] != assign[3]))\nsolver.add(Implies(And(assign[2] != -1, assign[4] != -1), assign[2] != assign[4]))\nsolver.add(Implies(And(assign[2] != -1, assign[5] != -1), assign[2] != assign[5]))\nsolver.add(Implies(And(assign[3] != -1, assign[4] != -1), assign[3] != assign[4]))\nsolver.add(Implies(And(assign[3] != -1, assign[5] != -1), assign[3] != assign[5]))\nsolver.add(Implies(And(assign[4] != -1, assign[5] != -1), assign[4] != assign[5]))\n\n# 1923 constraint: only Louis or Tiffany can be assigned to 1923\nfor i in range(6):\n    if i != L and i != T:\n        solver.add(assign[i] != 2)\n\n# Mollie constraint: if assigned, must be in 1921 or 1922\nsolver.add(Implies(assign[M] != -1, Or(assign[M] == 0, assign[M] == 1)))\n\n# Tiffany ⇒ Ryan constraint: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[T] != -1, assign[R] != -1))\n\n# Ryan ⇒ Onyx prior constraint: if Ryan assigned, then Onyx must be assigned and immediately before\nsolver.add(Implies(assign[R] != -1, And(\n    assign[O] != -1,\n    assign[O] == assign[R] - 1\n)))\n\n# Given assumption: Ryan and Yoshio are both assigned\nsolver.add(assign[R] != -1, assign[Y] != -1)\n\n# Answer choices indices: A=0 (Louis to 1923), B=1 (Mollie to 1921), C=2 (Onyx to 1922), D=3 (Tiffany to 1924), E=4 (Yoshio to 1922)\nanswer_index_list = []\n\n# Check each choice\n# A: Louis assigned to 1923 (year index 2)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[L] == 2)\nif s_chk.check() == sat:\n    answer_index_list.append(0)\n\n# B: Mollie assigned to 1921 (year index 0)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[M] == 0)\nif s_chk.check() == sat:\n    answer_index_list.append(1)\n\n# C: Onyx assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[O] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(2)\n\n# D: Tiffany assigned to 1924 (year index 3)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[T] == 3)\nif s_chk.check() == sat:\n    answer_index_list.append(3)\n\n# E: Yoshio assigned to 1922 (year index 1)\ns_chk = Solver()\ns_chk.add(solver.assertions())\ns_chk.add(assign[Y] == 1)\nif s_chk.check() == sat:\n    answer_index_list.append(4)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[0]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1083,
+            "completion_tokens": 1313,
+            "total_tokens": 2396
+          },
+          "api_time_only": 35.80548858642578,
+          "solver_time_only": 0.08585000038146973
+        }
+      ]
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyear_indices = {1921: 0, 1922: 1, 1923: 2, 1924: 3}\n\n# Create year assignment variables for each student (-1 means unassigned)\nyear = [Int(f\"year_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: assigned students get years 1921-1924, unassigned get -1\nfor i in range(6):\n    solver.add(Or(year[i] == -1, year[i] == 1921, year[i] == 1922, year[i] == 1923, year[i] == 1924))\n\n# Exactly four students are assigned (exactly four have year != -1)\nassigned_count = Sum([If(year[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# The four assigned students must cover all years 1921-1924 exactly once\n# We'll enforce this by ensuring the non-unassigned years are distinct and span all four years\nnon_assigned_years = [year[i] for i in range(6) if year[i] != -1]\nsolver.add(Distinct(*non_assigned_years))\n# Also ensure all four years are covered\nfor y in [1921, 1922, 1923, 1924]:\n    solver.add(Or(*[year[i] == y for i in range(6)]))\n\n# Fixed scenario: Ryan and Yoshio are assigned (year != -1)\nsolver.add(year[3] != -1)  # Ryan\nsolver.add(year[5] != -1)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923\nsolver.add(Implies(year[0] == 1923, True))  # Louis can be assigned to 1923\nsolver.add(Implies(year[4] == 1923, True))  # Tiffany can be assigned to 1923\n# If someone else is assigned to 1923, it's invalid:\nfor i in [1, 2, 5]:  # Mollie, Onyx, Yoshio\n    solver.add(Implies(year[i] == 1923, False))\n\n# If Mollie is assigned, she must be in 1921 or 1922\nsolver.add(Implies(year[1] != -1, Or(year[1] == 1921, year[1] == 1922)))\n\n# If Tiffany is assigned, then Ryan must be assigned (already satisfied by scenario)\nsolver.add(Implies(year[4] != -1, year[3] != -1))\n\n# If Ryan is assigned, Onyx must be assigned to the year immediately prior\nsolver.add(Implies(year[3] != -1, And(\n    year[2] != -1,\n    year[2] == year[3] - 1\n)))\n\n# Answer choices (as conditions to check for possibility under the scenario)\nanswer_conditions = [\n    year[0] == 1923,  # Louis is assigned to 1923\n    year[1] == 1921,  # Mollie is assigned to 1921\n    year[2] == 1922,  # Onyx is assigned to 1922\n    year[4] == 1924,  # Tiffany is assigned to 1924\n    year[5] == 1922   # Yoshio is assigned to 1922\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, cond in enumerate(answer_conditions):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(cond)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyear_indices = {1921: 0, 1922: 1, 1923: 2, 1924: 3}\n\n# Create year assignment variables for each student (-1 means unassigned)\nyear = [Int(f\"year_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: assigned students get years 1921-1924, unassigned get -1\nfor i in range(6):\n    solver.add(Or(year[i] == -1, year[i] == 1921, year[i] == 1922, year[i] == 1923, year[i] == 1924))\n\n# Exactly four students are assigned (exactly four have year != -1)\nassigned_count = Sum([If(year[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# The four assigned students must cover all years 1921-1924 exactly once\n# We'll enforce this by ensuring the non-unassigned years are distinct and span all four years\nnon_assigned_years = [year[i] for i in range(6) if year[i] != -1]\nsolver.add(Distinct(*non_assigned_years))\n# Also ensure all four years are covered\nfor y in [1921, 1922, 1923, 1924]:\n    solver.add(Or(*[year[i] == y for i in range(6)]))\n\n# Fixed scenario: Ryan and Yoshio are assigned (year != -1)\nsolver.add(year[3] != -1)  # Ryan\nsolver.add(year[5] != -1)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923\nsolver.add(Implies(year[0] == 1923, True))  # Louis can be assigned to 1923\nsolver.add(Implies(year[4] == 1923, True))  # Tiffany can be assigned to 1923\n# If someone else is assigned to 1923, it's invalid:\nfor i in [1, 2, 5]:  # Mollie, Onyx, Yoshio\n    solver.add(Implies(year[i] == 1923, False))\n\n# If Mollie is assigned, she must be in 1921 or 1922\nsolver.add(Implies(year[1] != -1, Or(year[1] == 1921, year[1] == 1922)))\n\n# If Tiffany is assigned, then Ryan must be assigned (already satisfied by scenario)\nsolver.add(Implies(year[4] != -1, year[3] != -1))\n\n# If Ryan is assigned, Onyx must be assigned to the year immediately prior\nsolver.add(Implies(year[3] != -1, And(\n    year[2] != -1,\n    year[2] == year[3] - 1\n)))\n\n# Answer choices (as conditions to check for possibility under the scenario)\nanswer_conditions = [\n    year[0] == 1923,  # Louis is assigned to 1923\n    year[1] == 1921,  # Mollie is assigned to 1921\n    year[2] == 1922,  # Onyx is assigned to 1922\n    year[4] == 1924,  # Tiffany is assigned to 1924\n    year[5] == 1922   # Yoshio is assigned to 1922\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, cond in enumerate(answer_conditions):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(cond)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpx3e8g8ro.py\", line 23, in <module>\n    non_assigned_years = [year[i] for i in range(6) if year[i] != -1]\n                                                       ^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\nstudents = [\"Louis\", \"Mollie\", \"Onyx\", \"Ryan\", \"Tiffany\", \"Yoshio\"]\nyear_indices = {1921: 0, 1922: 1, 1923: 2, 1924: 3}\n\n# Create year assignment variables for each student (-1 means unassigned)\nyear = [Int(f\"year_{i}\") for i in range(6)]\n\n# Create boolean variables to indicate if a student is assigned\nassigned = [Bool(f\"assigned_{i}\") for i in range(6)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: assigned students get years 1921-1924, unassigned get -1\nfor i in range(6):\n    solver.add(Implies(assigned[i], Or(year[i] == 1921, year[i] == 1922, year[i] == 1923, year[i] == 1924)))\n    solver.add(Implies(Not(assigned[i]), year[i] == -1))\n\n# Exactly four students are assigned\nsolver.add(Sum([If(assigned[i], 1, 0) for i in range(6)]) == 4)\n\n# The four assigned students must cover all years 1921-1924 exactly once\n# Enforce distinctness of assigned years\nnon_assigned_years = [year[i] for i in range(6)]\nsolver.add(Distinct(*[If(assigned[i], year[i], 0) for i in range(6)]))\n\n# Also ensure all four years are covered by assigned students\nfor y in [1921, 1922, 1923, 1924]:\n    solver.add(Or(*[And(assigned[i], year[i] == y) for i in range(6)]))\n\n# Fixed scenario: Ryan and Yoshio are assigned (year != -1)\nsolver.add(assigned[3] == True)  # Ryan\nsolver.add(assigned[5] == True)  # Yoshio\n\n# Only Louis or Tiffany can be assigned to 1923\nfor i in [0, 4]:  # Louis and Tiffany can be assigned to 1923\n    solver.add(Implies(And(assigned[i], year[i] == 1923), True))\nfor i in [1, 2, 5]:  # Mollie, Onyx, Yoshio cannot be assigned to 1923\n    solver.add(Implies(year[i] == 1923, Not(assigned[i])))\n\n# If Mollie is assigned, she must be in 1921 or 1922\nsolver.add(Implies(assigned[1], Or(year[1] == 1921, year[1] == 1922)))\n\n# If Tiffany is assigned, then Ryan must be assigned (already satisfied by scenario)\nsolver.add(Implies(assigned[4], assigned[3]))\n\n# If Ryan is assigned, Onyx must be assigned to the year immediately prior\nsolver.add(Implies(assigned[3], And(\n    assigned[2],\n    year[2] == year[3] - 1\n)))\n\n# Answer choices (as conditions to check for possibility under the scenario)\nanswer_conditions = [\n    year[0] == 1923,  # Louis is assigned to 1923\n    year[1] == 1921,  # Mollie is assigned to 1921\n    year[2] == 1922,  # Onyx is assigned to 1922\n    year[4] == 1924,  # Tiffany is assigned to 1924\n    year[5] == 1922   # Yoshio is assigned to 1922\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, cond in enumerate(answer_conditions):\n    s_chk = Solver()\n    for a in solver.assertions():\n        s_chk.add(a)\n    s_chk.add(cond)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1184,
+            "completion_tokens": 958,
+            "total_tokens": 2142
+          },
+          "api_time_only": 27.424814701080322,
+          "solver_time_only": 0.08892536163330078
+        }
+      ]
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each student assigned to -1 (not assigned) or 0-3\nfor i in range(6):\n    solver.add(Or([assign[i] == j for j in range(-1, 4)]))\n\n# Exactly four students are assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# One-to-one mapping: assigned students get distinct years\nassigned_years = [assign[i] for i in range(6) if i != -1]\nsolver.add(Distinct([assign[i] for i in range(6) if assign[i] != -1]))\n\n# Year 1923 constraint: only Louis (0) or Tiffany (4)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany-Ryan dependency: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan-Onyx adjacency: if Ryan assigned, then Onyx must be assigned to year immediately prior\n# This implies Ryan cannot be in year 0 (1921)\nsolver.add(Implies(assign[3] != -1, And(\n    assign[2] != -1,\n    assign[2] == assign[3] - 1,\n    assign[3] >= 1\n)))\n\n# Scenario constraint: both Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)\nsolver.add(assign[5] != -1)\n\n# Choices\nchoices = [\n    (\"Louis is assigned to 1923.\", lambda: assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", lambda: assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", lambda: assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", lambda: assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", lambda: assign[5] == 1)\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint_func) in enumerate(choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint_func())\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each student assigned to -1 (not assigned) or 0-3\nfor i in range(6):\n    solver.add(Or([assign[i] == j for j in range(-1, 4)]))\n\n# Exactly four students are assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# One-to-one mapping: assigned students get distinct years\nassigned_years = [assign[i] for i in range(6) if i != -1]\nsolver.add(Distinct([assign[i] for i in range(6) if assign[i] != -1]))\n\n# Year 1923 constraint: only Louis (0) or Tiffany (4)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany-Ryan dependency: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan-Onyx adjacency: if Ryan assigned, then Onyx must be assigned to year immediately prior\n# This implies Ryan cannot be in year 0 (1921)\nsolver.add(Implies(assign[3] != -1, And(\n    assign[2] != -1,\n    assign[2] == assign[3] - 1,\n    assign[3] >= 1\n)))\n\n# Scenario constraint: both Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)\nsolver.add(assign[5] != -1)\n\n# Choices\nchoices = [\n    (\"Louis is assigned to 1923.\", lambda: assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", lambda: assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", lambda: assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", lambda: assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", lambda: assign[5] == 1)\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint_func) in enumerate(choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint_func())\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpf7_cr8ln.py\", line 20, in <module>\n    solver.add(Distinct([assign[i] for i in range(6) if assign[i] != -1]))\n                                                        ^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 391, in __bool__\n    raise Z3Exception(\"Symbolic expressions cannot be cast to concrete Boolean values.\")\nz3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Student indices: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5\n# Year indices: 1921=0, 1922=1, 1923=2, 1924=3\n\nassign = [Int(f\"assign_{i}\") for i in range(6)]\n\nsolver = Solver()\n\n# Domain constraints: each student assigned to -1 (not assigned) or 0-3\nfor i in range(6):\n    solver.add(Or([assign[i] == j for j in range(-1, 4)]))\n\n# Exactly four students are assigned\nassigned_count = Sum([If(assign[i] != -1, 1, 0) for i in range(6)])\nsolver.add(assigned_count == 4)\n\n# One-to-one mapping: assigned students get distinct years\nsolver.add(Distinct([assign[i] for i in range(6) if True]))\n\n# Year 1923 constraint: only Louis (0) or Tiffany (4)\nfor i in range(6):\n    solver.add(Implies(assign[i] == 2, Or(i == 0, i == 4)))\n\n# Mollie constraint: if assigned, must be in year 0 or 1\nsolver.add(Implies(assign[1] != -1, Or(assign[1] == 0, assign[1] == 1)))\n\n# Tiffany-Ryan dependency: if Tiffany assigned, then Ryan must be assigned\nsolver.add(Implies(assign[4] != -1, assign[3] != -1))\n\n# Ryan-Onyx adjacency: if Ryan assigned, then Onyx must be assigned to year immediately prior\n# This implies Ryan cannot be in year 0 (1921)\nsolver.add(Implies(assign[3] != -1, And(\n    assign[2] != -1,\n    assign[2] == assign[3] - 1,\n    assign[3] >= 1\n)))\n\n# Scenario constraint: both Ryan and Yoshio are assigned\nsolver.add(assign[3] != -1)\nsolver.add(assign[5] != -1)\n\n# Choices\nchoices = [\n    (\"Louis is assigned to 1923.\", lambda: assign[0] == 2),\n    (\"Mollie is assigned to 1921.\", lambda: assign[1] == 0),\n    (\"Onyx is assigned to 1922.\", lambda: assign[2] == 1),\n    (\"Tiffany is assigned to 1924.\", lambda: assign[4] == 3),\n    (\"Yoshio is assigned to 1922.\", lambda: assign[5] == 1)\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint_func) in enumerate(choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint_func())\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 917,
+            "completion_tokens": 660,
+            "total_tokens": 1577
+          },
+          "api_time_only": 19.035995721817017,
+          "solver_time_only": 0.07524895668029785
+        }
+      ]
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

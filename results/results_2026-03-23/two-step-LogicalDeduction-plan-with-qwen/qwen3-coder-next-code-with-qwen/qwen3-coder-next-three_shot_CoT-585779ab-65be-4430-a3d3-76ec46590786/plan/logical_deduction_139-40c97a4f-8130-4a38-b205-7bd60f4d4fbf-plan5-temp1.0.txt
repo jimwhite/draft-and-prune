@@ -1,0 +1,30 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"`.  
+   * Define the domain as integer positions from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with their domain (1–7) to the `Problem` instance.
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint:  
+     - *"The hummingbird is to the left of the crow"* → `hummingbird < crow`  
+     - *"The cardinal is to the right of the quail"* → `quail < cardinal`  
+     - *"The blue jay is the fourth from the left"* → `bluejay == 4`  
+     - *"The robin is the second from the left"* → `robin == 2`  
+     - *"The quail is to the right of the crow"* → `crow < quail`  
+     - *"The raven is to the left of the robin"* → `raven < robin`  
+   * Use lambda functions or direct relational constraints (e.g., via `FunctionConstraint`) to add these inequalities and equalities.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (since the problem is well-constrained, there should be exactly one solution).  
+   * Handle potential edge cases (e.g., multiple solutions), but assume uniqueness as per problem statement ("logically consistent").
+
+5. **Determine the Correct Answer:**  
+   * The question asks which bird is the **rightmost**, i.e., position 7.  
+   * Create a dictionary mapping choice letters to birds: `"A" → "robin"`, `"B" → "hummingbird"`, ..., `"G" → "quail"`.  
+   * Iterate over the solution dictionary to find which bird has value 7.  
+   * Return (or print) the corresponding choice letter for that bird.

@@ -1,0 +1,27 @@
+1. Identify all entities: cat, dog, rabbit, tiger.
+2. Define and encode all direct facts using ternary predicates (predicate(subject, object, True)):
+   - needs("cat", "dog", True)
+   - is_kind("dog", True)
+   - needs("dog", "rabbit", True)
+   - eats("rabbit", "dog", True)
+   - is_green("rabbit", True)
+   - chases("tiger", "rabbit", True)
+   - is_big("tiger", True)
+3. Encode all conditional rules as PyKe `foreach`-`assert` blocks:
+   • If something is nice and eats the tiger → it needs the dog.
+   • If something chases the cat → it eats the cat.
+   • If the dog chases the tiger → the tiger needs the rabbit.
+   • If the rabbit chases the tiger → the rabbit chases the cat.
+   • If something chases the cat → the cat is kind.
+   • If something eats the dog → it chases the cat.
+   • If something is rough → it eats the dog.
+   • If something is kind → it is rough.
+   • If something eats the rabbit and the rabbit is big → it is kind.
+4. Note: The facts do *not* directly state any entity is "nice", so “is_nice” may remain unasserted unless derivable.
+5. Derive consequences step-by-step:
+   - From is_kind("dog", True) and rule “if something is kind → it is rough”, infer is_rough("dog", True).
+   - From eats("rabbit", "dog", True) and rule “if something eats the dog → it chases the cat”, infer chases("rabbit", "cat", True).
+   - From chases("rabbit", "cat", True) and rule “if something chases the cat → the cat is kind”, infer is_kind("cat", True).
+   - From is_kind("cat", True) and “if something is kind → it is rough”, infer is_rough("cat", True).
+6. Query: “The cat is not rough” → Check whether is_rough("cat", False) holds.
+   But step 5 shows is_rough("cat", True) is derivable → Therefore, the query negation (is_rough("cat", False)) must be false.

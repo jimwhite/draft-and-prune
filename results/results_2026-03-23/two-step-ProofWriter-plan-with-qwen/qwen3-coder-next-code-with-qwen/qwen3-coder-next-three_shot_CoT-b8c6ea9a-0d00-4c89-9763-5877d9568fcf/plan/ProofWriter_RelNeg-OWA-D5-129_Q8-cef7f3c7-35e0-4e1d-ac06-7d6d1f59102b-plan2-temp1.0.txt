@@ -1,0 +1,14 @@
+1. Identify all entities: lion, mouse, rabbit, squirrel.
+2. Encode all explicit facts using ternary predicates (subject, object, True), with boolean-valued properties like is_cold, is_rough, is_kind, and relation-valued relations like needs, visits, sees.
+3. Specifically encode negative facts (e.g., “does not need”, “does not visit”) using ternary predicates with False as the object: needs("lion", "mouse", False), visits("mouse", "squirrel", False), etc.
+4. Translate each conditional into a rule:
+   • If X needs the rabbit and the rabbit sees the mouse → mouse does not see lion: uses needs("X", "rabbit", True) ∧ sees("rabbit", "mouse", True) → needs("mouse", "lion", False)
+   • If X is rough → visits the mouse: uses is_rough("X", True) → visits("X", "mouse", True)
+   • If X needs the rabbit and X visits the mouse → mouse needs the rabbit: uses needs("X", "rabbit", True) ∧ visits("X", "mouse", True) → needs("mouse", "rabbit", True)
+   • If X needs the rabbit and the rabbit is cold → X is rough: uses needs("X", "rabbit", True) ∧ is_cold("rabbit", True) → is_rough("X", True)
+   • If X needs the rabbit → rabbit needs squirrel: uses needs("X", "rabbit", True) → needs("rabbit", "squirrel", True)
+   • If squirrel sees lion and squirrel is not green → lion needs squirrel: uses sees("squirrel", "lion", True) ∧ ¬is_green("squirrel", True) → needs("lion", "squirrel", True)
+   • If X is big → visits lion: uses is_big("X", True) → visits("X", "lion", True)
+   • If X visits squirrel and squirrel sees lion → lion is not kind: uses visits("X", "squirrel", True) ∧ sees("squirrel", "lion", True) → is_kind("lion", False)
+5. Note: is_green is not mentioned directly in facts or rules as true, so the antecedent “squirrel is not green” (i.e., ¬is_green("squirrel", True)) must be treated as a default assumption unless is_green("squirrel", True) is proven — but PyKe does not support negation-as-failure; instead, since no fact states is_green("squirrel", True), we can encode the conditional only when is_green("squirrel", False) holds, or defer if unavailable.
+6. Query: test whether mouse does not need rabbit → facts.needs("mouse", "rabbit", False)

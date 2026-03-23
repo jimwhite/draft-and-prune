@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * The variables are the seven books: `"green"`, `"brown"`, `"white"`, `"black"`, `"orange"`, `"purple"`, `"yellow"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost position** and **7 = rightmost position**.  
+   * Add all variables with the domain [1, 2, 3, 4, 5, 6, 7] to the problem.
+
+3. **Translate Each Statement into Constraints Using Lambda Functions:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * "The purple book is to the left of the yellow book" → `purple < yellow`.  
+   * "The green book is to the left of the white book" → `green < white`.  
+   * "The brown book is to the right of the yellow book" → `yellow < brown`.  
+   * "The white book is the fourth from the left" → `white == 4`.  
+   * "The green book is to the right of the orange book" → `orange < green`.  
+   * "The black book is the second from the left" → `black == 2`.
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` on the problem instance to find all satisfying assignments.  
+   * Since the constraints fully determine a unique arrangement, extract the first (and only) solution.
+
+5. **Determine the Correct Choice Based on "Third from the Right":**  
+   * In a 7-book shelf, third from the right corresponds to position **5**, because:  
+     - Rightmost = 7 → 1st from right  
+     - Position 6 = 2nd from right  
+     - **Position 5 = 3rd from right**  
+   * Create a dictionary mapping choice letters to book names:  
+     `{'A': 'green', 'B': 'brown', 'C': 'white', 'D': 'black', 'E': 'orange', 'F': 'purple', 'G': 'yellow'}`.  
+   * In the solution dictionary, find which book has position == 5.  
+   * Return the corresponding choice letter (e.g., if `'green'` is at position 5, answer is `'A'`).

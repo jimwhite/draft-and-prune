@@ -1,0 +1,29 @@
+1. Identify all entities involved: bear, cat, lion, squirrel.
+2. Define binary properties (is_cold, is_rough, is_red, is_green) and binary relations (eats, likes, visits) using ternary predicates of the form predicate(subject, object, True), where object is either a boolean (for properties) or another entity (for relations).
+3. Encode all explicitly stated facts as facts.pred(subj, obj, True):
+   - eats("bear", "squirrel", True)
+   - is_cold("bear", True)
+   - is_rough("bear", True)
+   - visits("bear", "lion", True)
+   - eats("cat", "lion", True)
+   - likes("lion", "cat", True)
+   - visits("lion", "bear", True)
+   - eats("squirrel", "lion", True)
+   - is_cold("squirrel", True)
+   - is_rough("squirrel", True)  ← explicitly stated; key for query
+   - likes("squirrel", "bear", True)
+   - visits("squirrel", "lion", True)
+4. Translate each conditional into PyKe rules:
+   • Red people are green → If is_red(X, True) then is_green(X, True)
+   • If someone eats the lion → the lion is red → If eats(X, "lion", True) then is_red("lion", True)
+   • If someone is green and likes the lion → they eat the bear → If is_green(X, True) ∧ likes(X, "lion", True) then eats(X, "bear", True)
+   • If someone visits the bear → the bear likes the lion → If visits(X, "bear", True) then likes("bear", "lion", True)
+   • If someone likes the squirrel and likes the lion → they visit the lion → If likes(X, "squirrel", True) ∧ likes(X, "lion", True) then visits(X, "lion", True)
+   • If someone is green → they eat the squirrel → If is_green(X, True) then eats(X, "squirrel", True)
+   • If someone likes the lion → they visit the bear → If likes(X, "lion", True) then visits(X, "bear", True)
+   • If someone visits the lion and the lion is green → they are red → If visits(X, "lion", True) ∧ is_green("lion", True) then is_red(X, True)
+5. Implement each rule using `foreach` blocks for preconditions and `assert` clauses for conclusions.
+6. The query is: “The squirrel is not rough”, i.e., is_rough("squirrel", False).
+   → Use facts.is_rough("squirrel", False) as the query.
+   Note: Since the fact is_rough("squirrel", True) is explicitly stated, the query's truth value depends on whether any rule can force is_rough("squirrel", True) → contradiction, or if negation-as-failure applies. In PyKe (a forward-chaining rule engine with default closed-world for facts), absence of negation rules means we cannot conclude the negation unless explicitly derivable or proven inconsistent. Since is_rough("squirrel", True) is given, the query should be false—unless rules derive inconsistency (e.g., if all rough things must not be rough), but no such rule exists. So the query is directly contradicted by an explicit fact.
+7. Therefore, directly encode the query as verifying that facts.is_rough("squirrel", False) does not hold; in PyKe this is asserted via the negation query mode, but per spec we simply use facts.is_rough("squirrel", False) to test.

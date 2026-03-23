@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Bob, Gary, Harry.  
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_furry("Anne", True), is_blue("Gary", True), etc.).  
+3. Translate all conditional rules into PyKe `foreach` + `assert` rules:  
+   • Cold and blue → quiet.  
+   • Round and furry → quiet.  
+   • If Bob is blue and round → Bob is young.  
+   • Round → blue.  
+   • Young and round → blue.  
+   • If Harry is quiet and furry → Harry is blue.  
+   • Furry → cold.  
+   • Cold → round.  
+   • Young and furry → rough.  
+4. For each rule, construct a `foreach` block matching the antecedent conditions and an `assert` for the consequent.  
+5. The query checks whether Harry is furry: use facts.is_furry("Harry", True).

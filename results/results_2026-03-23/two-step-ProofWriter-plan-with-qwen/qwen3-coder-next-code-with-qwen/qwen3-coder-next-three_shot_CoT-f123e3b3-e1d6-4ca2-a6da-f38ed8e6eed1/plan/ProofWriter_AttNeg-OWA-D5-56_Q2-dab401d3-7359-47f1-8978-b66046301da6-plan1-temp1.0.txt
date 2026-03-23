@@ -1,0 +1,15 @@
+1. Identify all individuals: Dave, Erin, Fiona, Harry.
+2. Encode all explicit atomic facts using ternary predicates (e.g., is_red("Dave", True), is_quiet("Erin", True), is_white("Fiona", True), etc.).
+3. Encode facts involving negations (e.g., "Harry is not green") as is_green("Harry", False).
+4. Translate all rules from the context into PyKe `foreach` + `assert` blocks:
+   • If someone is quiet and red → they are smart.
+   • If someone is quiet → they are smart.
+   • If Dave is red → Dave is big.
+   • If Dave is smart and white → Dave is big.
+   • If Fiona is white and red → Fiona is rough.
+   • If someone is white → they are quiet.
+   • If someone is rough → they are green.
+   • If someone is smart → they are red.
+5. Apply default assumption that if a predicate is not asserted as True or False, its truth value remains unknown unless derivable via rules.
+6. The query checks whether "Harry is not red" holds:
+   → Use facts.is_red("Harry", False)

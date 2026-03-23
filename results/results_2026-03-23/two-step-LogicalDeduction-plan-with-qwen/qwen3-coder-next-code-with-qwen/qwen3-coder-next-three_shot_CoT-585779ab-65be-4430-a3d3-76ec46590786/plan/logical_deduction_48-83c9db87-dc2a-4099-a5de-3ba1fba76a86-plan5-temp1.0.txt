@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five fruits: `"mangoes"`, `"kiwis"`, `"watermelons"`, `"oranges"`, and `"apples"`.  
+   * Assign a numerical domain from 1 to 5, where **1 = cheapest** and **5 = most expensive** (i.e., higher number means more expensive).  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Convert each statement into a constraint using `lambda` or direct value assignment:  
+     - "The oranges are the cheapest" → assign `"oranges"` position = 1.  
+     - "The kiwis are less expensive than the mangoes" → `"kiwis"` rank < `"mangoes"` rank (i.e., `kiwis < mangoes`).  
+     - "The watermelons are more expensive than the apples" → `"watermelons"` rank > `"apples"` rank (i.e., `apples < watermelons`).  
+     - "The watermelons are less expensive than the kiwis" → `"watermelons"` rank < `"kiwis"` rank (i.e., `watermelons < kiwis`).  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to retrieve all valid price rankings satisfying the constraints.  
+   * Since the problem is deterministic, there will be exactly one solution—extract it from the list.
+
+5. **Identify the Most Expensive Fruit and Match to Choice:**  
+   * The question asks which fruit is the most expensive, i.e., has rank = 5.  
+   * Create a dictionary mapping choice letters (`"A"`→`"mangoes"`, `"B"`→`"kiwis"`, etc.) to fruit names.  
+   * In the solution dictionary, find which fruit has value 5 (most expensive).  
+   * Return the corresponding choice letter as the answer.

@@ -1,0 +1,21 @@
+1. Identify all entities: Charlie, Erin, Fiona, Gary.  
+2. Encode all explicitly stated facts using ternary predicates:  
+   - is_young("Charlie", True)  
+   - is_blue("Erin", True), is_not_kind("Erin", True) [Note: use a unary predicate or binary with False for negation]  
+   - is_blue("Fiona", True), is_white("Fiona", True)  
+   - is_blue("Gary", True), is_kind("Gary", True)  
+3. For unary predicates with negation (e.g., “not kind”), define explicit binary predicates: is_kind(X, False) for “X is not kind”.  
+   - So encode: is_kind("Erin", False)  
+4. Translate all context rules into PyKe `foreach` + `assert` form:  
+   • Furry, nice things are white. → If furry(X, True) ∧ nice(X, True), then is_white(X, True).  
+   • If young(X, True) ∧ blue(X, True), then smart(X, True).  
+   • If blue(X, True) ∧ smart(X, True), then furry(X, True).  
+   • If smart(X, True) ∧ white(X, True), then furry(X, True).  
+   • If young(X, True), then nice(X, True).  
+   • If Fiona is smart ∧ Fiona is young, then furry(Fiona, False).  
+   • If kind(X, True), then furry(X, True). (Specifically for Erin: if is_kind("Erin", True), then furry("Erin", True) — but note Erin is given as not kind.)  
+   • If Gary is smart ∧ Gary is white, then is_kind("Gary", False).  
+   • If nice(X, True), then blue(X, True).  
+5. Note: Some rules have antecedents about properties not yet known (e.g., smart(Fiona)); inference may be needed.  
+6. The query tests whether Fiona is not white:  
+   → Use facts.is_white("Fiona", False)

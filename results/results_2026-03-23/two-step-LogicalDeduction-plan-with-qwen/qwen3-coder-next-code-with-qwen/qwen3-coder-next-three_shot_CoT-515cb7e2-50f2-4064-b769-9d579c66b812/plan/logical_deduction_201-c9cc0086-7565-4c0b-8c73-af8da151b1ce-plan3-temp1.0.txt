@@ -1,0 +1,37 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"purple"`, `"brown"`, `"red"`, `"blue"`, `"gray"`, `"black"`, and `"green"`.  
+   * Define the domain of positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Add All-Different Constraint:**  
+   * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into Constraints:**  
+   * "The brown book is to the left of the green book" → `brown < green` (using a lambda or simple relational constraint).  
+   * "The gray book is the second from the left" → `gray == 2`.  
+   * "The black book is to the left of the gray book" → `black < gray` (and since `gray == 2`, this implies `black == 1`).  
+   * "The blue book is to the left of the red book" → `blue < red`.  
+   * "The blue book is the second from the right" → `blue == 6` (since position 7 is rightmost).  
+   * "The green book is to the left of the purple book" → `green < purple`.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Use `getSolutions()` to compute all valid assignments. Given the constraints, there will be exactly one solution.
+
+6. **Analyze the Solution to Determine Position of Each Book:**  
+   * Extract the unique solution dictionary mapping book names to positions.
+
+7. **Identify Which Book Is Fourth From the Left (i.e., position = 4):**  
+   * Loop through the solution items and find the book with value `4`.  
+   * Map this book to the corresponding choice letter:  
+     - A → purple  
+     - B → brown  
+     - C → red  
+     - D → blue  
+     - E → gray  
+     - F → black  
+     - G → green  
+   * Return the letter (A–G) corresponding to the book at position 4.

@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Their Domain:**
+   * Define the five fruits as variables: `"cantaloupes"`, `"kiwis"`, `"oranges"`, `"mangoes"`, and `"peaches"`.
+   * Assign a numerical domain from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**.
+   * Add all variables with domain [1, 2, 3, 4, 5] to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+   * Translate the statements into constraints using `lambda` functions:
+     - "The kiwis are less expensive than the mangoes" → `kiwis < mangoes`
+     - "The peaches are less expensive than the oranges" → `peaches < oranges`
+     - "The oranges are the second-most expensive" → `oranges == 4` (since most expensive = 5, second-most = 4)
+     - "The mangoes are the second-cheapest" → `mangoes == 2` (cheapest = 1, second-cheapest = 2)
+
+4. **Solve for the Arrangement:**
+   * Call `getSolutions()` to find all valid assignments.
+   * Extract the unique solution (as the problem is well-constrained).
+
+5. **Identify the Correct Answer:**
+   * The question asks which fruit is the cheapest → position = 1.
+   * Map choice letters to fruit names:
+        A → "cantaloupes", B → "kiwis", C → "oranges", D → "mangoes", E → "peaches"
+   * Search the solution dictionary for the fruit assigned rank 1.
+   * Output the corresponding choice letter.

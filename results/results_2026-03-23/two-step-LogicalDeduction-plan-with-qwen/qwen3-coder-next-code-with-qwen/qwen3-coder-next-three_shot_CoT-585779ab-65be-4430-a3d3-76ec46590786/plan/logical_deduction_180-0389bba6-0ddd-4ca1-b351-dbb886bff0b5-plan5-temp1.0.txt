@@ -1,0 +1,39 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, `"green"`.  
+   * Define the domain as integers from **1 to 7**, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Add AllDifferent Constraint:**  
+   * Add `AllDifferentConstraint()` to ensure each book occupies a unique position.
+
+4. **Translate Each Statement into Constraints Using Lambda Functions:**  
+   * "The red book is to the right of the yellow book" → `red > yellow`.  
+   * "The white book is the second from the right" → `white == 6` (since 7 is rightmost, 6 is second from right).  
+   * "The red book is to the left of the green book" → `red < green`.  
+   * "The blue book is to the right of the black book" → `blue > black`.  
+   * "The black book is the third from the right" → `black == 5` (positions: 7=rightmost, so 6=second right, 5=third right).  
+   * "The orange book is the leftmost" → `orange == 1`.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (the problem is deterministic).
+
+6. **Determine Which Choice is True:**  
+   * The question asks: *"Which of the following is true?"* and lists choices of the form "[X] book is the third from the right."  
+   * Since we already know `black == 5`, and our mapping confirms position 5 = third from right (positions: 7,6,5 → 1st,2nd,3rd from right), choice A is explicitly stated in the premises and must be true.  
+   * Nevertheless, verify by checking for each choice:  
+        * Map choices A–G to book names:  
+            - A → `"black"`  
+            - B → `"orange"`  
+            - C → `"yellow"`  
+            - D → `"white"`  
+            - E → `"blue"`  
+            - F → `"red"`  
+            - G → `"green"`  
+        * For each choice, check whether the book’s position equals 5 (third from right).  
+        * Confirm that `"black"` has position 5, so **A is true**.  
+   * Return choice letter `"A"` as the answer.

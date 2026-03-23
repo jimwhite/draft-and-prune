@@ -1,0 +1,51 @@
+from constraint import *
+
+# Initialize the problem
+problem = Problem()
+
+# Define variables (birds) and domain (positions 1 to 7)
+birds = ["hawk", "hummingbird", "quail", "owl", "crow", "robin", "cardinal"]
+positions = range(1, 8)
+problem.addVariables(birds, positions)
+
+# Add all different constraint
+problem.addConstraint(AllDifferentConstraint())
+
+# Add constraints based on the problem description
+# "The cardinal is the second from the right" → position 6
+problem.addConstraint(lambda cardinal: cardinal == 6, ["cardinal"])
+
+# "The hawk is the rightmost" → position 7
+problem.addConstraint(lambda hawk: hawk == 7, ["hawk"])
+
+# "The owl is to the left of the hummingbird" → owl < hummingbird
+problem.addConstraint(lambda owl, hummingbird: owl < hummingbird, ["owl", "hummingbird"])
+
+# "The robin is to the left of the quail" → robin < quail
+problem.addConstraint(lambda robin, quail: robin < quail, ["robin", "quail"])
+
+# "The owl is to the right of the crow" → crow < owl
+problem.addConstraint(lambda crow, owl: crow < owl, ["crow", "owl"])
+
+# "The robin is the fourth from the left" → position 4
+problem.addConstraint(lambda robin: robin == 4, ["robin"])
+
+# Solve the problem
+solutions = problem.getSolutions()
+
+# Map choice letters to bird names
+choices = {
+    "A": "hawk",
+    "B": "hummingbird",
+    "C": "quail",
+    "D": "owl",
+    "E": "crow",
+    "F": "robin",
+    "G": "cardinal"
+}
+
+# Find which bird is at position 1 (leftmost)
+for solution in solutions:
+    for letter, bird_name in choices.items():
+        if solution[bird_name] == 1:
+            print(letter)

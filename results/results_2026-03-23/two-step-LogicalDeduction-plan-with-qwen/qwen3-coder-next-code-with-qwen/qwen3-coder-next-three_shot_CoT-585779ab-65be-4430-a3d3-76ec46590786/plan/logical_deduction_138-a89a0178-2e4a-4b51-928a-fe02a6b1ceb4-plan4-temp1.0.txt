@@ -1,0 +1,29 @@
+1.  **Initialize the Constraint Satisfaction Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the seven bird names: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, and `"raven"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all variables to the problem with this domain.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that each bird occupies a unique position using `AllDifferentConstraint`.
+
+4.  **Translate Each Natural Language Statement into Constraints:**
+    * "The falcon is to the right of the quail" → `falcon > quail`
+    * "The robin is to the right of the hummingbird" → `robin > hummingbird`
+    * "The raven is to the left of the quail" → `raven < quail`
+    * "The blue jay is the second from the left" → `blue jay == 2`
+    * "The robin is the third from the left" → `robin == 3`
+    * "The cardinal is the third from the right" → Since there are 7 positions, third from the right is position `7 - 3 + 1 = 5`, so `cardinal == 5`
+
+5.  **Solve the Constraint Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the unique solution (only one valid arrangement exists per problem description).
+
+6.  **Interpret the Question and Map to Choices:**
+    * The question asks which bird is "second from the right", i.e., position `7 - 2 + 1 = 6`.
+    * Create a dictionary mapping choice letters (A–G) to the corresponding bird names from the choices.
+    * Iterate through the solution dictionary and find the bird whose position value is 6.
+    * Return the choice letter (A, B, C, D, E, F, or G) corresponding to that bird as the answer.

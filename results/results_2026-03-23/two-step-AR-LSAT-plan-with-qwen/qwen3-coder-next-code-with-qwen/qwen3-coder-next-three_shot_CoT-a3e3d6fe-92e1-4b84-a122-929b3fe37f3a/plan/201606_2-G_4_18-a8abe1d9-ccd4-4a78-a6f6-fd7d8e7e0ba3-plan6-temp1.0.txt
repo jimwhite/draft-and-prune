@@ -1,0 +1,18 @@
+1. Enumerate the six singers and assign indices: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer variables for their audition positions: `pos[0]` to `pos[5]`, each ranging from 1 to 6.  
+3. Add **distinctness constraint**: all `pos[i]` must be pairwise distinct (a permutation of 1..6).  
+4. Add **recording constraints**: Kammer and Lugo are recorded (indices 0,1); others not.  
+    - Fourth audition cannot be recorded ⇒ the singer at position 4 must *not* be Kammer or Lugo: i.e., `¬(pos_inv[4] == 0 ∨ pos_inv[4] == 1)`.  
+    - Fifth audition must be recorded ⇒ the singer at position 5 *must* be Kammer or Lugo: `pos_inv[5] == 0 ∨ pos_inv[5] == 1`.  
+    (Alternatively, define `pos_inv` as inverse: `inv[p] = i` iff `pos[i] == p`, and constrain accordingly.)  
+5. Add **Waite constraint**: Waite (3) must go *before both* recorded auditions.  
+    - Let `r1` and `r2` be positions of Kammer and Lugo (i.e., `pos[0]`, `pos[1]`). Then:  
+      `pos[3] < pos[0]` and `pos[3] < pos[1]`.  
+6. Add **Kammer–Trillo constraint**: `pos[0] < pos[2]`.  
+7. Add **Zinn–Yoshida constraint**: `pos[5] < pos[4]`.  
+8. For each choice (a candidate full ordering), parse the order to get a list of singer indices, e.g., `order = [0,2,5,3,1,4]` for first choice.  
+9. For each candidate order:  
+    - Create a fresh solver.  
+    - Constrain the positions exactly to match the candidate order: `pos[i] == rank+1` where `rank` is 0-indexed position in the list.  
+    - Check satisfiability with the base constraints (distinctness, recording rules, Waite-before-recorded, Kammer-before-Trillo, Zinn-before-Yoshida).  
+10. Collect all choices for which the model is SAT. Since only one choice can be correct, return that index (or string).

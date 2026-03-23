@@ -1,0 +1,19 @@
+1. Enumerate the six available colors (forest, olive, peach, turquoise, white, yellow) and assign each an integer index 0–5.  
+2. Since exactly five of the six colors are used, define Boolean decision variables `used[c]` for each color c, with the constraint that exactly five are true.  
+3. Define three rugs; for each rug r ∈ {0,1,2} and color c, define Boolean variable `in_rug[r][c]` indicating whether color c is used in rug r.  
+4. Add **exactly-one-rug constraint**: each color used appears in exactly one rug: for each color c, if `used[c]` is true, then exactly one `in_rug[r][c]` is true.  
+5. Add **rug composition constraints**: each rug is either solid (exactly one color) or multicolored (two or more colors).  
+   - For each rug r, let `count[r] = sum_{c} in_rug[r][c]`; add constraint: `count[r] == 1 OR count[r] >= 2`. (Implement via auxiliary Boolean variables or big-M encoding: introduce `solid[r]`, then `count[r] == 1 ↔ solid[r]`, and enforce exactly two rugs are solid.)  
+6. Enforce exactly **two solid rugs**: `sum_{r} solid[r] == 2`.  
+7. Add **color compatibility rules per rug**:  
+   - If white is in a rug, then exactly two *other* colors must also be in that rug: `in_rug[r][white] → (count[r] == 3)`.  
+   - If olive is in a rug, then peach must also be: `in_rug[r][olive] → in_rug[r][peach]`.  
+   - Forest and turquoise cannot co-occur: `¬(in_rug[r][forest] ∧ in_rug[r][turquoise])`.  
+   - Peach and turquoise cannot co-occur: `¬(in_rug[r][peach] ∧ in_rug[r][turquoise])`.  
+   - Peach and yellow cannot co-occur: `¬(in_rug[r][peach] ∧ in_rug[r][yellow])`.  
+8. Translate the five answer choices into color pairs (as indices), e.g., ('forest', 'peach') → (0,2).  
+9. Define `forbidden_pairs` list. For each choice pair (c1, c2) in answer choices:  
+   - Clone base constraints into a fresh solver S.  
+   - Add constraint that rug0 is solid with color c1 AND rug1 is solid with color c2 (or any permutation: try all 3×2=6 assignments of the two solid rugs to positions r_i, r_j). Specifically: for each ordered pair (r_a, r_b) with r_a ≠ r_b, assert `solid[r_a]`, `in_rug[r_a][c1]`, `count[r_a]==1`; same for r_b and c2; enforce all other rugs non-solid (`count[r] ≥ 2`).  
+   - If for *all* such assignments the system is UNSAT, then (c1,c2) is impossible → append to `forbidden_pairs`.  
+10. Output the list of forbidden color pairs (as indices or mapped back to names), matching the format of the question’s required output.

@@ -1,0 +1,24 @@
+1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+3. Represent "Wren is a yumpus" as a base fact: `is_a("Wren", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   * Every jompus is bright → `foreach (j) if is_a(j, "jompus") then is_bright(j, True)`  
+   * Every jompus is a vumpus → `foreach (j) if is_a(j, "jompus") then is_a(j, "vumpus", True)`  
+   * Vumpuses are floral → `foreach (v) if is_a(v, "vumpus") then is_floral(v, True)`  
+   * Every vumpus is a yumpus → `foreach (v) if is_a(v, "vumpus") then is_a(v, "yumpus", True)`  
+   * Every yumpus is not temperate → `foreach (y) if is_a(y, "yumpus") then is_temperate(y, False)`  
+   * Each yumpus is a numpus → `foreach (y) if is_a(y, "yumpus") then is_a(y, "numpus", True)`  
+   * Every numpus is sweet → `foreach (n) if is_a(n, "numpus") then is_sweet(n, True)`  
+   * Each numpus is a zumpus → `foreach (n) if is_a(n, "numpus") then is_a(n, "zumpus", True)`  
+   * Zumpuses are mean → `foreach (z) if is_a(z, "zumpus") then is_mean(z, True)`  
+   * Zumpuses are rompuses → `foreach (z) if is_a(z, "zumpus") then is_a(z, "rompus", True)`  
+   * Each rompus is not feisty → `foreach (r) if is_a(r, "rompus") then is_feisty(r, False)`  
+   * Every impus is not transparent → `foreach (i) if is_a(i, "impus") then is_transparent(i, False)`  
+   * Each rompus is a wumpus → `foreach (r) if is_a(r, "rompus") then is_a(r, "wumpus", True)`  
+   * Wumpuses are transparent → `foreach (w) if is_a(w, "wumpus") then is_transparent(w, True)`  
+   * Each wumpus is a dumpus → `foreach (w) if is_a(w, "wumpus") then is_a(w, "dumpus", True)`  
+   * Dumpuses are large → `foreach (d) if is_a(d, "dumpus") then is_large(d, True)`  
+   * Each dumpus is a tumpus → `foreach (d) if is_a(d, "dumpus") then is_a(d, "tumpus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Wren is transparent" is provable:  
+   → Use `facts.is_transparent("Wren", True)`.

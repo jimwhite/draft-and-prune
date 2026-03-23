@@ -1,0 +1,19 @@
+1. Enumerate the five bird types and assign them integer codes: oystercatchers=0, petrels=1, rails=2, sandpipers=3, terns=4.  
+2. Enumerate the five lecture slots (positions 1 to 5) and create integer variables for each bird type indicating its position.  
+3. Create Boolean variables `hall[i]` (i=1..5) where `hall[i] = True` means lecture at position i is in Gladwyn Hall, else Howard Auditorium.  
+4. Add **fixed hall constraints**:  
+   - `hall[1] = True` (first lecture in Gladwyn Hall).  
+   - `hall[4] = False` (fourth lecture in Howard Auditorium).  
+5. Add **hall count constraint**: exactly three lectures in Gladwyn Hall → sum of `hall[i]` for i=1..5 equals 3.  
+6. Add **sandpiper–oystercatcher constraint**: sandpipers in Howard Auditorium → `hall[pos_sand] = False`; and sandpipers earlier than oystercatchers → `pos_sand < pos_oyst`.  
+7. Add **tern–petrel constraint**: terns earlier than petrels → `pos_tern < pos_pet`; and petrels in Gladwyn Hall → `hall[pos_pet] = True`.  
+8. Add **bird uniqueness constraint**: all `pos_*` variables are distinct and cover {1,2,3,4,5}.  
+9. Translate each answer choice into a logical condition on the `hall[]` Boolean variables:  
+   - Choice 0 (first and second in Gladwyn): `hall[1] ∧ hall[2]`  
+   - Choice 1 (second and third in Howard): `¬hall[2] ∧ ¬hall[3]`  
+   - Choice 2 (second and fifth in Gladwyn): `hall[2] ∧ hall[5]`  
+   - Choice 3 (third and fourth in Howard): `¬hall[3] ∧ ¬hall[4]`  
+   - Choice 4 (third and fifth in Gladwyn): `hall[3] ∧ hall[5]`  
+10. For each choice, clone the base solver and assert the choice’s condition. Then check SAT. If UNSAT, that choice **must be false**, so record its index.  
+11. Append the index of any UNSAT choice to `answer_index_list`.  
+12. Output `answer_index_list`.

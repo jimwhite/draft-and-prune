@@ -1,0 +1,27 @@
+1. Enumerate the six lab assistants and assign them integer indices.  
+2. Enumerate the six sessions: label them by (day, slot), where day ∈ {0: Wednesday, 1: Thursday, 2: Friday}, slot ∈ {0: morning, 1: afternoon} → total of 6 ordered pairs, assign index 0–5.  
+3. Create integer variables `assign[i]` for i = 0..5, where `assign[i]` is the assistant index assigned to session i; all `assign[i]` must be distinct (bijection).  
+4. Precompute session-day mapping: sessions 0–1 = Wed, 2–3 = Thu, 4–5 = Fri (e.g., [0:WedAM, 1:WedPM, 2:ThuAM, 3:ThuPM, 4:FriAM, 5:FriPM]).  
+5. Add **day-slot constraints**:  
+    - Nessa must lead an afternoon session: if session i is afternoon (i = 1, 3, or 5), then `assign[i] == Nessa`.  
+6. Add **same-day constraint**: Kevin and Rebecca must lead sessions on the same day → there exists a day d such that both assistants are assigned to sessions in day d. Express via: `|day_of(assign⁻¹[Kevin]) - day_of(assign⁻¹[Rebecca])| == 0`. Alternatively, enforce via existence quantifier using Big-M or explicit disjunction over days.  
+7. Add **mutual exclusion constraint**: Lan and Olivia cannot lead sessions on the same day → `day_of(session_assigned_to[Lan]) ≠ day_of(session_assigned_to[Olivia])`.  
+8. Add **Julio before Olivia constraint**: Julio's session day < Olivia’s session day, or same day but earlier slot (e.g., WedAM < WedPM). Encode using session indices: assign precedence order consistent with global ordering 0 < 1 < ... < 5 (since sessions are sequential in time), but strictly require `assign_inv[Julio] < assign_inv[Olivia]`.  
+9. Add **auxiliary constraint from problem condition**: Lan does *not* lead a Wednesday session → if session i is Wed (i = 0 or 1), then `assign[i] ≠ Lan`.  
+10. Translate answer choices to assistant indices: ['Rebecca', 'Olivia', 'Nessa', 'Kevin', 'Julio'] → indices 0..4.  
+11. Define answer index list `answer_index_list = []`. For each candidate assistant A in the choices:  
+    - Clone base constraints + Lan-not-Wed constraint.  
+    - Add constraint `assign_inv[A]` must be in a Thursday session: i.e., the session assigned to A has index 2 or 3 (ThuAM/PM).  
+    - Then, for *every* Thursday session position p ∈ {2, 3}, add constraint `assign[p] == A`.  
+    - If the resulting system is UNSAT for *both* p=2 and p=3, then A is forced to be in Thursday. However, the question asks who *must* be in Thursday under the condition — so we test necessity:  
+        - For assistant A, check whether *every* satisfying assignment (under the condition Lan ≠ Wed) has A in a Thursday session.  
+        - To prove necessity, test: assume allThursday = False → create solver with base+Lan≠Wed + (assign_inv[A] ∉ {2,3}) → if UNSAT, then A must be in Thursday.  
+    - Alternatively: more efficient — iterate over all positions p ∉ {2,3} and assert `assign_inv[A] == p`; if any such assignment is SAT for some p ∉ {2,3}, then A need not be in Thursday. If all such constraints yield UNSAT (i.e., A cannot be in Wed or Fri), then A must be in Thu.  
+    - So for each A:  
+        a. Clone base + Lan≠Wed.  
+        b. For p = 0 (WedAM): add `assign_inv[A] == p`. Check SAT.  
+        c. For p = 1 (WedPM): add `assign_inv[A] == p`. Check SAT.  
+        d. For p = 4 (FriAM): add `assign_inv[A] == p`. Check SAT.  
+        e. For p = 5 (FriPM): add `assign_inv[A] == p`. Check SAT.  
+        f. If *all four* of the above are UNSAT, then A must be in Thursday; append index(A) to answer_index_list.  
+12. Print the final `answer_index_list`.

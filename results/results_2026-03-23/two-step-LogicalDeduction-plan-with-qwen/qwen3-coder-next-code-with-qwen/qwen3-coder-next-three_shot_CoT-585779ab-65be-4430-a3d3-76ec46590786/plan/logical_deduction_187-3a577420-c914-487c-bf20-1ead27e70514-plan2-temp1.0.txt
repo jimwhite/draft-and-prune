@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the golf tournament rankings.
+
+2.  **Define Variables and Domain:**  
+    * Define variables as the seven golfers: `"Eve"`, `"Ana"`, `"Amy"`, `"Dan"`, `"Eli"`, `"Rob"`, and `"Mya"`.  
+    * Define the domain as integers from 1 to 7, where **1 = highest rank (first place)** and **7 = lowest rank (last place)**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.  
+    * Translate each statement into constraints using lambda functions:  
+        - "Mya finished above Eli" → `Mya < Eli` (lower rank number = higher position).  
+        - "Eve finished below Rob" → `Rob < Eve`.  
+        - "Amy finished second" → `Amy == 2`.  
+        - "Rob finished below Dan" → `Dan < Rob`.  
+        - "Ana finished second-to-last" → `Ana == 6` (since last is 7, second-to-last is 6).  
+        - "Dan finished fourth" → `Dan == 4`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to compute all valid assignments.  
+    * Extract the unique solution (the list will contain one dictionary mapping golfers to ranks).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks who finished last, i.e., rank = 7.  
+    * Map the choices to golfer names:  
+        - "A" → "Eve", "B" → "Ana", "C" → "Amy", "D" → "Dan", "E" → "Eli", "F" → "Rob", "G" → "Mya".  
+    * For each choice, check if the corresponding golfer’s rank in the solution is 7.  
+    * Return the letter (A–G) of the choice where this condition holds true.

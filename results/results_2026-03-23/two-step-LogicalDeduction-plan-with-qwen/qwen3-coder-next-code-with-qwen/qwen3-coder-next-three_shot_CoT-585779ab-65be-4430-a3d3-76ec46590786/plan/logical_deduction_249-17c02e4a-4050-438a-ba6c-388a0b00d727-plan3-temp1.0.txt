@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the three golfers as variables: `"Ana"`, `"Rob"`, and `"Joe"`.  
+   * Define the domain for finishing positions as integers from 1 to 3, where **1 = first (highest/furthest left)** and **3 = third (lowest/furthest right)**.  
+   * Add these variables to the problem with their domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure no two golfers share the same position.  
+   * Translate "Joe finished above Ana" into a constraint: `Joe's position < Ana's position` (since lower number = higher finish).  
+   * Translate "Rob finished above Joe" into a constraint: `Rob's position < Joe's position`.
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments of positions.  
+   * Extract the unique solution (the list will contain exactly one dictionary mapping golfers to positions).
+
+5. **Determine the Correct Answer:**  
+   * The question asks who finished second (position 2).  
+   * Create a mapping from choice letters to golfer names: `"A" -> "Ana"`, `"B" -> "Rob"`, `"C" -> "Joe"`.  
+   * Iterate through choices; for each, check if the mapped golfer's position in the solution equals 2.  
+   * Return (or output) the letter of the first matching choice.

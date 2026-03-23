@@ -1,0 +1,19 @@
+1. Identify all entities: Bob, Dave, Erin, Fiona.
+2. Encode all explicitly stated properties as ternary facts using `facts.property(entity, value, True)` (for Boolean-valued properties like is_blue, is_cold, etc.) or `facts.is_property(entity, value)` where appropriate (e.g., is_kind("Dave", True), is_smart("Dave", True)).
+3. Specifically, assert:
+   - is_blue("Bob", True), is_cold("Bob", True), is_green("Bob", True)
+   - is_blue("Dave", True), is_cold("Dave", True), is_green("Dave", True), is_kind("Dave", True), is_smart("Dave", True), is_white("Dave", True)
+   - is_smart("Erin", True)
+   - is_blue("Fiona", True)
+4. Translate each universal conditional into a rule using `foreach` + `assert` blocks:
+   • Blue people are smart → forall X: if is_blue(X, True) then is_smart(X, True)
+   • If Fiona is green and blue → Fiona is big → special-case rule: if is_green("Fiona", True) ∧ is_blue("Fiona", True), then assert is_big("Fiona", True)
+   • Smart people are cold → forall X: if is_smart(X, True) then is_cold(X, True)
+   • If Bob is kind and blue → Bob is not green → if is_kind("Bob", True) ∧ is_blue("Bob", True), then assert is_green("Bob", False)
+   • If someone is blue → they are white → forall X: if is_blue(X, True) then is_white(X, True)
+   • Green people are white → forall X: if is_green(X, True) then is_white(X, True)
+   • All big people are kind → forall X: if is_big(X, True) then is_kind(X, True)
+   • If someone is cold → they are green → forall X: if is_cold(X, True) then is_green(X, True)
+5. Note potential inconsistencies: Bob is declared green; but cold → green and Bob is cold, which is consistent. Also Dave is blue ⇒ white (consistent), blue ⇒ smart (Dave is already smart), green ⇒ white (Dave is white, consistent). No immediate contradiction.
+6. The query is whether Dave is big:
+   → Use facts.is_big("Dave", True) as the query; check if it can be derived.

@@ -1,0 +1,23 @@
+1.  Identify all entities and types: Wren, zumpus, dumpus, rompus, vumpus, numpus, wumpus, yumpus, tumpus, impus.  
+2.  Identify all properties: nervous, large, brown, transparent, bitter, floral, not_transparent (as negation of transparent), tumpus is-not-bright (but brightness only used for negation in "not bright"), and implicit transparency-related facts.  
+3.  Represent "Wren is a dumpus" as a base fact: `is_a("Wren", "dumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules, carefully distinguishing positive assertions from negative ones (e.g., "Numpuses are not bitter" → `¬is_bitter(x)` when `is_a(x, "numpus")`; "Every yumpus is not transparent" → `¬is_transparent(x)` when `is_a(x, "yumpus")`).  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` or `neg_assert` clause (or rule with negated conclusion) for the consequence:  
+   - Every zumpus is nervous → `foreach(x, if(is_a(x,"zumpus")) assert(is_nervous(x)))`  
+   - Every zumpus is a dumpus → `foreach(x, if(is_a(x,"zumpus")) assert(is_a(x,"dumpus")))`  
+   - Every dumpus is large → `foreach(x, if(is_a(x,"dumpus")) assert(is_large(x)))`  
+   - Dumpuses are rompuses → `foreach(x, if(is_a(x,"dumpus")) assert(is_a(x,"rompus")))`  
+   - Every rompus is brown → `foreach(x, if(is_a(x,"rompus")) assert(is_brown(x)))`  
+   - Vumpuses are transparent → `foreach(x, if(is_a(x,"vumpus")) assert(is_transparent(x)))`  
+   - Each rompus is a numpus → `foreach(x, if(is_a(x,"rompus")) assert(is_a(x,"numpus")))`  
+   - Numpuses are not bitter → `foreach(x, if(is_a(x,"numpus")) neg_assert(is_bitter(x)))`  
+   - Numpuses are wumpuses → `foreach(x, if(is_a(x,"numpus")) assert(is_a(x,"wumpus")))`  
+   - Each wumpus is floral → `foreach(x, if(is_a(x,"wumpus")) assert(is_floral(x)))`  
+   - Every wumpus is a yumpus → `foreach(x, if(is_a(x,"wumpus")) assert(is_a(x,"yumpus")))`  
+   - Every yumpus is not transparent → `foreach(x, if(is_a(x,"yumpus")) neg_assert(is_transparent(x)))`  
+   - Yumpuses are tumpuses → `foreach(x, if(is_a(x,"yumpus")) assert(is_a(x,"tumpus")))`  
+   - Tumpuses are not bright → `foreach(x, if(is_a(x,"tumpus")) neg_assert(is_bright(x)))`  
+   - Every tumpus is an impus → `foreach(x, if(is_a(x,"tumpus")) assert(is_a(x,"impus")))`  
+6.  Derive chain: Wren is dumpus → dumpus → rompus → numpus → wumpus → yumpus. Since Wren is a yumpus, and every yumpus is not transparent → Wren is not transparent.  
+7.  The query tests whether "Wren is not transparent" is provable:  
+   → Use `facts.is_transparent("Wren", False)`.

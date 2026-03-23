@@ -1,0 +1,21 @@
+1. Enumerate riders (Reynaldo, Seamus, Theresa, Yuki) and bicycles (F, G, H, J), assigning each an integer index (0–3 for riders, 0–3 for bicycles).  
+2. Create Boolean variables `r1[i][j]` and `r2[i][j]` to indicate whether rider i tests bicycle j on day 1 and day 2 respectively.  
+3. Add **one-to-one assignment constraints per day**: for each day, every rider is assigned exactly one bicycle, and every bicycle is assigned to exactly one rider.  
+    - For day 1: for each rider i, sum_j r1[i][j] = 1; for each bicycle j, sum_i r1[i][j] = 1.  
+    - Same for day 2: sum_j r2[i][j] = 1 for each i; sum_i r2[i][j] = 1 for each j.  
+4. Add **forbidden assignments**:  
+    - Reynaldo (rider 0) cannot test F (bicycle 0) on either day: r1[0][0] = false, r2[0][0] = false.  
+    - Yuki (rider 3) cannot test J (bicycle 3) on either day: r1[3][3] = false, r2[3][3] = false.  
+5. Add **Theresa constraint**: Theresa (rider 2) must test H (bicycle 2) on at least one day: r1[2][2] ∨ r2[2][2].  
+6. Add **Yuki–Seamus link**: The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all bicycles j, r1[3][j] → r2[1][j].  
+7. Encode the five answer choices as specific propositional constraints (each a potential truth):  
+    - Choice 0: "Reynaldo tests J on the first day" → r1[0][3] = true  
+    - Choice 1: "Reynaldo tests J on the second day" → r2[0][3] = true  
+    - Choice 2: "Seamus tests H on the first day" → r1[1][2] = true  
+    - Choice 3: "Yuki tests H on the first day" → r1[3][2] = true  
+    - Choice 4: "Yuki tests H on the second day" → r2[3][2] = true  
+8. Define answer index list `answer_index_list = []`. For each choice (index c ∈ {0,…,4}):  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the specific constraint for choice c.  
+    - If UNSAT, then this choice **cannot be true**; append c to `answer_index_list`.  
+9. Print `answer_index_list`.

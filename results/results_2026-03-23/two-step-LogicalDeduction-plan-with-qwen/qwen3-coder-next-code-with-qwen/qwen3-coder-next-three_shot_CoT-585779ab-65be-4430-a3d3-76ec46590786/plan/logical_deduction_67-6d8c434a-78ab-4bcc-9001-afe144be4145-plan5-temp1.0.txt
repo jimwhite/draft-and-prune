@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: the five birds — `"cardinal"`, `"hawk"`, `"hummingbird"`, `"raven"`, and `"owl"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost** position on the branch.  
+   * Add all variables to the problem with this domain.
+
+3. **Translate Each Statement into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+   * Add constraint: `"The raven is to the left of the hummingbird"` → `raven < hummingbird`.  
+   * Add constraint: `"The hawk is to the left of the owl"` → `hawk < owl`.  
+   * Add constraint: `"The cardinal is to the left of the hawk"` → `cardinal < hawk`.  
+   * Add constraint: `"The raven is the second from the right"` → `raven == 4` (since position 5 is rightmost, so second from right is position 4).
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (as the problem is fully constrained and consistent).
+
+5. **Determine Which Statement Is True:**  
+   * The question asks which bird is **third from the left**, i.e., position 3.  
+   * Create a mapping of choice letters to birds: `"A" → "cardinal"`, `"B" → "hawk"`, `"C" → "hummingbird"`, `"D" → "raven"`, `"E" → "owl"`.  
+   * Inspect the solution dictionary to find which bird has position value 3.  
+   * Return (or output) the corresponding choice letter.

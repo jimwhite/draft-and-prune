@@ -1,0 +1,16 @@
+1. Enumerate the eight compositions and assign each an integer index (e.g., F=0, H=1, L=2, O=3, P=4, R=5, S=6, T=7).  
+2. Create 8 integer variables `pos[0]` to `pos[7]`, representing the performance position (1 through 8) of each composition.  
+3. Add **domain and uniqueness constraints**: all `pos[i]` ∈ {1,2,...,8} and pairwise distinct (using `Distinct(pos)`).  
+4. Add **T-F-R adjacency constraint**: T is either immediately before F (`pos_T == pos_F - 1`) or immediately after R (`pos_T == pos_R + 1`).  
+5. Add **spacing constraint for F and R**: either `pos_F < pos_R - 2` (at least two between after F and before R) or `pos_R < pos_F - 2` (at least two between after R and before F).  
+6. Add **O constraint**: O is first or fifth → `pos_O == 1` OR `pos_O == 5`.  
+7. Add **eighth position constraint**: eighth composition is L or H → `pos_L == 8` OR `pos_H == 8`.  
+8. Add **P-before-S constraint**: `pos_P < pos_S`.  
+9. Add **O-S interleaving constraint**: there is at least one composition strictly between O and S → `|pos_O - pos_S| >= 2`.  
+10. Parse each answer choice as a list of composition names in order (first to eighth), convert each name to its index, and derive the implied position mapping: e.g., if choice is `[L,P,S,R,O,T,F,H]`, then `pos_L=1, pos_P=2, ..., pos_H=8`.  
+11. For each answer choice:  
+    - Clone the base solver (with constraints 3–9).  
+    - Assert equality between each `pos[i]` and the position implied by the choice (e.g., add `pos_L == 1`, `pos_P == 2`, etc.).  
+    - Check satisfiability.  
+12. Return the index (0-based) of the *first* choice that yields SAT; this is the correct order.  
+13. Output only the full list string of that choice (e.g., `'P, T, F, S, O, R, L, H'`).

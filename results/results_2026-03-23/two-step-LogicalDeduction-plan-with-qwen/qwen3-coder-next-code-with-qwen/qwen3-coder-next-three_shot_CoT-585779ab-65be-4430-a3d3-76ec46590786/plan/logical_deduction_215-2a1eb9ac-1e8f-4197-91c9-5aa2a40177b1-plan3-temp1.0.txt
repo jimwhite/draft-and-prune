@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven vehicle types as variables: `"convertible"`, `"truck"`, `"tractor"`, `"limousine"`, `"motorcyle"`, `"hatchback"`, and `"sedan"`.  
+   * Assign a numerical rank domain from 1 to 7, where **1 = oldest** and **7 = newest**, as implied by the use of "newest" in the problem statements.  
+   * Add all variables and their shared domain (range 1–7) to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique rank.  
+   * Translate each statement into constraint functions:  
+     * "The hatchback is the fourth-newest" → rank(hatchback) = 4  
+     * "The limousine is older than the motorcyle" → rank(limousine) < rank(motorcyle)  
+     * "The truck is newer than the motorcyle" → rank(truck) > rank(motorcyle)  
+     * "The sedan is the second-newest" → rank(sedan) = 6  
+     * "The tractor is newer than the convertible" → rank(tractor) > rank(convertible)  
+     * "The hatchback is older than the convertible" → rank(hatchback) < rank(convertible)
+
+4. **Solve for All Valid Arrangements:**  
+   * Use the `getSolutions()` method to compute all assignments of ranks satisfying all constraints.  
+   * Extract the unique solution (or first valid solution, since the problem is deterministic), and store it as a dictionary mapping vehicle names to their integer ranks.
+
+5. **Determine the Third-Newest Vehicle:**  
+   * The question asks for the vehicle that is third-newest. In our 1=oldest to 7=newest scale, **third-newest corresponds to rank = 5** (since newest=7 → 2nd=6, 3rd=5).  
+   * Create a mapping from choice letters `["A","B","C","D","E","F","G"]` to vehicle names as given in the choices.  
+   * Iterate through the choice-vehicle pairs and find which vehicle has rank 5 in the solution.  
+   * Return (or output) the corresponding choice letter as the answer.

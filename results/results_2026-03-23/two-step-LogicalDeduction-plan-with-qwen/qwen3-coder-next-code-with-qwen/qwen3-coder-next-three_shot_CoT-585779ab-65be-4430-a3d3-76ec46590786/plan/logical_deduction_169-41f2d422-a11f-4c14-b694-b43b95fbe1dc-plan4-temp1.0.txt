@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"Joe"`, `"Dan"`, `"Ana"`, `"Mel"`, `"Ada"`, `"Eve"`, `"Amy"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (topmost)** and **7 = last place**.  
+   * Add all variables with domain {1, 2, ..., 7} to the problem.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique finishing positions.  
+   * Convert each statement into a constraint using `lambda` or direct equality/inequality:  
+     - "Eve finished above Amy" → Eve's position < Amy's position (`eve < amy`)  
+     - "Dan finished second" → Dan's position = 2  
+     - "Ada finished below Ana" → Ada's position > Ana's position (`ada > ana`)  
+     - "Ana finished third-to-last" → In a 7-golfer field, third-to-last is position **5** (positions from front: 1st, 2nd, ..., 5th = third-to-last)  
+     - "Mel finished last" → Mel's position = 7  
+     - "Amy finished third" → Amy's position = 3  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid position assignments satisfying all constraints.  
+   * Extract the unique solution (assuming exactly one feasible arrangement).
+
+5. **Identify Which Golfer Is in Position 2:**  
+   * Since Dan's position is explicitly constrained to be 2, the solution must have `"Dan"` at key with value 2.  
+   * However, verify by inspecting the solved mapping: loop through the solution dictionary to find which golfer has position = 2.  
+   * Match this golfer with the corresponding choice letter:  
+     - Choice B explicitly states "Dan finished second", which is directly enforced by the constraint.  
+   * Return choice **B** as the correct answer.

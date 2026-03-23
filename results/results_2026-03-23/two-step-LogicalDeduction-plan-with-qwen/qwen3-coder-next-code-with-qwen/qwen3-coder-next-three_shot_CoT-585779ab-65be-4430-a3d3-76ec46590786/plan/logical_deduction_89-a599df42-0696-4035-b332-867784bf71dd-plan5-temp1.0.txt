@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the five vehicles as string variables: `"station_wagon"`, `"sedan"`, `"tractor"`, `"motorcycle"`, and `"limousine"`.  
+    * Define the domain as integers 1 to 5, where **1 = oldest** and **5 = newest**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure unique positions.  
+    * Convert each statement:  
+        - "The tractor is newer than the motorcycle" → `tractor > motorcycle` (since higher number = newer)  
+        - "The motorcycle is newer than the sedan" → `motorcycle > sedan`  
+        - "The limousine is the oldest" → `limousine == 1`  
+        - "The station wagon is the newest" → `station_wagon == 5`
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid arrangements.  
+    * Extract the unique solution (only one will exist given consistent constraints).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks for the vehicle that is **second-newest**, which corresponds to position **4** in our numbering.  
+    * Create a mapping from choice letters (A–E) to vehicle names in the order given by the choices:  
+        A → `"station_wagon"`, B → `"sedan"`, C → `"tractor"`, D → `"motorcycle"`, E → `"limousine"`  
+    * Find which vehicle in the solution has position 4.  
+    * Output the letter corresponding to that vehicle.

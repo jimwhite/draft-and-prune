@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables as the seven birds: `"hawk"`, `"hummingbird"`, `"falcon"`, `"cardinal"`, `"owl"`, `"robin"`, and `"blue jay"`.  
+   * Define the domain as integer positions from 1 to 7, where **1 = leftmost** and **7 = rightmost**, consistent with the problem's phrasing ("third from the left", "rightmost").  
+   * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3. **Translate Statements into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Convert each statement to a lambda or direct constraint:  
+     - "The hummingbird is to the left of the owl" → `hummingbird < owl`  
+     - "The robin is the rightmost" → `robin == 7`  
+     - "The blue jay is to the left of the hawk" → `blue jay < hawk`  
+     - "The blue jay is the third from the left" → `blue jay == 3`  
+     - "The falcon is the fourth from the left" → `falcon == 4`  
+     - "The cardinal is the second from the right" → `cardinal == 6` (since position 7 is rightmost)
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Use `getSolutions()` to compute all valid assignments satisfying every constraint.  
+   * Since the problem is fully constrained and consistent, there will be exactly one solution; extract it (e.g., `solutions[0]`).
+
+5. **Identify the Correct Answer by Comparing with Choices:**  
+   * The question asks: *"Which of the following is true?"* and each choice claims a specific bird *is* the second from the right (i.e., position 6).  
+   * Note: The statement "The cardinal is the second from the right" (i.e., `cardinal == 6`) is already explicitly given in the problem and must hold in any valid solution.  
+   * Create a mapping from choice letters (A–G) to bird names:  
+     A→"hawk", B→"hummingbird", C→"falcon", D→"cardinal", E→"owl", F→"robin", G→"blue jay".  
+   * For each choice, check whether the bird's position in the solution equals 6.  
+   * Because "cardinal is the second from the right" was given as a premise (and encoded as `cardinal == 6`), the cardinal *must* be at position 6.  
+   * Therefore, choice **D** ("The cardinal is the second from the right.") is unambiguously true.  
+   * Return or output **D** as the final answer.

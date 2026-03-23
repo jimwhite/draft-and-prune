@@ -1,0 +1,28 @@
+1.  **Initialize the Constraint Satisfaction Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to hold variables and constraints.
+
+2.  **Define Variables and Domain:**
+    * List the seven fruits as variables: `["kiwis", "loquats", "pears", "peaches", "mangoes", "plums", "apples"]`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.
+    * Add all variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all fruits have distinct price rankings using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The loquats are the fourth-most expensive" → `loquats == 4`
+    * "The peaches are the second-most expensive" → `peaches == 6` (since most expensive = 7, second-most = 6)
+    * "The plums are the cheapest" → `plums == 1`
+    * "The peaches are less expensive than the mangoes" → `peaches < mangoes` (i.e., 6 < mangoes ⇒ mangoes = 7)
+    * "The apples are more expensive than the pears" → `apples < pears` (lower rank number means more expensive)
+    * "The pears are more expensive than the kiwis" → `pears < kiwis`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the unique solution (since constraints fully determine ordering).
+
+6.  **Answer the Question:**
+    * The question asks which fruit is the cheapest → i.e., has rank **1**.
+    * According to constraint 4, `plums == 1` is explicitly given; verify consistency with other constraints.
+    * Map the answer to the choices: Choice **F** corresponds to "The plums are the cheapest." → output `"F"`.

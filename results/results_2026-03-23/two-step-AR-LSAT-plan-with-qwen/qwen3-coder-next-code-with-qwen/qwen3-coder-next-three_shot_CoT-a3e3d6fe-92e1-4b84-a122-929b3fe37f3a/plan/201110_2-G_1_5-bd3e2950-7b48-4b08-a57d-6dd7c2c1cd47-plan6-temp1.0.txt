@@ -1,0 +1,19 @@
+1. Enumerate the six employees and assign them integer indices: Robertson=0, Souza=1, Togowa=2, Vaughn=3, Xu=4, Young=5.  
+2. Create integer variables `pos[0..5]` for their assigned parking space numbers (1–6).  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6}, and all positions are distinct (using `Distinct(pos)` or pairwise inequalities).  
+4. Add **base ordering constraints**:  
+   - Young > Togowa: `pos[5] > pos[2]`  
+   - Xu > Souza: `pos[4] > pos[1]`  
+   - Robertson > Young: `pos[0] > pos[5]`  
+   - Robertson ∈ {1,2,3,4}: `pos[0] ≤ 4`  
+5. Add **additional conditional constraint**: Young > Souza (`pos[5] > pos[1]`) as given in the "if" premise.  
+6. Translate answer choices into boolean conditions on positions:  
+   - Choice 0: Togowa = #1 → `pos[2] == 1`  
+   - Choice 1: Young = #2 → `pos[5] == 2`  
+   - Choice 2: Robertson = #3 → `pos[0] == 3`  
+   - Choice 3: Souza = #3 → `pos[1] == 3`  
+   - Choice 4: Vaughn = #4 → `pos[3] == 4`  
+7. For each choice, clone the base constraints (including Young > Souza) into a fresh solver, assert the choice condition, and check satisfiability.  
+8. Collect all choices for which the model is SAT — these are the options that "could be true".  
+9. Among them, identify and output only those consistent with the question: *which one could be true* (exactly one should be SAT).  
+10. Since the question asks for the option that *could* be true, select the first (or only) SAT choice index and return its corresponding answer string.

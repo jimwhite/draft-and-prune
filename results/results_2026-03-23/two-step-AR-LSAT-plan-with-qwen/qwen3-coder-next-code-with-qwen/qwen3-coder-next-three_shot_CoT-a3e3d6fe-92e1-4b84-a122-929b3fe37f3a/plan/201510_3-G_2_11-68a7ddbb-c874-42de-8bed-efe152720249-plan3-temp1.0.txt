@@ -1,0 +1,27 @@
+1. Enumerate the three photographers (Fuentes=0, Gagnon=1, Hue=2) and three sections (Lifestyle=0, Metro=1, Sports=2).  
+2. Create integer variables `f_l`, `f_m`, `f_s` for Fuentes' counts in Lifestyle, Metro, Sports; similarly `g_l`, `g_m`, `g_s` for Gagnon; and `h_l`, `h_m`, `h_s` for Hue.  
+3. Add **total-per-section constraints**: Lifestyle sum = 2 (`f_l + g_l + h_l == 2`), Metro sum = 2, Sports sum = 2.  
+4. Add **photographer-count constraints**: For each photographer, total count between 1 and 3 inclusive (e.g., `1 <= f_l + f_m + f_s <= 3`, same for Gagnon and Hue).  
+5. Add **Gagnon-Sports ban**: `g_s == 0`.  
+6. Add **Lifestyle-Metro overlap constraint**: At least one photographer has at least one photo in both Lifestyle and Metro (i.e., `(f_l > 0 ∧ f_m > 0) ∨ (g_l > 0 ∧ g_m > 0) ∨ (h_l > 0 ∧ h_m > 0)`).  
+7. Add **cross-section equality constraint**: `h_l == f_s`.  
+8. Add **given condition**: One Lifestyle photo by Fuentes and one by Hue ⇒ `f_l == 1` and `h_l == 1`.  
+9. From step 8 and step 7, deduce `f_s == 1`.  
+10. From Lifestyle total: `f_l + g_l + h_l == 2` and known values ⇒ `1 + g_l + 1 == 2` ⇒ `g_l == 0`.  
+11. From Gagnon-Sports ban: `g_s == 0`; combine with `g_l == 0` ⇒ Gagnon can only appear in Metro: so `g_m ∈ {0,1,2}` but total Gagnon count must be ≥1 and ≤3, so `g_m ≥ 1`.  
+12. From Metro total: `f_m + g_m + h_m == 2`.  
+13. From Photographer counts: Fuentes total = `f_l + f_m + f_s = 1 + f_m + 1 = f_m + 2`. So `1 ≤ f_m + 2 ≤ 3` ⇒ `f_m ∈ {0,1}`.  
+14. Hue total = `h_l + h_m + h_s = 1 + h_m + h_s`. So `1 ≤ 2 + h_m + h_s ≤ 3` ⇒ `h_m + h_s ≤ 1`.  
+15. Sports total: `f_s + g_s + h_s = 1 + 0 + h_s == 2` ⇒ `h_s == 1`. Then from step 14: `h_m + 1 ≤ 1` ⇒ `h_m == 0`.  
+16. With `h_m = 0`, Metro total: `f_m + g_m == 2`.  
+17. From step 13, `f_m ∈ {0,1}`; if `f_m = 1`, then `g_m = 1`; if `f_m = 0`, then `g_m = 2`. Both are allowed (check Gagnon total: if `g_m=2`, then Gagnon count = 2, valid; Fuentes count = `1+0+1=2` or `1+1+1=3`, both ≤3).  
+18. So two consistent scenarios: (A) `f_m=1, g_m=1`; or (B) `f_m=0, g_m=2`.  
+19. Evaluate each answer choice under the derived fixed values (`f_l=1, h_l=1, f_s=1, g_s=0, h_m=0, h_s=1`):  
+    - Choice 1: "Both Metro by Fuentes" ⇒ `f_m=2`. But from step 16: `f_m + g_m = 2` and `f_m ≤1` (step 13). Contradiction ⇒ impossible.  
+    - Choice 2: "Both Metro by Gagnon" ⇒ `g_m=2`, `f_m=0`. Matches scenario (B). Valid.  
+    - Choice 3: "Exactly one Metro by Hue" ⇒ `h_m=1`. Contradicts step 15 (`h_m=0`) ⇒ impossible.  
+    - Choice 4: "Both Sports by Hue" ⇒ `h_s=2`. Contradicts step 15 (`h_s=1`) ⇒ impossible.  
+    - Choice 5: "Neither Sports by Hue" ⇒ `h_s=0`. Contradicts step 15 (`h_s=1`) ⇒ impossible.  
+20. Therefore, only choice 2 is possible.  
+21. Define `answer_index_list = [1]` (0-indexed: index 1 corresponds to the second choice).  
+22. Print `[1]`.

@@ -1,0 +1,23 @@
+1. Enumerate the five students and assign them integer indices (0: Jiang, 1: Kramer, 2: Lopez, 3: Megregian, 4: O’Neill).  
+2. Enumerate the three plays and assign them integer indices (0: Sunset, 1: Tamerlane, 2: Undulation).  
+3. Create Boolean variables `review[i][p]` for each student i and play p, indicating whether student i reviews play p.  
+4. Add **non-empty constraint**: each student reviews at least one play (for each i, `review[i][0] ∨ review[i][1] ∨ review[i][2]`).  
+5. Add **Kramer/Lopez fewer than Megregian constraint**:  
+    - Let `k_count = sum(review[1][p] for p in [0,1,2])`, `m_count = sum(review[3][p] for p in [0,1,2])`, `l_count = sum(review[2][p] for p in [0,1,2])`.  
+    - Add `k_count < m_count` and `l_count < m_count`.  
+6. Add **mutual exclusivity constraint** between (Lopez, Jiang) and (Megregian, Jiang):  
+    - For each play p: `¬(review[2][p] ∧ review[0][p])` and `¬(review[3][p] ∧ review[0][p])`.  
+7. Add **Tamerlane reviews**:  
+    - `review[1][1] = True` (Kramer) and `review[4][1] = True` (O’Neill).  
+8. Add **exactly-two-identical-reviewees constraint**:  
+    - For each unordered pair of distinct students (i,j), define indicator `same[i][j] = ∧_{p} (review[i][p] ↔ review[j][p])`.  
+    - Add constraint that exactly one such pair has `same[i][j] = True` (i.e., sum over all i<j of `same[i][j]` equals 1).  
+9. Add **global assumption for the conditional**: exactly three students review Undulation: `sum_{i} review[i][2] == 3`.  
+10. For each answer choice, check satisfiability under its negation to see if it *could* be true:  
+    - For choice A ("Megregian does not review Undulation"): assume `¬review[3][2]`, check SAT.  
+    - For choice B ("O’Neill does not review Undulation"): assume `¬review[4][2]`, check SAT.  
+    - For choice C ("Jiang reviews Undulation"): assume `review[0][2]`, check SAT.  
+    - For choice D ("Lopez reviews Tamerlane"): assume `review[2][1]`, check SAT.  
+    - For choice E ("O’Neill reviews Sunset"): assume `review[4][0]`, check SAT.  
+11. The answer is the choice(s) for which the augmented model (base constraints + assumption) is SAT.  
+12. Among the five, identify the one(s) that are satisfiable and output the index of the correct choice.

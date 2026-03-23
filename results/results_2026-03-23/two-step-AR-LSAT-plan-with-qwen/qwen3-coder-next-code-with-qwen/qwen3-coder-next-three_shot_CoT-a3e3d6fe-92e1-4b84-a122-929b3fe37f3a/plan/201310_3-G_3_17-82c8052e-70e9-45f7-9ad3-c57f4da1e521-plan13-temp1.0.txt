@@ -1,0 +1,18 @@
+1. Enumerate the five movies and assign them integer codes (e.g., 0=horror, 1=mystery, 2=romance, 3=sci-fi, 4=western).  
+2. Enumerate the three screens (1,2,3) and create integer variables for each movie’s screen assignment.  
+3. Create integer variables for start times: assign symbolic time points to each movie: screen1_7pm=0, screen2_7pm=1, screen3_8pm=2, screen1_9pm=3, screen2_9pm=4 (or use relative ordering via explicit ordering constraints instead of absolute times).  
+   - Alternative: define time-order variables and assign each movie a *time slot* variable from {0,1,2,3,4} representing: 7pm-s1=0, 7pm-s2=1, 8pm-s3=2, 9pm-s1=3, 9pm-s2=4. Ensure exactly one movie per slot.  
+4. Add **slot constraints**: each time slot (0–4) is assigned to exactly one movie (all-different constraint on time slots).  
+5. Add **screen capacity constraints implicitly** by mapping each time slot to its screen: slots 0 & 3 → screen1, 1 & 4 → screen2, 2 → screen3. Enforce that no screen gets >2 movies: screen1 = {slots 0,3}, screen2 = {slots 1,4}, screen3 = {slot2}. Since there are 5 slots and capacities match (2+2+1), enforce only one movie per slot.  
+6. Add **ordering constraint**: western begins before horror film → time_slot[western] < time_slot[horror].  
+7. Add **screen constraint**: sci-fi ≠ screen3 → sci-fi not assigned to slot2 (i.e., time_slot[sci-fi] ≠ 2).  
+8. Add **screen constraint**: romance ≠ screen2 → time_slot[romance] ≠ 1 and ≠ 4.  
+9. Add **screen constraint**: horror and mystery on different screens → screen_of[horror] ≠ screen_of[mystery].  
+   - Define helper function: screen(time_slot) = 1 if time in {0,3}, 2 if time in {1,4}, 3 if time=2.  
+10. For screen1, movies are those with time_slot in {0,3}. The order is 7pm (slot0) first, then 9pm (slot3).  
+11. Translate each answer choice into a pair of movies: check if they could occupy exactly slots {0,3} in the specified order (i.e., first movie = slot0, second = slot3).  
+12. Define answer index list 'impossible_indices' []. For each candidate pair (in order):  
+   - Clone base constraints.  
+   - Assert: movie_A assigned to slot0, movie_B assigned to slot3 (for screen1_7pm and screen1_9pm respectively).  
+   - If UNSAT, then this pair **cannot** be screen1's list → append its index to 'impossible_indices'.  
+13. Return the impossible index (since only one CANNOT be accurate).

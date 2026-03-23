@@ -1,0 +1,27 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define the five birds as variables: `"owl"`, `"robin"`, `"blue jay"`, `"hawk"`, and `"hummingbird"`.  
+   * Define the domain as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all five bird variables with this domain to the `Problem` instance.
+
+3. **Add Constraints from the Problem Statement:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into constraints using `addConstraint` with lambda functions:  
+     - "The owl is the second from the right" → `owl == 4` (since positions: 1,2,3,4,5 → rightmost=5, second-right=4).  
+     - "The robin is the second from the left" → `robin == 2`.  
+     - "The robin is to the right of the blue jay" → `blue jay < robin` (i.e., `lambda bj, r: bj < r`).  
+     - "The hummingbird is to the right of the hawk" → `hawk < hummingbird` (i.e., `lambda h, hb: h < hb`).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (as the problem is deterministic and consistent).  
+
+5. **Determine the Correct Answer:**  
+   * The question asks: "Which of the following is true?" and specifically focuses on **which bird is second from the left** (position 2).  
+   * Note: Choice B directly states "The robin is the second from the left." From constraint 3 above, we already have `robin == 2` as a given premise — this must hold in all solutions.  
+   * Therefore, **B is necessarily true** by construction of the problem constraints.  
+   * To be thorough: verify in the solution that `robin == 2`, and confirm no contradiction exists.  
+   * Return choice **B** as the answer — no further comparison with other choices is needed because the premise directly asserts it, and consistency guarantees its validity.

@@ -1,0 +1,33 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven fruits as variables: `"mangoes"`, `"cantaloupes"`, `"apples"`, `"plums"`, `"loquats"`, `"watermelons"`, and `"peaches"`.
+    * Assign integer positions to represent price ranking, where **1 = cheapest** and **7 = most expensive**.
+    * Add all seven variables to the `Problem` instance with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Add Constraints for Uniqueness and Ordering:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "The plums are more expensive than the mangoes" → `plums < mangoes` (since lower number = cheaper; more expensive means larger rank value? Wait—no: we defined 1=cheapest, so *more expensive* means *larger rank*. So plums > mangoes).
+        * Clarify: if 1 = cheapest, then "X is more expensive than Y" ⇔ rank(X) > rank(Y).
+        * So:
+            - "plums are more expensive than mangoes" → `plums > mangoes`
+            - "watermelons are more expensive than loquats" → `watermelons > loquats`
+            - "loquats are the second-cheapest" → `loquats == 2`
+            - "plums are less expensive than peaches" → `plums < peaches` (since cheaper = smaller rank)
+            - "mangoes are the fourth-most expensive" → since most expensive is 7, fourth-most expensive means rank = 4 (e.g., ranks: 1=cheapest/7th, 2=6th, 3=5th, **4=4th**, 5=3rd, 6=2nd, 7=1st/most expensive). So mangoes == 4.
+            - "peaches are less expensive than cantaloupes" → `peaches < cantaloupes`
+    * Confirm mapping: position = 1 (cheapest), ..., 4 (fourth-most expensive = rank 4), ..., 7 (most expensive). Yes.
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all assignments satisfying constraints.
+    * Extract the single valid solution (problem states consistency, implying uniqueness).
+
+5.  **Determine Which Fruit Is Cheapest:**
+    * The question asks for the cheapest fruit, i.e., the fruit with rank 1.
+    * Create a mapping from choice letters to fruit names: 
+        A→"mangoes", B→"cantaloupes", C→"apples", D→"plums", E→"loquats", F→"watermelons", G→"peaches".
+    * Iterate through the choices; for each, check if its fruit’s position in the solution equals 1.
+    * Return the letter of the first (or only) choice where this holds.

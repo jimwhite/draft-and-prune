@@ -1,0 +1,23 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables as the three golfers: `"Ana"`, `"Rob"`, and `"Joe"`.  
+   * Define the domain as integer ranks from 1 to 3, where **1 = first place (highest/furthest left)**, **2 = second place**, and **3 = third place (lowest/furthest right)**.  
+   * Add these variables and their domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.  
+   * Convert each statement into a constraint:  
+     - "Joe finished above Ana" means Joe's rank is numerically *less* than Ana's (`Joe < Ana`).  
+     - "Rob finished second" means Rob's rank is exactly 2.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid rank assignments.  
+   * Extract the unique solution (a dictionary mapping golfers to ranks).
+
+5. **Identify the Correct Answer:**  
+   * Determine which golfer has rank 1 (first place).  
+   * Map the choices to golfer names: "A" → Ana, "B" → Rob, "C" → Joe.  
+   * Find which choice corresponds to the golfer with rank 1 and output that letter as the final answer.

@@ -1,0 +1,40 @@
+1. Identify all entities involved: bald_eagle, bear, rabbit, tiger.
+2. Define binary predicates for relations (e.g., sees, visits, needs) and unary/predicates for properties (e.g., is_big, is_red, is_blue), using ternary encoding where the second argument is True for truth assertions and the third argument is omitted or handled as per PyKe’s conventions (note: standard PyKe uses binary predicates for relations and unary for properties; however, the prompt specifies ternary with True as object. Clarify: all facts should be encoded as predicate(subject, object, True), where relations use entity objects and properties use boolean objects—so for relations, object is another entity; for properties like is_big, the object is True).
+3. Encode all explicitly stated facts using `facts.<predicate>(subject, object, True)`:
+   - is_big("bald_eagle", True)
+   - is_red("bald_eagle", True)
+   - sees("bald_eagle", "tiger", True)
+   - visits("bald_eagle", "bear", True)
+   - needs("bear", "bald_eagle", True)
+   - sees("bear", "bald_eagle", True)
+   - Not sees("bear", "tiger", True) → encode as facts.sees("bear", "tiger", False)
+   - is_big("rabbit", True)
+   - needs("rabbit", "bald_eagle", True)
+   - needs("rabbit", "bear", True)
+   - visits("rabbit", "tiger", True)
+   - needs("tiger", "bald_eagle", True)
+   - needs("tiger", "rabbit", True)
+   - visits("tiger", "bear", True)
+4. Translate each conditional sentence into a rule using `foreach` for premises and `assert` (or conflict if negative conclusion is needed) for conclusions:
+   • If something is big → it needs the tiger.  
+     ⇒ foreach: facts.is_big(x, True) → assert facts.needs(x, "tiger", True)
+   • If something needs the tiger and sees the bald eagle → the tiger is big.  
+     ⇒ foreach: facts.needs(x, "tiger", True), facts.sees(x, "bald_eagle", True) → assert facts.is_big("tiger", True)
+   • If something needs the tiger and visits the bear → the tiger needs the rabbit.  
+     ⇒ foreach: facts.needs(x, "tiger", True), facts.visits(x, "bear", True) → assert facts.needs("tiger", "rabbit", True)
+   • If bald_eagle visits bear AND bald_eagle needs tiger → bear needs tiger.  
+     ⇒ foreach: facts.visits("bald_eagle", "bear", True), facts.needs("bald_eagle", "tiger", True) → assert facts.needs("bear", "tiger", True)
+   • If something needs the tiger → it is red.  
+     ⇒ foreach: facts.needs(x, "tiger", True) → assert facts.is_red(x, True)
+   • If bear sees rabbit → rabbit sees tiger.  
+     ⇒ foreach: facts.sees("bear", "rabbit", True) → assert facts.sees("rabbit", "tiger", True)
+   • If something is blue → it visits the bear.  
+     ⇒ foreach: facts.is_blue(x, True) → assert facts.visits(x, "bear", True)
+   • If something is blue and needs tiger → it does NOT visit the bald_eagle.  
+     ⇒ This is a negative conclusion:  
+       foreach: facts.is_blue(x, True), facts.needs(x, "tiger", True) → conflict / assert ¬facts.visits(x, "bald_eagle", True).  
+       In PyKe, represent as a rule that fires when both premises hold and then assert `facts.visits(x, "bald_eagle", False)`.
+5. The query checks whether the bear does not visit the rabbit:
+   → Use facts.visits("bear", "rabbit", False)
+6. Note: Some implications may lead to derivations (e.g., if tiger is big, then via needs-tiger→red, etc.), so the system must infer all consequences before evaluating the query.
+7. Since "bear does not visit rabbit" is a negative literal, confirm that either it is directly asserted as false, or derive its falsehood via contradiction if assumption leads to inconsistency.

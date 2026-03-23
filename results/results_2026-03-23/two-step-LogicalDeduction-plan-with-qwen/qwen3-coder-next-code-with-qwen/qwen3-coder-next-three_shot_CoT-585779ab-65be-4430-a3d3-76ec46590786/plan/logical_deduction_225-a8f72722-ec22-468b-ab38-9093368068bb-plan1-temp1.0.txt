@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"purple"`, `"brown"`, `"red"`, `"blue"`, `"gray"`, `"black"`, and `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain using `addVariable`.
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint` over all seven variables to enforce that each book occupies a unique position.
+
+4. **Translate Each Statement into Constraints Using Lambda Functions:**  
+   * "The brown book is to the left of the green book" → `brown < green`  
+   * "The gray book is the second from the left" → `gray == 2`  
+   * "The black book is to the left of the gray book" → `black < gray`  
+   * "The blue book is to the left of the red book" → `blue < red`  
+   * "The blue book is the second from the right" → `blue == 6` (since positions: left=1, ..., rightmost=7 ⇒ second from right = 6)  
+   * "The green book is to the left of the purple book" → `green < purple`  
+   * Add each constraint using `addConstraint(lambda a, b: ..., ['var1', 'var2'])`, or for unary constraints (`== k`), use `addConstraint(lambda a: a == k, ['var'])`.
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments. Given the constraints, expect exactly one solution.
+
+6. **Determine Which Book Is Third from the Right:**  
+   * Note: third from the right in a 7-position sequence is position `7 - 2 = 5`. (Positions from left: 1,2,3,4,5,6,7 ⇒ rightmost=7, second=6, third=5)  
+   * For each book in the solution dictionary, check if its position equals 5.  
+   * Create a mapping from choice letter to book name: `{"A": "purple", "B": "brown", "C": "red", "D": "blue", "E": "gray", "F": "black", "G": "green"}`  
+   * Find the book at position 5 and return the corresponding choice letter.

@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define the seven golfers as variables: `"Mel"`, `"Rob"`, `"Eli"`, `"Dan"`, `"Ana"`, `"Ada"`, and `"Mya"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = first place (highest finish)** and **7 = last place**.  
+   * Add all variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem`.
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct finish positions.
+
+4. **Translate Statements into Constraints:**  
+   * "Ana finished last" → `Ana == 7`.  
+   * "Rob finished fourth" → `Rob == 4`.  
+   * "Eli finished second" → `Eli == 2`.  
+   * "Mya finished above Rob" → `Mya < Rob` (since lower number = better finish).  
+   * "Dan finished above Mya" → `Dan < Mya`.  
+   * "Mel finished above Ada" → `Mel < Ada`.
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints are consistent and deterministic enough to yield one arrangement).
+
+6. **Check the Question and Choices:**  
+   * The question asks: "Which of the following is true?" and specifically about who finished **third**, i.e., position = 3.  
+   * Create a mapping from choice letters (A–G) to golfers:  
+     A → "Mel", B → "Rob", C → "Eli", D → "Dan", E → "Ana", F → "Ada", G → "Mya".  
+   * In the solution, find which golfer has position 3.  
+   * Return the corresponding choice letter.

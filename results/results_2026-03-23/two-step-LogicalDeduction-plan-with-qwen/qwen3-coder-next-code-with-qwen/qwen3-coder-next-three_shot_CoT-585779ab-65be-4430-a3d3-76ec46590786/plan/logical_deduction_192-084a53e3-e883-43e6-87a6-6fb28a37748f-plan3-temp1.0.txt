@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven vehicles as string variables: `"limousine"`, `"truck"`, `"sedan"`, `"tractor"`, `"minivan"`, `"motorcyle"`, and `"hatchback"`.  
+    * Define the domain as integers from 1 to 7, where **1 = oldest**, and **7 = newest** (so rank corresponds directly to "newestness": smaller number = older).  
+    * Add all variables and their domain (1–7) to the problem instance.
+
+3.  **Formulate Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks.  
+    * Convert each statement to a constraint:  
+        * "The minivan is older than the tractor" → `minivan < tractor` (since older = smaller rank).  
+        * "The hatchback is older than the sedan" → `hatchback < sedan`.  
+        * "The truck is the third-newest" → position = 5 (since newest=7, second-newest=6, third-newest=5).  
+        * "The hatchback is the second-newest" → position = 6.  
+        * "The tractor is older than the limousine" → `tractor < limousine`.  
+        * "The motorcyle is newer than the limousine" → `limousine < motorcyle`.  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments. Given consistency, there will be exactly one solution.  
+    * Retrieve the sole solution (e.g., `solutions[0]` or iterate and break on first).
+
+5.  **Answer the Question:**  
+    * Determine which vehicle is the **fourth-newest**, i.e., has rank = 4 (since newest=7 → 3rd-newest=5, 2nd-newest=6, **4th-newest=4**).  
+    * Create a mapping from choice letters to vehicle names:  
+        A→"limousine", B→"truck", C→"sedan", D→"tractor", E→"minivan", F→"motorcyle", G→"hatchback".  
+    * Iterate through the choices, check which vehicle’s rank in the solution equals 4.  
+    * Output the corresponding choice letter as the final answer.

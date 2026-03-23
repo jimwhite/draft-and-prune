@@ -1,0 +1,11 @@
+1. Enumerate the five students and three plays, assigning integer codes to plays: Sunset = 0, Tamerlane = 1, Undulation = 2.  
+2. Create Boolean variables `review[s][p]` for each student s and play p, indicating whether student s reviews play p.  
+3. Add **non-empty review constraint**: each student reviews at least one play (no student reviews zero plays).  
+4. Add **Kramer & Lopez < Megregian constraint**: count(reviews by Kramer) < count(reviews by Megregian); count(_reviews by Lopez) < count( reviews by Megregian).  
+5. Add **Jiang–Lopez/Megregian disjointness constraint**: Lopez and Megregian do not review any play Jiang reviews → for each play p, if `review[Jiang][p]` then `¬review[Lopez][p]` and `¬review[Megregian][p]`.  
+6. Add **Kramer & O'Neill review Tamerlane**: `review[Kramer][1] = True`, `review[O'Neill][1] = True`.  
+7. Add **exactly-two-identical-reviewers constraint**: there exists a pair of distinct students with identical review sets (i.e., for all plays p, `review[s1][p] == review[s2][p]`), and no third student has the same set. (Enforce: ∃s1≠s2 such that s1 and s2 have identical reviews, and for all s3 ≠ s1,s2, review set of s3 differs from theirs.)  
+8. Add **hypothesis constraint**: exactly three students review Undulation: `sum(review[s][2] for s in students) == 3`.  
+9. For each answer choice, create a fresh solver, clone all base constraints + hypothesis constraint, and add the condition from the answer choice (e.g., `¬review[Megregian][2]` for first option, etc.).  
+10. For each choice, if the model is SAT (i.e., feasible under that condition), record that choice as possible.  
+11. Return the list of satisfiable choices (as indices or strings per option).

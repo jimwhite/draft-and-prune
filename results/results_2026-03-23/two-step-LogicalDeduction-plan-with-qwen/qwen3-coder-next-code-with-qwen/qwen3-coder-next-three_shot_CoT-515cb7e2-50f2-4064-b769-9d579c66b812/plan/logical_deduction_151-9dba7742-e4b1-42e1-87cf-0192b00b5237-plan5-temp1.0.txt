@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin modeling the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, `"peaches"`.
+    * Define the domain for these variables as integers from 1 to 7. Establish a clear convention: **1 = cheapest**, **7 = most expensive** (so "second-most expensive" corresponds to rank 6).
+    * Add all fruit variables and their domain (1–7) to the problem.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.
+    * Convert each statement into a constraint using lambda functions:
+        * "The oranges are more expensive than the peaches" → `oranges > peaches` (higher rank = more expensive).
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes` (lower rank = less expensive).
+        * "The peaches are the second-most expensive" → `peaches == 6`.
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.
+    * Extract the unique solution (the solver returns one dictionary mapping fruit names to their rank values).
+
+5.  **Identify the Correct Choice:**
+    * The question asks which fruit is second-most expensive, i.e., rank 6.
+    * Build a dictionary mapping each choice letter ('A' through 'G') to the corresponding fruit name:
+        * 'A': "watermelons"
+        * 'B': "mangoes"
+        * 'C': "kiwis"
+        * 'D': "pears"
+        * 'E': "cantaloupes"
+        * 'F': "oranges"
+        * 'G': "peaches"
+    * Iterate through the solution dictionary to find which fruit has rank 6.
+    * Return (or output) the choice letter associated with that fruit.

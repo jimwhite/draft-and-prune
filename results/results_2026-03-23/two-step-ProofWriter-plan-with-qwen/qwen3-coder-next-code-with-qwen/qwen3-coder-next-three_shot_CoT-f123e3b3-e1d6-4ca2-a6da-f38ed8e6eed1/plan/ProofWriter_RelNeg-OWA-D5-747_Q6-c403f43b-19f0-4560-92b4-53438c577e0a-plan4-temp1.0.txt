@@ -1,0 +1,17 @@
+1. Identify all entities: bear, mouse, squirrel, tiger.
+2. Encode all explicitly stated facts using ternary predicates:
+   - eats("bear", "tiger", True), is_red("bear", False), likes("bear", "squirrel", True), visits("bear", "squirrel", True)
+   - eats("mouse", "tiger", True), is_red("mouse", True), is_rough("mouse", True), likes("mouse", "bear", True), likes("mouse", "tiger", False)
+   - likes("squirrel", "bear", True), eats("tiger", "mouse", True)
+3. Translate each conditional statement into a PyKe rule using `foreach` and `assert`:
+   • If mouse likes bear ∧ bear likes mouse → mouse is not kind.
+   • If someone visits the mouse → they like the squirrel.
+   • If someone is green → they visit the bear.
+   • If someone likes bear ∧ bear visits tiger → they visit the bear.
+   • If someone eats bear ∧ does not like tiger → they are green.
+   • If someone visits the mouse → the mouse eats the bear.
+   • If someone is red ∧ eats tiger → tiger visits the mouse.
+   • If someone visits the bear → they are kind.
+4. For rules involving negated predicates (e.g., "not red", "does not like"), use negation-as-failure by encoding the fact with False value and using appropriate conditions in `foreach`.
+5. The query checks whether the tiger does not like the squirrel:
+   → Use facts.likes("tiger", "squirrel", False)

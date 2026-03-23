@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as string variables: `"Eve"`, `"Ana"`, `"Amy"`, `"Dan"`, `"Eli"`, `"Rob"`, `"Mya"`.  
+   * Define the domain as integers from 1 to 7, where **1 = highest finish (best)** and **7 = lowest finish (worst)**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add All-Different Constraint:**  
+   * Enforce that all golfers have distinct finish positions using `AllDifferentConstraint`.
+
+4. **Translate Statements into Constraints Using Lambda Functions:**  
+   * "Mya finished above Eli" → `Mya`'s position < `Eli`'s position.  
+   * "Eve finished below Rob" → `Rob`'s position < `Eve`'s position.  
+   * "Amy finished second" → `Amy` = 2.  
+   * "Rob finished below Dan" → `Dan`'s position < `Rob`'s position.  
+   * "Ana finished second-to-last" → In a 7-golfer field, this is position 6 (`7 - 1 = 6`).  
+   * "Dan finished fourth" → `Dan` = 4.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments. Given consistency and uniqueness implied, expect one solution.
+
+6. **Analyze the Solution to Answer the Question:**  
+   * The question asks who finished third (i.e., position = 3).  
+   * Create a dictionary mapping choice letters `['A','B','C','D','E','F','G']` to corresponding golfer names from the choices.  
+   * In the solution dictionary, locate the key (golfer name) whose value equals 3.  
+   * Return the letter associated with that golfer as the final answer.

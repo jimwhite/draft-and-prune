@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to define and solve the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Create a list of the five book names as variables: `"green"`, `"blue"`, `"white"`, `"purple"`, `"yellow"`.
+    * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost** position.
+    * Add all variables to the problem with this domain.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each book occupies a unique position using `AllDifferentConstraint()`.
+
+4.  **Translate Statements into Constraints Using Lambda Functions:**
+    * "The blue book is to the right of the yellow book" → `blue > yellow`
+    * "The white book is to the left of the yellow book" → `white < yellow`
+    * "The blue book is the second from the right" → `blue == 4` (since position 5 is rightmost, 4 is second-rightmost)
+    * "The purple book is the second from the left" → `purple == 2` (since position 1 is leftmost, 2 is second-leftmost)
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions to books.
+    * Extract the single solution (problem has a unique configuration).
+
+6.  **Interpret the Question and Evaluate Choices:**
+    * The question asks which book is the second from the left, i.e., the book at position **2**.
+    * Create a mapping between choice letters and book names: A→"green", B→"blue", C→"white", D→"purple", E→"yellow".
+    * Find which book has position value 2 in the solution.
+    * Return the choice letter corresponding to that book as the correct answer.

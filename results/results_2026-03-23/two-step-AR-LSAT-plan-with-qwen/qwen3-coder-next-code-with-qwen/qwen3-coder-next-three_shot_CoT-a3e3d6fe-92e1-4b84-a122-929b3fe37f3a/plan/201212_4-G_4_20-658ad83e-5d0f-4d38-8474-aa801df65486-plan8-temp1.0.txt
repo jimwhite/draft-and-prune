@@ -1,0 +1,11 @@
+1. Enumerate the seven articles (G, H, J, Q, R, S, Y) and assign each a unique integer position from 1 to 7.  
+2. Create integer variables `pos[article]` for each article’s editing position (1–7), and enforce all positions are distinct.  
+3. Define topic categories: finance = {G, H, J}, nutrition = {Q, R, S}, wildlife = {Y}.  
+4. Add **consecutive-different-topic constraint**: for all adjacent positions i and i+1 (1 ≤ i ≤ 6), the articles at those positions must have different topics.  
+5. Add **S-before-Q conditional constraint**: if S is earlier than Q, then Q must be in position 3. Equivalently: `pos_S < pos_Q → pos_Q == 3`.  
+6. Add **S-before-Y constraint**: `pos_S < pos_Y`.  
+7. Add **J-before-G-before-R chain**: `pos_J < pos_G` and `pos_G < pos_R`.  
+8. Translate the answer choices into assertions: each choice asserts a specific article is in position 2 (except R is third and Y is third — handle accordingly).  
+9. For each choice, construct a fresh solver with base constraints plus the choice’s positional assertion (e.g., `pos_G == 2` for “G is second”, `pos_R == 3` for “R is third”).  
+10. For each such solver, check satisfiability: if SAT, the choice *could be true*, so record its index.  
+11. Output the index (or indices) of all choices that yield SAT models — only one should be SAT per LSAT-style logic games.

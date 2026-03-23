@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven golfers as variables: `"Eli"`, `"Eve"`, `"Mel"`, `"Joe"`, `"Mya"`, `"Rob"`, and `"Ada"`.  
+    * Define a domain of integers from **1 to 7**, where **1 = first place (highest/lowest position number)** and **7 = last place (lowest/highest position number)** — consistent with standard ranking convention ("above" means lower rank number, "below" means higher rank number).  
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Translate Clues into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.  
+    * Use lambda functions to encode the relational and fixed-position constraints:  
+        - "Ada finished above Mya" → `Ada < Mya` (lower rank number = better placement).  
+        - "Eli finished below Joe" → `Joe < Eli` (since Eli is *below* Joe, Joe has a better/lower rank).  
+        - "Eli finished above Eve" → `Eli < Eve`.  
+        - "Ada finished second-to-last" → Ada's rank = 6 (positions: 1=1st, ..., 6=2nd-to-last, 7=last).  
+        - "Mel finished third" → Mel's rank = 3.  
+        - "Rob finished fourth" → Rob's rank = 4.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments.  
+    * Extract the unique solution from the returned list (since the problem is fully constrained, there should be exactly one).
+
+5.  **Identify the Correct Choice:**  
+    * The question asks: *"Which of the following is true?"* and lists seven options, each claiming a specific golfer finished second-to-last (rank 6).  
+    * In the solved solution, find which golfer has rank = 6.  
+    * Create a mapping from choice letters (`"A"` through `"G"`) to the corresponding golfer names:  
+        - A → Eli, B → Eve, C → Mel, D → Joe, E → Mya, F → Rob, G → Ada.  
+    * Return the choice letter (e.g., `"G"`) for which that golfer’s rank is 6.

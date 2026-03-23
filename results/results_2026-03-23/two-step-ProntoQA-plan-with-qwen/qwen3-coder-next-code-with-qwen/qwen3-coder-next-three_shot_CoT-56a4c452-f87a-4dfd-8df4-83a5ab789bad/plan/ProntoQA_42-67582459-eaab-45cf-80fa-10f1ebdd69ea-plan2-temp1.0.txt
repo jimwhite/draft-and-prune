@@ -1,0 +1,34 @@
+1.  Identify all entities and types: Wren, tumpus, jompus, vumpus, dumpus, yumpus, numpus, zumpus, rompus, impus, wumpus.  
+2.  Identify all properties: dull, sour, feisty, cold, transparent, amenable, orange, earthy.  
+3.  Represent "Wren is a vumpus" as a base fact: `is_a("Wren", "vumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Tumpuses are dull.  
+    * Tumpuses are jompuses.  
+    * Jompuses are not sour.  
+    * Each jompus is a vumpus.  
+    * Vumpuses are feisty.  
+    * Vumpuses are dumpuses.  
+    * Dumpuses are cold.  
+    * Each dumpus is a yumpus.  
+    * Each yumpus is transparent.  
+    * Each yumpus is a numpus.  
+    * Numpuses are not amenable.  
+    * Numpuses are zumpuses.  
+    * Each zumpus is orange.  
+    * Each zumpus is a rompus.  
+    * Rompuses are earthy.  
+    * Each impus is not orange.  
+    * Rompuses are wumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (or negated fact for negative properties like "not sour", "not amenable", etc.).  
+6.  Derive the type chain for Wren:  
+    - `is_a(Wren, vumpus)` (given)  
+    - `vumpus ⊆ dumpus` ⇒ `is_a(Wren, dumpus)`  
+    - `dumpus ⊆ yumpus` ⇒ `is_a(Wren, yumpus)`  
+    - `yumpus ⊆ numpus` ⇒ `is_a(Wren, numpus)`  
+    - `numpus ⊆ zumpus` ⇒ `is_a(Wren, zumpus)`  
+    - `zumpus ⊆ rompus` ⇒ `is_a(Wren, rompus)`  
+    - `rompus ⊆ wumpus` ⇒ `is_a(Wren, wumpus)`  
+7.  From rule: "Each zumpus is orange" ⇒ `is_orange(zumpus)`, and since Wren is a zumpus, `is_orange(Wren)` holds.  
+8.  The statement "Wren is not orange" is equivalent to `is_orange(Wren, False)`.  
+9.  Since we have derived `is_orange(Wren)` (i.e., `is_orange("Wren", True)`), the negation is not provable.  
+10. Therefore, to test the query: Use `facts.is_orange("Wren", False)`.

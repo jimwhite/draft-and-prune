@@ -1,0 +1,20 @@
+1. Enumerate the five solos (positions 1 to 5) and two pianists (Wayne=0, Zara=1), and two piece types (modern=0, traditional=1).  
+2. Create integer variables `pianist[i]` ∈ {0,1} for each solo i (0–4), and `piece[i]` ∈ {0,1} for each solo i.  
+3. Add domain constraints: `pianist[i]` ∈ {0,1}, `piece[i]` ∈ {0,1} for all i.  
+4. Add **fixed constraint**: third solo (index 2) is traditional → `piece[2] == 1`.  
+5. Add **exactly two consecutive traditional pieces** constraint: exactly one pair of adjacent solos both have `piece[i] == 1` and `piece[i+1] == 1`, and no three consecutive traditional pieces.  
+    - Count total adjacent traditional pairs = 1.  
+6. Add **fourth solo constraint**: `(pianist[3] == 0 ∧ piece[3] == 1) ∨ (pianist[3] == 1 ∧ piece[3] == 0)`.  
+7. Add **pianist repetition constraint**: the pianist of solo 2 (index 1) ≠ pianist of solo 5 (index 4).  
+8. Add **no traditional before Wayne modern**: ∃j < i such that `pianist[j] == 0 ∧ piece[j] == 0`, for the first traditional solo i (where `piece[i] == 1`).  
+    - Equivalently: the first occurrence of traditional piece must be after at least one Wayne modern solo.  
+9. Add **hypothesis constraint**: fifth solo (index 4) is Wayne + traditional → `pianist[4] == 0 ∧ piece[4] == 1`.  
+10. Translate each answer choice into constraints and check satisfiability:  
+    - (A) Zara performs first solo → `pianist[0] == 1`.  
+    - (B) Wayne performs second solo → `pianist[1] == 0`.  
+    - (C) Zara performs third solo → `pianist[2] == 1`.  
+    - (D) Second solo is modern → `piece[1] == 0`.  
+    - (E) Fourth solo is traditional → `piece[3] == 1`.  
+11. For each choice (A–E), clone the base + hypothesis constraints, add the choice’s constraint, and check SAT.  
+12. Collect indices of all choices that yield SAT → these are the ones that *could* be true.  
+13. Return the list of SAT choice indices (as per the question, only one is correct, but we collect all valid ones).

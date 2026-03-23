@@ -1,0 +1,29 @@
+1. Enumerate the five students and assign integer indices (e.g., Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4).  
+2. Create Boolean variables `team[i]` for each student i: True means green team, False means red team.  
+3. Create Boolean variables `facilitator[i]` for each student i: True means designated as facilitator.  
+4. Add **team-size constraints**: exactly two students on one team, three on the other.  
+    - Compute number of green-team members as `sum(team[i] for i in range(5)) == 2` OR `== 3`.  
+    - Equivalently, enforce: `(sum(team[i] for i in range(5)) == 2) + (sum(team[i] for i in range(5)) == 3)` is always true, but better to model via integer count `g = Sum([If(team[i], 1, 0) for i in range(5)])`, then assert `g == 2 or g == 3`.  
+    - Since one team must have exactly two and the other three, enforce `g == 2` OR `g == 3`. Use a disjunctive constraint (or two separate solves, but here we’ll use a solver-level OR via integer variable + constraints). Better: enforce `g == 2` (then red has 3) or `g == 3` (red has 2). Add: `Or(g == 2, g == 3)`.  
+5. Add **fixed constraints**:  
+    - Lateefah is on green team: `team[2] == True`.  
+    - Olga is a facilitator: `facilitator[4] == True`.  
+    - Kelly is not a facilitator: `facilitator[1] == False`.  
+6. Add **team-difference constraint**: Juana and Olga are on different teams: `team[0] != team[4]`.  
+7. Add **facilitator-exclusivity constraint**: exactly one facilitator per team:  
+    - Let `green_facilitators = Sum([If(And(team[i], facilitator[i]), 1, 0) for i in range(5)])`  
+    - Let `red_facilitators = Sum([If(And(Not(team[i]), facilitator[i]), 1, 0) for i in range(5)])`  
+    - Enforce `green_facilitators == 1` and `red_facilitators == 1`.  
+8. Now, assume the condition: Mei is assigned to green team (`team[3] == True`).  
+9. Add this assumption to the solver.  
+10. Enumerate the five answer choices and translate each into a logical condition:  
+    - Option 0: Juana is on green → `team[0] == True`  
+    - Option 1: Kelly is on red → `team[1] == False`  
+    - Option 2: Olga is on green → `team[4] == True`  
+    - Option 3: Lateefah is facilitator → `facilitator[2] == True`  
+    - Option 4: Mei is facilitator → `facilitator[3] == True`  
+11. For each option, clone the solver (with Mei-on-green assumption), add `Not(option_condition)`, and check satisfiability.  
+12. If a model exists where the option is *false*, then the option is **not forced**.  
+13. The option that is forced (i.e., its negation leads to UNSAT) is the answer.  
+14. Build a list of indices where negation leads to UNSAT (i.e., the condition must be true).  
+15. Return the first such index (since only one answer choice must be true).

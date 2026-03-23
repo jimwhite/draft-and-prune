@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Identify the variables as the seven fruits: `"kiwis"`, `"cantaloupes"`, `"oranges"`, `"loquats"`, `"pears"`, `"watermelons"`, and `"peaches"`.
+    * Define the domain for ranking: integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all fruit variables with domain [1, 2, 3, 4, 5, 6, 7] to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint using lambda functions:
+        * "The loquats are less expensive than the peaches" → `loquats < peaches`
+        * "The pears are the third-cheapest" → `pears == 3`
+        * "The oranges are less expensive than the cantaloupes" → `oranges < cantaloupes`
+        * "The loquats are more expensive than the watermelons" → `loquats > watermelons`
+        * "The peaches are less expensive than the oranges" → `peaches < oranges`
+        * "The kiwis are the second-most expensive" → `kiwis == 6` (since most expensive is rank 7, second-most is 6)
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` on the problem object to compute all valid assignments of ranks to fruits.
+    * Extract the unique solution (since the constraints define a total ordering) from the list of solutions.
+
+5.  **Determine the Third-Most-Expensive Fruit:**
+    * Note that "third-most expensive" corresponds to rank 5 in our system (most = 7, second-most = 6, third-most = 5).
+    * Create a dictionary mapping choice letters ("A" through "G") to the corresponding fruit names in order:  
+      `"A": "kiwis"`, `"B": "cantaloupes"`, `"C": "oranges"`, `"D": "loquats"`, `"E": "pears"`, `"F": "watermelons"`, `"G": "peaches"`
+    * Iterate through the choices. For each choice, check if the associated fruit's rank in the solution equals 5.
+    * Return (or print) the letter of the choice whose fruit has rank 5 as the final answer.

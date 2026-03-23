@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven birds as variables: `"blue jay"`, `"owl"`, `"falcon"`, `"hawk"`, `"raven"`, `"crow"`, and `"hummingbird"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all variables to the problem with their domain [1, 2, 3, 4, 5, 6, 7].
+
+3.  **Add Constraints:**
+    * Add `AllDifferentConstraint` to ensure each bird occupies a unique position.
+    * Add constraints derived from the statements:
+        * `"The falcon is the second from the left"` → `falcon == 2`
+        * `"The crow is the rightmost"` → `crow == 7`
+        * `"The hummingbird is to the right of the blue jay"` → `blue jay < hummingbird`
+        * `"The hawk is to the right of the hummingbird"` → `hummingbird < hawk`
+        * `"The blue jay is to the right of the owl"` → `owl < blue jay`
+        * `"The raven is to the left of the falcon"` → `raven < falcon` (and since `falcon == 2`, this implies `raven < 2`, so `raven == 1`)
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the solution (there will be exactly one, given consistency and uniqueness implied by the problem type).
+
+5.  **Determine the Second-from-the-Right Position:**
+    * In a 7-position line, second from the right is position `6` (since 7 is rightmost).
+    * For the found solution, locate which bird has position `6`.
+    * Map that bird to the corresponding choice letter using the provided list of choices (A–G), where:
+        * A → `"blue jay"`
+        * B → `"owl"`
+        * C → `"falcon"`
+        * D → `"hawk"`
+        * E → `"raven"`
+        * F → `"crow"`
+        * G → `"hummingbird"`
+    * Output the letter corresponding to the bird at position 6.

@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the golf tournament ranking constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven golfers as variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"Joe"` (note: "Joe" is capitalized in the problem; preserve casing for consistency).  
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest rank)** and **7 = last place (lowest rank)** — i.e., position equals finish order.  
+    * Add all seven variables with domain {1, 2, ..., 7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finish position.  
+    * Translate each statement into a constraint:  
+        - "Amy finished below Joe" → Amy’s position number is *greater* than Joe’s (`amy > Joe`).  
+        - "Dan finished above Mya" → Dan’s position number is *less* than Mya’s (`dan < mya`).  
+        - "Eli finished third" → `eli == 3`.  
+        - "Ana finished first" → `ana == 1`.  
+        - "Amy finished second-to-last" → with 7 golfers, second-to-last is position **6** (`amy == 6`).  
+        - "Mya finished fourth" → `mya == 4`.  
+
+4.  **Solve for the Unique Ranking:**  
+    * Use `getSolutions()` to find all valid assignments. Given the constraints are numerous and fixed, expect a single solution.  
+    * Extract the solution dictionary (e.g., `solutions[0]`) containing each golfer’s position.
+
+5.  **Identify the Correct Choice:**  
+    * Compute third-to-last finish position: With 7 golfers, positions are [1 (1st), 2 (2nd), ..., 7 (7th)], so third-to-last = position **5** (since last=7, second-to-last=6, third-to-last=5).  
+    * Create a mapping from choice letters (`'A'` through `'G'`) to golfer names in the order given:  
+        - `'A'` → `"mya"`  
+        - `'B'` → `"eli"`  
+        - `'C'` → `"ana"`  
+        - `'D'` → `"amy"`  
+        - `'E'` → `"mel"`  
+        - `'F'` → `"dan"`  
+        - `'G'` → `"Joe"`  
+    * In the solution, find which golfer has position 5.  
+    * Return (or output) the corresponding choice letter (e.g., `'E'` if `mel == 5`).

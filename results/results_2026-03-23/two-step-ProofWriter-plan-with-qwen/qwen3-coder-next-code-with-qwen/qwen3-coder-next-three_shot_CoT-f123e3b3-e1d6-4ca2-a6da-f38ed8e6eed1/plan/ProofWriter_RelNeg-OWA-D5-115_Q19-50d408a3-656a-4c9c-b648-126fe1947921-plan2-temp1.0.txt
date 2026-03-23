@@ -1,0 +1,20 @@
+1. Identify all entities: bald_eagle, bear, dog, lion.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_blue("bald_eagle", True), is_red("bald_eagle", True), likes("bald_eagle", "lion", True), needs("bald_eagle", "bear", True), needs("bald_eagle", "dog", True),
+   - is_blue("bear", False), is_nice("bear", True), needs("bear", "dog", True),
+   - chases("dog", "bald_eagle", True), is_red("dog", True), needs("dog", "bear", False),
+   - likes("lion", "bear", False) → encode as ~likes("lion", "bear", True), or equivalently facts.likes("lion", "bear", False).
+3. Handle negated properties (e.g., “not blue”, “does not need”) by asserting the predicate with False: 
+   - is_blue("bear", False), needs("dog", "bear", False), likes("lion", "bear", False).
+4. Translate each conditional rule into a `foreach` block + `assert`:
+   • If X likes lion ∧ ¬red(X) → chases(X, lion).
+   • If X red ∧ needs(X, bald_eagle) → needs(bald_eagle, lion).
+   • If X round → ~likes(X, dog) (i.e., likes(X, dog, False)).
+   • If bald_eagle needs dog → is_round(dog).
+   • If X likes dog → likes(X, bald_eagle).
+   • If X chases lion ∧ lion likes dog → ~likes(dog, lion) (i.e., likes(dog, lion, False)).
+   • If bear likes lion → likes(lion, dog).
+   • If X likes bear → likes(bear, lion).
+   • If X round → likes(X, bear).
+5. For the query “The dog does not need the dog”:
+   → Use facts.needs("dog", "dog", False).

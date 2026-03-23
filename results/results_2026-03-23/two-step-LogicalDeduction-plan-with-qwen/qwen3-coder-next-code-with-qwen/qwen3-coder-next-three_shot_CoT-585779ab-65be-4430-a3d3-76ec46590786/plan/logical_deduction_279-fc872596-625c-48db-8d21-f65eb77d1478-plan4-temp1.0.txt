@@ -1,0 +1,23 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to create a constraint satisfaction problem instance.
+
+2.  **Define Variables and Domain:**  
+    * Identify the variables as the three birds: `"blue jay"`, `"cardinal"`, and `"quail"`.  
+    * Define the domain for positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle (second from the left)**, and **3 = rightmost**.  
+    * Add these variables to the problem with their domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate the statements into constraints using lambda functions:  
+        - "The cardinal is to the right of the quail" → `cardinal > quail`.  
+        - "The quail is to the right of the blue jay" → `quail > blue jay`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution (since the constraints fix a strict order).
+
+5.  **Determine the Correct Answer:**  
+    * Identify which bird occupies position 2 (second from the left) using the solution.  
+    * Map the choice letters to birds: "A" → blue jay, "B" → cardinal, "C" → quail.  
+    * Return the letter corresponding to the bird found at position 2.

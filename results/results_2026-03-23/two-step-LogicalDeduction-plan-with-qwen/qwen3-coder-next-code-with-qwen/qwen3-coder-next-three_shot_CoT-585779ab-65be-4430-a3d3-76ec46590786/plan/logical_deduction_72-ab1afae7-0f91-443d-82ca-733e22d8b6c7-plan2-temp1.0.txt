@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Set up the variables representing the five vehicles: `"hatchback"`, `"convertible"`, `"tractor"`, `"truck"`, and `"limousine"`.
+    * Define the domain as integers from 1 to 5, where **1 = oldest** and **5 = newest**, as age ranking is relative to time (older means earlier in sequence).
+    * Add all five vehicle variables with domain {1, 2, 3, 4, 5} to the problem instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age ranks across vehicles.
+    * Translate each statement into a constraint:
+        * "The tractor is newer than the hatchback" → `tractor > hatchback` (since newer means larger rank number).
+        * "The limousine is the second-newest" → `limousine == 4` (since newest = 5, second-newest = 4).
+        * "The truck is older than the hatchback" → `truck < hatchback` (older = smaller rank number).
+        * "The convertible is the second-oldest" → `convertible == 2` (since oldest = 1, second-oldest = 2).
+
+4.  **Solve the Problem:**
+    * Invoke `getSolutions()` to find all valid assignments of ranks that satisfy the constraints.
+    * Extract the single solution (the problem is well-defined and has a unique arrangement).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which vehicle is the second-newest (i.e., rank = 4).
+    * Use the solved solution dictionary to identify which vehicle has value 4.
+    * Map that vehicle to the corresponding choice letter using a predefined dictionary:  
+      `{"hatchback": "A", "convertible": "B", "tractor": "C", "truck": "D", "limousine": "E"}`
+    * Output the correct choice letter (e.g., `"E"` if limousine is second-newest).

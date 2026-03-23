@@ -1,0 +1,14 @@
+1. Enumerate the seven houses and assign each an integer index (e.g., J=0, K=1, L=2, M=3, N=4, O=5, P=6).  
+2. Create integer variables for each house’s showing position (1 through 7, where 1=first, ..., 7=seventh).  
+3. Add **domain constraints**: each position variable is in [1,7], and all seven positions are pairwise distinct (using a AllDifferent constraint).  
+4. Add **time-slot constraints** based on position ranges:  
+    - Morning: positions 1–2; Afternoon: positions 3–5; Evening: positions 6–7.  
+5. Add **J constraint**: J must be shown in the evening → pos_J ∈ {6,7}.  
+6. Add **K constraint**: K cannot be shown in the morning → pos_K ∉ {1,2} ⇒ pos_K ≥ 3.  
+7. Add **L-K-M ordering constraint**: L after K and before M → pos_K < pos_L < pos_M.  
+8. Translate each answer choice into a Boolean condition about house positions (e.g., “K is shown in the evening” ⇔ pos_K ∈ {6,7}).  
+9. Define `must_be_true_list = []`. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the *negation* of the answer choice condition (e.g., ¬(pos_K ∈ {6,7}) for first option).  
+    - If this augmented constraint set is UNSAT, then the answer choice *must* be true; append its index to `must_be_true_list`.  
+10. Print the index (or indices) in `must_be_true_list`.

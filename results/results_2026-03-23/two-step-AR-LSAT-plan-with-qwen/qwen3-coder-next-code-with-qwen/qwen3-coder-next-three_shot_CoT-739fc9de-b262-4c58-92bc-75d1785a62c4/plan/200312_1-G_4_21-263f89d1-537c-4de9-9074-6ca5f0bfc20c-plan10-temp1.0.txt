@@ -1,0 +1,27 @@
+1. Enumerate the five students and assign integer codes: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[s][p]` for each student s and play p (True if student reviews play p).  
+4. Add **at-least-one-play constraint**: each student reviews at least one play: `review[s][0] ∨ review[s][1] ∨ review[s][2]` for all s.  
+5. Add **Kramer/Lopez fewer than Megregian constraint**:  
+   - Let `cnt[s] = sum(review[s][p] for p in [0,1,2])`.  
+   - Add: `cnt[1] < cnt[3]` and `cnt[2] < cnt[3]`.  
+6. Add **Lopez/Jiang disjointness & Lopez/Megregian disjointness**:  
+   - For each play p: `¬review[2][p] ∨ ¬review[0][p]` (Lopez and Jiang share no plays),  
+   - For each play p: `¬review[2][p] ∨ ¬review[3][p]` (Lopez and Megregian share no plays).  
+7. Add **Kramer/O'Neill both review Tamerlane**: `review[1][1] = True`, `review[4][1] = True`.  
+8. Add **exactly-two-students-identical-review-set constraint**:  
+   - For every unordered pair (i,j), i<j, define `same[i][j] = ∧_{p=0}^2 (review[i][p] ↔ review[j][p])`.  
+   - Exactly one `same[i][j]` is True (i.e., sum of all `same[i][j]` = 1).  
+9. Add **exactly-three-review-Undulation constraint**: `sum(review[s][2] for s in [0..4]) == 3`.  
+10. Translate answer choices into logical conditions to be added as hypotheses (for "could be true" — i.e., consistency check):  
+    - Option 0: `¬review[3][2]` (Megregian does not review Undulation)  
+    - Option 1: `¬review[4][2]` (O'Neill does not review Undulation)  
+    - Option 2: `review[0][2]` (Jiang reviews Undulation)  
+    - Option 3: `review[2][1]` (Lopez reviews Tamerlane)  
+    - Option 4: `review[4][0]` (O'Neill reviews Sunset)  
+11. For each option index i in [0..4]:  
+    - Clone base constraints (including Undulation-count=3) into fresh solver.  
+    - Add the hypothesis for option i.  
+    - If model is SAT, then option i **could be true**; record its index.  
+12. Collect all SAT option indices into a list and output the result (as per question: "which one could be true" — but plan must support multiple possible, though only one should be satisfiable).  
+13. Print the list of option indices that are satisfiable.

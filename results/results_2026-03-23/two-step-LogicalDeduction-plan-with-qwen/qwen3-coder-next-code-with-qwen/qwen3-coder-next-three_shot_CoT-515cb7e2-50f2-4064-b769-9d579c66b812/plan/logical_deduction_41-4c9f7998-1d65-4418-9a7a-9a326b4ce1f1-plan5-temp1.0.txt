@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the five birds as variables: `"cardinal"`, `"crow"`, `"falcon"`, `"robin"`, and `"bluejay"` (using "bluejay" as a single string without space to avoid parsing issues).
+    * Define the domain as integers 1 through 5, where 1 = leftmost position and 5 = rightmost position.
+    * Add all five bird variables with domain {1, 2, 3, 4, 5} to the problem.
+
+3.  **Add Constraints Based on Statements:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Translate each logical statement into a constraint:
+        * "The robin is to the right of the cardinal" → `robin > cardinal`
+        * "The cardinal is to the right of the blue jay" → `cardinal > bluejay`
+        * "The blue jay is the second from the left" → `bluejay == 2`
+        * "The crow is the rightmost" → `crow == 5`
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to compute all valid assignments.
+    * Extract the single solution (since constraints yield a unique arrangement).
+
+5.  **Determine the Leftmost Bird and Match to Choices:**
+    * Identify the bird with position value 1 (leftmost) in the solution.
+    * Map the answer choices:
+        - A) cardinal → check if its position == 1
+        - B) crow → check if its position == 1 (but we know crow == 5, so unlikely)
+        - C) falcon
+        - D) robin → check if robin == 1 (but robin > cardinal > bluejay = 2, so robin ≥ 4)
+        - E) bluejay → check if bluejay == 1 (but bluejay = 2, so no)
+    * Return the choice letter corresponding to the bird at position 1.

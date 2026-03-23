@@ -1,0 +1,51 @@
+from constraint import *
+
+# Initialize the constraint satisfaction problem
+problem = Problem()
+
+# Define the variables (the seven fruits) and their domain (price ranks 1-7)
+fruits = ["loquats", "peaches", "watermelons", "plums", "kiwis", "mangoes", "pears"]
+ranks = range(1, 8)
+problem.addVariables(fruits, ranks)
+
+# Add constraints based on the puzzle's statements
+# 1. All fruits must have a unique price rank
+problem.addConstraint(AllDifferentConstraint())
+
+# 2. "The pears are more expensive than the kiwis" → kiwis < pears
+problem.addConstraint(lambda kiwis, pears: kiwis < pears, ("kiwis", "pears"))
+
+# 3. "The watermelons are less expensive than the peaches" → watermelons < peaches
+problem.addConstraint(lambda watermelons, peaches: watermelons < peaches, ("watermelons", "peaches"))
+
+# 4. "The mangoes are the third-cheapest" → mangoes == 3
+problem.addConstraint(lambda mangoes: mangoes == 3, ("mangoes",))
+
+# 5. "The watermelons are the third-most expensive" → position = 7 - 3 + 1 = 5
+problem.addConstraint(lambda watermelons: watermelons == 5, ("watermelons",))
+
+# 6. "The plums are the second-most expensive" → position = 7 - 1 = 6
+problem.addConstraint(lambda plums: plums == 6, ("plums",))
+
+# 7. "The loquats are the second-cheapest" → loquats == 2
+problem.addConstraint(lambda loquats: loquats == 2, ("loquats",))
+
+# Find the unique solution
+solutions = problem.getSolutions()
+
+# Map choice letters to fruit names for the most expensive (rank 7)
+choices = {
+    "A": "loquats",
+    "B": "peaches",
+    "C": "watermelons",
+    "D": "plums",
+    "E": "kiwis",
+    "F": "mangoes",
+    "G": "pears"
+}
+
+# Find which fruit has rank 7 (most expensive) and print the corresponding letter
+for solution in solutions:
+    for letter, fruit_name in choices.items():
+        if solution[fruit_name] == 7:
+            print(letter)

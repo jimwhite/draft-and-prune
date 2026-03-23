@@ -1,0 +1,21 @@
+1. Identify all entities involved: Charlie, Erin, Fiona, Gary.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(entity, True) for unary properties (e.g., is_green("Charlie", True), is_kind("Charlie", True)) and explicitly state known attribute values for each individual.
+3. Translate each universal conditional statement (e.g., “If someone is X and Y then Z”, “All X people are Y”) into PyKe rules using `foreach` blocks to match conditions and `assert` clauses for conclusions.
+   - If someone is round and kind → they are green.
+   - All green, round people are blue.
+   - Round people are big.
+   - If someone is kind → they are furry.
+   - All blue people are kind.
+   - If someone is green → they are big.
+   - If Erin is cold and green → Erin is blue.
+   - Cold, blue people are kind.
+   - All green, big people are round.
+4. For the rule “If someone is green and blue then they are kind” (if applicable from “Cold, blue people are kind”), ensure only the specified cold+blue condition triggers kindness; do not overgeneralize.
+5. For the rule “If someone is green then they are big”, verify that this applies universally (i.e., to all individuals, including Fiona).
+6. Determine whether Fiona is round by:
+   - First asserting known facts about Fiona: is_green("Fiona", True).
+   - Using the rule “If someone is green then they are big” to infer is_big("Fiona", True).
+   - Now, check whether “All green, big people are round” applies: since Fiona is green and (via inference) big, the rule should yield is_round("Fiona", True).
+   - Confirm whether any contradictory facts or missing preconditions (e.g., unknown is_cold, etc.) prevent derivation.
+7. The query tests whether Fiona is round:
+   → Use facts.is_round("Fiona", True) to check if the fact can be inferred; otherwise, return unknown or false.

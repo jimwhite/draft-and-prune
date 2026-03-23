@@ -1,0 +1,27 @@
+1. Identify all individuals: Anne, Charlie, Dave, Fiona.
+2. Encode all explicit facts as ternary predicates (e.g., is_cold("Anne", True), is_kind("Fiona", True), etc.); note that “Fiona is not green” must be encoded as ¬is_green("Fiona", True), i.e., use facts.is_green("Fiona", False).
+3. Translate each universal conditional rule into PyKe rules using `foreach` (over universally quantified variable “X”) and `assert`:
+   • If Charlie is cold → Charlie is quiet.
+   • If Charlie is big → Charlie is not green (i.e., is_green("Charlie", False)).
+   • If Anne is kind → Anne is big.
+   • All big people are blue (i.e., if X is big → X is blue).
+   • Blue people are quiet (i.e., if X is blue → X is quiet).
+   • If Dave is kind → Dave is cold.
+   • If someone is round → they are green (i.e., if X is round → X is green).
+   • Quiet people are round (i.e., if X is quiet → X is round).
+   • If someone is kind and not blue → they are round (i.e., if X is kind ∧ ¬is_blue(X) → X is round).
+4. For rules with exceptions or negated conclusions (e.g., “not green”, “not cold”), ensure negative assertions are encoded explicitly via facts.pred(name, False), not omitted or inferred indirectly without support.
+5. For the query “Dave is not cold”, check consistency of ¬is_cold("Dave", True) by verifying whether facts.is_cold("Dave", False) can be derived (i.e., prove it via rule chains), or if it remains unproven/contradicted.
+6. Specifically, evaluate:
+   - Start with known facts: is_kind("Dave", ?) is not given → Dave's kindness unknown.
+   - Rule 6: if Dave is kind → Dave is cold, but since Dave’s kindness is unknown, no direct implication.
+   - Rule 9: if Dave is kind and not blue → round; but blue status unknown (only Charlie, Dave stated as blue? Actually: “Charlie is blue”, “Dave is blue” are explicit facts → so Dave is blue, thus the condition “kind and not blue” for Dave cannot be satisfied.)
+   - Rule 4: big → blue, and Rule 5: blue → quiet; Rule 7: round → green, Rule 8: quiet → round; Rule 10: kind ∧ ¬blue → round (irrelevant for Dave since blue).
+   - Since Dave is explicitly blue, and Rule 5 applies: Dave is blue → Dave is quiet; then quiet → round (Rule 8) → Dave is round; then round → green (Rule 7) → Dave is green.
+   - Fiona is known to be not green; Dave being green is consistent, but irrelevant for query.
+   - To determine cold status of Dave: no rule asserts ¬is_cold("Dave", False), and no chain derives is_cold("Dave", True) because kindness is unknown and only Dave-being-kind would imply cold; lacking that, we cannot derive cold.
+   - Thus: no evidence for is_cold("Dave", True); but absence of proof ≠ proof of negation in PyKe (open-world), unless we can *prove* ¬is_cold("Dave", True) via inconsistency.
+   - However, PyKe may allow closing the world *only* for derived facts—query must rely on whether ¬is_cold("Dave", True) is provable.
+   - Since no rule yields is_cold("Dave", False), and Dave is known to be blue, but being cold/bad is unrelated to blueness (no rule like blue → ¬cold), we cannot prove Dave is cold nor not cold.
+   - Therefore, to test query: try asserting facts.is_cold("Dave", False); check if derivable or leads to contradiction.
+7. Final query: Use facts.is_cold("Dave", False) and verify if it can be proven; if yes → statement true; if contradiction arises → false; else → unknown.

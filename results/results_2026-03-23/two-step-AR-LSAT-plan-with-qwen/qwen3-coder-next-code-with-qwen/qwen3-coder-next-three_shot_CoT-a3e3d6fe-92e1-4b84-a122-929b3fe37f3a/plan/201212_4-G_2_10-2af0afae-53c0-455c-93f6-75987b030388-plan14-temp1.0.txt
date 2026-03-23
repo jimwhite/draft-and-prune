@@ -1,0 +1,22 @@
+1. Enumerate the five witnesses and assign integer codes (e.g., Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4).  
+2. Create integer variables `day[w]` for each witness w ∈ {0,1,2,3,4}, representing the day they testify (0=Monday, 1=Tuesday, 2=Wednesday).  
+3. Add **domain constraints**: each `day[w]` ∈ {0,1,2}.  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `day[3] == 2`.  
+5. Add **at-least-one-Monday constraint**: at least one witness has `day[w] == 0`.  
+6. Add **exactly-two-on-Tuesday constraint**: exactly two witnesses have `day[w] == 1`.  
+7. Add **Garcia-Franco-different-days constraint**: `day[0] != day[1]`.  
+8. Add **Hong-not-Monday constraint**: `day[2] != 0`.  
+9. Add the **conditional assumption** of the question: Franco testifies on the same day as Hong → `day[0] == day[2]`.  
+10. Translate the five answer choices into logical conditions on the days:  
+    - (A) Franco on Wednesday → `day[0] == 2`  
+    - (B) Garcia on Monday → `day[1] == 0`  
+    - (C) Garcia on Wednesday → `day[1] == 2`  
+    - (D) Hong on Tuesday → `day[2] == 1`  
+    - (E) Iturbe is the only witness on Wednesday → exactly one witness (Iturbe) has `day[w] == 2`.  
+11. For each answer choice i, create a fresh solver with all constraints from steps 3–9, and additionally assert the condition for answer choice i.  
+12. If a model exists (SAT) for that choice, the choice is possible; else, it is impossible.  
+13. A statement **must be true** iff in *every* satisfying assignment (under the assumption `day[0] == day[2]`), that statement holds. To check this:  
+    - For each answer choice, create a fresh solver with base + assumption; assert the *negation* of that choice's condition.  
+    - If UNSAT, then the negation is impossible → the original condition **must be true**.  
+14. Collect indices of answer choices that must be true (i.e., their negation leads to UNSAT) into `answer_index_list`.  
+15. Return the index list (exactly one must exist per problem logic).

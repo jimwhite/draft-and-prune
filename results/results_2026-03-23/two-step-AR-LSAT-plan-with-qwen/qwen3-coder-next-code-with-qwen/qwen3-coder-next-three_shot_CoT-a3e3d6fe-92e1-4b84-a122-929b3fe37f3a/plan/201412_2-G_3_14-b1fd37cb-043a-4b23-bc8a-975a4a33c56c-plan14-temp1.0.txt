@@ -1,0 +1,23 @@
+1. Enumerate the six available colors and assign each an integer index: forest=0, olive=1, peach=2, turquoise=3, white=4, yellow=5.  
+2. Since exactly five colors are used, create a set of Boolean variables indicating which color is *excluded* (i.e., one excluded color, five included). Equivalently, create Boolean variables `used[c]` for each color c, with exactly five of them true.  
+3. Model the three rugs: create Boolean variables `rug_r[c]` (for rug r ∈ {0,1,2} and color c) indicating whether color c is used in rug r.  
+4. Add **exactly-five-colors constraint**: Σ_{c} used[c] = 5.  
+5. Add **each used color appears in exactly one rug**: for each color c, if `used[c]` is true, then exactly one of `rug_0[c], rug_1[c], rug_2[c]` is true; if false, all are false.  
+6. Add **rug structure constraints**:  
+    - Each rug is either solid (exactly one color used) or multicolored (≥2 colors).  
+    - Since exactly two rugs are solid, exactly two rugs have sum_c rug_r[c] = 1; the remaining one rug has sum_c rug_r[c] ≥ 2.  
+7. Add **rule constraints** for each rug:  
+    - (R1) If white ∈ rug_r, then exactly two *other* colors are used in that rug: i.e., if `rug_r[white]` is true, then Σ_{c ≠ white} rug_r[c] = 2.  
+    - (R2) If olive ∈ rug_r, then peach ∈ rug_r: `rug_r[olive] → rug_r[peach]`.  
+    - (R3) Forest and turquoise not together: `¬(rug_r[forest] ∧ rug_r[turquoise])`.  
+    - (R4) Peach and turquoise not together: `¬(rug_r[peach] ∧ rug_r[turquoise])`.  
+    - (R5) Peach and yellow not together: `¬(rug_r[peach] ∧ rug_r[yellow])`.  
+8. Translate the answer choices into candidate *pairs of solid rug colors*: e.g., "forest and peach" means two rugs are solid: one is {forest}, the other is {peach}.  
+9. For each choice, generate a constraint set:  
+    - Assume two rugs are solid with the specified colors (e.g., `rug_0[forest]=true` and all other rug_0[c≠forest]=false; `rug_1[peach]=true` and all other rug_1[c≠peach]=false).  
+    - The third rug (rug_2) is multicolored: Σ_c rug_2[c] ≥ 2.  
+    - Enforce all rule constraints (R1–R5) over rug_0, rug_1, and rug_2.  
+    - Enforce the total used colors = 5 (i.e., exactly one color is excluded, and total colors across all rugs used = 5).  
+10. For each choice, clone the base constraints and add the specific pair constraint. Check satisfiability with Z3:  
+    - If UNSAT, then that pair **cannot** be the two solid rugs; add its index to `answer_index_list`.  
+11. Print `answer_index_list`.

@@ -1,0 +1,15 @@
+1. Enumerate the eight compositions: ['F', 'H', 'L', 'O', 'P', 'R', 'S', 'T'] and assign integer indices 0–7.  
+2. Create eight integer position variables (pos_F, pos_H, ..., pos_T), each ranging from 0 to 7.  
+3. Add **distinctness constraint**: all position variables must be pairwise distinct (use `Distinct`).  
+4. Add **T–F–R adjacency constraint**: T is either immediately before F (`pos_T + 1 == pos_F`) OR immediately after R (`pos_R + 1 == pos_T`). Implement as disjunction using `Or`.  
+5. Add **gap constraint**: at least two compositions between F and R → `|pos_F - pos_R| >= 3`.  
+6. Add **O position constraint**: O is first or fifth → `pos_O == 0 OR pos_O == 4`.  
+7. Add **eighth position constraint**: L or H is eighth → `pos_L == 7 OR pos_H == 7`.  
+8. Add **P before S constraint**: `pos_P < pos_S`.  
+9. Add **O–S separation constraint**: at least one composition between O and S → `|pos_O - pos_S| >= 2`.  
+10. Parse each answer choice as a list of 8 compositions in order (e.g., ['L', 'P', 'S', ...]) and compute the implied positions: for each composition X, `pos_X = index_of_X_in_choice`.  
+11. For each choice:  
+    - Clone the base solver (or create a fresh one for evaluation).  
+    - Add constraints that encode the exact positions from the choice (i.e., `pos_F == 6` if 'F' is at index 6, etc.).  
+    - Use the solver to check satisfiability with all base constraints (4–9).  
+12. Return the first choice (index) that yields SAT as the correct answer; if none, error—but per problem only one is valid.

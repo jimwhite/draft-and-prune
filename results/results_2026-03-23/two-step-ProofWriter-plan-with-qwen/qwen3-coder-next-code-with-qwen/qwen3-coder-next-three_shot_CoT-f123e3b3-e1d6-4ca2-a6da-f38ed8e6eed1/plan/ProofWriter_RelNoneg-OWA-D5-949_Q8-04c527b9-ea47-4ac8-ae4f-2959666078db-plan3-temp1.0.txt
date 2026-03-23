@@ -1,0 +1,18 @@
+1. Identify all entities: bear, cat, dog, mouse.
+2. Encode all directly stated facts using ternary predicates of the form predicate(subject, object, True):
+   - Properties: is_green("bear", True), is_young("cat", True), is_round("dog", True), is_big("mouse", True), is_cold("mouse", True)
+   - Relations: likes("bear", "cat", True), likes("bear", "dog", True), visits("bear", "dog", True), sees("cat", "bear", True), sees("cat", "dog", True), visits("cat", "bear", True), visits("cat", "mouse", True), likes("dog", "bear", True), likes("dog", "mouse", True), visits("dog", "mouse", True)
+3. Translate each conditional rule into PyKe rules using `foreach` and `assert`:
+   • If something visits the mouse and the mouse visits the dog → it is cold.
+   • If something likes the cat → it visits the dog.
+   • If something is cold → it likes the cat.
+   • If something is green → it sees the dog.
+   • If something likes the mouse → it sees the cat.
+   • If something is green and cold → it likes the cat.
+   • If something is big and visits the bear → the bear is green.
+4. For each rule:
+   - Express universal quantification using `foreach` with pattern variables (e.g., ?x) to match premises.
+   - Use conjunction in `foreach` for compound conditions (e.g., and_(sees(?x, "bear", True), is_cold(?x, True))).
+   - Use `assert` with the consequent predicate (e.g., is_cold(?x, True)).
+5. The query tests whether the cat is not cold:
+   → Use facts.is_cold("cat", False) to check if the statement "The cat is not cold" holds.

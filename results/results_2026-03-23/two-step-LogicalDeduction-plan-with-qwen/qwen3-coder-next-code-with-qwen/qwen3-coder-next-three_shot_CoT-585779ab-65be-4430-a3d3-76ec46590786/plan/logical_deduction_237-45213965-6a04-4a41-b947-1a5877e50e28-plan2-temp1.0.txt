@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"red"`, `"white"`, `"purple"`, `"black"`, `"gray"`, `"orange"`, and `"blue"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**, consistent with standard positional indexing.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Encode each statement as a constraint:  
+     - *"The red book is to the right of the white book"* → `red > white`  
+     - *"The gray book is to the left of the orange book"* → `gray < orange`  
+     - *"The gray book is to the right of the blue book"* → `gray > blue`  
+     - *"The red book is the second from the right"* → `red == 6` (since position 7 is rightmost, second from right is 6)  
+     - *"The black book is the fourth from the left"* → `black == 4`  
+     - *"The orange book is to the left of the white book"* → `orange < white`
+
+4. **Solve for Valid Arrangements:**  
+   * Use `getSolutions()` to find all solutions satisfying the constraints.  
+   * Extract the unique solution (as the problem is deterministic).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is **third from the right**, i.e., position `7 - 2 = 5`.  
+   * Map each choice letter (A–G) to its corresponding book:  
+     A → `"red"`, B → `"white"`, C → `"purple"`, D → `"black"`, E → `"gray"`, F → `"orange"`, G → `"blue"`  
+   * In the solution, locate which book has position 5.  
+   * Output the letter (A–G) corresponding to that book.

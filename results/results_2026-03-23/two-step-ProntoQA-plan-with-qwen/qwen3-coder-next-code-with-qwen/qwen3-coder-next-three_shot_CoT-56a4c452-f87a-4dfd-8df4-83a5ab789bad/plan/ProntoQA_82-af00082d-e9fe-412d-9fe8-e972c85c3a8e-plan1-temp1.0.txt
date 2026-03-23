@@ -1,0 +1,27 @@
+1. Identify all entities and types: Rex, impus, yumpus, wumpus, numpus, jompus, dumpus, tumpus, vumpus, rompus, zumpus.  
+2. Identify all properties: mean, blue, hot, fruity, bright (implicitly none), dull, happy, opaque, metallic.  
+3. Represent "Rex is a yumpus" as a base fact: `is_a("Rex", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Impuses are mean → `foreach x, is_a(x, "impus", True) ⇒ is_mean(x, True)`  
+   - Each impus is a yumpus → `foreach x, is_a(x, "impus", True) ⇒ is_a(x, "yumpus", True)`  
+   - Yumpuses are blue → `foreach x, is_a(x, "yumpus", True) ⇒ is_blue(x, True)`  
+   - Yumpuses are wumpuses → `foreach x, is_a(x, "yumpus", True) ⇒ is_a(x, "wumpus", True)`  
+   - Wumpuses are hot → `foreach x, is_a(x, "wumpus", True) ⇒ is_hot(x, True)`  
+   - Every wumpus is a numpus → `foreach x, is_a(x, "wumpus", True) ⇒ is_a(x, "numpus", True)`  
+   - Jompuses are happy → `foreach x, is_a(x, "jompus", True) ⇒ is_happy(x, True)`  
+   - Numpuses are fruity → `foreach x, is_a(x, "numpus", True) ⇒ is_fruity(x, True)`  
+   - Numpuses are dumpuses → `foreach x, is_a(x, "numpus", True) ⇒ is_a(x, "dumpus", True)`  
+   - Every dumpus is not dull → `foreach x, is_a(x, "dumpus", True) ⇒ is_dull(x, False)`  
+   - Every dumpus is a tumpus → `foreach x, is_a(x, "dumpus", True) ⇒ is_a(x, "tumpus", True)`  
+   - Tumpuses are not happy → `foreach x, is_a(x, "tumpus", True) ⇒ is_happy(x, False)`  
+   - Every tumpus is a vumpus → `foreach x, is_a(x, "tumpus", True) ⇒ is_a(x, "vumpus", True)`  
+   - Vumpuses are not opaque → `foreach x, is_a(x, "vumpus", True) ⇒ is_opaque(x, False)`  
+   - Every vumpus is a rompus → `foreach x, is_a(x, "vumpus", True) ⇒ is_a(x, "rompus", True)`  
+   - Rompuses are metallic → `foreach x, is_a(x, "rompus", True) ⇒ is_metallic(x, True)`  
+   - Each rompus is a zumpus → `foreach x, is_a(x, "rompus", True) ⇒ is_a(x, "zumpus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (e.g., `foreach x: is_a(x, "tumpus", True) => assert(is_happy(x, False))`).  
+6. Derive the chain of subtype relations from Rex being a yumpus:  
+   - Rex is a yumpus → Rex is a wumpus → Rex is a numpus → Rex is a dumpus → Rex is a tumpus  
+   - Since Rex is a tumpus, and all tumpuses are not happy → Rex is not happy.  
+7. The query tests if the statement "Rex is not happy" is provable:  
+   → Use `facts.is_happy("Rex", False)`.

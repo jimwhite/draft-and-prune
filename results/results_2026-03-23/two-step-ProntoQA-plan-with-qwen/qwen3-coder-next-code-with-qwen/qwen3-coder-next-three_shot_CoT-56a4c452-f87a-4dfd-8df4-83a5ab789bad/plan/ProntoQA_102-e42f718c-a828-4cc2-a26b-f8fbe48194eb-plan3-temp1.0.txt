@@ -1,0 +1,24 @@
+1. Identify all entities and types: Rex, dumpus, tumpus, vumpus, zumpus, wumpus, numpus, rompus, jompus, yumpus, impus.  
+2. Identify all properties: dull, spicy, fruity, large, blue, kind, cold, transparent, yumpus-related spiciness (explicitly stated), impus membership.  
+3. Represent "Rex is a wumpus" as a base fact: `is_a("Rex", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Each dumpus is not dull → `not_dull(dumpus(x))`.  
+   - Tumpuses are not spicy → `not_spicy(tumpus(x))`.  
+   - Dumpuses are vumpuses → `is_a(dumpus(x), "vumpus", True)`.  
+   - Vumpuses are fruity → `is_fruity(vumpus(x))`.  
+   - Each vumpus is a zumpus → `is_a(vumpus(x), "zumpus", True)`.  
+   - Each zumpus is large → `is_large(zumpus(x))`.  
+   - Each zumpus is a wumpus → `is_a(zumpus(x), "wumpus", True)`.  
+   - Wumpuses are blue → `is_blue(wumpus(x))`.  
+   - Wumpuses are numpuses → `is_a(wumpus(x), "numpus", True)`.  
+   - Each numpus is kind → `is_kind(numpus(x))`.  
+   - Numpuses are rompuses → `is_a(numpus(x), "rompus", True)`.  
+   - Rompuses are cold → `is_cold(rompus(x))`.  
+   - Rompuses are jompuses → `is_a(rompus(x), "jompus", True)`.  
+   - Jompuses are not transparent → `not_transparent(jompus(x))`.  
+   - Jompuses are yumpuses → `is_a(jompus(x), "yumpus", True)`.  
+   - Yumpuses are spicy → `is_spicy(yumpus(x))`.  
+   - Every yumpus is an impus → `is_a(yumpus(x), "impus", True)`.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` (or negation) clause for the conclusion. Note critical contradiction: Jompuses → yumpuses, and Yumpuses are spicy ⇒ jompus(x) is spicy; but Tumpuses are not spicy and Dumpuses → vumpuses → zumpuses → wumpuses → numpuses → rompuses → jompuses, yet Rex is a wumpus ⇒ numpus ⇒ rompus ⇒ jompus ⇒ yumpus, and yumpus ⇒ spicy ⇒ Rex is spicy. Also note: Tumpuses are not spicy does *not* directly conflict since Rex is not known to be a tumpus.  
+6. The query tests if the statement "Rex is not spicy" is provable:  
+   → Use `facts.is_spicy("Rex", False)`.

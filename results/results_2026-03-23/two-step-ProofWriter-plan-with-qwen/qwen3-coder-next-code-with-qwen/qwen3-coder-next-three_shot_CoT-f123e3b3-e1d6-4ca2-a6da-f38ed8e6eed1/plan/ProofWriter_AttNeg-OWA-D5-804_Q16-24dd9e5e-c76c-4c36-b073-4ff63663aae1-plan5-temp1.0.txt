@@ -1,0 +1,14 @@
+1. Identify all individuals: Anne, Charlie, Erin, Fiona.
+2. Encode all explicitly stated atomic facts using ternary predicates: e.g., is_kind("Anne", True), is_big("Erin", True), is_green("Erin", True), etc., and negated facts like is_big("Charlie", False), is_green("Charlie", False).
+3. Translate each universal conditional into a PyKe rule using `foreach` blocks:
+   • If Erin is big and red → Erin is kind.
+   • All rough things are green: foreach(x, if(is_rough(x, True), then is_green(x, True))).
+   • If something is kind → it is green.
+   • Quiet and green things are big.
+   • Rough and green things are red.
+   • If something is green → it is rough.
+   • If Erin is red → Erin is green.
+   • Red and rough things are quiet.
+   • Quiet and not red → not white.
+4. Ensure all negated facts (e.g., "not big") are encoded as `is_big("Charlie", False)` directly.
+5. The query tests whether Anne is white: assert or verify `is_white("Anne", True)` and check for inconsistency with derived facts.

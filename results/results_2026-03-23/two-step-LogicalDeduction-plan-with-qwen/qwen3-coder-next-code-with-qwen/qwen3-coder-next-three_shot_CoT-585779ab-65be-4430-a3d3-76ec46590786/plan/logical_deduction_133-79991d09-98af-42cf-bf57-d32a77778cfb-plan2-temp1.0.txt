@@ -1,0 +1,41 @@
+1.  **Initialize the Problem Environment:**
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define variables as the seven bird names: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, `"raven"`.
+    * Define domain as integers from 1 to 7, where position 1 is leftmost and position 7 is rightmost.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Add AllDifferentConstraint:**
+    * Enforce that each bird occupies a unique position using `AllDifferentConstraint`.
+
+4.  **Translate and Add Positional Constraints:**
+    * "The blue jay is the second from the left" → `blue jay == 2`
+    * "The robin is the third from the left" → `robin == 3`
+    * "The cardinal is the third from the right" → Since positions are 1 (leftmost) to 7 (rightmost), third from right is position `7 - 3 + 1 = 5`, so `cardinal == 5`
+    * "The raven is to the left of the quail" → `raven < quail`
+    * "The falcon is to the right of the quail" → `quail < falcon`
+    * "The robin is to the right of the hummingbird" → `hummingbird < robin` (and since robin == 3, this implies hummingbird ∈ {1,2})
+
+5.  **Solve the Problem:**
+    * Use `getSolutions()` to compute all valid arrangements.
+    * Retrieve the unique solution (the problem has exactly one satisfying assignment).
+
+6.  **Determine Position of Fourth from Left:**
+    * The question asks which bird is at position 4 (since "fourth from the left" = index 4 in 1-based counting).
+    * Extract the bird mapped to position 4 from the solution dictionary.
+
+7.  **Map Bird to Choice Letter:**
+    * Create a lookup mapping choice letters (A–G) to bird names:
+        - A → "cardinal"
+        - B → "blue jay"
+        - C → "robin"
+        - D → "falcon"
+        - E → "quail"
+        - F → "hummingbird"
+        - G → "raven"
+    * Identify which choice letter corresponds to the bird found in position 4.
+
+8. **Output Final Answer:**
+    * Print or return the correct choice letter (e.g., 'F').

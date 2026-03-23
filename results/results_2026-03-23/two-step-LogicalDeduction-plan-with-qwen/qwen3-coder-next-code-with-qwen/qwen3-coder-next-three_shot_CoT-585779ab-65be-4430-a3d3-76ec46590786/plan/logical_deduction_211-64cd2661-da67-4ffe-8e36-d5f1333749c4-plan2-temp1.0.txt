@@ -1,0 +1,28 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven variables as the golfers' names: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"Joe"` (note: capitalize `'Joe'` consistently with input; all others lowercase to match typical naming convention in problem text, but verify — actually the problem lists names as "Mya, Eli, Ana, Amy, Mel, Dan, and Joe", so preserve original casing for clarity: use `"Mya"`, `"Eli"`, `"Ana"`, `"Amy"`, `"Mel"`, `"Dan"`, `"Joe"`).  
+   * Define the domain as integer rankings from **1 (first place)** to **7 (seventh, i.e., last)**.  
+   * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique finishing positions for all golfers.  
+   * Translate each statement into a constraint using `addConstraint` with lambda functions or direct value constraints:  
+        - "Amy finished below Joe" → Amy’s rank is **higher number** than Joe’s (since lower rank = better finish); i.e., `amy > joe`.  
+        - "Dan finished above Mya" → Dan’s rank is lower number than Mya’s: `dan < mya`.  
+        - "Eli finished third" → `eli == 3`.  
+        - "Ana finished first" → `ana == 1`.  
+        - "Amy finished second-to-last" → rank = 6 (since positions: 1=1st, ..., 6=6th=second-to-last, 7=last). So `amy == 6`.  
+        - "Mya finished fourth" → `mya == 4`.
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments. Given the problem’s consistency and fixed constraints, there should be exactly one solution.  
+   * Extract the single solution dictionary.
+
+5. **Determine Third-to-Last Placement and Match Choices:**  
+   * Third-to-last in a 7-golfer field is rank **5** (positions: 1st=1, 2nd=2, 3rd=3, 4th=4, 5th=5=third-to-last, 6th=6=second-to-last, 7th=7=last).  
+   * Create a mapping from choice letters to golfer names: `{'A': 'Mya', 'B': 'Eli', 'C': 'Ana', 'D': 'Amy', 'E': 'Mel', 'F': 'Dan', 'G': 'Joe'}`.  
+   * Iterate through the choices: for each choice letter, check if the corresponding golfer’s position in the solution is 5.  
+   * Return (or print) the choice letter where this holds true — that golfer finished third-to-last.

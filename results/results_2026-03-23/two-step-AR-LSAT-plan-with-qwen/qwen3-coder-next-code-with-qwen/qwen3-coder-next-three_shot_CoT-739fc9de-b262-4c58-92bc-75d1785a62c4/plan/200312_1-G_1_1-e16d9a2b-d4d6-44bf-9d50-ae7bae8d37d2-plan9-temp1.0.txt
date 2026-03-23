@@ -1,0 +1,15 @@
+1. Enumerate the 9 scientists (F, G, H, K, L, M, P, Q, R) and assign integer indices.  
+2. Create Boolean variables for each scientist (e.g., `F`, `G`, ..., `R`), indicating whether they are selected.  
+3. Add **size constraint**: exactly 5 scientists are selected: `F + G + H + K + L + M + P + Q + R == 5`.  
+4. Add **representation constraints**: at least one botanist (F ∨ G ∨ H), at least one chemist (K ∨ L ∨ M), and at least one zoologist (P ∨ Q ∨ R).  
+5. Add **conditional constraint**: if more than one botanist is selected (i.e., F+G+H ≥ 2), then at most one zoologist is selected (P + Q + R ≤ 1). This can be encoded as: `(F+G+H >= 2) → (P+Q+R <= 1)`, implemented via `~(F+G+H >= 2) | (P+Q+R <= 1)` or by using an auxiliary Boolean for the antecedent.  
+6. Add **exclusion constraint**: F and K cannot both be selected: `~(F ∧ K)`.  
+7. Add **exclusion constraint**: K and M cannot both be selected: `~(K ∧ M)`.  
+8. Add **conditional constraint**: if M is selected, then both P and R must be selected: `M → (P ∧ R)`, i.e., `~M ∨ (P ∧ R)`.  
+9. For each answer choice, parse the list of selected scientists.  
+10. For each choice:  
+    - Create a fresh solver, copy all base constraints.  
+    - Assert the selected scientists are True and others False (e.g., for choice `['F', 'G', 'K', 'P', 'Q']`, assert `F ∧ G ∧ K ∧ P ∧ Q ∧ ~H ∧ ~L ∧ ~M ∧ ~R`).  
+    - Check satisfiability.  
+11. Append the index (0–4) of each choice that yields SAT to `answer_index_list`.  
+12. Output the answer index list (only one valid choice is expected).

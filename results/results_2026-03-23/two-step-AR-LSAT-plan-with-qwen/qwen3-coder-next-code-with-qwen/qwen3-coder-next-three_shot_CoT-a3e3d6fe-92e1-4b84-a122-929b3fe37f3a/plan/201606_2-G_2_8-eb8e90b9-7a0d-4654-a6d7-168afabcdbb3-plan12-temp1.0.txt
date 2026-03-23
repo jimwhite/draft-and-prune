@@ -1,0 +1,23 @@
+1. Enumerate the six available students and assign them integer indices: Louis (0), Mollie (1), Onyx (2), Ryan (3), Tiffany (4), Yoshio (5).  
+2. Define Boolean assignment variables: for each student i and year y in {1921, 1922, 1923, 1924}, create a Boolean variable `assigned[i][y]`, meaning student i is assigned to year y.  
+3. Add **assignment constraints**: exactly four students are selected, and each selected student is assigned to exactly one year; each year has exactly one student.  
+    - For each year y, sum over i of `assigned[i][y]` = 1.  
+    - For each student i, sum over y of `assigned[i][y]` ≤ 1 (at most one year).  
+    - Enforce exactly four students are used: sum over i,y of `assigned[i][y]` = 4.  
+4. Add **year-value constraints**: encode years as integers: 1921=0, 1922=1, 1923=2, 1924=3 for easier indexing.  
+5. Add **conditional constraints based on problem logic**:  
+    - Only Louis or Tiffany can be assigned to 1923: for all i ∉ {Louis, Tiffany}, `assigned[i][1923]` = false.  
+    - If Mollie is assigned, she must be in 1921 or 1922: `assigned[1][0] ∨ assigned[1][1]` ⇒ enforce via implication: if Mollie is used (`assigned[1][0] ∨ assigned[1][1] ∨ assigned[1][2] ∨ assigned[1][3]`), then she must be in 0 or 1. Simplify: add `assigned[1][2] = false` and `assigned[1][3] = false`.  
+    - If Tiffany is assigned, then Ryan must be assigned: `assigned[4][0] ∨ ... ∨ assigned[4][3]` ⇒ `assigned[3][0] ∨ ... ∨ assigned[3][3]`. Encode as implication: `∧_{y} (assigned[4][y] → ∨_{z} assigned[3][z])`.  
+    - If Ryan is assigned, then Onyx must be assigned to the year immediately prior: let Ryan’s year index = r ∈ {0,1,2}, then Onyx must be assigned to r−1. Encode: for each y ∈ {0,1,2}, `assigned[3][y] → assigned[2][y-1]`. Note: if Ryan is in 1924 (year index 3), no prior year exists, so `assigned[3][3] = false` (or disallow Ryan in 1924).  
+6. Add **given scenario constraint**: both Ryan and Yoshio are assigned to the project: `assigned[3][y] = true` for exactly one y; `assigned[5][z] = true` for exactly one z. Enforce existence of at least one assignment each for Ryan and Yoshio (the global constraint ensures exactly one).  
+7. Translate the answer choices into logical statements about possible assignments:  
+    - A: Louis assigned to 1923 → `assigned[0][2] = true`.  
+    - B: Mollie assigned to 1921 → `assigned[1][0] = true`.  
+    - C: Onyx assigned to 1922 → `assigned[2][1] = true`.  
+    - D: Tiffany assigned to 1924 → `assigned[4][3] = true`.  
+    - E: Yoshio assigned to 1922 → `assigned[5][1] = true`.  
+8. For each choice, create a fresh solver, add all base constraints + scenario constraint (Ryan and Yoshio assigned), then assert the choice condition.  
+9. If the solver returns SAT, that choice **could be true**; record its index in a list `could_be_true_indices`.  
+10. The problem asks “which one could be true?”, so collect all indices for which the model is SAT and output that list (but per format, just raw plan).  
+11. Output the list of indices (0–4) corresponding to choices that are possible under the scenario.

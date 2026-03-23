@@ -1,0 +1,22 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define variables for the three birds: `"hummingbird"`, `"owl"`, and `"falcon"`.  
+   * Define the domain as positions 1, 2, and 3, where **1 = leftmost**, **2 = middle**, **3 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.  
+   * Convert "The falcon is to the right of the owl" into a constraint: `falcon > owl`.  
+   * Convert "The hummingbird is to the left of the owl" into a constraint: `hummingbird < owl`.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the single solution (the constraints uniquely determine the order).
+
+5. **Determine the Correct Answer:**  
+   * Identify which bird is in position 2 (the second from the left).  
+   * Map choice letters to birds: A → hummingbird, B → owl, C → falcon.  
+   * Select the choice corresponding to the bird found in position 2 and output its letter.

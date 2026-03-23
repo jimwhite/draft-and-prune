@@ -1,0 +1,29 @@
+1. Enumerate the five students and assign integer indices: Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4.  
+2. Create integer variables `team[i]` for each student i, where `team[i] ∈ {0 (green), 1 (red)}`.  
+3. Add **team size constraints**: one team has exactly 2 members, the other has exactly 3.  
+    - Let `count_green = Sum([If(team[i]==0,1,0) for i in range(5)])`.  
+    - Add constraint: `Or(count_green == 2, count_green == 3)`.  
+4. Add **fixed team assignments**:  
+    - Lateefah is on green: `team[2] == 0`.  
+    - Olga and Juana are on different teams: `team[4] != team[0]`.  
+5. Add **facilitator setup**: create Boolean variables `facilitator[i]` for each student i.  
+    - Exactly one facilitator per team:  
+        - `facilitator_green = Or([And(team[i]==0, facilitator[i]) for i in range(5)])`  
+        - `facilitator_red   = Or([And(team[i]==1, facilitator[i]) for i in range(5)])`  
+        - Add: `Exactly([And(team[i]==0, facilitator[i]) for i in range(5)])`  
+        - Add: `Exactly([And(team[i]==1, facilitator[i]) for i in range(5)])`  
+6. Add **given facilitator constraints**:  
+    - Olga is a facilitator: `facilitator[4] == True`.  
+    - Kelly is not a facilitator: `facilitator[1] == False`.  
+7. Add **premise constraint** for the conditional: Mei is on green team → `team[3] == 0`.  
+8. Define the five answer choices as formulas (each is a logical statement about team assignments and facilitator roles):  
+    - A: Juana is on green → `team[0] == 0`  
+    - B: Kelly is on red → `team[1] == 1`  
+    - C: Olga is on green → `team[4] == 0`  
+    - D: Lateefah is facilitator → `And(team[2]==0, facilitator[2])`  
+    - E: Mei is facilitator → `And(team[3]==0, facilitator[3])`  
+9. For each answer choice i (0 to 4):  
+    - Clone the current constraints (including Mei on green) into fresh solver.  
+    - Assert that answer choice i is **false** (negate the formula).  
+    - If the resulting system is UNSAT, then choice i **must be true** under the premise; record its index.  
+10. Output the index of the *single* forced answer choice (as per question phrasing, only one must be true).

@@ -1,0 +1,18 @@
+1. Identify all entities: bear, cow, rabbit, tiger.  
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True):  
+   - Properties (unary relations): is_blue("bear", True), is_green("bear", True), is_red("bear", True), is_cold("rabbit", True), is_nice("rabbit", True), is_blue("cow", True)  
+   - Binary relations: sees("bear", "rabbit", True), needs("cow", "tiger", True), visits("cow", "rabbit", True), needs("rabbit", "cow", True), sees("rabbit", "cow", True), sees("rabbit", "tiger", True), needs("tiger", "bear", True), needs("tiger", "rabbit", True), visits("tiger", "bear", True), visits("tiger", "cow", True)  
+3. Translate each conditional rule into a PyKe `foreach` + `assert` block:  
+   • If something is green → it visits the tiger.  
+   • If something sees the bear and is cold → the bear is green.  
+   • If the cow needs the rabbit and the rabbit needs the cow → the rabbit is red.  
+   • If something is green → it needs the cow.  
+   • If something visits the tiger → the tiger is red.  
+   • If something needs the tiger and the tiger sees the cow → the cow needs the bear.  
+   • If something sees the bear and needs the bear → it sees the cow.  
+   • If something visits the rabbit → the rabbit needs the tiger.  
+   • If something needs the bear and the bear visits the tiger → it sees the bear.  
+4. For each rule: define a `foreach` block with all required premises (using `facts.predicate(x, y, True)` as conditions), and an `assert` block for the conclusion (e.g., `facts.visits(x, "tiger", True)` or `facts.is_green("bear", True)`).  
+5. Note that the target statement “The cow visits the rabbit” is already asserted directly as a fact: `facts.visits("cow", "rabbit", True)`; thus, no inference is required to confirm it.  
+6. However, since the problem may involve non-monotonic reasoning or potential contradiction (e.g., multiple facts about same predicate), verify that no rule derivation conflicts with this fact — but in PyKe, asserted facts take precedence and rules only add new facts.  
+7. Query: use `facts.visits("cow", "rabbit", True)` to check truth value.

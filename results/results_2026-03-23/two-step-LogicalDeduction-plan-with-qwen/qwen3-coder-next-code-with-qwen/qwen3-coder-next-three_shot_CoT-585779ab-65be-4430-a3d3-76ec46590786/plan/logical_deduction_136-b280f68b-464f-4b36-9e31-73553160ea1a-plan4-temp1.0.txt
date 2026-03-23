@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to construct the constraint satisfaction model.
+
+2.  **Define Variables and Domain:**
+    * Create a list of the seven bird names as string variables: `"bluejay"`, `"owl"`, `"falcon"`, `"hawk"`, `"raven"`, `"crow"`, and `"hummingbird"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all variables to the `Problem` with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Add constraint for "The falcon is the second from the left": `falcon == 2`.
+    * Add constraint for "The crow is the rightmost": `crow == 7`.
+    * Add constraint for "The hummingbird is to the right of the blue jay": `bluejay < hummingbird`.
+    * Add constraint for "The hawk is to the right of the hummingbird": `hummingbird < hawk`.
+    * Add constraint for "The blue jay is to the right of the owl": `owl < bluejay`.
+    * Add constraint for "The raven is to the left of the falcon": `raven < falcon`.
+
+4.  **Solve for Valid Arrangements:**
+    * Call `getSolutions()` to find all satisfying assignments.
+    * Since the problem is deterministic, extract the single unique solution from the list.
+
+5.  **Identify the Leftmost Bird and Match to Choices:**
+    * The question asks for the leftmost bird, i.e., position 1.
+    * Map each choice letter ("A" through "G") to its corresponding bird name using the given choices.
+    * Examine the solution dictionary to find which bird has position value 1.
+    * Return the choice letter associated with that bird as the final answer.

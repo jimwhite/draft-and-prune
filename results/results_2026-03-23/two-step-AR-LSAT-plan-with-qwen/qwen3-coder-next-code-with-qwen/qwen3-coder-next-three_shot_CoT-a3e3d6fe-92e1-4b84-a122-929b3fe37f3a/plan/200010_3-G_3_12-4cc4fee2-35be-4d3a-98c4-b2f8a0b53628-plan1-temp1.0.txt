@@ -1,0 +1,13 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign each an integer index (0 to 7).  
+2. Create eight integer position variables `pos[comp]` for each composition, ranging from 0 to 7 (representing positions 1 to 8).  
+3. Add **all-different constraint**: all eight position variables must be pairwise distinct.  
+4. Add **condition 1 (T–F–R adjacency)**: T is either immediately before F (`pos_T == pos_F - 1`) or immediately after R (`pos_T == pos_R + 1`).  
+5. Add **condition 2 (at least two between F and R)**: `abs(pos_F - pos_R) >= 3`.  
+6. Add **condition 3 (O first or fifth)**: `pos_O == 0 OR pos_O == 4`.  
+7. Add **condition 4 (eighth is L or H)**: `pos_L == 7 OR pos_H == 7`.  
+8. Add **condition 5 (P before S)**: `pos_P < pos_S`.  
+9. Add **condition 6 (at least one between O and S)**: `abs(pos_O - pos_S) >= 2`.  
+10. For each answer choice list (string), parse it into the ordered sequence of compositions and convert to position constraints: assign `pos[comp] = i` for the i-th item (0-indexed).  
+11. For each answer choice, clone the base constraints into a fresh solver and add the explicit position constraints from that choice.  
+12. Check satisfiability for each cloned solver: if SAT, the sequence is valid; record its index (0 to 4).  
+13. Output the index of the valid sequence(s) as the answer (only one should be SAT).

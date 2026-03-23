@@ -1,0 +1,28 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin building the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven variables representing the fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** (i.e., lower number = cheaper, higher number = more expensive).
+    * Add all seven fruit variables and the domain (1–7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "The oranges are more expensive than the peaches" → `oranges > peaches`.
+        * "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4` (since more expensive = higher rank; 4th-most expensive means rank=4).
+        * "The pears are less expensive than the cantaloupes" → `pears < 4`.
+        * "The peaches are the second-most expensive" → `peaches == 6` (2nd-most expensive = rank 6; ranks: 7=1st, 6=2nd, etc.).
+        * "The mangoes are the cheapest" → `mangoes == 1`.
+        * "The kiwis are the third-cheapest" → `kiwis == 3` (cheapest=1, 2nd-cheapest=2, 3rd-cheapest=3).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (or first solution) from the returned list.
+
+5.  **Identify the Correct Choice:**
+    * The question asks which fruit is the third-most expensive. Since more expensive = higher rank, third-most expensive corresponds to **rank 5** (1st=7, 2nd=6, 3rd=5).
+    * Create a mapping dictionary from choice letters ("A" through "G") to their respective fruit names.
+    * Iterate over the choices and check which fruit in the solution has a value (rank) of 5.
+    * Output the corresponding choice letter as the answer.

@@ -1,0 +1,14 @@
+1. Enumerate the six photographers: assign indices 0–5 to Frost, Gonzalez, Heideck, Knutson, Lai, Mays.  
+2. Create Boolean variables `s[i]` and `t[i]` for each photographer i: `s[i]` = True if assigned to Silva, `t[i]` = True if assigned to Thorne.  
+3. Add **mutual exclusivity constraint**: no photographer assigned to both ceremonies: `s[i] == !t[i]` for all i (or equivalently, `!(s[i] && t[i])` and at most one true).  
+4. Add **at least-two constraint**: each ceremony has ≥2 photographers: `sum(s[i] for i in range(6)) >= 2` and `sum(t[i] for i in range(6)) >= 2`.  
+5. Add **Frost–Heideck together constraint**: Frost and Heideck assigned to same ceremony: `s[0] == s[2]` (Frost=0, Heideck=2).  
+6. Add **Lai–Mays separation constraint**: if both assigned, they must be at different ceremonies: `((s[4] && s[5]) || (t[4] && t[5])) == False` → equivalent to `!(s[4] && s[5]) && !(t[4] && t[5])`.  
+7. Add **Gonzalez→Lai conditional**: If Gonzalez at Silva, then Lai must be at Thorne: `s[1] → t[4]` (i.e., `!s[1] || t[4]`).  
+8. Add **Knutson conditional**: If Knutson NOT at Thorne, then Heideck and Mays must be at Thorne: `!t[3] → (t[2] && t[5])` (i.e., `t[3] || (t[2] && t[5])`).  
+9. For each answer choice, parse the assignment and translate into Boolean variable assignments:  
+    - Set `s[i]`/`t[i]` to True or False based on who is listed in which ceremony.  
+    - If a photographer appears in neither list, set both `s[i]` and `t[i]` to False (allowed per problem: “not all have to be assigned”).  
+10. For each choice, clone the base solver, assert the fixed assignments from the choice, and check SAT.  
+11. If SAT, append that choice’s index to `answer_index_list`.  
+12. Print the answer index list (should be exactly one).

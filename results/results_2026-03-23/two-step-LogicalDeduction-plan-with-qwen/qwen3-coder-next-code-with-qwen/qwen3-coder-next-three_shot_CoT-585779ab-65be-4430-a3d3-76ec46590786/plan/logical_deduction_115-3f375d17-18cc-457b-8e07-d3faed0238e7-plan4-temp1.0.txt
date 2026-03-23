@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven vehicles as variables: `"convertible"`, `"limousine"`, `"hatchback"`, `"bus"`, `"station_wagon"`, `"tractor"`, and `"minivan"`.
+    * Define the domain as integers 1 through 7, where **1 = oldest** and **7 = newest** (consistent with previous analogous problems using age ranking).
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Convert each statement into a constraint using `lambda` or direct equality:
+        * "The station wagon is the fourth-newest" → position = 4 (since newest=7, fourth-newest means 7−3=4).
+        * "The hatchback is older than the bus" → `hatchback < bus`.
+        * "The hatchback is the second-newest" → position = 6 (since newest=7, second-newest = 6).
+        * "The minivan is newer than the limousine" → `limousine < minivan`.
+        * "The convertible is older than the limousine" → `convertible < limousine`.
+        * "The tractor is the second-oldest" → position = 2 (oldest=1, so second-oldest=2).
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid configurations.
+    * Since the problem is deterministic, extract the single solution (or one of them if multiple exist, though uniqueness is implied).
+
+5.  **Determine the Third-Newest Vehicle:**
+    * The question asks for the vehicle that is **third-newest**, which corresponds to rank = 5 (since newest=7, second-newest=6, third-newest=5).
+    * Create a mapping from choice letters to vehicle names: `{"A": "convertible", "B": "limousine", "C": "hatchback", "D": "bus", "E": "station_wagon", "F": "tractor", "G": "minivan"}`.
+    * Iterate through the choices, find which vehicle has position 5 in the solution.
+    * Output the corresponding choice letter.

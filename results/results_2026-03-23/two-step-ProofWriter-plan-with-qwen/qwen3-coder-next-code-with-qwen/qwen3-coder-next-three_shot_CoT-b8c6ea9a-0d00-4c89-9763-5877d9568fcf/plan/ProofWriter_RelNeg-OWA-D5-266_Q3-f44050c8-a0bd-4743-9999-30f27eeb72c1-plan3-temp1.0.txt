@@ -1,0 +1,30 @@
+1. Identify all involved entities: bald_eagle, cow, dog, lion.
+2. Encode all directly stated facts using ternary predicates:
+   - eats("bald_eagle", "cow", True)
+   - eats("bald_eagle", "dog", False) → encoded as ¬eats("bald_eagle", "dog") or explicitly: eats("bald_eagle", "dog", False)
+   - is_rough("bald_eagle", True), is_round("cow", True), sees("cow", "bald_eagle", True)
+   - sees("cow", "dog", False) → encoded as sees("cow", "dog", False)
+   - visits("cow", "bald_eagle", True), visits("cow", "lion", True)
+   - is_rough("dog", True), is_young("lion", True), sees("lion", "bald_eagle", False) → sees("lion", "bald_eagle", False)
+   - sees("lion", "cow", True)
+3. Translate all conditional rules into PyKe `foreach` + `assert` format:
+   • If someone is green and eats the bald eagle → bald_eagle is not rough:  
+     `foreach is_green(?x, True) and eats(?x, "bald_eagle", True) → assert is_rough("bald_eagle", False)`
+   • If someone is big and does not see the bald eagle → bald_eagle is rough:  
+     `foreach is_big(?x, True) and sees(?x, "bald_eagle", False) → assert is_rough("bald_eagle", True)`
+   • If someone is big → visits the dog:  
+     `foreach is_big(?x, True) → assert visits(?x, "dog", True)`
+   • If someone eats the lion and is big → lion eats dog:  
+     `foreach eats(?x, "lion", True) and is_big(?x, True) → assert eats("lion", "dog", True)`
+   • If someone visits the dog → dog eats cow:  
+     `foreach visits(?x, "dog", True) → assert eats("dog", "cow", True)`
+   • If someone is rough and eats the cow → they are young:  
+     `foreach is_rough(?x, True) and eats(?x, "cow", True) → assert is_young(?x, True)`
+   • If lion eats cow → lion visits bald_eagle:  
+     `foreach eats("lion", "cow", True) → assert visits("lion", "bald_eagle", True)`
+   • If someone is big and sees the lion → they are green:  
+     `foreach is_big(?x, True) and sees(?x, "lion", True) → assert is_green(?x, True)`
+   • If someone is young → they are big:  
+     `foreach is_young(?x, True) → assert is_big(?x, True)`
+4. The query tests whether the lion is big:  
+   → Use `facts.is_big("lion", True)`

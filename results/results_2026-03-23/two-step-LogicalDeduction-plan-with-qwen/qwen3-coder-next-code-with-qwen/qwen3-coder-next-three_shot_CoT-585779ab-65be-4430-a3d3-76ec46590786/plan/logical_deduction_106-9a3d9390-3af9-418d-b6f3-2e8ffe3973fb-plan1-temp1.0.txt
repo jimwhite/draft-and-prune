@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * List the seven fruits as variables: `"watermelons"`, `"cantaloupes"`, `"pears"`, `"peaches"`, `"mangoes"`, `"kiwis"`, and `"oranges"`.  
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (higher number = higher price).  
+    * Add all variables with this domain to the `Problem`.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into a constraint using `lambda` functions or direct equality/inequality:  
+        * "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`  
+        * "The pears are less expensive than the kiwis" → `pears < kiwis`  
+        * "The kiwis are the fourth-most expensive" → `kiwis == 4`  
+        * "The mangoes are less expensive than the pears" → `mangoes < pears`  
+        * "The peaches are the cheapest" → `peaches == 1`  
+        * "The cantaloupes are more expensive than the watermelons" → `cantaloupes > watermelons`
+
+4.  **Solve for the Full Arrangement:**  
+    * Call `getSolutions()` to find all valid solutions.  
+    * Since the problem is deterministic, extract the unique solution (the first one in the list).
+
+5.  **Identify the Correct Choice:**  
+    * The question asks which fruit is fourth-most expensive, i.e., has rank `4`.  
+    * Note: The choices include a direct statement about kiwis ("F) The kiwis are the fourth-most expensive."), which is already given in the problem.  
+    * Verify the solution: Confirm that `kiwis == 4` holds (as required by input), and check which choice(s) are consistent. Since the problem states this explicitly, choice **F** must be true.  
+    * However, to follow the plan rigorously:  
+        * Create a mapping from choice letters ("A" through "G") to fruit names as per the choices.  
+        * Iterate through the solution: find which fruit has value `4`.  
+        * Return the corresponding choice letter. In this case, it will be "F".

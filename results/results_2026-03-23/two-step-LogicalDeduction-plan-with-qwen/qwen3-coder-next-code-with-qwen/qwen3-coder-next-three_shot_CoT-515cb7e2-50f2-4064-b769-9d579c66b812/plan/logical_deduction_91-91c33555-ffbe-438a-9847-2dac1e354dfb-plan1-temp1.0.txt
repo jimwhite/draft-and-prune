@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five vehicles: `"tractor"`, `"truck"`, `"bus"`, `"minivan"`, `"convertible"`.  
+   * Define the domain as integers 1 through 5, where **1 = oldest**, and **5 = newest**.  
+   * Add all variables to the problem with this domain.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure unique rankings.  
+   * Add constraint: `"bus is newer than the tractor"` → `bus > tractor`.  
+   * Add constraint: `"convertible is older than the tractor"` → `convertible < tractor`.  
+   * Add constraint: `"truck is the second-newest"` → `truck == 4` (since newest = 5, second-newest = 4).  
+   * Add constraint: `"minivan is older than the convertible"` → `minivan < convertible`.
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (since the puzzle is well-constrained).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which vehicle is the **third-newest**, i.e., rank **3** (since 5=newest, 4=second-newest, 3=third-newest).  
+   * Create a mapping from choice letters to vehicle names:  
+        A → `"tractor"`, B → `"truck"`, C → `"bus"`, D → `"minivan"`, E → `"convertible"`.  
+   * Iterate through choices, find the vehicle in the solution with position value 3.  
+   * Return the corresponding letter as the answer.

@@ -1,0 +1,23 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the three books as variables: `"purple"`, `"black"`, and `"blue"`.
+    * Define the domain as integer positions 1, 2, and 3, where **1 = leftmost**, **2 = middle (second from left)**, and **3 = rightmost**.
+    * Add these variables with their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.
+    * Translate the first statement: "The purple book is to the right of the blue book" → `purple > blue` (using a lambda constraint).
+    * Translate the second statement: "The black book is the second from the left" → `black == 2`.
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Extract the unique solution (since the problem is constrained enough for a single solution).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which statement is true; the choices explicitly describe positions.
+    * Note that choice B directly matches the given constraint ("The black book is the second from the left"), so it must be true.
+    * Alternatively, verify by checking the solution: confirm that the book at position 2 is `"black"`, and compare against the choices.
+    * Return choice letter **B** as the answer.

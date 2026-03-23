@@ -1,0 +1,24 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the three fruits: `"apples"`, `"peaches"`, and `"loquats"`.  
+   * Assign a domain of integers from 1 to 3, where **1 = least expensive**, **2 = second-most expensive**, and **3 = most expensive**.  
+   * Add these variables with their domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a distinct price rank.  
+   * Translate the statements into constraints using lambda functions:  
+     - "The loquats are less expensive than the apples" → `loquats < apples` (i.e., loquat's rank < apple's rank).  
+     - "The peaches are more expensive than the apples" → `apples < peaches` (i.e., apple's rank < peach's rank).  
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to find all valid solutions. Given the linear order implied by the constraints, there will be exactly one solution.  
+   * Extract the single solution dictionary.
+
+5. **Identify the Correct Choice:**  
+   * The question asks which fruit is the **second-most expensive**, i.e., has rank **2**.  
+   * Create a mapping from choice letters ("A", "B", "C") to fruit names:  
+     - "A" → `"apples"`, "B" → `"peaches"`, "C" → `"loquats"`.  
+   * Check which fruit in the solution has value 2, and output the corresponding letter.

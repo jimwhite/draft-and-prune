@@ -1,0 +1,13 @@
+1. Enumerate the five candidates and assign them integer codes (e.g., Jaramillo=0, Kayne=1, Landon=2, Novetzke=3, Ong=4).  
+2. Create integer variables for ambassador assignments: `v_en` (Venezuela), `y_en` (Yemen), `z_en` (Zambia), each ranging from 0 to 4.  
+3. Add **distinctness constraint**: `v_en`, `y_en`, `z_en` are pairwise distinct.  
+4. Add **constraint 1 (Kayne/XOR/Novetzke)**: Exactly one of Kayne or Novetzke is assigned (i.e., `(Kayne_assigned XOR Novetzke_assigned)`), where `Kayne_assigned = (v_en==1 ∨ y_en==1 ∨ z_en==1)` and similarly for Novetzke.  
+5. Add **constraint 2 (Jaramillo → Kayne)**: If Jaramillo is assigned, then Kayne must be assigned: `(Jaramille_assigned → Kayne_assigned)`.  
+6. Add **constraint 3 (Ong→Venezuela → ¬Kayne→Yemen)**: If `v_en == 4` (Ong to Venezuela), then `y_en != 1` (Kayne not to Yemen).  
+7. Add **constraint 4 (Landon only to Zambia)**: If Landon is assigned, then his assignment must be Zambia: `(Landon_assigned → z_en == 2)`.  
+8. Translate the five answer choices into pairs of candidate indices: e.g., ['Jaramillo and Novetzke'] → (0,3), etc.  
+9. Define `answer_index_list = []`. For each answer choice (pair `(a,b)`), do:  
+   a. Clone the base constraints into a fresh solver.  
+   b. Assert that candidates `a` and `b` are the two unassigned (i.e., none of `v_en`, `y_en`, `z_en` equals `a` or `b`).  
+   c. If the model is SAT, then this pair *could* be unassigned; append its index to `answer_index_list`.  
+10. Print the answer index list (indices of feasible unassigned pairs).

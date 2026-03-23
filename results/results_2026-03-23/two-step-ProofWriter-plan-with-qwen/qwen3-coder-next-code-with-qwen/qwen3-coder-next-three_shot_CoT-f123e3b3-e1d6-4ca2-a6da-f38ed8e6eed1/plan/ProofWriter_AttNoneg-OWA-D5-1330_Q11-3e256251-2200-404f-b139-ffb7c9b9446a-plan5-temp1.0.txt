@@ -1,0 +1,27 @@
+1. Identify all entities involved: Bob, Charlie, Dave, Harry.
+2. Encode all explicitly stated facts using ternary predicates of the form property(entity, True) or relation(entity1, entity2, True); specifically:
+   - is_red("Bob", True)
+   - is_young("Bob", True)
+   - is_big("Charlie", True), is_green("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True), is_young("Charlie", True)
+   - is_big("Dave", True)
+   - is_rough("Harry", True), is_round("Harry", True), is_young("Harry", True)
+3. Express all universally quantified rules as PyKe `foreach` + `assert` statements:
+   • All rough and white → young
+   • All big → round
+   • All white and red → rough
+   • All round → green
+   • All big → white
+   • If Harry is round then Harry is big (this is a ground rule; treat as `foreach` with fixed subject "Harry")
+   • All rough and young → red
+   • If something is young → it is green
+   • All green → red
+4. For each rule, translate into a `foreach` block:
+   - For unary composite properties (e.g., “rough and white”), match two `is_...` facts in the condition of `foreach`.
+   - For unary conditional rules (e.g., “young → green”), use a single `is_young` premise and assert `is_green`.
+   - For ground conditionals (e.g., Harry-specific), use fixed constants in `foreach` or a dedicated rule with hardcoded entity.
+5. The query asks whether Dave is young: 
+   → Use `facts.is_young("Dave", True)` to check if it is entailed.
+   Since Dave’s properties are only partially given (only `is_big`), and no rules directly apply to Dave without inferred intermediate properties, the plan must determine whether enough inference steps (via the chain of rules) yield `is_young("Dave", True)` or its negation.
+6. Note: Since all big things → white, and Dave is big ⇒ Dave is white; then via “all big → round” (already known), and “all round → green”, so Dave is green; then via “all green → red”, Dave is red. Now we have Dave: big ⇒ white, round, green, red — but no rule connects these to being young unless combined with other properties (e.g., rough & white ⇒ young, or rough & young ⇒ red — but we lack rough for Dave). Harry is round ⇒ big (ground), and then via other rules, but these do not apply to Dave. Therefore, no path yields `is_young("Dave", True)`, and there is no rule stating anything implies ¬young directly. So the query expects testing for truth only, not falsity.
+7. In PyKe, absence of a fact does *not* imply its negation; therefore, if `is_young("Dave", True)` is not derivable, the answer is *unknown*. The plan must focus on encoding all rules and facts precisely to see whether inference can derive it — but the answer will be unknown unless a contradiction arises or it follows inevitably.
+8. Final query: `facts.is_young("Dave", True)` — evaluate whether this fact can be asserted via the rules; if not, answer is unknown.

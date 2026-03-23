@@ -1,0 +1,15 @@
+1. Identify all entities involved: bald_eagle, bear, dog, lion.
+2. Define ternary predicates for properties and relations: is_blue(subject, boolean), is_red(subject, boolean), is_nice(subject, boolean), likes(subject, object, True), needs(subject, object, True), chases(subject, object, True).
+3. Encode all explicitly stated facts as facts.predicate(subj, obj, value), including negative facts (e.g., is_blue("bear", False), needs("dog", "bald_eagle", False)).
+4. Translate each conditional statement into PyKe rules using `foreach` blocks for the antecedent condition and `assert` for the consequent:
+   • If something likes the lion and it is not red → it chases the lion.
+   • If something is red and needs the bald eagle → the bald eagle needs the lion.
+   • If something is round → it does not like the dog.
+   • If the bald eagle needs the dog → the dog is round.
+   • If something likes the dog → it likes the bald eagle.
+   • If something chases the lion and the lion likes the dog → the dog does not like the lion.
+   • If the bear likes the lion → the lion likes the dog.
+   • If something likes the bear → the bear likes the lion.
+   • If something is round → it likes the bear.
+5. For rules involving negation of properties (e.g., “not red”, “does not like”), use `foreach` with conditionals that explicitly check for negated predicates using PyKe’s negative graph or ground terms appropriately (e.g., `not (likes(x, "dog", True))` or `~facts.likes(x, "dog", True)` depending on PyKe syntax).
+6. Derive whether the dog does not need the dog: query using facts.needs("dog", "dog", False).

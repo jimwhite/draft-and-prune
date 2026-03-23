@@ -1,0 +1,33 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven variables corresponding to the book titles: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.
+    * Set the domain as integers from 1 to 7, where **1 = leftmost position** and **7 = rightmost position**.
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that all books occupy distinct positions by adding an `AllDifferentConstraint` over the seven book variables.
+
+4.  **Translate Each Statement into Constraints:**
+    * "The yellow book is the rightmost" → `yellow == 7`.
+    * "The blue book is to the left of the orange book" → `blue < orange`.
+    * "The green book is to the right of the white book" → `white < green`.
+    * "The blue book is to the right of the green book" → `green < blue`.
+    * "The black book is the fourth from the left" → `black == 4`.
+    * "The brown book is the third from the right" → In a 7-position line, third from the right means position `7 - 3 + 1 = 5`, so `brown == 5`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions satisfying the constraints.
+    * Extract the unique solution (since the problem is deterministic and consistent).
+
+6.  **Interpret the Question:**
+    * The question asks: "Which of the following is true?" with options specifying which book is third from the left (i.e., position 3).
+    * Identify the book assigned to position 3 in the solution.
+
+7.  **Map Solution to Answer Choices:**
+    * Create a mapping from choice letters (A–G) to book names as per the options:
+        - A: "brown", B: "white", C: "black", D: "yellow", E: "orange", F: "blue", G: "green"
+    * Find which book in the solution has position 3.
+    * Return the corresponding choice letter.

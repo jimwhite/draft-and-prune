@@ -1,0 +1,32 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five books as variables: `"yellow"`, `"gray"`, `"red"`, `"black"`, and `"white"`.  
+   * Define the domain for each variable as integers 1 through 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all five variables to the `Problem` instance with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate each natural-language statement into a constraint using `addConstraint` and lambda functions:  
+     - "The gray book is to the left of the yellow book" → `lambda g, y: g < y`  
+     - "The white book is to the left of the red book" → `lambda w, r: w < r`  
+     - "The black book is to the right of the red book" → `lambda b, r: b > r`  
+     - "The black book is to the left of the gray book" → `lambda b, g: b < g`  
+   * Add each of these four constraints to the problem.
+
+4. **Solve for All Valid Arrangements:**  
+   * Call `getSolutions()` to retrieve all solutions satisfying the constraints.  
+   * Since the problem is deterministic and consistent, there will be exactly one solution.
+
+5. **Determine the Third-from-Left Book:**  
+   * The question asks which book is in position 3 (third from the left).  
+   * Iterate through the solution dictionary to find which book has value 3.  
+   * Map the identified book name to its corresponding choice letter (A–E) using a lookup dictionary:  
+     - `"yellow"` → "A"  
+     - `"gray"` → "B"  
+     - `"red"` → "C"  
+     - `"black"` → "D"  
+     - `"white"` → "E"  
+   * Output the letter corresponding to the book at position 3.

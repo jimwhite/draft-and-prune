@@ -1,0 +1,30 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven fruits as variables: `"plums"`, `"kiwis"`, `"cantaloupes"`, `"pears"`, `"watermelons"`, `"apples"`, and `"loquats"`.  
+   * Define a domain of integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** (to align with standard “rank” semantics: lower = cheaper, higher = more expensive).  
+   * Add all seven fruit variables and their domain (1–7) to the problem.
+
+3. **Translate All Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+   * Convert each statement into a lambda constraint:  
+     - "The watermelons are more expensive than the cantaloupes" → `watermelons > cantaloupes`  
+     - "The apples are less expensive than the cantaloupes" → `apples < cantaloupes`  
+     - "The watermelons are the second-most expensive" → `watermelons == 6` (since 7 is most expensive, 6 is second-most)  
+     - "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+     - "The apples are more expensive than the loquats" → `apples > loquats`  
+     - "The loquats are the third-cheapest" → `loquats == 3` (since cheapest = 1, second-cheapest = 2, third-cheapest = 3)  
+     - "The plums are the cheapest" → `plums == 1`
+
+4. **Solve for All Valid Assignments:**  
+   * Use `getSolutions()` to find all possible rank assignments satisfying the constraints.  
+   * Extract the unique solution (or any one, if multiple exist—though uniqueness is expected here).
+
+5. **Identify the Third-Most-Expensive Fruit:**  
+   * The third-most-expensive corresponds to rank **5** (since 7 = most expensive, 6 = second-most, 5 = third-most).  
+   * Create a dictionary mapping choice letters (`'A'` through `'G'`) to their respective fruit names:  
+     - `'A'`: `"plums"`, `'B'`: `"kiwis"`, `'C'`: `"cantaloupes"`, `'D'`: `"pears"`, `'E'`: `"watermelons"`, `'F'`: `"apples"`, `'G'`: `"loquats"`  
+   * Search the solved solution for the fruit with rank = 5.  
+   * Return the corresponding choice letter as the answer.

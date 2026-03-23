@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven vehicle variables as strings: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"`.
+    * Assign a numerical domain from 1 to 7, where **1 = oldest** and **7 = newest**, as implied by "newest/oldest" ordering.
+    * Add all variables and the domain to the `Problem` instance.
+
+3.  **Add Constraints Based on Statements:**
+    * Add an `AllDifferentConstraint` to ensure all vehicles have distinct age ranks.
+    * Translate each statement into a constraint:
+        * "The station wagon is the fourth-newest" → position of `"station_wagon"` = 4 (since 1=oldest, 7=newest: fourth-newest means rank = 7 - 4 + 1 = 4).
+        * "The minivan is the third-newest" → `"minivan"` = 5 (7 - 3 + 1 = 5).
+        * "The tractor is the second-oldest" → `"tractor"` = 2 (oldest=1, second-oldest=2).
+        * "The convertible is older than the station wagon" → `"convertible"` < `"station_wagon"` (i.e., `convertible` rank < 4).
+        * "The truck is newer than the bus" → `"bus"` < `"truck"` (older vehicles have smaller rank numbers; newer = larger rank).
+        * "The hatchback is older than the convertible" → `"hatchback"` < `"convertible"`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments satisfying all constraints.
+    * Extract the unique solution (since the problem is well-constrained, only one should exist).
+
+5.  **Determine the Newest Vehicle:**
+    * The newest vehicle corresponds to rank **7**.
+    * Create a mapping from choice letters (A–G) to vehicle names: 
+        `{"A": "truck", "B": "hatchback", "C": "minivan", "D": "bus", "E": "tractor", "F": "station_wagon", "G": "convertible"}`.
+    * Find the vehicle in the solution with rank 7, then output the corresponding choice letter.

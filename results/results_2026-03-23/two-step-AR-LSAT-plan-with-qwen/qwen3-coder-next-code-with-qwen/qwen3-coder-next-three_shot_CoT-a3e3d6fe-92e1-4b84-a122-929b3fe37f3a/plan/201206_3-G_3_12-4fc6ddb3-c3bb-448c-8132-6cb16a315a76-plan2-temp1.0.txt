@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Create integer variables for each representative's zone assignment (1, 2, or 3).  
+3. Add **mutual exclusion constraint**: each representative is assigned exactly one zone (implicitly handled by domain and later grouping constraints).  
+4. Add **Parra-or-Tiao-in-Zone-1 constraint**: Exactly one of Parra or Tiao is in Zone 1.  
+5. Add **Tiao-or-Udall-in-Zone-2 constraint**: Exactly one of Tiao or Udall is in Zone 2.  
+6. Add **Parra-and-Quinn-same-zone constraint**: Parra and Quinn are assigned to the same zone.  
+7. Add **Stuckey-and-Udall-same-zone constraint**: Stuckey and Udall are assigned to the same zone.  
+8. Add **Zone-3-size constraint**: Number of representatives in Zone 3 is strictly greater than number in Zone 2.  
+9. Precompute zone counts for each assignment candidate (sum of indicators per zone) to verify the size constraint efficiently.  
+10. For each choice in the answer options:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert fixed zone assignments from the choice (e.g., Kim → Zone 1, Parra → Zone 1, etc.).  
+    - Solve the constrained instance.  
+    - If SAT and zone counts satisfy Zone-3-size > Zone-2-size (already encoded or verify post-solve), the choice is feasible.  
+11. Collect indices of all feasible choices into a list and output the first (or all) satisfying choice(s).

@@ -1,0 +1,590 @@
+{
+  "problem": {
+    "context": "During a recital, two pianists—Wayne and Zara—will perform solos. There will be five solos altogether, performed one immediately after another. Each solo will be either a modern piece or a traditional piece. The choice of pianist and type of piece for the solos must conform to the following conditions: The third solo is a traditional piece. Exactly two of the traditional pieces are performed consecutively. In the fourth solo, either Wayne performs a traditional piece or Zara performs a modern piece. The pianist who performs the second solo does not perform the fifth solo. No traditional piece is performed until Wayne performs at least one modem piece.",
+    "question": "If in the fifth solo Wayne performs a traditional piece, which one of the following could be true?",
+    "answers": [
+      "Zara performs the first solo.",
+      "Wayne performs the second solo.",
+      "Zara performs the third solo.",
+      "The second solo is a modem piece.",
+      "The fourth solo is a traditional piece."
+    ],
+    "label": 2,
+    "id_string": "201206_3-G_4_22"
+  },
+  "timing": 955.697160243988,
+  "all_solver_outputs": [
+    "[]",
+    "[2]",
+    "[]",
+    "[2]",
+    "[2]",
+    "[2]",
+    "[0, 2]",
+    "[]",
+    "[]",
+    "[]",
+    "[]",
+    "[2, 3, 4]",
+    "[]",
+    "[2]",
+    "[2]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 654,
+        "total_tokens": 2328
+      },
+      "plan_generation_api_time_only": 18.9612774848938,
+      "code_generation_usage": {
+        "prompt_tokens": 3698,
+        "completion_tokens": 741,
+        "total_tokens": 4439
+      },
+      "code_generation_api_time_only": 23.925382375717163,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5372,
+        "completion_tokens": 1395,
+        "total_tokens": 6767
+      },
+      "path_api_time_only": 42.88665986061096,
+      "solver_time_only": 0.07768702507019043
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 596,
+        "total_tokens": 2270
+      },
+      "plan_generation_api_time_only": 16.4579598903656,
+      "code_generation_usage": {
+        "prompt_tokens": 3638,
+        "completion_tokens": 673,
+        "total_tokens": 4311
+      },
+      "code_generation_api_time_only": 20.510193347930908,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5312,
+        "completion_tokens": 1269,
+        "total_tokens": 6581
+      },
+      "path_api_time_only": 36.96815323829651,
+      "solver_time_only": 0.08192634582519531
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 1727,
+        "total_tokens": 3401
+      },
+      "plan_generation_api_time_only": 46.77424192428589,
+      "code_generation_usage": {
+        "prompt_tokens": 4770,
+        "completion_tokens": 1284,
+        "total_tokens": 6054
+      },
+      "code_generation_api_time_only": 35.72391223907471,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 6444,
+        "completion_tokens": 3011,
+        "total_tokens": 9455
+      },
+      "path_api_time_only": 82.4981541633606,
+      "solver_time_only": 0.08304333686828613
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 738,
+        "total_tokens": 2412
+      },
+      "plan_generation_api_time_only": 23.360056161880493,
+      "code_generation_usage": {
+        "prompt_tokens": 3782,
+        "completion_tokens": 1007,
+        "total_tokens": 4789
+      },
+      "code_generation_api_time_only": 26.97414803504944,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5456,
+        "completion_tokens": 1745,
+        "total_tokens": 7201
+      },
+      "path_api_time_only": 50.33420419692993,
+      "solver_time_only": 0.0771646499633789
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 571,
+        "total_tokens": 2245
+      },
+      "plan_generation_api_time_only": 16.7420334815979,
+      "code_generation_usage": {
+        "prompt_tokens": 3615,
+        "completion_tokens": 717,
+        "total_tokens": 4332
+      },
+      "code_generation_api_time_only": 21.394472122192383,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5289,
+        "completion_tokens": 1288,
+        "total_tokens": 6577
+      },
+      "path_api_time_only": 38.13650560379028,
+      "solver_time_only": 0.08331704139709473
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 477,
+        "total_tokens": 2151
+      },
+      "plan_generation_api_time_only": 14.713378190994263,
+      "code_generation_usage": {
+        "prompt_tokens": 3521,
+        "completion_tokens": 720,
+        "total_tokens": 4241
+      },
+      "code_generation_api_time_only": 20.021570920944214,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5195,
+        "completion_tokens": 1197,
+        "total_tokens": 6392
+      },
+      "path_api_time_only": 34.73494911193848,
+      "solver_time_only": 0.0810391902923584
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 629,
+        "total_tokens": 2303
+      },
+      "plan_generation_api_time_only": 18.38373327255249,
+      "code_generation_usage": {
+        "prompt_tokens": 3673,
+        "completion_tokens": 871,
+        "total_tokens": 4544
+      },
+      "code_generation_api_time_only": 25.140196561813354,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5347,
+        "completion_tokens": 1500,
+        "total_tokens": 6847
+      },
+      "path_api_time_only": 43.523929834365845,
+      "solver_time_only": 0.07136750221252441
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 1236,
+        "total_tokens": 2910
+      },
+      "plan_generation_api_time_only": 36.896198749542236,
+      "code_generation_usage": {
+        "prompt_tokens": 4280,
+        "completion_tokens": 1334,
+        "total_tokens": 5614
+      },
+      "code_generation_api_time_only": 37.229201793670654,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5954,
+        "completion_tokens": 2570,
+        "total_tokens": 8524
+      },
+      "path_api_time_only": 74.12540054321289,
+      "solver_time_only": 0.08045411109924316
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 531,
+        "total_tokens": 2205
+      },
+      "plan_generation_api_time_only": 15.023120403289795,
+      "code_generation_usage": {
+        "prompt_tokens": 3575,
+        "completion_tokens": 743,
+        "total_tokens": 4318
+      },
+      "code_generation_api_time_only": 22.51680040359497,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5249,
+        "completion_tokens": 1274,
+        "total_tokens": 6523
+      },
+      "path_api_time_only": 37.539920806884766,
+      "solver_time_only": 0.07750582695007324
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 729,
+        "total_tokens": 2403
+      },
+      "plan_generation_api_time_only": 20.533862829208374,
+      "code_generation_usage": {
+        "prompt_tokens": 3773,
+        "completion_tokens": 739,
+        "total_tokens": 4512
+      },
+      "code_generation_api_time_only": 20.452232837677002,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5447,
+        "completion_tokens": 1468,
+        "total_tokens": 6915
+      },
+      "path_api_time_only": 40.986095666885376,
+      "solver_time_only": 0.07953572273254395
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 560,
+        "total_tokens": 2234
+      },
+      "plan_generation_api_time_only": 16.79668164253235,
+      "code_generation_usage": {
+        "prompt_tokens": 3604,
+        "completion_tokens": 1137,
+        "total_tokens": 4741
+      },
+      "code_generation_api_time_only": 32.20425987243652,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5278,
+        "completion_tokens": 1697,
+        "total_tokens": 6975
+      },
+      "path_api_time_only": 49.00094151496887,
+      "solver_time_only": 0.08266258239746094
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 663,
+        "total_tokens": 2337
+      },
+      "plan_generation_api_time_only": 20.0074725151062,
+      "code_generation_usage": {
+        "prompt_tokens": 3707,
+        "completion_tokens": 1430,
+        "total_tokens": 5137
+      },
+      "code_generation_api_time_only": 40.451857566833496,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5381,
+        "completion_tokens": 2093,
+        "total_tokens": 7474
+      },
+      "path_api_time_only": 60.4593300819397,
+      "solver_time_only": 0.08249640464782715
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 619,
+        "total_tokens": 2293
+      },
+      "plan_generation_api_time_only": 19.63172197341919,
+      "code_generation_usage": {
+        "prompt_tokens": 3663,
+        "completion_tokens": 894,
+        "total_tokens": 4557
+      },
+      "code_generation_api_time_only": 26.44874358177185,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5337,
+        "completion_tokens": 1513,
+        "total_tokens": 6850
+      },
+      "path_api_time_only": 46.08046555519104,
+      "solver_time_only": 0.08343815803527832
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 745,
+        "total_tokens": 2419
+      },
+      "plan_generation_api_time_only": 21.258476972579956,
+      "code_generation_usage": {
+        "prompt_tokens": 3789,
+        "completion_tokens": 816,
+        "total_tokens": 4605
+      },
+      "code_generation_api_time_only": 25.62547731399536,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5463,
+        "completion_tokens": 1561,
+        "total_tokens": 7024
+      },
+      "path_api_time_only": 46.88395428657532,
+      "solver_time_only": 0.08099818229675293
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1674,
+        "completion_tokens": 6196,
+        "total_tokens": 7870
+      },
+      "plan_generation_api_time_only": 168.96326804161072,
+      "code_generation_usage": {
+        "prompt_tokens": 9240,
+        "completion_tokens": 1126,
+        "total_tokens": 10366
+      },
+      "code_generation_api_time_only": 35.55665421485901,
+      "repair_usage_total": {
+        "prompt_tokens": 1257,
+        "completion_tokens": 1129,
+        "total_tokens": 2386
+      },
+      "repair_api_time_only_total": 31.467666625976562,
+      "path_usage_total": {
+        "prompt_tokens": 12171,
+        "completion_tokens": 8451,
+        "total_tokens": 20622
+      },
+      "path_api_time_only": 235.9875888824463,
+      "solver_time_only": 0.11942291259765625
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 88695,
+    "completion_tokens": 32032,
+    "total_tokens": 120727
+  },
+  "api_time_only_total": 920.1462533473969,
+  "solver_time_only_total": 1.2420589923858643,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Solo positions: 0 to 4 (1st to 5th)\np = [Bool(f\"p_{i}\") for i in range(5)]  # True if Wayne performs solo i\nt = [Bool(f\"t_{i}\") for i in range(5)]  # True if solo i is traditional\n\nsolver = Solver()\n\n# Third solo is traditional\nsolver.add(t[2])\n\n# Exactly one pair of consecutive traditional solos, no three in a row\n# Enumerate all valid t patterns with exactly one adjacent pair and t[2]=True\nvalid_t_patterns = [\n    [False, True, True, False, False],  # pair at (1,2)\n    [True, True, False, False, True],   # pair at (0,1), isolated at 4\n    [False, True, True, False, True],   # pair at (1,2), isolated at 4\n    [False, False, True, True, False]   # pair at (2,3)\n]\n\n# Add disjunction of valid patterns\npattern_constraints = []\nfor pattern in valid_t_patterns:\n    conj = And(*[t[i] == pattern[i] for i in range(5)])\n    pattern_constraints.append(conj)\nsolver.add(Or(*pattern_constraints))\n\n# Hypothesis: fifth solo Wayne performs traditional piece\nsolver.add(p[4], t[4])\n\n# Fourth solo constraint: t[3] == p[3]\nsolver.add(t[3] == p[3])\n\n# Pianist constraint: solo 2 pianist ≠ solo 5 pianist\nsolver.add(p[1] != p[4])\n\n# No traditional piece until Wayne performs at least one modern piece\n# First tradtional must be preceded by Wayne-modern\n# Since t[2]=True and we have valid patterns, enforce for each pattern:\n# Pattern 0: [F,T,T,F,F] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 2: [F,T,T,F,T] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 3: [F,F,T,T,F] → first tradtional at index 2, need (p[0]=True & t[0]=False) or (p[1]=True & t[1]=False)\n# Pattern 1: [T,T,F,F,T] → first tradtional at index 0 → invalid (no prior solo)\n# So exclude pattern 1 and enforce constraints for others\n\n# Exclude pattern with first tradtional at index 0\nsolver.add(Not(And(t[0], t[1])))\n\n# Enforce Wayne-modern before first tradtional\n# For patterns where first tradtional at index 1: need p[0] & !t[0]\n# For patterns where first tradtional at index 2: need (p[0] & !t[0]) or (p[1] & !t[1])\n# Since t[2]=True, first tradtional ≤ 2\n# If t[0]=False and t[1]=False, first tradtional=2 → need (p[0] & !t[0]) or (p[1] & !t[1])\n# If t[1]=True, first tradtional=1 → need p[0] & !t[0]\n# Combine: (t[0] => False) and ((t[1] & p[0]) | (!t[1] & (p[0] | p[1])))\n# Simpler: enforce that before first tradtional, there's Wayne-modern\n# Since only 5 solos, check cases:\n# We know t[2]=True. Cases:\n#   Case 1: t[0]=False, t[1]=True → need p[0] & !t[0]\n#   Case 2: t[0]=False, t[1]=False → need (p[0] & !t[0]) or (p[1] & !t[1])\n#   Case 3: t[0]=True → invalid (first tradtional at 0)\n# So:\nsolver.add(Implies(t[1], And(Not(t[0]), p[0])))\nsolver.add(Implies(And(Not(t[0]), Not(t[1])), Or(And(p[0], Not(t[0])), And(p[1], Not(t[1])))))\n\n# Answer choices\nanswer_choices = [\n    (\"Zara performs the first solo.\", Not(p[0])),\n    (\"Wayne performs the second solo.\", p[1]),\n    (\"Zara performs the third solo.\", Not(p[2])),\n    (\"The second solo is a modern piece.\", Not(t[1])),\n    (\"The fourth solo is a traditional piece.\", t[3])\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\n```",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Solo positions: 0 to 4 (1st to 5th)\np = [Bool(f\"p_{i}\") for i in range(5)]  # True if Wayne performs solo i\nt = [Bool(f\"t_{i}\") for i in range(5)]  # True if solo i is traditional\n\nsolver = Solver()\n\n# Third solo is traditional\nsolver.add(t[2])\n\n# Exactly one pair of consecutive traditional solos, no three in a row\n# Enumerate all valid t patterns with exactly one adjacent pair and t[2]=True\nvalid_t_patterns = [\n    [False, True, True, False, False],  # pair at (1,2)\n    [True, True, False, False, True],   # pair at (0,1), isolated at 4\n    [False, True, True, False, True],   # pair at (1,2), isolated at 4\n    [False, False, True, True, False]   # pair at (2,3)\n]\n\n# Add disjunction of valid patterns\npattern_constraints = []\nfor pattern in valid_t_patterns:\n    conj = And(*[t[i] == pattern[i] for i in range(5)])\n    pattern_constraints.append(conj)\nsolver.add(Or(*pattern_constraints))\n\n# Hypothesis: fifth solo Wayne performs traditional piece\nsolver.add(p[4], t[4])\n\n# Fourth solo constraint: t[3] == p[3]\nsolver.add(t[3] == p[3])\n\n# Pianist constraint: solo 2 pianist ≠ solo 5 pianist\nsolver.add(p[1] != p[4])\n\n# No traditional piece until Wayne performs at least one modern piece\n# First tradtional must be preceded by Wayne-modern\n# Since t[2]=True and we have valid patterns, enforce for each pattern:\n# Pattern 0: [F,T,T,F,F] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 2: [F,T,T,F,T] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 3: [F,F,T,T,F] → first tradtional at index 2, need (p[0]=True & t[0]=False) or (p[1]=True & t[1]=False)\n# Pattern 1: [T,T,F,F,T] → first tradtional at index 0 → invalid (no prior solo)\n# So exclude pattern 1 and enforce constraints for others\n\n# Exclude pattern with first tradtional at index 0\nsolver.add(Not(And(t[0], t[1])))\n\n# Enforce Wayne-modern before first tradtional\n# For patterns where first tradtional at index 1: need p[0] & !t[0]\n# For patterns where first tradtional at index 2: need (p[0] & !t[0]) or (p[1] & !t[1])\n# Since t[2]=True, first tradtional ≤ 2\n# If t[0]=False and t[1]=False, first tradtional=2 → need (p[0] & !t[0]) or (p[1] & !t[1])\n# If t[1]=True, first tradtional=1 → need p[0] & !t[0]\n# Combine: (t[0] => False) and ((t[1] & p[0]) | (!t[1] & (p[0] | p[1])))\n# Simpler: enforce that before first tradtional, there's Wayne-modern\n# Since only 5 solos, check cases:\n# We know t[2]=True. Cases:\n#   Case 1: t[0]=False, t[1]=True → need p[0] & !t[0]\n#   Case 2: t[0]=False, t[1]=False → need (p[0] & !t[0]) or (p[1] & !t[1])\n#   Case 3: t[0]=True → invalid (first tradtional at 0)\n# So:\nsolver.add(Implies(t[1], And(Not(t[0]), p[0])))\nsolver.add(Implies(And(Not(t[0]), Not(t[1])), Or(And(p[0], Not(t[0])), And(p[1], Not(t[1])))))\n\n# Answer choices\nanswer_choices = [\n    (\"Zara performs the first solo.\", Not(p[0])),\n    (\"Wayne performs the second solo.\", p[1]),\n    (\"Zara performs the third solo.\", Not(p[2])),\n    (\"The second solo is a modern piece.\", Not(t[1])),\n    (\"The fourth solo is a traditional piece.\", t[3])\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\n```\nError message from solver:\nZ3 execution error (return code 1).\nStderr:   File \"/tmp/tmpt5k0qacf.py\", line 85\n    ```\n    ^\nSyntaxError: invalid syntax\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Solo positions: 0 to 4 (1st to 5th)\np = [Bool(f\"p_{i}\") for i in range(5)]  # True if Wayne performs solo i\nt = [Bool(f\"t_{i}\") for i in range(5)]  # True if solo i is traditional\n\nsolver = Solver()\n\n# Third solo is traditional\nsolver.add(t[2])\n\n# Exactly one pair of consecutive traditional solos, no three in a row\n# Enumerate all valid t patterns with exactly one adjacent pair and t[2]=True\nvalid_t_patterns = [\n    [False, True, True, False, False],  # pair at (1,2)\n    [True, True, False, False, True],   # pair at (0,1), isolated at 4\n    [False, True, True, False, True],   # pair at (1,2), isolated at 4\n    [False, False, True, True, False]   # pair at (2,3)\n]\n\n# Add disjunction of valid patterns\npattern_constraints = []\nfor pattern in valid_t_patterns:\n    conj = And(*[t[i] == pattern[i] for i in range(5)])\n    pattern_constraints.append(conj)\nsolver.add(Or(*pattern_constraints))\n\n# Hypothesis: fifth solo Wayne performs traditional piece\nsolver.add(p[4], t[4])\n\n# Fourth solo constraint: t[3] == p[3]\nsolver.add(t[3] == p[3])\n\n# Pianist constraint: solo 2 pianist ≠ solo 5 pianist\nsolver.add(p[1] != p[4])\n\n# No traditional piece until Wayne performs at least one modern piece\n# First tradtional must be preceded by Wayne-modern\n# Since t[2]=True and we have valid patterns, enforce for each pattern:\n# Pattern 0: [F,T,T,F,F] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 2: [F,T,T,F,T] → first tradtional at index 1, need p[0]=True & t[0]=False\n# Pattern 3: [F,F,T,T,F] → first tradtional at index 2, need (p[0]=True & t[0]=False) or (p[1]=True & t[1]=False)\n# Pattern 1: [T,T,F,F,T] → first tradtional at index 0 → invalid (no prior solo)\n# So exclude pattern 1 and enforce constraints for others\n\n# Exclude pattern with first tradtional at index 0\nsolver.add(Not(And(t[0], t[1])))\n\n# Enforce Wayne-modern before first tradtional\n# For patterns where first tradtional at index 1: need p[0] & !t[0]\n# For patterns where first tradtional at index 2: need (p[0] & !t[0]) or (p[1] & !t[1])\n# Since t[2]=True, first tradtional ≤ 2\n# If t[0]=False and t[1]=False, first tradtional=2 → need (p[0] & !t[0]) or (p[1] & !t[1])\n# If t[1]=True, first tradtional=1 → need p[0] & !t[0]\n# Combine: (t[0] => False) and ((t[1] & p[0]) | (!t[1] & (p[0] | p[1])))\n# Simpler: enforce that before first tradtional, there's Wayne-modern\n# Since only 5 solos, check cases:\n# We know t[2]=True. Cases:\n#   Case 1: t[0]=False, t[1]=True → need p[0] & !t[0]\n#   Case 2: t[0]=False, t[1]=False → need (p[0] & !t[0]) or (p[1] & !t[1])\n#   Case 3: t[0]=True → invalid (first tradtional at 0)\n# So:\nsolver.add(Implies(t[1], And(Not(t[0]), p[0])))\nsolver.add(Implies(And(Not(t[0]), Not(t[1])), Or(And(p[0], Not(t[0])), And(p[1], Not(t[1])))))\n\n# Answer choices\nanswer_choices = [\n    (\"Zara performs the first solo.\", Not(p[0])),\n    (\"Wayne performs the second solo.\", p[1]),\n    (\"Zara performs the third solo.\", Not(p[2])),\n    (\"The second solo is a modern piece.\", Not(t[1])),\n    (\"The fourth solo is a traditional piece.\", t[3])\n]\n\nanswer_index_list = []\nfor idx, (desc, constraint) in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    s_chk.add(constraint)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[2]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1257,
+            "completion_tokens": 1129,
+            "total_tokens": 2386
+          },
+          "api_time_only": 31.467666625976562,
+          "solver_time_only": 0.09116291999816895
+        }
+      ]
+    }
+  ]
+}

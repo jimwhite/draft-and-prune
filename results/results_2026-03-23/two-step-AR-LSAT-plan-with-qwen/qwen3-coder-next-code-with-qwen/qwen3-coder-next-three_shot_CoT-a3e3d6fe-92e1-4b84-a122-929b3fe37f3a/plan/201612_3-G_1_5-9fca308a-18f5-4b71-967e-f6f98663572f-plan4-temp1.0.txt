@@ -1,0 +1,19 @@
+1. Enumerate the five students and assign integer indices: Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4.  
+2. Create Boolean variables `team[i]` for each student i: True = green team, False = red team.  
+3. Create Boolean variables `facilitator[i]` for each student i: True = designated facilitator of their team.  
+4. Add **team-size constraints**: exactly two students on one team, three on the other. Implement by enumerating all possibilities via cardinality constraints: `(sum(team) == 2) XOR (sum(team) == 3)` — but more robustly: enforce `(sum(team) == 2) or (sum(team) == 3)` and that facilitators exist per team (so both teams non-empty).  
+5. Add **fixed assignment constraints**:  
+    - Lateefah is on green team: `team[2] == True`.  
+    - Juana and Olga are on different teams: `team[0] != team[4]`.  
+    - Olga is a facilitator: `facilitator[4] == True`.  
+6. Add **exactly one facilitator per team** constraints:  
+    - For green team (students with `team[i] == True`), exactly one has `facilitator[i] == True`.  
+    - For red team (students with `team[i] == False`), exactly one has `facilitator[i] == True`.  
+7. Add **Kelly is not a facilitator**: `facilitator[1] == False`.  
+8. Add **given conditional assumption**: Mei is assigned to green team: `team[3] == True`.  
+9. Now, under this assumption and all above constraints, determine which of the five answer choices **must** be true in *every* satisfying assignment.  
+10. For each answer choice:  
+    - Clone base constraints + Mei-on-green assumption into fresh solver.  
+    - Assert the *negation* of the answer statement (e.g., for "Juana is assigned to green", assert `team[0] == False`).  
+    - If UNSAT, then the statement *must* be true (i.e., its negation is impossible); record that this choice is a necessary consequence.  
+11. Among the five choices, exactly one must be forced (since it’s a “must be true” question). Output the index of that choice.

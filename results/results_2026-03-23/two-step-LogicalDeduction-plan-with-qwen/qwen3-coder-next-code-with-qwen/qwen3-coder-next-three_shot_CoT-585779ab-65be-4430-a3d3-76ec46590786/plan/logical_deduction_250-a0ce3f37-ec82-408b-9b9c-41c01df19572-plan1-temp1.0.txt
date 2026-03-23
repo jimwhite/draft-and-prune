@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the three books as variables: `"white"`, `"black"`, and `"purple"`.
+    * Define the domain as integers 1, 2, and 3 where **1 = leftmost** and **3 = rightmost**.
+    * Add these variables with the domain {1, 2, 3} to the problem.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.
+    * Translate "The black book is to the left of the purple book" into a constraint: `black < purple`.
+    * Translate "The purple book is to the left of the white book" into a constraint: `purple < white`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the unique solution (since the constraints fully determine the order).
+
+5.  **Determine the Correct Answer:**
+    * The question asks which book is the rightmost (position 3).
+    * Map choice letters to books: "A" → `"white"`, "B" → `"black"`, "C" → `"purple"`.
+    * Find the book in the solution with position 3.
+    * Return the corresponding choice letter as the final answer.

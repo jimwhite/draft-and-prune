@@ -1,0 +1,23 @@
+1. Identify all involved entities: bald_eagle, cat, lion, mouse.
+2. Encode all explicitly stated facts using ternary predicates: 
+   - is_young("bald_eagle", True), is_rough("cat", True), is_young("cat", True), etc.
+   - For negative facts (e.g., "does not chase", "does not eat"), use negation-as-failure or encode as `not chase(...)` via rule-based reasoning (PyKe does not support direct negative facts, so use complementary rules or query-time negation).
+   - Specifically: `not chase("bald_eagle", "mouse", True)`, `not chase("cat", "bald_eagle", True)`, etc. — but since PyKe uses positive facts only, these must be handled via *closed-world assumption* at query time or by deriving that the opposite does not hold via other rules; however, strictly in PyKe (a forward-chaining system with positive facts), negative literals are handled by *failing to derive the positive*. So instead, include explicit facts for what holds and rely on absence of derived positive facts.
+3. Translate all conditional rules into `foreach` + `assert` blocks:
+   • If something is kind → it is round.
+   • If something chases the bald eagle → it is round.
+   • If something is round → it sees the bald eagle.
+   • If something chases the cat and the cat chases the bald eagle → it eats the bald eagle.
+   • If something chases the cat → the cat sees the lion.  
+     → (Key rule for the query)
+   • If something sees the cat → it chases the bald eagle.
+   • If the bald eagle is young and chases the lion → the bald eagle sees the lion.
+   • If the mouse eats the cat and eats the bald eagle → the bald eagle eats the cat.
+   • If something sees the bald eagle and chases the cat → the bald eagle sees the cat.
+4. For rules with composite conditions (e.g., "X chases Y and Y Z"), use nested `foreach` or a single `foreach` with multiple `and` conditions in the condition clause.
+5. For the query "The cat sees the lion":
+   → Use facts.sees("cat", "lion", True)
+   → However, note that one rule directly implies: *If something chases the cat then the cat sees the lion.* So find whether anything chases the cat. From facts: lion chases the cat, and mouse chases the cat — so this rule fires immediately.
+6. Therefore, assert sees("cat", "lion", True) directly via rule #5 above (since lion chases cat ⇒ cat sees lion). So the query will be entailed.
+7. Ensure no conflicting rules or assumptions could prevent this — check for any rule that might imply `not sees("cat", "lion", True)`; none exist.
+8. Final plan: encode all positive facts and rules, then query `facts.sees("cat", "lion", True)`.

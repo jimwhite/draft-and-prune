@@ -1,0 +1,28 @@
+1. Enumerate the six lab assistants and assign each an integer index (e.g., Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5).  
+2. Enumerate the six sessions: assign each a unique integer index from 0 to 5, where session indices map to (day, time):  
+   - Session 0: Wednesday morning  
+   - Session 1: Wednesday afternoon  
+   - Session 2: Thursday morning  
+   - Session 3: Thursday afternoon (given fixed for Julio)  
+   - Session 4: Friday morning  
+   - Session 5: Friday afternoon.  
+3. Create integer variables `session[i]` for each assistant i, indicating which session index they lead (domain: 0–5).  
+4. Add **distinctness constraint**: all `session[i]` values must be pairwise distinct (each session has exactly one assistant).  
+5. Add **fixed constraint**: Julio leads Thursday afternoon → `session[Julio] == 3`.  
+6. Add **day/time constraints**: define helper functions to extract day and time (e.g., `day(s) = s // 2`, `time(s) = s % 2` with morning=0, afternoon=1).  
+7. Add constraint: Kevin and Rebecca must be on the same day → `day(session[Kevin]) == day(session[Rebecca])`.  
+8. Add constraint: Lan and Olivia cannot be on the same day → `day(session[Lan]) != day(session[Olivia])`.  
+9. Add constraint: Nessa must lead an afternoon session → `time(session[Nessa]) == 1`.  
+10. Add constraint: Julio’s session day < Olivia’s session day → `day(session[Julio]) < day(session[Olivia])` (and since Julio is fixed to Thursday, Olivia must be on Friday).  
+11. From step 10, deduce Olivia’s day = Friday (sessions 4 or 5), so `session[Olivia] ∈ {4,5}`.  
+12. Add constraint: Olivia ≠ Julio’s session → already implied by distinctness, but reinforced by day difference.  
+13. Now iterate over all possible assignments consistent with constraints using Z3 (or logical deduction):  
+    - Instantiate the solver with all constraints.  
+    - Use `check()` to verify feasibility (should be SAT).  
+14. To count how many *other* assistants have uniquely determined sessions:  
+    - Enumerate all six assistants except Julio (i.e., Kevin, Lan, Nessa, Olivia, Rebecca).  
+    - For each such assistant X, collect all solution values of `session[X]` across *all* satisfying assignments (using a loop with model enumeration or check-and-assert-uniqueness).  
+        - Alternatively, for each X and each possible session s ∈ {0..5}\{3}, add constraint `session[X] == s` and check consistency; if consistent for only one s, then X’s session is uniquely determined.  
+    - Count how many assistants have exactly one consistent session value.  
+15. Since the question asks for the count of assistants with *determined* sessions under the condition that Julio leads Thursday afternoon, record this count.  
+16. Compare against answer choices: output the index of the matching choice (e.g., if count=3, choose option 'three').

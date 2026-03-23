@@ -1,0 +1,29 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven golfers as string variables: `"mya"`, `"eli"`, `"ana"`, `"amy"`, `"mel"`, `"dan"`, and `"joe"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first place (finish position)** and **7 = last place**.  
+    * Add all variables with the domain 1–7 to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure no two golfers share the same finish position.  
+    * Translate each statement into a constraint:  
+        - "Amy finished below Joe" means Amy’s position number is greater than Joe’s (`amy > joe`).  
+        - "Dan finished above Mya" means Dan’s position number is less than Mya’s (`dan < mya`).  
+        - "Eli finished third" → `eli == 3`.  
+        - "Ana finished first" → `ana == 1`.  
+        - "Amy finished second-to-last" → `amy == 6` (since positions: 1=first, ..., 6=second-to-last, 7=last).  
+        - "Mya finished fourth" → `mya == 4`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution from the returned list of dictionaries (each dictionary maps golfer names to their positions).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks which golfer finished third-to-last. With 7 golfers, third-to-last corresponds to position **5** (since last = 7, second-to-last = 6, third-to-last = 5).  
+    * Create a mapping from choice letters (`"A"` to `"G"`) to golfer names:  
+        `{"A": "mya", "B": "eli", "C": "ana", "D": "amy", "E": "mel", "F": "dan", "G": "joe"}`.  
+    * Iterate through the mapping: for each choice, check if the corresponding golfer’s position in the solution is 5.  
+    * Return (or print) the choice letter where the golfer’s position equals 5.

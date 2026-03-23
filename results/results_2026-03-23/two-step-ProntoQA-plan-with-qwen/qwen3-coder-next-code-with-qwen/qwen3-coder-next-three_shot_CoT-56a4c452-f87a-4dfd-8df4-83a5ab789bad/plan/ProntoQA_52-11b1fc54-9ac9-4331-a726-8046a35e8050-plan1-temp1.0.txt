@@ -1,0 +1,39 @@
+1.  Identify all entities and types: Polly, jompus, dumpus, zumpus, wumpus, impus, vumpus, tumpus, numpus.  
+2.  Identify all properties: spicy, transparent, feisty, dull, blue, floral.  
+3.  Represent "Polly is a jompus" as a base fact: `is_a("Polly", "jompus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Every jompus is spicy.  
+    - Every jompus is a dumpus.  
+    - Each dumpus is not transparent.  
+    - Each dumpus is a zumpus.  
+    - Zumpuses are feisty.  
+    - Zumpuses are wumpuses.  
+    - Each wumpus is not dull.  
+    - Every wumpus is an impus.  
+    - Every vumpus is not blue.  
+    - Impuses are blue.  
+    - Impuses are tumpuses.  
+    - Tumpuses are not floral.  
+    - Each tumpus is a numpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - `foreach X, is_a(X,"jompus") → assert is_spicy(X)`.  
+    - `foreach X, is_a(X,"jompus") → assert is_a(X,"dumpus", True)`.  
+    - `foreach X, is_a(X,"dumpus") → assert not is_transparent(X)`.  
+    - `foreach X, is_a(X,"dumpus") → assert is_a(X,"zumpus", True)`.  
+    - `foreach X, is_a(X,"zumpus") → assert is_feisty(X)`.  
+    - `foreach X, is_a(X,"zumpus") → assert is_a(X,"wumpus", True)`.  
+    - `foreach X, is_a(X,"wumpus") → assert not is_dull(X)`.  
+    - `foreach X, is_a(X,"wumpus") → assert is_a(X,"impus", True)`.  
+    - `foreach X, is_a(X,"vumpus") → assert not is_blue(X)`.  
+    - `foreach X, is_a(X,"impus") → assert is_blue(X)`.  
+    - `foreach X, is_a(X,"impus") → assert is_a(X,"tumpus", True)`.  
+    - `foreach X, is_a(X,"tumpus") → assert not is_floral(X)`.  
+    - `foreach X, is_a(X,"tumpus") → assert is_a(X,"numpus", True)`.  
+6.  Deduce properties of Polly step-by-step:  
+    - From `is_a("Polly", "jompus")` and rule 2: `is_a("Polly", "dumpus", True)`.  
+    - From `is_a("Polly", "dumpus")` and rule 4: `is_a("Polly", "zumpus", True)`.  
+    - From `is_a("Polly", "dumpus")` (or via zumpus) and rule 8: `is_a("Polly", "wumpus", True)`.  
+    - From `is_a("Polly", "wumpus")` and rule 9: `is_a("Polly", "impus", True)`.  
+    - From `is_a("Polly", "impus")` and rule 10: `is_blue("Polly")`.  
+7.  The query tests if "Polly is blue" is provable:  
+    → Use `facts.is_blue("Polly", True)`.

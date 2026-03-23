@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the puzzle.
+
+2.  **Define Variables and Domain:**
+    * List the seven vehicle names as strings: `"truck"`, `"hatchback"`, `"minivan"`, `"bus"`, `"tractor"`, `"station_wagon"`, and `"convertible"` (using underscore for multi-word names to avoid parsing issues).
+    * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**, as age ranking is implied by "newest/oldest" language.
+    * Add all seven variables with this domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to enforce unique positions.
+    * Add the following constraints using `addConstraint` with lambda functions or direct value assignments:
+        - `"The station wagon is the fourth-newest"` → position 4 (since 1=oldest, 7=newest: 4th-newest = position 4).
+        - `"The minivan is the third-newest"` → position 3.
+        - `"The tractor is the second-oldest"` → position 2 (since 1=oldest, so second-oldest = position 2).
+        - `"The convertible is older than the station wagon"` → `convertible < station_wagon` (lower position number).
+        - `"The truck is newer than the bus"` → `bus < truck` (bus has smaller position number, i.e., older).
+        - `"The hatchback is older than the convertible"` → `hatchback < convertible`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions to vehicles.
+    * Extract the unique solution (the solver should return exactly one, as the problem is consistent and constrained).
+
+5.  **Determine the Second-Newest Vehicle:**
+    * The question asks which vehicle is the **second-newest**. In our 1–7 scheme (1=oldest, 7=newest), second-newest corresponds to position **6**.
+    * Create a mapping from choice letters ("A", "B", ..., "G") to vehicle names as per the choices:
+        - A → `"truck"`
+        - B → `"hatchback"`
+        - C → `"minivan"`
+        - D → `"bus"`
+        - E → `"tractor"`
+        - F → `"station_wagon"`
+        - G → `"convertible"`
+    * In the solved assignment, find which vehicle has position 6.
+    * Return the corresponding choice letter.

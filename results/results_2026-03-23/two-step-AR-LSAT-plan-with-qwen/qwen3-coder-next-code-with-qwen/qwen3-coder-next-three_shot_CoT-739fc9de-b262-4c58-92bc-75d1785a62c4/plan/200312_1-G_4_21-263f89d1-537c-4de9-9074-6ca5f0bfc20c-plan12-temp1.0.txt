@@ -1,0 +1,22 @@
+1. Enumerate the five students and assign integer indices: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays and assign integer indices: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[s][p]` for each student s and play p (True means student s reviews play p).  
+4. Add **non-empty review constraint**: each student reviews at least one play — for each student s, `review[s][0] or review[s][1] or review[s][2]`.  
+5. Add **Kramer and Lopez review fewer plays than Megregian**:  
+   - Let `count[s] = sum([review[s][p] for p in range(3)])`.  
+   - Add `count[1] < count[3]` and `count[2] < count[3]`.  
+6. Add **neither Lopez nor Megregian reviews any play Jiang reviews**: for each play p, `review[2][p] => not review[0][p]` and `review[3][p] => not review[0][p]`.  
+7. Add **Kramer and O'Neill both review Tamerlane**: `review[1][1] = True`, `review[4][1] = True`.  
+8. Add **exactly two students have identical review sets**:  
+   - For each pair (i, j) with i < j, define `same[i][j] = And(review[i][0] == review[j][0], review[i][1] == review[j][1], review[i][2] == review[j][2])`.  
+   - Exactly one such pair satisfies `same[i][j]` (i.e., sum of boolean `same[i][j]` over 10 pairs equals 1).  
+9. Add the **additional condition**: exactly three students review Undulation — i.e., `sum([If(review[s][2], 1, 0) for s in range(5)]) == 3`.  
+10. Translate the answer choices into logical assertions about review sets:  
+    - A) Megregian does not review Undulation → `not review[3][2]`  
+    - B) O'Neill does not review Undulation → `not review[4][2]`  
+    - C) Jiang reviews Undulation → `review[0][2]`  
+    - D) Lopez reviews Tamerlane → `review[2][1]`  
+    - E) O'Neill reviews Sunset → `review[4][0]`  
+11. For each choice, clone the base constraints + the "exactly 3 review Undulation" constraint into a fresh solver, add the choice's assertion, and check satisfiability.  
+12. Collect indices of choices for which the model is SAT (i.e., possibilities that could be true).  
+13. Output the list of valid choice indices (e.g., `[i for i, sat in enumerate(results) if sat]`).

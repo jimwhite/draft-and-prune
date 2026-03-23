@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * The variables are the seven golfers: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (highest/earliest finish)** and **7 = last place (lowest/latest finish)**.  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure no two golfers share the same finish position.  
+   * Convert each statement into a constraint using `lambda` functions or direct equality:  
+     - "Amy finished third" → `amy_position == 3`  
+     - "Joe finished last" → `joe_position == 7`  
+     - "Mya finished above Dan" → `mya_position < dan_position` (lower number = better/earlier rank)  
+     - "Eve finished fourth" → `eve_position == 4`  
+     - "Amy finished above Rob" → `amy_position < rob_position`  
+     - "Ada finished third-to-last" → Since there are 7 golfers, third-to-last means position = 7 − 2 = 5 → `ada_position == 5`  
+
+4. **Solve for All Valid Assignments:**  
+   * Use `getSolutions()` to find all complete assignments satisfying all constraints.  
+   * Extract the unique solution (or one valid solution, as the problem implies uniqueness).
+
+5. **Determine Which Choice Is True (Who Finished Fourth):**  
+   * Examine the question: it asks who finished fourth → position 4.  
+   * Create a mapping from choice letters (`'A'` through `'G'`) to golfer names:  
+     `{'A': 'Dan', 'B': 'Eve', 'C': 'Mya', 'D': 'Amy', 'E': 'Rob', 'F': 'Ada', 'G': 'Joe'}`  
+   * In the solution dictionary, find which golfer has position value 4.  
+   * Return (or output) the corresponding choice letter for that golfer as the answer.

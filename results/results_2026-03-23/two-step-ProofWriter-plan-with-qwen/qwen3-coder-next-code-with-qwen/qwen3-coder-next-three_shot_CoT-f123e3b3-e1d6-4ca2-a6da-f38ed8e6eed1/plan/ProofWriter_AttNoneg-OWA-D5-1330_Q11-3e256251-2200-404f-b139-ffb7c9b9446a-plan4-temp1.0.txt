@@ -1,0 +1,16 @@
+1. Identify all entities: Bob, Charlie, Dave, Harry.  
+2. Encode all explicitly stated properties using ternary predicates: is_red("Bob", True), is_young("Bob", True), is_big("Charlie", True), is_green("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True), is_young("Charlie", True), is_big("Dave", True), is_rough("Harry", True), is_round("Harry", True), is_young("Harry", True).  
+3. Encode all universal conditionals as rules using PyKe `foreach`/`assert`:  
+   • All rough, white things are young.  
+   • All big things are round.  
+   • All white, red things are rough.  
+   • All round things are green.  
+   • All big things are white.  
+   • If Harry is round then Harry is big (already covered by rule 2 + universals, but also explicit conditional).  
+   • All rough, young things are red.  
+   • If something is young then it is green.  
+   • All green things are red.  
+4. For each rule, translate to `foreach` pattern for premises and `assert` for conclusion (e.g., `foreach is_rough(?x, True), is_white(?x, True) → assert is_young(?x, True)`).  
+5. Derive facts about Dave using the rules and known properties (only `is_big("Dave", True)` is directly given).  
+6. The query tests whether Dave is young:  
+   → Use `facts.is_young("Dave", True)` as the goal; the solver will determine truth value via forward chaining and possible contradiction detection.

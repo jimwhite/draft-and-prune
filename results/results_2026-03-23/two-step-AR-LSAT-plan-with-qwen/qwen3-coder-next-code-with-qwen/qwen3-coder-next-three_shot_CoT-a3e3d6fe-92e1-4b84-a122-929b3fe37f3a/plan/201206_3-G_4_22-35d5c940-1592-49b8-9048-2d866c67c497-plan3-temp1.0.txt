@@ -1,0 +1,44 @@
+1. Enumerate the five solos (positions 1 to 5) and two pianists (Wayne=0, Zara=1); also enumerate piece types: modern=0, traditional=1.  
+2. Create integer variables `pianist[i]` for each solo i (0..4), constrained to {0,1}.  
+3. Create integer variables `piece[i]` for each solo i (0..4), constrained to {0,1}.  
+4. Add **domain constraints**: `pianist[i] ∈ {0,1}`, `piece[i] ∈ {0,1}` for all i.  
+5. Add **fixed constraint**: Solo 3 (index 2) is traditional → `piece[2] == 1`.  
+6. Add **exactly two consecutive traditional pieces constraint**: There exists exactly one index i (0 ≤ i ≤ 3) such that `piece[i] == piece[i+1] == 1`, and no other pair of consecutive traditional pieces (i.e., at most one run of length ≥2, and it must be exactly length 2). This can be encoded by:  
+    - Exactly one of the following is true: (piece[0]∧piece[1]), (piece[1]∧piece[2]), (piece[2]∧piece[3]), (piece[3]∧piece[4])  
+    - And for each such pair, ensure no adjacent third traditional piece: e.g., if piece[1]∧piece[2], then ¬piece[0] ∧ ¬piece[3]; if piece[2]∧piece[3], then ¬piece[1] ∧ ¬piece[4]; etc.  
+    - Alternatively, encode globally: total number of traditional pieces = 2 or 3? But problem only says “exactly two…consecutively” — i.e., there is a block of exactly two consecutive traditional pieces, and no other traditional pieces adjacent to it or elsewhere. So possible patterns: TTMMM, MTTMM, MMTTM, MMMTT, or with moderns inserted such that the TT block is isolated. So enforce:  
+        * There is exactly one i where piece[i] == piece[i+1] == 1  
+        * For all j ≠ i, piece[j] == 1 ⇒ piece[j-1]==0 and piece[j+1]==0 (if indices valid)  
+        * And total traditional pieces = 2 + k? No — only the consecutive pair counts; others could be isolated? But "exactly two of the traditional pieces are performed consecutively" implies there is a pair, and all other traditional pieces (if any) are non-consecutive. However, standard interpretation in LSAT-style logic games: “exactly two traditional pieces are performed consecutively” means there is one block of exactly two consecutive traditional pieces, and no other adjacent trad-pairs — but total trad pieces could be 2 or more (e.g., T M T T M has one block of two, and an isolated T elsewhere — that’s okay). So:  
+        - Let `pairs[i] = (piece[i] == 1 and piece[i+1] == 1)` for i=0..3  
+        - `sum(pairs) >= 1` (at least one adjacent trad pair)  
+        - `sum(pairs) <= 1` (exactly one such adjacent pair)  
+        - For any i where `pairs[i]` holds, ensure `piece[i-1]==0` (if i>0) and `piece[i+2]==0` (if i<3)  
+7. Add **fourth solo constraint**: In solo 4 (index 3), either Wayne performs traditional or Zara performs modern:  
+    - `(pianist[3] == 0 and piece[3] == 1) or (pianist[3] == 1 and piece[3] == 0)`  
+8. Add **second and fifth pianist constraint**: Pianist of solo 2 ≠ pianist of solo 5 → `pianist[1] != pianist[4]`.  
+9. Add **no trad until Wayne does at least one modern**: There exists some solo j such that `pianist[j] == 0 and piece[j] == 0`, and for all solos i < j, if `piece[i] == 1` then false — i.e., all solos before Wayne’s first modern are non-traditional (i.e., modern). Equivalently: Let `first_modern_wayne = min { i | pianist[i]==0 and piece[i]==0 }`. Then for all i < first_modern_wayne, `piece[i] == 0`. If no such Wayne modern exists (i.e., Wayne never plays modern), then the condition is violated — but since the constraint says “no trad piece until Wayne performs at least one modern”, it implies Wayne *must* perform at least one modern before any trad. So enforce:  
+    - There exists i such that `pianist[i]==0 ∧ piece[i]==0`  
+    - Let k = first index where Wayne plays: find minimal i where `pianist[i]==0`. But better:  
+        * Define boolean `wayne_modern_before_trad[i] = (pianist[i]==0 ∧ piece[i]==0)`  
+        * Let `first_wayne_modern = some i where wayne_modern_before_trad[i] is true`, then for all j < i, `piece[j] == 0`.  
+    - Use big-M or linearization: For all j, if `piece[j] == 1`, then there exists i < j such that `pianist[i]==0 ∧ piece[i]==0`.  
+    - Simpler: For all j, `piece[j] == 1 ⇒ ∃i < j : (pianist[i]==0 ∧ piece[i]==0)`  
+    - Encode: For each j where `piece[j] == 1`, at least one of the first j solos must be Wayne + modern.  
+        For j=0: `piece[0]==1 ⇒ false` → so `piece[0] == 0`  
+        For j=1: `piece[1]==1 ⇒ (pianist[0]==0 ∧ piece[0]==0)`  
+        For j=2: `piece[2]==1 ⇒ (pianist[0]==0 ∧ piece[0]==0) ∨ (pianist[1]==0 ∧ piece[1]==0)`  
+        For j=3: similarly, etc.  
+    - Since solo 3 (index 2) is trad (`piece[2]==1`), this forces that among solos 0 or 1, there must be Wayne + modern.  
+10. Add the **hypothetical condition**: In solo 5 (index 4), Wayne performs traditional: `pianist[4] == 0 ∧ piece[4] == 1`.  
+11. Define the five answer choices as:  
+    - A: Zara performs first solo → `pianist[0] == 1`  
+    - B: Wayne performs second solo → `pianist[1] == 0`  
+    - C: Zara performs third solo → `pianist[2] == 1`  
+    - D: Second solo is modern → `piece[1] == 0`  
+    - E: Fourth solo is trad → `piece[3] == 1`  
+12. Define answer_index_list = []. For each choice index k ∈ {0,1,2,3,4}:  
+    - Clone base constraints + `pianist[4]==0 ∧ piece[4]==1` into fresh solver.  
+    - Add constraint for choice k (e.g., for k=0: `pianist[0]==1`).  
+    - If the model is SAT, then this choice *could* be true; append k to answer_index_list.  
+13. Output the list of indices where SAT holds — these are the viable options.

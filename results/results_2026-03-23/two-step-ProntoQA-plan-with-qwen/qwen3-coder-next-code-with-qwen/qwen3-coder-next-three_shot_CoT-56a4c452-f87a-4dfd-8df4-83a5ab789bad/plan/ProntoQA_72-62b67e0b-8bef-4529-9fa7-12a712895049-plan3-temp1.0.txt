@@ -1,0 +1,28 @@
+1. Identify all entities and types: Sam, tumpus, yumpus, wumpus, jompus, vumpus, impus, zumpus, numpus, dumpus, rompuses.  
+2. Identify all properties: small, aggressive, bright, liquid, orange, transparent, fruity, sour.  
+3. Represent "Sam is a wumpus" as a base fact: `is_a("Sam", "wumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Tumpuses are not small.  
+   - Tumpuses are yumpuses.  
+   - Every yumpus is aggressive.  
+   - Each yumpus is a wumpus.  
+   - Every wumpus is bright.  
+   - Each wumpus is a jompus.  
+   - Jompuses are not liquid.  
+   - Every jompus is a vumpus.  
+   - Each vumpus is orange.  
+   - Every vumpus is an impus.  
+   - Every impus is not transparent.  
+   - Each impus is a zumpus.  
+   - Every zumpus is fruity.  
+   - Every zumpus is a numpus.  
+   - Every numpus is sour.  
+   - Rompuses are not fruity. *(Note: this rule does *not* apply to Sam unless Sam is a rompus, which is not given.)*  
+   - Numpuses are dumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. Derive chain of membership: Sam is a wumpus → Sam is a jompus (from "each wumpus is a jompus") → Sam is a vumpus (from "every jompus is a vumpus") → Sam is an impus (from "every vumpus is an impus") → Sam is a zumpus (from "each impus is a zumpus") → Sam is a numpus (from "every zumpus is a numpus") → Sam is a dumpus (from "numpuses are dumpuses").  
+7. From "Sam is a zumpus", use rule "every zumpus is fruity" to conclude Sam is fruity.  
+8. The statement "Sam is fruity" is *true*, so the query "Is Sam not fruity?" would be false — but the given statement to evaluate is **"Sam is fruity"**, not its negation. However, the problem asks: "Is the following statement true or false? Sam is fruity."  
+   → Therefore, to verify truth of "Sam is fruity", use query `facts.is_fruity("Sam", True)`.  
+9. Since the reasoning proves `is_fruity("Sam", True)` holds, the statement is **true**.  
+10. Final query: `facts.is_fruity("Sam", True)`.

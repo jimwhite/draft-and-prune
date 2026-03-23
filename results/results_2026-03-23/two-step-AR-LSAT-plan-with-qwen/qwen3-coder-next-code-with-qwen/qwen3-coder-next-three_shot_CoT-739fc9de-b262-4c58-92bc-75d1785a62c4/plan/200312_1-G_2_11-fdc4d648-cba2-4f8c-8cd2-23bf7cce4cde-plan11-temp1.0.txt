@@ -1,0 +1,21 @@
+1. Enumerate the six cargo types and assign integer codes (e.g., fuel=0, grain=1, livestock=2, machinery=3, produce=4, textiles=5).  
+2. Create integer variables `bay[i]` for each cargo type i, representing the bay number (1 to 6) where it is held.  
+3. Add **domain constraints**: each `bay[i]` ∈ {1,2,3,4,5,6}, and all `bay[i]` are pairwise distinct (each bay holds exactly one cargo type).  
+4. Add **given ordering constraints**:  
+   - grain > livestock ⇒ `bay[grain] > bay[livestock]`  
+   - livestock > textiles ⇒ `bay[livestock] > bay[textiles]`  
+   - produce > fuel ⇒ `bay[produce] > bay[fuel]`  
+   - textiles adjacent to produce ⇒ `|bay[textiles] - bay[produce]| = 1`  
+5. Add **conditional assumption**: produce is next to livestock ⇒ `|bay[produce] - bay[livestock]| = 1`.  
+6. Translate answer choices into logical conditions to be tested for possibility:  
+   - "Bay 2 is holding fuel" ⇒ `bay[fuel] == 2`  
+   - "Bay 4 is holding produce" ⇒ `bay[produce] == 4`  
+   - "Bay 4 is holding textiles" ⇒ `bay[textiles] == 4`  
+   - "Bay 5 is holding grain" ⇒ `bay[grain] == 5`  
+   - "Bay 5 is holding machinery" ⇒ `bay[machinery] == 5`  
+7. Define `impossible_choices_index_list = []`. For each choice (in order):  
+   - Clone the current constraints (base + conditional) into a fresh solver.  
+   - Assert the specific condition for that choice.  
+   - Check satisfiability: if UNSAT, then this choice **cannot** be true under the condition; append its index to `impossible_choices_index_list`.  
+8. Since the question asks "EXCEPT", the correct answer is the *only* impossible choice; return the corresponding string from choices using `impossible_choices_index_list[0]` if exactly one exists (or verify uniqueness).  
+9. Output the resulting choice string as final answer.

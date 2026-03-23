@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * List the seven birds as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, `"quail"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost**, **7 = rightmost**.  
+   * Add all variables and domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint using lambda functions:  
+     - "The hummingbird is to the left of the crow" → `hummingbird < crow`  
+     - "The cardinal is to the right of the quail" → `quail < cardinal`  
+     - "The blue jay is the fourth from the left" → `bluejay == 4`  
+     - "The robin is the second from the left" → `robin == 2`  
+     - "The quail is to the right of the crow" → `crow < quail`  
+     - "The raven is to the left of the robin" → `raven < robin`  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints are consistent and sufficient).
+
+5. **Determine the Correct Answer:**  
+   * The question asks: which bird is third from the left (i.e., position 3)?  
+   * Map choice letters to birds: A→robin, B→hummingbird, C→raven, D→bluejay, E→crow, F→cardinal, G→quail.  
+   * In the solution dictionary, find the key (bird) whose value equals 3.  
+   * Output the corresponding choice letter for that bird.

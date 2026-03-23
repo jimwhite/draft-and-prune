@@ -1,0 +1,26 @@
+1. Enumerate the six colors: forest=0, olive=1, peach=2, turquoise=3, white=4, yellow=5.  
+2. Create integer variables `s1`, `s2`, `m1`, `m2`, `m3` representing the color(s) used in each rug, with exactly five colors total used (so one color is unused).  
+3. Model rugs: two solid rugs (each uses exactly one unique color) and three multicolored rugs (each uses ≥2 colors), all colors used in a rug are distinct across rugs.  
+4. Encode the constraint that exactly five colors are used: sum over all color indicators = 5 (or enforce bijection between used colors and indices).  
+5. For each solid rug, assign a single color variable (e.g., `s1_color`, `s2_color`), ensuring they are distinct and from the five used colors.  
+6. For each multicolored rug, create a set of binary variables `c[i][j]` indicating color j is used in rug i, and enforce ≥2 colors per multicolored rug.  
+7. Add global constraint: no color appears in more than one rug (i.e., for each color, at most one rug uses it).  
+8. Add the logic rules as implications for multicolored and solid rugs:  
+    - If white is used in a rug, then exactly two other colors must be present → total 3 colors for that rug.  
+    - If olive is used, peach must be present in the same rug.  
+    - Forest and turquoise cannot both appear in any rug.  
+    - Peach and turquoise cannot both appear in any rug.  
+    - Peach and yellow cannot both appear in any rug.  
+9. For the two solid rugs, their colors must each satisfy the above constraints *when used alone*:  
+    - Solid white is allowed (no extra colors needed if it's the only color — but rule says “in any rug in which white is used, two other colors are also used” → solid white violates this).  
+    - Solid olive requires peach in same rug — impossible if solid → solid olive forbidden.  
+    - Solid peach alone: check pairwise conflicts with turquoise/yellow — allowed if no conflict.  
+    - Solid forest + solid peach: must check pairwise constraints — forest and peach share no rule forbidding them, but each is alone → allowed unless conflicts with themselves.  
+    - Solid turquoise + solid yellow: allowed (no direct rule forbidding same-rug conflict since only one color).  
+10. Generate all possible pairs of distinct colors for the two solid rugs (from 6 choose 2 = 15 possibilities).  
+11. For each candidate pair in the answer choices:  
+    - Fix `s1_color` and `s2_color` to the two colors.  
+    - Add constraints that the remaining three rugs use exactly three other distinct colors (total five), satisfying all rules and color usage constraints.  
+    - Solve using Z3 to check feasibility (SAT or UNSAT).  
+12. For each answer choice, if the configuration is UNSAT (i.e., impossible to complete with two solid rugs of those colors), then that pair is the answer.  
+13. Collect indices of all answer choices where UNSAT occurs and output them.

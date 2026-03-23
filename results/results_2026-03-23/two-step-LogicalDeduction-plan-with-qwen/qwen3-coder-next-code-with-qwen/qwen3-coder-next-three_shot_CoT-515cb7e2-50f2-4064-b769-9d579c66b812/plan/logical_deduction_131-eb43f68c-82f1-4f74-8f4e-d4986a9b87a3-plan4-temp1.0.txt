@@ -1,0 +1,35 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the golf tournament rankings.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven golfers as string variables: `"Joe"`, `"Mel"`, `"Mya"`, `"Eve"`, `"Rob"`, `"Ada"`, and `"Dan"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest rank)** and **7 = last place (lowest rank)**.
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.
+    * Add specific constraints using `lambda` functions or direct value assignment:
+        * "Rob finished first" → position(Rob) == 1.
+        * "Eve finished last" → position(Eve) == 7.
+        * "Dan finished above Ada" → Dan's rank < Ada's rank (i.e., Dan’s position number is smaller).
+        * "Mel finished above Mya" → Mel's rank < Mya's rank.
+        * "Joe finished second-to-last" → position(Joe) == 6 (since last is 7).
+        * "Mya finished third" → position(Mya) == 3.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid permutations satisfying all constraints.
+    * Since the problem is deterministic, extract the unique solution from the list.
+
+5.  **Determine Which Golfer Finished Third:**
+    * The question asks which golfer is third (i.e., has position value 3).
+    * From the solved solution, identify the key with value 3.
+    * Match that golfer's name to the provided choices (A–G):
+        - A) Joe
+        - B) Mel
+        - C) Mya
+        - D) Eve
+        - E) Rob
+        - F) Ada
+        - G) Dan
+    * Return the choice letter (e.g., `'C'`) corresponding to the golfer with position 3.

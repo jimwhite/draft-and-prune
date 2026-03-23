@@ -1,0 +1,20 @@
+1. Identify all individuals: Anne, Bob, Charlie, Fiona.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_nice("Anne", True)
+   - is_big("Bob", True), is_blue("Bob", True), is_cold("Bob", True)
+   - is_big("Charlie", True), is_cold("Charlie", True), is_nice("Charlie", True), is_young("Charlie", True)
+   - is_furry("Fiona", True), is_young("Fiona", True)
+3. Translate each conditional rule into PyKe `foreach` + `assert` form:
+   - If someone is furry and nice → they are cold.
+   - If Bob is blue and big → Bob is cold (redundant with fact, but include for completeness or omit as known).
+   - All blue and cold people are big.
+   - If someone is nice → they are smart.
+   - All smart and big people are nice.
+   - All smart people are blue.
+   - Blue and smart people are furry.
+   - Furry and cold people are smart.
+   - Cold people are big.
+4. For each rule, write a `foreach` block capturing the antecedent conditions and an `assert` for the consequent.
+5. The query is to determine whether "Charlie is not smart" holds:
+   → Use facts.is_smart("Charlie", False) to check if the negation is provable.
+6. Note: Since Charlie is already known to be nice, and the rule “If someone is nice → they are smart” applies directly, Charlie must be smart. Thus, the statement “Charlie is not smart” should be false—but the plan must reflect how to encode and query it formally, not reason ahead.

@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven vehicles as variables: `"truck"`, `"motorcycle"`, `"sedan"`, `"minivan"`, `"station_wagon"`, `"hatchback"`, and `"tractor"`.  
+   * Define the domain as integers from 1 to 7, where **1 = oldest** and **7 = newest**.  
+   * Add all seven variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Translate each clue into constraints:  
+     - "The hatchback is newer than the truck" → `hatchback > truck`  
+     - "The sedan is the third-newest" → `sedan == 5` (since newest=7, second-newest=6, third-newest=5)  
+     - "The station wagon is the newest" → `station_wagon == 7`  
+     - "The motorcyle is older than the truck" → `motorcycle < truck`  
+     - "The minivan is newer than the sedan" → `minivan > sedan` (i.e., `minivan > 5`)  
+     - "The tractor is the third-oldest" → `tractor == 3` (since oldest=1, second-oldest=2, third-oldest=3)  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments of ranks.  
+   * Extract the unique solution (expected as only one satisfies all constraints).  
+
+5. **Determine Which Vehicle is Fourth-Newest:**  
+   * Fourth-newest corresponds to rank = 4 (since newest=7 → positions: 7=newest, 6=2nd-newest, 5=3rd-newest, **4=4th-newest**).  
+   * Build a mapping from choice letters to vehicle names:  
+     A→"truck", B→"motorcycle", C→"sedan", D→"minivan", E→"station_wagon", F→"hatchback", G→"tractor".  
+   * Find the vehicle in the solution with rank 4.  
+   * Return the corresponding choice letter.

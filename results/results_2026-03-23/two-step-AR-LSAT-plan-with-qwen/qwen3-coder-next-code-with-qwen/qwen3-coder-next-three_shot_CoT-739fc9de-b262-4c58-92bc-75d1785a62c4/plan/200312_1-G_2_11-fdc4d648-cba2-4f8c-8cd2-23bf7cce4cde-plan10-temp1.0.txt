@@ -1,0 +1,19 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel, grain, livestock, machinery, produce, textiles → indices 0–5.  
+2. Create integer position variables for each cargo type: `pos_fuel`, `pos_grain`, `pos_livestock`, `pos_machinery`, `pos_produce`, `pos_textiles`, each in [1,6].  
+3. Add **domain constraints**: all positions are distinct integers from 1 to 6 (using `Distinct` constraint).  
+4. Add **base ordering constraints**:  
+   - `pos_grain > pos_livestock`  
+   - `pos_livestock > pos_textiles`  
+   - `pos_produce > pos_fuel`  
+5. Add **adjacency constraints**:  
+   - `|pos_textiles - pos_produce| = 1`  
+6. Add **scenario-specific constraint** (the conditional premise):  
+   - `|pos_produce - pos_livestock| = 1` (produce is next to livestock)  
+7. Add **extra derived constraint** from chains:  
+   - From `pos_grain > pos_livestock > pos_textiles`, infer `pos_grain ≥ pos_textiles + 3`.  
+8. For each answer choice:  
+   - Translate the statement into a constraint (e.g., "Bay 2 is holding fuel" → `pos_fuel == 2`).  
+   - Combine with the base + scenario constraints.  
+   - Clone the solver and add the constraint; check satisfiability (SAT/UNSAT).  
+9. The answer is the choice that **cannot** be true under the scenario, i.e., where adding its constraint yields UNSAT.  
+10. Identify and output the index of the EXCEPT option (the only UNSAT case).

@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * List the seven golfers as variables: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Add All-Different Constraint:**  
+    * Enforce that each golfer occupies a unique position by adding an `AllDifferentConstraint`.
+
+4.  **Translate Statements into Constraints Using Lambda Functions:**  
+    * "Amy finished third" → `amy_position == 3`.  
+    * "Joe finished last" → `joe_position == 7`.  
+    * "Mya finished above Dan" → `mya_position < dan_position` (lower rank number = better placement).  
+    * "Eve finished fourth" → `eve_position == 4`.  
+    * "Amy finished above Rob" → `amy_position < rob_position`.  
+    * "Ada finished third-to-last" → Since 7 positions exist, third-to-last is position `7 - 2 = 5` (because: last=7, second-to-last=6, third-to-last=5) → `ada_position == 5`.
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to retrieve all valid placements.  
+    * Extract the unique solution (only one valid arrangement is expected due to sufficient constraints).
+
+6.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" and lists choices about who finished third.  
+    * Based on our domain, position 3 corresponds to "third".  
+    * Create a mapping from choice letters (A–G) to golfer names:  
+        - A → "Dan", B → "Eve", C → "Mya", D → "Amy", E → "Rob", F → "Ada", G → "Joe".  
+    * For each choice, check if the assigned golfer’s position in the solution equals 3.  
+    * Output the letter (e.g., `"D"`) for which this condition holds true.

@@ -1,0 +1,35 @@
+1. Enumerate the six bands and assign them integer indices.  
+2. Create integer variables for each band’s slot position (1 through 6), with all positions distinct.  
+3. Add **domain constraints**: each band position ∈ {1,2,3,4,5,6}, and all positions distinct.  
+4. Add **original constraints**:  
+   - Vegemite before Zircon: `pos_Veg < pos_Zir`.  
+   - Wellspring and Zircon each before Xpert: `pos_Wel < pos_Xp` ∧ `pos_Zir < pos_Xp`.  
+   - Uneasy in last three slots: `pos_Uns ∈ {4,5,6}`.  
+   - Yardsign in first three slots: `pos_Yar ∈ {1,2,3}`.  
+5. Interpret each answer choice as a logical constraint and encode it:  
+   - A: “Only Uneasy can perform in a later slot than Xpert” ⇒ `pos_Xp < pos_Uns` ∧ for all bands B ∉ {Uns}, `pos_B < pos_Xp`.  
+   - B: “Vegemite before Wellspring, and Wellspring before Zircon” ⇒ `pos_Veg < pos_Wel < pos_Zir`.  
+   - C: “Vegemite and Wellspring each before Xpert” ⇒ `pos_Veg < pos_Xp` ∧ `pos_Wel < pos_Xp`.  
+   - D: “Xpert immediately before or after Uneasy” ⇒ `|pos_Xp − pos_Uns| = 1`.  
+   - E: “Xpert in slot five or six” ⇒ `pos_Xp ∈ {5,6}`.  
+6. For each answer choice:  
+   - Clone the base solver (including original constraints).  
+   - Add the answer-choice constraint.  
+   - Check SAT under both:  
+     (i) original ordering constraints, and  
+     (ii) the same but with the original “Wellspring and Zircon before Xpert” constraint **removed** (i.e., test if the new constraint *replaces* it and yields the same solution space).  
+   - More precisely: to test equivalence, verify that the set of models (valid orderings) under the original full constraints equals the set under new-constraint-only plus other original constraints (Veg < Zir, Uns ∈ {4,5,6}, Yar ∈ {1,2,3}).  
+   - Implement this by:  
+     a. Solver S₁ = base + (Wellspring < Xpert ∧ Zircon < Xpert).  
+     b. Solver S₂ = base + (answer-choice-constraint) [with Wellspring/Zircon < Xpert removed].  
+     c. Assert equivalence: (S₁ ⊨ answer-choice-constraint) ∧ (S₂ ⊨ Wellspring < Xpert ∧ Zircon < Xpert), or alternatively: check if (S₁ SAT ⇔ S₂ SAT) for all possible assignments is not feasible, so instead:  
+        - Check that every model of S₁ satisfies the answer-choice constraint AND every model of S₂ satisfies Wellspring < Xpert and Zircon < Xpert.  
+        - Use unsat checks on the symmetric difference:  
+          • Add constraint that a model satisfies S₁ but violates answer-choice → UNSAT.  
+          • Add constraint that a model satisfies S₂ but violates Wellspring/Zircon < Xpert → UNSAT.  
+   - However, in practice for logic games, equivalence can be checked by verifying that:  
+        (S₁ SAT ⇒ S₂ SAT) and (S₂ SAT ⇒ S₁ SAT) for all domain-sized cases, but better:  
+        Add negation of answer-choice to S₁ and check UNSAT ⇒ S₁ ⊨ answer-choice.  
+        Add negation of Wellspring/Zircon < Xpert to S₂ and check UNSAT ⇒ S₂ ⊨ original constraint.  
+7. For each answer choice, if both implications hold (i.e., S₁ ⇒ answer-choice and S₂ ⇒ original), then the choice is equivalent; append its index to `answer_index_list`.  
+8. Print the answer index list.

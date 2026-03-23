@@ -1,0 +1,35 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * List the seven books as string variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Add Constraints:**
+   * Add an `AllDifferentConstraint` to enforce unique positions.
+   * Add constraints using lambda functions based on the statements:
+     * `"The yellow book is the rightmost"` → `yellow == 7`
+     * `"The blue book is to the left of the orange book"` → `blue < orange`
+     * `"The green book is to the right of the white book"` → `white < green`
+     * `"The blue book is to the right of the green book"` → `green < blue`
+     * `"The black book is the fourth from the left"` → `black == 4`
+     * `"The brown book is the third from the right"` → since rightmost is 7, third from right = 7 - 2 = **5**, so `brown == 5`
+
+4. **Solve the Problem:**
+   * Call `getSolutions()` to obtain all valid assignments.
+   * Since the constraints uniquely determine the arrangement (as stated), extract the first (and only) solution dictionary.
+
+5. **Determine Which Book is Second From the Right:**
+   * "Second from the right" in a 7-position shelf is position **6** (because 7 = rightmost, so 7−1 = 6).
+   * For each key-value pair in the solution dictionary, find which book has position == 6.
+   * Map this book to the corresponding choice:
+     - `"brown"` → A (but brown is 5, so not A)
+     - `"white"` → B
+     - `"black"` → C (but black is 4)
+     - `"yellow"` → D (yellow is 7)
+     - `"orange"` → E
+     - `"blue"` → F
+     - `"green"` → G
+   * Return the letter (A–G) corresponding to the book at position 6.

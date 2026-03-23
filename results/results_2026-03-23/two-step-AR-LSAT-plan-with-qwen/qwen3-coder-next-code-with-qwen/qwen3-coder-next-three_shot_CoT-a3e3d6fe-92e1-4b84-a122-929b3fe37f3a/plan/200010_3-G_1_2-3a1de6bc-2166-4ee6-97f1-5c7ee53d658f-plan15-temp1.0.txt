@@ -1,0 +1,22 @@
+1. Enumerate the eight students and assign integer indices to each student.  
+2. Create Boolean variables for each student-day-slot combination: `assigned[s][d][slot]`, where s ∈ {0..7} (students), d ∈ {0,1,2} (Mon,Tue,Wed), slot ∈ {0,1} (morning, afternoon).  
+3. Add **exactly-six-reporters constraint**: exactly six students are assigned to at least one slot (i.e., sum over all d,slot of `assigned[s][d][slot]` is 1 for exactly six students; equivalently, sum over s of (OR over d,slot `assigned[s][d][slot]`) = 6).  
+4. Add **exactly-two-reports-per-day constraint**: for each day d, exactly two students are assigned: sum over s and slot of `assigned[s][d][slot]` = 2.  
+5. Add **no-overlap-per-slot constraint**: for each day and slot, at most one student is assigned (implied by previous + assignment per student ≤1).  
+6. Add **one-report-per-student constraint**: each student gives at most one report (sum over d,slot `assigned[s][d][slot]` ≤ 1).  
+7. Add **Tuesday-only-George constraint**: George can only report on Tuesday: `assigned[George][Mon][*] = false`, `assigned[George][Wed][*] = false`.  
+8. Add **afternoon-prohibition for Olivia and Robert**: Olivia cannot be assigned to any afternoon slot: `assigned[Olivia][d][1] = false` for all d; similarly for Robert.  
+9. Add **conditional Nina constraint**: If Nina reports on day d, then:  
+    - If d = Monday (0): Helen and Irving must both report on Tuesday (d=1), i.e., `assigned[Nina][0][*] → (assigned[Helen][1][0] ∨ assigned[Helen][1][1]) ∧ (assigned[Irving][1][0] ∨ assigned[Irving][1][1])`.  
+    - If d = Tuesday (1): Helen and Irving must both report on Wednesday (d=2).  
+    - If d = Wednesday (2): no further requirement.  
+    Implement via implication constraints using auxiliary variables or big-M style Boolean logic.  
+10. Add **premise constraint**: Kyle and Lenore do *not* give reports: for both, sum over d,slot `assigned[ Kyle ][d][slot] = 0`, same for Lenore.  
+11. For each answer choice, which specifies morning reports (slot=0) for Mon,Tue,Wed respectively:  
+    - Parse the triple (e.g., "Helen, George, Nina") as three students.  
+    - Clone base constraints (steps 3–10) into a fresh solver.  
+    - Enforce that the specified students are assigned *in those specific morning slots*: e.g., `assigned[Helen][Mon][0] = true`, `assigned[George][Tue][0] = true`, etc.  
+    - Enforce that *no other student* is assigned to those morning slots (i.e., slot=0 of each day must be exactly the specified student).  
+    - Enforce that afternoon slots can be any remaining valid assignments (no extra constraints beyond base).  
+    - If the model is SAT, then this triple is possible; record index.  
+12. Collect all indices of answer choices that yield SAT and output them (as per problem, only one correct answer expected; list contains index/indices of valid options).

@@ -1,0 +1,20 @@
+1. Enumerate the five candidates and assign them integer codes: Jaramillo=0, Kayne=1, Landon=2, Novetzke=3, Ong=4.  
+2. Create Boolean decision variables `assigned[i][c]` for each candidate i and country c ∈ {Venezuela=0, Yemen=1, Zambia=2}, where `assigned[i][c]` is true iff candidate i is assigned to country c.  
+3. Add **exactly-one-assignment constraints**: each candidate is assigned to at most one country: for all i, exactly one of `assigned[i][0]`, `assigned[i][1]`, `assigned[i][2]` is true.  
+4. Add **exactly-three-ambassadors constraint**: exactly three candidates are assigned (one per country), i.e., for all countries c, sum_i `assigned[i][c]` = 1.  
+5. Add **constraint A**: Either Kayne or Novetzke, but not both, is assigned to *some* ambassadorship (i.e., exactly one of Kayne or Novetzke gets an assignment): `(sum_c assigned[1][c]) == 1 XOR (sum_c assigned[3][c]) == 1`.  
+6. Add **constraint B**: If Jaramillo is assigned, then Kayne is also assigned: `sum_c assigned[0][c] == 1 → sum_c assigned[1][c] == 1`.  
+7. Add **constraint C**: If Ong is assigned to Venezuela, then Kayne is *not* assigned to Yemen: `assigned[4][0] → ¬assigned[1][1]`.  
+8. Add **constraint D**: If Landon is assigned, it must be to Zambia: `sum_c assigned[2][c] == 1 → assigned[2][2] = true`.  
+9. Translate each answer choice into the pair of unassigned candidates (i.e., those with zero total assignments), and denote them by candidate index pairs:  
+   - ['Jaramillo and Novetzke'] → (0,3)  
+   - ['Jaramillo and Ong'] → (0,4)  
+   - ['Kayne and Landon'] → (1,2)  
+   - ['Kayne and Novetzke'] → (1,3)  
+   - ['Landon and Ong'] → (2,4)  
+10. Define answer index list `answer_index_list = []`. For each choice index `idx` from 0 to 4:  
+    - Clone base constraints into a fresh solver.  
+    - Add constraint that the two candidates in choice `idx` are *not* assigned (i.e., for each candidate i in the pair, enforce `sum_c assigned[i][c] == 0`).  
+    - Add constraint that the remaining three candidates are exactly assigned (implicitly enforced by earlier global constraints).  
+    - If the model is SAT, this pair *could* be unassigned; append `idx` to `answer_index_list`.  
+11. Print `answer_index_list`.

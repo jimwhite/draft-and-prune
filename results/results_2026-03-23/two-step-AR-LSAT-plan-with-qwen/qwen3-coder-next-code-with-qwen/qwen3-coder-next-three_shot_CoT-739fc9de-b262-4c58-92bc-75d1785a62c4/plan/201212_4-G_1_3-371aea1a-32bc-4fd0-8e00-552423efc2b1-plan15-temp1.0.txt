@@ -1,0 +1,14 @@
+1. Enumerate the seven houses and assign integer positions 1 through 7 to represent their showing order.  
+2. Assign time slots: positions 1–2 = morning, 3–5 = afternoon, 6–7 = evening.  
+3. Create integer variables `pos_J`, `pos_K`, ..., `pos_P` (one per house).  
+4. Add **domain and uniqueness constraints**: each position is in [1,7] and all positions are distinct.  
+5. Add **J constraint**: J must be shown in the evening → `pos_J ∈ {6, 7}`.  
+6. Add **K constraint**: K cannot be shown in the morning → `pos_K ∈ {3, 4, 5, 6, 7}`.  
+7. Add **L–K–M ordering constraints**: L after K and before M → `pos_K < pos_L ∧ pos_L < pos_M`.  
+8. Translate each answer choice into a Boolean condition about the showing slot of the specified house(s).  
+9. For each answer choice, check whether it is **necessarily true** across all satisfying assignments:  
+   - Clone base constraints into a fresh solver.  
+   - Add the negation of the answer choice (e.g., “K is not shown in the evening” = `pos_K ∈ {3,4,5}` if the choice is “K in evening”).  
+   - If this extended set of constraints is UNSAT, then the answer choice **must be true**; record it as a candidate.  
+10. Among the recorded candidates, identify which one is logically forced (only one should satisfy UNSAT under negation).  
+11. Return the index of the only answer choice that is necessarily true (i.e., its negation is UNSAT).

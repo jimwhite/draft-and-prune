@@ -1,0 +1,24 @@
+1. Enumerate riders (Reynaldo, Seamus, Theresa, Yuki) and bicycles (F, G, H, J), assigning each rider and bicycle an integer index.  
+2. Create Boolean variables: `r1[i][j]` = True if rider i tests bicycle j on day 1; `r2[i][j]` = True if rider i tests bicycle j on day 2.  
+3. Add **day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider i, sum_j r1[i][j] == 1.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle j, sum_i r1[i][j] == 1.  
+4. Add **day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider i, sum_j r2[i][j] == 1.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle j, sum_i r2[i][j] == 1.  
+5. Add ** rider-bicycle exclusivity constraints**:  
+   - Reynaldo cannot test F on either day: ¬r1[Reynaldo][F] ∧ ¬r2[Reynaldo][F].  
+   - Yuki cannot test J on either day: ¬r1[Yuki][J] ∧ ¬r2[Yuki][J].  
+   - Theresa must test H on *some* day (not necessarily both), i.e., r1[Theresa][H] ∨ r2[Theresa][H].  
+6. Add **cross-day dependency constraint**: The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all bicycles j, r1[Yuki][j] → r2[Seamus][j].  
+7. Translate each answer choice into a logical condition and check its consistency with constraints:  
+   - Choice A: “Reynaldo tests J on day 1” → assert r1[Reynaldo][J] = True.  
+   - Choice B: “Reynaldo tests J on day 2” → assert r2[Reynaldo][J] = True.  
+   - Choice C: “Seamus tests H on day 1” → assert r1[Seamus][H] = True.  
+   - Choice D: “Yuki tests H on day 1” → assert r1[Yuki][H] = True.  
+   - Choice E: “Yuki tests H on day 2” → assert r2[Yuki][H] = True.  
+8. Define answer index list 'impossible_index_list' []. For each choice (indexed 0 to 4):  
+   - Clone base constraints into fresh solver.  
+   - Add the specific choice condition.  
+   - If UNSAT, append index to impossible_index_list (these are the EXCEPT candidates).  
+9. Output impossible_index_list (expected size = 1 for a valid EXCEPT question).

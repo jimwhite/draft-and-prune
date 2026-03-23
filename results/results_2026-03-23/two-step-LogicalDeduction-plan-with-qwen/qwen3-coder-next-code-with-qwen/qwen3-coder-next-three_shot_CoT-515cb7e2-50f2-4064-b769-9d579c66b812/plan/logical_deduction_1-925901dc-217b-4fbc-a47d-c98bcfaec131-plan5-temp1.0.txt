@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * Define variables for the five vehicles: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.
+    * Assign a domain of integers 1 to 5, where **1 = oldest** and **5 = newest**, representing the age ranking.
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of age rankings.
+    * Convert each statement into a constraint using `lambda` functions:
+        * "The tractor is newer than the minivan" → `tractor > minivan`
+        * "The tractor is older than the limousine" → `tractor < limousine`
+        * "The convertible is older than the sedan" → `convertible < sedan`
+        * "The convertible is the second-newest" → `convertible == 4` (since 5 = newest, 4 = second-newest)
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid solutions.
+    * Extract the unique solution from the returned list.
+
+5.  **Verify Against Choices:**
+    * Note that the question asks which statement is true, and one of the choices directly states "The convertible is the second-newest.", which matches the explicit constraint given in the problem.
+    * Since the solver respects all constraints—including "convertible == 4"—this choice must be true regardless of other positions.
+    * Confirm by checking the solved solution: verify that `convertible == 4` holds, and select choice "A" accordingly.

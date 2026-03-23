@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * Define the variables as the five vehicles: `"convertible"`, `"bus"`, `"minivan"`, `"truck"`, and `"sedan"`.
+    * Define the domain as integers from 1 to 5, where **1 represents the newest** vehicle and **5 represents the oldest**, consistent with typical chronological ranking for "newest/oldest" problems (smaller number = more recent).
+    * Add the vehicle variables and their domain to the `Problem` instance.
+
+3.  **Translate Rules into Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique rank.
+    * Convert each statement into a constraint using `lambda` functions:
+        * "The convertible is newer than the truck" → convertible's rank < truck's rank (`convertible < truck`).
+        * "The minivan is the newest" → minivan's rank = 1.
+        * "The bus is the third-newest" → bus's rank = 3 (since newest=1, second=2, third=newest=3).
+        * "The truck is newer than the sedan" → truck's rank < sedan's rank (`truck < sedan`).
+
+4.  **Solve for the Arrangement:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the unique solution from the returned list (should contain exactly one dictionary mapping vehicles to ranks).
+
+5.  **Identify the Correct Answer:**
+    * Determine which vehicle has rank = 2 (second-newest).
+    * Create a mapping from choice letters to vehicle names: 
+        A→"convertible", B→"bus", C→"minivan", D→"truck", E→"sedan".
+    * Check which vehicle in the solution has rank 2 and return its corresponding choice letter.

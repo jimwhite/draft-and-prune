@@ -1,0 +1,68 @@
+1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+3. Represent "Wren is a yumpus" as a base fact: `is_a("Wren", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules, taking care to handle direct contradictions (e.g., "every yumpus is not temperate" vs. "zumpuses are mean", etc.), and specifically resolve the conflict between:  
+   - "Each rompus is not feisty" (→ `is_feisty(X, False)` for all rompuses X)  
+   - "Every impus is not transparent" (→ `is_transparent(X, False)` for all impuses X)  
+   - "Wumpuses are transparent" (→ `is_transparent(X, True)` for all wumpuses X)  
+   This yields a direct contradiction: since every wumpus is a dumpus, and every dumpus is a tumpus (via chain), but more directly: wumpuses ⊆ dumpuses ⊆ tumps, yet also wumpus → impus (via "Wumpuses are impuses"? No—wait, the given text says: *"Each wumpus is a dumpus."*, and earlier: *"Every impus is not transparent."* and *"Wumpuses are transparent."* So wumpus X implies impus? No—let’s check: the sentence list says: *"Wumpuses are transparent. Each wumpus is a dumpus."*, and *earlier*: *"Every impus is not transparent."* — but there is no explicit "wumpus is an impus" in this problem. However, wait: in *Problem 2*, it said "Wumpuses are impuses", but here (Problem 4) it does *not* say "wumpuses are impuses". Re-reading:  
+   > Every jompus is bright.  
+   > Every jompus is a vumpus.  
+   > Vumpuses are floral.  
+   > Every vumpus is a yumpus.  
+   > Every yumpus is not temperate.  
+   > Each yumpus is a numpus.  
+   > Every numpus is sweet.  
+   > Each numpus is a zumpus.  
+   > Zumpuses are mean.  
+   > Zumpuses are rompuses.  
+   > Each rompus is not feisty.  
+   > Every impus is not transparent.  
+   > Each rompus is a wumpus.  
+   > Wumpuses are transparent.  
+   > Each wumpus is a dumpus.  
+   > Dumpuses are large.  
+   > Each dumpus is a tumpus.  
+   So: rompus ⊆ wumpus, and wumpus is transparent → `is_transparent(wumpus) = True`. But also: *every impus is not transparent* ⇒ `is_transparent(impus) = False`. However, there is *no direct inclusion* between wumpus and impus here (unlike Problem 2). So no contradiction in transparency unless a class is both wumpus and impus—check if that’s derivable:  
+   - From the list, no sentence says wumpus is impus or vice versa. So we treat them as distinct unless inferred via other links—and none link impus to others.  
+   - Important: The presence of *both* "Wumpuses are transparent" and "Every impus is not transparent" does *not* cause inconsistency unless some entity is both wumpus and impus—which we cannot derive here. So no contradiction in this problem regarding transparency.  
+5. Implement each rule using `foreach` (precondition) and `assert` (conclusion), including:  
+   - Direct property assertions: e.g., `foreach X, if is_a(X, "jompus") then is_bright(X)`  
+   - Subclass implications: e.g., `foreach X, if is_a(X, "jompus") then is_a(X, "vumpus")`  
+   - Property inheritance via subclass: e.g., since every yumpus is not temperate ⇒ `foreach X, if is_a(X, "yumpus") then ¬is_temperate(X)`  
+6. Derive the membership chain for Wren:  
+   - Base: `is_a(Wren, "yumpus") = True`  
+   - Then via rules: yumpus → numpus, numpus → zumpus, zumpus → rompus, rompus → wumpus  
+   - So Wren is a wumpus.  
+7. Since every wumpus is transparent (`foreach X, if is_a(X, "wumpus") then is_transparent(X)`), Wren is transparent.  
+8. The query tests if "Wren is not transparent" — but the goal statement is: **Is Wren transparent?** The question asks about "Wren is not amenable" in prior examples, but here it’s:  
+   > Question: Is the following statement true or false? Wren is transparent.  
+   So to prove whether it's *true*, we test `facts.is_transparent("Wren", True)`.  
+   However, per instruction (from prior patterns), the plan should end with the query form that checks provability of the *target statement*. Since the target is "Wren is transparent", we query `facts.is_transparent("Wren", True)`.  
+   But note: all prior plans used the *negated* form (e.g., `facts.is_small("Fae", False)` for "not small"), because they asked whether a *negated* statement was true. Here, the statement is *affirmative*: "Wren is transparent". So the correct query to check provability of the *given statement* is `facts.is_transparent("Wren", True)`.  
+9. Output plan:  
+   1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+   2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+   3. Represent "Wren is a yumpus" as base fact: `is_a("Wren", "yumpus", True)`.  
+   4. Translate all given class inclusion and property statements into logical rules:  
+      - Every jompus is bright.  
+      - Every jompus is a vumpus.  
+      - Vumpuses are floral.  
+      - Every vumpus is a yumpus.  
+      - Every yumpus is not temperate.  
+      - Each yumpus is a numpus.  
+      - Every numpus is sweet.  
+      - Each numpus is a zumpus.  
+      - Zumpuses are mean.  
+      - Zumpuses are rompuses.  
+      - Each rompus is not feisty.  
+      - Every impus is not transparent.  
+      - Each rompus is a wumpus.  
+      - Wumpuses are transparent.  
+      - Each wumpus is a dumpus.  
+      - Dumpuses are large.  
+      - Each dumpus is a tumpus.  
+   5. Encode each rule as `foreach` condition + `assert` consequence using PyKe syntax (e.g., `foreach X, is_a(X,"yumpus") → assert(is_a(X,"numpus"))`, `foreach X, is_a(X,"wumpus") → assert(is_transparent(X))`).  
+   6. Inference chain for Wren: yumpus → numpus → zumpus → rompus → wumpus ⇒ Wren is a wumpus.  
+   7. Since all wumpuses are transparent, conclude Wren is transparent.  
+   8. Formulate query to check if "Wren is transparent" is provable: `facts.is_transparent("Wren", True)`.

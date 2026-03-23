@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five fruits as string variables: `"loquats"`, `"pears"`, `"watermelons"`, `"kiwis"`, and `"plums"`.  
+   * Define the domain as integers 1 to 5, where **1 represents the least expensive** and **5 represents the most expensive**, so higher numbers = more expensive.  
+   * Add all variables and their domain to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce unique price rankings for each fruit.  
+   * Translate each statement into a constraint:  
+     - "The loquats are the third-most expensive" → loquats' rank = 3 (since most expensive is highest number, third-most expensive = rank 3 in ascending price order: 1=cheapest, 5=most expensive; but note: third-most expensive = rank 3 *from the top*, i.e., if sorted descending by price, it's #3; equivalently, in ascending ranking (1=cheapest), third-most expensive = rank 5 − 3 + 1 = **3**). So loquats == 3.  
+     - "The loquats are more expensive than the watermelons" → loquats > watermelons. Since loquats = 3, this implies watermelons < 3 (i.e., watermelons ∈ {1,2}).  
+     - "The plums are less expensive than the watermelons" → plums < watermelons. So plums < watermelons < 3 ⇒ plums ≤ 1 (since integers), thus plums = 1, watermelons = 2 is forced.  
+     - "The kiwis are more expensive than the pears" → kiwis > pears. No fixed values yet; they will occupy remaining ranks 4 and 5.
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (only one will satisfy all constraints given fixed loquats=3 and relative ordering).
+
+5. **Determine the Second-Most Expensive Fruit:**  
+   * Second-most expensive corresponds to rank = **4** (since 5=most expensive, 4=second-most).  
+   * Create a mapping from choice letters to fruit names:  
+     A → "loquats", B → "pears", C → "watermelons", D → "kiwis", E → "plums".  
+   * Iterate over the solution dictionary to find which fruit has rank 4.  
+   * Return the corresponding choice letter (A–E).

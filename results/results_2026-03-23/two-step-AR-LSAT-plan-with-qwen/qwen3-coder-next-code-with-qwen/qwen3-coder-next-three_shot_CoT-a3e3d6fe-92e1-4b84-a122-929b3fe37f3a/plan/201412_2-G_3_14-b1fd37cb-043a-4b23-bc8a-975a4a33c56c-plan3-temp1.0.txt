@@ -1,0 +1,26 @@
+1. Enumerate the six available colors: [forest, olive, peach, turquoise, white, yellow] and assign integer indices 0–5.  
+2. Create Boolean variables for each color indicating whether it is *used* in the rug set (since exactly 5 of 6 colors are used, exactly one color is excluded).  
+3. Add **exactly-five-used constraint**: sum of used-color Booleans = 5.  
+4. Create Boolean variables for each rug: `R0_solid`, `R1_solid`, `R2_solid` (each rug is either solid or multicolored).  
+5. Add **exactly-two-solid constraint**: `R0_solid + R1_solid + R2_solid == 2`.  
+6. For each rug *r* ∈ {0,1,2}, create Boolean variables `c[r][color]` indicating whether color is used in rug *r*.  
+7. Enforce **mutual exclusivity of colors across rugs**: for each color, it appears in at most one rug (i.e., sum over rugs of `c[r][color]` ≤ 1).  
+8. Enforce **global color usage**: `used[color] = OR_{r} c[r][color]`.  
+9. Add **solid-rug constraints**: For each rug *r*, if `R0_solid` is true, then exactly one color is used in that rug (i.e., sum over colors of `c[r][color] == 1`). If multicolored, ≥2 colors.  
+10. Add **rule constraints per rug**:  
+    - If white ∈ rug, then rug has ≥3 colors (white + 2 others).  
+    - If olive ∈ rug, then peach must also be in the same rug.  
+    - Forest and turquoise cannot both appear in any rug.  
+    - Peach and turquoise cannot both appear in any rug.  
+    - Peach and yellow cannot both appear in any rug.  
+11. Translate each choice pair into color indices: e.g., ['forest', 'peach'] → (0,2), etc.  
+12. For each choice pair *C = (c1,c2)*:  
+    - Clone base constraints.  
+    - Impose that rugs 0 and 1 are solid (WLOG, since rug labeling is symmetric) with colors c1 and c2 respectively:  
+        - `c[0][c1] = True`, all other `c[0][c≠c1] = False`  
+        - `c[1][c2] = True`, all other `c[1][c≠c2] = False`  
+        - Set `R0_solid = True`, `R1_solid = True`, `R2_solid = False`  
+    - Ensure c1 ≠ c2 (already true per pairs).  
+    - Add remaining logic rules and global constraints.  
+13. If the resulting instance is UNSAT, then the pair *C* **cannot** be the two solid rug colors; append index of that choice to `answer_index_list`.  
+14. Print the answer index list (indices of choices that are impossible).

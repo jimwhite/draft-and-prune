@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to define and solve the constraint satisfaction problem.  
+
+2. **Define Variables and Their Domain:**  
+   * Identify the five birds as variables: `"owl"`, `"robin"`, `"bluejay"`, `"hawk"`, and `"hummingbird"` (note: use `"bluejay"` as a single string without space for cleaner variable naming).  
+   * Define the domain as integers 1 to 5, where **1 = leftmost** and **5 = rightmost**, matching the problem’s spatial arrangement.  
+   * Add all five variables to the `Problem` instance with this domain.  
+
+3. **Translate Statements into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+   * Convert each natural-language statement into a constraint using lambda functions or direct value constraints:  
+     - "The owl is the second from the right" → owl's position = 4 (since positions are 1–5 left-to-right; second from right is position 4).  
+     - "The robin is the second from the left" → robin's position = 2.  
+     - "The robin is to the right of the blue jay" → bluejay's position < robin's position (i.e., `bluejay < 2`, so bluejay must be at position 1).  
+     - "The hummingbird is to the right of the hawk" → hawk's position < hummingbird's position.  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to compute all valid assignments satisfying all constraints.  
+   * Extract the unique solution (as the problem is fully constrained and consistent).  
+
+5. **Determine Which Bird Is Rightmost (Position 5):**  
+   * Examine the solution dictionary to identify which bird has position value 5.  
+   * Create a mapping between the multiple-choice letters and birds:  
+     - "A" → `"owl"`  
+     - "B" → `"robin"`  
+     - "C" → `"bluejay"`  
+     - "D" → `"hawk"`  
+     - "E" → `"hummingbird"`  
+   * Find the choice letter whose corresponding bird is at position 5.  
+   * Output that choice letter as the answer.

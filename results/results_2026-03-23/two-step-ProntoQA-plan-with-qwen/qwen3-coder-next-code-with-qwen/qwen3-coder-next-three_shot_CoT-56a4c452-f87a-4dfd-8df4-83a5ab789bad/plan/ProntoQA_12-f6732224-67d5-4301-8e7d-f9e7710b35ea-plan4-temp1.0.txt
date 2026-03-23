@@ -1,0 +1,26 @@
+1. Identify all entities and types: Fae, tumpus, numpus, vumpus, dumpus, zumpus, yumpus, jompus, rompus, impus, wumpus.  
+2. Identify all properties: orange, small, sour, cold, dull, amenable, floral, opaque, not floral (inferred), luminous (absent), etc. — specifically relevant: orange, small, sour, cold, dull, amenable, floral, opaque.  
+3. Represent "Fae is a dumpus" as a base fact: `is_a("Fae", "dumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every tumpus is orange.  
+   - Tumpuses are numpuses.  
+   - Numpuses are small.  
+   - Numpuses are vumpuses.  
+   - Every vumpus is sour.  
+   - Vumpuses are dumpuses.  
+   - Each dumpus is cold.  
+   - Every dumpus is a zumpus.  
+   - Each zumpus is dull.  
+   - Zumpuses are yumpuses.  
+   - Jompuses are floral. *(Note: Fae is a dumpus; not known to be jompus → this rule only applies if entity is jompus)*  
+   - Every yumpus is not amenable.  
+   - Each yumpus is a rompus.  
+   - Every rompus is opaque.  
+   - Rompuses are impuses.  
+   - Impuses are not floral.  
+   - Impuses are wumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence, ensuring correct directionality of inheritance (e.g., `is_a(X, Tumpus) ⇒ is_orange(X, True)`; `is_a(X, Dumpus) ⇒ is_cold(X, True)`, etc.).  
+6. Derive chain: Fae is a dumpus ⇒ Fae is a zumpus (via `every dumpus is a zumpus`) ⇒ Fae is a yumpus (via `zumpuses are yumpuses`) ⇒ Fae is a rompus (via `each yumpus is a rompus`) ⇒ Fae is an impus (via `rompuses are impuses`) ⇒ Fae is not floral (via `impuses are not floral`).  
+7. Note: Although "Jompuses are floral" exists, Fae is *not* known to be a jompus, so this does not conflict.  
+8. The query tests if the statement "Fae is not floral" is provable:  
+   → Use `facts.is_floral("Fae", False)`.

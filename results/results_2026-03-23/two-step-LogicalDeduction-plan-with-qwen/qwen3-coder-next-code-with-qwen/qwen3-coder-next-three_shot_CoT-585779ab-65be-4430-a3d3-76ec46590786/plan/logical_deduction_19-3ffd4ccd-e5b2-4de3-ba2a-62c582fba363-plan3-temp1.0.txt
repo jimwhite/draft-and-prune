@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five vehicles: `"tractor"`, `"station_wagon"`, `"bus"`, `"motorcycle"`, and `"minivan"`.  
+   * Assign each variable a domain of integers from 1 to 5, where **1 = oldest** and **5 = newest**, consistent with the problem's chronological ordering.  
+   * Add all variables and their domain to the `Problem` instance.
+
+3. **Translate Rules into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of age rankings.  
+   * Encode each statement as a constraint using lambda functions:  
+     - *"The minivan is older than the motorcycle"* → `minivan < motorcycle` (since lower rank = older).  
+     - *"The bus is the newest"* → `bus == 5`.  
+     - *"The tractor is the third-newest"* → with newest = 5, third-newest = rank 3 (since positions: 1=oldest, 2=second-oldest, 3=third-newest? Wait—clarify: third-*newest* means counting from newest: 1st-newest=5, 2nd-newest=4, **3rd-newest=3**). So `tractor == 3`.  
+     - *"The station wagon is the second-oldest"* → oldest=1, so second-oldest=2 ⇒ `station_wagon == 2`.
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to compute all valid assignments satisfying all constraints.  
+   * Extract the unique solution (since the problem is deterministic), and store it.
+
+5. **Determine Which Statement Is True:**  
+   * The question asks which vehicle is the newest (i.e., rank 5).  
+   * Use the solution mapping to find which vehicle has value `5`.  
+   * Match that vehicle to the corresponding choice:  
+     - A) Tractor — check if `solution['tractor'] == 5`  
+     - B) Station wagon — check `solution['station_wagon'] == 5`  
+     - C) Bus — check `solution['bus'] == 5`  
+     - D) Motorcycle — check `solution['motorcycle'] == 5`  
+     - E) Minivan — check `solution['minivan'] == 5`  
+   * Return the letter of the choice that matches.

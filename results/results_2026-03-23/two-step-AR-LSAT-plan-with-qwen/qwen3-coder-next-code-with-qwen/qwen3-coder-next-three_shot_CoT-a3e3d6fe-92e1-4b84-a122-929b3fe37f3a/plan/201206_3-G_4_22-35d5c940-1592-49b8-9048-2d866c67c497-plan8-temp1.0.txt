@@ -1,0 +1,40 @@
+1. Enumerate the five solos (positions 1 to 5) and create variables for:  
+   - `pianist[i] ∈ {0 (Wayne), 1 (Zara)}` for each solo `i`,  
+   - `type[i] ∈ {0 (modern), 1 (traditional)}` for each solo `i`.  
+2. Add **fixed constraints**:  
+   - Solo 3 is traditional: `type[2] == 1` (0-indexed position 2).  
+   - Exactly two traditional pieces are performed consecutively — i.e., there exists exactly one index `j ∈ {0,1,2,3}` such that `type[j] == type[j+1] == 1`, and all other traditional pieces (if any) are isolated.  
+     - *Implementation*: Count total traditional pieces `T = sum(type[i] for i in range(5))`. Then require `T == 3` (since exactly two consecutive ⇒ at least one run of length 2; and with no other adjacencies, the only possible count is 3: e.g., positions i,i+1,i+2 with type[i]=type[i+1]=1, type[i+2]=0 or i-1=0; but also possible run of exactly two and one isolated = total 3). However, to be precise:  
+       - Enforce: there is exactly one pair of consecutive `1`s, and no triple; i.e.,  
+         `(type[0] & type[1]) + (type[1] & type[2]) + (type[2] & type[3]) + (type[3] & type[4]) == 1`,  
+         and `(type[0] & type[1] & type[2]) == False`,  
+         `(type[1] & type[2] & type[3]) == False`,  
+         `(type[2] & type[3] & type[4]) == False`.  
+3. Add **Solo 4 constraint**: In solo 4 (index 3), either Wayne performs traditional or Zara performs modern:  
+   - `(pianist[3] == 0 & type[3] == 1) | (pianist[3] == 1 & type[3] == 0)`  
+4. Add **non-repetition constraint**: The pianist who performs solo 2 (index 1) does not perform solo 5 (index 4):  
+   - `pianist[1] != pianist[4]`  
+5. Add **no-early-traditional constraint**: No traditional piece is performed until Wayne performs at least one modern piece.  
+   - Let `first_wayne_modern = min { i | pianist[i] == 0 & type[i] == 0 }` if exists.  
+   - Equivalent: For all positions `i`, if `type[i] == 1` then ∃ `j < i` such that `pianist[j] == 0 & type[j] == 0`.  
+   - In Z3: Define `has_wayne_modern_before[i] = Or([And(pianist[k]==0, type[k]==0) for k in range(i)])` and assert `ForAll([i], Implies(type[i]==1, has_wayne_modern_before(i)))`.  
+     - But since finite, rewrite as: For each `i`, if no modern Wayne before `i`, then type[i] ≠ 1.  
+       E.g., for i=0: not (type[0]==1)  
+       i=1: if no k<1 with Wayne modern, then type[1]≠1 ⇒ `(And(pianist[0]!=0 or type[0]!=0)) → type[1]==0`  
+       Implement as:  
+         - `type[0] == 0`  
+         - `Implies(And(pianist[0]!=0, type[0]!=0), type[1]==0)`  
+         - `Implies(And(Or(pianist[0]!=0, type[0]!=0), Or(pianist[1]!=0, type[1]!=0)), type[2]==0)`  
+         - `Implies(And(Or(pianist[0]!=0, type[0]!=0), Or(pianist[1]!=0, type[1]!=0), Or(pianist[2]!=0, type[2]!=0)), type[3]==0)`  
+         - `Implies(And(... all previous (pianist[k]!=0 or type[k]!=0) ...), type[4]==0)`  
+6. Add the **scenario condition**: Fifth solo is Wayne performing traditional: `pianist[4] == 0 & type[4] == 1`.  
+7. Translate the five answer choices into checkable statements:  
+   - A: Zara performs first solo → `pianist[0] == 1`  
+   - B: Wayne performs second solo → `pianist[1] == 0`  
+   - C: Zara performs third solo → `pianist[2] == 1`  
+   - D: Second solo is modern → `type[1] == 0`  
+   - E: Fourth solo is traditional → `type[3] == 1`  
+8. For each choice, clone base constraints + scenario condition into a fresh solver.  
+9. Add the choice condition (e.g., `pianist[0] == 1` for A).  
+10. Check satisfiability: if SAT, then that choice *could* be true — record its index in `answer_index_list`.  
+11. Print the list of indices corresponding to valid (SAT) choices.

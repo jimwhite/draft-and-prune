@@ -1,0 +1,48 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign them integer indices 0–3.  
+2. Enumerate the four lecture topics (lithographs, oil paintings, sculptures, watercolors) and assign them integer indices 0–3.  
+3. Create integer variables for lecture order positions (1 to 4) of each topic, or alternatively create binary assignment variables `topic_given_by[historian][topic]` and `lecture_order[topic][position]`, but prefer a compact modeling approach:  
+   - Use assignment variables `h_topic[h][t]` = 1 if historian h gives lecture on topic t (each historian gets exactly one topic, each topic assigned to exactly one historian).  
+   - Use order variables `pos[t]` = position (1–4) of topic t in the lecture sequence.  
+   - Or more efficiently, model the lecture schedule as a permutation of topics across positions 1–4 and assign historian to each topic, but better:  
+     Create decision variables `lecture[i] = (historian, topic)` for position i ∈ {1,2,3,4}, with all `historian` and `topic` distinct.  
+   Choose method: Since we need ordering of topics AND assignments, define:  
+     - Let `topic_order = [t1, t2, t3, t4]` be a permutation of topics (positions 1–4).  
+     - Let `giver[t] = h` be the historian who gives lecture on topic t (bijection between historians and topics).  
+4. Add **topic ordering constraints** from problem:  
+   - oil paintings < lithographs and watercolors < lithographs.  
+   - Farley’s lecture (i.e., topic assigned to Farley) < oil paintings.  
+   - Holden’s lecture position < Garcia’s lecture position AND Holden’s lecture position < Jiang’s lecture position.  
+5. Translate constraint 4 into boolean/linear constraints:  
+   - Let `pos[t]` = position of topic t. Then: `pos[oil] < pos[litho]`, `pos[water] < pos[litho]`.  
+   - Let `giver[Farley] = tF`, then `pos[tF] < pos[oil]`.  
+   - Let `giver[Holden] = tH`, `giver[Garcia] = tG`, `giver[Jiang] = tJ`. Then: `pos[tH] < pos[tG]` and `pos[tH] < pos[tJ]`.  
+6. Add **bijection constraints**:  
+   - For each historian, exactly one topic assigned: `∑_t h_topic[h][t] = 1`.  
+   - For each topic, exactly one historian assigned: `∑_h h_topic[h][t] = 1`.  
+7. Add all permutations/assignment consistency: `pos[t]` must be consistent with the lecture ordering; but to link `giver` and `pos`, compute historian position as:  
+   - For each topic t, let `h = giver[t]`, then historian position for h is `pos[t]`.  
+   So define `historian_pos[h] = pos[t]` where `h_topic[h][t] = 1`. This requires either big-M encoding or using alldifferent + piecewise definitions — better to model positions directly.  
+Alternative: Use position-based assignment: define `assignment[i] = (h, t)` for position i ∈ {1..4}.  
+Simpler: Model via 16 binary variables `x[i][h][t]` = 1 if at position i, historian h gives topic t.  
+But that's heavy; instead:  
+- Let `topic_pos[t] ∈ {1,2,3,4}` and `h_topic[h][t] ∈ {0,1}`, with constraints:  
+  - ∑_t h_topic[h][t] = 1 for each h (historian constraint)  
+  - ∑_h h_topic[h][t] = 1 for each t (topic constraint)  
+  - Define `historian_pos[h] = ∑_t topic_pos[t] * h_topic[h][t]` (since for each h, exactly one t has h_topic=1).  
+8. Add ordering constraints using `topic_pos` and derived `historian_pos`:  
+   - `topic_pos[oil] < topic_pos[litho]`  
+   - `topic_pos[water] < topic_pos[litho]`  
+   - `historian_pos[Farley] < topic_pos[oil]`  
+   - `historian_pos[Holden] < historian_pos[Garcia]`  
+   - `historian_pos[Holden] < historian_pos[Jiang]`  
+9. For each answer choice, interpret the statement and check whether it MUST be true across all satisfying assignments:  
+   - For each choice, assert its negation and test UNSAT; if UNSAT, then the statement must be true.  
+   Choices:  
+   A. Farley < sculptures ⇒ `historian_pos[Farley] < topic_pos[sculptures]`  
+   B. Holden < lithographs ⇒ `historian_pos[Holden] < topic_pos[litho]`  
+   C. sculptures < Garcia ⇒ `topic_pos[sculptures] < historian_pos[Garcia]`  
+   D. sculptures < Jiang ⇒ `topic_pos[sculptures] < historian_pos[Jiang]`  
+   E. watercolors < Garcia ⇒ `topic_pos[water] < historian_pos[Garcia]`  
+10. Clone base constraints into a fresh solver for each choice, add the negation of that statement, and check unsatisfiability.  
+11. Collect all choice indices for which the model becomes UNSAT under negation — those are statements that MUST be true. Since only one answer is correct, the list will contain exactly one index.  
+12. Return the index of that choice.

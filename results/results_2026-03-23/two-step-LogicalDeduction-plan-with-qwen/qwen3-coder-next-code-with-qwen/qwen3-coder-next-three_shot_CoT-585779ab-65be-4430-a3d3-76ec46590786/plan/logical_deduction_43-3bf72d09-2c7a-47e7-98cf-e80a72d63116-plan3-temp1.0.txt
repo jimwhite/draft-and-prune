@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five birds as variables: `"owl"`, `"crow"`, `"raven"`, `"robin"`, and `"cardinal"`.  
+    * Define the domain as integers 1 to 5, where **1 = leftmost** and **5 = rightmost** position on the branch.  
+    * Add all bird variables to the problem with domain {1, 2, 3, 4, 5}.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that each bird occupies a unique position.  
+    * Translate each statement into constraints:  
+        - "The raven is the second from the left" → `raven == 2`  
+        - "The raven is to the right of the owl" → `owl < raven` (i.e., `owl < 2`)  
+        - "The robin is the second from the right" → `robin == 4`  
+        - "The robin is to the left of the crow" → `robin < crow` (i.e., `4 < crow`, so `crow == 5`)  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+    * Since the problem is well-constrained, expect exactly one solution; extract it.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which bird is second from the left (i.e., position 2).  
+    * Compare each choice’s described bird against position 2 in the solution:  
+        - A) owl → check if `owl == 2`  
+        - B) crow → check if `crow == 2`  
+        - C) raven → check if `raven == 2` (already known true from constraint, but verify consistency)  
+        - D) robin → check if `robin == 2` (known to be 4, so false)  
+        - E) cardinal → check if `cardinal == 2`  
+    * The choice whose bird has position 2 in the solution is correct; output its letter.

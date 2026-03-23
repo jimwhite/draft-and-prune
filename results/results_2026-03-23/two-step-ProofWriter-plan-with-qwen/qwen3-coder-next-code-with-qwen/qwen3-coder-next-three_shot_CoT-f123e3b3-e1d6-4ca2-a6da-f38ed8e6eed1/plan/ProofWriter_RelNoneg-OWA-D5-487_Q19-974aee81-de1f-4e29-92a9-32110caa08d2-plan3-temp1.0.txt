@@ -1,0 +1,17 @@
+1. Identify all entities: cat, dog, lion, rabbit.  
+2. Encode all explicit facts as ternary predicates with boolean objects for unary properties (e.g., is_rough("cat", True), is_blue("lion", True)) and entity objects for binary relations (e.g., chases("cat", "lion", True), needs("cat", "lion", True)).  
+3. Translate each conditional rule into a `foreach` block with condition atoms and an `assert` clause for the conclusion:  
+   • If someone chases the lion → they are round.  
+   • If the lion needs the rabbit AND the rabbit chases the dog → the lion likes the dog.  
+   • If someone is round AND they chase the lion → they need the cat.  
+   • If someone needs the cat AND they chase the dog → they like the rabbit.  
+   • If someone chases the lion AND the lion is blue → the lion is round.  
+   • If someone chases the rabbit → they are rough.  
+   • If someone is rough AND they like the rabbit → the rabbit is young.  
+   • If the rabbit chases the cat AND the cat needs the lion → the rabbit is young.  
+   • If someone is round AND they need the cat → they chase the dog.  
+4. Note that *chases*, *needs*, *likes* are binary relations requiring entity second arguments (e.g., chases(X, "lion", True)), and *needs the rabbit* means needs(X, "rabbit", True).  
+5. The query checks whether *the lion does not like the cat*, i.e., likes("lion", "cat", False).  
+6. Before asserting the query, infer as much as possible via backward chaining: use facts.is_rough("cat", True), etc., and apply rules to derive missing facts (e.g., cat chases lion ⇒ cat is round; rabbit is rough and likes dog, but no info on rabbit liking rabbit, so may not trigger rabbit young rule directly).  
+7. Specifically, assess if lion likes cat can be proven true or false: check direct facts (none state lion likes cat), and see if any rule implies lion likes cat — none do; check if any rule could imply the negation (none assert !likes directly), but also verify no chain leads to lion liking cat.  
+8. Conclude query: facts.likes("lion", "cat", False).

@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five books as string variables: `"brown"`, `"orange"`, `"red"`, `"purple"`, `"black"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables to the problem with this domain using `addVariable`.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a constraint:  
+     - "The purple book is to the left of the black book" → `purple < black` (using `addConstraint(lambda p, b: p < b, ["purple", "black"])`).  
+     - "The red book is to the right of the brown book" → `brown < red` (using `addConstraint(lambda br, r: br < r, ["brown", "red"])`).  
+     - "The orange book is the second from the left" → `orange == 2` (using `addConstraint(lambda o: o == 2, ["orange"])`).  
+     - "The black book is the third from the left" → `black == 3` (using `addConstraint(lambda k: k == 3, ["black"])`).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Since the problem is fully constrained and consistent, extract the single solution (or first solution) from the list.
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is **second from the left**, i.e., has position = 2.  
+   * Create a mapping: `{'A': 'brown', 'B': 'orange', 'C': 'red', 'D': 'purple', 'E': 'black'}`.  
+   * In the solution dictionary, find which book has value `2`.  
+   * Return the corresponding choice letter (e.g., if `"orange"` has position `2`, output `'B'`).

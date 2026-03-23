@@ -1,0 +1,20 @@
+1. Enumerate the five witnesses: Franco (0), Garcia (1), Hong (2), Iturbe (3), Jackson (4). Assign integer day indices: Monday=0, Tuesday=1, Wednesday=2.  
+2. Create integer variables `d[w]` for each witness w ∈ {0..4}, representing their testimony day (domain 0–2).  
+3. Add **distinctness constraints for Franco and Garcia**: `d[0] ≠ d[1]`.  
+4. Add **Iturbe fixed constraint**: `d[3] == 2` (Wednesday).  
+5. Add **exactly two witnesses on Tuesday**: count of witnesses with `d[w] == 1` is exactly 2.  
+6. Add **Hong not on Monday**: `d[2] ≠ 0`.  
+7. Add **at least one witness on Monday**: at least one `d[w] == 0`.  
+8. Add **problem-specific assumption**: Franco and Hong testify on the same day: `d[0] == d[2]`.  
+9. For each answer choice (as a logical condition), check whether it **must be true** under all valid schedules satisfying steps 3–8:  
+    - Construct base solver with constraints 3–8.  
+    - For each choice, clone the solver and add the **negation** of the choice condition.  
+    - If the negated constraint yields UNSAT (i.e., impossible), then the choice **must be true**.  
+10. Translate answer choices into logical conditions:  
+    - A: `d[0] == 2`  
+    - B: `d[1] == 0`  
+    - C: `d[1] == 2`  
+    - D: `d[2] == 1`  
+    - E: `count({w : d[w]==2}) == 1` (only Iturbe on Wednesday).  
+11. Collect all choices whose negation is UNSAT → these are the "must be true" options.  
+12. Output the index of the one correct choice (the plan expects a single answer, so report that index).

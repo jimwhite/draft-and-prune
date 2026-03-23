@@ -1,0 +1,13 @@
+1. Enumerate the eight employees and assign each an integer code (e.g., Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7).  
+2. Create Boolean variables `m[i]` for each employee i, indicating whether they are selected (True) or not (False).  
+3. Add **team-size constraint**: at least 4 employees are selected → `sum(m[i] for i in range(8)) >= 4`.  
+4. Add **fixed condition**: Yoder is not on the team → `m[6] == False`.  
+5. Add **constraint 1**: If Myers is selected, neither Ortega nor Paine can be → `m[0] => (~m[1] & ~m[2])`, equivalently: `~m[0] | (~m[1] & ~m[2])`.  
+6. Add **constraint 2**: If Schmidt is selected, both Paine and Thomson must be → `m[3] => (m[2] & m[4])`, equivalently: `~m[3] | (m[2] & m[4])`.  
+7. Add **constraint 3**: If Wong is selected, both Myers and Yoder must be → `m[5] => (m[0] & m[6])`. Since `m[6]` is False, this simplifies to `~m[5] | (m[0] & False)` → `~m[5]`, i.e., Wong cannot be selected. Add hard constraint: `m[5] == False`.  
+8. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+9. Define `answer_index_list = []`. For each candidate employee (in order of choices), check if they **must be excluded** when Yoder is not on the team:  
+    - Clone base constraints into fresh solver.  
+    - Assert that this employee *is* selected: `m[idx] == True`.  
+    - Check SAT. If UNSAT, then this employee **cannot** be on the team (i.e., it is impossible for them to be included under Yoder not selected); thus, they are the "EXCEPT" candidate. Append their index to `answer_index_list`.  
+10. Print the answer index list — only one index should appear, corresponding to the employee who could **not** be on the team if Yoder is excluded.

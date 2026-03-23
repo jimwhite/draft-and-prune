@@ -1,0 +1,22 @@
+1. Enumerate the seven articles and assign each an integer index.  
+2. Create integer variables for the editing positions (1 to 7) of each article.  
+3. Add **domain constraints**: all position variables must be distinct integers in [1, 7].  
+4. Add **topic grouping**: define a mapping from article to topic (finance: G, H, J; nutrition: Q, R, S; wildlife: Y).  
+5. Add **no-consecutive-same-topic constraint**: for all i in [1,6], article at position i and article at position i+1 must have different topics.  
+6. Add **S-before-Q conditional constraint**: if S is earlier than Q, then Q must be in position 3; equivalently, (pos_S < pos_Q) → (pos_Q == 3).  
+7. Add **S-before-Y constraint**: pos_S < pos_Y.  
+8. Add **J-before-G and G-before-R chain**: pos_J < pos_G ∧ pos_G < pos_R.  
+9. Translate each answer choice into a constraint: e.g., “H is fourth” → pos_H == 4, etc.  
+10. For each answer choice:  
+    - Clone the base constraints (steps 3–8) into a fresh solver.  
+    - Add the answer choice’s positional constraint (step 9).  
+    - Check if adding all three remaining topic constraints and the existing logic uniquely determines a single ordering:  
+        • To test uniqueness, *count models*: after solving, add a constraint excluding the found solution and re-solve; if UNSAT, the model is unique.  
+        • Alternatively, use Z3’s `solver.unsat_core` or check if only one permutation satisfies all constraints (by collecting all models).  
+    • However, since Z3 does not directly return “uniqueness” without enumeration, implement model counting:  
+        - Solve for a model.  
+        - If UNSAT → choice impossible (discard).  
+        - Else, add a constraint negating the found solution.  
+        - Solve again: if UNSAT → only one model exists (order fully determined); else, not unique.  
+    • Append the index of this choice to `answer_index_list` if and only if the model is unique.  
+11. Return the choice (from the list of five) whose index is in `answer_index_list`.

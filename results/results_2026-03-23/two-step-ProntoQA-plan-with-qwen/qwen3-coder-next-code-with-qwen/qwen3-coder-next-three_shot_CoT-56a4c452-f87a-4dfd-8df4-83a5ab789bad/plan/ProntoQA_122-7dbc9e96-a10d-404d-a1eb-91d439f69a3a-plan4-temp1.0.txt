@@ -1,0 +1,24 @@
+1.  Identify all entities and types: Fae, rompus, dumpus, numpus, jompus, tumpus, impus, yumpus, zumpus, vumpus, wumpus.  
+2.  Identify all properties: metallic, blue, fruity, mean, temperate, dull, transparent, sweet.  
+3.  Represent "Fae is a numpus" as a base fact: `is_a("Fae", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    * Rompuses are metallic.  
+    * Rompuses are dumpuses.  
+    * Dumpuses are blue.  
+    * Every dumpus is a numpus.  
+    * Every numpus is fruity.  
+    * Numpuses are jompuses.  
+    * Every jompus is mean.  
+    * Jompuses are tumpuses.  
+    * Tumpuses are not temperate.  
+    * Tumpuses are impuses.  
+    * Impuses are not dull.  
+    * Each impus is a yumpus.  
+    * Every yumpus is not transparent.  
+    * Yumpuses are zumpuses.  
+    * Wumpuses are transparent.  
+    * Zumpuses are not sweet.  
+    * Zumpuses are vumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  The query tests if the statement "Fae is transparent" is provable: since Fae is a numpus → jompus → tumpus → impus → yumpus, and yumpuses are not transparent, we can prove `is_transparent("Fae", False)`, so the statement "Fae is transparent" is false.  
+    → Use `facts.is_transparent("Fae", True)`.

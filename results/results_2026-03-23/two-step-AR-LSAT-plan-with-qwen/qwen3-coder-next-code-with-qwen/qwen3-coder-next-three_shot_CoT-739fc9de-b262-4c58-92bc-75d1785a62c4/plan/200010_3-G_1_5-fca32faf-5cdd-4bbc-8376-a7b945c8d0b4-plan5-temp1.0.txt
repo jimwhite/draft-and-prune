@@ -1,0 +1,27 @@
+1. Enumerate the eight students and assign each an integer index.  
+2. Define Boolean variables `scheduled[s][d]` for each student s and day d ∈ {Monday, Tuesday, Wednesday}, indicating whether student s gives *any* report on day d.  
+3. Define Boolean variables `slot[s][d][t]` for each student s, day d, and time t ∈ {morning, afternoon}, indicating whether student s gives a report in that specific slot.  
+4. Add **total reports constraint**: exactly six students give reports (i.e., sum over all `slot[s][d][t]` = 1 for each (s,d,t) is true for exactly six students across two slots).  
+5. Add **exactly two reports per day constraint**: for each day d, exactly two slots (morning and afternoon) are assigned — i.e., for each day, sum over students of `slot[s][d][morning]` + `slot[s][d][afternoon]` = 2.  
+6. Add **assignment consistency**: each `slot[s][d][t]` implies `scheduled[s][d]`, and sum over days for a student gives total reports (0 or more), but exactly six students have at least one report.  
+7. Add **day-specific constraints**:  
+   - Tuesday is the only day George can give a report ⇒ `slot[George][Monday][t] = false`, `slot[George][Wednesday][t] = false` for both t; George may be scheduled only on Tuesday (morning or afternoon).  
+   - Neither Olivia nor Robert can give an afternoon report ⇒ `slot[Olivia][d][afternoon] = false`, `slot[Robert][d][afternoon] = false` for all d.  
+8. Add **conditional constraint** for Nina: If Nina gives a report on Monday or Tuesday, then Helen and Irving must both give reports the next day. Since Nina cannot report on Wednesday *and* trigger this (the condition explicitly excludes that), we encode:  
+   - For Monday: if `scheduled[Nina][Monday]` then `scheduled[Helen][Tuesday] = true` and `scheduled[Irving][Tuesday] = true`.  
+   - For Tuesday: if `scheduled[Nina][Tuesday]` then `scheduled[Helen][Wednesday] = true` and `scheduled[Irving][Wednesday] = true`.  
+9. Add **given scenario constraints**:  
+   - Kyle gives the *afternoon* report on Tuesday ⇒ `slot[Kyle][Tuesday][afternoon] = true`.  
+   - Helen gives the *afternoon* report on Wednesday ⇒ `slot[Helen][Wednesday][afternoon] = true`.  
+10. For each answer choice, extract the proposed morning report students for Monday, Tuesday, Wednesday (list of 3 students).  
+11. For each choice:  
+    - Clone base constraints into a fresh solver.  
+    - Add **fixed-morning-report constraints**:  
+        - `slot[choice_Monday][Monday][morning] = true`,  
+        - `slot[choice_Tuesday][Tuesday][morning] = true`,  
+        - `slot[choice_Wednesday][Wednesday][morning] = true`.  
+    - Add **uniqueness of slot assignments**: no student can occupy both morning and afternoon on the same day; ensure each person is assigned at most once per day.  
+    - Add **afternoon assignments** already fixed (Kyle Tue afternoon, Helen Wed afternoon), so ensure these remain.  
+    - Add **no conflict with fixed constraints** (e.g., George only on Tue — if choice has George as Tuesday morning, that’s fine; if someone else is assigned to Tue afternoon besides Kyle, conflict).  
+12. For each choice, check satisfiability: if SAT, the choice is possible — record its index in answer_index_list.  
+13. Print answer_index_list (should contain indices of all feasible choices).

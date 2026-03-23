@@ -1,0 +1,33 @@
+1. **Initialize the Problem Environment:**
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**
+   * Define the seven bird variables as strings: `"blue jay"`, `"owl"`, `"falcon"`, `"hawk"`, `"raven"`, `"crow"`, and `"hummingbird"`.
+   * Define the domain as integers from 1 to 7, where position **1 = leftmost** and **7 = rightmost**.
+   * Add all seven variables to the problem with the domain {1, 2, 3, 4, 5, 6, 7}.
+
+3. **Add Constraints:**
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+   * Add deterministic constraints using equality:
+     - `falcon == 2` (second from the left).
+     - `crow == 7` (rightmost).
+   - Add relational constraints using lambda functions:
+     - `hummingbird > blue jay` (hummingbird is to the right of blue jay).
+     - `hawk > hummingbird` (hawk is to the right of hummingbird).
+     - `blue jay > owl` (blue jay is to the right of owl).
+     - `raven < falcon` (raven is to the left of falcon; since `falcon == 2`, this implies `raven == 1`).
+
+4. **Solve the Problem:**
+   * Use `getSolutions()` to enumerate all valid assignments.
+   * Extract the unique solution (the problem has exactly one solution due to sufficient constraints).
+
+5. **Identify the Second-from-the-Right Position:**
+   * In our system, second from the right corresponds to position **6** (since rightmost is 7).
+   * Iterate over the solution dictionary and find which bird has position value 6.
+
+6. **Map to Answer Choices:**
+   * Create a mapping from choice letters ("A" through "G") to bird names:
+     - A: "blue jay", B: "owl", C: "falcon", D: "hawk", E: "raven", F: "crow", G: "hummingbird".
+   * Locate the bird with position 6 and retrieve its corresponding choice letter.
+   * Output the choice letter as the final answer.

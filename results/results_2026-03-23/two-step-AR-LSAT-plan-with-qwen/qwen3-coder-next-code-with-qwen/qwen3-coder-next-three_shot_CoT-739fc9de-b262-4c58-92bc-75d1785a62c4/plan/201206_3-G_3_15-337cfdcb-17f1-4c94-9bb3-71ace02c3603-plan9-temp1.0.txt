@@ -1,0 +1,17 @@
+1. Enumerate the seven sales representatives and assign integer codes: Kim=0, Mahr=1, Parra=2, Quinn=3, Stuckey=4, Tiao=5, Udall=6.  
+2. Define integer variables `z[k]` for each representative's zone (1, 2, or 3).  
+3. Add **partition constraints**: each representative assigned exactly one zone; all zones are among {1,2,3}.  
+4. Add **mutual exclusivity constraints for Zone 1**: Exactly one of Parra or Tiao works in Zone 1: `(z[Parra]==1) XOR (z[Tiao]==1)`.  
+5. Add **mutual exclusivity constraints for Zone 2**: Exactly one of Tiao or Udall works in Zone 2: `(z[Tiao]==2) XOR (z[Udall]==2)`.  
+6. Add **Parra–Quinn same zone constraint**: `z[Parra] == z[Quinn]`.  
+7. Add **Stuckey–Udall same zone constraint**: `z[Stuckey] == z[Udall]`.  
+8. Add **zone size constraint**: more representatives in Zone 3 than in Zone 2: `count(Zone3) > count(Zone2)`.  
+9. Translate each answer choice into the set of representatives claimed to be in Zone 3; for a list `L`, this means:  
+   - All representatives in `L` must be assigned to Zone 3.  
+   - All representatives *not* in `L` must be assigned to Zone 1 or Zone 2 (but not Zone 3).  
+10. Define `answer_index_list = []`. For each answer choice (index i from 0 to 4):  
+    - Clone base constraints into fresh solver.  
+    - Assert: For each rep `r` in choice i, `z[r] == 3`.  
+    - Assert: For each rep `r` not in choice i, `z[r] != 3`.  
+    - If the resulting formula is SAT, append i to `answer_index_list`.  
+11. Print `answer_index_list` (the indices of feasible choices).

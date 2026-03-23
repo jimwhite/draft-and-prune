@@ -1,0 +1,25 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicles as variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+   * Assign integer positions 1 to 5, where **1 = oldest**, **5 = newest** (consistent with previous antique-car-show problems for uniformity).  
+   * Add all variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Translate each statement:  
+     - "The tractor is newer than the minivan" → `tractor > minivan` (since higher number = newer).  
+     - "The tractor is older than the limousine" → `tractor < limousine`.  
+     - "The convertible is older than the sedan" → `convertible < sedan`.  
+     - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (as consistency implies a single arrangement).
+
+5. **Verify Against Choices:**  
+   * Note: The question asks *"Which of the following is true?"*, and Choice A explicitly states *"The convertible is the second-newest."*  
+   * Since constraint "The convertible is the second-newest" was directly enforced as `convertible == 4`, this statement must be true.  
+   * Therefore,无需 further computation — Choice A is unambiguously correct and matches the input constraint.

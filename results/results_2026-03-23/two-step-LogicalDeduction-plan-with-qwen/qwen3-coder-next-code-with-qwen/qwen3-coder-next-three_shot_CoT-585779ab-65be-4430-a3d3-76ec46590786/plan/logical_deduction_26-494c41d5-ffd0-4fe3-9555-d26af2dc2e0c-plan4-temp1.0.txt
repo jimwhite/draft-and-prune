@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to hold variables and constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five golfers: `"Amy"`, `"Dan"`, `"Mya"`, `"Eli"`, and `"Mel"`.  
+   * Define the domain as integers from 1 to 5, where **1 = first (best/most left)** and **5 = last (worst/most right)**—i.e., smaller numbers indicate better (earlier) finish positions.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Translate each statement into constraints using lambda functions:  
+     - "Amy finished above Mel" → Amy's position < Mel's position (`lambda a, m: a < m`).  
+     - "Mya finished first" → Mya's position = 1 (`lambda m: m == 1`).  
+     - "Amy finished below Eli" → Amy's position > Eli's position (`lambda a, e: a > e`).  
+     - "Dan finished last" → Dan's position = 5 (`lambda d: d == 5`).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments satisfying the constraints.  
+   * Since the problem is deterministic, extract the unique solution from the result list.
+
+5. **Determine Which Choice Is True:**  
+   * The question asks which golfer finished first (i.e., position = 1).  
+   * Create a dictionary mapping choices: `"A"` → `"Amy"`, `"B"` → `"Dan"`, `"C"` → `"Mya"`, `"D"` → `"Eli"`, `"E"` → `"Mel"`.  
+   * Iterate through the solution dictionary to find which golfer has position 1.  
+   * Return (or print) the letter corresponding to that golfer as the correct answer.

@@ -1,0 +1,20 @@
+1. Enumerate the five students and assign integer codes: Jiang=0, Kramer=1, Lopez=2, Megregian=3, O'Neill=4.  
+2. Enumerate the three plays: Sunset=0, Tamerlane=1, Undulation=2.  
+3. Create Boolean variables `review[i][p]` for student i reviewing play p (i ∈ {0..4}, p ∈ {0,1,2}).  
+4. Add **at-least-one** constraint for each student: each reviews at least one play (i ∨ p, review[i][p]).  
+5. Add **Kramer & Lopez < Megregian** constraint: for each of Kramer and Lopez, count the number of plays they review; Megregian must review strictly more than both.  
+6. Add **disjoint reviews** constraint: Lopez and Megregian share no plays with Jiang; i.e., for each play p, if review[0][p] then ¬review[2][p] and ¬review[3][p].  
+7. Add **Kramer & O'Neill both review Tamerlane**: review[1][1] = True and review[4][1] = True.  
+8. Add **exactly-two-students-identical** constraint: there exists exactly one pair of distinct students (i,j) such that for all plays p, review[i][p] ↔ review[j][p]; i.e., exactly one pair has identical review sets.  
+9. Add **exactly-three-students-review-Undulation** constraint: sum_{i=0}^4 review[i][2] == 3.  
+10. Translate each choice into a logical condition:  
+    - Choice 0: Megregian does not review Undulation → ¬review[3][2]  
+    - Choice 1: O'Neill does not review Undulation → ¬review[4][2]  
+    - Choice 2: Jiang reviews Undulation → review[0][2]  
+    - Choice 3: Lopez reviews Tamerlane → review[2][1]  
+    - Choice 4: O'Neill reviews Sunset → review[4][0]  
+11. Define answer index list `answer_index_list = []`. For each choice index c ∈ {0,1,2,3,4}:  
+    - Clone base constraints into a fresh solver S.  
+    - Add the choice condition as a constraint to S.  
+    - If S is SAT (i.e., there exists a valid assignment satisfying all constraints including the choice), then append c to `answer_index_list`.  
+12. Print `answer_index_list`.

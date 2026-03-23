@@ -1,0 +1,15 @@
+1. Enumerate the seven articles and assign each a unique integer index (e.g., G=0, H=1, J=2, Q=3, R=4, S=5, Y=6).  
+2. Create integer variables `pos[a]` for each article `a`, representing its position in the editing sequence (1 to 7).  
+3. Add **domain constraints**: All `pos[a]` ∈ {1,2,3,4,5,6,7} and all are distinct (use `Distinct` or pairwise inequalities).  
+4. Add **topic constraints**: Group articles by topic: Finance = {G,H,J}, Nutrition = {Q,R,S}, Wildlife = {Y}.  
+5. Add **no consecutive same-topic constraint**: For all pairs of articles `(a,b)`, if `|pos[a] - pos[b]| == 1` then their topics differ. Since Z3 doesn’t directly handle absolute differences well in constraints, instead assert: For every pair `(a,b)` where `topic[a] == topic[b]`, enforce `|pos[a] - pos[b]| ≠ 1`. This is equivalent to: `(pos[a] < pos[b] - 1) ∨ (pos[a] > pos[b] + 1)`.  
+6. Add **S-before-Q conditional constraint**: “S can be earlier than Q only if Q is third” means: If `pos[S] < pos[Q]`, then `pos[Q] == 3`. Equivalently: `(pos[S] < pos[Q]) → (pos[Q] == 3)`, or `¬(pos[S] < pos[Q]) ∨ (pos[Q] == 3)`.  
+7. Add **S-before-Y constraint**: `pos[S] < pos[Y]`.  
+8. Add **J–G–R chain constraint**: `pos[J] < pos[G] ∧ pos[G] < pos[R]`.  
+9. Translate answer choices into constraints: For each choice, assert the claimed position (e.g., “G is second” → `pos[G] == 2`).  
+10. For each answer choice in order:  
+    - Clone the base constraints (steps 2–8) into a fresh solver.  
+    - Assert the specific position constraint for that choice.  
+    - Check satisfiability: if SAT, then this scenario is possible; record the index of this choice as valid.  
+11. Return the list of indices for which the scenario is SAT — but since only one choice can be correct and the question asks “Which one could be true?”, simply find the first (or any) SAT choice and output its index.  
+12. However, per instruction: output the raw plan — so stop after defining step 10 fully without executing.

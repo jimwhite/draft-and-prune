@@ -1,0 +1,18 @@
+1. Identify all entities involved: Anne, Bob, Erin, Fiona.  
+2. Define unary properties (e.g., is_round, is_red, is_smart, is_furry, is_rough, is_big) using ternary predicates of the form property(entity, True); do not use objects for unary properties.  
+3. Encode all directly stated facts as facts.property(entity, True) or facts.property(entity, False) where negations are explicitly stated (but note: no explicit "not white" fact is given, only implications involving “white”).  
+4. Translate each universal conditional into a rule with `foreach` and `assert`:  
+   • All smart things are furry.  
+   • All furry things are red.  
+   • All round things are rough.  
+   • If Bob is white → Bob is furry.  
+   • All red, rough things are big.  
+   • All rough things are smart.  
+   • If Fiona is furry → Fiona is red.  
+   • If Bob is round and big → Bob is furry.  
+   • If Fiona is red and white → Fiona is smart.  
+5. For each rule, use `foreach` to bind variables for universally quantified subjects and assert the consequent when all antecedents hold.  
+6. Note: “white” is treated as a unary predicate; no explicit fact asserts `is_white` for any entity, but it may be inferred via rules (e.g., if Bob is white is assumed in a conditional, but we must not assume it unless implied).  
+7. The query tests whether Bob is *not* white:  
+   → Use facts.is_white("Bob", False) to check if “Bob is not white” is entailed.  
+8. Since no information directly or indirectly forces `is_white("Bob", True)`, but the statement requires proving `is_white("Bob", False)` (i.e., ¬white(Bob)), verify whether ¬white(Bob) is logically implied by the facts and rules; if neither white nor not-white is derivable, classify as unknown.

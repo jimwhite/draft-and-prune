@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the seven books: `"orange"`, `"red"`, `"green"`, `"white"`, `"purple"`, `"brown"`, and `"yellow"`.  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven book variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.  
+    * Translate each relational statement into a constraint using lambda functions:  
+        - "The green book is to the left of the purple book" → `green < purple`  
+        - "The white book is to the right of the orange book" → `orange < white`  
+        - "The green book is to the right of the brown book" → `brown < green`  
+        - "The yellow book is to the right of the white book" → `white < yellow`  
+        - "The red book is to the right of the yellow book" → `yellow < red`  
+        - "The brown book is to the right of the red book" → `red < brown`  
+
+4.  **Solve for All Valid Arrangements:**  
+    * Call `getSolutions()` on the problem instance to find all solutions satisfying the constraints.  
+    * Extract the unique solution (assuming exactly one exists, as stated by logical consistency).  
+
+5.  **Determine Which Book is Second from the Left:**  
+    * The question asks which book occupies position **2** (second from left).  
+    * Create a mapping from choice letters ("A" to "G") to book names:  
+        `"A" → "orange"`, `"B" → "red"`, `"C" → "green"`, `"D" → "white"`,  
+        `"E" → "purple"`, `"F" → "brown"`, `"G" → "yellow"`.  
+    * Iterate through the solution dictionary to find which book has position value 2.  
+    * Return (or identify) the choice letter corresponding to that book as the correct answer.

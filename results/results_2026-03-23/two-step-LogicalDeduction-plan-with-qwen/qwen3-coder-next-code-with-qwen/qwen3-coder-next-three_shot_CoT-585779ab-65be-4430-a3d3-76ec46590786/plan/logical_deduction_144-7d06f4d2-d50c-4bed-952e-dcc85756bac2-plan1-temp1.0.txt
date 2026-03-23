@@ -1,0 +1,35 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin constructing the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven golfers as variables: `"Joe"`, `"Dan"`, `"Ada"`, `"Amy"`, `"Rob"`, `"Mya"`, and `"Mel"`.
+    * Define the domain as integers from 1 to 7, where **1 represents first place (highest rank)** and **7 represents last place (lowest rank)** — lower number = better finish.
+    * Add all variables and their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "Ada finished below Amy" means Ada's position number > Amy's position number (`lambda a, am: a > am`).
+        * "Joe finished below Dan" means Joe's position number > Dan's (`lambda j, d: j > d`).
+        * "Dan finished below Ada" means Dan's position number > Ada's (`lambda d, a: d > a`).
+        * "Mel finished third-to-last" in a 7-person race means position = 5 (positions: 1st=best, 7th=worst; third-to-last = 5th place: positions 5,6,7 are last three).
+        * "Amy finished third" means Amy's position = 3.
+        * "Rob finished below Mya" means Rob's position number > Mya's (`lambda r, m: r > m`).
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments of positions.
+    * Extract the first (and unique) solution from the list.
+
+5.  **Determine the Correct Answer:**
+    * Identify which golfer has position = 1 (first place).
+    * Create a mapping from choice letters to golfer names:
+        - 'A' → 'Joe'
+        - 'B' → 'Dan'
+        - 'C' → 'Ada'
+        - 'D' → 'Amy'
+        - 'E' → 'Rob'
+        - 'F' → 'Mya'
+        - 'G' → 'Mel'
+    * Find which golfer in the solution has position 1.
+    * Return the corresponding choice letter.

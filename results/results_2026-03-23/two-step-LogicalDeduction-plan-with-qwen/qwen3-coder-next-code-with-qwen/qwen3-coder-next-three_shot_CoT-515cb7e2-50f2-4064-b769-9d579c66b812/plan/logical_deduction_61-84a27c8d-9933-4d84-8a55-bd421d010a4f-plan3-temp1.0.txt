@@ -1,0 +1,33 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five books as string variables: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost**, **2 = second from left**, ..., **5 = rightmost**.  
+   * Add all five variables with domain `{1, 2, 3, 4, 5}` to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Add the following constraints using lambda functions (or equivalent constraint helpers):  
+     - *"The red book is to the right of the gray book"* → `red > gray`  
+     - *"The black book is to the left of the blue book"* → `black < blue`  
+     - *"The blue book is to the left of the gray book"* → `blue < gray`  
+     - *"The purple book is the second from the right"* → `purple == 4` (since position 5 is rightmost, so second from right = position 4)  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all satisfying assignments.  
+   * Extract the unique solution (since the problem is fully constrained, there should be exactly one).  
+
+5. **Determine Which Statement Is True:**  
+   * Examine the question: *"Which of the following is true?"* and the answer choices.  
+   * Note that all choices refer to *"is the second from the right"*, i.e., position 4.  
+   * Since we already have the constraint `purple == 4`, verify via the solution that purple occupies position 4 (it must).  
+   * Map choice letters to books:  
+     - A) gray → check if gray == 4  
+     - B) red → check if red == 4  
+     - C) purple → check if purple == 4  
+     - D) blue → check if blue == 4  
+     - E) black → check if black == 4  
+   * Identify which choice matches the actual position of its book in the solution. Given `purple == 4` is enforced, **C** must be true.  
+   * Output the correct choice letter (**"C"**) as the final answer.

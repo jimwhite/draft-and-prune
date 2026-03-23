@@ -1,0 +1,23 @@
+1. Enumerate the five witnesses and assign them integer codes (e.g., Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4).  
+2. Enumerate the three days and assign them integer codes (e.g., Monday=0, Tuesday=1, Wednesday=2).  
+3. Create integer variables `day[w]` for each witness w ∈ {0,1,2,3,4}, representing the day they testify (domain: 0,1,2).  
+4. Add **fixed constraint**: Iturbe (index 3) testifies on Wednesday → `day[3] == 2`.  
+5. Add **cardinality constraints**:  
+   - Exactly two witnesses testify on Tuesday → count of `day[w] == 1` is exactly 2.  
+   - At least one witness testifies on Monday → count of `day[w] == 0` ≥ 1.  
+6. Add **exclusion constraints**:  
+   - Franco (0) and Garcia (1) do not testify on same day → `day[0] != day[1]`.  
+   - Hong (2) does not testify on Monday → `day[2] != 0`.  
+7. Add the **conditional constraint** given in the question: Franco and Hong testify on same day → `day[0] == day[2]`.  
+8. Translate each answer choice into a logical condition on the schedule:  
+   - A: Franco on Wednesday → `day[0] == 2`  
+   - B: Garcia on Monday → `day[1] == 0`  
+   - C: Garcia on Wednesday → `day[1] == 2`  
+   - D: Hong on Tuesday → `day[2] == 1`  
+   - E: Iturbe is the only one on Wednesday → `day[w] != 2 for all w ≠ 3`  
+9. For each answer choice, check whether it **must** be true given all constraints:  
+   - Clone base + conditional constraints into fresh solver S.  
+   - Assert the *negation* of the answer choice condition (e.g., for A, assert `day[0] != 2`).  
+   - If S is UNSAT, then the answer choice must be true; record it.  
+10. Collect all choices for which the negation is UNSAT → those are the *must-be-true* options.  
+11. Return the index (or indices) of the required answer choice(s).

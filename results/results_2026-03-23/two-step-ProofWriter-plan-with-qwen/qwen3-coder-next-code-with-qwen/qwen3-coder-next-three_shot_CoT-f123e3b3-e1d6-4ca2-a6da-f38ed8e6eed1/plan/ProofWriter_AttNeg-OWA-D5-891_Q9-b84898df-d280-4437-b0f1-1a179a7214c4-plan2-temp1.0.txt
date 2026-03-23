@@ -1,0 +1,21 @@
+1. Identify all entities: Bob, Charlie, Erin, Fiona.
+2. Encode all explicitly stated facts using ternary predicates:
+   - is_green("Bob", True)
+   - is_kind("Bob", True)
+   - is_green("Charlie", True)
+   - is_smart("Charlie", False)
+   - is_young("Erin", False)
+   - is_nice("Fiona", True)
+   - is_young("Fiona", True)
+3. Express each contextual implication as a PyKe rule using `foreach` and `assert`:
+   • If something is green and smart → it is quiet.
+   • If something is kind → it is green.
+   • If something is smart → it is young.
+   • If something is young → it is kind.
+   • If something is quiet → it is furry.
+   • If something is quiet and nice → it is furry.
+   • If something is nice and green → it is smart.
+   • If Bob is kind and not green → Bob is furry.
+4. For rules with negated conditions (e.g., "not smart", "not green"), use `foreach` clauses with explicit `is_smart(X, False)` or `is_green(X, False)` as needed; for Bob’s specific conditional, hardcode the constant “Bob” in both condition and conclusion.
+5. The query tests whether Fiona is quiet:
+   → Use facts.is_quiet("Fiona", True)

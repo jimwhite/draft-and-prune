@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * The variables are the five golfers: `"Mel"`, `"Dan"`, `"Amy"`, `"Joe"`, and `"Eve"`.  
+   * Define the domain as integers from **1 to 5**, where **1 = first place (leftmost / highest rank)** and **5 = last place (rightmost / lowest rank)**.  
+   * Add all variables with this domain to the problem.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+   * Translate each statement:  
+     - "Amy finished below Dan" means Amy's position number is **greater than** Dan’s (`amy > dan`).  
+     - "Mel finished first" means Mel's position is **1**.  
+     - "Joe finished above Dan" means Joe’s position number is **less than** Dan’s (`joe < dan`).  
+     - "Eve finished last" means Eve's position is **5**.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid solutions.  
+   * Extract the unique solution (since the problem is fully determined by the constraints).
+
+5. **Identify the Correct Answer:**  
+   * The question is: "Which of the following is true?" with choices about who finished last (position 5).  
+   * From the constraints, we already know "Eve finished last" is explicitly given — but verify via solution.  
+   * Map the choices to golfer names: A→Mel, B→Dan, C→Amy, D→Joe, E→Eve.  
+   * Check which golfer has position 5 in the solution and return the corresponding letter (E).

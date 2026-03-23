@@ -1,0 +1,17 @@
+1. Identify all entities: bear, mouse, squirrel, tiger.  
+2. Encode direct facts using ternary predicates:  
+   - Properties: is_green("bear", True), is_kind("bear", True), is_cold("squirrel", True), is_nice("squirrel", True), is_green("tiger", True)  
+   - Relations: needs("mouse", "bear", True), visits("mouse", "bear", True), visits("mouse", "squirrel", True), visits("mouse", "tiger", True), chases("squirrel", "bear", True), needs("tiger", "bear", True)  
+3. Translate each conditional into a `foreach` + `assert` rule:  
+   • If X needs the mouse → is_kind(X, True)  
+   • If mouse is young → mouse needs bear (i.e., needs("mouse", "bear", True))  
+   • If X chases the bear → X needs the tiger (i.e., needs(X, "tiger", True))  
+   • If X needs the squirrel and visits the mouse → mouse needs X (i.e., needs("mouse", X, True))  
+   • If X visits the squirrel → X needs the mouse (i.e., needs(X, "mouse", True))  
+   • If X chases the squirrel and squirrel is nice → is_young(X, True)  
+   • If X visits the mouse and mouse is green → X needs the tiger (i.e., needs(X, "tiger", True))  
+   • If X is kind and visits the tiger → tiger visits X (i.e., visits("tiger", X, True))  
+   • If bear needs squirrel and bear visits tiger → bear chases tiger (i.e., chases("bear", "tiger", True))  
+4. For rules with negations (none present here), use `not` in `foreach`; for constants, directly instantiate.  
+5. The query asks whether squirrel chases tiger:  
+   → Use facts.chases("squirrel", "tiger", True)

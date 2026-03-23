@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the five birds as variables: `"cardinal"`, `"crow"`, `"falcon"`, `"robin"`, and `"bluejay"` (note: use `"bluejay"` as a single string to avoid space issues in variable names).  
+    * Define the domain of positions as integers from 1 (leftmost) to 5 (rightmost).  
+    * Add all five bird variables with domain `{1,2,3,4,5}` to the `Problem` instance.
+
+3.  **Add Constraints from Statements:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate each natural language statement into constraints using `addConstraint` with lambda functions:  
+        - "The robin is to the right of the cardinal" → `cardinal < robin`  
+        - "The cardinal is to the right of the blue jay" → `bluejay < cardinal`  
+        - "The blue jay is the second from the left" → `bluejay == 2`  
+        - "The crow is the rightmost" → `crow == 5`
+
+4.  **Solve the Constraint Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments of positions.  
+    * Extract the unique solution (a dictionary mapping bird names to position integers).
+
+5.  **Identify the Leftmost Bird and Match to Choices:**  
+    * The leftmost position corresponds to value 1.  
+    * Create a mapping from choice letters (A–E) to bird names: `{"A": "cardinal", "B": "crow", "C": "falcon", "D": "robin", "E": "bluejay"}`.  
+    * In the solution, find which bird has position 1.  
+    * Return the choice letter (A–E) corresponding to that bird as the answer.

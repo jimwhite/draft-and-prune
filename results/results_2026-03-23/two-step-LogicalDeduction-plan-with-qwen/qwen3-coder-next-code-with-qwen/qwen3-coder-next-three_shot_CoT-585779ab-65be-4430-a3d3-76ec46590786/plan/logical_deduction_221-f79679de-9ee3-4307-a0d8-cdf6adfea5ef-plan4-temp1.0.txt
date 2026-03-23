@@ -1,0 +1,46 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"oranges"`, `"loquats"`, `"apples"`, `"kiwis"`, `"mangoes"`, `"plums"`, and `"peaches"`.
+    * Define a numerical domain representing price rank: integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.
+    * Add all fruit variables to the problem, each with domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each fruit has a unique price rank using `AllDifferentConstraint`.
+
+4.  **Translate Explicit Rank Statements into Equality Constraints:**
+    * "The peaches are the cheapest" → peach rank = 1.
+    * "The apples are the second-cheapest" → apple rank = 2.
+    * "The loquats are the third-cheapest" → loquat rank = 3.
+    * "The plums are the fourth-most expensive" → since most expensive is rank 7, fourth-most expensive = rank 4 (because 7−4+1 = 4). So plum rank = 4.
+
+5.  **Translate Comparative Rank Statements into Inequality Constraints:**
+    * "The kiwis are more expensive than the mangoes" → kiwi rank < mango rank (lower number = cheaper? No — wait: higher price = more expensive → larger rank value. So kiwi is *more* expensive → kiwi rank > mango rank).
+        * Clarify mapping: cheaper = lower number, more expensive = higher number.
+        * So "kiwis are more expensive than mangoes" → kiwi rank > mango rank.
+    * "The oranges are less expensive than the mangoes" → oranges rank < mango rank.
+
+6.  **Collect and Add All Constraints:**
+    * Add the seven equality constraints (peaches=1, apples=2, loquats=3, plums=4).
+    * Add the two inequality constraints (kiwi > mango and orange < mango) using `addConstraint` with lambda functions or custom constraints.
+
+7.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments of ranks to fruits.
+    * Since the problem is deterministic, expect exactly one solution (or a small number), and extract it.
+
+8.  **Determine the Most Expensive Fruit:**
+    * The question asks which fruit is the most expensive, i.e., has rank 7.
+    * Iterate over the solved assignment to find which fruit has value 7.
+
+9.  **Map to Correct Choice:**
+    * Create a mapping from choice letters to fruit names:
+        - A → "oranges"
+        - B → "loquats"
+        - C → "apples"
+        - D → "kiwis"
+        - E → "mangoes"
+        - F → "plums"
+        - G → "peaches"
+    * Identify the letter corresponding to the fruit with rank 7 and output it as the answer.

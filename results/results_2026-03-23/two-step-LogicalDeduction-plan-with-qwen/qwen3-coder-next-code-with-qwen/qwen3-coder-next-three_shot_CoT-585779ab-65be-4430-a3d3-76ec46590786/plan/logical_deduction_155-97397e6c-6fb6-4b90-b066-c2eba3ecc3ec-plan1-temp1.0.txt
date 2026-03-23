@@ -1,0 +1,39 @@
+1. **Initialize the Constraint Satisfaction Problem:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the CSP.
+
+2. **Define Variables and Domain:**  
+   * Define the seven bird variables: `"cardinal"`, `"crow"`, `"hummingbird"`, `"blue jay"`, `"owl"`, `"robin"`, and `"quail"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Add AllDifferent Constraint:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.
+
+4. **Translate and Add Positional Constraints:**  
+   * "The cardinal is to the right of the crow" → `cardinal > crow`  
+   * "The quail is the third from the left" → `quail == 3`  
+   * "The owl is to the right of the robin" → `owl > robin`  
+   * "The hummingbird is to the right of the blue jay" → `hummingbird > blue jay`  
+   * "The cardinal is the second from the left" → `cardinal == 2`  
+   * "The owl is the third from the right" → Since positions are left-to-right 1–7, third from the right = position 5 (7−3+1=5) → `owl == 5`  
+   * Add each of these six constraints to the problem using lambda functions (or direct integer equality/inequality via `AddConstraint`).
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all satisfying assignments.  
+   * Extract the unique solution (or first one if multiple exist, though uniqueness is expected given constraints).
+
+6. **Identify the Leftmost Bird (Position 1):**  
+   * Iterate through the solution dictionary to find which bird has position value `1`.  
+   * Create a mapping from choice letters to birds:  
+     - `'A' → "cardinal"`  
+     - `'B' → "crow"`  
+     - `'C' → "hummingbird"`  
+     - `'D' → "blue jay"`  
+     - `'E' → "owl"`  
+     - `'F' → "robin"`  
+     - `'G' → "quail"`  
+   * Find the choice letter whose associated bird has position `1`.
+
+7. **Output the Correct Choice Letter:**  
+   * Return (or print) that letter as the answer to the question.

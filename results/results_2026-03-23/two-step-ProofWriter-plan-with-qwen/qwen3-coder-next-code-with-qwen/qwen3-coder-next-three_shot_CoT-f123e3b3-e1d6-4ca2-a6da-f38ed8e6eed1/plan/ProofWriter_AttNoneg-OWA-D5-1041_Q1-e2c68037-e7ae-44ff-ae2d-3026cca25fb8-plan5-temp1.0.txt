@@ -1,0 +1,18 @@
+1. Identify all entities: Bob, Charlie, Dave, Fiona.  
+2. Encode all directly stated facts using ternary predicates:  
+   - is_cold("Bob", True), is_quiet("Bob", True), is_red("Bob", True), is_smart("Bob", True)  
+   - is_kind("Charlie", True), is_quiet("Charlie", True), is_red("Charlie", True), is_rough("Charlie", True)  
+   - is_cold("Dave", True), is_kind("Dave", True), is_smart("Dave", True)  
+   - is_quiet("Fiona", True)  
+3. Translate conditional rules into PyKe `foreach` + `assert` blocks:  
+   • If X is quiet and cold → X is smart.  
+   • If X is red and cold → X is round.  
+   • If X is kind and rough → X is red.  
+   • All quiet things are rough (i.e., if X is quiet → X is rough).  
+   • If X is cold and smart → X is red.  
+   • If X is rough → X is cold.  
+   • All red things are rough (i.e., if X is red → X is rough).  
+   • If Dave is smart and kind → Dave is quiet.  
+4. For each rule, use `foreach` to bind variable X and match the condition conjunction; assert the consequent property or relation.  
+5. The query tests whether Charlie is kind:  
+   → Use facts.is_kind("Charlie", True)

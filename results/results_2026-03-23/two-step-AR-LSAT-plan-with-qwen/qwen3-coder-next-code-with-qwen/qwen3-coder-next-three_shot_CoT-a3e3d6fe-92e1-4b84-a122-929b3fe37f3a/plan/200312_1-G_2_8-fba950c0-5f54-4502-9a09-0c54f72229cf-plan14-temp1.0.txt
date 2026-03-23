@@ -1,0 +1,17 @@
+1. Enumerate the six cargo types: ["fuel", "grain", "livestock", "machinery", "produce", "textiles"] and assign integer indices 0–5.  
+2. Create integer position variables `pos[type_idx]` for each cargo type, representing the bay number (1–6).  
+3. Add **domain constraints**: all `pos[type_idx]` are integers in [1,6], and pairwise distinct (bijection between cargo types and bays).  
+4. Add **relative ordering constraints**:  
+   - Grain > livestock (pos["grain"] > pos["livestock"]),  
+   - Livestock > textiles (pos["livestock"] > pos["textiles"]),  
+   - Produce > fuel (pos["produce"] > pos["fuel"]),  
+   - Textiles and produce are adjacent: |pos["textiles"] − pos["produce"]| = 1.  
+5. Add **additional constraint** from the conditional: machinery and grain have exactly one bay between them, i.e., |pos["machinery"] − pos["grain"]| = 2.  
+6. Create a fresh Z3 solver and add all constraints above (Steps 3–5).  
+7. For each bay position *b* in {1,2,3,4,5,6}, query the solver to find *all* valid assignments satisfying constraints and compute for each assignment the set of cargo types whose bay position is uniquely determined (i.e., same across all models).  
+   - To achieve this: generate *all* satisfying assignments (using a loop with blocking clauses to exclude previously found models) OR use optimization/quantifier-free SAT solving via iterative model enumeration.  
+   - Alternatively, for each cargo type *t*, check if `pos[t]` is forced to a unique value across all solutions:  
+       • For each possible position *p* ∈ {1,…,6}, add constraint `pos[t] == p` and check SAT.  
+       • If exactly one *p* yields SAT, then *t* is determined.  
+8. Count how many cargo types are determined (Step 7) for the scenario with |machinery – grain| = 2.  
+9. Since the question asks "for exactly how many bays is the type of cargo completely determined", output that count.

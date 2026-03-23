@@ -1,0 +1,16 @@
+1. Identify all entities involved: cat, cow, lion, mouse.  
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(subject, object, True), where properties (e.g., is_young, is_cold, is_red, is_blue) take a boolean as the object, and relations (e.g., visits, likes, needs) take another entity as the object.  
+3. For each directly stated fact, add a facts.pred(subject, object, True) statement (e.g., facts.is_young("cat", True), facts.visits("cat", "mouse", True), etc.).  
+4. Translate each conditional sentence into a rule using PyKe's `foreach` (to match the antecedent conditions) and `assert` (to derive the consequent):  
+   • If something needs the cat and the cat is red → it is blue.  
+   • If something is blue → it is red.  
+   • If something likes the mouse and the mouse likes the cat → the cat is blue.  
+   • If something is cold and red → it likes the mouse.  
+   • If something needs the cow and is cold → it is young.  
+   • If something is nice → it visits the lion.  
+   • If something needs the lion → it likes the cat.  
+   • If something visits the cat and likes the lion → the cat is blue.  
+   • If something is cold and blue → it needs the lion.  
+5. For each rule, write a `foreach` block that binds variables to matching entities (e.g., for “If something is cold and red…”, use `foreach(is_cold("?", True), is_red("?", True))`).  
+6. The query checks whether the mouse needs the mouse:  
+   → Use facts.needs("mouse", "mouse", True).

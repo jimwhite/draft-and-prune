@@ -1,0 +1,27 @@
+1.  **Initialize the Problem Environment:**  
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**  
+    * Define variables: `"convertible"`, `"bus"`, `"minivan"`, `"truck"`, `"sedan"`.  
+    * Define domain as integers 1 to 5, where **1 = oldest** and **5 = newest** (since statements use "newest", this ordering aligns with typical age/rank semantics).  
+    * Add all variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3.  **Add AllDifferent Constraint:**  
+    * Add `AllDifferentConstraint()` to ensure each vehicle has a unique age rank.
+
+4.  **Translate Statements into Constraints (using lambda functions):**  
+    * "The convertible is newer than the truck" → `convertible > truck` (since newer = higher rank number).  
+    * "The minivan is the newest" → `minivan == 5`.  
+    * "The bus is the third-newest" → positions: newest=5, 2nd-newest=4, **3rd-newest=3** → `bus == 3`.  
+    * "The truck is newer than the sedan" → `truck > sedan`.
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid solutions.  
+    * Extract the unique solution (as implied by consistency).
+
+6.  **Determine the Second-Newest Vehicle:**  
+    * Note: "second-newest" corresponds to rank **4** (since newest=5).  
+    * Create mapping from choice letters to vehicle names: `{"A": "convertible", "B": "bus", "C": "minivan", "D": "truck", "E": "sedan"}`.  
+    * For each choice letter, check if the associated vehicle’s rank in the solution equals 4.  
+    * Output the corresponding letter for the correct vehicle.

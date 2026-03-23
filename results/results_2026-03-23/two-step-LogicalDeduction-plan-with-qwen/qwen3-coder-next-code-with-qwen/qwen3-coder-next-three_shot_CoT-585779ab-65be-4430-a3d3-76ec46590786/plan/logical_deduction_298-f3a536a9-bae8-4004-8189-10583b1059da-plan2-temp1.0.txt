@@ -1,0 +1,23 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to define the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the variables: `"white"`, `"green"`, `"orange"` (representing the three books).  
+   * Define the domain as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, **3 = rightmost**.  
+   * Add all three variables to the problem with domain `{1, 2, 3}`.
+
+3. **Add Constraints Based on Statements:**  
+   * Add `AllDifferentConstraint()` to enforce each book occupies a unique position.  
+   * Translate "The green book is to the right of the white book" into a constraint: `green > white` (use `lambda w, g: g > w`).  
+   * Translate "The orange book is the rightmost" into a constraint: `orange == 3`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Since the constraints uniquely determine the arrangement, extract the single solution (first in the list).
+
+5. **Identify the Leftmost Book and Match to Choices:**  
+   * The question asks which book is leftmost (i.e., position = 1).  
+   * Create a mapping from choice letters to book names: `{"A": "white", "B": "green", "C": "orange"}`.  
+   * Find which book has position 1 in the solution dictionary.  
+   * Return the choice letter corresponding to that book.

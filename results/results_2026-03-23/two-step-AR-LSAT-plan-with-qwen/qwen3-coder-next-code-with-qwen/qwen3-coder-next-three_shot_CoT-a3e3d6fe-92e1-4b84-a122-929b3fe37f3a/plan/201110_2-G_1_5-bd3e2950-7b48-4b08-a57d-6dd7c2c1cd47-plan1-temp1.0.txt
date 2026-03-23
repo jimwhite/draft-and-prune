@@ -1,0 +1,21 @@
+1. Enumerate the six employees and assign integer indices.  
+2. Create integer variables for each employee’s parking space (1 to 6), all distinct.  
+3. Add **domain constraints**: each employee’s space ∈ {1,2,3,4,5,6}; all spaces distinct.  
+4. Add **base ordering constraints** from rules:  
+   - Young > Togowa (`pos_Young > pos_Togowa`)  
+   - Xu > Souza (`pos_Xu > pos_Souza`)  
+   - Robertson > Young (`pos_Robertson > pos_Young`)  
+   - Robertson ∈ {1,2,3,4} (`pos_Robertson <= 4`)  
+5. Add the **conditional premise constraint**: Young > Souza (`pos_Young > pos_Souza`).  
+6. Translate the answer choices into logical statements about positions:  
+   - Choice 0: `pos_Togowa == 1`  
+   - Choice 1: `pos_Young == 2`  
+   - Choice 2: `pos_Robertson == 3`  
+   - Choice 3: `pos_Souza == 3`  
+   - Choice 4: `pos_Vaughn == 4`  
+7. Define an answer index list `answer_index_list = []`. For each choice (in order 0 to 4):  
+   - Clone the full constraint set (base + premise) into a fresh solver.  
+   - Add the specific choice condition (e.g., `pos_Togowa == 1`).  
+   - Solve the instance.  
+   - If SAT is returned, then the choice *could* be true; append its index to `answer_index_list`.  
+8. After testing all choices, output the list of indices for which SAT was found (i.e., those that are possible).

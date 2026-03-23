@@ -1,0 +1,15 @@
+1. Enumerate the five movie types and assign integer codes.  
+2. Define variables for each movie: screen (1, 2, or 3) and start time slot (7pm=0, 8pm=1, 9pm=2).  
+3. Enforce screen capacity constraints:  
+   - Exactly two movies on screen 1, exactly two on screen 2, exactly one on screen 3.  
+   - Screen 1 movies must have distinct time slots {0,2} (since 7pm and 9pm), screen 2 must have distinct time slots {0,2}, screen 3 has exactly one movie with time slot 1 (8pm).  
+4. Add ordering constraint: western begins before horror film → time_slot(western) < time_slot(horror).  
+5. Add constraint: sci-fi film is not on screen 3.  
+6. Add constraint: romance is not on screen 2.  
+7. Add constraint: horror and mystery are on different screens.  
+8. For each answer choice (a candidate list for screen 1: [movie_at_7pm, movie_at_9pm]), check feasibility by:  
+   - Cloning base constraints into a fresh solver.  
+   - Asserting that exactly those two movies are assigned to screen 1, with the first at time slot 0 and second at time slot 2.  
+   - Asserting remaining movies are assigned to screens 2 and 3 respecting capacities and constraints.  
+   - If UNSAT, the list is impossible; record the index of this choice as a solution.  
+9. Return the answer choice with UNSAT (the one that CANNOT be accurate).

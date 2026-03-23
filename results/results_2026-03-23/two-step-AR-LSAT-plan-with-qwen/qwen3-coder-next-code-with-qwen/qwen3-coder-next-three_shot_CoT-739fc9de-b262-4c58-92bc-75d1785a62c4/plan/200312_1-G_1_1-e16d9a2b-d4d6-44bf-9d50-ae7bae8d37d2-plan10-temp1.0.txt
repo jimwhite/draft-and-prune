@@ -1,0 +1,35 @@
+1. Enumerate the nine scientists and assign each a Boolean selection variable:  
+   - Botanists: `F`, `G`, `H`  
+   - Chemists: `K`, `L`, `M`  
+   - Zoologists: `P`, `Q`, `R`  
+
+2. Define helper integer expressions for counts:  
+   - `bot_count = If(F,1,0) + If(G,1,0) + If(H,1,0)`  
+   - `chem_count = If(K,1,0) + If(L,1,0) + If(M,1,0)`  
+   - `zoo_count = If(P,1,0) + If(Q,1,0) + If(R,1,0)`  
+
+3. Add **panel size constraint**: `bot_count + chem_count + zoo_count == 5`.  
+
+4. Add **must-have-each-type constraint**:  
+   - `bot_count >= 1`, `chem_count >= 1`, `zoo_count >= 1`.  
+
+5. Add **conditional constraint**: If more than one botanist is selected, then at most one zoologist:  
+   - `bot_count > 1 ⇒ zoo_count <= 1`, encoded as:  
+     `(bot_count <= 1) ∨ (zoo_count <= 1)`.  
+
+6. Add **exclusion constraints**:  
+   - `¬(F ∧ K)` (F and K cannot both be selected).  
+   - `¬(K ∧ M)` (K and M cannot both be selected).  
+
+7. Add **conditional constraint for M**:  
+   - `M ⇒ (P ∧ R)` (If M is selected, both P and R must be selected).  
+
+8. Translate each answer choice into a conjunction of selections (e.g., `'F, G, K, P, Q'` → `F ∧ G ∧ ¬H ∧ K ∧ ¬L ∧ ¬M ∧ P ∧ Q ∧ ¬R`).  
+
+9. For each answer choice:  
+   - Clone the base constraints (steps 1–7) into a fresh solver.  
+   - Assert the specific selection of that choice (step 8).  
+   - Check satisfiability.  
+   - If SAT, record the index of that choice as valid.  
+
+10. Return the index of the first (or all) valid choices as the answer.

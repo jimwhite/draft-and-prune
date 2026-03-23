@@ -1,0 +1,20 @@
+1. Enumerate the six targets: Image website (IW), Image voicemail (IV), Solide website (SW), Solide voicemail (SV), Truvest website (TW), Truvest voicemail (TV). Assign each a variable taking values in {1, 2, 3} (days).  
+2. Add **domain constraints**: all variables ∈ {1, 2, 3}.  
+3. Add **no-longer-website-than-voicemail** for each client:  
+   - IW ≤ IV,  
+   - SW ≤ SV,  
+   - TW ≤ TV.  
+4. Add **Image voicemail is shortest among voicemails**: IV < SV and IV < TV.  
+5. Add **Solide website shorter than Truvest website**: SW < TW.  
+6. Add the given condition: IW = 2.  
+7. From constraints, deduce:  
+   - Since IV > IW? No — IW ≤ IV and IW = 2 ⇒ IV ∈ {2, 3}.  
+   - But IV < SV and IV < TV ⇒ IV must be strictly less than SV and TV, so IV cannot be 3 (then no values >3 exist). Hence IV ∈ {2} ∪ {values < SV, TV}, but only possible if IV = 2 (since values are 1,2,3 and must be strictly less than SV and TV). Wait: if IV = 1, then SV, TV ∈ {2,3} — possible. But is IV=1 allowed? Check: Image’s voicemail target must be *shorter* than the *other clients’* voicemail targets — yes, 1 < 2 or 3 is okay. But we also have IW = 2 and IW ≤ IV ⇒ 2 ≤ IV. So IV ≥ 2. Combine: IV ≥ 2 and IV < SV, TV ⇒ IV = 2 (since if IV = 3, then SV,TV > 3 impossible). Therefore IV = 2.  
+8. So Image’s voicemail target must be 2 days. That directly matches choice 1. But verify consistency:  
+   - IW = IV = 2 satisfies IW ≤ IV (equality allowed).  
+   - IV = 2 < SV and TV ⇒ SV, TV ∈ {3} (since only value >2 is 3). So SV = 3, TV = 3.  
+   - SW ≤ SV = 3 and TW ≤ TV = 3, plus SW < TW.  
+     Possible: SW=1, TW=2 or 3; or SW=2, TW=3. All valid.  
+9. Therefore the *only* forced target is Image’s voicemail = 2 days.  
+10. Define answer index list: map choices to indices (0=Image voicemail, 1=Solide website, etc.), and append index 0 to answer_index_list.  
+11. Print answer_index_list.

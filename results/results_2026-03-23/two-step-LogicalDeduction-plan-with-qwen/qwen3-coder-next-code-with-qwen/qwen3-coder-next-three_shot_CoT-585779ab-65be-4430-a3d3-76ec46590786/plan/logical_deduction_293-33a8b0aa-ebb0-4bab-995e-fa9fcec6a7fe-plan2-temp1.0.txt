@@ -1,0 +1,23 @@
+1.  **Set Up the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the three books: `"orange"`, `"white"`, and `"purple"`.  
+    * Define the domain as integer positions from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+    * Add all variables to the problem with this domain.
+
+3.  **Add Constraints:**  
+    * Enforce uniqueness of positions by adding an `AllDifferentConstraint`.  
+    * Translate "The orange book is to the left of the white book" into a constraint: `orange < white` (using a `lambda` or built-in relational constraint).  
+    * Translate "The purple book is the rightmost" into a constraint: `purple == 3`.
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to retrieve all valid arrangements.  
+    * Extract the unique solution (since the problem is deterministic).
+
+5.  **Determine the Correct Answer:**  
+    * The question asks: "Which book is second from the left?" — i.e., the book at position 2.  
+    * Iterate through the solution dictionary to find which book has position value 2.  
+    * Map that book to the corresponding choice letter: "A" for orange, "B" for white, "C" for purple.  
+    * Return or output the correct choice letter.

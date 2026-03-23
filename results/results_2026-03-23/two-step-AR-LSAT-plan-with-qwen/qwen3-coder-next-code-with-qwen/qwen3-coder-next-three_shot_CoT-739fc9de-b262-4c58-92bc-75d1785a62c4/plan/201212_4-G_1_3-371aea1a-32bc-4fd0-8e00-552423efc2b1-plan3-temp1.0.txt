@@ -1,0 +1,22 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables for each house’s showing position (1 to 7).  
+3. Add **domain constraints**: positions are integers from 1 to 7, all distinct (permutation).  
+4. Add **session constraints** based on position ranges:  
+    - Morning: positions 1–2; Afternoon: 3–5; Evening: 6–7.  
+5. Add given constraints:  
+    - J is shown in the evening → position_J ∈ {6, 7}.  
+    - K cannot be shown in the morning → position_K ∉ {1, 2} ⇒ position_K ≥ 3.  
+    - L is shown after K and before M → position_K < position_L < position_M.  
+6. Translate each answer choice into a logical proposition about positions:  
+    - "K is shown in the evening" ⇔ position_K ∈ {6, 7}  
+    - "L is shown in the afternoon" ⇔ position_L ∈ {3, 4, 5}  
+    - "L is shown in the evening" ⇔ position_L ∈ {6, 7}  
+    - "M is shown in the morning" ⇔ position_M ∈ {1, 2}  
+    - "M is shown in the afternoon" ⇔ position_M ∈ {3, 4, 5}  
+7. For each choice, use proof by contradiction:  
+    - Clone base constraints into fresh solver.  
+    - Assert that the choice is **false** (e.g., for “K in evening”, assert position_K ∉ {6, 7}).  
+    - Check satisfiability.  
+8. A choice **must be true** iff its negation makes the constraints UNSAT.  
+9. Collect all choices whose negations yield UNSAT into an answer index list.  
+10. Output the single forced choice (list length must be 1).

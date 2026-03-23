@@ -1,0 +1,26 @@
+1. Enumerate the six photographers and assign each an integer index (e.g., Frost=0, Gonzalez=1, Heideck=2, Knutson=3, Lai=4, Mays=5).  
+2. Create Boolean variables for each photographer and ceremony: `S[i]` = True if photographer i is assigned to Silva, `T[i]` = True if assigned to Thorne.  
+3. Add **mutual exclusivity**: For each photographer i, `S[i] == Not(T[i])` (a photographer cannot be at both ceremonies).  
+4. Add **non-assigned flexibility**: Each photographer may be unassigned: no constraint forces `S[i] or T[i]` to be True, but at least two photographers must be assigned per ceremony.  
+5. Add **minimum-assignment constraints**:  
+    - At least two Silva photographers: `AtLeast(S[0], S[1], S[2], S[3], S[4], S[5], 2)`  
+    - At least two Thorne photographers: `AtLeast(T[0], T[1], T[2], T[3], T[4], T[5], 2)`  
+6. Add **Frost-Heideck together constraint**: Frost (0) and Heideck (2) must be assigned to the same ceremony:  
+    - `S[0] == S[2]` (and implicitly `T[0] == T[2]`, due to mutual exclusivity).  
+7. Add **Lai-Mays separation constraint**: If both Lai (4) and Mays (5) are assigned, they must be on different ceremonies:  
+    - `(S[4] and S[5]) == False` — i.e., `Not(And(S[4], S[5]))`,  
+    - and equivalently `Not(And(T[4], T[5]))` is redundant given mutual exclusivity.  
+8. Add **Gonzalez→Lai implication**: If Gonzalez (1) is at Silva, then Lai (4) must be at Thorne:  
+    - `S[1] => T[4]`, which is equivalent to `Not(S[1]) or T[4]`.  
+9. Add **Knutson conditional**: If Knutson (3) is *not* at Thorne, then both Heideck (2) and Mays (5) must be at Thorne:  
+    - `Not(T[3]) => And(S[2], S[5])` is incorrect — re-interpret:  
+      "If Knutson is not assigned to Thorne, then both Heideck and Mays must be assigned *to it*" → contradiction: cannot assign same person to both.  
+      Clarify: "must be assigned *to it*" means Thorne — but Heideck and Mays cannot be at both.  
+      Re-read: "If Knutson is not assigned to the Thorne University ceremony, then both Heideck and Mays must be assigned to it."  
+      So: `Not(T[3]) => (T[2] and T[5])`.  
+      Since mutual exclusivity holds, `S[i] = Not(T[i])`, so no conflict.  
+10. For each answer choice (5 total), parse the assigned photographers for Silva and Thorne, construct a constraint that exactly those are assigned (others unassigned), and add the choice’s assignments:  
+    - For each photographer i, set `S[i] = True` if in Silva list, `T[i] = True` if in Thorne list, and all others False.  
+    - Ensure consistency (no overlap; mutual exclusivity holds).  
+11. For each choice, clone the base constraints and add the concrete assignment constraint. Check satisfiability: if SAT, it is acceptable; collect its index (0 to 4).  
+12. Return the index of the unique acceptable assignment (problem format implies exactly one valid choice).

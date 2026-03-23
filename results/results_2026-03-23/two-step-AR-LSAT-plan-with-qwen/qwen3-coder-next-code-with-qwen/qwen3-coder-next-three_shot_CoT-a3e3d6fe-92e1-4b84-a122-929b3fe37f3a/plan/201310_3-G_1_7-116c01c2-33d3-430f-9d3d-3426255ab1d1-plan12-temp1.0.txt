@@ -1,0 +1,26 @@
+1. Enumerate the six bands and assign them integer indices (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer variables `pos[b]` for each band `b`, representing its slot number (1 to 6).  
+3. Add **domain constraints**: each `pos[b] ∈ {1,2,3,4,5,6}`.  
+4. Add **all-different constraint**: all `pos[b]` must be distinct (each band in exactly one slot).  
+5. Add the original constraints from the problem:  
+   - Vegemite before Zircon: `pos[Vegemite] < pos[Zircon]`.  
+   - Wellspring before Xpert: `pos[Wellspring] < pos[Xpert]`.  
+   - Zircon before Xpert: `pos[Zircon] < pos[Xpert]`.  
+   - Uneasy in last three slots: `pos[Uneasy] ∈ {4,5,6}`.  
+   - Yardsign in first three slots: `pos[Yardsign] ∈ {1,2,3}`.  
+6. For each answer choice, model the new constraint and verify whether it is **logically equivalent** to the original "Wellspring < Xpert ∧ Zircon < Xpert" under all models satisfying the rest of the constraints:  
+   a. Clone base solver (with original constraints + remaining 3 constraints: Vegemite<Zircon, Uneasy∈{4,5,6}, Yardsign∈{1,2,3}).  
+   b. Add the candidate constraint (e.g., for choice C: `pos[Vegemite] < pos[Wellspring] ∧ pos[Wellspring] < pos[Xpert]`).  
+   c. To test equivalence, check *two* conditions:  
+      - **(i) New ⇒ Original**: Add negation of original constraint (`¬(pos[Wellspring] < pos[Xpert] ∧ pos[Zircon] < pos[Xpert])`) and verify UNSAT. If SAT, new constraint does *not* imply original → reject.  
+      - **(ii) Original ⇒ New**: Add negation of new constraint and verify UNSAT. If SAT, original does *not* imply new → reject.  
+   d. Only if both (i) and (ii) hold is the candidate logically equivalent.  
+7. Translate each answer choice into a formal constraint in Z3:  
+   - Choice A: `pos[Uneasy] < pos[Xpert]` is always false (since Uneasy ∈ {4,5,6} and Xpert could be 1–3), so false → UNSAT; not equivalent.  
+   - Choice B: `pos[Vegemite] < pos[Wellspring] ∧ pos[Wellspring] < pos[Zircon]`.  
+   - Choice C: `pos[Vegemite] < pos[Xpert] ∧ pos[Wellspring] < pos[Xpert]`.  
+   - Choice D: `|pos[Xpert] - pos[Uneasy]| = 1`.  
+   - Choice E: `pos[Xpert] ∈ {5,6}`.  
+8. For each candidate (B–E), run the equivalence test described in step 6.  
+9. Collect indices of candidates for which both (i) and (ii) hold.  
+10. Print the index of the correct choice (first such candidate, as only one can be correct).

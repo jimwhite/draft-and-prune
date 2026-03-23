@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five vehicle variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+   * Assign integer ranks from 1 to 5, where **1 = oldest**, and **5 = newest**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5}` to the `Problem` instance.
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique age rank.  
+   * Translate each statement into constraints:  
+     - "The tractor is newer than the minivan" → `tractor > minivan` (since newer = larger rank).  
+     - "The tractor is older than the limousine" → `tractor < limousine`.  
+     - "The convertible is older than the sedan" → `convertible < sedan`.  
+     - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).  
+
+4. **Solve the Problem:**  
+   * Invoke `getSolutions()` to compute all valid assignments satisfying the constraints.  
+   * Extract the unique solution (since the problem is well-constrained).
+
+5. **Verify and Select the Correct Choice:**  
+   * The question asks which statement is true — note that choice A directly restates the given fact ("The convertible is the second-newest").  
+   * Since this is explicitly provided as a premise and our solver will respect it (i.e., convertible’s rank = 4), choice A must be true.  
+   * No further inference is needed: the answer is directly encoded in the input and guaranteed consistent by construction.  
+   * Return `"A"` as the answer.

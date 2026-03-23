@@ -1,0 +1,14 @@
+1. Enumerate the seven accomplices and assign them integer indices: Peters=0, Quinn=1, Rovero=2, Stanton=3, Tao=4, Villas=5, White=6.  
+2. Create integer variables `pos[i]` for the recruitment position (1 to 7) of each accomplice i.  
+3. Add **domain constraints**: each `pos[i]` ∈ {1,2,3,4,5,6,7}, and all `pos[i]` are pairwise distinct (bijection).  
+4. Add **fixed constraint**: Peters is recruited fourth: `pos[0] == 4`.  
+5. Add **Villas-White adjacency constraint**: Villas immediately before White: `pos[5] + 1 == pos[6]`.  
+6. Add **Quinn-Rovero precedence constraint**: Quinn earlier than Rovero: `pos[1] < pos[2]`.  
+7. Add **Stanton-Tao non-adjacency constraint**: |pos[3] - pos[4]| ≠ 1.  
+8. For each choice (list of accomplice names in order), convert to a position assignment: e.g., first element → pos=1, second → pos=2, etc.  
+9. For each choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Assert equality of each `pos[i]` with the position derived from the choice.  
+   - Check satisfiability: if SAT, this order is possible; record index of this choice as valid.  
+10. Output the index (or list of indices) of choices that satisfy all constraints — only one will be SAT per problem type.  
+11. Return the valid choice string from the original list of choices based on the recorded index.

@@ -1,0 +1,590 @@
+{
+  "problem": {
+    "context": "A software company employs exactly seven sales representatives—Kim, Mahr, Parra, Quinn, Stuckey, Tiao, and Udall—to work in its three sales zones—Zone 1, Zone 2, and Zone 3. Each sales representative works in exactly one of the sales zones, in accordance with the following conditions: Either Parra or Tiao (but not both) works in Zone 1. Either Tiao or Udall (but not both) works in Zone 2. Parra and Quinn work in the same sales zone as each other. Stuckey and Udall work in the same sales zone as each other. There are more of the sales representatives working in Zone 3 than in Zone 2.",
+    "question": "Which one of the following could be a complete and accurate list of the sales representatives working in Zone 3?",
+    "answers": [
+      "Kim, Mahr",
+      "Kim, Tiao",
+      "Parra, Quinn",
+      "Stuckey, Tiao, Udall",
+      "Parra, Quinn, Stuckey, Udall"
+    ],
+    "label": 0,
+    "id_string": "201206_3-G_3_15"
+  },
+  "timing": 595.0294392108917,
+  "all_solver_outputs": [
+    "[0]",
+    "[0]",
+    "0",
+    "[0]",
+    "[0, 1, 2]",
+    "[0]",
+    "[0]",
+    "0",
+    "[0]",
+    "[0]",
+    "[2]",
+    "[0]",
+    "0",
+    "[0]",
+    "[0]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 505,
+        "total_tokens": 2196
+      },
+      "plan_generation_api_time_only": 13.111876487731934,
+      "code_generation_usage": {
+        "prompt_tokens": 3567,
+        "completion_tokens": 737,
+        "total_tokens": 4304
+      },
+      "code_generation_api_time_only": 23.731719493865967,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5258,
+        "completion_tokens": 1242,
+        "total_tokens": 6500
+      },
+      "path_api_time_only": 36.8435959815979,
+      "solver_time_only": 0.07740473747253418
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 620,
+        "total_tokens": 2311
+      },
+      "plan_generation_api_time_only": 16.33521008491516,
+      "code_generation_usage": {
+        "prompt_tokens": 3681,
+        "completion_tokens": 678,
+        "total_tokens": 4359
+      },
+      "code_generation_api_time_only": 19.871256351470947,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5372,
+        "completion_tokens": 1298,
+        "total_tokens": 6670
+      },
+      "path_api_time_only": 36.20646643638611,
+      "solver_time_only": 0.07593131065368652
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 485,
+        "total_tokens": 2176
+      },
+      "plan_generation_api_time_only": 13.33525562286377,
+      "code_generation_usage": {
+        "prompt_tokens": 3546,
+        "completion_tokens": 793,
+        "total_tokens": 4339
+      },
+      "code_generation_api_time_only": 22.854551315307617,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5237,
+        "completion_tokens": 1278,
+        "total_tokens": 6515
+      },
+      "path_api_time_only": 36.18980693817139,
+      "solver_time_only": 0.07747721672058105
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 582,
+        "total_tokens": 2273
+      },
+      "plan_generation_api_time_only": 15.046902418136597,
+      "code_generation_usage": {
+        "prompt_tokens": 3643,
+        "completion_tokens": 662,
+        "total_tokens": 4305
+      },
+      "code_generation_api_time_only": 20.472508668899536,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5334,
+        "completion_tokens": 1244,
+        "total_tokens": 6578
+      },
+      "path_api_time_only": 35.51941108703613,
+      "solver_time_only": 0.0680701732635498
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 527,
+        "total_tokens": 2218
+      },
+      "plan_generation_api_time_only": 14.057372331619263,
+      "code_generation_usage": {
+        "prompt_tokens": 3588,
+        "completion_tokens": 686,
+        "total_tokens": 4274
+      },
+      "code_generation_api_time_only": 22.35199999809265,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5279,
+        "completion_tokens": 1213,
+        "total_tokens": 6492
+      },
+      "path_api_time_only": 36.409372329711914,
+      "solver_time_only": 0.08001017570495605
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 446,
+        "total_tokens": 2137
+      },
+      "plan_generation_api_time_only": 12.308663606643677,
+      "code_generation_usage": {
+        "prompt_tokens": 3507,
+        "completion_tokens": 745,
+        "total_tokens": 4252
+      },
+      "code_generation_api_time_only": 21.015864372253418,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5198,
+        "completion_tokens": 1191,
+        "total_tokens": 6389
+      },
+      "path_api_time_only": 33.324527978897095,
+      "solver_time_only": 0.07827019691467285
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 573,
+        "total_tokens": 2264
+      },
+      "plan_generation_api_time_only": 14.747357606887817,
+      "code_generation_usage": {
+        "prompt_tokens": 3634,
+        "completion_tokens": 745,
+        "total_tokens": 4379
+      },
+      "code_generation_api_time_only": 21.029709100723267,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5325,
+        "completion_tokens": 1318,
+        "total_tokens": 6643
+      },
+      "path_api_time_only": 35.777066707611084,
+      "solver_time_only": 0.08121514320373535
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 551,
+        "total_tokens": 2242
+      },
+      "plan_generation_api_time_only": 15.63160252571106,
+      "code_generation_usage": {
+        "prompt_tokens": 3612,
+        "completion_tokens": 807,
+        "total_tokens": 4419
+      },
+      "code_generation_api_time_only": 22.167064666748047,
+      "repair_usage_total": {
+        "prompt_tokens": 990,
+        "completion_tokens": 821,
+        "total_tokens": 1811
+      },
+      "repair_api_time_only_total": 24.77197504043579,
+      "path_usage_total": {
+        "prompt_tokens": 6293,
+        "completion_tokens": 2179,
+        "total_tokens": 8472
+      },
+      "path_api_time_only": 62.5706422328949,
+      "solver_time_only": 0.14863991737365723
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 477,
+        "total_tokens": 2168
+      },
+      "plan_generation_api_time_only": 13.755935430526733,
+      "code_generation_usage": {
+        "prompt_tokens": 3538,
+        "completion_tokens": 657,
+        "total_tokens": 4195
+      },
+      "code_generation_api_time_only": 19.543926239013672,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5229,
+        "completion_tokens": 1134,
+        "total_tokens": 6363
+      },
+      "path_api_time_only": 33.299861669540405,
+      "solver_time_only": 0.0775916576385498
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 524,
+        "total_tokens": 2215
+      },
+      "plan_generation_api_time_only": 15.052746057510376,
+      "code_generation_usage": {
+        "prompt_tokens": 3585,
+        "completion_tokens": 763,
+        "total_tokens": 4348
+      },
+      "code_generation_api_time_only": 23.16080403327942,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5276,
+        "completion_tokens": 1287,
+        "total_tokens": 6563
+      },
+      "path_api_time_only": 38.213550090789795,
+      "solver_time_only": 0.07850503921508789
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 449,
+        "total_tokens": 2140
+      },
+      "plan_generation_api_time_only": 13.819036960601807,
+      "code_generation_usage": {
+        "prompt_tokens": 3510,
+        "completion_tokens": 1084,
+        "total_tokens": 4594
+      },
+      "code_generation_api_time_only": 30.73296809196472,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5201,
+        "completion_tokens": 1533,
+        "total_tokens": 6734
+      },
+      "path_api_time_only": 44.55200505256653,
+      "solver_time_only": 0.08199310302734375
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 373,
+        "total_tokens": 2064
+      },
+      "plan_generation_api_time_only": 9.941181898117065,
+      "code_generation_usage": {
+        "prompt_tokens": 3434,
+        "completion_tokens": 719,
+        "total_tokens": 4153
+      },
+      "code_generation_api_time_only": 22.92283844947815,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5125,
+        "completion_tokens": 1092,
+        "total_tokens": 6217
+      },
+      "path_api_time_only": 32.864020347595215,
+      "solver_time_only": 0.08221960067749023
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 340,
+        "total_tokens": 2031
+      },
+      "plan_generation_api_time_only": 9.948423624038696,
+      "code_generation_usage": {
+        "prompt_tokens": 3401,
+        "completion_tokens": 711,
+        "total_tokens": 4112
+      },
+      "code_generation_api_time_only": 21.370511531829834,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5092,
+        "completion_tokens": 1051,
+        "total_tokens": 6143
+      },
+      "path_api_time_only": 31.31893515586853,
+      "solver_time_only": 0.07908749580383301
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 510,
+        "total_tokens": 2201
+      },
+      "plan_generation_api_time_only": 13.988378524780273,
+      "code_generation_usage": {
+        "prompt_tokens": 3571,
+        "completion_tokens": 578,
+        "total_tokens": 4149
+      },
+      "code_generation_api_time_only": 19.799461603164673,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5262,
+        "completion_tokens": 1088,
+        "total_tokens": 6350
+      },
+      "path_api_time_only": 33.787840127944946,
+      "solver_time_only": 0.06691646575927734
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1691,
+        "completion_tokens": 439,
+        "total_tokens": 2130
+      },
+      "plan_generation_api_time_only": 12.466200828552246,
+      "code_generation_usage": {
+        "prompt_tokens": 3500,
+        "completion_tokens": 676,
+        "total_tokens": 4176
+      },
+      "code_generation_api_time_only": 20.172927141189575,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5191,
+        "completion_tokens": 1115,
+        "total_tokens": 6306
+      },
+      "path_api_time_only": 32.63912796974182,
+      "solver_time_only": 0.08057904243469238
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 79672,
+    "completion_tokens": 19263,
+    "total_tokens": 98935
+  },
+  "api_time_only_total": 559.5162301063538,
+  "solver_time_only_total": 1.2339112758636475,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Representative indices: Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall\n(KIM, MAHR, PARRA, QUINN, STUCKEY, TIAO, UDALL) = range(7)\n\n# Zone variables: zone[i] is the zone (1, 2, or 3) for representative i\nzone = [Int(f\"zone_{i}\") for i in range(7)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each representative is assigned to zone 1, 2, or 3\nfor i in range(7):\n    solver.add(Or(zone[i] == 1, zone[i] == 2, zone[i] == 3))\n\n# Parra/Tiao Zone 1 constraint: exactly one of them is in Zone 1\nsolver.add(Xor(zone[PARRA] == 1, zone[TIAO] == 1))\n\n# Tiao/Udall Zone 2 constraint: exactly one of them is in Zone 2\nsolver.add(Xor(zone[TIAO] == 2, zone[UDALL] == 2))\n\n# Parra/Quinn same zone constraint\nsolver.add(zone[PARRA] == zone[QUINN])\n\n# Stuckey/Udall same zone constraint\nsolver.add(zone[STUCKEY] == zone[UDALL])\n\n# Zone 3 > Zone 2 size constraint\ncount_zone2 = Sum([If(zone[i] == 2, 1, 0) for i in range(7)])\ncount_zone3 = Sum([If(zone[i] == 3, 1, 0) for i in range(7)])\nsolver.add(count_zone3 > count_zone2)\n\n# Answer choices\nanswer_choices = [\n    ['Kim', 'Mahr'],                    # Index 0: Kim and Mahr in Zone 3\n    ['Kim', 'Tiao'],                   # Index 1: Kim and Tiao in Zone 3\n    ['Parra', 'Quinn'],                # Index 2: Parra and Quinn in Zone 3\n    ['Stuckey', 'Tiao', 'Udall'],     # Index 3: Stuckey, Tiao, Udall in Zone 3\n    ['Parra', 'Quinn', 'Stuckey', 'Udall']  # Index 4: Parra, Quinn, Stuckey, Udall in Zone 3\n]\n\n# Map representative names to indices for checking answer choices\nrep_name_to_idx = {\n    'Kim': KIM, 'Mahr': MAHR, 'Parra': PARRA,\n    'Quinn': QUINN, 'Stuckey': STUCKEY, 'Tiao': TIAO, 'Udall': UDALL\n}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, reps in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add constraint: exactly these representatives are in Zone 3\n    for i in range(7):\n        if rep_name_to_idx[rep_name_to_idx.keys()[list(rep_name_to_idx.values()).index(i)]] in reps:\n            # This representative is in the list, so must be in Zone 3\n            s_chk.add(zone[i] == 3)\n        else:\n            # This representative is not in the list, so must NOT be in Zone 3\n            s_chk.add(zone[i] != 3)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\n# Output the index of the only SAT choice (as per LSAT format, exactly one should be SAT)\nprint(answer_index_list[0] if answer_index_list else -1)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Representative indices: Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall\n(KIM, MAHR, PARRA, QUINN, STUCKEY, TIAO, UDALL) = range(7)\n\n# Zone variables: zone[i] is the zone (1, 2, or 3) for representative i\nzone = [Int(f\"zone_{i}\") for i in range(7)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each representative is assigned to zone 1, 2, or 3\nfor i in range(7):\n    solver.add(Or(zone[i] == 1, zone[i] == 2, zone[i] == 3))\n\n# Parra/Tiao Zone 1 constraint: exactly one of them is in Zone 1\nsolver.add(Xor(zone[PARRA] == 1, zone[TIAO] == 1))\n\n# Tiao/Udall Zone 2 constraint: exactly one of them is in Zone 2\nsolver.add(Xor(zone[TIAO] == 2, zone[UDALL] == 2))\n\n# Parra/Quinn same zone constraint\nsolver.add(zone[PARRA] == zone[QUINN])\n\n# Stuckey/Udall same zone constraint\nsolver.add(zone[STUCKEY] == zone[UDALL])\n\n# Zone 3 > Zone 2 size constraint\ncount_zone2 = Sum([If(zone[i] == 2, 1, 0) for i in range(7)])\ncount_zone3 = Sum([If(zone[i] == 3, 1, 0) for i in range(7)])\nsolver.add(count_zone3 > count_zone2)\n\n# Answer choices\nanswer_choices = [\n    ['Kim', 'Mahr'],                    # Index 0: Kim and Mahr in Zone 3\n    ['Kim', 'Tiao'],                   # Index 1: Kim and Tiao in Zone 3\n    ['Parra', 'Quinn'],                # Index 2: Parra and Quinn in Zone 3\n    ['Stuckey', 'Tiao', 'Udall'],     # Index 3: Stuckey, Tiao, Udall in Zone 3\n    ['Parra', 'Quinn', 'Stuckey', 'Udall']  # Index 4: Parra, Quinn, Stuckey, Udall in Zone 3\n]\n\n# Map representative names to indices for checking answer choices\nrep_name_to_idx = {\n    'Kim': KIM, 'Mahr': MAHR, 'Parra': PARRA,\n    'Quinn': QUINN, 'Stuckey': STUCKEY, 'Tiao': TIAO, 'Udall': UDALL\n}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, reps in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add constraint: exactly these representatives are in Zone 3\n    for i in range(7):\n        if rep_name_to_idx[rep_name_to_idx.keys()[list(rep_name_to_idx.values()).index(i)]] in reps:\n            # This representative is in the list, so must be in Zone 3\n            s_chk.add(zone[i] == 3)\n        else:\n            # This representative is not in the list, so must NOT be in Zone 3\n            s_chk.add(zone[i] != 3)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\n# Output the index of the only SAT choice (as per LSAT format, exactly one should be SAT)\nprint(answer_index_list[0] if answer_index_list else -1)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp2cnq8yay.py\", line 56, in <module>\n    if rep_name_to_idx[rep_name_to_idx.keys()[list(rep_name_to_idx.values()).index(i)]] in reps:\n                       ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: 'dict_keys' object is not subscriptable\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Representative indices: Kim, Mahr, Parra, Quinn, Stuckey, Tiao, Udall\n(KIM, MAHR, PARRA, QUINN, STUCKEY, TIAO, UDALL) = range(7)\n\n# Zone variables: zone[i] is the zone (1, 2, or 3) for representative i\nzone = [Int(f\"zone_{i}\") for i in range(7)]\n\n# Base solver\nsolver = Solver()\n\n# Domain constraints: each representative is assigned to zone 1, 2, or 3\nfor i in range(7):\n    solver.add(Or(zone[i] == 1, zone[i] == 2, zone[i] == 3))\n\n# Parra/Tiao Zone 1 constraint: exactly one of them is in Zone 1\nsolver.add(Xor(zone[PARRA] == 1, zone[TIAO] == 1))\n\n# Tiao/Udall Zone 2 constraint: exactly one of them is in Zone 2\nsolver.add(Xor(zone[TIAO] == 2, zone[UDALL] == 2))\n\n# Parra/Quinn same zone constraint\nsolver.add(zone[PARRA] == zone[QUINN])\n\n# Stuckey/Udall same zone constraint\nsolver.add(zone[STUCKEY] == zone[UDALL])\n\n# Zone 3 > Zone 2 size constraint\ncount_zone2 = Sum([If(zone[i] == 2, 1, 0) for i in range(7)])\ncount_zone3 = Sum([If(zone[i] == 3, 1, 0) for i in range(7)])\nsolver.add(count_zone3 > count_zone2)\n\n# Answer choices\nanswer_choices = [\n    ['Kim', 'Mahr'],                    # Index 0: Kim and Mahr in Zone 3\n    ['Kim', 'Tiao'],                   # Index 1: Kim and Tiao in Zone 3\n    ['Parra', 'Quinn'],                # Index 2: Parra and Quinn in Zone 3\n    ['Stuckey', 'Tiao', 'Udall'],     # Index 3: Stuckey, Tiao, Udall in Zone 3\n    ['Parra', 'Quinn', 'Stuckey', 'Udall']  # Index 4: Parra, Quinn, Stuckey, Udall in Zone 3\n]\n\n# Map representative names to indices for checking answer choices\nrep_name_to_idx = {\n    'Kim': KIM, 'Mahr': MAHR, 'Parra': PARRA,\n    'Quinn': QUINN, 'Stuckey': STUCKEY, 'Tiao': TIAO, 'Udall': UDALL\n}\n\n# Create reverse mapping: index -> name\nrep_idx_to_name = {v: k for k, v in rep_name_to_idx.items()}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, reps in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Add constraint: exactly these representatives are in Zone 3\n    for i in range(7):\n        if rep_idx_to_name[i] in reps:\n            # This representative is in the list, so must be in Zone 3\n            s_chk.add(zone[i] == 3)\n        else:\n            # This representative is not in the list, so must NOT be in Zone 3\n            s_chk.add(zone[i] != 3)\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\n# Output the index of the only SAT choice (as per LSAT format, exactly one should be SAT)\nprint(answer_index_list[0] if answer_index_list else -1)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "0",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 990,
+            "completion_tokens": 821,
+            "total_tokens": 1811
+          },
+          "api_time_only": 24.77197504043579,
+          "solver_time_only": 0.07731032371520996
+        }
+      ]
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

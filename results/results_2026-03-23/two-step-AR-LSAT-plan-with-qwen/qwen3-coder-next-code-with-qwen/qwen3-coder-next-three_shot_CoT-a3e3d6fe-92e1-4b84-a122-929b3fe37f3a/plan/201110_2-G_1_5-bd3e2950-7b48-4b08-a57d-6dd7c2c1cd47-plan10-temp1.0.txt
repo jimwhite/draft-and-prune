@@ -1,0 +1,19 @@
+1. Enumerate the six employees and assign integer indices.  
+2. Create integer variables for each employee's assigned parking space (positions 1 to 6).  
+3. Add **domain constraints**: each employee's space is an integer in [1, 6].  
+4. Add **distinctness constraint**: all six space variables must be pairwise distinct (a permutation).  
+5. Add **base ordering constraints** from the rules:  
+    - Young > Togowa (`pos_Young > pos_Togowa`)  
+    - Xu > Souza (`pos_Xu > pos_Souza`)  
+    - Robertson > Young (`pos_Robertson > pos_Young`)  
+    - Robertson ∈ {1, 2, 3, 4} (`pos_Robertson <= 4`)  
+6. Add the **conditional constraint** from the scenario: Young > Souza (`pos_Young > pos_Souza`).  
+7. Translate each answer choice into a constraint:  
+    - A) Togowa = 1  
+    - B) Young = 2  
+    - C) Robertson = 3  
+    - D) Souza = 3  
+    - E) Vaughn = 4  
+8. For each choice, clone the base constraints (including the conditional Young > Souza), add the choice-specific constraint, and check SAT with Z3.  
+9. Collect all choices for which the augmented solver returns SAT — these are possible ("could be true").  
+10. Output only those answer strings corresponding to SAT cases (only the *possible* ones).

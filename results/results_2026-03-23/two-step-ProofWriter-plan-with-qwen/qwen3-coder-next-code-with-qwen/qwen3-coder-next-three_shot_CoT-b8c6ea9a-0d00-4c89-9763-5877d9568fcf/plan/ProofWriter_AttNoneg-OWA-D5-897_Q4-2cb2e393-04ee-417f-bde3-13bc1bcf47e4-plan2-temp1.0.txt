@@ -1,0 +1,20 @@
+1. Identify all entities involved: Anne, Bob, Charlie, Fiona.
+2. Define all explicit properties and relations using ternary predicates of the form predicate(subject, boolean_value, True), where boolean_value encodes truth of atomic properties (e.g., is_nice(subject, True)).
+3. Encode all directly stated facts as facts.predicate(subject, value, True):
+   - is_nice("Anne", True)
+   - is_big("Bob", True), is_blue("Bob", True), is_cold("Bob", True)
+   - is_big("Charlie", True), is_cold("Charlie", True), is_nice("Charlie", True), is_young("Charlie", True)
+   - is_furry("Fiona", True), is_young("Fiona", True)
+4. Translate each conditional rule into PyKe `foreach`-`assert` rules:
+   • If someone is furry and nice → cold: foreach(is_furry(x, True), is_nice(x, True)) ⇒ assert(is_cold(x, True))
+   • If Bob is blue and big → cold: (redundant given direct fact; skip unless needed for closure—omit as not required)
+   • All blue, cold people are big: foreach(is_blue(x, True), is_cold(x, True)) ⇒ assert(is_big(x, True))
+   • If someone is nice → smart: foreach(is_nice(x, True)) ⇒ assert(is_smart(x, True))
+   • All smart, big people are nice: foreach(is_smart(x, True), is_big(x, True)) ⇒ assert(is_nice(x, True))
+   • All smart people are blue: foreach(is_smart(x, True)) ⇒ assert(is_blue(x, True))
+   • Blue, smart people are furry: foreach(is_blue(x, True), is_smart(x, True)) ⇒ assert(is_furry(x, True))
+   • Furry, cold people are smart: foreach(is_furry(x, True), is_cold(x, True)) ⇒ assert(is_smart(x, True))
+   • Cold people are big: foreach(is_cold(x, True)) ⇒ assert(is_big(x, True))
+5. Note: Rule "If Bob is blue and big then Bob is cold" is already redundant with explicit fact; no rule needed.
+6. The query tests whether Charlie is *not* smart:
+   → Use facts.is_smart("Charlie", False)

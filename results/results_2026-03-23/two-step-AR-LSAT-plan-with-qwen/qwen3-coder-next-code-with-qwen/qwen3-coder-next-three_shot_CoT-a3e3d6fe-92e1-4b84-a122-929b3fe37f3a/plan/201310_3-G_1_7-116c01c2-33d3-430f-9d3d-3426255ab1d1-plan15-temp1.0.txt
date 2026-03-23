@@ -1,0 +1,25 @@
+1. Enumerate the six bands and assign them integer indices (e.g., Uneasy=0, Vegemite=1, Wellspring=2, Xpert=3, Yardsign=4, Zircon=5).  
+2. Create integer position variables `pos[i]` for each band i ∈ {0,...,5}, representing their slot number (1 to 6).  
+3. Add **domain constraints**: `pos[i] ∈ {1,2,3,4,5,6}` for all i.  
+4. Add **distinctness constraint**: All `pos[i]` are pairwise distinct (injective mapping to slots).  
+5. Add **original constraints**:  
+    - Vegemite before Zircon: `pos[1] < pos[5]`  
+    - Wellspring and Zircon before Xpert: `pos[2] < pos[3]` ∧ `pos[5] < pos[3]`  
+    - Uneasy in last three slots: `pos[0] ∈ {4,5,6}`  
+    - Yardsign in first three slots: `pos[4] ∈ {1,2,3}`  
+6. Define the **target substitution candidates** as propositional expressions over positions (to be checked for logical equivalence with `pos[2] < pos[3] ∧ pos[5] < pos[3]`).  
+7. For each candidate statement S in the answer choices:  
+    a. Clone the base solver with all original constraints (steps 3–5).  
+    b. Temporarily **remove** the Wellspring-Zircon-before-Xpert constraint (`pos[2] < pos[3] ∧ pos[5] < pos[3]`).  
+    c. Add the candidate statement S as a constraint (e.g., for “Vegemite and Wellspring each before Xpert”, add `pos[1] < pos[3] ∧ pos[2] < pos[3]`).  
+    d. Use the solver to check whether all models of this modified system are **exactly** the same as those of the original system (i.e., the set of feasible orderings is unchanged).  
+        - However, since full model-set equality is hard, use a sound and complete test: verify **both** directions:  
+            i. Add constraint that original condition fails (i.e., `¬(pos[2] < pos[3] ∧ pos[5] < pos[3])`) but candidate condition holds; if UNSAT, then candidate ⇒ original.  
+            ii. Add constraint that candidate condition fails but original holds; if UNSAT, then original ⇒ candidate.  
+        - Equivalently: check that `(original ↔ candidate)` is entailed by the rest of the constraints.  
+    e. To implement efficiently: for each direction (implication), create two solvers:  
+        - Solver1: original constraints + candidate ⇒ original (i.e., candidate holds ∧ original fails) → check UNSAT.  
+        - Solver2: original constraints + original ⇒ candidate (i.e., original holds ∧ candidate fails) → check UNSAT.  
+        - If both are UNSAT, then candidate is logically equivalent *under the full constraint set*, so it has the same effect.  
+    f. Append index of candidate to `answer_index_list` if both checks succeed (i.e., implication holds both ways).  
+8. Print the `answer_index_list`.

@@ -1,0 +1,25 @@
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the puzzle.
+
+2.  **Define Variables and Domain:**
+    * Create a list of strings representing the three books: `"gray"`, `"orange"`, and `"brown"` to serve as variables.
+    * Define the domain as integer positions from 1 to 3, where 1 = leftmost and 3 = rightmost.
+    * Add all three variables with domain {1, 2, 3} to the `Problem` instance.
+
+3.  **Add Constraints from the Statements:**
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.
+    * Translate "The orange book is the leftmost" into a constraint: `orange == 1`.
+    * Translate "The gray book is to the right of the brown book" into a constraint: `brown < gray`.
+
+4.  **Solve the Problem:**
+    * Use the `getSolutions()` method to find all valid assignments of positions to books.
+    * Extract the unique solution (only one will satisfy all constraints).
+
+5.  **Determine Which Book Is Rightmost:**
+    * The rightmost position is 3; identify which book has value 3 in the solution.
+    * Map the correct choice letter based on the identified book:
+        - If `gray` is at position 3 → Choice A
+        - If `orange` is at position 3 → Choice B (impossible due to orange=1 constraint, but check generically)
+        - If `brown` is at position 3 → Choice C
+    * Output the correct choice letter.

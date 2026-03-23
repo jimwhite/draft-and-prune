@@ -1,0 +1,46 @@
+1. Enumerate the eight students and assign integer indices.  
+2. Define Boolean variables for each student-day-slot combination (e.g., `M_Morning[student]`, `M_Afternoon[student]`, etc.), but instead model assignment using per-slot variables: create 6 slot variables (M_M, M_A, T_M, T_A, W_M, W_A) each ranging over student indices.  
+3. Add **domain constraints**: each slot variable must be one of the 8 students.  
+4. Add **injectivity constraints**: exactly 6 distinct students are assigned to the 6 slots (i.e., all slot values are pairwise distinct).  
+5. Add **fixed constraints from the scenario**:  
+    - Kyle gives afternoon report on Tuesday: `T_A = Kyle`.  
+    - Helen gives afternoon report on Wednesday: `W_A = Helen`.  
+6. Add **day-specific constraint**:  
+    - Tuesday is the only day George can give a report → `George ∈ {T_M, T_A}` and George ∉ {M_M, M_A, W_M, W_A}. Since `T_A = Kyle`, then George must be `T_M`. Add constraint: `T_M = George`.  
+7. Add **afternoon-report constraints**:  
+    - Neither Olivia nor Robert can give an afternoon report → `M_A, T_A, W_A ≠ Olivia` and `≠ Robert`. Already satisfied by `T_A = Kyle`, `W_A = Helen`; enforce `M_A ≠ Olivia, Robert`.  
+8. Add **Nina conditional constraint**:  
+    - If Nina gives a report on Monday or Tuesday, then:  
+        - If Monday: Helen and Irving must both give reports on Tuesday (morning & afternoon), but T_A = Kyle → impossible. So Nina cannot be on Monday.  
+        - If Tuesday: Helen and Irving must both give reports on Wednesday → but W_A = Helen, so Helen is afternoon; need Irving also on Wednesday (i.e., `W_M = Irving`).  
+        - If Wednesday: no extra constraint.  
+    - Thus, possible placements for Nina: only Wednesday (since Tuesday would require Helen and Irving both on Wednesday, but Helen is already assigned to W_A, so W_M = Irving is allowed), or not at all. So:  
+        - If Nina is assigned, then either:  
+            (a) `Nina ∈ {W_M}` (only possible Wednesday slot), OR  
+            (b) `Nina` assigned to Tuesday → requires `W_M = Irving` and W_A already Helen, so valid *if* Nina is in T_M — but T_M = George → conflict. So Nina cannot be Tuesday.  
+            Hence: if Nina is assigned, then `W_M = Nina`. But wait—wait condition says “on the next day Helen and Irving must both give reports” — if Nina is on Tuesday, next day is Wednesday → need Helen and Irving *both* on Wednesday. Helen is at W_A, so Irving must be W_M. But T_M = George, T_A = Kyle → Nina can't be on Tuesday (T slots taken). So Nina cannot be placed on Tuesday. Thus Nina can only appear if assigned to Wednesday (i.e., `W_M = Nina`). In that case, since it's the last day, no “next day” → condition vacuously true.  
+        - So Nina may be W_M (allowed), or not assigned at all.  
+    - Encode as: For any assignment, if `student = Nina` and slot ∈ {M_M, M_A, T_M, T_A}, then:  
+        - If slot = Monday (M_M or M_A), → unsatisfiable (Helen & Irving must be on Tuesday, but T slots taken by George/Kyle).  
+        - If slot = T_M or T_A → conflict with George/Kyle. So only possible slot for Nina is W_M, with no additional constraint needed (since Wednesday → no next day).  
+    - Conclude: constraint is automatically enforced if we simply **forbid Nina in Monday and Tuesday slots**. So add:  
+        `M_M ≠ Nina`, `M_A ≠ Nina`, `T_M ≠ Nina`, `T_A ≠ Nina`.  
+        (Given T_M = George and T_A = Kyle, this is redundant except for M slots.)  
+9. Now consider the answer choices — each provides candidate morning reports: (M_M, T_M, W_M).  
+    - We already know `T_M = George`, so filter choices where second element is "George". Only possible candidates:  
+        ['Lenore, George, and Irving', 'Robert, George, and Irving'] — others have non-George at T_M → invalid.  
+    - Also, `M_A` and `W_A` are fixed: M_A = ?, W_A = Helen, and all 6 students used must be distinct.  
+    - For each valid choice candidate:  
+        a. Parse (M_M, T_M, W_M) = (A, B, C).  
+        b. Set `M_M = A`, `T_M = B` (must be George), `W_M = C`.  
+        c. We already have T_A = Kyle, W_A = Helen. So assigned slots:  
+            M_M=A, M_A=?, T_M=B=George, T_A=Kyle, W_M=C, W_A=Helen.  
+        d. Remaining unassigned slot: `M_A`. It must be filled by one of the 8 students not yet used. Students used so far: {A, George, Kyle, C, Helen}. Need one more distinct student for M_A.  
+        e. Add all constraints from step 8 (Nina only allowed in Wednesday morning → so if C = Nina, that’s okay; but if A or B is Nina, invalid — already handled by T_M=George).  
+        f. Check whether all 6 assigned students are distinct and valid under constraints:  
+            - Ensure no afternoon Olivia/Robert → M_A ∉ {Olivia, Robert}.  
+            - Nina condition: only allowed in W_M (C=Nina is okay), not elsewhere.  
+        g. If all constraints satisfied → this choice is possible (SAT).  
+    - Implement: For each answer choice, construct assignment, clone solver, assert fixed assignments (M_M = first, T_M = second=George, W_M = third), plus global constraints (injectivity, afternoon≠Olivia/Robert, Nina only in W_M if at all), then check SAT.  
+10. Define answer index list: collect indices of choices that yield SAT (i.e., could be correct).  
+11. Return the list (though problem asks “which one could be...”, so expect exactly one SAT).

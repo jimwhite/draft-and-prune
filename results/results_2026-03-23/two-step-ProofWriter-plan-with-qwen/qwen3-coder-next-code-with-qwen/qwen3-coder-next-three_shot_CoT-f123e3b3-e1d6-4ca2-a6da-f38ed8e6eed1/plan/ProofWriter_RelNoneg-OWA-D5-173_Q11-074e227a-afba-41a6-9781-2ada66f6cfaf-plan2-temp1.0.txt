@@ -1,0 +1,24 @@
+1. Identify all entities: bald_eagle, cat, cow, rabbit.
+2. Encode direct facts using ternary predicates:
+   - is_blue("bald_eagle", True), is_blue("cow", True)
+   - visits("cat", "bald_eagle", True), visits("cat", "rabbit", True)
+   - sees("cow", "rabbit", True)
+   - eats("bald_eagle", "cow", True), eats("rabbit", "bald_eagle", True)
+   - is_cold("rabbit", True)
+   - sees("rabbit", "cow", True), visits("rabbit", "cat", True)
+3. Translate context rules into PyKe `foreach` + `assert` form:
+   • If X visits cow and sees cow → X visits bald_eagle.
+   • If X is nice → X is big.
+   • If X visits bald_eagle → X is nice.
+   • If X is cold and visits cow → cow sees X (i.e., sees("cow", X, True)).
+   • If X is round and eats bald_eagle → X sees bald_eagle (i.e., sees(X, "bald_eagle", True)).
+   • If X visits cat → X visits rabbit.
+   • If X visits rabbit and sees cow → X visits cow.
+4. Note: No explicit fact or rule directly establishes `is_nice` for any entity unless derived via visiting bald_eagle; the rabbit is cold, sees cow, and visits cat → may derive visits to rabbit and cow via rules.
+5. To determine if `rabbit is big`, derive whether `is_nice("rabbit", True)` holds:
+   - Check if rabbit visits bald_eagle (via rule: visits cat → visits rabbit, but that’s already known; need visits bald_eagle).
+   - Check if rabbit is cold and visits cow: rabbit *visits cat*, but does it visit cow? Rule: if X visits rabbit and sees cow → X visits cow. Rabbit visits rabbit (self? not stated), but sees cow is true — however, need `visits("rabbit", "rabbit", True)` which is *not given* and cannot be assumed. So rabbit visits cow is not derivable.
+   - Rabbit does *not* visit bald_eagle (no rule yields it directly), so rabbit is not nice via rule 3.
+   - Therefore, `is_nice("rabbit", True)` is not derivable → `is_big("rabbit", True)` cannot be deduced.
+6. Query: check if `is_big("rabbit", True)` is *entailed*; since no derivation path exists, and the statement claims “The rabbit is big”, assess truth value: unknown (not provable true; no contradiction implies false either).
+7. Final query assertion for verification: Use facts.is_big("rabbit", True) — but the plan must only describe steps, not assert.

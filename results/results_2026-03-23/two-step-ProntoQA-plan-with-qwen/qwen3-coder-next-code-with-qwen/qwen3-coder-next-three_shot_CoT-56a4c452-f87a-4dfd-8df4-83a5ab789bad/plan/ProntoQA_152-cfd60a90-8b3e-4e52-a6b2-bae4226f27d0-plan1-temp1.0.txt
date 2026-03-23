@@ -1,0 +1,23 @@
+1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+3. Represent "Wren is a yumpus" as a base fact: `is_a("Wren", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every jompus is bright.  
+   - Every jompus is a vumpus.  
+   - Vumpuses are floral.  
+   - Every vumpus is a yumpus.  
+   - Every yumpus is not temperate.  
+   - Each yumpus is a numpus.  
+   - Every numpus is sweet.  
+   - Each numpus is a zumpus.  
+   - Zumpuses are mean.  
+   - Zumpuses are rompuses.  
+   - Each rompus is not feisty.  
+   - Every impus is not transparent.  
+   - Each rompus is a wumpus.  
+   - Wumpuses are transparent.  
+   - Each wumpus is a dumpus.  
+   - Dumpuses are large.  
+   - Each dumpus is a tumpus.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (note: contradictory facts about transparency—wumpuses are transparent and every impus is not transparent—but no connection between wumpuses/impuses in this chain; however, the key implication is that Wren → yumpus → numpus → zumpus → rompus → wumpus, and wumpuses are transparent, so Wren is transparent).  
+6. The query tests if the statement "Wren is transparent" is provable: → Use `facts.is_transparent("Wren", True)`.

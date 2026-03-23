@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to define the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**
+    * List the seven fruits as string variables: `"watermelons"`, `"oranges"`, `"mangoes"`, `"cantaloupes"`, `"kiwis"`, `"pears"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**.
+    * Add all variables to the problem with this domain.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.
+    * Convert each statement into a constraint using lambda or direct value assignment:
+        * "The pears are the second-cheapest" → `pears == 2`
+        * "The oranges are the fourth-most expensive" → `oranges == 4` (since 7 is most expensive, 4 is fourth from top → rank = 4)
+        * "The watermelons are the second-most expensive" → `watermelons == 6`
+        * "The peaches are more expensive than the cantaloupes" → `cantaloupes < peaches`
+        * "The peaches are less expensive than the mangoes" → `peaches < mangoes`
+        * "The cantaloupes are more expensive than the kiwis" → `kiwis < cantaloupes`
+
+4.  **Solve for the Price Ranking:**
+    * Use `getSolutions()` to obtain all valid assignments of ranks to fruits.
+    * Since the problem is fully constrained, expect exactly one solution; extract it.
+
+5.  **Determine Which Statement Is True:**
+    * The question asks which fruit is the fourth-most expensive → rank = 4.
+    * Create a mapping from choice letters to fruit names: `'A' → 'watermelons'`, `'B' → 'oranges'`, `'C' → 'mangoes'`, `'D' → 'cantaloupes'`, `'E' → 'kiwis'`, `'F' → 'pears'`, `'G' → 'peaches'`.
+    * For each choice letter, check if the corresponding fruit's rank in the solution is 4.
+    * Return the first matching choice letter (there should be exactly one).

@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Bob, Erin, Harry.  
+2. Encode all explicitly stated atomic facts using ternary predicates (e.g., is_furry("Anne", True), is_nice("Erin", True), etc.).  
+3. Encode each universal conditional as a PyKe rule using `foreach` and `assert`:  
+   • Young things are furry.  
+   • Nice, furry things are green.  
+   • All green things are nice.  
+   • Nice, green things are big.  
+   • All green things are smart.  
+   • If something is big and young → it is round.  
+   • All green things are big.  
+   • If Harry is young → Harry is furry.  
+   • Furry, smart things are nice.  
+4. For each rule: express preconditions in `foreach` clauses with appropriate bindings and variable scopes; conclude with an `assert` for the derived property/relation.  
+5. The query tests whether Harry is *not* green: use `facts.is_green("Harry", False)` to check if the negation holds.

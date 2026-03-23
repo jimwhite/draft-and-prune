@@ -1,0 +1,22 @@
+1. Enumerate the three cookie types (oatmeal, peanut butter, sugar) and assign integer codes 0, 1, 2 respectively.  
+2. Enumerate the five days (Monday to Friday) and assign integer codes 1 to 5 respectively.  
+3. Create integer variables `batch_type_day[type][batch_num]` for each cookie type and batch number (1st, 2nd, or 3rd), representing the day on which that batch is made.  
+4. Add **domain constraints**: each `batch_type_day[type][b]` must be in [1,5].  
+5. Add **distinct-day-per-type constraint**: for each cookie type, the three batch days must be strictly increasing (since no two batches of same type on same day) — model as `batch_type_day[type][1] < batch_type_day[type][2] < batch_type_day[type][3]`.  
+6. Add **Monday-at-least-one constraint**: at least one of the nine batch variables equals 1.  
+7. Add **given-relative constraints**:  
+    - Second oatmeal batch = first peanut butter batch: `batch_type_day[0][2] == batch_type_day[1][1]`.  
+    - Second sugar batch = Thursday: `batch_type_day[2][2] == 4`.  
+8. Add the **conditional premise**: assume that *there exists* a pair of cookie types (X ≠ Y) such that first batch of X occurs on same day as third batch of Y — i.e., `batch_type_day[X][1] == batch_type_day[Y][3]`. Model this via existential quantification: create auxiliary Boolean variables to encode the disjunction over all (X,Y) pairs with X≠Y, and assert it holds.  
+9. For each answer choice (each statement about the schedule), define a constraint expressing that the statement is **true** under a full assignment:  
+    - "At least one batch on each of five days": for day d in 1..5, ∃ batch such that `batch_type_day[type][b] == d`.  
+    - "At least two batches on Wednesday (day 3)": count of batch variables equal to 3 ≥ 2.  
+    - "Exactly one batch on Monday": count of batch variables equal to 1 = 1.  
+    - "Exactly two batches on Tuesday (day 2)": count of batch variables equal to 2 = 2.  
+    - "Exactly one batch on Friday (day 5)": count of batch variables equal to 5 = 1.  
+10. For each answer choice, check whether the statement **must be true** under all schedules satisfying both base constraints and the conditional premise:  
+    - Clone the full constraint set (base + premise).  
+    - Add the negation of the statement's condition.  
+    - If UNSAT, then the statement is logically implied (cannot be false); if SAT, then the statement *could* be false — i.e., this is a valid answer to "which could be false".  
+11. Collect all indices of answer choices for which the cloned solver with negated statement returns SAT — these are the options that could be false.  
+12. Return the list of such indices (there should be exactly one).

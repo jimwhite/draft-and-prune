@@ -1,0 +1,22 @@
+1. Enumerate riders (Reynaldo, Seamus, Theresa, Yuki) and bicycles (F, G, H, J), assigning integer indices: riders [0–3], bicycles [0–3].  
+2. Create Boolean variables for assignments: `d1[r][b]` = True if rider r tests bicycle b on day 1; `d2[r][b]` = True if rider r tests bicycle b on day 2.  
+3. Add **day-1 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 1: for each rider r, exactly one `d1[r][b]` is True.  
+    - Each bicycle is tested by exactly one rider on day 1: for each bicycle b, exactly one `d1[r][b]` is True.  
+4. Add **day-2 assignment constraints**:  
+    - Each rider tests exactly one bicycle on day 2: for each rider r, exactly one `d2[r][b]` is True.  
+    - Each bicycle is tested by exactly one rider on day 2: for each bicycle b, exactly one `d2[r][b]` is True.  
+5. Add **global constraints**:  
+    - Reynaldo cannot test F on either day: `~d1[0][0]` and `~d2[0][0]`.  
+    - Yuki cannot test J on either day: `~d1[3][3]` and `~d2[3][3]`.  
+    - Theresa must test H on at least one day: `d1[2][2] ∨ d2[2][2]`.  
+    - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all bicycles b, `d1[3][b] → d2[1][b]`.  
+6. Translate each answer choice into a logical condition:  
+    - A: Reynaldo tests J on day 1 → `d1[0][3]`  
+    - B: Reynaldo tests J on day 2 → `d2[0][3]`  
+    - C: Seamus tests H on day 1 → `d1[1][2]`  
+    - D: Yuki tests H on day 1 → `d1[3][2]`  
+    - E: Yuki tests H on day 2 → `d2[3][2]`  
+7. For each choice, create a fresh solver with base constraints (steps 3–5), then add the choice’s condition.  
+8. Record whether each model is SAT or UNSAT. The EXCEPT choice corresponds to the only UNSAT case.  
+9. Return the index of the choice that is UNSAT (i.e., the one that **cannot** be true).

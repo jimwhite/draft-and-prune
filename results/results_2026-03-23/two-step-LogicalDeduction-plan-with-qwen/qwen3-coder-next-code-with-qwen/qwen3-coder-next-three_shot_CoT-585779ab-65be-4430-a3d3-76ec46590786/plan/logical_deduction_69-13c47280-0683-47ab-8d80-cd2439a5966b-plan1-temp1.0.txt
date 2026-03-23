@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the pricing order puzzle.  
+
+2.  **Define Variables and Domain:**  
+    * Define variables for the five fruits: `"loquats"`, `"peaches"`, `"pears"`, `"plums"`, and `"watermelons"`.  
+    * Assign a numerical domain from 1 to 5, where **1 = cheapest** and **5 = most expensive**, matching the problem's description of price tiers.  
+    * Add all fruit variables to the `Problem` with this domain (1–5).  
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce unique price ranks.  
+    * Convert each clue into a constraint:  
+        - "The watermelons are the most expensive" → `watermelons == 5`.  
+        - "The peaches are more expensive than the loquats" → `peaches < loquats` (since lower rank = cheaper, so higher price means smaller rank number).  
+        - "The plums are the second-cheapest" → `plums == 2` (cheapest=1, so second-cheapest=2).  
+        - "The pears are the third-most expensive" → `pears == 3` (most expensive=5, so third-most expensive = 5−2 = 3).  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Extract the unique solution (since constraints fully determine positions).  
+
+5.  **Determine Second-Most-Expensive Fruit:**  
+    * The second-most-expensive corresponds to rank **4** (since 5 = most expensive, 4 = second-most).  
+    * Map the answer choices to fruits: A=loquats, B=peaches, C=pears, D=plums, E=watermelons.  
+    * In the solution dictionary, find which fruit has rank 4 and return its corresponding choice letter.

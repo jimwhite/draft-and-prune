@@ -1,0 +1,627 @@
+{
+  "problem": {
+    "context": "A panel of five scientists will be formed. The panelists will be selected from among three botanists—F, G, and H—three chemists—K, L, and M—and three zoologists—P, Q, and R. Selection is governed by the following conditions: The panel must include at least one scientist of each of the three types. If more than one botanist is selected, then at most one zoologist is selected. F and K cannot both be selected. K and M cannot both be selected. If M is selected, both P and R must be selected.",
+    "question": "Which one of the following is an acceptable selection of scientists for the panel?",
+    "answers": [
+      "F, G, K, P, Q",
+      "G, H, K, L, M",
+      "G, H, K, L, R",
+      "H, K, M, P, R",
+      "H, L, M, P, Q"
+    ],
+    "label": 2,
+    "id_string": "200312_1-G_1_1"
+  },
+  "timing": 658.5852658748627,
+  "all_solver_outputs": [
+    "2",
+    "Z3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpbcoyp5kf.py\", line 62, in <module>\n    if choice['K'] == 1:\n       ~~~~~~^^^^^\nKeyError: 'K'\n\nStdout: ",
+    "[]",
+    "[2]",
+    "2",
+    "2",
+    "[2]",
+    "2",
+    "[2]",
+    "[2]",
+    "-1",
+    "2",
+    "[2]",
+    "['G', 'H', 'K', 'L', 'R']",
+    "[2]"
+  ],
+  "all_solver_error_types": [
+    null,
+    "runtime_error",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 510,
+        "total_tokens": 2178
+      },
+      "plan_generation_api_time_only": 15.178990840911865,
+      "code_generation_usage": {
+        "prompt_tokens": 3548,
+        "completion_tokens": 711,
+        "total_tokens": 4259
+      },
+      "code_generation_api_time_only": 22.797975063323975,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5216,
+        "completion_tokens": 1221,
+        "total_tokens": 6437
+      },
+      "path_api_time_only": 37.97696590423584,
+      "solver_time_only": 0.08449292182922363
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 630,
+        "total_tokens": 2298
+      },
+      "plan_generation_api_time_only": 19.46884250640869,
+      "code_generation_usage": {
+        "prompt_tokens": 3668,
+        "completion_tokens": 993,
+        "total_tokens": 4661
+      },
+      "code_generation_api_time_only": 27.194433450698853,
+      "repair_usage_total": {
+        "prompt_tokens": 2293,
+        "completion_tokens": 1994,
+        "total_tokens": 4287
+      },
+      "repair_api_time_only_total": 56.50808238983154,
+      "path_usage_total": {
+        "prompt_tokens": 7629,
+        "completion_tokens": 3617,
+        "total_tokens": 11246
+      },
+      "path_api_time_only": 103.17135834693909,
+      "solver_time_only": 0.24857711791992188
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 442,
+        "total_tokens": 2110
+      },
+      "plan_generation_api_time_only": 11.988215208053589,
+      "code_generation_usage": {
+        "prompt_tokens": 3480,
+        "completion_tokens": 646,
+        "total_tokens": 4126
+      },
+      "code_generation_api_time_only": 21.55301856994629,
+      "repair_usage_total": {
+        "prompt_tokens": 808,
+        "completion_tokens": 662,
+        "total_tokens": 1470
+      },
+      "repair_api_time_only_total": 17.37557077407837,
+      "path_usage_total": {
+        "prompt_tokens": 5956,
+        "completion_tokens": 1750,
+        "total_tokens": 7706
+      },
+      "path_api_time_only": 50.91680455207825,
+      "solver_time_only": 0.14725089073181152
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 415,
+        "total_tokens": 2083
+      },
+      "plan_generation_api_time_only": 12.795497179031372,
+      "code_generation_usage": {
+        "prompt_tokens": 3453,
+        "completion_tokens": 633,
+        "total_tokens": 4086
+      },
+      "code_generation_api_time_only": 18.96385669708252,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5121,
+        "completion_tokens": 1048,
+        "total_tokens": 6169
+      },
+      "path_api_time_only": 31.75935387611389,
+      "solver_time_only": 0.0756828784942627
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 331,
+        "total_tokens": 1999
+      },
+      "plan_generation_api_time_only": 8.764883995056152,
+      "code_generation_usage": {
+        "prompt_tokens": 3369,
+        "completion_tokens": 687,
+        "total_tokens": 4056
+      },
+      "code_generation_api_time_only": 22.58233380317688,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5037,
+        "completion_tokens": 1018,
+        "total_tokens": 6055
+      },
+      "path_api_time_only": 31.347217798233032,
+      "solver_time_only": 0.0712728500366211
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 400,
+        "total_tokens": 2068
+      },
+      "plan_generation_api_time_only": 10.953733444213867,
+      "code_generation_usage": {
+        "prompt_tokens": 3438,
+        "completion_tokens": 687,
+        "total_tokens": 4125
+      },
+      "code_generation_api_time_only": 19.579447746276855,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5106,
+        "completion_tokens": 1087,
+        "total_tokens": 6193
+      },
+      "path_api_time_only": 30.533181190490723,
+      "solver_time_only": 0.07925200462341309
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 504,
+        "total_tokens": 2172
+      },
+      "plan_generation_api_time_only": 13.260728359222412,
+      "code_generation_usage": {
+        "prompt_tokens": 3542,
+        "completion_tokens": 1018,
+        "total_tokens": 4560
+      },
+      "code_generation_api_time_only": 31.41054677963257,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5210,
+        "completion_tokens": 1522,
+        "total_tokens": 6732
+      },
+      "path_api_time_only": 44.67127513885498,
+      "solver_time_only": 0.08079862594604492
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 540,
+        "total_tokens": 2208
+      },
+      "plan_generation_api_time_only": 16.003072023391724,
+      "code_generation_usage": {
+        "prompt_tokens": 3578,
+        "completion_tokens": 600,
+        "total_tokens": 4178
+      },
+      "code_generation_api_time_only": 16.506490230560303,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5246,
+        "completion_tokens": 1140,
+        "total_tokens": 6386
+      },
+      "path_api_time_only": 32.509562253952026,
+      "solver_time_only": 0.08382940292358398
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 503,
+        "total_tokens": 2171
+      },
+      "plan_generation_api_time_only": 16.367680072784424,
+      "code_generation_usage": {
+        "prompt_tokens": 3541,
+        "completion_tokens": 605,
+        "total_tokens": 4146
+      },
+      "code_generation_api_time_only": 17.128753185272217,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5209,
+        "completion_tokens": 1108,
+        "total_tokens": 6317
+      },
+      "path_api_time_only": 33.49643325805664,
+      "solver_time_only": 0.08356261253356934
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 504,
+        "total_tokens": 2172
+      },
+      "plan_generation_api_time_only": 15.829792022705078,
+      "code_generation_usage": {
+        "prompt_tokens": 3542,
+        "completion_tokens": 597,
+        "total_tokens": 4139
+      },
+      "code_generation_api_time_only": 19.14446783065796,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5210,
+        "completion_tokens": 1101,
+        "total_tokens": 6311
+      },
+      "path_api_time_only": 34.97425985336304,
+      "solver_time_only": 0.07895112037658691
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 735,
+        "total_tokens": 2403
+      },
+      "plan_generation_api_time_only": 20.94913077354431,
+      "code_generation_usage": {
+        "prompt_tokens": 3773,
+        "completion_tokens": 672,
+        "total_tokens": 4445
+      },
+      "code_generation_api_time_only": 18.850502967834473,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5441,
+        "completion_tokens": 1407,
+        "total_tokens": 6848
+      },
+      "path_api_time_only": 39.799633741378784,
+      "solver_time_only": 0.07702851295471191
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 540,
+        "total_tokens": 2208
+      },
+      "plan_generation_api_time_only": 17.153252840042114,
+      "code_generation_usage": {
+        "prompt_tokens": 3578,
+        "completion_tokens": 662,
+        "total_tokens": 4240
+      },
+      "code_generation_api_time_only": 20.803775787353516,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5246,
+        "completion_tokens": 1202,
+        "total_tokens": 6448
+      },
+      "path_api_time_only": 37.95702862739563,
+      "solver_time_only": 0.07712626457214355
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 690,
+        "total_tokens": 2358
+      },
+      "plan_generation_api_time_only": 18.379976272583008,
+      "code_generation_usage": {
+        "prompt_tokens": 3728,
+        "completion_tokens": 645,
+        "total_tokens": 4373
+      },
+      "code_generation_api_time_only": 17.537835359573364,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5396,
+        "completion_tokens": 1335,
+        "total_tokens": 6731
+      },
+      "path_api_time_only": 35.91781163215637,
+      "solver_time_only": 0.07843542098999023
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 532,
+        "total_tokens": 2200
+      },
+      "plan_generation_api_time_only": 18.6914279460907,
+      "code_generation_usage": {
+        "prompt_tokens": 3570,
+        "completion_tokens": 614,
+        "total_tokens": 4184
+      },
+      "code_generation_api_time_only": 17.643006086349487,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5238,
+        "completion_tokens": 1146,
+        "total_tokens": 6384
+      },
+      "path_api_time_only": 36.334434032440186,
+      "solver_time_only": 0.07274842262268066
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1668,
+        "completion_tokens": 504,
+        "total_tokens": 2172
+      },
+      "plan_generation_api_time_only": 13.867016315460205,
+      "code_generation_usage": {
+        "prompt_tokens": 3542,
+        "completion_tokens": 868,
+        "total_tokens": 4410
+      },
+      "code_generation_api_time_only": 25.476900100708008,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5210,
+        "completion_tokens": 1372,
+        "total_tokens": 6582
+      },
+      "path_api_time_only": 39.34391641616821,
+      "solver_time_only": 0.07983613014221191
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 81471,
+    "completion_tokens": 21074,
+    "total_tokens": 102545
+  },
+  "api_time_only_total": 620.7092366218567,
+  "solver_time_only_total": 1.4188451766967773,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpuo1t6gle.py\", line 62, in <module>\n    if choice['K'] == 1:\n       ~~~~~~^^^^^\nKeyError: 'K'\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Z3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp_6qvnl2f.py\", line 62, in <module>\n    if choice['K'] == 1:\n       ~~~~~~^^^^^\nKeyError: 'K'\n\nStdout: ",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 1146,
+            "completion_tokens": 997,
+            "total_tokens": 2143
+          },
+          "api_time_only": 29.526634693145752,
+          "solver_time_only": 0.08797955513000488
+        },
+        {
+          "round_index": 2,
+          "input_code": "from z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp_6qvnl2f.py\", line 62, in <module>\n    if choice['K'] == 1:\n       ~~~~~~^^^^^\nKeyError: 'K'\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Scientists: F, G, H (botanists); K, L, M (chemists); P, Q, R (zoologists)\nb_f, b_g, b_h = Bools('b_f b_g b_h')\nc_k, c_l, c_m = Bools('c_k c_l c_m')\nz_p, z_q, z_r = Bools('z_p z_q z_r')\n\n# Base solver with all constraints\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists\nsolver.add(b_f + b_g + b_h + c_k + c_l + c_m + z_p + z_q + z_r == 5)\n\n# Type-covering constraint: at least one from each group\nsolver.add(b_f + b_g + b_h >= 1)\nsolver.add(c_k + c_l + c_m >= 1)\nsolver.add(z_p + z_q + z_r >= 1)\n\n# Conditional constraint: if >1 botanist, then ≤1 zoologist\nsolver.add(Implies(b_f + b_g + b_h >= 2, z_p + z_q + z_r <= 1))\n\n# F and K cannot both be selected\nsolver.add(Not(And(b_f, c_k)))\n\n# K and M cannot both be selected\nsolver.add(Not(And(c_k, c_m)))\n\n# If M is selected, both P and R must be selected\nsolver.add(Implies(c_m, And(z_p, z_r)))\n\n# Answer choices\nanswer_choices = [\n    {'F': 1, 'G': 1, 'H': 0, 'K': 1, 'L': 0, 'M': 0, 'P': 1, 'Q': 1, 'R': 0},  # F, G, K, P, Q\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 0, 'Q': 0, 'R': 0},  # G, H, K, L, M\n    {'F': 0, 'G': 1, 'H': 1, 'K': 1, 'L': 0, 'M': 0, 'P': 0, 'Q': 0, 'R': 1},  # G, H, K, L, R\n    {'F': 0, 'G': 0, 'H': 1, 'K': 1, 'L': 0, 'M': 1, 'P': 1, 'Q': 0, 'R': 1},  # H, K, M, P, R\n    {'F': 0, 'G': 0, 'H': 1, 'L': 1, 'M': 1, 'P': 1, 'Q': 1, 'R': 0}           # H, L, M, P, Q\n]\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Fix selection to match the choice\n    if choice['F'] == 1:\n        s_chk.add(b_f)\n    else:\n        s_chk.add(Not(b_f))\n        \n    if choice['G'] == 1:\n        s_chk.add(b_g)\n    else:\n        s_chk.add(Not(b_g))\n        \n    if choice['H'] == 1:\n        s_chk.add(b_h)\n    else:\n        s_chk.add(Not(b_h))\n        \n    if choice['K'] == 1:\n        s_chk.add(c_k)\n    else:\n        s_chk.add(Not(c_k))\n        \n    if choice['L'] == 1:\n        s_chk.add(c_l)\n    else:\n        s_chk.add(Not(c_l))\n        \n    if choice['M'] == 1:\n        s_chk.add(c_m)\n    else:\n        s_chk.add(Not(c_m))\n        \n    if choice['P'] == 1:\n        s_chk.add(z_p)\n    else:\n        s_chk.add(Not(z_p))\n        \n    if choice['Q'] == 1:\n        s_chk.add(z_q)\n    else:\n        s_chk.add(Not(z_q))\n        \n    if choice['R'] == 1:\n        s_chk.add(z_r)\n    else:\n        s_chk.add(Not(z_r))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": false,
+            "solver_output_or_error": "Z3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpbcoyp5kf.py\", line 62, in <module>\n    if choice['K'] == 1:\n       ~~~~~~^^^^^\nKeyError: 'K'\n\nStdout: ",
+            "error_type": "runtime_error"
+          },
+          "usage": {
+            "prompt_tokens": 1147,
+            "completion_tokens": 997,
+            "total_tokens": 2144
+          },
+          "api_time_only": 26.98144769668579,
+          "solver_time_only": 0.0809178352355957
+        }
+      ]
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Scientist indices: botanists F=0, G=1, H=2; chemists K=3, L=4, M=5; zoologists P=6, Q=7, R=8\ns = [Bool(f\"s_{i}\") for i in range(9)]\n\n# Base solver\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists selected\nsolver.add(Sum([If(s[i], 1, 0) for i in range(9)]) == 5)\n\n# Type coverage constraints\nsolver.add(Or(s[0], s[1], s[2]))  # at least one botanist\nsolver.add(Or(s[3], s[4], s[5]))  # at least one chemist\nsolver.add(Or(s[6], s[7], s[8]))  # at least one zoologist\n\n# Conditional constraint: if more than one botanist, then at most one zoologist\nbotanist_count = Sum([If(s[i], 1, 0) for i in range(3)])\nzoologist_count = Sum([If(s[i], 1, 0) for i in range(6, 9)])\nsolver.add(Implies(botanist_count >= 2, zoologist_count <= 1))\n\n# Mutual exclusion constraints\nsolver.add(Not(And(s[0], s[3])))  # F and K cannot both be selected\nsolver.add(Not(And(s[3], s[5])))  # K and M cannot both be selected\n\n# Implication constraint: if M is selected, then P and R must be selected\nsolver.add(Implies(s[5], And(s[6], s[8])))\n\n# Answer choices\nanswer_choices = [\n    ['F', 'G', 'K', 'P', 'Q'],\n    ['G', 'H', 'K', 'L', 'M'],\n    ['G', 'H', 'K', 'L', 'R'],\n    ['H', 'K', 'M', 'P', 'R'],\n    ['H', 'L', 'M', 'P', 'Q']\n]\n\n# Map scientist names to indices\nname_to_idx = {\n    'F': 0, 'G': 1, 'H': 2,\n    'K': 3, 'L': 4, 'M': 5,\n    'P': 6, 'Q': 7, 'R': 8\n}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set selected scientists to true, others to false\n    for i in range(9):\n        if name_to_idx.get(choice[i]) is not None:\n            s_chk.add(s[name_to_idx[choice[i]]])\n        else:\n            s_chk.add(Not(s[i]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Scientist indices: botanists F=0, G=1, H=2; chemists K=3, L=4, M=5; zoologists P=6, Q=7, R=8\ns = [Bool(f\"s_{i}\") for i in range(9)]\n\n# Base solver\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists selected\nsolver.add(Sum([If(s[i], 1, 0) for i in range(9)]) == 5)\n\n# Type coverage constraints\nsolver.add(Or(s[0], s[1], s[2]))  # at least one botanist\nsolver.add(Or(s[3], s[4], s[5]))  # at least one chemist\nsolver.add(Or(s[6], s[7], s[8]))  # at least one zoologist\n\n# Conditional constraint: if more than one botanist, then at most one zoologist\nbotanist_count = Sum([If(s[i], 1, 0) for i in range(3)])\nzoologist_count = Sum([If(s[i], 1, 0) for i in range(6, 9)])\nsolver.add(Implies(botanist_count >= 2, zoologist_count <= 1))\n\n# Mutual exclusion constraints\nsolver.add(Not(And(s[0], s[3])))  # F and K cannot both be selected\nsolver.add(Not(And(s[3], s[5])))  # K and M cannot both be selected\n\n# Implication constraint: if M is selected, then P and R must be selected\nsolver.add(Implies(s[5], And(s[6], s[8])))\n\n# Answer choices\nanswer_choices = [\n    ['F', 'G', 'K', 'P', 'Q'],\n    ['G', 'H', 'K', 'L', 'M'],\n    ['G', 'H', 'K', 'L', 'R'],\n    ['H', 'K', 'M', 'P', 'R'],\n    ['H', 'L', 'M', 'P', 'Q']\n]\n\n# Map scientist names to indices\nname_to_idx = {\n    'F': 0, 'G': 1, 'H': 2,\n    'K': 3, 'L': 4, 'M': 5,\n    'P': 6, 'Q': 7, 'R': 8\n}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set selected scientists to true, others to false\n    for i in range(9):\n        if name_to_idx.get(choice[i]) is not None:\n            s_chk.add(s[name_to_idx[choice[i]]])\n        else:\n            s_chk.add(Not(s[i]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp2o62n177.py\", line 53, in <module>\n    if name_to_idx.get(choice[i]) is not None:\n                       ~~~~~~^^^\nIndexError: list index out of range\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Scientist indices: botanists F=0, G=1, H=2; chemists K=3, L=4, M=5; zoologists P=6, Q=7, R=8\ns = [Bool(f\"s_{i}\") for i in range(9)]\n\n# Base solver\nsolver = Solver()\n\n# Panel size constraint: exactly 5 scientists selected\nsolver.add(Sum([If(s[i], 1, 0) for i in range(9)]) == 5)\n\n# Type coverage constraints\nsolver.add(Or(s[0], s[1], s[2]))  # at least one botanist\nsolver.add(Or(s[3], s[4], s[5]))  # at least one chemist\nsolver.add(Or(s[6], s[7], s[8]))  # at least one zoologist\n\n# Conditional constraint: if more than one botanist, then at most one zoologist\nbotanist_count = Sum([If(s[i], 1, 0) for i in range(3)])\nzoologist_count = Sum([If(s[i], 1, 0) for i in range(6, 9)])\nsolver.add(Implies(botanist_count >= 2, zoologist_count <= 1))\n\n# Mutual exclusion constraints\nsolver.add(Not(And(s[0], s[3])))  # F and K cannot both be selected\nsolver.add(Not(And(s[3], s[5])))  # K and M cannot both be selected\n\n# Implication constraint: if M is selected, then P and R must be selected\nsolver.add(Implies(s[5], And(s[6], s[8])))\n\n# Answer choices\nanswer_choices = [\n    ['F', 'G', 'K', 'P', 'Q'],\n    ['G', 'H', 'K', 'L', 'M'],\n    ['G', 'H', 'K', 'L', 'R'],\n    ['H', 'K', 'M', 'P', 'R'],\n    ['H', 'L', 'M', 'P', 'Q']\n]\n\n# Map scientist names to indices\nname_to_idx = {\n    'F': 0, 'G': 1, 'H': 2,\n    'K': 3, 'L': 4, 'M': 5,\n    'P': 6, 'Q': 7, 'R': 8\n}\n\n# Check each answer choice\nanswer_index_list = []\nfor idx, choice in enumerate(answer_choices):\n    s_chk = Solver()\n    s_chk.add(solver.assertions())\n    \n    # Set selected scientists to true, others to false\n    for i in range(9):\n        name = choice[i] if i < len(choice) else None\n        if name is not None and name in name_to_idx:\n            s_chk.add(s[name_to_idx[name]])\n        else:\n            s_chk.add(Not(s[i]))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 808,
+            "completion_tokens": 662,
+            "total_tokens": 1470
+          },
+          "api_time_only": 17.37557077407837,
+          "solver_time_only": 0.07403159141540527
+        }
+      ]
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

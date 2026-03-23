@@ -1,0 +1,39 @@
+1. Enumerate the eight students and assign integer codes to them (e.g., George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7).  
+2. Enumerate the six report slots: Morning-Monday (slot 0), Afternoon-Monday (slot 1), Morning-Tuesday (slot 2), Afternoon-Tuesday (slot 3), Morning-Wednesday (slot 4), Afternoon-Wednesday (slot 5).  
+3. Create integer variables `report[i]` for each slot i, representing which student gives the report in that slot. Each `report[i] ∈ {0..7}`.  
+4. Add **injectivity constraint**: exactly six distinct students report; two students do not report at all. Use a set of size 6 or cardinality constraints (via `Distinct` on selected subset), but easier: enforce all six `report[i]` are distinct and exactly one student per slot, with the implicit that two students are unused.  
+5. Add **fixed constraints from premise**:  
+    - Kyle gives afternoon report on Tuesday → `report[3] = 3`.  
+    - Helen gives afternoon report on Wednesday → `report[5] = 1`.  
+6. Add **day-specific availability constraints**:  
+    - Tuesday is the only day George can report → George can only be in slot 2 or 3. Since slot 3 is Kyle, George may only possibly be in slot 2 (Morning-Tuesday).  
+    - Olivia and Robert cannot give afternoon reports → Olivia/Robert ∉ {1, 3, 5}. So `report[i] ∈ {6,7}` ⇒ i ∉ {1,3,5}.  
+    - Since slot 1 (Afternoon-Monday) and slot 5 (Afternoon-Wednesday) are taken, slot 1 cannot be Olivia/Robert; slot 5 is Helen (allowed), so OK. Slot 3 is Kyle, so Olivia/Robert not in slot 3 either (already taken), but still enforce they never appear in afternoon slots.  
+7. Add **Nina conditional constraint**:  
+    - If Nina reports on Monday (slot 0 or 1) → Helen and Irving must both report on Tuesday.  
+    - If Nina reports on Tuesday (slot 2 or 3) → Helen and Irving must both report on Wednesday.  
+    - If Nina reports on Wednesday (slot 4 or 5) → no further constraint.  
+    - But Nina only reports once; so:  
+        - If `report[i] == 5` for some i ∈ {0,1}, then both Helen and Irving must be in slot 2 & 3 (but slot 3 is Kyle, so impossible to have both Helen and Irving on Tuesday) → contradiction unless Nina not in Monday.  
+        - Since slot 3 is Kyle and slot 2 is available, but Helen must be in both morning/afternoon of Tuesday? Wait: only one report per slot. So "Helen and Irving must both give reports [on the next day]" means two *reports* on Tuesday: one morning, one afternoon. Since slot 2 = Morning-Tue, slot 3 = Afternoon-Tue (Kyle), so Helen and Irving cannot both occupy Tuesday if Kyle is already in slot 3. Therefore, Nina **cannot** give a Monday report (because that would require both morning and afternoon Tuesday to be Helen & Irving, but Kyle occupies afternoon).  
+        - Similarly, if Nina is in slot 2 (Morning-Tue), then next day is Wednesday → Helen and Irving must both give reports on Wednesday. But slot 4 (Morning-Wed) and slot 5 (Afternoon-Wed = Helen) are the only Wed slots. So Helen must be in slot 5 (afternoon, given), and Irving must be in slot 4 (morning). That is feasible.  
+        - So possible Nina positions: slot 2 only (Morning-Tue) or Wednesday slots (4/5). But slot 5 = Helen, so Nina only possible at slot 4.  
+        - If Nina in slot 4 (Morning-Wed), then next day is Thursday → no constraint, so allowed.  
+        - If Nina in slot 2 (Morning-Tue), then Wednesday must have Helen and Irving — Helen is already in slot 5, so Irving must be in slot 4.  
+        - So Nina ∈ {2,4} possible; other positions invalid due to constraints.  
+8. Add constraint: only six students report — i.e., `Distinct(report[0], report[1], ..., report[5])`.  
+9. Since we are given a specific assignment (slot 3 = Kyle, slot 5 = Helen), and only six slots filled with distinct students, we now consider the answer choices: each choice gives morning reports for Mon, Tue, Wed — i.e., `report[0]`, `report[2]`, `report[4]` respectively. The afternoon slots are fixed or constrained:  
+    - Afternoon Monday: slot 1 (unknown), must be one of remaining students.  
+    - Afternoon Tuesday: slot 3 = Kyle (fixed).  
+    - Afternoon Wednesday: slot 5 = Helen (fixed).  
+10. For each answer choice (list of three students, in order [Mon-morning, Tue-morning, Wed-morning]):  
+    - Extract the three proposed students: e.g., option A = ["Irving", "Lenore", "Nina"] ⇒ `report[0] = Irving`, `report[2] = Lenore`, `report[4] = Nina`.  
+    - Add these three assignments as constraints.  
+    - Now check consistency with all prior constraints (injectivity, availability, Nina conditional, etc.).  
+    - Use Z3 to solve: if SAT is possible, then this choice is viable.  
+11. Define `answer_index_list = []`. For each choice index j ∈ {0,1,2,3,4}:  
+    - Create fresh solver S.  
+    - Add all base constraints (steps 3–8).  
+    - Add the three specific morning-report assignments for choice j.  
+    - Solve S. If SAT, append j to `answer_index_list`.  
+12. Return the `answer_index_list` (should contain indices of valid choices).

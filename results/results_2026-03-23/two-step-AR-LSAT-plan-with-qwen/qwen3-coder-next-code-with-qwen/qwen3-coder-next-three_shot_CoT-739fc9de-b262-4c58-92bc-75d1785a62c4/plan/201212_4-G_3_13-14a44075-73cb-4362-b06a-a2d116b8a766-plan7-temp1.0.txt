@@ -1,0 +1,31 @@
+1. Enumerate the six service targets as variables: `I_web`, `I_voic`, `S_web`, `S_voic`, `T_web`, `T_voic`, each with domain {1, 2, 3} (representing 1 day, 2 days, 3 days).  
+2. Add **ordering constraint for each client**: website target ≤ voicemail target: `I_web <= I_voic`, `S_web <= S_voic`, `T_web <= T_voic`.  
+3. Add **Image voicemail constraint**: Image's voicemail target is strictly shorter than both other clients’ voicemail targets: `I_voic < S_voic` and `I_voic < T_voic`.  
+4. Add **Solide–Truvest website constraint**: Solide’s website target is strictly shorter than Truvest’s website target: `S_web < T_web`.  
+5. Add **given condition**: Image's website target is 2 days: `I_web == 2`.  
+6. From step 2 and 5, deduce: since `I_web <= I_voic` and `I_web == 2`, then `I_voic ∈ {2, 3}`.  
+7. From step 3: `I_voic < S_voic` and `I_voic < T_voic`. So if `I_voic == 2`, then `S_voic, T_voic ∈ {3}` (since max is 3). If `I_voic == 3`, then `S_voic, T_voic > 3` is impossible — contradiction. So `I_voic` cannot be 3 ⇒ **`I_voic == 2`** is forced.  
+8. Now fix `I_web = 2`, `I_voic = 2`.  
+9. Remaining constraints:  
+   - `S_web <= S_voic`, `T_web <= T_voic`  
+   - `2 < S_voic`, `2 < T_voic` ⇒ `S_voic = 3`, `T_voic = 3`  
+   - `S_web < T_web`  
+10. Possible values for `S_web`, `T_web` ∈ {1, 2} (since each ≤ their voicemail = 3, and `S_web < T_web`).  
+    - Options: `(S_web, T_web) = (1, 2)` or `(1, 3)` or `(2, 3)`, but `T_web <= T_voic = 3` so all allowed.  
+    - However, `S_web <= S_voic = 3` — so 1 or 2 are fine.  
+    - But note: `S_web < T_web` and both must be ≤ 3.  
+11. Now examine answer choices to find which target *must* be 2:  
+    - Image's voicemail target = 2 (already deduced) → candidate.  
+    - Solide's website target: could be 1 (e.g., set S_web=1, T_web=2 or 3) → not forced to be 2.  
+    - Solide's voicemail target: must be 3 (since > I_voic=2) → not 2.  
+    - Truvest's website target: could be 2 or 3 (if S_web=1, T_web=2 or 3) → not forced to be 2.  
+    - Truvest's voicemail target: must be 3 → not 2.  
+12. Confirm only **Image's voicemail target** is forced to be 2.  
+13. Translate answer choices:  
+    - Choice 0: Image's voicemail target  
+    - Choice 1: Solide's website target  
+    - Choice 2: Solide's voicemail target  
+    - Choice 3: Truvest's website target  
+    - Choice 4: Truvest's voicemail target  
+14. Since Image's voicemail target = 2 is forced, append index `0` to answer_index_list.  
+15. Return answer index list `[0]`.

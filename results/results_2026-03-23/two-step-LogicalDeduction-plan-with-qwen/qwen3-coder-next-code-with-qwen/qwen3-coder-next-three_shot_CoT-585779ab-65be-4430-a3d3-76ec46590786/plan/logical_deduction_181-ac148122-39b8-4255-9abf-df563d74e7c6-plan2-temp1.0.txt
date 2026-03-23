@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as variables: `"orange"`, `"red"`, `"brown"`, `"blue"`, `"black"`, `"gray"`, and `"white"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+   * Translate each statement into constraints:  
+        - "The white book is the leftmost" → `white == 1`  
+        - "The red book is to the right of the blue book" → `blue < red`  
+        - "The orange book is the second from the right" → `orange == 6` (since 7 is rightmost)  
+        - "The gray book is the fourth from the left" → `gray == 4`  
+        - "The black book is the rightmost" → `black == 7`  
+        - "The gray book is to the right of the red book" → `red < gray`
+
+4. **Solve for Valid Arrangements:**  
+   * Call `getSolutions()` to retrieve all solutions that satisfy the constraints.  
+   * Extract the solution(s); due to the problem's constraints, there should be a unique valid assignment.
+
+5. **Identify the Second-Leftmost Book (Position 2):**  
+   * The question asks which book is second from the left, i.e., the book with position value `2`.  
+   * Create a dictionary mapping choice letters (`'A'` to `'G'`) to their corresponding book names as listed in the choices:  
+        - `'A': 'orange'`, `'B': 'red'`, `'C': 'brown'`, `'D': 'blue'`, `'E': 'black'`, `'F': 'gray'`, `'G': 'white'`  
+   * Iterate over the choices: for each choice letter, check if its assigned book’s position in the solution equals `2`.  
+   * Return (or output) the correct choice letter where this condition holds.

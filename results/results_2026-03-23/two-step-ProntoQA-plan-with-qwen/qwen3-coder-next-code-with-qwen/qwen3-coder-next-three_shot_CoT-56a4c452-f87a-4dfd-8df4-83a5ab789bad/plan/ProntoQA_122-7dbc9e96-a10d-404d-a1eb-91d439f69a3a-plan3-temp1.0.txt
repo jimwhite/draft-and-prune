@@ -1,0 +1,42 @@
+1.  Identify all entities and types: Fae, rompus, dumpus, numpus, jompus, tumpus, impus, yumpus, zumpus, wumpus, vumpus.  
+2.  Identify all properties: metallic, blue, fruity, mean, temperate, dull, transparent, sweet.  
+3.  Represent "Fae is a numpus" as a base fact: `is_a("Fae", "numpus", True)`.  
+4.  Convert all class properties and subclass relationships into logical rules:  
+    - Rompuses are metallic.  
+    - Rompuses are dumpuses.  
+    - Dumpuses are blue.  
+    - Every dumpus is a numpus.  
+    - Every numpus is fruity.  
+    - Numpuses are jompuses.  
+    - Every jompus is mean.  
+    - Jompuses are tumpuses.  
+    - Tumpuses are not temperate.  
+    - Tumpuses are impuses.  
+    - Impuses are not dull.  
+    - Each impus is a yumpus.  
+    - Every yumpus is not transparent.  
+    - Yumpuses are zumpuses.  
+    - Wumpuses are transparent. (Note: Wumpus is not connected to Fae’s chain; may be irrelevant but must be formalized for completeness.)  
+    - Zumpuses are not sweet.  
+    - Zumpuses are vumpuses.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence:  
+    - For subclass relations (e.g., "Rompuses are dumpuses") → `foreach x: is_a(x, "rompus", True) => is_a(x, "dumpus", True)`  
+    - For property assertions (e.g., "Rompuses are metallic") → `foreach x: is_a(x, "rompus", True) => is_property(x, "metallic", True)`  
+    - For negative properties (e.g., "Tumpuses are not temperate") → `foreach x: is_a(x, "tumpus", True) => is_property(x, "temperate", False)`  
+    - For class inclusions (e.g., "Every dumpus is a numpus") → same as subclass.  
+6.  Derive properties for Fae step-by-step from the base fact:  
+    - From `is_a(Fae, numpus)`, infer:  
+        - `is_a(Fae, dumpus)` (since every dumpus is a numpus → but we need the converse? Wait: rule is "Every dumpus is a numpus", *not* vice versa. So we cannot infer Fae is dumpus from being numpus — incorrect direction.)  
+        - Correction: Rules are directional. Must carefully interpret each statement:  
+            - "Rompuses are dumpuses" → all rompuses ∈ dumpuses  
+            - "Rompuses are metallic" → property assignment  
+            - "Dumpuses are blue" → all dumpuses have blue  
+            - "Every dumpus is a numpus" → dumpuses ⊆ numpuses  
+            - So if Fae is a numpus, we *cannot* infer it’s a dumpus.  
+            - But: "Numpuses are jompuses" → numpuses ⊆ jompuses  
+            - So Fae (numpus) ⇒ jompus, tumpus (since "Jompuses are tumpuses"), impus (tumpuses are impuses), yumpus (impuses ⊆ yumpuses), zumpus (yumpuses are zumpuses).  
+            - From zumpus: `is_property(Fae, transparent, False)` (since "Zumpuses are not sweet"? Wait — no. We need: "Every yumpus is not transparent", and Fae is yumpus ⇒ Fae is not transparent.  
+            - Also: "Wumpuses are transparent" — but no link from Fae to wumpus.  
+            - So key chain: Fae is numpus ⇒ jompus ⇒ tumpus ⇒ impus ⇒ yumpus ⇒ (via "Every yumpus is not transparent") Fae is not transparent.  
+7.  The query tests if "Fae is transparent" holds — but we can prove Fae is *not* transparent, so the statement is false.  
+    → Use `facts.is_transparent("Fae", True)` to check provability; it will fail.

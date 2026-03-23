@@ -1,0 +1,34 @@
+1. Enumerate the five bird types and assign them integer codes: oystercatchers=0, petrels=1, rails=2, sandpipers=3, terns=4.  
+2. Enumerate the five lecture slots (1 to 5) and assign variables for bird type `bird[i]` (i = 1..5), ensuring all are distinct.  
+3. Create Boolean variables `hall[i]` (True = Gladwyn Hall, False = Howard Auditorium) for each slot i=1..5.  
+4. Add **fixed hall constraints**:  
+   - `hall[1] = True` (first lecture in Gladwyn Hall).  
+   - `hall[4] = False` (fourth lecture in Howard Auditorium).  
+5. Add **exactly-three-Gladwyn constraint**: exactly three of `hall[1]..hall[5]` are True.  
+6. Add **sandpipers constraints**:  
+   - `bird[i] = 3` for some i.  
+   - `hall[i] = False` (sandpipers in Howard).  
+   - Sandpipers lecture occurs before oystercatchers: position(sandpipers) < position(oystercatchers).  
+7. Add **terns-petrels-Gladwyn constraints**:  
+   - Petrels lecture is in Gladwyn Hall (`hall[j] = True` where `bird[j] = 1`).  
+   - Terns lecture occurs before petrels: position(rails_tern=4) < position(petrels=1).  
+8. Translate the five answer choices into Boolean conjunctions about hall assignments for specific slots:  
+   - Choice 0: `hall[1] ∧ hall[2]`  
+   - Choice 1: `hall[2] ∧ hall[3] ∧ (¬hall[2])`? Wait— Howard = False, so "both in Howard" means `hall[2]=False ∧ hall[3]=False`  
+   - Actually, define for each choice:  
+     • C0: `hall[1] ∧ hall[2]`  
+     • C1: `¬hall[2] ∧ ¬hall[3]`  
+     • C2: `hall[2] ∧ hall[5]`  
+     • C3: `¬hall[3] ∧ hall[4]` (but hall[4] is already False, so `¬hall[3] ∧ False` → always false? No: hall[4]=False fixed, so C3 is `¬hall[3] ∧ True?` — No! "both in Howard" means hall[3]=False and hall[4]=False. Since hall[4] is fixed to False, C3 reduces to `hall[3]=False`. But the choice says "third and fourth lectures are both in Howard", i.e., hall[3]=False ∧ hall[4]=False → since hall[4] is fixed False, it's just `hall[3]=False`.  
+     • C4: `hall[3] ∧ hall[5]`  
+   Clarify: Howard = False, Gladwyn = True. So:  
+     C0: hall[1] ∧ hall[2]  
+     C1: ¬hall[2] ∧ ¬hall[3]  
+     C2: hall[2] ∧ hall[5]  
+     C3: ¬hall[3] ∧ ¬hall[4]  (but hall[4] is already False → equivalent to ¬hall[3])  
+     C4: hall[3] ∧ hall[5]  
+9. Define answer index list `answer_index_list = []`. For each choice k ∈ {0,1,2,3,4}:  
+   - Clone the base constraints into fresh solver S.  
+   - Add the constraint for choice k (e.g., for C0: `hall[1] ∧ hall[2]`).  
+   - If S is UNSAT, then this choice **must be false**; append k to `answer_index_list`.  
+10. Print `answer_index_list`.

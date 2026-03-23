@@ -1,0 +1,17 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign each an integer index (0 to 7).  
+2. Create eight integer position variables `pos[F], pos[H], ..., pos[T]` (or equivalently, create a list `order[0..7]` where `order[i]` is the composition at position i+1).  
+3. Add **domain and permutation constraints**: all positions must be a permutation of 0..7 (i.e., all `order[i]` are distinct and cover all compositions).  
+4. Add **T-F-R adjacency constraint**:  
+   - Either `pos[T] == pos[F] - 1` (T immediately before F) OR `pos[R] == pos[T] - 1` (T immediately after R).  
+5. Add **at-least-two-between-F-and-R constraint**:  
+   - Either `pos[F] + 2 < pos[R]` OR `pos[R] + 2 < pos[F]`.  
+6. Add **O-first-or-fifth constraint**: `pos[O] == 0` OR `pos[O] == 4`.  
+7. Add **eighth-composition constraint**: `order[7] == 'L'` OR `order[7] == 'H'`.  
+8. Add **P-before-S constraint**: `pos[P] < pos[S]`.  
+9. Add **at-least-one-between-O-and-S constraint**: `|pos[O] - pos[S]| >= 2`.  
+10. Translate each answer choice into a list of compositions in order (e.g., ['L','P',...,'H']), and check each one against all constraints.  
+11. For each choice:  
+    - Assign positions explicitly based on the list (e.g., index 0 → position 1, ..., index 7 → position 8; or map to 0-based positions directly: `pos[c] = i` for composition c at list index i).  
+    - Verify all constraints (steps 4–9) hold under this assignment.  
+12. The choice(s) satisfying all constraints are valid; select the one listed in the options that is valid.  
+13. Output the index of the correct choice (0-indexed among the given list of choices).

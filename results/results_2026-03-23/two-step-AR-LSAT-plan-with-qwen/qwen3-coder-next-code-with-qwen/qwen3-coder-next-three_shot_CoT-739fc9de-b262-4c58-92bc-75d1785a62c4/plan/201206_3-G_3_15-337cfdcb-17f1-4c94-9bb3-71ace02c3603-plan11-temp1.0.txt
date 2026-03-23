@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Create integer variables for each representative's zone (Zone 1, Zone 2, Zone 3), with domain [1, 3].  
+3. Add **mutual exclusivity constraints**: no representative is assigned to multiple zones (implicit via single-zone variable).  
+4. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1 (XOR).  
+5. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2 (XOR).  
+6. Add **Parra-Quinn constraint**: Parra and Quinn are assigned to the same zone.  
+7. Add **Stuckey-Udall constraint**: Stuckey and Udall are assigned to the same zone.  
+8. Add **Zone size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+9. Translate each answer choice into a candidate set of representatives for Zone 3 and derive implied assignments (e.g., if 'Parra, Quinn, Stuckey, Udall' is Zone 3, then Parra, Quinn ∈ Zone 3; Stuckey, Udall ∈ Zone 3).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the Zone assignments implied by the candidate Zone 3 list (includingZone 1 and Zone 2 constraints derived from XORs and groupings).  
+    - Assert consistency of all derived zone assignments (e.g., if Parra ∈ Zone 3, then from Zone 1 XOR, Tiao ∉ Zone 1 ⇒ Tiao ∈ Zone 2 or 3; but from Zone 2 XOR, if Tiao ∉ Zone 1 and Udall ∈ Zone 3 ≠ Zone 2 (since Stuckey-Udall together), need to check consistency).  
+    - If the model is SAT, then this answer choice is possible; record its index.  
+11. Collect all possible answer indices and output the list (though only one will be correct per question).

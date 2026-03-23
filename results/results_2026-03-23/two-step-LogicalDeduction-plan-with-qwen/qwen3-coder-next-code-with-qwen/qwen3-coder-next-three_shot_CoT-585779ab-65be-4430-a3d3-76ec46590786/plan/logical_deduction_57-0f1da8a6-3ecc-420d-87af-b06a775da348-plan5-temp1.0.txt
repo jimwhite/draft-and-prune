@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the five vehicles as variables: `"hatchback"`, `"limousine"`, `"sedan"`, `"bus"`, and `"tractor"`.  
+   * Assign a numerical rank domain from 1 to 5, where **1 = oldest** and **5 = newest**, as age ranking is implied by "newer"/"oldest".  
+   * Add all variables with domain `{1, 2, 3, 4, 5}` to the `Problem` instance.
+
+3. **Translate Statements into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * Convert each statement into a constraint using lambda (or direct arithmetic) constraints:  
+        - "The tractor is newer than the hatchback" → `tractor > hatchback` (since newer = higher rank number).  
+        - "The bus is the second-oldest" → `bus == 2` (second-oldest = rank 2, because oldest = rank 1).  
+        - "The hatchback is newer than the sedan" → `hatchback > sedan`.  
+        - "The limousine is the newest" → `limousine == 5`.
+
+4. **Solve for Valid Arrangements:**  
+   * Invoke `getSolutions()` to compute all solutions satisfying the constraints.  
+   * Extract the unique solution (since the problem is fully constrained, there should be exactly one valid assignment).
+
+5. **Identify the Correct Answer:**  
+   * Interpret "third-newest" as rank 3 (since newest=5, second-newest=4, third-newest=3).  
+   * Build a mapping from choice letters to vehicle names: `"A" → "hatchback"`, `"B" → "limousine"`, `"C" → "sedan"`, `"D" → "bus"`, `"E" → "tractor"`.  
+   * For the found solution, check which vehicle has rank 3.  
+   * Return the corresponding choice letter (e.g., `"C"` if `sedan == 3`).

@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five vehicles: `"minivan"`, `"hatchback"`, `"bus"`, `"convertible"`, and `"motorcycle"`.  
+   * Define the domain as integers from **1 to 5**, where **1 = oldest** and **5 = newest**.  
+   * Add all variables with domain {1, 2, 3, 4, 5} to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of rankings.  
+   * Encode each statement as a constraint using `lambda`:  
+     - "The hatchback is newer than the convertible" → `hatchback > convertible`  
+     - "The bus is newer than the hatchback" → `bus > hatchback`  
+     - "The bus is older than the motorcycle" → `bus < motorcycle`  
+     - "The minivan is the newest" → `minivan == 5`
+
+4. **Solve for the Arrangement:**  
+   * Use `getSolutions()` to find all satisfying assignments.  
+   * Extract the unique solution (only one valid ranking exists).
+
+5. **Identify the Correct Answer:**  
+   * The question is a direct verification of the statement in choice A.  
+   * Check if `minivan == 5` holds in the solution (it must, per constraint #4).  
+   * Since this matches choice A exactly and the problem states statements are consistent, confirm that **A is true**.  
+   * Return `"A"` as the final answer.

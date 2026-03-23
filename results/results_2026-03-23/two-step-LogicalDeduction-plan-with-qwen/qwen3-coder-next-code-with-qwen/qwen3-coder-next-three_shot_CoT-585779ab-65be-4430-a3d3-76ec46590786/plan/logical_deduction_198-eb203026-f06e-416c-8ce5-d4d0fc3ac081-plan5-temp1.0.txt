@@ -1,0 +1,35 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the golf tournament rankings.
+
+2. **Define Variables and Domain:**  
+   * List the seven golfers as variables: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, `"Ana"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (earliest/lowest rank)** and **7 = last place (highest rank number)**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem`.
+
+3. **Add All-Different Constraint:**  
+   * Enforce that each golfer has a unique finish position using `AllDifferentConstraint`.
+
+4. **Translate Statements into Constraints:**  
+   * "Joe finished first" → `Joe == 1`  
+   * "Mel finished second-to-last" → Mel is in position 6 (since 7 is last), so `Mel == 6`  
+   * "Rob finished above Eve" → Rob’s position number is less than Eve’s (`Rob < Eve`)  
+   * "Mel finished above Eli" → `Mel < Eli` (i.e., `6 < Eli`, so `Eli > 6` ⇒ `Eli == 7`)  
+   * "Rob finished below Ada" → Rob’s position number is greater than Ada’s (`Rob > Ada`)  
+   * "Eve finished fourth" → `Eve == 4`
+
+5. **Solve the CSP:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (since constraints are consistent and deterministic).
+
+6. **Identify Who Finished Fourth:**  
+   * From the solution, find which golfer has position `4`.  
+   * Map this golfer to the corresponding choice letter:  
+        - A) Joe → check if Joe == 4  
+        - B) Eli → check if Eli == 4  
+        - C) Ada → check if Ada == 4  
+        - D) Mel → check if Mel == 4  
+        - E) Eve → check if Eve == 4  
+        - F) Rob → check if Rob == 4  
+        - G) Ana → check if Ana == 4  
+   * Return the letter of the choice whose golfer has rank `4`.

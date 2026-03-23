@@ -1,0 +1,19 @@
+1. Enumerate the seven sales representatives and assign each an integer index.  
+2. Create integer variables for each representative’s zone assignment (1, 2, or 3).  
+3. Add **domain constraints**: each representative is assigned exactly one zone (1 ≤ zone ≤ 3).  
+4. Add **mutual exclusion constraints**: each representative assigned to exactly one zone (implicit in single variable per rep).  
+5. Add **exclusive-or constraints**:  
+    - Zone 1: exactly one of Parra or Tiao (i.e., `zone_Parra ≠ zone_Tiao` and `zone_Parra == 1 ∨ zone_Tiao == 1`).  
+    - Zone 2: exactly one of Tiao or Udall (i.e., `zone_Tiao ≠ zone_Udall` and `zone_Tiao == 2 ∨ zone_Udall == 2`).  
+6. Add **equivalence constraints**:  
+    - Parra and Quinn in same zone: `zone_Parra == zone_Quinn`.  
+    - Stuckey and Udall in same zone: `zone_Stuckey == zone_Udall`.  
+7. Add **size comparison constraint**: number of representatives in Zone 3 > number in Zone 2.  
+8. Compute possible zone assignments consistent with all above constraints (via Z3 solver).  
+9. Enumerate all valid full assignments (or just collect sets of representatives in Zone 3).  
+10. For each answer choice, interpret it as a *complete and accurate* list for Zone 3:  
+    - Extract the set of representatives listed.  
+    - Enforce that exactly those representatives are in Zone 3 (all others must be in Zones 1 or 2 per constraints).  
+    - Clone base constraints, add explicit `zone_rep == 3` for listed reps and `zone_rep ≠ 3` for unlisted reps.  
+    - Check if the model is SAT; if YES, then this choice is possible.  
+11. Collect indices (or names) of choices that yield SAT and output the matching choice(s).

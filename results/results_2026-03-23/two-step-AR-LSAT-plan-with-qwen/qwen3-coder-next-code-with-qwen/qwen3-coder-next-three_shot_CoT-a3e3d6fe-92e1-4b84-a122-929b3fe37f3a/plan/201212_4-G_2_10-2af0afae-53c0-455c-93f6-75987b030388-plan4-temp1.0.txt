@@ -1,0 +1,20 @@
+1. Enumerate the five witnesses and assign them integer codes (e.g., Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4).  
+2. Enumerate the three days and assign them integer codes (e.g., Monday=0, Tuesday=1, Wednesday=2).  
+3. Create integer variables `day[w]` for each witness `w`, representing the day they testify (domain: 0,1,2).  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `day[Iturbe] == 2`.  
+5. Add **distinct-day constraint** for Franco and Garcia → `day[Franco] != day[Garcia]`.  
+6. Add **count constraint for Tuesday**: Exactly two witnesses testify on Tuesday → count of `day[w] == 1` equals 2.  
+7. Add ** Hong constraint**: Hong does not testify on Monday → `day[Hong] != 0`.  
+8. Add **Monday coverage constraint**: At least one witness testifies on Monday → at least one `day[w] == 0`.  
+9. Add **hypothesis constraint**: Franco and Hong testify on the same day → `day[Franco] == day[Hong]`.  
+10. Translate the five answer choices into logical conditions on the day assignments:  
+    - A: `day[Franco] == 2`  
+    - B: `day[Garcia] == 0`  
+    - C: `day[Garcia] == 2`  
+    - D: `day[Hong] == 1`  
+    - E: Exactly one witness on Wednesday → `(count of day[w] == 2) == 1`  
+11. For each answer choice, check whether it **must be true** under the hypotheses:  
+    - Clone base constraints + hypothesis into a fresh solver.  
+    - For each choice *i*, assert the negation of choice *i*.  
+    - If UNSAT, then choice *i* must be true; record its index.  
+12. Since only one choice can be correct, collect indices where UNSAT occurs and output the corresponding answer phrase.

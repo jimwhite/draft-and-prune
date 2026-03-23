@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraints for the golf tournament rankings.  
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven golfers as variables: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.  
+    * Define the domain as integers from 1 to 7, where **1 = first place (highest rank)** and **7 = last place**.  
+    * Add all seven golfer variables with the domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.  
+    * Translate each statement into a precise constraint:  
+        * "Amy finished third" → `Amy == 3`  
+        * "Joe finished last" → `Joe == 7`  
+        * "Mya finished above Dan" → `Mya < Dan` (lower position number means higher finish)  
+        * "Eve finished fourth" → `Eve == 4`  
+        * "Amy finished above Rob" → `Amy < Rob` (i.e., `3 < Rob`)  
+        * "Ada finished third-to-last" → Since last is 7, third-to-last is position 5 → `Ada == 5`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid rankings satisfying all constraints.  
+    * Extract the unique solution (or one solution, as uniqueness is implied by consistent statements).  
+
+5.  **Identify the Correct Answer:**  
+    * The question asks: "Which of the following is true?" with options specifying who finished fourth (i.e., position 4).  
+    * From the solution, determine which golfer has rank `4`.  
+    * Compare this golfer against the list of choices:  
+        - A) Dan  
+        - B) Eve  
+        - C) Mya  
+        - D) Amy  
+        - E) Rob  
+        - F) Ada  
+        - G) Joe  
+    * Since `Eve == 4` is a direct constraint, Eve is fourth → choice **B** is true.  
+    * Return or output the correct letter: `"B"`.

@@ -1,0 +1,18 @@
+1. Enumerate the five solos (positions 1 to 5) and create integer variables for pianist assignments: `W` for Wayne, `Z` for Zara. Also create Boolean variables for piece type: `M[i] = True` if solo i is modern, `False` if traditional.  
+2. Add **domain constraints**: For each solo i (1..5), pianist[i] ∈ {W, Z}; `M[i] ∈ {True, False}`.  
+3. Add **fixed constraints**:  
+   - Solo 3 is traditional: `M[3] = False`.  
+   - Exactly two traditional pieces are performed consecutively: count of consecutive (i, i+1) with `M[i] == False ∧ M[i+1] == False` must be exactly 1.  
+   - In solo 4: `(pianist[4] == W ∧ M[4] == False) ∨ (pianist[4] == Z ∧ M[4] == True)`.  
+   - The pianist of solo 2 ≠ pianist of solo 5: `pianist[2] != pianist[5]`.  
+   - No traditional piece before Wayne performs at least one modern piece: ∃j ≤ k such that pianist[j] == W ∧ M[j] == True, and for all i < j, if pianist[i] == W then M[i] == True, and for all i where pianist[i] == Z and M[i] == False, we must have j ≤ i.  
+     (Equivalently: the first traditional solo cannot occur before Wayne’s first modern solo.)  
+4. Add **hypothesis constraint** for the conditional: fifth solo is Wayne performing traditional piece: `pianist[5] == W ∧ M[5] == False`.  
+5. Translate the answer choices into logical constraints:  
+   - A: `pianist[1] == Z`  
+   - B: `pianist[2] == W`  
+   - C: `pianist[3] == Z`  
+   - D: `M[2] == True`  
+   - E: `M[4] == False`  
+6. For each answer choice in order, clone the base constraints + hypothesis into a fresh solver, add the choice's constraint, and check SAT.  
+7. Collect indices of choices for which the model is SAT (i.e., possible under the hypothesis), and set as answer.

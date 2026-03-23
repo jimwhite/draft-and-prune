@@ -1,0 +1,16 @@
+1. Identify all entities involved: bear, cat, dog, lion.
+2. Encode all directly stated facts using ternary predicates in the form predicate(subject, object, True).
+   - Properties: is_nice, is_cold, is_blue, is_big (take boolean objects)
+   - Relations: likes, sees, eats (take entity names as objects)
+3. For each explicit statement, assert the corresponding fact using facts.predicate("subject", "object", True).
+4. Translate each conditional rule into PyKe rules using `foreach` blocks for antecedents and `assert` for consequents:
+   - If someone is big → they eat the dog.
+   - If someone is cold → they are nice.
+   - If someone is blue and sees the bear → they see the dog.
+   - If someone eats the dog → the dog is nice.
+   - If someone is blue and sees the dog → they are big.
+   - If someone eats the bear and is nice → they are blue.
+   - If someone eats the bear and sees the dog → the dog is big.
+5. For each rule, use appropriate variables (e.g., ?x) and quantified patterns in `foreach`, followed by `assert` for the derived fact.
+6. The query checks whether the cat does *not* see the dog:
+   → Use facts.sees("cat", "dog", False)

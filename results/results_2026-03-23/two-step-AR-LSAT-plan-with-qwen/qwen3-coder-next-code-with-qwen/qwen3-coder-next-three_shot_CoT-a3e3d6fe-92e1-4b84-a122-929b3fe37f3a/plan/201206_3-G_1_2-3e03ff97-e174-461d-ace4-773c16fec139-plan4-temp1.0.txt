@@ -1,0 +1,20 @@
+1. Enumerate the six lab assistants and assign them integer indices: [Julio, Kevin, Lan, Nessa, Olivia, Rebecca].  
+2. Enumerate the six sessions: assign indices 0 to 5 corresponding to [Wed AM, Wed PM, Thu AM, Thu PM, Fri AM, Fri PM] in chronological order (so position index reflects temporal order).  
+3. Create integer variables `pos[i]` for each assistant i ∈ {0..5}, representing the session position (0–5) they lead.  
+4. Add **domain constraints**: `pos[i] ∈ {0,1,2,3,4,5}` for all i, and `distinct(pos[0],...,pos[5])`.  
+5. Add **day mapping**: define helper functions to compute day from position:  
+    - day(p) = 0 if p ∈ {0,1} (Wed), 1 if p ∈ {2,3} (Thu), 2 if p ∈ {4,5} (Fri).  
+6. Add **Kevin & Rebecca same-day constraint**: `day(pos[K]) == day(pos[R])`.  
+7. Add **Lan & Olivia different-day constraint**: `day(pos[L]) ≠ day(pos[O])`.  
+8. Add **Nessa afternoon constraint**: `pos[N] ∈ {1,3,5}` (PM sessions).  
+9. Add **Julio earlier than Olivia**: `pos[J] < pos[O]`.  
+10. Add the conditional premise: **Lan does not lead a Wednesday session**, i.e., `day(pos[L]) ≠ 0` ⇒ `pos[L] ∈ {2,3,4,5}`.  
+11. Translate answer choices to assistant indices: Rebecca=5, Olivia=4, Nessa=3, Kevin=1, Julio=0.  
+12. For each assistant A in [Rebecca, Olivia, Nessa, Kevin, Julio], do:  
+    a. Clone base constraints (steps 4–10) into a fresh solver S.  
+    b. Add constraint: `pos[A] ∈ {2,3}` (i.e., A leads a Thursday session).  
+    c. If S is UNSAT, then A **cannot** be the only possibility—*but we need to find who must be Thursday*, so we do the reverse:  
+    d. Instead, for each assistant A, check whether **in every satisfying assignment**, `pos[A] ∈ {2,3}`.  
+       - To test “A must be Thursday”, add constraint `pos[A] ∉ {2,3}` (i.e., A is *not* Thursday), and check UNSAT.  
+       - If UNSAT, then A is forced to be Thursday—add A to answer list.  
+13. Output the list of assistants who must lead a Thursday session under the given condition.

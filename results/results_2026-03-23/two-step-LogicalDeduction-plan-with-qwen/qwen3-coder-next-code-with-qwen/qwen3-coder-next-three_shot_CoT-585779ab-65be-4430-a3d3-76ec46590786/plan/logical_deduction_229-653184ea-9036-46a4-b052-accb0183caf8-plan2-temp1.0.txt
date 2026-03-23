@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: the seven fruits — `"oranges"`, `"plums"`, `"loquats"`, `"apples"`, `"kiwis"`, `"cantaloupes"`, `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**, reflecting the "most expensive" ranking direction in the problem statement.  
+   * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3. **Translate Rules into Formal Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+   * Convert each descriptive statement into a constraint using `lambda` or direct equality/inequality constraints:  
+      - "The loquats are less expensive than the kiwis" → `loquats < kiwis` (since lower rank = cheaper).  
+      - "The plums are the cheapest" → `plums == 1`.  
+      - "The loquats are the fourth-most expensive" → Since 1 is cheapest, 4th-most expensive = rank **4** (i.e., fourth from *most expensive* side: positions ordered 1-cheap → 7-expensive; so most expensive = 7, second-most = 6, ..., fourth-most = **4**). Confirm: Most expensive (7), 2nd (6), 3rd (5), **4th (4)** — yes, so `loquats == 4`.  
+      - "The peaches are less expensive than the oranges" → `peaches < oranges`.  
+      - "The peaches are more expensive than the kiwis" → `kiwis < peaches`.  
+      - "The apples are the second-cheapest" → Cheapest = 1, so second-cheapest = rank **2** → `apples == 2`.
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Given the problem’s uniqueness, extract the first (or only) solution from the returned list.
+
+5. **Determine the Third-Most-Expensive Fruit:**  
+   * The question asks: "Which is the third-most expensive?"  
+     - Using our scale (1 = cheapest, 7 = most expensive), third-most expensive = **rank 5** (since: 7=1st-most, 6=2nd-most, **5=3rd-most**).  
+   * Create a mapping from choice letters (`A`–`G`) to fruit names:  
+     `{'A': 'oranges', 'B': 'plums', 'C': 'loquats', 'D': 'apples', 'E': 'kiwis', 'F': 'cantaloupes', 'G': 'peaches'}`.  
+   * Iterate through the solution dictionary, find the fruit with position `5`.  
+   * Return the choice letter corresponding to that fruit as the answer.

@@ -1,0 +1,33 @@
+1. Identify all entities and types: Wren, jompus, vumpus, yumpus, numpus, zumpus, rompus, impus, wumpus, dumpus, tumpus.  
+2. Identify all properties: bright, floral, temperate, sweet, mean, feisty, transparent, large.  
+3. Represent "Wren is a yumpus" as a base fact: `is_a("Wren", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Every jompus is bright → `foreach X: is_a(X, "jompus") ⇒ is_bright(X, True)`  
+   - Every jompus is a vumpus → `foreach X: is_a(X, "jompus") ⇒ is_a(X, "vumpus", True)`  
+   - Vumpuses are floral → `foreach X: is_a(X, "vumpus") ⇒ is_floral(X, True)`  
+   - Every vumpus is a yumpus → `foreach X: is_a(X, "vumpus") ⇒ is_a(X, "yumpus", True)`  
+   - Every yumpus is not temperate → `foreach X: is_a(X, "yumpus") ⇒ is_temperate(X, False)`  
+   - Each yumpus is a numpus → `foreach X: is_a(X, "yumpus") ⇒ is_a(X, "numpus", True)`  
+   - Every numpus is sweet → `foreach X: is_a(X, "numpus") ⇒ is_sweet(X, True)`  
+   - Each numpus is a zumpus → `foreach X: is_a(X, "numpus") ⇒ is_a(X, "zumpus", True)`  
+   - Zumpuses are mean → `foreach X: is_a(X, "zumpus") ⇒ is_mean(X, True)`  
+   - Zumpuses are rompuses → `foreach X: is_a(X, "zumpus") ⇒ is_a(X, "rompus", True)`  
+   - Each rompus is not feisty → `foreach X: is_a(X, "rompus") ⇒ is_feisty(X, False)`  
+   - Every impus is not transparent → `foreach X: is_a(X, "impus") ⇒ is_transparent(X, False)`  
+   - Each rompus is a wumpus → `foreach X: is_a(X, "rompus") ⇒ is_a(X, "wumpus", True)`  
+   - Wumpuses are transparent → `foreach X: is_a(X, "wumpus") ⇒ is_transparent(X, True)`  
+   - Each wumpus is a dumpus → `foreach X: is_a(X, "wumpus") ⇒ is_a(X, "dumpus", True)`  
+   - Dumpuses are large → `foreach X: is_a(X, "dumpus") ⇒ is_large(X, True)`  
+   - Each dumpus is a tumpus → `foreach X: is_a(X, "dumpus") ⇒ is_a(X, "tumpus", True)`  
+5. Implement each rule using `foreach` condition and `assert` consequence in PyKe syntax (e.g., `rules.add("vumpus_to_yumpus", "foreach X: is_a(X, 'vumpus') => is_a(X, 'yumpus', True)")`).  
+6. Observe contradictory direct facts:  
+   - From "Each rompus is not feisty" and "Wumpuses are transparent" + "Every impus is not transparent", but more critically:  
+   - Wren is a yumpus → via chain: yumpus → numpus → zumpus → rompus → wumpus, so Wren is a wumpus.  
+   - Since Wren is a wumpus, `is_transparent("Wren", True)` follows directly from "Wumpuses are transparent".  
+   - However, note the rule "Every impus is not transparent" only applies to impuses; wumpuses *are* impuses (per rule: Wumpuses are impuses), so we must verify consistency.  
+   - But crucially, the problem does *not* state "Wumpuses are impuses" in this specific instance—double-checking the given premises:  
+     - Premise list includes "Every impus is not transparent" and "Wumpuses are transparent", but *not* explicitly that wumpuses are impuses.  
+     - In *this* problem’s statement, the rule "Wumpuses are transparent" directly overrides any implication of non-transparent.  
+   - Since Wren is a wumpus (via yumpus → numpus → zumpus → rompus → wumpus), and "Wumpuses are transparent", we conclude Wren *is* transparent.  
+7. The query tests if "Wren is transparent" is provable:  
+   → Use `facts.is_transparent("Wren", True)`.

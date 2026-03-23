@@ -1,0 +1,20 @@
+1. Enumerate the six available students and assign integer codes: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5.  
+2. Enumerate the four years: 1921=0, 1922=1, 1923=2, 1924=3.  
+3. Create integer decision variables `assign[i]` for each student i ∈ {0,…,5}, representing the year assigned (−1 if not assigned).  
+4. Add **assignment domain constraints**: `assign[i] ∈ {−1, 0, 1, 2, 3}` for all i.  
+5. Add **exactly-four-students constraint**: exactly four students have `assign[i] ≠ −1`.  
+6. Add **one-to-one mapping constraint**: the four assigned students must be assigned to distinct years (i.e., their `assign[i]` values form a permutation of {0,1,2,3}).  
+7. Add **year-1923 constraint**: only Louis (0) or Tiffany (4) may be assigned to year 1923 (i.e., if `assign[i] == 2`, then i ∈ {0,4}).  
+8. Add **Mollie constraint**: if Mollie (1) is assigned (`assign[1] ≠ −1`), then she must be in year 0 or 1 (`assign[1] ∈ {0,1}`).  
+9. Add **Tiffany–Ryan dependency**: if Tiffany (4) is assigned (`assign[4] ≠ −1`), then Ryan (3) must be assigned (`assign[3] ≠ −1`).  
+10. Add **Ryan–Onyx adjacency constraint**: if Ryan (3) is assigned, then Onyx (2) must be assigned to the year immediately prior: `assign[2] == assign[3] − 1`, and both must be ≥0 (i.e., `assign[3] ≥ 1`).  
+11. Add the scenario constraint: both Ryan (3) and Yoshio (5) are assigned (`assign[3] ≠ −1` and `assign[5] ≠ −1`).  
+12. For each choice, translate to a condition and test for possibility (SAT) under the above constraints:  
+    - Choice 0 ("Louis is assigned to 1923"): add `assign[0] == 2`.  
+    - Choice 1 ("Mollie is assigned to 1921"): add `assign[1] == 0`.  
+    - Choice 2 ("Onyx is assigned to 1922"): add `assign[2] == 1`.  
+    - Choice 3 ("Tiffany is assigned to 1924"): add `assign[4] == 3`.  
+    - Choice 4 ("Yoshio is assigned to 1922"): add `assign[5] == 1`.  
+13. For each choice, clone the base constraints + scenario constraint, add the choice-specific constraint, and check satisfiability with Z3.  
+14. Record indices of all choices for which the model is SAT (i.e., could be true).  
+15. Output the list of valid choice indices (0–4) corresponding to possibilities that could be true.

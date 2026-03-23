@@ -1,0 +1,18 @@
+1. Enumerate the seven sales representatives and assign integer indices.  
+2. Create integer variables `zone[i]` for each representative i, indicating which zone (1, 2, or 3) they are assigned to.  
+3. Add **domain constraints**: each `zone[i] ∈ {1, 2, 3}`.  
+4. Add **mutual exclusivity constraints** (but not both) for Zone 1: exactly one of Parra or Tiao is in Zone 1.  
+    - `(zone[Parra] == 1) ↔ (zone[Tiao] != 1)` and `(zone[Parra] == 1) ∨ (zone[Tiao] == 1)` → equivalently: `(zone[Parra] == 1) XOR (zone[Tiao] == 1)`.  
+5. Add **mutual exclusivity constraint** for Zone 2: exactly one of Tiao or Udall is in Zone 2.  
+    - `(zone[Tiao] == 2) XOR (zone[Udall] == 2)`.  
+6. Add **Parra–Quinn same zone constraint**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey–Udall same zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone 3 size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+    - Count how many have `zone[i] == 3` and how many have `zone[i] == 2`, enforce strict inequality.  
+9. Translate each answer choice into a set of representatives and a proposed zone assignment (Zone 3 members only; others implicitly assigned to Zones 1/2 per constraints).  
+10. For each answer choice, create a fresh solver and add:  
+    - All base constraints (steps 3–8).  
+    - Additional constraints fixing zone assignments to match the proposed list: for each representative listed in the choice, assert `zone[i] == 3`; for others, leave free but subject to other constraints.  
+    - *Crucially*, ensure the assignment is **complete and accurate**, meaning all constraints are satisfied and no extra representatives are in Zone 3 beyond those listed.  
+11. Check satisfiability: if SAT, the choice is possible; collect its index.  
+12. Return the list of indices corresponding to valid answer choices (only one will be SAT).

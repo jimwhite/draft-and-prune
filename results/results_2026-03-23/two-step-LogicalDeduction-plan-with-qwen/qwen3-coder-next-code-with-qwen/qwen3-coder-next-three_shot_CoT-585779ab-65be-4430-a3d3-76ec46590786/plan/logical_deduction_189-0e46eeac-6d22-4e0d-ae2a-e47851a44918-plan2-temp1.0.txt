@@ -1,0 +1,36 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"orange"`, `"green"`, `"red"`, `"gray"`, `"purple"`, `"blue"`, and `"brown"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with their domain (1–7).
+
+3. **Add All-Different Constraint:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.
+
+4. **Translate Each Statement into Constraints Using Lambda Functions:**  
+   * "The purple book is the fourth from the left" → `purple == 4`.  
+   * "The brown book is the third from the left" → `brown == 3`.  
+   * "The green book is to the left of the blue book" → `green < blue`.  
+   * "The red book is the leftmost" → `red == 1`.  
+   * "The gray book is the third from the right" → Since rightmost is 7, third from right = position 5 (7−2) → `gray == 5`.  
+   * "The orange book is the rightmost" → `orange == 7`.
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions to books.  
+   * Extract the solution (there should be exactly one, given the constraints fully determine most positions and leave only two books ambiguous—green/blue—but their relative order is fixed by the constraint).
+
+6. **Interpret the Question and Match to Choices:**  
+   * The question asks: "Which of the following is true?" with options referencing "the fourth from the left", i.e., position 4.  
+   * From constraint step 4, we already know: `purple == 4`. So the purple book is fourth from the left.  
+   * Map each choice letter to its book:  
+     - A → orange (7)  
+     - B → green (unknown, but < blue and ≠3,4,5,1,7 ⇒ must be 2)  
+     - C → red (1)  
+     - D → gray (5)  
+     - E → purple (4)  
+     - F → blue (> green, likely 6)  
+     - G → brown (3)  
+   * Confirm via the solution that purple is at position 4 and select choice **E**.

@@ -1,0 +1,26 @@
+1. Enumerate the five bird types: oystercatchers (OC), petrels (P), rails (R), sandpipers (S), terns (T). Assign each an integer index 0–4.  
+2. Enumerate the five lecture slots: positions 1 to 5 (1-indexed).  
+3. Create two arrays of integer variables:  
+    - `bird_pos[i]` = position (1–5) where bird i is lectureed.  
+    - `hall_pos[j]` = hall (0 for Gladwyn, 1 for Howard) at position j.  
+4. Add **permutation constraint**: all `bird_pos[i]` are distinct and cover 1–5.  
+5. Add **hall assignment constraint**: for each position j (1–5), `hall[j]` ∈ {0, 1}, and exactly three positions have hall = 0 (Gladwyn), two have hall = 1 (Howard).  
+6. Add **fixed hall constraints**:  
+    - `hall[0] == 0` (first lecture in Gladwyn).  
+    - `hall[3] == 1` (fourth lecture in Howard; note: index j−1 for 0-based array).  
+7. Add **sandpipers constraint**:  
+    - `hall[S] == 1` (S in Howard).  
+    - `bird_pos[S] < bird_pos[OC]`.  
+8. Add **terns/petrels/Gladwyn constraints**:  
+    - `bird_pos[T] < bird_pos[P]`.  
+    - `hall[P] == 0` (petrels in Gladwyn).  
+9. For each answer choice, model it as a statement about hall assignments at two positions:  
+    - e.g., “first and second lectures in Gladwyn” → `hall[0] == 0 ∧ hall[1] == 0`.  
+    - Since `hall[0]` is already forced to 0, this reduces to asserting `hall[1] == 0`.  
+10. Define list of answer choices (converted to logical assertions on `hall` values at specified positions).  
+11. For each choice i (0–4):  
+    - Clone base constraints into fresh solver.  
+    - Add assertion corresponding to choice i (e.g., both specified positions have hall = 0).  
+    - Check satisfiability.  
+12. If the model is UNSAT, then that choice **must be false**; record its index.  
+13. Return the index of the choice that is UNSAT (must be false).

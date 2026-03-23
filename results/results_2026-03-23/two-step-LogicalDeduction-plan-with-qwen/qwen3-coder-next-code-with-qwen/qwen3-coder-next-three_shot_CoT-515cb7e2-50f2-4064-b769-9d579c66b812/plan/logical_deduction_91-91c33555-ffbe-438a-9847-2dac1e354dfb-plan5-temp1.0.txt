@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Their Domain:**  
+    * Identify the five vehicle types as variables: `"tractor"`, `"truck"`, `"bus"`, `"minivan"`, and `"convertible"`.  
+    * Define the domain for positions using integers 1 to 5, where **1 = oldest** and **5 = newest**.  
+    * Add all five variables to the problem with the domain `{1, 2, 3, 4, 5}`.
+
+3.  **Translate Rules into Constraints:**  
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+    * Convert each statement into a constraint:  
+        - "The bus is newer than the tractor" → `bus > tractor` (since newer = higher rank number).  
+        - "The convertible is older than the tractor" → `convertible < tractor`.  
+        - "The truck is the second-newest" → `truck == 4` (newest = 5, so second-newest = 4).  
+        - "The minivan is older than the convertible" → `minivan < convertible`.
+
+4.  **Solve for Valid Arrangements:**  
+    * Use `getSolutions()` to compute all possible assignments satisfying the constraints.  
+    * Since the problem is deterministic, there will be exactly one solution; retrieve it (e.g., `solutions[0]`).
+
+5.  **Identify the Correct Answer:**  
+    * The question asks for which vehicle is the **third-newest**, i.e., rank = 3.  
+    * Map choice letters to vehicles: `'A'`→"tractor", `'B'`→"truck", `'C'`→"bus", `'D'`→"minivan", `'E'`→"convertible".  
+    * For each vehicle in the solution, check if its assigned position equals 3.  
+    * Return the choice letter corresponding to that vehicle.

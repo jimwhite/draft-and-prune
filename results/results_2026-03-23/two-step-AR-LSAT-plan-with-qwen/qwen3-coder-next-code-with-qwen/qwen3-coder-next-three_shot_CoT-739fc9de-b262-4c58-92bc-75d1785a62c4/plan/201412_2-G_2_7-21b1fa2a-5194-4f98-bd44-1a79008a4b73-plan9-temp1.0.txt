@@ -1,0 +1,19 @@
+1. Enumerate the four art historians (Farley, Garcia, Holden, Jiang) and assign integer indices.  
+2. Enumerate the four topics (lithographs, oil paintings, sculptures, watercolors) and assign integer indices.  
+3. Create integer variables `h_pos[i]` for each historian i (position of their lecture, 1 to 4), and `t_pos[j]` for each topic j (position of that lecture, 1 to 4).  
+4. Add **bijective assignment constraints**: each historian gives exactly one lecture, and each topic is covered by exactly one historian.  
+   - Introduce binary variables `assign[i][j]` indicating historian i gives lecture on topic j.  
+   - For each historian, exactly one topic is assigned (sum_j assign[i][j] = 1).  
+   - For each topic, exactly one historian is assigned (sum_i assign[i][j] = 1).  
+   - Link `h_pos[i]` and `t_pos[j]`: if assign[i][j] = 1, then `h_pos[i] == t_pos[j]`.  
+5. Add **topic ordering constraints**:  
+   - Oil paintings and watercolors lectures are both earlier than lithographs: `t_pos[oil] < t_pos[litho]` and `t_pos[water] < t_pos[litho]`.  
+   - Farley's lecture is earlier than oil paintings: `h_pos[Farley] < t_pos[oil]`.  
+   - Holden's lecture is earlier than both Garcia’s and Jiang’s: `h_pos[Holden] < h_pos[Garcia]` and `h_pos[Holden] < h_pos[Jiang]`.  
+6. Translate each answer choice into a logical statement involving lecture positions (e.g., "Farley's lecture is earlier than the sculptures lecture" → `h_pos[Farley] < t_pos[sculptures]`).  
+7. For each answer choice, define a formula representing that statement.  
+8. To determine which *must* be true:  
+   - For each answer choice, assume its negation (i.e., the statement is false), and add that to the base constraints.  
+   - Check SAT with Z3: if UNSAT, then the original statement *must* be true (since its negation is impossible).  
+9. Collect all answer choices whose negation yields UNSAT (i.e., those that must be true).  
+10. Return the index of the correct answer (the only one where the statement must hold).

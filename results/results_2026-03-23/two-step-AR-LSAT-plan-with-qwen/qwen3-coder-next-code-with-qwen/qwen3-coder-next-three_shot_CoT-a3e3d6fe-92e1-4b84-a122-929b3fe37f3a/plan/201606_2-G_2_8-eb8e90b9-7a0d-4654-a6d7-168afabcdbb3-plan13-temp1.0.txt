@@ -1,0 +1,22 @@
+1. Enumerate the six available students and assign integer indices to them: Louis=0, Mollie=1, Onyx=2, Ryan=3, Tiffany=4, Yoshio=5.  
+2. Create integer variables `year[student]` for each student, representing the year assigned (1921=0, 1922=1, 1923=2, 1924=3). Only four students will be assigned; model this by allowing unassigned students to have a sentinel value (e.g., year = -1), but enforce exactly four distinct years among assigned students.  
+3. Add **exactly-four-assignment constraint**: Exactly four of the six `year[i]` variables are non-negative and take distinct values in {0,1,2,3}. Implement by introducing binary selectors `assign[i] ∈ {0,1}` and constraints:  
+   - `assign[i] == 1 ⇔ year[i] ∈ {0,1,2,3}`  
+   - `sum(assign) == 4`  
+   - For all i < j, if `assign[i] == 1` and `assign[j] == 1`, then `year[i] ≠ year[j]`.  
+4. Add **1923-only-L-or-T constraint**: Only Louis (0) or Tiffany (4) can be assigned to year 2. That is, for all other students s ∉ {0,4}, if `assign[s] == 1`, then `year[s] ≠ 2`.  
+5. Add **Mollie constraint**: If Mollie (1) is assigned (`assign[1] == 1`), then `year[1] ∈ {0,1}` (i.e., 1921 or 1922).  
+6. Add **Tiffany→Ryan constraint**: If Tiffany (4) is assigned (`assign[4] == 1`), then Ryan (3) must also be assigned (`assign[3] == 1`).  
+7. Add **Ryan→Onyx-before constraint**: If Ryan (3) is assigned, then Onyx (2) must be assigned and `year[Onyx] == year[Ryan] - 1`. Additionally, `year[Ryan] ≠ 0` (since prior year must exist).  
+8. Add the **given condition**: Both Ryan and Yoshio are assigned → enforce `assign[3] == 1` and `assign[5] == 1`.  
+9. Translate each answer choice into a logical condition:  
+   - A: Louis assigned to 1923 → `assign[0] == 1 ∧ year[0] == 2`  
+   - B: Mollie assigned to 1921 → `assign[1] == 1 ∧ year[1] == 0`  
+   - C: Onyx assigned to 1922 → `assign[2] == 1 ∧ year[2] == 1`  
+   - D: Tiffany assigned to 1924 → `assign[4] == 1 ∧ year[4] == 3`  
+   - E: Yoshio assigned to 1922 → `assign[5] == 1 ∧ year[5] == 1`  
+10. For each answer choice (A–E):  
+    - Clone the current solver (which includes all constraints + Ryan+Yoshio assigned).  
+    - Assert the condition for that choice.  
+    - Check satisfiability: if SAT, then that choice *could* be true → record its index (0–4).  
+11. Collect all indices for which the choice is satisfiable and output them (as a list).

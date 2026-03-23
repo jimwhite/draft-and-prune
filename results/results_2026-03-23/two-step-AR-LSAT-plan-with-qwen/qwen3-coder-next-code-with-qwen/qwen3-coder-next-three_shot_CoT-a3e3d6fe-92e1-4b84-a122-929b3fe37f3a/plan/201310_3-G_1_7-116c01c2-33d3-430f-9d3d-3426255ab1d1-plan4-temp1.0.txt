@@ -1,0 +1,39 @@
+1. Enumerate the six bands and assign them integer indices.  
+2. Create permutation variables (e.g., using distinct integers from 1 to 6) for each band’s slot position.  
+3. Add **domain constraints**: all positions are integers in [1,6] and pairwise distinct (using `Distinct`).  
+4. Add **given constraints**:  
+    - Vegemite before Zircon: `pos_Vegemite < pos_Zircon`.  
+    - Wellspring and Zircon each before Xpert: `pos_Wellspring < pos_Xpert` and `pos_Zircon < pos_Xpert`.  
+    - Uneasy in one of last three slots: `pos_Uneasy ≥ 4`.  
+    - Yardsign in one of first three slots: `pos_Yardsign ≤ 3`.  
+5. For each answer choice, interpret its logical meaning:  
+    - A. "Only Uneasy can perform in a later slot than Xpert": means `pos_Xpert < pos_Uneasy` and for all other bands B ∈ {Vegemite, Wellspring, Zircon, Yardsign}, `pos_B < pos_Xpert`.  
+    - B. "Vegemite before Wellspring and Wellspring before Zircon": `pos_Vegemite < pos_Wellspring < pos_Zircon`.  
+    - C. "Vegemite and Wellspring each before Xpert": `pos_Vegemite < pos_Xpert ∧ pos_Wellspring < pos_Xpert`.  
+    - D. "Xpert immediately before or after Uneasy": `|pos_Xpert - pos_Uneasy| = 1`.  
+    - E. "Xpert in slot five or six": `pos_Xpert ∈ {5,6}`.  
+6. For each answer choice:  
+    - Clone the base solver with original constraints (3–4).  
+    - Replace the constraint set `pos_Wellspring < pos_Xpert ∧ pos_Zircon < pos_Xpert` with the new condition derived from the answer choice.  
+    - Check if **every model** of the modified system satisfies *exactly* the same ordering constraints as the original (i.e., the two constraint sets are logically equivalent on all valid assignments).  
+    - Equivalently, check:  
+        (i) The new constraint set implies the original `Wellspring < Xpert ∧ Zircon < Xpert`, and  
+        (ii) The original constraints + the new constraint set do not add any further restriction beyond what is implied by (i) *for all possible orderings* satisfying the other constraints.  
+    - Practical approach: For each choice, check that:  
+        - The new condition *logically entails* `Wellspring < Xpert ∧ Zircon < Xpert` under the other constraints.  
+        - And that adding it does **not** eliminate any previously possible ordering (i.e., there exists a model satisfying the original constraints that also satisfies the new one — but more critically, no ordering allowed by original is disallowed by the new *unless* it already violated `Wellspring < Xpert ∧ Zircon < Xpert`).  
+    - Better: For each choice, test two directions using SAT queries:  
+        (a) Add new condition + other constraints → check if `Wellspring < Xpert ∧ Zircon < Xpert` is *always* true (if UNSAT when assuming ¬(Wellspring < Xpert ∨ Zircon < Xpert), then (i) holds).  
+        (b) Add original constraints + other fixed constraints → check if adding the new condition does *not* restrict solutions beyond what original `Wellspring < Xpert ∧ Zircon < Xpert` already enforces. That is, for every model of the original + other constraints, does it satisfy the new condition? If not, then the new condition is *stronger* (too restrictive). Instead, check if for all models satisfying original + other constraints, the new condition holds **iff** the original `Wellspring/Zircon < Xpert` does.  
+    - Simplified check (sufficient and practical): For each answer choice:  
+        - Let `C_new` be the new condition.  
+        - Compute if `(original_constraints ∧ other_fixed) ∧ C_new` is SAT (must be, else new condition incompatible).  
+        - Then check: `(original_constraints ∧ other_fixed) ⇒ C_new`? If yes, then `C_new` is implied — too strong. But we want *replacement* meaning: `original_constraints ⇔ C_new` under other constraints. So check both implications:  
+            i. `(original_constraints ∧ other_fixed) ⇒ C_new` → unsatisfiable if `original_constraints ∧ other_fixed ∧ ¬C_new` is SAT.  
+            ii. `C_new ⇒ (original_constraints)` under other constraints → unsatisfiable if `C_new ∧ other_fixed ∧ ¬(Wellspring < Xpert ∨ Zircon < Xpert)` is SAT.  
+        - If both (i) and (ii) hold (i.e., `original_constraints ∧ other_fixed` ≡ `C_new ∧ other_fixed`), then the choice works.  
+7. Use a loop over choices: create solver S, add all fixed constraints (3–4). For each choice, clone S → S′, add `C_new`, and verify equivalence via two UNSAT checks:  
+    - Check1: Add ¬(Wellspring < Xpert ∧ Zircon < Xpert) to S′; if SAT → new constraint doesn’t enforce original ⇒ reject.  
+    - Check2: Add (Wellspring < Xpert ∧ Zircon < Xpert) to base S, and also add ¬C_new; if SAT → original allows models violating new constraint ⇒ reject.  
+8. Collect indices of choices where both checks return UNSAT (i.e., equivalence holds).  
+9. Return the index list of valid replacements.

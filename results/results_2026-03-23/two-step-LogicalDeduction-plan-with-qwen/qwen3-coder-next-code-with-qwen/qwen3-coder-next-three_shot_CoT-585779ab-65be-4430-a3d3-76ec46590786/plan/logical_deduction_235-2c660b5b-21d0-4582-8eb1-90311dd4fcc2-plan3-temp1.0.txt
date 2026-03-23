@@ -1,0 +1,33 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven birds as variables: `"hawk"`, `"raven"`, `"falcon"`, `"crow"`, `"hummingbird"`, `"robin"`, and `"cardinal"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the problem with their shared domain (1–7) using `addVariable`.
+
+3.  **Add All-Different Constraint:**
+    * Add an `AllDifferentConstraint` over all seven bird variables to ensure each occupies a unique position.
+
+4.  **Translate Statements into Constraints:**
+    * "The hawk is the second from the right" → position = 6 (since rightmost = 7, second-right = 6).
+    * "The robin is to the left of the raven" → `robin < raven`.
+    * "The raven is to the left of the crow" → `raven < crow`.
+    * "The falcon is to the left of the cardinal" → `falcon < cardinal`.
+    * "The hummingbird is the second from the left" → position = 2.
+    * "The falcon is the third from the right" → position = 5 (since 7 - 3 + 1 = 5).
+
+5.  **Add Each Constraint Using Lambda Functions:**
+    * For the fixed-position constraints (hawk=6, hummingbird=2, falcon=5), use `addConstraint(lambda x: x == value, [variable])`.
+    * For ordering constraints (e.g., robin < raven), use `addConstraint(lambda r, rv: r < rv, ["robin", "raven"])`, similarly for the others.
+
+6.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments.
+    * Since the constraints fully determine a unique arrangement, extract the first (and only) solution dictionary.
+
+7.  **Identify the Correct Choice:**
+    * The question asks which bird is second from the right (position 6).
+    * Create a mapping: "A"→"hawk", "B"→"raven", ..., "G"→"cardinal".
+    * Iterate through the solution dictionary to find which bird has position 6.
+    * Return or print the corresponding letter from the choices.

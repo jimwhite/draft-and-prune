@@ -1,0 +1,18 @@
+1. Enumerate the six lab assistants and assign them integer indices (Julio=0, Kevin=1, Lan=2, Nessa=3, Olivia=4, Rebecca=5).  
+2. Enumerate the six sessions: assign each a unique index 0 to 5, where session order is fixed as [Wed AM, Wed PM, Thu AM, Thu PM, Fri AM, Fri PM] (i.e., global order).  
+3. Create integer variables `slot[i]` for each assistant `i`, where `slot[i] ∈ {0,1,2,3,4,5}` and all `slot[i]` are distinct (bijection).  
+4. Add **fixed constraint**: Julio leads Thursday afternoon ⇒ `slot[0] == 3` (since index 3 corresponds to Thu PM).  
+5. Add **day assignment helper**: define functions `day(s)` = 0 if s∈{0,1}, 1 if s∈{2,3}, 2 if s∈{4,5}; `period(s)` = 0 (AM) if s even, 1 (PM) if s odd.  
+6. Add **Kevin-Rebecca same-day constraint**: `day(slot[1]) == day(slot[5])`.  
+7. Add **Lan-Olive not-same-day constraint**: `day(slot[2]) != day(slot[4])`.  
+8. Add **Nessa afternoon constraint**: `period(slot[3]) == 1`.  
+9. Add **Julio earlier than Olivia constraint**: `slot[0] < slot[4]`.  
+10. With the fixed constraint `slot[0] == 3`, deduce consequences manually or via Z3:  
+    - From Julio < Olivia ⇒ `slot[4] > 3`. So Olivia must be in slot 4 (Fri AM) or 5 (Fri PM).  
+    - Nessa must be in an afternoon slot: possible slots for her are 1 (Wed PM), 3 (Thu PM), or 5 (Fri PM); but slot 3 is taken by Julio ⇒ Nessa ∈ {1,5}.  
+    - Kevin and Rebecca must share a day: possible same-day slot pairs are (0,1), (2,3), (4,5); but 3 is taken ⇒ they must both be in Wed AM/PM {0,1} or Fri AM/PM {4,5}.  
+    - Lan and Olivia cannot share a day: if Olivia is in Fri (slot 4 or 5), Lan must be on Wed (0,1) or Thu (2,3); but slot 3 is taken ⇒ Lan ∈ {0,1}.  
+11. Use Z3 to find **all satisfying assignments** under the constraints (with `slot[0]==3`).  
+12. For each assistant j ≠ 0, check if `slot[j]` is the same across **all** satisfying models.  
+    - Count how many assistants have a unique, determined slot position across all solutions.  
+13. If count = k, the answer is "k". Map k to the corresponding choice from ['one','two','three','four','five'].

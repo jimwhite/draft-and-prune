@@ -1,0 +1,15 @@
+1. Enumerate the eight employees and assign them integer indices: Myers=0, Ortega=1, Paine=2, Schmidt=3, Thomson=4, Wong=5, Yoder=6, Zayre=7.  
+2. Create Boolean variables `t[i]` for each employee i (i=0..7), where `t[i]==True` means employee i is selected for the team.  
+3. Add **team size constraint**: at least 4 employees are selected: `sum(t) >= 4`.  
+4. Add **Yoder-not-on-team constraint**: `t[6] == False` (given in the question).  
+5. Add **Myers constraint**: If Myers is selected, then Ortega and Paine are not: `t[0] => (~t[1] & ~t[2])`, equivalent to `~t[0] | (~t[1] & ~t[2])`.  
+6. Add **Schmidt constraint**: If Schmidt is selected, then both Paine and Thomson are: `t[3] => (t[2] & t[4])`, equivalent to `(~t[3]) | (t[2] & t[4])`.  
+7. Add **Wong constraint**: If Wong is selected, then both Myers and Yoder are: `t[5] => (t[0] & t[6])`. Since `t[6]==False`, this simplifies to `~t[5]` (i.e., Wong cannot be selected when Yoder is absent). Add constraint `t[5] == False`.  
+8. Translate the answer choices into employee indices: Zayre=7, Thomson=4, Paine=2, Ortega=1, Myers=0.  
+9. Define a forbidden index list `forbidden_list` [] (since the question asks for who **cannot** be on the team when Yoder is absent). For each candidate in the answer choices (indices 7,4,2,1,0):  
+   - Clone base constraints into a fresh solver.  
+   - Add constraint that this candidate *is* on the team: `t[candidate_index] == True`.  
+   - Check satisfiability.  
+   - If UNSAT, then this candidate **cannot** be on the team; append its index to `forbidden_list`.  
+10. After evaluating all candidates, the correct answer is the employee corresponding to any index in `forbidden_list`. Since only one choice must be correct (EXCEPT), there will be exactly one forced UNSAT.  
+11. Output `forbidden_list`.

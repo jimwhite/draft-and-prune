@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as string variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into constraints using `lambda` or direct value assignment:  
+     - "The yellow book is the rightmost" → `yellow == 7`  
+     - "The blue book is to the left of the orange book" → `blue < orange`  
+     - "The green book is to the right of the white book" → `white < green`  
+     - "The blue book is to the right of the green book" → `green < blue`  
+     - "The black book is the fourth from the left" → `black == 4`  
+     - "The brown book is the third from the right" → `brown == 5` (since positions: 7=rightmost, 6=second rightmost, 5=third rightmost)
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (only one should exist due to logical consistency and sufficient constraints).
+
+5. **Determine the Second-from-the-Right Book:**  
+   * In the 1–7 position system, **second from the right corresponds to position 6**.  
+   * Build a dictionary mapping choice letters `['A', 'B', 'C', 'D', 'E', 'F', 'G']` to their respective books:  
+     `{'A': 'brown', 'B': 'white', 'C': 'black', 'D': 'yellow', 'E': 'orange', 'F': 'blue', 'G': 'green'}`  
+   * Iterate through choices; for each choice, check if the corresponding book’s position in the solution equals 6.  
+   * Return the first matching choice letter as the answer.

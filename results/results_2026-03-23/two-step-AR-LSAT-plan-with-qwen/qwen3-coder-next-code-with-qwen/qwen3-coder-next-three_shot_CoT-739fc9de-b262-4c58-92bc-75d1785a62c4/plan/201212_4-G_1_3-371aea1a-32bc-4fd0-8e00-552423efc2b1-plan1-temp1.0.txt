@@ -1,0 +1,19 @@
+1. Enumerate the seven houses (J, K, L, M, N, O, P) and assign integer indices.  
+2. Create integer variables `pos[house]` for each house's show position (1 to 7).  
+3. Add **domain constraints**: `pos[house] ∈ {1,2,3,4,5,6,7}` and all positions distinct.  
+4. Add **session constraints**:  
+    - Morning: positions 1–2; Afternoon: 3–5; Evening: 6–7.  
+5. Add **J constraint**: J must be in evening → `pos[J] ∈ {6,7}`.  
+6. Add **K constraint**: K cannot be in morning → `pos[K] ∉ {1,2}` ⇒ `pos[K] ∈ {3,4,5,6,7}`.  
+7. Add **L ordering constraint**: L after K and before M → `pos[K] < pos[L] < pos[M]`.  
+8. Translate the answer choices into logical statements:  
+    - A: `pos[K] ∈ {6,7}`  
+    - B: `pos[L] ∈ {3,4,5}`  
+    - C: `pos[L] ∈ {6,7}`  
+    - D: `pos[M] ∈ {1,2}`  
+    - E: `pos[M] ∈ {3,4,5}`  
+9. For each choice, determine if it **must be true** in *all* valid assignments:  
+    - For each choice, clone base constraints into fresh solver.  
+    - Assert the *negation* of the choice (e.g., for A: `pos[K] ∉ {6,7}` ⇒ `pos[K] ≤ 5`).  
+    - If UNSAT, the choice *must* be true; add its index to `answer_index_list`.  
+10. Print the answer index list (exactly one must be non-empty and valid).

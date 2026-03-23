@@ -1,0 +1,27 @@
+1. Identify all entities and types: Stella, zumpus, wumpus, numpus, impus, rompus, vumpus, jompus, dumpus, yumpus, tumpus.  
+2. Identify all properties: metallic, floral, happy, kind, large, opaque, cold, opaque (redundant listing), spicy.  
+3. Represent "Stella is a numpus" as a base fact: `is_a("Stella", "numpus", True)`.  
+4. Translate all class property and subclass relationships into logical rules:  
+   - Every zumpus is metallic.  
+   - Each zumpus is a wumpus.  
+   - Wumpuses are not floral.  
+   - Every wumpus is a numpus.  
+   - Numpuses are happy.  
+   - Each numpus is an impus.  
+   - Impuses are kind.  
+   - Every impus is a rompus.  
+   - Every rompus is large.  
+   - Vumpuses are opaque.  
+   - Each rompus is a jompus.  
+   - Each jompus is cold.  
+   - Jompuses are dumpuses.  
+   - Each dumpus is not opaque.  
+   - Dumpuses are yumpuses.  
+   - Yumpuses are spicy.  
+   - Each yumpus is a tumpus.  
+5. Implement each rule using `foreach` for antecedent(s) and `assert` for consequent(s); ensure negative properties (e.g., “not floral”, “not opaque”) are modeled as explicit facts: use `~is_floral(X)`, `~is_opaque(X)` etc., or equivalently `is_floral(X, False)`, `is_opaque(X, False)` depending on PyKe’s convention.  
+6. Derive consequences for Stella using forward chaining:  
+   - From `is_a("Stella", "numpus")`, deduce `is_im` (impus), `is_rom` (rompus), `is_jom` (jompus), `is_dump` (dumpus), `is_yum` (yumpus), `is_tum` (tumpus).  
+   - From dumpus → not opaque (`each dumpus is not opaque`) and Stella is a dumpus, deduce `is_opaque("Stella", False)`.  
+7. The query tests whether "Stella is opaque" holds: since we can prove `is_opaque("Stella", False)`, the statement "Stella is opaque" (i.e., `is_opaque("Stella", True)`) is false.  
+   → Use `facts.is_opaque("Stella", True)` as the query goal.

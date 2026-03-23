@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five golfers: `"Ada"`, `"Eli"`, `"Amy"`, `"Joe"`, and `"Mel"`.  
+   * Define the domain as integers from 1 to 5, where **1 represents first (highest placement, i.e., topmost)** and **5 represents fifth (lowest placement)**. In ranking terms, lower numbers = better rank (above).  
+   * Add all golfers and their domain (1–5) to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each golfer has a unique placement rank.  
+   * Add the following constraints using lambda functions:  
+     - "Ada finished above Eli" → Ada’s rank < Eli’s rank (`lambda a, e: a < e`).  
+     - "Amy finished below Mel" → Amy’s rank > Mel’s rank (`lambda a, m: a > m`).  
+     - "Ada finished second" → Ada’s rank = 2.  
+     - "Mel finished below Eli" → Mel’s rank > Eli’s rank (`lambda m, e: m > e`).  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments of ranks to golfers.  
+   * Extract the unique solution (since constraints fully determine the order), and store it.
+
+5. **Determine Which Choice is True:**  
+   * Examine the choices: each claims a particular golfer finished second (i.e., has rank = 2).  
+   * Since the constraint "Ada finished second" is explicitly given and enforced, verify that in the solution Ada’s rank = 2.  
+   * Match this fact to the provided choices: choice A states "Ada finished second.", which is directly supported by both the problem and the solution.  
+   * Return choice **A** as the correct answer.

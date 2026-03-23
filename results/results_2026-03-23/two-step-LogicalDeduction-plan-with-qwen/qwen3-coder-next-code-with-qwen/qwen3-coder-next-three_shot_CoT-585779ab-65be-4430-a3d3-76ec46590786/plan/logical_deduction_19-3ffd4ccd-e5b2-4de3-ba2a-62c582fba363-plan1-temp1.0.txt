@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define variables as the five vehicles: `"tractor"`, `"station_wagon"`, `"bus"`, `"motorcycle"`, `"minivan"`.  
+   * Define the domain as integers from 1 to 5, where **1 = oldest**, **5 = newest**.  
+   * Add the variables and domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add `AllDifferentConstraint()` to ensure uniqueness of positions.  
+   * "The minivan is older than the motorcycle" → `minivan < motorcycle` (smaller rank number = older).  
+   * "The bus is the newest" → `bus == 5`.  
+   * "The tractor is the third-newest" → Since newest=5, third-newest = position 3 (5−2), so `tractor == 3`.  
+   * "The station wagon is the second-oldest" → Second-oldest = position 2 (since oldest=1), so `station_wagon == 2`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the single solution (the problem is uniquely determined).
+
+5. **Identify the Correct Choice:**  
+   * The question asks which vehicle is the newest (position 5).  
+   * Create a mapping from choice letters to vehicles:  
+     `{"A": "tractor", "B": "station_wagon", "C": "bus", "D": "motorcycle", "E": "minivan"}`.  
+   * In the solution, find which vehicle has value 5.  
+   * Output the corresponding choice letter (e.g., `"C"` if `bus == 5`).

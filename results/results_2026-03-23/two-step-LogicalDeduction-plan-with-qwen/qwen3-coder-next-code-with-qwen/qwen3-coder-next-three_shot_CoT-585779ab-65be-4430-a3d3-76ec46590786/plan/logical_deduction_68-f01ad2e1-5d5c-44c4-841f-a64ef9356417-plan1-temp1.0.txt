@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament finishing order.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the five golfers: `"Mel"`, `"Dan"`, `"Amy"`, `"Joe"`, and `"Eve"`.  
+   * Define the domain as integers from 1 to 5, where **1 = first place (best)** and **5 = last place (worst)**.  
+   * Add each golfer variable to the problem with the domain {1, 2, 3, 4, 5}.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure no two golfers share the same finishing position.  
+   * Translate each statement into a constraint:  
+     - "Amy finished below Dan" means Amy's position number is greater than Dan's (`Amy > Dan`).  
+     - "Mel finished first" means Mel’s position is exactly 1.  
+     - "Joe finished above Dan" means Joe’s position number is less than Dan’s (`Joe < Dan`).  
+     - "Eve finished last" means Eve’s position is exactly 5.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid permutations satisfying all constraints.  
+   * Since the problem is fully constrained, there will be exactly one solution; extract it (e.g., take `solutions[0]`).
+
+5. **Identify the Correct Answer:**  
+   * The question asks which golfer finished last (position 5).  
+   * Map the choice letters to their corresponding golfers:  
+     - A → Mel, B → Dan, C → Amy, D → Joe, E → Eve.  
+   * Check the solution dictionary for which golfer has position 5.  
+   * Return the choice letter (e.g., `"E"`) corresponding to that golfer as the answer.

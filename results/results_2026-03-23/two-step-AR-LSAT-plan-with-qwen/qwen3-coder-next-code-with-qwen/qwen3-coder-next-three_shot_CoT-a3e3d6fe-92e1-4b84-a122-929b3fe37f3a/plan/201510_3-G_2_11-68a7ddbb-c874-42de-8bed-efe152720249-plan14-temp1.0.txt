@@ -1,0 +1,37 @@
+1. Enumerate the three photographers and assign integer codes: Fuentes = 0, Gagnon = 1, Hue = 2.  
+2. Enumerate the three sections: Lifestyle = L, Metro = M, Sports = S.  
+3. Define integer variables `count[photo][section]` for each photographer and section, but instead use Boolean decision variables:  
+   - For each photographer `p ∈ {0,1,2}` and section `s ∈ {L,M,S}`, define Boolean variables `x[p][s]` indicating whether photographer p contributes *at least one* photo to section s, and `n[p][s]` as integer count (0,1,2) of photos by photographer p in section s.  
+   - Alternatively, use `n[p][s]` ∈ {0,1,2} as integer variables directly.  
+4. Add **global photo count constraint**: For each section s, `n[0][s] + n[1][s] + n[2][s] = 2`.  
+5. Add **photographer global count constraints**: For each photographer p, `1 ≤ n[p][0] + n[p][1] + n[p][2] ≤ 3`.  
+6. Add **Gagnon constraint**: `n[1][S] = 0` (no Gagnon in Sports).  
+7. Add **Lifestyle–Metro overlap constraint**: There exists at least one photographer p such that `n[p][L] ≥ 1 ∧ n[p][M] ≥ 1`. Implement via Boolean `overlap[p] = (n[p][L] > 0) ∧ (n[p][M] > 0)`; then require `overlap[0] ∨ overlap[1] ∨ overlap[2]`.  
+8. Add **Hue–Fuentes balance constraint**: `n[2][L] = n[0][S]`.  
+9. Add **given condition**: `n[0][L] ≥ 1` and `n[2][L] ≥ 1`, and since Lifestyle has exactly two photos, this implies `n[0][L] + n[2][L] = 2`, so `n[0][L] = 1` and `n[2][L] = 1`.  
+10. From step 9, deduce: `n[0][L] = 1`, `n[2][L] = 1`, `n[1][L] = 0`.  
+11. Use step 8 to get: `n[2][L] = n[0][S]` ⇒ `1 = n[0][S]`. So Fuentes has exactly one photo in Sports.  
+12. Since Sports needs two photos and Gagnon cannot be in Sports, the only possible photographers for Sports are Fuentes and Hue. So `n[0][S] = 1`, `n[2][S] = 1`, `n[1][S] = 0`.  
+13. Now compute remaining photographer counts:  
+    - Fuentes: `n[0][L] + n[0][M] + n[0][S] = 1 + n[0][M] + 1 = 2 + n[0][M]`. Must be ≤3 ⇒ `n[0][M] ≤1`, and ≥1 ⇒ automatically satisfied. So `n[0][M] ∈ {0,1}`.  
+    - Hue: `n[2][L] + n[2][M] + n[2][S] = 1 + n[2][M] + 1 = 2 + n[2][M]`. Must be ≤3 ⇒ `n[2][M] ≤1`, and ≥1 ⇒ OK. So `n[2][M] ∈ {0,1}`.  
+    - Gagnon: `n[1][L] + n[1][M] + n[1][S] = 0 + n[1][M] + 0 = n[1][M]`. Must be ≥1 ⇒ `n[1][M] ≥ 1`, and ≤3 ⇒ automatically OK. Also, Metro has exactly two photos: `n[0][M] + n[1][M] + n[2][M] = 2`.  
+14. So for Metro: `n[0][M] + n[1][M] + n[2][M] = 2`, with `n[0][M] ∈ {0,1}`, `n[1][M] ≥ 1`, `n[2][M] ∈ {0,1}`.  
+    Possible solutions:  
+    - `(n[0][M], n[1][M], n[2][M]) = (0,2,0)`  
+    - `(1,1,0)`  
+    - `(0,1,1)`  
+    - `(1,0,1)` → invalid (violates `n[1][M] ≥ 1`)  
+    So valid: (0,2,0), (1,1,0), (0,1,1).  
+15. Translate each choice into a condition and check consistency:  
+    - Choice 0: "Both Metro photos by Fuentes" ⇒ `n[0][M] = 2`. But max `n[0][M] = 1` (since Fuentes has only 2 total photos: 1 in L, 1 in S), so **impossible**.  
+    - Choice 1: "Both Metro photos by Gagnon" ⇒ `n[1][M] = 2`. This matches valid tuple (0,2,0). Check global counts: Gagnon total = 2 ∈ [1,3] — OK. So **possible**.  
+    - Choice 2: "Exactly one Metro photo by Hue" ⇒ `n[2][M] = 1`. Then possible tuples: (0,1,1) or (1,0,1) — but second invalid due to `n[1][M] ≥ 1`. So only (0,1,1) works: `n[0][M]=0`, `n[1][M]=1`, `n[2][M]=1`. Gagnon total = 1 — OK. So **possible**.  
+    - Choice 3: "Both Sports photos by Hue" ⇒ `n[2][S] = 2`. But we already deduced `n[2][S] = 1` (since Sports: 2 photos, only Fuentes/Hue possible, and `n[0][S]=1`). Contradiction — **impossible**.  
+    - Choice 4: "Neither Sports photo by Hue" ⇒ `n[2][S] = 0`. But then `n[0][S] = 2` (to satisfy Sports total = 2 and Gagnon excluded), contradicting `n[0][S] = 1`. — **impossible**.  
+16. Define answer index list `answer_index_list = []`. For each choice index i ∈ {0,1,2,3,4}, check feasibility using solver:  
+    - Clone base constraints.  
+    - Assert the specific Metro/Sports counts implied by choice i (e.g., for i=1: `n[1][M] == 2`).  
+    - Also enforce derived constraints (`n[0][L]=1`, `n[2][L]=1`, etc.) if not already enforced.  
+    - If SAT, append i to `answer_index_list`.  
+17. Print `answer_index_list`.

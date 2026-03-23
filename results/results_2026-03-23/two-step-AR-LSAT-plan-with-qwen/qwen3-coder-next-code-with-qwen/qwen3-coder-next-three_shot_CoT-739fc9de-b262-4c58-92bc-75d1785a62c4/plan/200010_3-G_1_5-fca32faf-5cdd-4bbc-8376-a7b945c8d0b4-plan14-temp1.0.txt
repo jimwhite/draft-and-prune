@@ -1,0 +1,21 @@
+1. Enumerate the eight students and assign integer codes.  
+2. Define Boolean variables for each student being assigned to a specific day (Mon, Tue, Wed) and slot (morning, afternoon), i.e., `assigned[student][day_slot]`.  
+3. Enforce **exactly six students report**: sum of all `assigned[s][ds]` over students and day-slots equals 6.  
+4. Enforce **exactly two reports per day**: for each day, sum of `assigned[s][day_mor] + assigned[s][day_aft]` over students equals 2.  
+5. Enforce **one report per slot per day**: for each (day, slot) pair, at most one student assigned.  
+6. Enforce **valid assignment per condition**:  
+    - Tuesday is the only day George can report: George can be assigned only to Tuesday (morning or afternoon); `assigned[George][Mon_mor] = False`, etc.  
+    - Neither Olivia nor Robert can give an afternoon report: for both, set `assigned[Olivia][*][aft] = False`, `assigned[Robert][*][aft] = False`.  
+7. Enforce **given assumptions**:  
+    - Kyle gives afternoon report on Tuesday: `assigned[Kyle][Tue_aft] = True`.  
+    - Helen gives afternoon report on Wednesday: `assigned[Helen][Wed_aft] = True`.  
+8. Enforce **Nina conditional constraint**: If Nina reports on Mon or Tue, then Helen and Irving must report the *next* day (both morning and afternoon), but if Nina reports on Wed, no such requirement. Implement via implications:  
+    - If `assigned[Nina][Mon_mor] ∨ assigned[Nina][Mon_aft]`, then `Helen` and `Irving` must each be assigned to *both* slots on Tue.  
+    - If `assigned[Nina][Tue_mor] ∨ assigned[Nina][Tue_aft]`, then `Helen` and `Irving` must each be assigned to *both* slots on Wed.  
+    - No constraint if Nina assigned only to Wed slots.  
+9. Generate all five answer choices as candidate morning-report lists: for each choice, extract (Mon_mor student, Tue_mor student, Wed_mor student).  
+10. For each answer choice:  
+    - Clone base constraints (including assumptions) into fresh solver.  
+    - Assert fixed assignments: Mon_mor = student1, Tue_mor = student2, Wed_mor = student3.  
+    - Check SAT. If SAT, then choice is possible; record index.  
+11. Return the index of the first (or all) possible choices (problem asks "which one", so expect exactly one SAT).

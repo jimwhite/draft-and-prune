@@ -1,0 +1,31 @@
+1.  Identify all entities and types: Stella, tumpus, wumpus, vumpus, jompus, dumpus, numpus, rompus, yumpus, impus, zumpus.  
+2.  Identify all properties: red, sweet, small, aggressive, temperate, bright, luminous, opaque.  
+3.  Represent "Stella is a wumpus" as a base fact: `is_a("Stella", "wumpus", True)`.  
+4.  Convert each class property and subclass relationship into a rule:  
+    - Every tumpus is red.  
+    - Each tumpus is a wumpus.  
+    - Every wumpus is sweet.  
+    - Wumpuses are vumpuses.  
+    - Vumpuses are small.  
+    - Every vumpus is a jompus.  
+    - Every jompus is not aggressive.  
+    - Zumpuses are temperate.  
+    - Each jompus is a dumpus.  
+    - Each dumpus is bright.  
+    - Every dumpus is a numpus.  
+    - Numpuses are not temperate.  
+    - Numpuses are rompuses.  
+    - Each rompus is not luminous.  
+    - Every rompus is a yumpus.  
+    - Yumpuses are opaque.  
+    - Every yumpus is an impus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  Derive logical consequences step-by-step:  
+    - From Stella is a wumpus, and every wumpus is sweet ⇒ Stella is sweet.  
+    - From Stella is a wumpus, and wumpuses are vumpuses ⇒ Stella is a vumpus.  
+    - From Stella is a vumpus, and every vumpus is a jompus ⇒ Stella is a jompus.  
+    - From Stella is a jompus, and each jompus is a dumpus ⇒ Stella is a dumpus.  
+    - From Stella is a dumpus, and every dumpus is a numpus ⇒ Stella is a numpus.  
+    - From Stella is a numpus, and numpuses are not temperate ⇒ Stella is not temperate.  
+7.  The query tests if the statement "Stella is not temperate" is provable:  
+    → Use `facts.is_temperate("Stella", False)`.

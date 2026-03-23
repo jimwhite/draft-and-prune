@@ -1,0 +1,20 @@
+1. Identify all entities: Bob, Charlie, Fiona, Gary.  
+2. Represent all explicit facts using ternary predicates (e.g., is_kind("Bob", True), is_quiet("Charlie", True), etc.).  
+3. Encode all given implications as rules using PyKe `foreach` and `assert`:  
+   • If Gary is red AND Gary is white → Gary is quiet.  
+   • All white things are rough: foreach is_white(X, True) → assert is_rough(X, True).  
+   • If something is rough → it is red: foreach is_rough(X, True) → assert is_red(X, True).  
+   • If something is nice → it is white: foreach is_nice(X, True) → assert is_white(X, True).  
+   • All smart things are white: foreach is_smart(X, True) → assert is_white(X, True).  
+   • Rough AND quiet things are NOT kind: foreach is_rough(X, True), is_quiet(X, True) → assert is_kind(X, False).  
+   • If something is quiet AND NOT smart → it is kind: foreach is_quiet(X, True), NOT(is_smart(X, True)) → assert is_kind(X, True).  
+   • Smart things are quiet: foreach is_smart(X, True) → assert is_quiet(X, True).  
+   • If something is smart AND NOT rough → it is quiet: foreach is_smart(X, True), NOT(is_rough(X, True)) → assert is_quiet(X, True).  
+4. Use facts.is_nice("Gary", True) as a given fact (explicitly stated).  
+5. Derive implications for Gary:  
+   - From is_nice("Gary", True), infer is_white("Gary", True) via rule 4.  
+   - From is_white("Gary", True), infer is_rough("Gary", True) via rule 2.  
+   - From is_rough("Gary", True), infer is_red("Gary", True) via rule 3.  
+   - Now Gary is red, white, and rough.  
+   - Use rule 1: is_red("Gary", True) ∧ is_white("Gary", True) ⇒ assert is_quiet("Gary", True).  
+6. Query: check if Gary is not quiet by asserting facts.is_quiet("Gary", False).

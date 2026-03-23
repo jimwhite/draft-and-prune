@@ -1,0 +1,24 @@
+1. Identify all entities: lion, mouse, rabbit, squirrel.
+2. Encode all explicit negative and positive atomic facts using ternary predicates (e.g., is_cold("lion", True), does_not_need("lion", "mouse", True), visits("lion", "squirrel", True), etc.).
+   - For relations like needs, visits, sees: use facts.relation("A", "B", True) for positive assertions and facts.relation("A", "B", False) or fact_neg(relation, "A", "B") / facts.relation("A", "B", False) for negatives. Since PyKe supports ternary predicate with boolean object, use facts.needs("squirrel", "mouse", True), facts.does_not_need("lion", "mouse", True) or equivalent structured representation. However, standard PyKe usage favors unary/binary predicates via predicate(subject, object, True), so define separate unary predicates for negative facts or use negated atoms explicitly via rules.
+   - Clarify: To represent “does not need X Y”, encode as a fact with predicate needs("X", "Y", False) — assuming ternary predicate allows third argument boolean.
+3. Translate each conditional sentence into PyKe rules using `foreach` and `assert`.
+   - If something needs the rabbit and the rabbit sees the mouse → the mouse does not see the lion.
+   - If something is rough → it visits the mouse.
+   - If something needs the rabbit and it visits the mouse → the mouse needs the rabbit.
+   - If something needs the rabbit and the rabbit is cold → it is rough.
+   - If something needs the rabbit → the rabbit needs the squirrel.
+   - If the squirrel sees the lion and the squirrel is not green → the lion needs the squirrel.
+   - If something is big → it visits the lion.
+   - If something visits the squirrel and the squirrel sees the lion → the lion is not kind.
+4. For conditionals involving negation (e.g., “the squirrel is not green”), note that no information about “green” is given — therefore the condition "squirrel is not green" cannot be assumed; hence such rule’s antecedent fails, so no derivation occurs. Thus encode as a `foreach` requiring explicit `is_green("squirrel", False)` if used, but since it's not known, the rule is inactive unless triggered.
+5. The query tests: “The mouse does not need the rabbit.”
+   → Use facts.needs("mouse", "rabbit", False) or equivalent, depending on predicate naming convention. Prefer consistent use: if needs(A,B,True) is used for “A needs B”, then needs("mouse","rabbit",False) expresses the negation.
+6. Additionally, check whether any derived facts (e.g., from rules like “if something needs rabbit → mouse needs rabbit”) can contradict or confirm the query.
+   - Note: Squirrel needs mouse (fact), squirrel needs rabbit (fact). Use rule “if something needs the rabbit → the rabbit needs the squirrel” to derive needs("rabbit","squirrel",True).
+   - Use rule “if something needs the rabbit and it visits the mouse → mouse needs rabbit” — but we have no info about anyone visiting mouse yet, so cannot derive directly.
+   - Rule “if something is rough → it visits the mouse”: rabbit is rough (fact), so rabbit visits mouse (i.e., facts.visits("rabbit","mouse",True)).
+   - Rabbit visits mouse and rabbit needs squirrel (from rule 5 above)? Wait: “if something needs the rabbit → ...”, but rabbit does *not* need rabbit — we have squirrel needs rabbit, not rabbit needs rabbit. So mouse needing rabbit would follow from: if X needs rabbit AND X visits mouse → mouse needs rabbit. Choose X = squirrel? Does squirrel visit mouse? Not stated, nor derivable yet.
+   - Check if squirrel visits mouse: no direct info. Rule “if something is rough → it visits the mouse” gives rabbit visits mouse, but squirrel not known to be rough.
+   - Therefore, whether mouse needs rabbit is uncertain without further derivation — but query asks about mouse NOT needing rabbit.
+7. Finalize: derive all possible consequences, then check if needs("mouse","rabbit",False) is entailed. If derivable as fact, answer true; if derive needs("mouse","rabbit",True), then false; otherwise unknown.

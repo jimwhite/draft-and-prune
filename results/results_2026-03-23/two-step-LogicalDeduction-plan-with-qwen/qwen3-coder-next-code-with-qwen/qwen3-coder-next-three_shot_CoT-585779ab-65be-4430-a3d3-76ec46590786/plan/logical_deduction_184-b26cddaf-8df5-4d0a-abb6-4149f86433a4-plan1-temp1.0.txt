@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the golf tournament finishing order constraints.
+
+2. **Define Variables and Domain:**  
+   * Define the seven golfers as variables: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, and `"Ana"`.  
+   * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.  
+   * Add all seven variables with domain {1, 2, ..., 7} to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.  
+   * Translate each statement into a constraint using `lambda` functions:  
+     - "Joe finished first" → Joe’s position = 1.  
+     - "Mel finished second-to-last" → Mel’s position = 6 (since last is 7, second-to-last is 6).  
+     - "Rob finished above Eve" → Rob’s position < Eve’s position.  
+     - "Mel finished above Eli" → Mel’s position < Eli’s position.  
+     - "Rob finished below Ada" → Rob’s position > Ada’s position.  
+     - "Eve finished fourth" → Eve’s position = 4.
+
+4. **Solve for All Valid Arrangements:**  
+   * Call `getSolutions()` to find all assignments of positions satisfying all constraints.  
+   * Since the problem is well-constrained, expect exactly one valid solution; extract it.
+
+5. **Identify the Last-Place Golfer:**  
+   * The question asks who finished last (position 7).  
+   * Create a mapping from choice letters to golfer names:  
+     `'A' → 'Joe'`, `'B' → 'Eli'`, `'C' → 'Ada'`, `'D' → 'Mel'`, `'E' → 'Eve'`, `'F' → 'Rob'`, `'G' → 'Ana'`.  
+   * Inspect the solved solution dictionary to find which golfer has position 7.  
+   * Return (or output) the choice letter corresponding to that golfer as the answer.

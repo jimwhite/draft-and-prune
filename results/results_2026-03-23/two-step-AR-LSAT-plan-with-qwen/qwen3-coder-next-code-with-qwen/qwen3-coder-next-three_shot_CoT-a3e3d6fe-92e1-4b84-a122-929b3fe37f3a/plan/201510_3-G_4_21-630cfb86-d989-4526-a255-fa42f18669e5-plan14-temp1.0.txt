@@ -1,0 +1,26 @@
+1. Enumerate the six cookbooks (K, L, M, N, O, P) and assign each an integer index.  
+2. Create Boolean variables for each cookbook: `fall[i]` = True if cookbook i is published in fall, False otherwise (spring).  
+3. Add **domain constraints**: each cookbook is assigned exactly one season (implicitly satisfied by Boolean variables).  
+4. Add **M and P constraint**: M and P cannot be in the same season → `fall[M] != fall[P]`.  
+5. Add **K and N constraint**: K and N must be in the same season → `fall[K] == fall[N]`.  
+6. Add **K-in-fall implies O-in-fall**: If `fall[K]` is True then `fall[O]` must be True → `~fall[K] | fall[O]`.  
+7. Add **M-in-fall implies N-in-spring**: If `fall[M]` is True then `fall[N]` must be False → `~fall[M] | ~fall[N]`.  
+8. Add **given condition**: N is published in fall → `fall[N] = True`.  
+9. From step 5 and step 8, deduce (or enforce in solver): `fall[K] = True` (since K and N same season).  
+10. From step 6 and `fall[K] = True`, deduce (or enforce): `fall[O] = True`.  
+11. From step 7 and `fall[N] = True`, deduce (or enforce): `~fall[M]` must hold (since if `fall[M]` were True, it would require `~fall[N]`, contradiction), so M must be in spring.  
+12. Now, with `fall[N]=True`, `fall[K]=True`, `fall[O]=True`, `~fall[M]` (M in spring), and `fall[P] != fall[M]` ⇒ `fall[P] = True` (since M in spring, P must be fall).  
+13. L has no constraints directly; its season is free (fall or spring).  
+14. Translate the answer choices to logical statements:  
+    - "K is published in the spring" → `~fall[K]` (contradicts step 10 → impossible)  
+    - "L is published in the fall" → `fall[L] = True` (no constraint forbids this → possible)  
+    - "M is published in the fall" → `fall[M] = True` (contradicts step 11 → impossible)  
+    - "O is published in the spring" → `~fall[O]` (contradicts step 10 → impossible)  
+    - "P is published in the spring" → `~fall[P]` (contradicts step 12 → impossible)  
+15. Use Z3 to verify consistency of each choice *under the fixed assumptions* (steps 8–12), but note steps 8–12 already derive strong implications; only "L is published in the fall" remains compatible.  
+16. For robustness:  
+    - Clone base constraints + `fall[N] = True`.  
+    - For each answer choice, add the choice’s condition as an extra constraint.  
+    - If SAT, then that choice *could be true*.  
+17. Collect all answer indices (from choices) where the augmented model is SAT into `answer_index_list`.  
+18. Output `answer_index_list` (expected to contain only index for "L is published in the fall").

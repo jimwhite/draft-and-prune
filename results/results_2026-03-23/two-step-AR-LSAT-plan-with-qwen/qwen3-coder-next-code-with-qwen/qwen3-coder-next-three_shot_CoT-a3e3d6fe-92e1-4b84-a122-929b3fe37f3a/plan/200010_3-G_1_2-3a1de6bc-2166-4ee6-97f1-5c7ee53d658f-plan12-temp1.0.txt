@@ -1,0 +1,17 @@
+1. Enumerate the eight students and assign each an integer index.  
+2. Create Boolean variables for each student-day-time slot: `assigned[s][d][t]`, where s ∈ {0..7} for students, d ∈ {Mon, Tue, Wed}, t ∈ {morning, afternoon}.  
+3. Add **exactly-six-reporters constraint**: sum over all students of (sum over days and times of `assigned[s][d][t]`) = 6.  
+4. Add **two-reports-per-day constraint**: for each day, exactly two slots (morning and afternoon) are assigned.  
+5. Add **one-report-per-slot constraint**: for each student, at most one slot (any day/time) is assigned.  
+6. Add **george-only-on-tuesday constraint**: `assigned[George][Mon][*] = false` and `assigned[George][Wed][*] = false`.  
+7. Add **no-afternoon-olivia/robert constraint**: `assigned[Olivia][*][afternoon] = false` and `assigned[Robert][*][afternoon] = false`.  
+8. Add **Nina-implication constraint**: if Nina gives a report on Monday, then Helen and Irving must both give reports on Tuesday; if Nina gives a report on Tuesday, then Helen and Irving must both give reports on Wednesday; if Nina gives a report on Wednesday, no constraint applies.  
+9. Add **Kyle-and-Lenore-no-report constraint**: `assigned[Kyle][*][*] = false` and `assigned[Lenore][*][*] = false`.  
+10. For each answer choice, which specifies morning reporters for Monday, Tuesday, Wednesday:  
+    - Parse the triple (e.g., ['Helen', 'George', 'Nina']).  
+    - Clone the current constraint set (excluding Kyle/Lenore and answer-specific constraints) into a fresh solver.  
+    - Add constraint that Monday morning = first student, Tuesday morning = second student, Wednesday morning = third student.  
+    - Ensure no conflict (e.g., George only on Tuesday, Olivia/Robert not in afternoon — here they are mornings so allowed).  
+    - Solve: if SAT, the choice is possible.  
+11. Record indices of answer choices that yield SAT (or directly record which choice passes).  
+12. Output the list of viable answer indices (or just the correct choice string if indexing into choices).

@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * List the seven bird names as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"` (note: combine "blue jay" into one string without space for compatibility, e.g., `"bluejay"`).
+    * Define the domain as integers from 1 to 7, where position 1 = leftmost and position 7 = rightmost.
+    * Add all seven variables with domain {1,2,3,4,5,6,7} to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.
+    * Translate each statement into a constraint:
+        * "The hummingbird is to the left of the crow" → `hummingbird < crow`
+        * "The cardinal is to the right of the quail" → `quail < cardinal`
+        * "The blue jay is the fourth from the left" → `bluejay == 4`
+        * "The robin is the second from the left" → `robin == 2`
+        * "The quail is to the right of the crow" → `crow < quail`
+        * "The raven is to the left of the robin" → `raven < robin` (and since robin == 2, raven must be 1)
+    * Add each of these six constraints to the `Problem` instance.
+
+4.  **Solve for Valid Assignments:**
+    * Use `getSolutions()` to find all satisfying assignments. Due to the fixed-order constraints, there should be a unique solution.
+    * Extract the first (and only) solution dictionary.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which bird is second from the left (i.e., position 2). However, note that the problem statement *explicitly states* "The robin is the second from the left", and choice A directly repeats that fact.
+    * Since all statements are logically consistent, this must hold in the solution: `solution["robin"] == 2`.
+    * Map choice letters to bird names: A→"robin", B→"hummingbird", C→"raven", D→"bluejay", E→"crow", F→"cardinal", G→"quail".
+    * Verify in the solution: find which bird has position 2 — it must be `"robin"`.
+    * Return choice "A" as the correct answer.

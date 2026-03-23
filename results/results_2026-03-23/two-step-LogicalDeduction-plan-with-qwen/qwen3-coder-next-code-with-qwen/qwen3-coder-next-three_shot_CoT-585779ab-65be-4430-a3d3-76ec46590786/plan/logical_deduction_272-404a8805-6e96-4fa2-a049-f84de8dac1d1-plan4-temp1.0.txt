@@ -1,0 +1,23 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the three fruits as variables: `"apples"`, `"peaches"`, and `"loquats"`.  
+   * Define the domain for price ranking using integers **1, 2, and 3**, where **1 = least expensive (cheapest)** and **3 = most expensive**.  
+   * Add these variables to the problem with their domain.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a distinct price rank.  
+   * Translate "The loquats are less expensive than the apples" → `loquats < apples` (since lower rank = cheaper).  
+   * Translate "The peaches are more expensive than the apples" → `apples < peaches` (since higher rank = more expensive).
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution from the returned list.
+
+5. **Identify the Correct Answer:**  
+   * The question asks for the fruit that is **second-most expensive**, which corresponds to rank **2** (since ranks 1, 2, 3 = cheapest → second → most expensive).  
+   * Create a mapping from choice letters to fruit names: `"A"` → `"apples"`, `"B"` → `"peaches"`, `"C"` → `"loquats"`.  
+   * In the solution dictionary, find which fruit has value (rank) = 2.  
+   * Output the corresponding choice letter.

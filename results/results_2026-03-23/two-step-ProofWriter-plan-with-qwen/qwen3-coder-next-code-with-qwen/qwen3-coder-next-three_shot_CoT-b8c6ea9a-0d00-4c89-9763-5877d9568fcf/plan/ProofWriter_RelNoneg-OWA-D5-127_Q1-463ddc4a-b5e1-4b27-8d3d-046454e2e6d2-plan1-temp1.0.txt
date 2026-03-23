@@ -1,0 +1,19 @@
+1. Identify all entities: bear, cow, rabbit, tiger.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_blue("bear", True), sees("bear", "rabbit", True), needs("cow", "tiger", True), visits("cow", "rabbit", True), etc.).
+3. For each conditional statement in the context:
+   a. Identify antecedent conditions (e.g., “If something is green then it visits the tiger” → condition: is_green(X, True); conclusion: visits(X, "tiger", True)).
+   b. Handle multi-conjunction antecedents (e.g., “If something sees the bear and it is cold then...” → two conditions in `foreach`).
+   c. Use variable X consistently for universal quantification over entities.
+4. Translate each rule into PyKe `foreach` + `assert` blocks:
+   • If something is green → it visits the tiger.
+   • If something sees the bear and it is cold → the bear is green.
+   • If the cow needs the rabbit and the rabbit needs the cow → the rabbit is red.
+   • If something is green → it needs the cow.
+   • If something visits the tiger → the tiger is red.
+   • If something needs the tiger and the tiger sees the cow → the cow needs the bear.
+   • If something sees the bear and it needs the bear → it sees the cow.
+   • If something visits the rabbit → the rabbit needs the tiger.
+   • If something needs the bear and the bear visits the tiger → it sees the bear.
+5. Note: Explicitly encode all constant facts (e.g., is_green("bear", True) from “The bear is green”) — even if seemingly redundant with rules, since facts may be asserted directly.
+6. For the query “The cow visits the rabbit”, check whether it is *explicitly stated* as a fact (it is: “The cow visits the rabbit”) — but verify whether any contradiction or rule could override or make it derivable. Since PyKe reasons *monotonically* (asserted facts remain true unless retracted, and no negation-as-failure), the direct fact should hold.
+7. Final query: Use facts.visits("cow", "rabbit", True).

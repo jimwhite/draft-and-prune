@@ -1,0 +1,18 @@
+1. Enumerate the five solos (positions 1 to 5) and two pianists (Wayne=0, Zara=1). Define Boolean variables `modern[i]` for solo i being modern (True) or traditional (False), and `pianist[i]` for the pianist of solo i.  
+2. Add **domain constraints**:  
+   - `modern[i] ∈ {False, True}` for i=1..5.  
+   - `pianist[i] ∈ {0, 1}` for i=1..5.  
+3. Add **fixed constraint**: Solo 3 is traditional → `modern[3] = False`.  
+4. Add **exactly two consecutive traditional pieces**: There exists exactly one index j ∈ {1,2,3,4} such that `modern[j] == False ∧ modern[j+1] == False`, and all other adjacent pairs are not both traditional.  
+5. Add **fourth solo constraint**: `(pianist[4] == 0 ∧ modern[4] == False) ∨ (pianist[4] == 1 ∧ modern[4] == True)`.  
+6. Add **non-repetition constraint**: The pianist of solo 2 ≠ pianist of solo 5.  
+7. Add **no traditional before Wayne plays modern**: Let `wayne_modern_before[i] = ∨_{k=1}^{i-1} (pianist[k]==0 ∧ modern[k]==True)`. Then for all i, if `modern[i]==False`, then `wayne_modern_before[i]` must be True.  
+8. Add **problem assumption**: Solo 5 is performed by Wayne and is traditional → `pianist[5] == 0 ∧ modern[5] == False`.  
+9. Translate the answer choices into logical assertions:  
+   - A: `pianist[1] == 1` (Zara first)  
+   - B: `pianist[2] == 0` (Wayne second)  
+   - C: `pianist[3] == 1` (Zara third)  
+   - D: `modern[2] == True` (second solo modern)  
+   - E: `modern[4] == False` (fourth solo traditional)  
+10. For each answer choice, clone the base constraints (steps 2–8) plus the assumption (step 8), then add the choice’s assertion. If the resulting formula is SAT, then that choice *could* be true; record it as a valid option.  
+11. Output the list of indices (0-based) corresponding to answer choices that yield SAT models.

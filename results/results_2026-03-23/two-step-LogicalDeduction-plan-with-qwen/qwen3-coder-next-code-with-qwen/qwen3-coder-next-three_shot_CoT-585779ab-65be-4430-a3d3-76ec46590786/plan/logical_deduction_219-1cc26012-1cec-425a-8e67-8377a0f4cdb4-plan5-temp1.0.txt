@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the seven fruits as variables: `"mangoes"`, `"cantaloupes"`, `"apples"`, `"plums"`, `"loquats"`, `"watermelons"`, and `"peaches"`.
+    * Use integer positions from 1 to 7 to represent expense ranking, where **1 = cheapest** and **7 = most expensive**.
+    * Add all fruit variables to the problem with domain {1, 2, 3, 4, 5, 6, 7}.
+
+3.  **Add AllDifferentConstraint:**
+    * Enforce that all fruit positions must be distinct using `AllDifferentConstraint`.
+
+4.  **Translate Statements into Numeric Constraints:**
+    * "The plums are more expensive than the mangoes" → `plums < mangoes` (since lower number = cheaper, so plums must have smaller rank).
+    * "The watermelons are more expensive than the loquats" → `watermelons < loquats`.
+    * "The loquats are the second-cheapest" → `loquats == 2`.
+    * "The plums are less expensive than the peaches" → `peaches < plums`.
+    * "The mangoes are the fourth-most expensive" → `mangoes == 4`.
+    * "The peaches are less expensive than the cantaloupes" → `cantaloupes < peaches`.
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (assuming the problem has a single solution, as stated).
+
+6.  **Identify the Most Expensive Fruit:**
+    * The most expensive fruit corresponds to position 7.
+    * Map the solution to find which fruit has rank 7.
+    * Compare against the choices: match the fruit name to the correct choice letter (A–G).
+    * Output the corresponding choice letter as the answer.

@@ -1,0 +1,33 @@
+1. Enumerate the eight students and assign them integer indices.  
+2. Define Boolean variables for each student-day-time slot indicating whether that student gives a report in that slot: `report[s][d][t]` where s ∈ [0..7], d ∈ {Mon=0, Tue=1, Wed=2}, t ∈ {morning=0, afternoon=1}.  
+3. Add **exactly-6-reports constraint**: sum over all `report[s][d][t]` = 6.  
+4. Add **exactly-2-reports-per-day constraint**: for each day d, sum over s and t of `report[s][d][t]` = 2.  
+5. Add **one-report-per-slot constraint**: for each (d, t), at most one student reports: for all s1 < s2, `report[s1][d][t] → ¬report[s2][d][t]` (enforced via pairwise exclusivity or cardinality ≤ 1).  
+6. Add **Kyle and Lenore do not report**: set `report[kyle][d][t] = false` and `report[lenore][d][t] = false` for all d, t.  
+7. Add **George constraint**: George can only report on Tuesday: for all d ≠ 1, t, `report[george][d][t] = false`.  
+8. Add **Olivia/Robert no-afternoon constraint**: for Olivia and Robert, set `report[student][d][1] = false` for all d.  
+9. Add **Nina conditional constraint**: If Nina reports on day d < 2 (i.e., Mon or Tue), then Helen and Irving must report the next day (d+1) — one in morning, one in afternoon. Formally:  
+   - If `report[nina][0][t]` is true for some t (Mon), then both Helen and Irving must report on Tue: `report[helen][1][0] ∧ report[irving][1][0] ∨ ...` actually must be *both* reports on Tue — i.e., the set of reporters on Tue is exactly {Helen, Irving} (since only 2 reports per day). So:  
+     - `report[nina][0][t] → (report[helen][1][0] ∨ report[helen][1][1]) ∧ (report[irving][1][0] ∨ report[irving][1][1])` AND total reports on Tue = 2 → implies Helen and Irving are the only ones on Tue.  
+   - Similarly for Nina on Tue (d=1): then Helen and Irving must report Wed.  
+   - If Nina reports on Wed, no constraint.  
+   Implement as: for d = 0 or 1, `report[nina][d][t] → ( (∑_{s'} report[s'][d+1][0]) == 2 ∧ {Helen, Irving} ⊆ reporters_on(d+1) )`. Easier: assert that if Nina reports on d < 2, then Helen and Irving both report on d+1 (i.e., `report[nina][d][t] → report[helen][d+1][0] ∨ report[helen][d+1][1]` AND same for Irving), *and* no one else reports on d+1 (but the per-day count =2 and Helen + Irving each reporting at least once forces them to be the two). So:  
+     - For d=0: `report[nina][0][t] → report[helen][1][0] ∨ report[helen][1][1]`  
+     - And same for Irving: `report[nina][0][t] → report[irving][1][0] ∨ report[irving][1][1]`  
+     - Similarly for d=1.  
+   Use implication with disjunctions per slot.  
+10. Define student indices: George=0, Helen=1, Irving=2, Kyle=3, Lenore=4, Nina=5, Olivia=6, Robert=7.  
+11. For each answer choice (a triple: morning_Mon, morning_Tue, morning_Wed), parse the names to student indices.  
+12. For each candidate triple, clone base constraints + Kyle/Lenore omitted + conditions above into a fresh solver.  
+13. Add **fixed-morning-slot constraints**:  
+    - `report[student_idx_Mon][0][0] = true` (Mon morning)  
+    - `report[student_idx_Tue][1][0] = true` (Tue morning)  
+    - `report[student_idx_Wed][2][0] = true` (Wed morning)  
+14. Add **no other report per morning slot**: for each day d, ensure only the assigned student reports that morning:  
+    - For Mon: `report[student_idx_Mon][0][0] = true` and for all s ≠ student_idx_Mon, `¬report[s][0][0]`.  
+    - Same for Tue and Wed mornings.  
+15. The afternoon slots remain unconstrained beyond global constraints (≤2 per day, no repeats, etc.).  
+16. If model is SAT, the triple is possible; collect valid indices.  
+17. Since only one choice will be possible, but the plan must identify all valid ones (though question asks "could be", so 0 or more are valid; final answer is the list of indices of possible choices).  
+18. Append index (0 to 4) of each satisfiable choice to `answer_index_list`.  
+19. Print `answer_index_list`.

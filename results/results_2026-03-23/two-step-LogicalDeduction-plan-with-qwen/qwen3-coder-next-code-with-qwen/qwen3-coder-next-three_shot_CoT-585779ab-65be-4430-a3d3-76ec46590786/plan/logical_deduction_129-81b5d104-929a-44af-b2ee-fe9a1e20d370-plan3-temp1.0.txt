@@ -1,0 +1,46 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven fruits as variables: `"kiwis"`, `"loquats"`, `"pears"`, `"peaches"`, `"mangoes"`, `"plums"`, and `"apples"`.  
+   * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit (consistent with standard ranking conventions where lower = less expensive).  
+   * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3. **Formulate Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+   * Translate each statement into a constraint using `addConstraint()` with lambda functions:  
+        - "The loquats are the fourth-most expensive" → `loquats == 4` (since 1=cheapest, 4=4th-cheapest = 4th-most expensive).  
+        - "The peaches are less expensive than the mangoes" → `peaches < mangoes` (lower rank = cheaper).  
+        - "The apples are more expensive than the pears" → `apples < pears` (more expensive = lower rank).  
+        - "The peaches are the second-most expensive" → `peaches == 2` (2nd-cheapest = 6th-most expensive? Wait—no: re-interpret carefully!)  
+          **Critical correction:** The phrase "second-most expensive" means second-highest price → in ascending rank (1=cheapest, 7=most expensive), this is position **6** (since 7=1st-most-expensive? No: standard mapping is:  
+          *most expensive* = highest price = **7**, *second-most expensive* = **6*, *third-most expensive* = **5**, etc.  
+          So:  
+          - 1st-most-expensive → rank 7  
+          - 2nd-most-expensive → rank 6  
+          - 4th-most-expensive → rank 4? Wait: total 7 items → ranks 1 to 7 (1=cheapest, 7=most expensive)  
+          Then:  
+            - 1st-most-expensive = rank 7  
+            - 2nd-most-expensive = rank 6  
+            - 3rd-most-expensive = rank 5  
+            - 4th-most-expensive = rank 4  
+          Yes! So:  
+          - loquats = 4 (since "fourth-most expensive" → rank 4)  
+          - peaches = 6 (since "second-most expensive" → rank 6)  
+        * "The plums are the cheapest" → `plums == 1`  
+        * "The pears are more expensive than the kiwis" → `pears < kiwis` (more expensive = lower rank)  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the solution (the problem is deterministic, so there will be one unique solution satisfying all constraints).
+
+5. **Verify and Match Against Choices:**  
+   * The question is: "Which of the following is true?" → specifically asking which fruit is **the cheapest** (rank 1).  
+   * The choices are labeled A–G, with F) "The plums are the cheapest" explicitly present.  
+   * From constraint "plums == 1", plums are forced to be rank 1 → cheapest.  
+   * Therefore, regardless of solving, choice **F** is directly supported by the constraint.  
+   * However, as per plan: proceed to retrieve the solution to confirm consistency and identify which fruit has rank 1.  
+   * Map choice letters to fruits:  
+        A → "kiwis", B → "loquats", C → "pears", D → "peaches", E → "mangoes", F → "plums", G → "apples".  
+   * Find the fruit with rank 1 in the solution, and return its corresponding letter.

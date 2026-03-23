@@ -1,0 +1,10 @@
+1. Enumerate the five solos (positions 1–5) and create two Boolean variables per solo: `pianist[i]` (True for Wayne, False for Zara) and `type[i]` (True for modern, False for traditional), for i in 1..5.  
+2. Add **fixed constraint**: third solo is traditional → `type[3] = False`.  
+3. Add **exactly two consecutive trad's**: There exists exactly one index i ∈ {1,2,3,4} such that `type[i] == type[i+1] == False`, and no other adjacent pair is both traditional (i.e., for all j ≠ i, not (type[j] == type[j+1] == False)).  
+4. Add **fourth solo constraint**: `pianist[4] == True and type[4] == False` OR `pianist[4] == False and type[4] == True`.  
+5. Add **non-consecutive constraint**: `pianist[2] != pianist[5]`.  
+6. Add **no trad before Wayne modern**: If any solo before the first Wayne modern is traditional, it’s invalid. Formally: Let `first_wayne_modern` be the earliest i where `pianist[i] == True and type[i] == True`. Then for all j < i, `type[j] == True` (i.e., no traditional before that point). Enforce via implication: For all j, if `type[j] == False`, then there exists k < j such that `pianist[k] == True and type[k] == True`.  
+7. Add the **question assumption**: Fifth solo is Wayne and traditional → `pianist[5] == True` and `type[5] == False`.  
+8. For each answer choice, create a fresh solver with base constraints + assumption, and add the specific condition from the choice (e.g., `pianist[1] == False` for “Zara performs the first solo”).  
+9. If the resulting formula is SAT, then that choice **could be true**; collect its index into `answer_index_list`.  
+10. Print the list of indices for which SAT is returned.

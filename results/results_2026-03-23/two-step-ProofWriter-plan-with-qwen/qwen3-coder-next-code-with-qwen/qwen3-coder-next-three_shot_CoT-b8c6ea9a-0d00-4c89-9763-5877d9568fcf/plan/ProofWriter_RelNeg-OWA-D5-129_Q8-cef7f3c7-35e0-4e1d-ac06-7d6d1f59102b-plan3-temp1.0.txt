@@ -1,0 +1,18 @@
+1. Identify all entities: lion, mouse, rabbit, squirrel.
+2. Encode all explicitly stated positive and negative facts using ternary predicates with True/False objects:
+   - is_cold("lion", True), needs("lion", "mouse", False), visits("lion", "squirrel", True)
+   - is_cold("mouse", True), visits("mouse", "squirrel", False)
+   - is_cold("rabbit", True), is_rough("rabbit", True), needs("rabbit", "lion", False), visits("rabbit", "squirrel", False)
+   - is_kind("squirrel", True), needs("squirrel", "mouse", True), needs("squirrel", "rabbit", True), sees("squirrel", "lion", False), sees("squirrel", "rabbit", False)
+3. Translate each conditional rule (with universal quantification over the subject) into PyKe rules using `foreach` blocks:
+   • needs(X, "rabbit", True) ∧ sees("rabbit", "mouse", True) → sees("mouse", "lion", False)
+   • is_rough(X, True) → visits(X, "mouse", True)
+   • needs(X, "rabbit", True) ∧ visits(X, "mouse", True) → needs("mouse", "rabbit", True)
+   • needs(X, "rabbit", True) ∧ is_cold("rabbit", True) → is_rough(X, True)
+   • needs(X, "rabbit", True) → needs("rabbit", "squirrel", True)
+   • sees("squirrel", "lion", True) ∧ ¬is_green("squirrel", True) → needs("lion", "squirrel", True)
+   • is_big(X, True) → visits(X, "lion", True)
+   • visits(X, "squirrel", True) ∧ sees("squirrel", "lion", True) → ¬is_kind("lion", True)
+4. For negated conclusions in rules (e.g., “does not see”, “does not need”), encode them directly as predicate(subject, object, False).
+5. The query asks whether the mouse does not need the rabbit:
+   → Use facts.needs("mouse", "rabbit", False)

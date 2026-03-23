@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"black"`, `"orange"`, `"yellow"`, `"white"`, `"blue"`, `"red"`, and `"green"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a constraint using lambda functions:  
+     - *"The red book is to the right of the yellow book"* → `yellow < red`  
+     - *"The white book is the second from the right"* → `white == 6` (since position 7 is rightmost, so second from right is 6)  
+     - *"The red book is to the left of the green book"* → `red < green`  
+     - *"The blue book is to the right of the black book"* → `black < blue`  
+     - *"The black book is the third from the right"* → `black == 5` (positions: 7=rightmost, 6=2nd rightmost, 5=3rd rightmost)  
+     - *"The orange book is the leftmost"* → `orange == 1`  
+
+4. **Solve for Valid Arrangement(s):**  
+   * Call `getSolutions()` to enumerate all solutions satisfying all constraints.  
+   * Since the problem is deterministic, there should be exactly one solution; extract it (e.g., `solutions[0]`).
+
+5. **Identify the Rightmost Book and Match to Choices:**  
+   * The rightmost position is 7. Locate which book has value `7` in the solution dictionary.  
+   * Create a mapping from choice letters to book names:  
+     - `'A' → 'black'`, `'B' → 'orange'`, `'C' → 'yellow'`,  
+       `'D' → 'white'`, `'E' → 'blue'`, `'F' → 'red'`, `'G' → 'green'`  
+   * Iterate through the choices: for each choice letter, check if its mapped book’s position in the solution equals 7.  
+   * Return the first (and only) matching choice letter as the answer.

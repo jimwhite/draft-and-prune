@@ -1,0 +1,29 @@
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class.
+
+2.  **Define Variables and Domain:**
+    * List the seven books as variables: `"brown"`, `"white"`, `"black"`, `"yellow"`, `"orange"`, `"blue"`, and `"green"`.
+    * Define the domain as integers from 1 to 7, where 1 = leftmost and 7 = rightmost.
+    * Add all variables with this domain to the `Problem` instance.
+
+3.  **Add Constraints from the Problem Statement:**
+    * Add an `AllDifferentConstraint` to enforce uniqueness of positions.
+    * Translate each statement into a constraint:
+        * "The yellow book is the rightmost" → `yellow == 7`.
+        * "The blue book is to the left of the orange book" → `blue < orange`.
+        * "The green book is to the right of the white book" → `white < green`.
+        * "The blue book is to the right of the green book" → `green < blue`.
+        * "The black book is the fourth from the left" → `black == 4`.
+        * "The brown book is the third from the right" → Since there are 7 positions, third from the right = position 5 (because 7 - 3 + 1 = 5), so `brown == 5`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to obtain all valid assignments.
+    * Extract the single solution (the problem has a unique configuration).
+
+5.  **Determine the Second-from-the-Right Position:**
+    * Identify position 6 as "second from the right" (since position 7 is rightmost, and 6 is immediately to its left).
+    * Create a mapping from choice letters (A–G) to book names:
+        A→"brown", B→"white", C→"black", D→"yellow", E→"orange", F→"blue", G→"green".
+    * In the solution dictionary, find which book has value 6.
+    * Return the choice letter corresponding to that book.

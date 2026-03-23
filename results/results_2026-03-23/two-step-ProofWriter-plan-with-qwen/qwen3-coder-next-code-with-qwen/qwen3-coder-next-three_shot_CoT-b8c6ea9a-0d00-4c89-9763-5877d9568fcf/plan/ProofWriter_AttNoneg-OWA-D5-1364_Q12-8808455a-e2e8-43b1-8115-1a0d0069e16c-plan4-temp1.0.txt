@@ -1,0 +1,14 @@
+1. Identify all individuals: Charlie, Erin, Fiona, Harry.  
+2. Encode all explicitly stated properties for each individual using ternary predicates (e.g., is_big("Charlie", True), is_cold("Charlie", True), ..., is_kind("Erin", True), etc.).  
+3. Translate all universal conditional rules into PyKe rules using `foreach` blocks and `assert` conclusions:  
+   • Kind things are big. → foreach (is_kind(X, True)) assert is_big(X, True)  
+   • All kind, smart things are rough. → foreach (is_kind(X, True), is_smart(X, True)) assert is_rough(X, True)  
+   • If something is red and quiet then it is big. → foreach (is_red(X, True), is_quiet(X, True)) assert is_big(X, True)  
+   • All red things are cold. → foreach (is_red(X, True)) assert is_cold(X, True)  
+   • All cold, quiet things are smart. → foreach (is_cold(X, True), is_quiet(X, True)) assert is_smart(X, True)  
+   • If something is big and smart then it is cold. → foreach (is_big(X, True), is_smart(X, True)) assert is_cold(X, True)  
+   • All quiet things are cold. → foreach (is_quiet(X, True)) assert is_cold(X, True)  
+   • Kind, big things are red. → foreach (is_kind(X, True), is_big(X, True)) assert is_red(X, True)  
+   • All cold, smart things are kind. → foreach (is_cold(X, True), is_smart(X, True)) assert is_kind(X, True)  
+4. Note: Since some rules may be circular or require chaining, ensure forward-chaining inference explores all derivable facts.  
+5. The query checks whether Fiona is *not* red: → Use facts.is_red("Fiona", False)

@@ -1,0 +1,14 @@
+1. Identify all entities involved: bear, cow, rabbit, tiger.
+2. Encode all explicitly stated facts using ternary predicates (e.g., is_blue("bear", True), sees("rabbit", "cow", True), needs("tiger", "bear", True), etc.).
+3. Translate each conditional rule in the context into a PyKe `foreach` + `assert` structure:
+   - If something is green → it visits the tiger.
+   - If something sees the bear and is cold → the bear is green.
+   - If cow needs rabbit AND rabbit needs cow → rabbit is red.
+   - If something is green → it needs the cow.
+   - If something visits the tiger → the tiger is red.
+   - If something needs the tiger AND tiger sees cow → cow needs bear.
+   - If something sees the bear AND needs the bear → it sees the cow.
+   - If something visits the rabbit → the rabbit needs the tiger.
+   - If something needs the bear AND bear visits the tiger → it sees the bear.
+4. For each rule, use `foreach` to match the antecedent conditions (with appropriate variable bindings), and an `assert` clause for the consequent.
+5. The query checks whether the cow visits the rabbit: use facts.visits("cow", "rabbit", True).

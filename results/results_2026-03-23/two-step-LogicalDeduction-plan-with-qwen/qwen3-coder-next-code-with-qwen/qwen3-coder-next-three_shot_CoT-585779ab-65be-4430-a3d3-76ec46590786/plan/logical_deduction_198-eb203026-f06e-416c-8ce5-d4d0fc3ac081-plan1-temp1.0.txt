@@ -1,0 +1,35 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * List the seven golfers as variables: `"Joe"`, `"Eli"`, `"Ada"`, `"Mel"`, `"Eve"`, `"Rob"`, `"Ana"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (best)** and **7 = last place (worst)**.
+    * Add all variables with domain {1, 2, ..., 7} to the problem.
+
+3.  **Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique finishing position.
+    * Add the following constraints using `addConstraint` with lambda functions:
+        - "Joe finished first" → Joe's position = 1.
+        - "Mel finished second-to-last" → Mel's position = 6 (since last is 7).
+        - "Rob finished above Eve" → Rob's position < Eve's position (lower number = better rank).
+        - "Mel finished above Eli" → Mel's position < Eli's position.
+        - "Rob finished below Ada" → Rob's position > Ada's position (lower number = better rank, so "below" means higher number).
+        - "Eve finished fourth" → Eve's position = 4.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Since the problem is well-constrained, expect a unique solution; retrieve it from the list.
+
+5.  **Identify the Correct Choice:**
+    * The question asks which golfer finished fourth (i.e., position = 4).
+    * From the solved solution, find which golfer has position value 4.
+    * Map that golfer to the corresponding choice letter:  
+        A) Joe → if Joe == 4  
+        B) Eli → if Eli == 4  
+        C) Ada → if Ada == 4  
+        D) Mel → if Mel == 4  
+        E) Eve → if Eve == 4  
+        F) Rob → if Rob == 4  
+        G) Ana → if Ana == 4
+    * Output the matching choice letter (e.g., print "E", since the problem states Eve finished fourth, and choice E confirms it).

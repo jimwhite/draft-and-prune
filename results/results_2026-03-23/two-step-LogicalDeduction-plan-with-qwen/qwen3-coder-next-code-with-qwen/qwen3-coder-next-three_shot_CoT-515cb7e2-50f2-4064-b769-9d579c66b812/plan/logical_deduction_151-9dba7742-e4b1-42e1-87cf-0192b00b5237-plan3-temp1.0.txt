@@ -1,0 +1,41 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into constraints using lambda functions:  
+        - "The oranges are more expensive than the peaches" → `oranges < peaches` (since smaller rank = cheaper, so higher price means larger rank value: actually, wait—correction needed!)  
+          *Clarification:* If 1 = cheapest and 7 = most expensive, then "more expensive" corresponds to a *larger* rank number. So "oranges are more expensive than peaches" means `oranges_rank > peaches_rank`.  
+        - "The cantaloupes are the fourth-most expensive" → `cantaloupes = 4`.  
+        - "The pears are less expensive than the cantaloupes" → `pears > cantaloupes` (since less expensive = smaller rank number? No—wait: if 1 is cheapest, then "less expensive" means *smaller* rank number. So pears less expensive than cantaloupes → `pears < 4`).  
+          *Let’s re-express precisely:*  
+          Let rank = position in price order from cheapest (1) to most expensive (7).  
+          So:  
+            - lower rank number = cheaper  
+            - higher rank number = more expensive  
+          Therefore:  
+            * "more expensive than" → higher rank value  
+            * "less expensive than" → lower rank value  
+          So:  
+            - oranges more expensive than peaches ⇒ `oranges > peaches`  
+            - pears less expensive than cantaloupes ⇒ `pears < cantaloupes`  
+        - "The peaches are the second-most expensive" ⇒ `peaches = 6` (since most expensive is 7, second-most is 6).  
+        - "The mangoes are the cheapest" ⇒ `mangoes = 1`.  
+        - "The kiwis are the third-cheapest" ⇒ `kiwis = 3`.
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (as the constraints should yield exactly one assignment).
+
+5. **Determine the Correct Answer:**  
+   * Identify which fruit has rank 6 (second-most expensive, since 7 = most expensive).  
+   * Map the answer choices to fruit names:  
+        A) watermelons, B) mangoes, C) kiwis, D) pears, E) cantaloupes, F) oranges, G) peaches  
+   * Check in the solution dictionary which fruit has value 6.  
+   * Return the corresponding choice letter (e.g., if peaches = 6, then answer is G).

@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Domain:**  
+   * Set the variables as the five vehicles: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+   * Define the domain for each variable as integers 1 through 5, where **1 = oldest**, **5 = newest** (consistent with previous antique car show problems and age-rank logic).  
+   * Add all variables and their domain (1–5) to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique age ranks for all vehicles.  
+   * Translate each statement into a constraint using `lambda` functions:  
+        - "The tractor is newer than the minivan" → `tractor > minivan`  
+        - "The tractor is older than the limousine" → `tractor < limousine`  
+        - "The convertible is older than the sedan" → `convertible < sedan`  
+        - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4)  
+
+4. **Solve for Valid Arrangements:**  
+   * Use `getSolutions()` to compute all satisfying assignments.  
+   * Extract the unique solution (the problem is well-constrained and should yield one solution).
+
+5. **Verify Against the Choices:**  
+   * Note: The question asks "Which of the following is true?" and the first choice is *"The convertible is the second-newest."*, which directly matches the given statement.  
+   * Since this fact is explicitly stated in the problem and enshrined as a constraint (`convertible == 4`), it must be true in all solutions.  
+   * Therefore, regardless of other constraints, choice A is guaranteed correct without needing to compute full positions.  
+   * Confirm by checking that the computed solution satisfies `convertible == 4` and no contradictions exist, then select "A".

@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the five fruits: `"peaches"`, `"watermelons"`, `"pears"`, `"apples"`, and `"cantaloupes"`.  
+    * Assign a numerical domain from 1 to 5, where **1 represents the cheapest** and **5 represents the most expensive**, as price ranking typically increases with cost.  
+    * Add all variables and their domain (1–5) to the `Problem` instance.
+
+3.  **Translate Statements into Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Convert each statement to a constraint using `addConstraint` with appropriate lambda functions or direct value constraints:  
+        * "The watermelons are the second-cheapest" → `watermelons == 2`  
+        * "The apples are the cheapest" → `apples == 1`  
+        * "The peaches are the most expensive" → `peaches == 5`  
+        * "The pears are less expensive than the cantaloupes" → `pears < cantaloupes`  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments.  
+    * Since the problem is deterministic and consistent, extract the single solution (or first solution if multiple exist — though uniqueness is implied by the setup).  
+
+5.  **Verify the Answer Against the Choices:**  
+    * Note that choice A states: "The peaches are the most expensive." This is explicitly given as a premise.  
+    * Although the solver will confirm `peaches == 5`, no further calculation is needed: the statement itself is guaranteed true by the problem's premises, and all constraints are consistent with it.  
+    * Therefore, without needing to explicitly compare other options, conclude that **A is true**.  
+    * (If verification via solution was required: inspect the solved `peaches` value and confirm it equals 5, matching choice A.)

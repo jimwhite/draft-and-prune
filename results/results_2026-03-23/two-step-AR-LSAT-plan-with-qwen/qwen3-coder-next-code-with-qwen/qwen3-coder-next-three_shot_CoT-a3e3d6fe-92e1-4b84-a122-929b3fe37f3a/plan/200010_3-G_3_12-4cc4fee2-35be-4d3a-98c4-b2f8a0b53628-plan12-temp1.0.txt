@@ -1,0 +1,16 @@
+1. Enumerate the eight compositions (F, H, L, O, P, R, S, T) and assign each an integer index (0–7).  
+2. Create integer position variables `pos[comp]` for each composition, ranging from 0 to 7 (representing positions 1–8).  
+3. Add **distinctness constraint**: all `pos[comp]` must be pairwise distinct (a permutation of 0–7).  
+4. Translate each condition into constraints:  
+   a. **T adjacency condition**: (T immediately before F) OR (T immediately after R).  
+      - `(pos[T] == pos[F] - 1)` OR `(pos[T] == pos[R] + 1)`.  
+   b. **At least two between F and R**: `|pos[F] - pos[R]| >= 3`.  
+   c. **O first or fifth**: `pos[O] == 0` OR `pos[O] == 4`.  
+   d. **Eighth is L or H**: `pos[L] == 7` OR `pos[H] == 7`.  
+   e. **P before S**: `pos[P] < pos[S]`.  
+   f. **At least one between O and S**: `|pos[O] - pos[S]| >= 2`.  
+5. For each answer choice (list of 8 compositions in order):  
+   a. Parse the sequence into candidate positions: index i → composition at position i+1 (so pos[comp] = i).  
+   b. Build a fresh solver, add all base constraints (Step 3–4), AND assert the specific positions implied by this choice.  
+   c. Check satisfiability: if SAT, the sequence is valid; record the index of this choice as possible.  
+6. Return the 0-based index (or print directly) of the *only* choice that yields SAT.

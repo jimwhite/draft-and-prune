@@ -1,0 +1,25 @@
+1. Identify all entities: Anne, Bob, Erin, Fiona.
+2. Encode all explicitly stated facts as facts predicates with boolean objects for properties and entity objects for relations (though only unary properties are present, no binary relations in this problem).
+   - is_round("Anne", True)
+   - is_red("Bob", True), is_smart("Bob", True)
+   - is_furry("Erin", True), is_red("Erin", True), is_rough("Erin", True), is_smart("Erin", True)
+   - is_big("Fiona", True), is_furry("Fiona", True), is_smart("Fiona", True)
+3. Translate all universal conditionals into rules using `foreach` and `assert`:
+   • All smart things are furry.
+   • All furry things are red.
+   • All round things are rough.
+   • If Bob is white then Bob is furry. (Note: “is_white” must be introduced as a new predicate; this rule only fires if is_white("Bob", True) is assumed or derived.)
+   • All red, rough things are big.
+   • All rough things are smart.
+   • If Fiona is furry then Fiona is red.
+   • If Bob is round and big then Bob is furry.
+   • If Fiona is red and white then Fiona is smart. (Note: again requires “is_white”.)
+4. Note that no explicit fact about white is given, and none of the rules *generate* is_white for any entity unless assumed. The query concerns whether Bob is NOT white, i.e., is_white("Bob", False).
+5. Since the system cannot assume negation by default and PyKe is positive-reasoning (only asserting what follows from facts + rules), the only way to conclude is_white("Bob", False) would be if assuming is_white("Bob", True) leads to contradiction. However:
+   - If Bob were white, then by rule “If Bob is white then Bob is furry” → is_furry("Bob", True)
+   - From facts, Bob is red and smart (so furry by “smart → furry” already), so no contradiction yet.
+   - No rule forces is_white("Bob", True) to be false.
+6. The query must test whether facts.is_white("Bob", False) can be derived. Since no path yields that, the answer would be “unknown” — but the *plan* must focus only on constraint encoding.
+7. Encode rules as `foreach` blocks with matching conditions and `assert` consequences, ensuring all quantified statements use variables (e.g., ?x).
+8. Use the fact database to include all ground facts.
+9. The query: `facts.is_white("Bob", False)` — but the plan does not evaluate, only constructs encoding steps.

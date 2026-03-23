@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven vehicles as string variables: `"limousine"`, `"convertible"`, `"station_wagon"`, `"minivan"`, `"bus"`, `"tractor"`, and `"truck"`.  
+   * Define the domain as integers from **1 to 7**, where **1 = oldest** and **7 = newest** (consistent with age ranking used in prior antique car problems).  
+   * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique ages (positions) for each vehicle.  
+   * Translate each statement into a constraint using `lambda` functions:  
+     - "The minivan is the oldest" → `minivan == 1`  
+     - "The truck is older than the station wagon" → `truck < station_wagon`  
+     - "The truck is newer than the limousine" → `truck > limousine`  
+     - "The bus is newer than the convertible" → `bus > convertible`  
+     - "The bus is older than the tractor" → `bus < tractor`  
+     - "The limousine is newer than the tractor" → `limousine > tractor`  
+
+4. **Solve the Problem:**  
+   * Use `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Since the problem is deterministic and consistent, there will be exactly one solution; extract it.
+
+5. **Determine the Correct Choice:**  
+   * The question asks which vehicle is the **third-newest**. In our system (1=oldest, 7=newest), the third-newest corresponds to position **5** (since: 7=newest, 6=2nd-newest, **5=3rd-newest**).  
+   * Create a mapping from choice letters ("A" to "G") to their respective vehicle names:  
+     - `"A"` → `"limousine"`, `"B"` → `"convertible"`, `"C"` → `"station_wagon"`, `"D"` → `"minivan"`, `"E"` → `"bus"`, `"F"` → `"tractor"`, `"G"` → `"truck"`  
+   * In the solved solution dictionary, find which vehicle has position value **5**.  
+   * Return the corresponding choice letter (e.g., if `"bus"` has value 5, return `"E"`).

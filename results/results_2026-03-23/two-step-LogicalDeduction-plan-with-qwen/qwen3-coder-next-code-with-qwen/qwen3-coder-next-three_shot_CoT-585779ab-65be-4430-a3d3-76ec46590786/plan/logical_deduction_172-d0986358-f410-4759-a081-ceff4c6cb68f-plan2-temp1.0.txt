@@ -1,0 +1,39 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven vehicles as variables: `"limousine"`, `"convertible"`, `"station_wagon"`, `"minivan"`, `"bus"`, `"tractor"`, and `"truck"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the oldest** and **7 represents the newest** vehicle.
+    * Add all seven variables with this domain to the `Problem` instance.
+
+3.  **Add AllDifferentConstraint:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+
+4.  **Translate Each Statement into Formal Constraints:**
+    * "The minivan is the oldest" → `minivan == 1`
+    * "The truck is older than the station wagon" → `truck < station_wagon`
+    * "The truck is newer than the limousine" → `truck > limousine`
+    * "The bus is newer than the convertible" → `bus > convertible`
+    * "The bus is older than the tractor" → `bus < tractor`
+    * "The limousine is newer than the tractor" → `limousine > tractor`
+
+5.  **Solve the Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks satisfying the constraints.
+    * Extract the unique solution (since the problem is deterministic) from the list of solutions.
+
+6.  **Interpret "third-newest" Using the Ranking System:**
+    * Since 7 is newest, 6 is second-newest, and **5 is third-newest**.
+    * Therefore, identify the vehicle whose rank in the solution is exactly 5.
+
+7.  **Map Result to Answer Choice:**
+    * Create a dictionary mapping choice letters (A–G) to corresponding vehicle names:
+        - A: "limousine"
+        - B: "convertible"
+        - C: "station_wagon"
+        - D: "minivan"
+        - E: "bus"
+        - F: "tractor"
+        - G: "truck"
+    * Find which vehicle has rank 5 in the solution.
+    * Return (output) the choice letter associated with that vehicle.

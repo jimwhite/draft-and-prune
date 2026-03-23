@@ -1,0 +1,23 @@
+1. Enumerate the three kitten breeds (Himalayan, Manx, Siamese) and three puppy breeds (Greyhound, Newfoundland, Rottweiler), assigning integer codes to each.  
+2. Create integer variables `kitten_day[d]` and `puppy_day[d]` for each day `d ∈ {1,...,7}`, where each takes values in `{0,1,2}` representing kitten and puppy breeds respectively.  
+3. Add **domain constraints**: `kitten_day[d] ∈ {0,1,2}` and `puppy_day[d] ∈ {0,1,2}` for all `d`.  
+4. Add **exactly-one-per-day constraint**: no implicit per-day duplicate breeds since only one kitten and one puppy breed are featured daily — already ensured by separate variables.  
+5. Add **fixed constraints**:  
+    - Greyhounds on day 1: `puppy_day[1] = Greyhound_index`.  
+6. Add **no-consecutive-same-breed constraints**: for each `d` from 1 to 6,  
+    - `kitten_day[d] ≠ kitten_day[d+1]` and `puppy_day[d] ≠ puppy_day[d+1]`.  
+7. Add **day-1-not-day-7 constraint**: `kitten_day[1] ≠ kitten_day[7]` and `puppy_day[1] ≠ puppy_day[7]`.  
+8. Add **Himalayan constraints**:  
+    - Himalayans not on day 1: `kitten_day[1] ≠ Himalayan_index`.  
+    - Himalayans not on day 7 (given in conditional): `kitten_day[7] ≠ Himalayan_index`.  
+    - Exactly three days feature Himalayans: enforce `count({d | kitten_day[d] == Himalayan_index}) == 3`.  
+9. Add **Rottweiler constraints**:  
+    - Not on day 7: `puppy_day[7] ≠ Rottweiler_index`.  
+    - Not on any day with Himalayans: for all `d`, if `kitten_day[d] == Himalayan_index` then `puppy_day[d] ≠ Rottweiler_index`.  
+10. Translate each answer choice (e.g., "day 1 and day 3") into pairs `(d1, d2)`.  
+11. For each pair `(d1, d2)` in the choices:  
+    - Clone base constraints into fresh solver.  
+    - Add constraint that days `d1` and `d2` have identical breeds: `kitten_day[d1] == kitten_day[d2]` AND `puppy_day[d1] == puppy_day[d2]`.  
+    - Check satisfiability.  
+    - If UNSAT, then this pair **cannot** be identical; add its index (0-based in choices list) to `answer_index_list`.  
+12. Print `answer_index_list`.

@@ -1,0 +1,21 @@
+1. Enumerate the six available students and assign integer indices.  
+2. Enumerate the four target years (1921–1924) and assign integer indices: 0 → 1921, 1 → 1922, 2 → 1923, 3 → 1924.  
+3. Create integer variables `assign[s]` for each student s ∈ {Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio}, indicating the year index they are assigned to (or a special value like −1 if unassigned).  
+4. Add **exactly-four-assignment constraint**: exactly four students are assigned (i.e., have `assign[s] != -1`) and each of the four years is assigned to exactly one student.  
+5. Add **year uniqueness constraint**: for assigned students, their year indices are pairwise distinct.  
+6. Add **1923 constraint**: only Louis or Tiffany can be assigned to 1923 → if `assign[s] == 2`, then s must be Louis or Tiffany.  
+7. Add **Mollie constraint**: if Mollie is assigned, then she must be in 1921 or 1922 → `assign[Mollie] != -1` ⇒ `assign[Mollie] ∈ {0, 1}`.  
+8. Add **Tiffany ⇒ Ryan constraint**: if Tiffany is assigned, then Ryan must be assigned → `assign[Tiffany] != -1` ⇒ `assign[Ryan] != -1`.  
+9. Add **Ryan ⇒ Onyx- prior constraint**: if Ryan is assigned, then Onyx must be assigned and `assign[Onyx] == assign[Ryan] - 1`.  
+10. Add **given assumption constraint**: Ryan and Yoshio are both assigned → `assign[Ryan] != -1` ∧ `assign[Yoshio] != -1`.  
+11. For each answer choice, construct a constraint:  
+    - A: Louis is assigned to 1923 → `assign[Louis] == 2`  
+    - B: Mollie is assigned to 1921 → `assign[Mollie] == 0`  
+    - C: Onyx is assigned to 1922 → `assign[Onyx] == 1`  
+    - D: Tiffany is assigned to 1924 → `assign[Tiffany] == 3`  
+    - E: Yoshio is assigned to 1922 → `assign[Yoshio] == 1`  
+12. Define an answer index list `answer_index_list = []`. For each choice A–E:  
+    - Clone the base + assumption constraints into a fresh solver.  
+    - Add the choice-specific constraint.  
+    - If the model is SAT, append its index (0 for A, 1 for B, ..., 4 for E) to `answer_index_list`.  
+13. Print the answer index list (which should contain indices of *possible* statements).

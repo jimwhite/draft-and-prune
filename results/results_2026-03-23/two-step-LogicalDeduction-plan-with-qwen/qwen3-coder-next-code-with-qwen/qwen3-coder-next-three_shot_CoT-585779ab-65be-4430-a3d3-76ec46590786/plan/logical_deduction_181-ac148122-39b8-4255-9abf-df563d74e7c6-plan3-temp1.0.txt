@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven books as variables: `"orange"`, `"red"`, `"brown"`, `"blue"`, `"black"`, `"gray"`, and `"white"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost**, **7 = rightmost**.
+    * Add all variables with domain {1,2,3,4,5,6,7} to the problem.
+
+3.  **Add Constraints Based on Statements:**
+    * Add `AllDifferentConstraint()` to ensure each book occupies a unique position.
+    * Translate each statement into constraints:
+        - "The white book is the leftmost" → `white == 1`
+        - "The orange book is the second from the right" → `orange == 6` (since position 7 is rightmost)
+        - "The black book is the rightmost" → `black == 7`
+        - "The gray book is the fourth from the left" → `gray == 4`
+        - "The red book is to the right of the blue book" → `blue < red`
+        - "The gray book is to the right of the red book" → `red < gray`
+
+4.  **Solve the Problem:**
+    * Use `getSolutions()` to find all valid assignments.
+    * Since the problem is well-constrained, expect a unique solution; extract it.
+
+5.  **Identify the Correct Answer:**
+    * The question asks which book is second from the left, i.e., position 2.
+    * Create a mapping from choice letters (A–G) to book names:  
+      A→"orange", B→"red", C→"brown", D→"blue", E→"black", F→"gray", G→"white".
+    * For each choice, check if the corresponding book's position in the solution equals 2.
+    * Return the letter of the first (and only) matching choice.

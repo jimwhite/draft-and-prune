@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven birds as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"blue jay"`, `"crow"`, `"cardinal"`, and `"quail"`.  
+    * Define the domain for positions as integers from 1 to 7, where **1 = leftmost**, and **7 = rightmost**.  
+    * Add all seven birds as variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+    * Translate each statement into a constraint:  
+        - "The hummingbird is to the left of the crow" → `hummingbird < crow`  
+        - "The cardinal is to the right of the quail" → `quail < cardinal`  
+        - "The blue jay is the fourth from the left" → `blue_jay == 4`  
+        - "The robin is the second from the left" → `robin == 2`  
+        - "The quail is to the right of the crow" → `crow < quail`  
+        - "The raven is to the left of the robin" → `raven < robin` (and since robin == 2, raven must be in position 1)
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments.  
+    * Since the problem is deterministic, extract the single solution (or first solution) from the returned list.
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which bird is the **third from the left**, i.e., at position 3.  
+    * Create a mapping from choice letters to bird names: `{'A': 'robin', 'B': 'hummingbird', 'C': 'raven', 'D': 'blue jay', 'E': 'crow', 'F': 'cardinal', 'G': 'quail'}`  
+    * Iterate through the choices; for each choice, check if the corresponding bird’s position in the solution equals 3.  
+    * Return the letter of the first (and only) matching choice as the final answer.

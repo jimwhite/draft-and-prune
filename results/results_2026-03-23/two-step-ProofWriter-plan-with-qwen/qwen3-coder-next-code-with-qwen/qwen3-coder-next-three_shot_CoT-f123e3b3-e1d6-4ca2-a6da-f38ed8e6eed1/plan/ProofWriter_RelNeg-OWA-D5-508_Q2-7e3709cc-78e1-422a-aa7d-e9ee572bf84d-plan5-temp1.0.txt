@@ -1,0 +1,22 @@
+1. Identify all entities: bald_eagle, cat, cow, squirrel.
+2. Encode all explicitly stated facts as ternary predicates:  
+   - is_big("bald_eagle", True)  
+   - is_cold("bald_eagle", True)  
+   - is_young("bald_eagle", True)  
+   - is_kind("cat", False)  
+   - is_red("cow", True)  
+   - likes("cow", "bald_eagle", True)  
+   - visits("squirrel", "bald_eagle", True)
+3. Translate each conditional rule into PyKe rules using `foreach` conditions and `assert` conclusions:  
+   • If X likes the cow → the cow likes the squirrel.  
+   • All big things are cold → if X is big then X is cold.  
+   • If the squirrel is red → the squirrel is young.  
+   • If X likes the squirrel → the squirrel is red.  
+   • If X is young → X likes the cow.  
+   • If squirrel likes cat AND NOT chase("cow","squirrel",True) → cat likes cow.  
+   • If X visits the squirrel AND squirrel is big → NOT likes(X, "squirrel", True).  
+   • If X is big → X visits the cow.  
+   • If X visits the squirrel AND NOT red(X) → NOT visits("squirrel", "bald_eagle", True).
+4. Note that is_red("cow", True) is explicitly given as a fact, so the negation "the cow is not red" directly contradicts this.
+5. The query tests the negation of a known fact:  
+   → Use facts.is_red("cow", False) to check if the statement "the cow is not red" holds.

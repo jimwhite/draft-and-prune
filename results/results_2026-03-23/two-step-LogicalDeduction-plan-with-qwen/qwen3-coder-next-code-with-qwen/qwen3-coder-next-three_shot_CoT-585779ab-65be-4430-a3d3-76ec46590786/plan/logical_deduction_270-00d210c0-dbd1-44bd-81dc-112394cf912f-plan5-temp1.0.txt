@@ -1,0 +1,23 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the arrangement constraints.
+
+2.  **Define Variables and Domain:**
+    * Identify the three birds as variables: `"crow"`, `"falcon"`, and `"hummingbird"`.
+    * Define the position domain as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.
+    * Add all three variables to the problem with the domain `{1, 2, 3}`.
+
+3.  **Add Logical Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each bird occupies a distinct position.
+    * Translate "The crow is to the left of the falcon" into a constraint: `crow_position < falcon_position`.
+    * Translate "The hummingbird is to the left of the crow" into a constraint: `hummingbird_position < crow_position`.
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of positions satisfying the constraints.
+    * Since the problem is small and well-constrained, there will be exactly one solution.
+
+5.  **Determine the Rightmost Bird:**
+    * Identify the bird assigned to position 3 (rightmost) in the solution.
+    * Map this bird to the corresponding choice letter:
+        - If `falcon` is rightmost → choice "B".
+    * Output the correct choice letter.

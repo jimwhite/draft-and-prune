@@ -1,0 +1,36 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven fruit variables: `"plums"`, `"kiwis"`, `"cantaloupes"`, `"pears"`, `"watermelons"`, `"apples"`, and `"loquats"`.  
+   * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**.  
+   * Add all variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+   * Translate each statement into a constraint using `lambda` functions or simple equality/inequality constraints:  
+     * "The watermelons are more expensive than the cantaloupes" → `watermelons > cantaloupes`  
+     * "The apples are less expensive than the cantaloupes" → `apples < cantaloupes`  
+     * "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6)  
+     * "The loquats are less expensive than the kiwis" → `loquats < kiwis`  
+     * "The apples are more expensive than the loquats" → `apples > loquats`  
+     * "The loquats are the third-cheapest" → `loquats == 3` (cheapest=1, second=2, third=3)  
+     * "The plums are the cheapest" → `plums == 1`
+
+4. **Solve for Valid Assignments:**  
+   * Call `getSolutions()` to compute all possible assignments satisfying all constraints.  
+   * Extract the unique solution (since the problem is well-constrained, there should be exactly one).
+
+5. **Determine the Third-Most-Expensive Fruit:**  
+   * The third-most-expensive position corresponds to rank **5** (7 = 1st most expensive, 6 = 2nd, 5 = 3rd).  
+   * Iterate through the solution dictionary to find which fruit has position `5`.  
+   * Map that fruit name to its corresponding choice letter from the list of options:  
+     - `'A'`: plums → position 1  
+     - `'B'`: kiwis  
+     - `'C'`: cantaloupes  
+     - `'D'`: pears  
+     - `'E'`: watermelons → position 6  
+     - `'F'`: apples  
+     - `'G'`: loquats → position 3  
+   * Return the correct letter.

@@ -1,0 +1,23 @@
+1. Enumerate the six available colors: forest, olive, peach, turquoise, white, yellow → assign integer indices 0–5.  
+2. Create Boolean variables `c[i]` for each color i indicating whether it is used (exactly five colors are used → sum(c[i]) == 5).  
+3. Model the three rugs as sets of colors: define Boolean variables `r[j][i]` for rug j (0 ≤ j ≤ 2) and color i, where `r[j][i]` is True iff rug j uses color i.  
+4. Add **exactly-five-used constraint**: for each color i, `c[i] == OR(r[0][i], r[1][i], r[2][i])`, and `sum(c[i] for i in range(6)) == 5`.  
+5. Add **solid/multicolored modeling**:  
+   - For each rug j, define `is_solid[j]` as a Boolean indicating if rug j is solid.  
+   - For each rug j, enforce: `is_solid[j] ↔ (exactly one color used in the rug)`. That is, `sum(r[j][i] for i in range(6)) == 1` if `is_solid[j]`, else `sum(r[j][i]) >= 2`.  
+6. Add **exactly-two-solid constraint**: `sum(is_solid[j] for j in range(3)) == 2`.  
+7. Add **rule constraints per rug**:  
+   - If white is used in a rug, then exactly two other colors must also be used: for each rug j, if `r[j][white_idx]` is True → `sum(r[j][i]) == 3`.  
+   - If olive is used in a rug, then peach must also be used: `r[j][olive_idx] → r[j][peach_idx]`.  
+   - Forest and turquoise cannot co-occur: `¬(r[j][forest_idx] ∧ r[j][turquoise_idx])`.  
+   - Peach and turquoise cannot co-occur: `¬(r[j][peach_idx] ∧ r[j][turquoise_idx])`.  
+   - Peach and yellow cannot co-occur: `¬(r[j][peach_idx] ∧ r[j][yellow_idx])`.  
+8. Encode the answer choices as candidate *pairs* of solid colors: for each choice, interpret it as "the two solid rugs use exactly those two colors". Since each solid rug uses precisely one color, this means:  
+   - Two rugs are solid with those two colors (one per rug), and the third rug is multicolored using other remaining colors (from the five used total).  
+   - For each choice, assert: exactly two rugs are solid; one uses color A, another uses color B; the third rug is multicolored (≥2 colors); and total used colors = 5.  
+9. For each answer choice:  
+   - Clone base constraints into a fresh solver.  
+   - Add assertions encoding that the two solid rugs use exactly the two given colors (order-independent).  
+   - Add `sum(is_solid[j]) == 2` explicitly.  
+   - Check satisfiability: if UNSAT, then that pair **cannot** be the solid rugs. Append its index to answer_index_list.  
+10. Print answer_index_list (indices of impossible solid-color pairs).

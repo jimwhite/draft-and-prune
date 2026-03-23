@@ -1,0 +1,36 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to create a constraint satisfaction problem solver.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven books as variables: `"brown"`, `"yellow"`, `"black"`, `"white"`, `"green"`, `"orange"`, and `"purple"`.
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.
+    * Add all seven variables to the problem with their domain (1–7).
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all books occupy distinct positions using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into a Formal Constraint:**
+    * "The purple book is the rightmost" → `purple == 7`
+    * "The yellow book is the leftmost" → `yellow == 1`
+    * "The orange book is the second from the right" → `orange == 6`
+    * "The brown book is to the left of the green book" → `brown < green`
+    * "The brown book is to the right of the black book" → `brown > black`
+    * "The white book is the fourth from the left" → `white == 4`
+
+5.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments.
+    * Since the problem is uniquely determined, extract the first (and only) solution dictionary.
+
+6.  **Analyze the Solution to Determine the Third-from-Left Book:**
+    * Recall that third-from-left corresponds to position **3**.
+    * Iterate through the solved dictionary to identify which book has value `3`.
+    * Map that book name to its corresponding choice letter using the provided choices:
+        - A) brown → if `brown == 3`
+        - B) yellow → if `yellow == 3` (but already constrained to position 1, so likely false)
+        - C) black → if `black == 3`
+        - D) white → if `white == 3` (but constrained to position 4, so false)
+        - E) green → if `green == 3`
+        - F) orange → if `orange == 3` (but constrained to position 6, so false)
+        - G) purple → if `purple == 3` (but constrained to position 7, so false)
+    * Output the correct choice letter (e.g., print or return it).

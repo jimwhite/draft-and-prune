@@ -1,0 +1,26 @@
+1. Identify all entities: Bob, Charlie, Fiona, Gary.  
+2. Define ternary predicates for unary properties (e.g., is_kind, is_quiet, is_rough, is_white, is_red, is_nice) using the format predicate(entity, True/False).  
+3. Encode all directly stated facts as `facts.predicate(entity, True)` or `facts.predicate(entity, False)` where appropriate:  
+   - is_kind("Bob", True)  
+   - is_quiet("Charlie", True), is_rough("Charlie", True)  
+   - is_kind("Fiona", True), is_rough("Fiona", True), is_white("Fiona", True)  
+   - is_nice("Gary", True)  
+4. Translate each conditional rule into a PyKe `foreach` + `assert` structure:  
+   • If Gary is red and white → Gary is quiet.  
+   • All white things are rough: ∀x (is_white(x, True) → is_rough(x, True)).  
+   • All rough things are red: ∀x (is_rough(x, True) → is_red(x, True)).  
+   • All nice things are white: ∀x (is_nice(x, True) → is_white(x, True)).  
+   • All smart things are white: ∀x (is_smart(x, True) → is_white(x, True)).  
+   • Rough and quiet things are not kind: ∀x (is_rough(x, True) ∧ is_quiet(x, True) → ¬is_kind(x, True)).  
+   • Quiet and not smart things are kind: ∀x (is_quiet(x, True) ∧ ¬is_smart(x, True) → is_kind(x, True)).  
+   • Smart things are quiet: ∀x (is_smart(x, True) → is_quiet(x, True)).  
+   • Smart and not rough things are quiet: ∀x (is_smart(x, True) ∧ ¬is_rough(x, True) → is_quiet(x, True)).  
+5. Introduce auxiliary predicates or uses of `not` to handle negations (e.g., `not is_smart(x, True)` in `foreach` conditions), ensuring proper negation-as-failure or explicit negation handling per PyKe limitations.  
+6. Since is_red and is_smart are not directly asserted for any entity, consider if they can be derived:  
+   - From is_nice("Gary", True) and rule "If something is nice → it is white", derive is_white("Gary", True).  
+   - From is_white("Gary", True) and rule "All white things are rough", derive is_rough("Gary", True).  
+   - From is_rough("Gary", True) and rule "All rough things are red", derive is_red("Gary", True).  
+   - Now Gary is red and white, so by the first rule, derive is_quiet("Gary", True).  
+7. The query asks whether Gary is not quiet:  
+   → Use `facts.is_quiet("Gary", False)` and check if this goal can be proven (i.e., if `is_quiet("Gary", False)` follows from facts and rules).  
+8. Since derivation yields is_quiet("Gary", True), the negation `is_quiet("Gary", False)` is false — so assert that query fails (i.e., answer is *false*).

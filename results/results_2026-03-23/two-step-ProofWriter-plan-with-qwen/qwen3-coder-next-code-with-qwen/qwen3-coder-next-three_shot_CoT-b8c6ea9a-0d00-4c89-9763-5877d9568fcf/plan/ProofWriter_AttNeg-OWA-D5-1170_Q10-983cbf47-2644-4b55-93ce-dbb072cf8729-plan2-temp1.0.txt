@@ -1,0 +1,16 @@
+1. Identify all entities: Bob, Charlie, Fiona, Gary.
+2. Represent all explicit facts using ternary predicates with boolean objects for properties (e.g., is_kind("Bob", True), is_quiet("Charlie", True), is_rough("Charlie", True), etc.).
+3. Encode direct facts as facts.pred(entity, True) for properties/relations.
+4. Translate each conditional sentence into PyKe rules:
+   • If Gary is red and white → Gary is quiet.
+   • All white things are rough.
+   • If something is rough → it is red.
+   • If something is nice → it is white.
+   • All smart things are white.
+   • Rough, quiet things are not kind (i.e., if X is rough and quiet → is_kind(X, False)).
+   • If something is quiet and not smart → it is kind.
+   • Smart things are quiet (i.e., if X is smart → is_quiet(X, True)).
+   • If something is smart and not rough → it is quiet.
+5. For each rule, use `foreach` to match premises and `assert` the conclusion (including negated facts like is_kind(..., False) where needed).
+6. The query tests whether Gary is not quiet:
+   → Use facts.is_quiet("Gary", False)

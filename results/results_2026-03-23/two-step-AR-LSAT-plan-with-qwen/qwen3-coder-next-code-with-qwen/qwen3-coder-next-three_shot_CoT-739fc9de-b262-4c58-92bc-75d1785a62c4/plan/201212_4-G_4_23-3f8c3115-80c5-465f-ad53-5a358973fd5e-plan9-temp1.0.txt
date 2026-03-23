@@ -1,0 +1,22 @@
+1. Enumerate the seven articles and assign each a unique integer index: G, H, J (finance), Q, R, S (nutrition), Y (wildlife).  
+2. Create integer variables `pos[article]` for each article’s editing position (1 to 7), with all positions distinct.  
+3. Add **domain constraints**: each `pos[article] ∈ {1,2,3,4,5,6,7}` and all are pairwise distinct.  
+4. Add **topic-consecutive-different constraint**: for every pair of consecutively ordered positions (i.e., |pos[a] - pos[b]| = 1), ensure their topics differ. Implement by checking all adjacent position pairs implicitly via ordering: if article A is immediately before article B, then topic(A) ≠ topic(B). To avoid explicit adjacency detection, enforce: for any two articles a,b of same topic, |pos[a] - pos[b]| ≥ 2.  
+5. Add **S–Q conditional constraint**: S earlier than Q only if Q is third ⇒ (pos[S] < pos[Q]) → (pos[Q] == 3). Equivalent to: if pos[Q] ≠ 3 then pos[S] ≥ pos[Q].  
+6. Add **S–Y constraint**: S before Y ⇒ `pos[S] < pos[Y]`.  
+7. Add **J–G–R chain**: J before G and G before R ⇒ `pos[J] < pos[G] < pos[R]`.  
+8. Translate the answer choices into constraint conditions on positions:  
+    - H is fourth → `pos[H] = 4`  
+    - H is sixth → `pos[H] = 6`  
+    - R is fourth → `pos[R] = 4`  
+    - R is seventh → `pos[R] = 7`  
+    - Y is fifth → `pos[Y] = 5`  
+9. For each answer choice, clone the base constraints into a fresh solver and add the choice condition (e.g., `pos[H] = 4`).  
+10. Check if adding that condition results in a unique solution:  
+    - First, check SAT (if UNSAT, skip this choice as invalid).  
+    - If SAT, extract the full assignment of positions.  
+    - Clone again and add constraints forcing *any* article to take a position different from the extracted solution (i.e., force deviation), then check SAT again.  
+    - If the deviated model is UNSAT for all possible single-article deviations, then the solution is unique under that condition.  
+    - Alternatively: enforce uniqueness by asserting that for every article, its position equals the one in the first model (using equality constraints), then verify that no alternative solution exists by checking UNSAT of negation of the full assignment.  
+11. Collect indices of answer choices for which the model is SAT and admits exactly one valid ordering (i.e., the solution is fully determined).  
+12. The correct answer is the single choice where adding its condition makes the full schedule unique; return that index.

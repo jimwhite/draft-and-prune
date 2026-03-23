@@ -1,0 +1,19 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning each an integer index.  
+2. Create Boolean decision variables: `day1[r][b]` = True if rider r tests bicycle b on day 1; `day2[r][b]` = True if rider r tests bicycle b on day 2.  
+3. Add **day1 constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider r, exactly one `day1[r][b]` is True.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle b, exactly one `day1[r][b]` is True.  
+4. Add **day2 constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider r, exactly one `day2[r][b]` is True.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle b, exactly one `day2[r][b]` is True.  
+5. Add **exclusion constraints**:  
+   - Reynaldo cannot test F on day 1: `day1[Reynaldo][F] = False`.  
+   - Yuki cannot test J on day 1: `day1[Yuki][J] = False`.  
+6. Add **Theresa-for-H constraint**: Theresa tests H on *some* day (either day 1 or day 2): `day1[Theresa][H] OR day2[Theresa][H]` must be True.  
+7. Add **Yuki-Seamus linking constraint**: The bicycle Yuki tests on day 1 must be the same bicycle Seamus tests on day 2: for all bicycles b, `day1[Yuki][b] ↔ day2[Seamus][b]`.  
+8. Translate each answer choice into a constraint that both riders test the same bicycle (the one named in the choice), and assert this must hold *for that specific bicycle*.  
+   - E.g., "Both Reynaldo and Seamus test J" → `day1[Reynaldo][J] = True` AND `day1[Seamus][J] = True`.  
+   - Note: Since each bicycle is tested by exactly one rider per day, this implicitly means the *same* bicycle J is assigned to both on the *same day*, i.e., day 1 only (since two riders can't test same bike same day).  
+9. For each answer choice, create a fresh solver with the base constraints (steps 3–7) and add the specific assertion from step 8.  
+10. If the solver returns UNSAT, then that choice **cannot be true**; record its index as the answer.  
+11. The correct answer is the choice for which UNSAT occurs.

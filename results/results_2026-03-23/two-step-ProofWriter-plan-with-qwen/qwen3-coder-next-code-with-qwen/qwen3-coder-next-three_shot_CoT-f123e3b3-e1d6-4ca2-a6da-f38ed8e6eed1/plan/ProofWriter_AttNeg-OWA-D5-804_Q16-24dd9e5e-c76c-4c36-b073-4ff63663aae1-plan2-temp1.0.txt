@@ -1,0 +1,19 @@
+1. Identify all entities: Anne, Charlie, Erin, Fiona.
+2. Represent all explicit facts using ternary predicates:  
+   - is_kind("Anne", True)  
+   - is_big("Charlie", False), is_green("Charlie", False), is_white("Charlie", True)  
+   - is_big("Erin", True), is_green("Erin", True), is_white("Erin", True)  
+   - is_green("Fiona", True), is_kind("Fiona", True), is_quiet("Fiona", True), is_red("Fiona", True), is_white("Fiona", True)  
+3. Encode all implications as rules:  
+   • If Erin is big and red → Erin is kind  
+   • All rough things are green  
+   • If something is kind → it is green  
+   • Quiet and green things are big  
+   • Rough and green things are red  
+   • If something is green → it is rough  
+   • If Erin is red → Erin is green  
+   • Red and rough things are quiet  
+   • Quiet and not red things → not white  
+4. Translate each rule using `foreach` conditions and `assert` conclusions in PyKe syntax.  
+5. For negative facts (e.g., Charlie is not big), encode as `not(is_big("Charlie", True))` in assertions or via negation constraints (e.g., use `not is_big("Charlie", True)` directly if PyKe supports it, or encode via biconditionial/functional constraints as needed).  
+6. The query checks whether Anne is white: → Use facts.is_white("Anne", True)

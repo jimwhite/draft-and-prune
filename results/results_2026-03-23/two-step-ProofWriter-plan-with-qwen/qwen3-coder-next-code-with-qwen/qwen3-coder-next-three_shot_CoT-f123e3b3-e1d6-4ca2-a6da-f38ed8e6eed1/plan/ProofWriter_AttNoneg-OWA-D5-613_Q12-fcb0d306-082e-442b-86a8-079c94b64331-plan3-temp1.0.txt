@@ -1,0 +1,18 @@
+1. Identify all individuals: Anne, Fiona, Gary, Harry.
+2. Encode all explicitly stated properties as facts.pred("person", property_value, True):
+   - is_blue("Anne", True), is_nice("Anne", True), is_quiet("Anne", True), is_rough("Anne", True)
+   - is_big("Fiona", True), is_blue("Fiona", True), is_quiet("Fiona", True)
+   - is_blue("Gary", True), is_quiet("Gary", True), is_rough("Gary", True), is_white("Gary", True)
+   - is_white("Harry", True)
+3. Translate each universal conditional into PyKe rules using `foreach` and `assert`:
+   • All big people are rough: foreach(is_big("X", True)) → assert(is_rough("X", True))
+   • All blue, nice people are big: foreach(is_blue("X", True), is_nice("X", True)) → assert(is_big("X", True))
+   • If someone is rough then they are green: foreach(is_rough("X", True)) → assert(is_green("X", True))
+   • All nice people are big: foreach(is_nice("X", True)) → assert(is_big("X", True))
+   • Green people are blue: foreach(is_green("X", True)) → assert(is_blue("X", True))
+   • Rough, white people are nice: foreach(is_rough("X", True), is_white("X", True)) → assert(is_nice("X", True))
+   • White people are nice: foreach(is_white("X", True)) → assert(is_nice("X", True))
+   • Green people are nice: foreach(is_green("X", True)) → assert(is_nice("X", True))
+4. After asserting all rules and facts, run the inference to derive new properties.
+5. To answer whether “Harry is not blue” is true, query: facts.is_blue("Harry", False)
+6. Determine truth value by checking if `facts.is_blue("Harry", True)` is derivable (false case), or if neither `is_blue("Harry", True)` nor `is_blue("Harry", False)` is derivable (unknown), otherwise false.

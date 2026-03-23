@@ -1,0 +1,27 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Define the five vehicles as string variables: `"convertible"`, `"sedan"`, `"tractor"`, `"minivan"`, and `"limousine"`.  
+   * Define a numerical domain of integers from 1 to 5, where **1 = oldest** and **5 = newest**, representing the age ranking order.  
+   * Add all vehicle variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique age rank.  
+   * Translate each statement into a constraint using `lambda` functions or built-in constraints:  
+     - "The tractor is newer than the minivan" → `tractor > minivan` (since higher rank number means newer).  
+     - "The tractor is older than the limousine" → `tractor < limousine` (lower rank number means older).  
+     - "The convertible is older than the sedan" → `convertible < sedan`.  
+     - "The convertible is the second-newest" → `convertible == 4` (since newest = 5, second-newest = 4).
+
+4. **Solve for the Arrangement:**  
+   * Invoke `getSolutions()` to enumerate all valid assignments.  
+   * Since the constraints are sufficient to determine a unique ordering, extract the single solution from the returned list.
+
+5. **Determine the Third-Newest Vehicle:**  
+   * The question asks which vehicle is the **third-newest**, which corresponds to rank **3** (since 5 = newest, 4 = second-newest, 3 = third-newest).  
+   * Create a dictionary mapping the choice letters `["A", "B", "C", "D", "E"]` to the vehicle names in the order:  
+     A → `"convertible"`, B → `"sedan"`, C → `"tractor"`, D → `"minivan"`, E → `"limousine"`.  
+   * In the solved solution, identify which vehicle has rank 3.  
+   * Output the choice letter (A–E) corresponding to that vehicle as the answer.

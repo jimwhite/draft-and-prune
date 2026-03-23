@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"kiwis"`, `"cantaloupes"`, `"oranges"`, `"loquats"`, `"pears"`, `"watermelons"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 = cheapest** and **7 = most expensive** (since the problem discusses expense rankings).
+    * Add all fruit variables and their domain (1–7) to the problem.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint:
+        * "The loquats are less expensive than the peaches" → `loquats < peaches`
+        * "The pears are the third-cheapest" → `pears == 3`
+        * "The oranges are less expensive than the cantaloupes" → `oranges < cantaloupes`
+        * "The loquats are more expensive than the watermelons" → `watermelons < loquats`
+        * "The peaches are less expensive than the oranges" → `peaches < oranges`
+        * "The kiwis are the second-most expensive" → `kiwis == 6` (since most expensive = 7, second-most = 6)
+
+4.  **Solve for the Unique Arrangement:**
+    * Use `getSolutions()` to find all valid assignments of ranks to fruits.
+    * Extract the single solution (as the constraints uniquely determine the ordering).
+
+5.  **Determine Which Fruit Is Third-Most-Expensive:**
+    * The question asks for the fruit with rank **5** (since 7 = most expensive, 6 = second-most, so 5 = third-most).
+    * Create a mapping from choice letters to fruit names: A→"kiwis", B→"cantaloupes", C→"oranges", D→"loquats", E→"pears", F→"watermelons", G→"peaches".
+    * Scan the solution dictionary for the fruit with rank 5.
+    * Return the corresponding choice letter as the answer.

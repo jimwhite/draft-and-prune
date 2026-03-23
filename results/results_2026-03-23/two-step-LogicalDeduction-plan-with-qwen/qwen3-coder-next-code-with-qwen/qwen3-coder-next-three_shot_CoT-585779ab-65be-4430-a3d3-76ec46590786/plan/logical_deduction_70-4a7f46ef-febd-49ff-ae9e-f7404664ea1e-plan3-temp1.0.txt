@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define the variables as the five vehicle types: `"hatchback"`, `"limousine"`, `"sedan"`, `"bus"`, and `"tractor"`.
+    * Assign a domain of integers 1 to 5, where **1 represents the oldest** vehicle and **5 represents the newest**.
+    * Add all variables with their domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * Translate each statement into constraints using `lambda` functions:
+        - "The tractor is newer than the hatchback" → `tractor > hatchback`
+        - "The bus is the second-oldest" → `bus == 2`
+        - "The hatchback is newer than the sedan" → `hatchback > sedan`
+        - "The limousine is the newest" → `limousine == 5`
+
+4.  **Solve for Valid Arrangement(s):**
+    * Use `getSolutions()` to find all solutions satisfying the constraints.
+    * Extract the unique solution from the returned list of dictionaries (each key is a vehicle, value is its age rank).
+
+5.  **Determine the Oldest Vehicle:**
+    * The question asks for the oldest vehicle, i.e., the one with rank **1**.
+    * Map choice letters to vehicle names per the choices:
+        A) `"hatchback"`, B) `"limousine"`, C) `"sedan"`, D) `"bus"`, E) `"tractor"`
+    * Scan the solution dictionary to find which vehicle has rank 1.
+    * Return the corresponding choice letter as the answer.

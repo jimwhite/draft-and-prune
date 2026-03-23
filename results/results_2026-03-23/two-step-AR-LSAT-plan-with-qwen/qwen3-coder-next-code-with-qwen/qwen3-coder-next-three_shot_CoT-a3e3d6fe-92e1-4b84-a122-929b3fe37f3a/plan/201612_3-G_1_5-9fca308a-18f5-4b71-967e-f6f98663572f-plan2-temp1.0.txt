@@ -1,0 +1,17 @@
+1. Enumerate the five students (Juana, Kelly, Lateefah, Mei, Olga) and assign integer indices.  
+2. Define Boolean variables for team assignments: `green[i]` (True if student i is on green team).  
+3. Add **team-size constraints**: exactly two students on one team, three on the other; i.e., `sum(green[i] for i in range(5)) == 2 or == 3`.  
+4. Add **Lateefah constraint**: Lateefah is on green team (`green[lateefah] == True`).  
+5. Add **Juana-Olga constraint**: Juana and Olga on different teams (`green[juana] != green[olga]`).  
+6. Add **Olga facilitator constraint**: Olga is a facilitator; since facilitators must be on their respective teams and only one per team, this implies Olga is on whichever team she's assigned (green or red), and specifically: if `green[olga] == True`, then Olga is the green facilitator; else, red facilitator. We'll model facilitators via additional Boolean variables.  
+7. Define Boolean variables `facilitator[i]` for each student i indicating if they are a facilitator.  
+8. Add **exactly-two-facilitators constraint**: exactly two students are facilitators (`sum(facilitator[i] for i in range(5)) == 2`).  
+9. Add **one-per-team facilitator constraint**: for each team, exactly one facilitator. If green has size `s_g`, then `sum(facilitator[i] for i if green[i]) == 1`; similarly for red (`green[i] == False`).  
+10. Add **Kelly not facilitator constraint**: `facilitator[kelly] == False`.  
+11. Add **Mei green team premise** (for the conditional): assume `green[mei] == True`.  
+12. Using the above constraints, derive all models (or use Z3 to check each answer choice’s necessity). For each answer choice:  
+    - Formulate the statement as a logical condition (e.g., "Juana is assigned to green" = `green[juana] == True`).  
+    - Add the negation of that condition to a cloned solver (i.e., assume it's *not* true).  
+    - Keep all prior constraints (including `green[mei] == True`).  
+    - If UNSAT, then the condition *must* be true; record it.  
+13. Among the answer choices, only one will be forced (UNSAT under negation); return that choice’s index.

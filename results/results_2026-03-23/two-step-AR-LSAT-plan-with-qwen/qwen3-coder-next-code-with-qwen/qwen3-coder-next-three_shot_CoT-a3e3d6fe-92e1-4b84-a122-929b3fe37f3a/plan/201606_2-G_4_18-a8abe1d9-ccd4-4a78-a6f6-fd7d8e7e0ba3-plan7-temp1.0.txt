@@ -1,0 +1,15 @@
+1. Enumerate the six singers and assign integer indices; identify which are recorded (Kammer, Lugo) and which are not.  
+2. Create integer variables for the position (1 to 6) of each singer's audition.  
+3. Add **domain constraints**: positions are integers from 1 to 6, all distinct (permutation).  
+4. Add **recorded position constraints**:  
+    - Position 4 ≠ recorded (i.e., not Kammer or Lugo at position 4).  
+    - Position 5 = recorded (i.e., must be Kammer or Lugo at position 5).  
+5. Add **ordering constraints**:  
+    - Waite's position < Kammer's position AND Waite's position < Lugo's position.  
+    - Kammer's position < Trillo's position.  
+    - Zinn's position < Yoshida's position.  
+6. For each choice (list of 6 singer names in order), convert to a permutation mapping (singer → position).  
+7. Clone the base constraints into a fresh solver for each choice.  
+8. Assert equality between actual positions and the candidate ordering (i.e., fix each singer’s position to match the choice).  
+9. If the solver returns SAT, then the ordering is possible; record that index as valid.  
+10. Output the index of the valid choice(s).

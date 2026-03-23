@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the seven vehicle variables: `"station_wagon"`, `"truck"`, `"sedan"`, `"limousine"`, `"convertible"`, `"bus"`, and `"hatchback"`.  
+   * Assign integer ranks from 1 to 7, where **1 = oldest**, **2 = second-oldest**, ..., **7 = newest** (i.e., increasing rank corresponds to newer age).  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce that each vehicle has a unique age rank.  
+   * Translate each statement into a constraint using lambda or direct equality/inequality:  
+     - "The limousine is the newest" → `limousine == 7`  
+     - "The bus is the third-newest" → In a 1=oldest to 7=newest scale, third-newest = position 5 (since newest=7 → second-newest=6 → third-newest=5) → `bus == 5`  
+     - "The bus is older than the convertible" → bus rank < convertible rank → `bus < convertible`  
+     - "The sedan is the third-oldest" → sedan rank = 3 → `sedan == 3`  
+     - "The station wagon is older than the truck" → station_wagon rank < truck rank → `station_wagon < truck`  
+     - "The hatchback is the oldest" → hatchback rank = 1 → `hatchback == 1`
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of ranks satisfying all constraints.  
+   * Since the problem is deterministic and consistent, there will be exactly one solution; retrieve it.
+
+5. **Identify the Correct Answer:**  
+   * The question asks which vehicle is the third-oldest → rank = 3.  
+   * Check the solution: verify which variable has value `3`. According to constraint #4, it is explicitly stated that the *sedan* has rank 3.  
+   * Map the correct choice letter: Choice C states "The sedan is the third-oldest."  
+   * Return `'C'` as the final answer.

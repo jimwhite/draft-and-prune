@@ -1,0 +1,628 @@
+{
+  "problem": {
+    "context": "A bakery makes exactly three kinds of cookie—oatmeal, peanut butter, and sugar. Exactly three batches of each kind of cookie are made each week (Monday through Friday) and each batch is made, from start to finish, on a single day. The following conditions apply: No two batches of the same kind of cookie are made on the same day. At least one batch of cookies is made on Monday. The second batch of oatmeal cookies is made on the same day as the first batch of peanut butter cookies. The second batch of sugar cookies is made on Thursday.",
+    "question": "If one kind of cookie's first batch is made on the same day as another kind of cookie's third batch, then which one of the following could be false?",
+    "answers": [
+      "At least one batch of cookies is made on each of the five days.",
+      "At least two batches of cookies are made on Wednesday.",
+      "Exactly one batch of cookies is made on Monday.",
+      "Exactly two batches of cookies are made on Tuesday.",
+      "Exactly one batch of cookies is made on Friday."
+    ],
+    "label": 4,
+    "id_string": "200312_1-G_3_18"
+  },
+  "timing": 909.0289750099182,
+  "all_solver_outputs": [
+    "[0, 1, 2, 3, 4]",
+    "[4]",
+    "[4]",
+    "[0, 1, 2, 3, 4]",
+    "[0, 1, 2, 3, 4]",
+    "[4]",
+    "[4]",
+    "[0, 1, 2, 3, 4]",
+    "[4]",
+    "[0, 1, 2, 3, 4]",
+    "[0, 1, 2, 3, 4]",
+    "[4]",
+    "[0, 1, 2, 3, 4]",
+    "[0, 1, 2, 3, 4]",
+    "[1, 4]"
+  ],
+  "all_solver_error_types": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "path_token_usage": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 906,
+        "total_tokens": 2594
+      },
+      "plan_generation_api_time_only": 25.168501138687134,
+      "code_generation_usage": {
+        "prompt_tokens": 3964,
+        "completion_tokens": 986,
+        "total_tokens": 4950
+      },
+      "code_generation_api_time_only": 30.259752988815308,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5652,
+        "completion_tokens": 1892,
+        "total_tokens": 7544
+      },
+      "path_api_time_only": 55.42825412750244,
+      "solver_time_only": 0.09144234657287598
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 681,
+        "total_tokens": 2369
+      },
+      "plan_generation_api_time_only": 18.219546794891357,
+      "code_generation_usage": {
+        "prompt_tokens": 3739,
+        "completion_tokens": 1157,
+        "total_tokens": 4896
+      },
+      "code_generation_api_time_only": 32.3516800403595,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5427,
+        "completion_tokens": 1838,
+        "total_tokens": 7265
+      },
+      "path_api_time_only": 50.571226835250854,
+      "solver_time_only": 0.1010587215423584
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 567,
+        "total_tokens": 2255
+      },
+      "plan_generation_api_time_only": 16.740488290786743,
+      "code_generation_usage": {
+        "prompt_tokens": 3625,
+        "completion_tokens": 1303,
+        "total_tokens": 4928
+      },
+      "code_generation_api_time_only": 37.28129434585571,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5313,
+        "completion_tokens": 1870,
+        "total_tokens": 7183
+      },
+      "path_api_time_only": 54.021782636642456,
+      "solver_time_only": 0.10171389579772949
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 768,
+        "total_tokens": 2456
+      },
+      "plan_generation_api_time_only": 19.737916469573975,
+      "code_generation_usage": {
+        "prompt_tokens": 3826,
+        "completion_tokens": 727,
+        "total_tokens": 4553
+      },
+      "code_generation_api_time_only": 24.35884118080139,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5514,
+        "completion_tokens": 1495,
+        "total_tokens": 7009
+      },
+      "path_api_time_only": 44.096757650375366,
+      "solver_time_only": 0.09161901473999023
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 649,
+        "total_tokens": 2337
+      },
+      "plan_generation_api_time_only": 17.297308921813965,
+      "code_generation_usage": {
+        "prompt_tokens": 3708,
+        "completion_tokens": 1302,
+        "total_tokens": 5010
+      },
+      "code_generation_api_time_only": 37.67313599586487,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5396,
+        "completion_tokens": 1951,
+        "total_tokens": 7347
+      },
+      "path_api_time_only": 54.97044491767883,
+      "solver_time_only": 0.0924222469329834
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 917,
+        "total_tokens": 2605
+      },
+      "plan_generation_api_time_only": 24.036702871322632,
+      "code_generation_usage": {
+        "prompt_tokens": 3975,
+        "completion_tokens": 900,
+        "total_tokens": 4875
+      },
+      "code_generation_api_time_only": 27.019197702407837,
+      "repair_usage_total": {
+        "prompt_tokens": 1580,
+        "completion_tokens": 906,
+        "total_tokens": 2486
+      },
+      "repair_api_time_only_total": 26.122126579284668,
+      "path_usage_total": {
+        "prompt_tokens": 7243,
+        "completion_tokens": 2723,
+        "total_tokens": 9966
+      },
+      "path_api_time_only": 77.17802715301514,
+      "solver_time_only": 0.16598081588745117
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 576,
+        "total_tokens": 2264
+      },
+      "plan_generation_api_time_only": 18.141647338867188,
+      "code_generation_usage": {
+        "prompt_tokens": 3634,
+        "completion_tokens": 807,
+        "total_tokens": 4441
+      },
+      "code_generation_api_time_only": 24.142897844314575,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5322,
+        "completion_tokens": 1383,
+        "total_tokens": 6705
+      },
+      "path_api_time_only": 42.28454518318176,
+      "solver_time_only": 0.09050416946411133
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 794,
+        "total_tokens": 2482
+      },
+      "plan_generation_api_time_only": 24.232069730758667,
+      "code_generation_usage": {
+        "prompt_tokens": 3852,
+        "completion_tokens": 927,
+        "total_tokens": 4779
+      },
+      "code_generation_api_time_only": 29.02366065979004,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5540,
+        "completion_tokens": 1721,
+        "total_tokens": 7261
+      },
+      "path_api_time_only": 53.255730390548706,
+      "solver_time_only": 0.09305930137634277
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 693,
+        "total_tokens": 2381
+      },
+      "plan_generation_api_time_only": 19.254611492156982,
+      "code_generation_usage": {
+        "prompt_tokens": 3751,
+        "completion_tokens": 1047,
+        "total_tokens": 4798
+      },
+      "code_generation_api_time_only": 29.80594229698181,
+      "repair_usage_total": {
+        "prompt_tokens": 1482,
+        "completion_tokens": 852,
+        "total_tokens": 2334
+      },
+      "repair_api_time_only_total": 24.116575479507446,
+      "path_usage_total": {
+        "prompt_tokens": 6921,
+        "completion_tokens": 2592,
+        "total_tokens": 9513
+      },
+      "path_api_time_only": 73.17712926864624,
+      "solver_time_only": 0.16875648498535156
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 640,
+        "total_tokens": 2328
+      },
+      "plan_generation_api_time_only": 17.489084005355835,
+      "code_generation_usage": {
+        "prompt_tokens": 3698,
+        "completion_tokens": 968,
+        "total_tokens": 4666
+      },
+      "code_generation_api_time_only": 29.624003410339355,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5386,
+        "completion_tokens": 1608,
+        "total_tokens": 6994
+      },
+      "path_api_time_only": 47.11308741569519,
+      "solver_time_only": 0.09136271476745605
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 721,
+        "total_tokens": 2409
+      },
+      "plan_generation_api_time_only": 22.228895902633667,
+      "code_generation_usage": {
+        "prompt_tokens": 3779,
+        "completion_tokens": 1083,
+        "total_tokens": 4862
+      },
+      "code_generation_api_time_only": 32.47934913635254,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5467,
+        "completion_tokens": 1804,
+        "total_tokens": 7271
+      },
+      "path_api_time_only": 54.708245038986206,
+      "solver_time_only": 0.09781050682067871
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 649,
+        "total_tokens": 2337
+      },
+      "plan_generation_api_time_only": 19.04275631904602,
+      "code_generation_usage": {
+        "prompt_tokens": 3707,
+        "completion_tokens": 1087,
+        "total_tokens": 4794
+      },
+      "code_generation_api_time_only": 31.95621109008789,
+      "repair_usage_total": {
+        "prompt_tokens": 1411,
+        "completion_tokens": 1103,
+        "total_tokens": 2514
+      },
+      "repair_api_time_only_total": 30.009429931640625,
+      "path_usage_total": {
+        "prompt_tokens": 6806,
+        "completion_tokens": 2839,
+        "total_tokens": 9645
+      },
+      "path_api_time_only": 81.00839734077454,
+      "solver_time_only": 0.17618656158447266
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 614,
+        "total_tokens": 2302
+      },
+      "plan_generation_api_time_only": 17.71909499168396,
+      "code_generation_usage": {
+        "prompt_tokens": 3672,
+        "completion_tokens": 1403,
+        "total_tokens": 5075
+      },
+      "code_generation_api_time_only": 41.07032656669617,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5360,
+        "completion_tokens": 2017,
+        "total_tokens": 7377
+      },
+      "path_api_time_only": 58.78942155838013,
+      "solver_time_only": 0.10452938079833984
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 1176,
+        "total_tokens": 2864
+      },
+      "plan_generation_api_time_only": 33.951727628707886,
+      "code_generation_usage": {
+        "prompt_tokens": 4235,
+        "completion_tokens": 944,
+        "total_tokens": 5179
+      },
+      "code_generation_api_time_only": 27.086406230926514,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5923,
+        "completion_tokens": 2120,
+        "total_tokens": 8043
+      },
+      "path_api_time_only": 61.0381338596344,
+      "solver_time_only": 0.1193399429321289
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "plan_generation_usage": {
+        "prompt_tokens": 1688,
+        "completion_tokens": 919,
+        "total_tokens": 2607
+      },
+      "plan_generation_api_time_only": 24.341028928756714,
+      "code_generation_usage": {
+        "prompt_tokens": 3977,
+        "completion_tokens": 1357,
+        "total_tokens": 5334
+      },
+      "code_generation_api_time_only": 38.82658863067627,
+      "repair_usage_total": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "repair_api_time_only_total": 0.0,
+      "path_usage_total": {
+        "prompt_tokens": 5665,
+        "completion_tokens": 2276,
+        "total_tokens": 7941
+      },
+      "path_api_time_only": 63.16761755943298,
+      "solver_time_only": 0.08799886703491211
+    }
+  ],
+  "token_usage_total": {
+    "prompt_tokens": 86935,
+    "completion_tokens": 30129,
+    "total_tokens": 117064
+  },
+  "api_time_only_total": 870.8088009357452,
+  "solver_time_only_total": 1.6737849712371826,
+  "repair_logs": [
+    {
+      "plan_idx": 1,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 2,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 3,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 4,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 5,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 6,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-5 (Monday-Friday)\n\n# Batch day variables: o1,o2,o3 for oatmeal; p1,p2,p3 for peanut butter; s1,s2,s3 for sugar\no1, o2, o3 = Int('o1'), Int('o2'), Int('o3')\np1, p2, p3 = Int('p1'), Int('p2'), Int('p3')\ns1, s2, s3 = Int('s1'), Int('s2'), Int('s3')\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]:\n    solver.add(var >= 1, var <= 5)\n\n# No two batches of same type on same day (distinct within each type)\nsolver.add(o1 != o2, o1 != o3, o2 != o3)\nsolver.add(p1 != p2, p1 != p3, p2 != p3)\nsolver.add(s1 != s2, s1 != s3, s2 != s3)\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(o1 == 1, o2 == 1, o3 == 1,\n              p1 == 1, p2 == 1, p3 == 1,\n              s1 == 1, s2 == 1, s3 == 1))\n\n# Fixed constraints\nsolver.add(o2 == p1)      # second oatmeal = first peanut butter\nsolver.add(s2 == 4)       # second sugar on Thursday\n\n# Ordering constraints per type: batches made in order\nsolver.add(o1 < o2, o2 < o3)\nsolver.add(p1 < p2, p2 < p3)\nsolver.add(s1 < s2, s2 < s3)\n\n# Assumption: one kind's first batch same day as another kind's third batch\nassumption = Or(\n    o1 == p3, o1 == s3,\n    p1 == o3, p1 == s3,\n    s1 == o3, s1 == p3\n)\n\n# Combine base constraints with assumption\nbase_with_assumption = And(\n    solver.assertions(),\n    assumption\n)\n\n# Define helper to count batches on a given day\ndef count_on_day(day_val):\n    return Sum([If(var == day_val, 1, 0) for var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]])\n\n# Answer choices conditions\n# 0: At least one batch on each of the five days → all days have count >=1\ncond0 = And(count_on_day(1) >= 1, count_on_day(2) >= 1,\n            count_on_day(3) >= 1, count_on_day(4) >= 1,\n            count_on_day(5) >= 1)\n\n# 1: At least two batches on Wednesday (day 3)\ncond1 = count_on_day(3) >= 2\n\n# 2: Exactly one batch on Monday (day 1)\ncond2 = count_on_day(1) == 1\n\n# 3: Exactly two batches on Tuesday (day 2)\ncond3 = count_on_day(2) == 2\n\n# 4: Exactly one batch on Friday (day 5)\ncond4 = count_on_day(5) == 1\n\n# Check each answer choice: find which could be false (i.e., its negation is satisfiable under assumption)\nanswer_index_list = []\nfor idx, cond in enumerate([cond0, cond1, cond2, cond3, cond4]):\n    s_chk = Solver()\n    # Add base_with_assumption\n    s_chk.add(base_with_assumption)\n    # Add negation of condition\n    s_chk.add(Not(cond))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-5 (Monday-Friday)\n\n# Batch day variables: o1,o2,o3 for oatmeal; p1,p2,p3 for peanut butter; s1,s2,s3 for sugar\no1, o2, o3 = Int('o1'), Int('o2'), Int('o3')\np1, p2, p3 = Int('p1'), Int('p2'), Int('p3')\ns1, s2, s3 = Int('s1'), Int('s2'), Int('s3')\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]:\n    solver.add(var >= 1, var <= 5)\n\n# No two batches of same type on same day (distinct within each type)\nsolver.add(o1 != o2, o1 != o3, o2 != o3)\nsolver.add(p1 != p2, p1 != p3, p2 != p3)\nsolver.add(s1 != s2, s1 != s3, s2 != s3)\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(o1 == 1, o2 == 1, o3 == 1,\n              p1 == 1, p2 == 1, p3 == 1,\n              s1 == 1, s2 == 1, s3 == 1))\n\n# Fixed constraints\nsolver.add(o2 == p1)      # second oatmeal = first peanut butter\nsolver.add(s2 == 4)       # second sugar on Thursday\n\n# Ordering constraints per type: batches made in order\nsolver.add(o1 < o2, o2 < o3)\nsolver.add(p1 < p2, p2 < p3)\nsolver.add(s1 < s2, s2 < s3)\n\n# Assumption: one kind's first batch same day as another kind's third batch\nassumption = Or(\n    o1 == p3, o1 == s3,\n    p1 == o3, p1 == s3,\n    s1 == o3, s1 == p3\n)\n\n# Combine base constraints with assumption\nbase_with_assumption = And(\n    solver.assertions(),\n    assumption\n)\n\n# Define helper to count batches on a given day\ndef count_on_day(day_val):\n    return Sum([If(var == day_val, 1, 0) for var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]])\n\n# Answer choices conditions\n# 0: At least one batch on each of the five days → all days have count >=1\ncond0 = And(count_on_day(1) >= 1, count_on_day(2) >= 1,\n            count_on_day(3) >= 1, count_on_day(4) >= 1,\n            count_on_day(5) >= 1)\n\n# 1: At least two batches on Wednesday (day 3)\ncond1 = count_on_day(3) >= 2\n\n# 2: Exactly one batch on Monday (day 1)\ncond2 = count_on_day(1) == 1\n\n# 3: Exactly two batches on Tuesday (day 2)\ncond3 = count_on_day(2) == 2\n\n# 4: Exactly one batch on Friday (day 5)\ncond4 = count_on_day(5) == 1\n\n# Check each answer choice: find which could be false (i.e., its negation is satisfiable under assumption)\nanswer_index_list = []\nfor idx, cond in enumerate([cond0, cond1, cond2, cond3, cond4]):\n    s_chk = Solver()\n    # Add base_with_assumption\n    s_chk.add(base_with_assumption)\n    # Add negation of condition\n    s_chk.add(Not(cond))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp60d67oni.py\", line 44, in <module>\n    base_with_assumption = And(\n        solver.assertions(),\n        assumption\n    )\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1948, in And\n    args = _coerce_expr_list(args, ctx)\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1282, in _coerce_expr_list\n    return [s.cast(a) for a in alist]\n            ~~~~~~^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1577, in cast\n    _z3_assert(is_expr(val), msg % (val, type(val)))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 115, in _z3_assert\n    raise Z3Exception(msg)\nz3.z3types.Z3Exception: True, False or Z3 Boolean expression expected. Received [o1 >= 1,\n o1 <= 5,\n o2 >= 1,\n o2 <= 5,\n o3 >= 1,\n o3 <= 5,\n p1 >= 1,\n p1 <= 5,\n p2 >= 1,\n p2 <= 5,\n p3 >= 1,\n p3 <= 5,\n s1 >= 1,\n s1 <= 5,\n s2 >= 1,\n s2 <= 5,\n s3 >= 1,\n s3 <= 5,\n o1 != o2,\n o1 != o3,\n o2 != o3,\n p1 != p2,\n p1 != p3,\n p2 != p3,\n s1 != s2,\n s1 != s3,\n s2 != s3,\n Or(o1 == 1,\n    o2 == 1,\n    o3 == 1,\n    p1 == 1,\n    p2 == 1,\n    p3 == 1,\n    s1 == 1,\n    s2 == 1,\n    s3 == 1),\n o2 == p1,\n s2 == 4,\n o1 < o2,\n o2 < o3,\n p1 < p2,\n p2 < p3,\n s1 < s2,\n s2 < s3] of type <class 'z3.z3.AstVector'>\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-5 (Monday-Friday)\n\n# Batch day variables: o1,o2,o3 for oatmeal; p1,p2,p3 for peanut butter; s1,s2,s3 for sugar\no1, o2, o3 = Int('o1'), Int('o2'), Int('o3')\np1, p2, p3 = Int('p1'), Int('p2'), Int('p3')\ns1, s2, s3 = Int('s1'), Int('s2'), Int('s3')\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]:\n    solver.add(var >= 1, var <= 5)\n\n# No two batches of same type on same day (distinct within each type)\nsolver.add(o1 != o2, o1 != o3, o2 != o3)\nsolver.add(p1 != p2, p1 != p3, p2 != p3)\nsolver.add(s1 != s2, s1 != s3, s2 != s3)\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(o1 == 1, o2 == 1, o3 == 1,\n              p1 == 1, p2 == 1, p3 == 1,\n              s1 == 1, s2 == 1, s3 == 1))\n\n# Fixed constraints\nsolver.add(o2 == p1)      # second oatmeal = first peanut butter\nsolver.add(s2 == 4)       # second sugar on Thursday\n\n# Ordering constraints per type: batches made in order\nsolver.add(o1 < o2, o2 < o3)\nsolver.add(p1 < p2, p2 < p3)\nsolver.add(s1 < s2, s2 < s3)\n\n# Assumption: one kind's first batch same day as another kind's third batch\nassumption = Or(\n    o1 == p3, o1 == s3,\n    p1 == o3, p1 == s3,\n    s1 == o3, s1 == p3\n)\n\n# Combine base constraints with assumption\nbase_with_assumption = And(\n    And(solver.assertions()),\n    assumption\n)\n\n# Define helper to count batches on a given day\ndef count_on_day(day_val):\n    return Sum([If(var == day_val, 1, 0) for var in [o1, o2, o3, p1, p2, p3, s1, s2, s3]])\n\n# Answer choices conditions\n# 0: At least one batch on each of the five days → all days have count >=1\ncond0 = And(count_on_day(1) >= 1, count_on_day(2) >= 1,\n            count_on_day(3) >= 1, count_on_day(4) >= 1,\n            count_on_day(5) >= 1)\n\n# 1: At least two batches on Wednesday (day 3)\ncond1 = count_on_day(3) >= 2\n\n# 2: Exactly one batch on Monday (day 1)\ncond2 = count_on_day(1) == 1\n\n# 3: Exactly two batches on Tuesday (day 2)\ncond3 = count_on_day(2) == 2\n\n# 4: Exactly one batch on Friday (day 5)\ncond4 = count_on_day(5) == 1\n\n# Check each answer choice: find which could be false (i.e., its negation is satisfiable under assumption)\nanswer_index_list = []\nfor idx, cond in enumerate([cond0, cond1, cond2, cond3, cond4]):\n    s_chk = Solver()\n    # Add base_with_assumption\n    s_chk.add(base_with_assumption)\n    # Add negation of condition\n    s_chk.add(Not(cond))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1580,
+            "completion_tokens": 906,
+            "total_tokens": 2486
+          },
+          "api_time_only": 26.122126579284668,
+          "solver_time_only": 0.09055924415588379
+        }
+      ]
+    },
+    {
+      "plan_idx": 7,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 8,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 9,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday\n\n# Create variables: batch_type_day[type][batch_num] where batch_num is 1,2,3\nbatch = [[Int(f\"b_{t}_{b}\") for b in range(1, 4)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor t in range(3):\n    for b in range(3):\n        solver.add(batch[t][b] >= 1, batch[t][b] <= 5)\n\n# Distinct-day-per-type constraint: strictly increasing days for each cookie type\nfor t in range(3):\n    solver.add(batch[t][0] < batch[t][1], batch[t][1] < batch[t][2])\n\n# Monday at least one batch\nsolver.add(Or(*[batch[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Given relative constraints:\n# Second oatmeal batch = first peanut butter batch\nsolver.add(batch[0][1] == batch[1][0])\n# Second sugar batch = Thursday (day 4)\nsolver.add(batch[2][1] == 4)\n\n# Conditional premise: there exists X != Y such that first batch of X = third batch of Y\n# Create auxiliary variables for disjunction\nX1, X2, X3 = Bools('x1 x2 x3')\nsolver.add(\n    Or(\n        And(X1, batch[0][0] == batch[1][2]),\n        And(X2, batch[0][0] == batch[2][2]),\n        And(X3, batch[1][0] == batch[0][2]),\n        And(X4 if 'X4' in dir() else (lambda: None)(), batch[1][0] == batch[2][2]),\n        And(X5 if 'X5' in dir() else (lambda: None)(), batch[2][0] == batch[0][2]),\n        And(X6 if 'X6' in dir() else (lambda: None)(), batch[2][0] == batch[1][2])\n    )\n)\n\n# Fix the above with proper auxiliary variables\naux = [Bool(f\"aux_{i}\") for i in range(6)]\nsolver.add(\n    Or(\n        And(aux[0], batch[0][0] == batch[1][2]),\n        And(aux[1], batch[0][0] == batch[2][2]),\n        And(aux[2], batch[1][0] == batch[0][2]),\n        And(aux[3], batch[1][0] == batch[2][2]),\n        And(aux[4], batch[2][0] == batch[0][2]),\n        And(aux[5], batch[2][0] == batch[1][2])\n    )\n)\n\n# Answer choices (statements that could be false)\nanswer_choices = [\n    # 0: At least one batch on each of the five days\n    lambda: And(*[Or(*[batch[t][b] == d for t in range(3) for b in range(3)]) for d in range(1, 6)]),\n    # 1: At least two batches on Wednesday (day 3)\n    lambda: Sum([If(batch[t][b] == 3, 1, 0) for t in range(3) for b in range(3)]) >= 2,\n    # 2: Exactly one batch on Monday (day 1)\n    lambda: Sum([If(batch[t][b] == 1, 1, 0) for t in range(3) for b in range(3)]) == 1,\n    # 3: Exactly two batches on Tuesday (day 2)\n    lambda: Sum([If(batch[t][b] == 2, 1, 0) for t in range(3) for b in range(3)]) == 2,\n    # 4: Exactly one batch on Friday (day 5)\n    lambda: Sum([If(batch[t][b] == 5, 1, 0) for t in range(3) for b in range(3)]) == 1\n]\n\n# Check each answer choice: if negation is satisfiable, then the statement could be false\nanswer_index_list = []\nfor idx, stmt in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add base constraints + premise\n    s_chk.add(solver.assertions())\n    \n    # Add negation of the statement\n    s_chk.add(Not(stmt()))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday\n\n# Create variables: batch_type_day[type][batch_num] where batch_num is 1,2,3\nbatch = [[Int(f\"b_{t}_{b}\") for b in range(1, 4)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor t in range(3):\n    for b in range(3):\n        solver.add(batch[t][b] >= 1, batch[t][b] <= 5)\n\n# Distinct-day-per-type constraint: strictly increasing days for each cookie type\nfor t in range(3):\n    solver.add(batch[t][0] < batch[t][1], batch[t][1] < batch[t][2])\n\n# Monday at least one batch\nsolver.add(Or(*[batch[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Given relative constraints:\n# Second oatmeal batch = first peanut butter batch\nsolver.add(batch[0][1] == batch[1][0])\n# Second sugar batch = Thursday (day 4)\nsolver.add(batch[2][1] == 4)\n\n# Conditional premise: there exists X != Y such that first batch of X = third batch of Y\n# Create auxiliary variables for disjunction\nX1, X2, X3 = Bools('x1 x2 x3')\nsolver.add(\n    Or(\n        And(X1, batch[0][0] == batch[1][2]),\n        And(X2, batch[0][0] == batch[2][2]),\n        And(X3, batch[1][0] == batch[0][2]),\n        And(X4 if 'X4' in dir() else (lambda: None)(), batch[1][0] == batch[2][2]),\n        And(X5 if 'X5' in dir() else (lambda: None)(), batch[2][0] == batch[0][2]),\n        And(X6 if 'X6' in dir() else (lambda: None)(), batch[2][0] == batch[1][2])\n    )\n)\n\n# Fix the above with proper auxiliary variables\naux = [Bool(f\"aux_{i}\") for i in range(6)]\nsolver.add(\n    Or(\n        And(aux[0], batch[0][0] == batch[1][2]),\n        And(aux[1], batch[0][0] == batch[2][2]),\n        And(aux[2], batch[1][0] == batch[0][2]),\n        And(aux[3], batch[1][0] == batch[2][2]),\n        And(aux[4], batch[2][0] == batch[0][2]),\n        And(aux[5], batch[2][0] == batch[1][2])\n    )\n)\n\n# Answer choices (statements that could be false)\nanswer_choices = [\n    # 0: At least one batch on each of the five days\n    lambda: And(*[Or(*[batch[t][b] == d for t in range(3) for b in range(3)]) for d in range(1, 6)]),\n    # 1: At least two batches on Wednesday (day 3)\n    lambda: Sum([If(batch[t][b] == 3, 1, 0) for t in range(3) for b in range(3)]) >= 2,\n    # 2: Exactly one batch on Monday (day 1)\n    lambda: Sum([If(batch[t][b] == 1, 1, 0) for t in range(3) for b in range(3)]) == 1,\n    # 3: Exactly two batches on Tuesday (day 2)\n    lambda: Sum([If(batch[t][b] == 2, 1, 0) for t in range(3) for b in range(3)]) == 2,\n    # 4: Exactly one batch on Friday (day 5)\n    lambda: Sum([If(batch[t][b] == 5, 1, 0) for t in range(3) for b in range(3)]) == 1\n]\n\n# Check each answer choice: if negation is satisfiable, then the statement could be false\nanswer_index_list = []\nfor idx, stmt in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add base constraints + premise\n    s_chk.add(solver.assertions())\n    \n    # Add negation of the statement\n    s_chk.add(Not(stmt()))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmp1xlue09d.py\", line 37, in <module>\n    And(X4 if 'X4' in dir() else (lambda: None)(), batch[1][0] == batch[2][2]),\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1948, in And\n    args = _coerce_expr_list(args, ctx)\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1282, in _coerce_expr_list\n    return [s.cast(a) for a in alist]\n            ~~~~~~^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 1577, in cast\n    _z3_assert(is_expr(val), msg % (val, type(val)))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 115, in _z3_assert\n    raise Z3Exception(msg)\nz3.z3types.Z3Exception: True, False or Z3 Boolean expression expected. Received None of type <class 'NoneType'>\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Cookie types: 0-oatmeal, 1-peanut butter, 2-sugar\n# Days: 1-Monday, 2-Tuesday, 3-Wednesday, 4-Thursday, 5-Friday\n\n# Create variables: batch_type_day[type][batch_num] where batch_num is 1,2,3\nbatch = [[Int(f\"b_{t}_{b}\") for b in range(1, 4)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: each batch day between 1 and 5\nfor t in range(3):\n    for b in range(3):\n        solver.add(batch[t][b] >= 1, batch[t][b] <= 5)\n\n# Distinct-day-per-type constraint: strictly increasing days for each cookie type\nfor t in range(3):\n    solver.add(batch[t][0] < batch[t][1], batch[t][1] < batch[t][2])\n\n# Monday at least one batch\nsolver.add(Or(*[batch[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Given relative constraints:\n# Second oatmeal batch = first peanut butter batch\nsolver.add(batch[0][1] == batch[1][0])\n# Second sugar batch = Thursday (day 4)\nsolver.add(batch[2][1] == 4)\n\n# Conditional premise: there exists X != Y such that first batch of X = third batch of Y\naux = [Bool(f\"aux_{i}\") for i in range(6)]\nsolver.add(\n    Or(\n        And(aux[0], batch[0][0] == batch[1][2]),\n        And(aux[1], batch[0][0] == batch[2][2]),\n        And(aux[2], batch[1][0] == batch[0][2]),\n        And(aux[3], batch[1][0] == batch[2][2]),\n        And(aux[4], batch[2][0] == batch[0][2]),\n        And(aux[5], batch[2][0] == batch[1][2])\n    )\n)\n\n# Answer choices (statements that could be false)\nanswer_choices = [\n    # 0: At least one batch on each of the five days\n    lambda: And(*[Or(*[batch[t][b] == d for t in range(3) for b in range(3)]) for d in range(1, 6)]),\n    # 1: At least two batches on Wednesday (day 3)\n    lambda: Sum([If(batch[t][b] == 3, 1, 0) for t in range(3) for b in range(3)]) >= 2,\n    # 2: Exactly one batch on Monday (day 1)\n    lambda: Sum([If(batch[t][b] == 1, 1, 0) for t in range(3) for b in range(3)]) == 1,\n    # 3: Exactly two batches on Tuesday (day 2)\n    lambda: Sum([If(batch[t][b] == 2, 1, 0) for t in range(3) for b in range(3)]) == 2,\n    # 4: Exactly one batch on Friday (day 5)\n    lambda: Sum([If(batch[t][b] == 5, 1, 0) for t in range(3) for b in range(3)]) == 1\n]\n\n# Check each answer choice: if negation is satisfiable, then the statement could be false\nanswer_index_list = []\nfor idx, stmt in enumerate(answer_choices):\n    s_chk = Solver()\n    # Add base constraints + premise\n    s_chk.add(solver.assertions())\n    \n    # Add negation of the statement\n    s_chk.add(Not(stmt()))\n    \n    if s_chk.check() == sat:\n        answer_index_list.append(idx)\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1482,
+            "completion_tokens": 852,
+            "total_tokens": 2334
+          },
+          "api_time_only": 24.116575479507446,
+          "solver_time_only": 0.08994364738464355
+        }
+      ]
+    },
+    {
+      "plan_idx": 10,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 11,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 12,
+      "code_idx": 1,
+      "repair_round_logs": [
+        {
+          "round_index": 1,
+          "input_code": "from z3 import *\n\n# Cookie types: 0=oatmeal, 1=peanut butter, 2=sugar\n# Batch numbers: 0=first, 1=second, 2=third\nday = [[Int(f\"day_{t}_{b}\") for b in range(3)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: days 1-5\nfor t in range(3):\n    for b in range(3):\n        solver.add(day[t][b] >= 1, day[t][b] <= 5)\n\n# Strict ordering within each cookie type\nfor t in range(3):\n    solver.add(day[t][0] < day[t][1], day[t][1] < day[t][2])\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(*[day[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Second batch of sugar is on Thursday (day 4)\nsolver.add(day[2][1] == 4)\n\n# Second batch of oatmeal same day as first batch of peanut butter\nsolver.add(day[0][1] == day[1][0])\n\n# Premise: there exists A != B such that first batch of A == third batch of B\n# We'll handle this by generating models and filtering\n\n# Helper to get all models with the premise\ndef get_models_with_premise(s):\n    models = []\n    while True:\n        if s.check() == unsat:\n            break\n        m = s.model()\n        models.append(m)\n        \n        # Block current model\n        block = []\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    block.append(day[t][b] != val)\n                else:\n                    block.append(day[t][b] != val.as_long())\n        s.add(Or(block))\n    return models\n\n# Get all base models\nbase_models = get_models_with_premise(Solver(solver.assertions()))\n\n# Filter models that satisfy the premise: exists A != B with day[A][0] == day[B][2]\nvalid_models = []\nfor m in base_models:\n    satisfies_premise = False\n    for A in range(3):\n        for B in range(3):\n            if A != B:\n                val_A0 = m.eval(day[A][0])\n                val_B2 = m.eval(day[B][2])\n                if is_const(val_A0):\n                    val_A0 = val_A0.as_long()\n                else:\n                    val_A0 = int(str(val_A0))\n                if is_const(val_B2):\n                    val_B2 = val_B2.as_long()\n                else:\n                    val_B2 = int(str(val_B2))\n                if val_A0 == val_B2:\n                    satisfies_premise = True\n                    break\n        if satisfies_premise:\n            break\n    if satisfies_premise:\n        valid_models.append(m)\n\n# Evaluate each answer choice across all valid models\nanswer_choices = [\n    \"At least one batch of cookies is made on each of the five days.\",\n    \"At least two batches of cookies are made on Wednesday.\",\n    \"Exactly one batch of cookies is made on Monday.\",\n    \"Exactly two batches of cookies are made on Tuesday.\",\n    \"Exactly one batch of cookies is made on Friday.\"\n]\n\n# For each choice, check if it's true in ALL valid models\nchoice_always_true = []\nfor idx, choice in enumerate(answer_choices):\n    always_true = True\n    for m in valid_models:\n        # Count batches per day\n        count = [0] * 6  # index 1-5 for days Monday-Friday\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    d = val.as_long()\n                else:\n                    d = int(str(val))\n                count[d] += 1\n        \n        # Evaluate the choice\n        if idx == 0:  # At least one batch on each of five days\n            cond = all(count[d] >= 1 for d in range(1, 6))\n        elif idx == 1:  # At least two batches on Wednesday (day 3)\n            cond = count[3] >= 2\n        elif idx == 2:  # Exactly one batch on Monday (day 1)\n            cond = count[1] == 1\n        elif idx == 3:  # Exactly two batches on Tuesday (day 2)\n            cond = count[2] == 2\n        elif idx == 4:  # Exactly one batch on Friday (day 5)\n            cond = count[5] == 1\n        \n        if not cond:\n            always_true = False\n            break\n    \n    choice_always_true.append(always_true)\n\n# Find the choice that could be false (i.e., not always true)\nanswer_index_list = [idx for idx, always in enumerate(choice_always_true) if not always]\n\nprint(answer_index_list)",
+          "repair_prompt": "You are an expert Python syntax fixer specializing in the Z3 SMT solver library.\nYour task is to fix the syntax errors in the code below given the error message from Z3 solver.\nProduce ONLY raw Python code. Do not include any other comments or explanations.\n\nCode with Syntax Errors:\nfrom z3 import *\n\n# Cookie types: 0=oatmeal, 1=peanut butter, 2=sugar\n# Batch numbers: 0=first, 1=second, 2=third\nday = [[Int(f\"day_{t}_{b}\") for b in range(3)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: days 1-5\nfor t in range(3):\n    for b in range(3):\n        solver.add(day[t][b] >= 1, day[t][b] <= 5)\n\n# Strict ordering within each cookie type\nfor t in range(3):\n    solver.add(day[t][0] < day[t][1], day[t][1] < day[t][2])\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(*[day[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Second batch of sugar is on Thursday (day 4)\nsolver.add(day[2][1] == 4)\n\n# Second batch of oatmeal same day as first batch of peanut butter\nsolver.add(day[0][1] == day[1][0])\n\n# Premise: there exists A != B such that first batch of A == third batch of B\n# We'll handle this by generating models and filtering\n\n# Helper to get all models with the premise\ndef get_models_with_premise(s):\n    models = []\n    while True:\n        if s.check() == unsat:\n            break\n        m = s.model()\n        models.append(m)\n        \n        # Block current model\n        block = []\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    block.append(day[t][b] != val)\n                else:\n                    block.append(day[t][b] != val.as_long())\n        s.add(Or(block))\n    return models\n\n# Get all base models\nbase_models = get_models_with_premise(Solver(solver.assertions()))\n\n# Filter models that satisfy the premise: exists A != B with day[A][0] == day[B][2]\nvalid_models = []\nfor m in base_models:\n    satisfies_premise = False\n    for A in range(3):\n        for B in range(3):\n            if A != B:\n                val_A0 = m.eval(day[A][0])\n                val_B2 = m.eval(day[B][2])\n                if is_const(val_A0):\n                    val_A0 = val_A0.as_long()\n                else:\n                    val_A0 = int(str(val_A0))\n                if is_const(val_B2):\n                    val_B2 = val_B2.as_long()\n                else:\n                    val_B2 = int(str(val_B2))\n                if val_A0 == val_B2:\n                    satisfies_premise = True\n                    break\n        if satisfies_premise:\n            break\n    if satisfies_premise:\n        valid_models.append(m)\n\n# Evaluate each answer choice across all valid models\nanswer_choices = [\n    \"At least one batch of cookies is made on each of the five days.\",\n    \"At least two batches of cookies are made on Wednesday.\",\n    \"Exactly one batch of cookies is made on Monday.\",\n    \"Exactly two batches of cookies are made on Tuesday.\",\n    \"Exactly one batch of cookies is made on Friday.\"\n]\n\n# For each choice, check if it's true in ALL valid models\nchoice_always_true = []\nfor idx, choice in enumerate(answer_choices):\n    always_true = True\n    for m in valid_models:\n        # Count batches per day\n        count = [0] * 6  # index 1-5 for days Monday-Friday\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    d = val.as_long()\n                else:\n                    d = int(str(val))\n                count[d] += 1\n        \n        # Evaluate the choice\n        if idx == 0:  # At least one batch on each of five days\n            cond = all(count[d] >= 1 for d in range(1, 6))\n        elif idx == 1:  # At least two batches on Wednesday (day 3)\n            cond = count[3] >= 2\n        elif idx == 2:  # Exactly one batch on Monday (day 1)\n            cond = count[1] == 1\n        elif idx == 3:  # Exactly two batches on Tuesday (day 2)\n            cond = count[2] == 2\n        elif idx == 4:  # Exactly one batch on Friday (day 5)\n            cond = count[5] == 1\n        \n        if not cond:\n            always_true = False\n            break\n    \n    choice_always_true.append(always_true)\n\n# Find the choice that could be false (i.e., not always true)\nanswer_index_list = [idx for idx, always in enumerate(choice_always_true) if not always]\n\nprint(answer_index_list)\nError message from solver:\nZ3 execution error (return code 1).\nStderr: Traceback (most recent call last):\n  File \"/tmp/tmpdj4jm4h3.py\", line 52, in <module>\n    base_models = get_models_with_premise(Solver(solver.assertions()))\n                                          ~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 7021, in __init__\n    assert solver is None or ctx is not None\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\nException ignored in: <function Solver.__del__ at 0xffff7fe11da0>\nTraceback (most recent call last):\n  File \"/workspaces/draft-and-prune/.venv/lib/python3.13/site-packages/z3/z3.py\", line 7034, in __del__\n    if self.solver is not None and self.ctx.ref() is not None and Z3_solver_dec_ref is not None:\nAttributeError: 'Solver' object has no attribute 'solver'\n\nStdout: \n\nFixed Code:\n```\nfrom z3 import *\n\n```\n",
+          "repaired_code": "from z3 import *\n\n# Cookie types: 0=oatmeal, 1=peanut butter, 2=sugar\n# Batch numbers: 0=first, 1=second, 2=third\nday = [[Int(f\"day_{t}_{b}\") for b in range(3)] for t in range(3)]\n\nsolver = Solver()\n\n# Domain constraints: days 1-5\nfor t in range(3):\n    for b in range(3):\n        solver.add(day[t][b] >= 1, day[t][b] <= 5)\n\n# Strict ordering within each cookie type\nfor t in range(3):\n    solver.add(day[t][0] < day[t][1], day[t][1] < day[t][2])\n\n# At least one batch on Monday (day 1)\nsolver.add(Or(*[day[t][b] == 1 for t in range(3) for b in range(3)]))\n\n# Second batch of sugar is on Thursday (day 4)\nsolver.add(day[2][1] == 4)\n\n# Second batch of oatmeal same day as first batch of peanut butter\nsolver.add(day[0][1] == day[1][0])\n\n# Helper to get all models with the premise\ndef get_models_with_premise(s):\n    models = []\n    while True:\n        if s.check() == unsat:\n            break\n        m = s.model()\n        models.append(m)\n        \n        # Block current model\n        block = []\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    block.append(day[t][b] != val)\n                else:\n                    block.append(day[t][b] != val.as_long())\n        s.add(Or(block))\n    return models\n\n# Get all base models\nbase_models = get_models_with_premise(Solver())\nfor a in solver.assertions():\n    base_models[-1]  # dummy to avoid using solver directly\nbase_solver = Solver()\nfor a in solver.assertions():\n    base_solver.add(a)\nbase_models = get_models_with_premise(base_solver)\n\n# Filter models that satisfy the premise: exists A != B with day[A][0] == day[B][2]\nvalid_models = []\nfor m in base_models:\n    satisfies_premise = False\n    for A in range(3):\n        for B in range(3):\n            if A != B:\n                val_A0 = m.eval(day[A][0])\n                val_B2 = m.eval(day[B][2])\n                if is_const(val_A0):\n                    val_A0 = val_A0.as_long()\n                else:\n                    val_A0 = int(str(val_A0))\n                if is_const(val_B2):\n                    val_B2 = val_B2.as_long()\n                else:\n                    val_B2 = int(str(val_B2))\n                if val_A0 == val_B2:\n                    satisfies_premise = True\n                    break\n        if satisfies_premise:\n            break\n    if satisfies_premise:\n        valid_models.append(m)\n\n# Evaluate each answer choice across all valid models\nanswer_choices = [\n    \"At least one batch of cookies is made on each of the five days.\",\n    \"At least two batches of cookies are made on Wednesday.\",\n    \"Exactly one batch of cookies is made on Monday.\",\n    \"Exactly two batches of cookies are made on Tuesday.\",\n    \"Exactly one batch of cookies is made on Friday.\"\n]\n\n# For each choice, check if it's true in ALL valid models\nchoice_always_true = []\nfor idx, choice in enumerate(answer_choices):\n    always_true = True\n    for m in valid_models:\n        # Count batches per day\n        count = [0] * 6  # index 1-5 for days Monday-Friday\n        for t in range(3):\n            for b in range(3):\n                val = m.eval(day[t][b])\n                if is_const(val):\n                    d = val.as_long()\n                else:\n                    d = int(str(val))\n                count[d] += 1\n        \n        # Evaluate the choice\n        if idx == 0:  # At least one batch on each of five days\n            cond = all(count[d] >= 1 for d in range(1, 6))\n        elif idx == 1:  # At least two batches on Wednesday (day 3)\n            cond = count[3] >= 2\n        elif idx == 2:  # Exactly one batch on Monday (day 1)\n            cond = count[1] == 1\n        elif idx == 3:  # Exactly two batches on Tuesday (day 2)\n            cond = count[2] == 2\n        elif idx == 4:  # Exactly one batch on Friday (day 5)\n            cond = count[5] == 1\n        \n        if not cond:\n            always_true = False\n            break\n    \n    choice_always_true.append(always_true)\n\n# Find the choice that could be false (i.e., not always true)\nanswer_index_list = [idx for idx, always in enumerate(choice_always_true) if not always]\n\nprint(answer_index_list)",
+          "syntax_check_result": {
+            "is_valid": true,
+            "solver_output_or_error": "[4]",
+            "error_type": null
+          },
+          "usage": {
+            "prompt_tokens": 1411,
+            "completion_tokens": 1103,
+            "total_tokens": 2514
+          },
+          "api_time_only": 30.009429931640625,
+          "solver_time_only": 0.10604357719421387
+        }
+      ]
+    },
+    {
+      "plan_idx": 13,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 14,
+      "code_idx": 1,
+      "repair_round_logs": []
+    },
+    {
+      "plan_idx": 15,
+      "code_idx": 1,
+      "repair_round_logs": []
+    }
+  ]
+}

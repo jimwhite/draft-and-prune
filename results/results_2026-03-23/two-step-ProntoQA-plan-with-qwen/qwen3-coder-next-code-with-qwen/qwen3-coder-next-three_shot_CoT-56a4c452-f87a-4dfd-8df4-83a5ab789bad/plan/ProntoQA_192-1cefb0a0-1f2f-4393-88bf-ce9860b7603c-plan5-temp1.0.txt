@@ -1,0 +1,19 @@
+1. Identify all entities and types: Sam, numpus, wumpus, rompus, vumpus, jompus, yumpus, zumpus.  
+2. Identify all properties: wooden, small, floral, blue, dull.  
+3. Represent "Sam is a numpus" as a base fact: `is_a("Sam", "numpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Numpuses are not wooden.  
+   - Numpuses are wumpuses.  
+   - Wumpuses are small.  
+   - Wumpuses are rompuses.  
+   - Rompuses are not floral.  
+   - Rompuses are vumpuses.  
+   - Each vumpus is blue.  
+   - Jompuses are not dull.  
+   - Each vumpus is a yumpus.  
+   - Each yumpus is dull.  
+   - Yumpuses are zumpuses.  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (note: negative properties like "not wooden" require a separate predicate `is_wooden/2` and asserting negation via constraint or fact that the property does not hold; for properties like "not dull", assert `is_dull(x, False)` in the conclusion).  
+6. Derive Sam's classification chain: Sam is a numpus → Sam is a wumpus → Sam is a rompus → Sam is a vumpus → Sam is a yumpus → Sam is dull (by "Each yumpus is dull").  
+7. The query tests if "Sam is not dull" is provable: since we can prove Sam *is* dull, the statement "Sam is not dull" is false.  
+8. Use `facts.is_dull("Sam", False)` to check provability of the negated statement.

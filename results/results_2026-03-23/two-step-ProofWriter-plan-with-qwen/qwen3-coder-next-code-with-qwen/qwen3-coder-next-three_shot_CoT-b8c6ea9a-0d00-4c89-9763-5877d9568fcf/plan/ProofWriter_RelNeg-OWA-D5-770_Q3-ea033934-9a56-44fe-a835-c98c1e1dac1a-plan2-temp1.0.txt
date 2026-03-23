@@ -1,0 +1,19 @@
+1. Identify all entities involved: bald_eagle, cat, lion, mouse.
+2. Encode all directly stated explicit facts using ternary predicates (e.g., chases("bald_eagle", "cat", True), is_young("bald_eagle", True), does_not_chase("bald_eagle", "mouse", True), etc.), where negated facts are represented explicitly as facts.do_not_<predicate>(subject, object, True) or via negation in rules if PyKe supports conditional negation — but since PyKe uses positive facts only, we must assume explicit negative facts are encoded via separate predicates or by asserting the complement is False (e.g., chases("cat", "bald_eagle", False) is invalid; instead, we assert do_not_chase("cat", "bald_eagle", True) if needed).
+   - For this problem, all negative statements (e.g., “The cat does not chase the bald eagle”) must be encoded as explicit negative predicates: do_not_chase("cat", "bald_eagle", True), do_not_eat("cat", "bald_eagle", True).
+3. Translate all conditional rules into PyKe `foreach` + `assert` blocks:
+   • If something is kind → it is round.
+   • If something chases the bald eagle → it is round.
+   • If something is round → it sees the bald eagle.
+   • If something chases the cat and the cat chases the bald eagle → it eats the bald eagle.
+   • If something chases the cat → the cat sees the lion. (Note: consequent is binary relation on cat and lion)
+   • If something sees the cat → it chases the bald eagle.
+   • If the bald eagle is young and the bald eagle chases the lion → the bald eagle sees the lion.
+   • If the mouse eats the cat and the mouse eats the bald eagle → the bald eagle eats the cat.
+   • If something sees the bald eagle and it chases the cat → the bald eagle sees the cat.
+4. Ensure all rules use appropriate variable scoping and quantification with `foreach` over entities.
+5. For the query "The cat sees the lion", determine whether we can derive `sees("cat", "lion", True)` from facts and rules.
+   - Note: Rule 5 directly states: If something chases the cat → the cat sees the lion.
+   - From facts, the lion chases the cat: chases("lion", "cat", True).
+   - Therefore, instantiate rule 5 with "something" = lion to conclude sees("cat", "lion", True).
+6. So the query becomes: Use facts.sees("cat", "lion", True) to verify truth.

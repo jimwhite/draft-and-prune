@@ -1,0 +1,31 @@
+1. Enumerate the seven days (1 through 7) and define integer variables for kitten breed and puppy breed per day:  
+   - `k[i] ∈ {0, 1, 2}` for kitten on day i (0=Himalayan, 1=Manx, 2=Siamese)  
+   - `p[i] ∈ {0, 1, 2}` for puppy on day i (0=Greyhound, 1=Newfoundland, 2=Rottweiler)  
+
+2. Add **fixed constraints from problem statement**:  
+   - `p[0] = 0` (Greyhound on day 1, since index 0 → day 1)  
+   - Himalayans not on day 1 ⇒ `k[0] ≠ 0`  
+   - Himalayans not on day 7 ⇒ `k[6] ≠ 0` (as given in conditional premise)  
+
+3. Add **breedingfrequency constraints**:  
+   - Himalayans on exactly 3 days ⇒ sum over i of `(k[i] == 0)` is 3  
+   - Rottweilers not on day 7 ⇒ `p[6] ≠ 2`  
+   - Rottweilers not on any day that features Himalayans ⇒ for all i, if `k[i] == 0` then `p[i] ≠ 2`  
+
+4. Add **no-consecutive-days constraint**:  
+   - For all i from 0 to 5:  
+     - `k[i] != k[i+1]` and `p[i] != p[i+1]`  
+
+5. Add **day-1 ≠ day-7 constraint**:  
+   - `k[0] != k[6]` and `p[0] != p[6]`  
+
+6. Translate answer choice pairs into day index tuples:  
+   - (day1, day3) → (0,2), (day2, day6) → (1,5), (day3, day5) → (2,4),  
+     (day4, day6) → (3,5), (day5, day7) → (4,6)  
+
+7. Define `answer_index_list = []`. For each answer choice index j (0 to 4) corresponding to pair (d1, d2):  
+   - Clone base constraints into fresh solver S.  
+   - Add constraint: `k[d1] == k[d2]` and `p[d1] == p[d2]` (same kitten and same puppy on both days).  
+   - If S.check() is UNSAT, then this pair CANNOT be identical → append j to `answer_index_list`.  
+
+8. Output the index list (raw answer indices of impossible pairs).

@@ -1,0 +1,19 @@
+1. Enumerate the six available colors (forest, olive, peach, turquoise, white, yellow) and assign integer indices 0–5.  
+2. Since exactly five colors are used, define a Boolean selector variable `used[c]` for each color c indicating whether it is used. Add constraint: exactly five `used[c]` are true.  
+3. Define three rugs (R0, R1, R2). For each rug r and color c, define Boolean variable `in_rug[r][c]` indicating whether color c is used in rug r.  
+4. Add **exactly-one-use constraint**: each used color appears in exactly one rug (i.e., for each c, sum over r of `in_rug[r][c]` equals 1 if `used[c]`, else 0).  
+5. Add **solid/multicolored constraint**: a rug is solid iff exactly one `in_rug[r][c]` is true; multicolored otherwise. Enforce that exactly two rugs are solid (i.e., exactly two rugs have exactly one color assigned).  
+6. Encode the rule constraints as implications:  
+   - **White rule**: If white is in rug r, then at least two other colors are also in that rug ⇒ `(in_rug[r][white] → (sum_{c ≠ white} in_rug[r][c]) ≥ 2)`.  
+   - **Olive ⇒ peach**: `in_rug[r][olive] → in_rug[r][peach]`.  
+   - **Forest & turquoise conflict**: `¬(in_rug[r][forest] ∧ in_rug[r][turquoise])`.  
+   - **Peach & turquoise conflict**: `¬(in_rug[r][peach] ∧ in_rug[r][turquoise])`.  
+   - **Peach & yellow conflict**: `¬(in_rug[r][peach] ∧ in_rug[r][yellow])`.  
+7. Translate the answer choices into pairs of colors (each pair corresponds to potential solid rug colors). For each choice:  
+   - Identify the two colors (e.g., forest and peach → indices 0 and 2).  
+   - Assume the two solid rugs are precisely those two colors (i.e., one rug contains only forest, the other only peach).  
+   - Add constraints: two rugs each have exactly one color (the specified ones), the third rug is multicolored.  
+   - Ensure no other rug uses those two colors (since each color used exactly once).  
+8. For each choice, clone the base constraints into a fresh solver and add the assumption (the two specified colors form the solid rugs).  
+9. If the resulting formula is UNSAT, then that pair of colors **cannot** be the two solid rugs; record the choice index.  
+10. Collect all such impossible pairs and output their indices (corresponding to the answer choices).

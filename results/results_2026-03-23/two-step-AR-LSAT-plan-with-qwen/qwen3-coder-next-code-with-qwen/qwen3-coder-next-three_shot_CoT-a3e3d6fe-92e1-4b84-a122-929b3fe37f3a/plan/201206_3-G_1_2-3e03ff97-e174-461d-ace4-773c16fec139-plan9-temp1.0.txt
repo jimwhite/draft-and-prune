@@ -1,0 +1,20 @@
+1. Enumerate the six lab assistants and assign integer indices.  
+2. Enumerate the six sessions: Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA); assign each session a unique position index 0–5 in chronological order.  
+3. Create integer variables `pos[i]` for each lab assistant i ∈ {Julio, Kevin, Lan, Nessa, Olivia, Rebecca}, representing the session position (0–5) they lead.  
+4. Add **domain constraints**: all `pos[i]` ∈ {0,1,2,3,4,5}, and all distinct (one session per assistant).  
+5. Add **day-of-week mapping constraints**:  
+    - WM → day 0, WA → day 0  
+    - TM → day 1, TA → day 1  
+    - FM → day 2, FA → day 2  
+   Define helper functions or integer divisions to extract day and time-of-day (e.g., `day = pos // 2`, `time = pos % 2`), or precompute mapping dictionary.  
+6. Add **constraint: Kevin and Rebecca same day**: `day(Kevin) == day(Rebecca)`.  
+7. Add **constraint: Lan and Olivia different days**: `day(Lan) ≠ day(Olivia)`.  
+8. Add **constraint: Nessa afternoon session**: `pos[Nessa] % 2 == 1`.  
+9. Add **constraint: Julio earlier day than Olivia**: `day(Julio) < day(Olivia)`.  
+10. Add **given conditional assumption**: Lan does NOT lead a Wednesday session → `day(Lan) ≠ 0`.  
+11. Translate answer choices into assistant indices: ['Rebecca', 'Olivia', 'Nessa', 'Kevin', 'Julio'] → indices 0–4.  
+12. Define `answer_index_list = []`. For each candidate assistant in the answer choices:  
+    - Clone base constraints + Lan-not-Wednesday into fresh solver.  
+    - Assert that this assistant does **not** lead any Thursday session: `day(assistant) ≠ 1`.  
+    - If UNSAT, then the assistant **must** lead a Thursday session under the given conditions → append their index to `answer_index_list`.  
+13. Print `answer_index_list`.

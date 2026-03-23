@@ -1,0 +1,18 @@
+1. Identify all individuals: Anne, Bob, Gary, Harry.
+2. Encode all explicitly stated facts using ternary predicates of the form predicate(entity, True):
+   - is_furry("Anne", True), is_furry("Bob", True)
+   - is_blue("Gary", True), is_cold("Gary", True), is_furry("Gary", True), is_quiet("Gary", True), is_round("Gary", True)
+   - is_blue("Harry", True), is_cold("Harry", True), is_quiet("Harry", True), is_round("Harry", True), is_young("Harry", True)
+3. Translate all logical implications into PyKe rules using `foreach` and `assert`:
+   • If something is cold and blue → it is quiet.
+   • If something is round and furry → it is quiet.
+   • If Bob is blue and round → Bob is young.
+   • If something is round → it is blue.
+   • If something is young and round → it is blue.
+   • If Harry is quiet and furry → Harry is blue.
+   • If something is furry → it is cold.
+   • If something is cold → it is round.
+   • If something is young and furry → it is rough.
+4. For each rule, construct a `foreach` block that matches the antecedent conditions (using appropriate predicates and unifying variables), followed by an `assert` clause that adds the consequent fact.
+5. The query checks whether Harry is furry:
+   → Use facts.is_furry("Harry", True)

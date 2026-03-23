@@ -1,0 +1,214 @@
+You are an expert Python programmer specializing in the Z3 SMT solver library.
+Your goal is to write executable Python Z3 code to solve the given problem.
+Remember to only output the raw Python code.
+
+Context:
+"On Tuesday Vladimir and Wendy each eat exactly four separate meals: breakfast, lunch, dinner, and a snack. The following is all that is known about what they eat during that day: At no meal does Vladimir eat the same kind of food as Wendy. Neither of them eats the same kind of food more than once during the day. For breakfast, each eats exactly one of the following: hot cakes, poached eggs, or omelet. For lunch, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For dinner, each eats exactly one of the following: fish, hot cakes, macaroni, or omelet. For a snack, each eats exactly one of the following: fish or omelet. Wendy eats an omelet for lunch."
+Question:
+"Vladimir must eat which one of the following foods?"
+Choices:
+["fish", "hot cakes", "macaroni", "omelet", "poached eggs"]
+Z3 Program:
+```
+from z3 import *
+
+# Food indices
+(FISH, HOT, MAC, OME, POE) = range(5)
+
+# Meal variables: 0-breakfast, 1-lunch, 2-dinner, 3-snack
+V = [Int(f"V_{m}") for m in range(4)]
+W = [Int(f"W_{m}") for m in range(4)]
+
+# Base solver
+solver = Solver()
+
+# Domain constraints
+## Breakfast: hot cakes, poached eggs, or omelet
+solver.add(Or(V[0] == HOT, V[0] == POE, V[0] == OME))
+solver.add(Or(W[0] == HOT, W[0] == POE, W[0] == OME))
+## Lunch and dinner: fish, hot cakes, macaroni, or omelet
+for meal in [1, 2]:  # lunch and dinner
+    solver.add(Or(V[meal] == FISH, V[meal] == HOT, V[meal] == MAC, V[meal] == OME))
+    solver.add(Or(W[meal] == FISH, W[meal] == HOT, W[meal] == MAC, W[meal] == OME))
+## Snack: fish or omelet
+solver.add(Or(V[3] == FISH, V[3] == OME))
+solver.add(Or(W[3] == FISH, W[3] == OME))
+
+# Fixed constraint
+solver.add(W[1] == OME)
+
+# No-repeat constraints
+for i in range(4):
+    for j in range(i + 1, 4):
+        solver.add(V[i] != V[j], W[i] != W[j])
+
+# No-same-meal constraints
+for m in range(4):
+    solver.add(V[m] != W[m])
+
+# Check each answer choice using proof by contradiction
+answer_index_list = []
+for idx in range(5):
+    s_chk = Solver()
+    s_chk.add(solver.assertions())
+    
+    # Assert Vladimir never eats this food at any meal
+    s_chk.add(And(*(V[k] != idx for k in range(4))))
+    
+    # If UNSAT, this food is forced for Vladimir
+    if s_chk.check() == unsat:
+        answer_index_list.append(idx)
+
+print(answer_index_list)
+```
+
+Context:
+"In a repair facility there are exactly six technicians: Stacy, Urma, Wim, Xena, Yolanda, and Zane. Each technician repairs machines of at least one of the following three types—radios, televisions, and VCRs—and no other types. The following conditions apply: Xena and exactly three other technicians repair radios. Yolanda repairs both televisions and VCRs. Stacy does not repair any type of machine that Yolanda repairs. Zane repairs more types of machines than Yolanda repairs. Wim does not repair any type of machine that Stacy repairs. Urma repairs exactly two types of machines."
+Question:
+"Which one of the following pairs of technicians could repair all and only the same types of machines as each other?"
+Choices:
+["Stacy and Urma", "Urma and Yolanda", "Urma and Xena", "Wim and Xena", "Xena and Yolanda"]
+Z3 Program:
+```
+from z3 import *
+
+# Technician indices
+(S, U, W, X, Y, Z) = range(6)
+
+# Machine type indices: 0-Radio, 1-Television, 2-VCR
+t = [[Bool(f"t_{i}_{j}") for j in range(3)] for i in range(6)]
+
+# Base solver
+solver = Solver()
+
+# At-least-one constraint
+## Each technician repairs at least one machine type
+for i in range(6):
+    solver.add(Or(t[i][0], t[i][1], t[i][2]))
+
+# Radio constraint
+## Xena repairs radios
+solver.add(t[X][0])
+## Exactly 4 technicians repair radios
+solver.add(Sum([If(t[i][0], 1, 0) for i in range(6)]) == 4)
+
+# Yolanda constraint
+solver.add(t[Y][1], t[Y][2])
+
+# Stacy constraint
+solver.add(Not(t[S][1]), Not(t[S][2]))
+
+# Zane constraint
+count = lambda idx: Sum([If(t[idx][j], 1, 0) for j in range(3)])
+solver.add(count(Z) > count(Y))
+
+# Wim constraint
+for j in range(3):
+    solver.add(Implies(t[S][j], Not(t[W][j])))
+
+# Urma constraint
+solver.add(count(U) == 2)
+
+# Check each answer choice
+answer_index_list = []
+for idx in range(5):
+    s_chk = Solver()
+    s_chk.add(solver.assertions())
+    
+    # Define pairs based on answer choices
+    if idx == 0:    # Stacy and Urma
+        tech1, tech2 = S, U
+    elif idx == 1:  # Urma and Yolanda
+        tech1, tech2 = U, Y
+    elif idx == 2:  # Urma and Xena
+        tech1, tech2 = U, X
+    elif idx == 3:  # Wim and Xena
+        tech1, tech2 = W, X
+    elif idx == 4:  # Xena and Yolanda
+        tech1, tech2 = X, Y
+    
+    # Both technicians repair identical machine types
+    for j in range(3):
+        s_chk.add(t[tech1][j] == t[tech2][j])
+    
+    if s_chk.check() == sat:
+        answer_index_list.append(idx)
+
+print(answer_index_list)
+```
+
+Context:
+"Workers at a water treatment plant open eight valves—G, H, I, K, L, N, O, and P—to flush out a system of pipes that needs emergency repairs. To maximize safety and efficiency, each valve is opened exactly once, and no two valves are opened at the same time. The valves are opened in accordance with the following conditions: Both K and P are opened before H. O is opened before L but after H. L is opened after G. N is opened before H. I is opened after K."
+Question:
+"Each of the following could be the fifth valve opened EXCEPT:"
+Choices:
+["H", "I", "K", "N", "O"]
+Z3 Program:
+```
+from z3 import *
+
+# Valve position variables: pos_valve = opening position (1-8)
+pos = {v: Int(f"pos_{v}") for v in ["G", "H", "I", "K", "L", "N", "O", "P"]}
+
+# Base solver
+solver = Solver()
+
+# Domain constraints
+## Each valve position between 1 and 8
+for v in pos:
+    solver.add(pos[v] >= 1, pos[v] <= 8)
+## All positions distinct (each valve opened exactly once)
+solver.add(Distinct(*pos.values()))
+
+# Ordering constraints
+## K and P opened before H
+solver.add(pos["K"] < pos["H"])
+solver.add(pos["P"] < pos["H"])
+## N opened before H
+solver.add(pos["N"] < pos["H"])
+## H opened before O, O opened before L
+solver.add(pos["H"] < pos["O"])
+solver.add(pos["O"] < pos["L"])
+## G opened before L
+solver.add(pos["G"] < pos["L"])
+## K opened before I
+solver.add(pos["K"] < pos["I"])
+
+# Check each answer choice
+answer_index_list = []
+for idx in range(5):
+    s_chk = Solver()
+    s_chk.add(solver.assertions())
+    
+    # Define valve based on answer choices
+    if idx == 0:      # H
+        valve = "H"
+    elif idx == 1:    # I
+        valve = "I"
+    elif idx == 2:    # K
+        valve = "K"
+    elif idx == 3:    # N
+        valve = "N"
+    elif idx == 4:    # O
+        valve = "O"
+    
+    # Add constraint that this valve is opened fifth
+    s_chk.add(pos[valve] == 5)
+    
+    # If UNSAT, this valve cannot be fifth (EXCEPT answer)
+    if s_chk.check() == unsat:
+        answer_index_list.append(idx)
+
+print(answer_index_list)
+```
+
+Context:
+{context}
+Question:
+{question}
+Choices:
+{answers}
+Z3 Program:
+```
+
+```

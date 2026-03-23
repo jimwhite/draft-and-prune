@@ -1,0 +1,27 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to begin modeling the puzzle.
+
+2.  **Define Variables and the Domain:**
+    * Identify the variables representing the five fruits: `"mangoes"`, `"cantaloupes"`, `"plums"`, `"oranges"`, and `"watermelons"`.
+    * Define the domain as integers from 1 to 5, where **1 = cheapest** and **5 = most expensive**, to represent price rankings.
+    * Add the fruit variables and their domain (1–5) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate the statements into constraints using `lambda` functions:
+        * "The oranges are more expensive than the watermelons" → `oranges > watermelons`
+        * "The watermelons are the second-cheapest" → `watermelons == 2`
+        * "The plums are less expensive than the cantaloupes" → `plums < cantaloupes`
+        * "The plums are the second-most expensive" → `plums == 4`
+
+4.  **Solve for the Arrangement:**
+    * Use `getSolutions()` to find all valid assignments of ranks to fruits satisfying the constraints.
+    * Extract the unique solution from the returned list (since the problem is well-constrained and consistent).
+
+5.  **Determine Which Statement Is True:**
+    * Note that the question asks which choice correctly identifies the second-most expensive fruit (i.e., rank 4).
+    * From constraint #4, we already know `plums == 4`, so plums are second-most expensive.
+    * However, for completeness in code: create a dictionary mapping choice letters ("A"–"E") to fruit names.
+    * Iterate over choices: for each choice, check if the corresponding fruit’s rank in the solution equals 4.
+    * Return/print the letter of the choice whose fruit has rank 4.

@@ -1,0 +1,26 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the variables as the five fruits: `"cantaloupe"`, `"kiwi"`, `"orange"`, `"mango"`, and `"peach"`.  
+    * Define the domain as integers from 1 to 5, where **1 = cheapest** and **5 = most expensive** (i.e., higher number = more expensive).  
+    * Add all variables to the problem with their domain [1, 2, 3, 4, 5].
+
+3.  **Add the AllDifferentConstraint:**  
+    * Enforce that each fruit has a unique price rank using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Constraints:**  
+    * "The kiwis are less expensive than the mangoes" → `kiwi < mango` (since lower rank number means cheaper).  
+    * "The peaches are less expensive than the oranges" → `peach < orange`.  
+    * "The oranges are the second-most expensive" → oranges occupy rank 4 (since most expensive is 5, second-most is 4).  
+    * "The mangoes are the second-cheapest" → mangoes occupy rank 2 (cheapest is 1, second-cheapest is 2).
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments of ranks.  
+    * Extract the unique solution (as the problem is deterministic).
+
+6.  **Determine the Third-Most-Expensive Fruit:**  
+    * Since third-most-expensive corresponds to rank 3 (5 = most, 4 = second-most, **3 = third-most**), locate the fruit with rank 3 in the solution.  
+    * Build a mapping from choice letters to fruit names: A→"cantaloupe", B→"kiwi", C→"orange", D→"mango", E→"peach".  
+    * Identify which fruit has rank 3 and output the corresponding choice letter.

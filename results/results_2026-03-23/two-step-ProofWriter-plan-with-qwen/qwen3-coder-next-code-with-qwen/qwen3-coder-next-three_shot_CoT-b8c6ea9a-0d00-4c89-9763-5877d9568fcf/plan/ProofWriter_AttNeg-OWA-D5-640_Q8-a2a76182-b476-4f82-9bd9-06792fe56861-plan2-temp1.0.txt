@@ -1,0 +1,19 @@
+1. Identify all individuals: Bob, Dave, Fiona, Harry.
+2. Encode explicit facts using ternary predicates:
+   - is_rough("Bob", True)
+   - is_furry("Dave", True), is_nice("Dave", True), is_smart("Dave", True), is_red("Dave", False)
+   - is_green("Fiona", True), is_nice("Fiona", True)
+   - is_blue("Harry", True), is_furry("Harry", True), is_green("Harry", True), is_nice("Harry", True), is_red("Harry", False), is_rough("Harry", True), is_smart("Harry", True)
+3. Encode the contextual implications as rules:
+   • Smart things are green → `foreach is_smart(x, True) assert is_green(x, True)`
+   • If something is nice and not rough → it is red → `foreach is_nice(x, True), is_rough(x, False) assert is_red(x, True)`
+   • If something is nice → it is smart → `foreach is_nice(x, True) assert is_smart(x, True)`
+   • If something is rough → it is nice → `foreach is_rough(x, True) assert is_nice(x, True)`
+   • If something is blue → it is furry → `foreach is_blue(x, True) assert is_furry(x, True)`
+   • All blue, smart things are furry → `foreach is_blue(x, True), is_smart(x, True) assert is_furry(x, True)` (note: may be redundant with prior rule but keep as stated)
+   • If Bob is furry and not rough → Bob is green → `foreach is_furry("Bob", True), is_rough("Bob", False) assert is_green("Bob", True)`
+   • If something is green → it is blue → `foreach is_green(x, True) assert is_blue(x, True)`
+   • If something is red and not nice → it is not blue → `foreach is_red(x, True), is_nice(x, False) assert is_blue(x, False)`
+4. Note: Several rules are potentially conflicting or circular (e.g., nice→smart, smart→green, green→blue, blue→furry); these must be handled as forward-chaining rules in PyKe.
+5. The query checks whether Bob is not green:
+   → Use facts.is_green("Bob", False)

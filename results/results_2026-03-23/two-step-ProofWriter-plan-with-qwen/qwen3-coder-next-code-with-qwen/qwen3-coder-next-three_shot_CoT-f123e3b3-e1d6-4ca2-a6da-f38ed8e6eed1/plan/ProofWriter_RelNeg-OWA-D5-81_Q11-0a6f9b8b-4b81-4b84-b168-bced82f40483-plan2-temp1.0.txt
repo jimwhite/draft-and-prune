@@ -1,0 +1,24 @@
+1. Identify all entities: cat, cow, rabbit, squirrel.
+2. Encode all directly stated facts as ternary predicates using facts.predicate(subject, object, True):
+   - eats("cat", "squirrel", True)
+   - sees("cat", "squirrel", True)
+   - eats("cow", "squirrel", True)
+   - sees("cow", "cat", True)
+   - is_round("rabbit", True)
+   - sees("rabbit", "cat", True)
+   - eats("squirrel", "rabbit", True)
+   - is_cold("squirrel", True)
+   - needs("squirrel", "rabbit", True)
+   - sees("squirrel", "cat", True)
+3. Translate each conditional rule into PyKe `foreach` + `assert` rules:
+   • If someone sees the cat and is not green → they see the cow.
+   • If rabbit is kind AND rabbit sees squirrel → squirrel needs rabbit. (Note: 'kind' is unary predicate; use facts.is_kind("rabbit", True) as conditional.)
+   • Rough people are cold: If someone is rough → they are cold.
+   • If someone sees the rabbit → they are not round.
+   • If someone sees the squirrel and is not green → they need the squirrel.
+   • If someone eats the cow → they see the rabbit.
+   • If someone eats the squirrel → they are rough.
+   • If someone is cold → they eat the cow.
+4. For each rule, express condition via `foreach` over variables, using `~facts.predicate(...)` for negation (e.g., `~facts.is_green("X", True)`) and assert conclusion accordingly.
+5. To answer whether "The cat is not round": check if facts.is_round("cat", False) can be deduced, or equivalently whether `~facts.is_round("cat", True)` holds — i.e., attempt to prove that cat is round leads to contradiction or directly derive `~facts.is_round("cat", True)`.
+6. Specifically, query the negated property: Use facts.is_round("cat", False).

@@ -1,0 +1,23 @@
+1. Enumerate the five students and assign integer indices (0: Jiang, 1: Kramer, 2: Lopez, 3: Megregian, 4: O'Neill).  
+2. Enumerate the three plays and assign integer indices (0: Sunset, 1: Tamerlane, 2: Undulation).  
+3. Create Boolean variables `rev[i][p]` for each student i and play p, indicating whether student i reviews play p.  
+4. Add **non-empty constraint**: each student reviews at least one play.  
+5. Add **Kramer & Lopez < Megregian constraint**: for each student s in {Kramer, Lopez}, the count of plays reviewed by s is strictly less than the count for Megregian.  
+6. Add **Jiang-Lopez/Megregian disjointness constraint**: Lopez and Megregian share no plays with Jiang; i.e., for all plays p, if `rev[Jiang][p]` is true then both `rev[Lopez][p]` and `rev[Megregian][p]` are false.  
+7. Add **Kramer & O'Neill both review Tamerlane**: `rev[Kramer][1] = true` and `rev[O'Neill][1] = true`.  
+8. Add **exactly-two-pairs-identical constraint**: among the five students, there is exactly one pair of distinct students who review *exactly* the same set of plays; all other students have unique review sets.  
+   - To model this: first, define set-representation via bit-vectors or integer encoding (e.g., `set[i] = rev[i][0]*4 + rev[i][1]*2 + rev[i][2]`);  
+   - Count the number of distinct `set[i]` values; let d = number of distinct sets.  
+   - Since five students and exactly two share a set (i.e., one duplication), then d = 4, and the multiplicity of one value is exactly 2 (others are 1).  
+   - Enforce: sum over all values v of `max(0, count(v) - 1)` = 1; equivalently, encode via additional auxiliary variables or use `Distinct` with a single equality pair.  
+   - Simpler: enforce existence of exactly one unordered pair (i,j), i<j, such that `set[i] == set[j]`, and for all other pairs (i,k) with k≠j, `set[i] != set[k]`.  
+9. Add **exactly-three-undulation constraint**: total number of students reviewing Undulation (play index 2) is exactly three.  
+10. For each answer choice, define a corresponding constraint and test feasibility with Z3:  
+   - Choice A: "Megregian does not review Undulation" → `¬rev[Megregian][2]`  
+   - Choice B: "O'Neill does not review Undulation" → `¬rev[O'Neill][2]`  
+   - Choice C: "Jiang reviews Undulation" → `rev[Jiang][2]`  
+   - Choice D: "Lopez reviews Tamerlane" → `rev[Lopez][1]`  
+   - Choice E: "O'Neill reviews Sunset" → `rev[O'Neill][0]`  
+11. For each choice, clone the base constraints (steps 4–9) plus the new choice constraint into a fresh solver.  
+12. If any such model is SAT, the choice *could* be true — record its index as valid.  
+13. Output the list of indices for which the model is SAT (i.e., possibilities).

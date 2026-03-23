@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the puzzle.
+
+2. **Define Variables and Their Domain:**  
+   * Define the variables as the seven fruits: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.  
+   * Define a numerical domain representing price ranking: use integers from 1 to 7, where **1 = cheapest** and **7 = most expensive**.  
+   * Add all variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3. **Translate Rules into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of price ranks.  
+   * Convert each statement into a lambda constraint:  
+     - "The oranges are more expensive than the peaches" → `oranges > peaches` (since higher rank = more expensive).  
+     - "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4`.  
+     - "The pears are less expensive than the cantaloupes" → `pears < 4` (since cheaper = lower rank).  
+     - "The peaches are the second-most expensive" → `peaches == 6` (since most expensive is rank 7, second-most = 6).  
+     - "The mangoes are the cheapest" → `mangoes == 1`.  
+     - "The kiwis are the third-cheapest" → `kiwis == 3` (since cheapest = rank 1, second-cheapest = 2, third-cheapest = 3).
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (since constraints fully determine ranks).
+
+5. **Determine Which Option is True:**  
+   * The question asks which fruit is the cheapest (i.e., rank 1).  
+   * The choices include explicit claims about cheapest status.  
+   * Use the solved solution to verify which fruit has rank 1, and match it with the corresponding choice.  
+   * Note: Statement "The mangoes are the cheapest" is explicitly given, so choice **B** must be true—but verify consistency with other constraints (especially rank uniqueness and other fixed ranks) in the solution.  
+   * Print the correct choice letter (e.g., `"B"`).

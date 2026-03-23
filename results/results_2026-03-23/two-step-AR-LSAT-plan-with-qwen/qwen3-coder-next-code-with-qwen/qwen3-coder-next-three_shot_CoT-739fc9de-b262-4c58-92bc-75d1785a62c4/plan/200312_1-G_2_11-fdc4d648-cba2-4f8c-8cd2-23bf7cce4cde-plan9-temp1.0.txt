@@ -1,0 +1,20 @@
+1. Enumerate the six cargo types and assign each an integer index (0–5 for fuel, grain, livestock, machinery, produce, textiles).  
+2. Create six integer variables `b[0]` through `b[5]`, where `b[i]` is the bay number (1–6) for cargo type i.  
+3. Add **domain constraints**: all `b[i]` ∈ {1,2,3,4,5,6}, and all distinct (permutation of 1–6).  
+4. Add **ordering constraints** from the problem:  
+   - grain > livestock ⇒ `b[grain] > b[livestock]`  
+   - livestock > textiles ⇒ `b[livestock] > b[txtiles]`  
+   - produce > fuel ⇒ `b[produce] > b[fuel]`  
+   - textiles adjacent to produce ⇒ `|b[txtiles] - b[produce]| == 1`  
+5. Add **additional condition from the "if" clause**: produce is next to livestock ⇒ `|b[produce] - b[livestock]| == 1`.  
+6. Translate each answer choice into a constraint:  
+   - "Bay 2 is holding fuel" ⇒ `b[fuel] == 2`  
+   - "Bay 4 is holding produce" ⇒ `b[produce] == 4`  
+   - "Bay 4 is holding textiles" ⇒ `b[txtiles] == 4`  
+   - "Bay 5 is holding grain" ⇒ `b[grain] == 5`  
+   - "Bay 5 is holding machinery" ⇒ `b[machinery] == 5`  
+7. For each choice (in order), clone the full constraint set (base + produce-livestock adjacency) into a fresh solver.  
+8. Assert the specific bay assignment of that choice.  
+9. If the resulting formula is UNSAT, then that choice **cannot** be true under the condition; it is the "EXCEPT" candidate.  
+10. Collect indices of all UNSAT choices into `answer_index_list`. Since exactly one EXCEPT answer must exist, the list will have size 1.  
+11. Return the corresponding choice string for that index as the final answer.

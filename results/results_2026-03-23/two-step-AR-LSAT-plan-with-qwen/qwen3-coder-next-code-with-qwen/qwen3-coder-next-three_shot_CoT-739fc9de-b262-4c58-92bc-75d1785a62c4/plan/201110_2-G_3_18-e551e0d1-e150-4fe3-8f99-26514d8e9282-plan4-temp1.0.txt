@@ -1,0 +1,20 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning each an integer index.  
+2. Create Boolean variables: `day1[r][b]` = True if rider r tests bicycle b on day 1; `day2[r][b]` = True if rider r tests bicycle b on day 2.  
+3. Add **day1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider r, exactly one `day1[r][b]` is True.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bike b, exactly one `day1[r][b]` is True.  
+4. Add **day2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider r, exactly one `day2[r][b]` is True.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bike b, exactly one `day2[r][b]` is True.  
+5. Add **hard constraints**:  
+   - Reynaldo cannot test F on any day: `day1[Reynaldo][F] = False`, `day2[Reynaldo][F] = False`.  
+   - Yuki cannot test J on any day: `day1[Yuki][J] = False`, `day2[Yuki][J] = False`.  
+   - Theresa must test H on *some* day: `day1[Theresa][H] or day2[Theresa][H] = True`.  
+   - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for all b, `day1[Yuki][b] → day2[Seamus][b]` (i.e., if Yuki tests b on day1, then Seamus tests b on day2).  
+6. Translate each answer choice into a Boolean conjunction of equality constraints (i.e., both riders test the same bicycle on the same day).  
+   - E.g., “Both Reynaldo and Seamus test J” → `day1[Reynaldo][J] ∧ day1[Seamus][J]` (since both testing same bike on same day; note: problem states “both test J” without specifying day, but given context implies *same* day; cross-check: all choices say “both ... test X” — consistent with same-day pair).  
+7. For each answer choice:  
+   - Clone the base constraints into a fresh solver.  
+   - Add the specific claim (e.g., `day1[Reynaldo][J] and day1[Seamus][J]`).  
+   - Check satisfiability.  
+8. The choice that yields UNSAT is the one that CANNOT be true; output its index as the answer.

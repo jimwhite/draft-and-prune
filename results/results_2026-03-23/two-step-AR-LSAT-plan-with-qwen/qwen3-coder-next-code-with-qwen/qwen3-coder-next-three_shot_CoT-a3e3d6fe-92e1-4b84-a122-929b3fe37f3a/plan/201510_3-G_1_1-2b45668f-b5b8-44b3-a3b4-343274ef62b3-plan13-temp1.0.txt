@@ -1,0 +1,9 @@
+1. Enumerate the seven accomplices and assign each a fixed position variable (1 through 7) corresponding to their recruitment order.  
+2. Add **domain constraints**: each position variable is an integer in [1,7] and all are distinct (a permutation).  
+3. Add **fixed constraint**: Peters is recruited fourth → pos_Peters = 4.  
+4. Add **Villas-White adjacency constraint**: Villas is recruited immediately before White → pos_White = pos_Villas + 1.  
+5. Add **Quinn-Rovero ordering constraint**: Quinn recruited earlier than Rovero → pos_Quinn < pos_Rovero.  
+6. Add **Stanton-Tao separation constraint**: Stanton is neither immediately before nor after Tao → |pos_Stanton - pos_Tao| ≠ 1.  
+7. For each answer choice (list of seven names in order), create a fresh solver, add all base constraints, and then assert that the recruitment order matches the candidate sequence (i.e., for each position i from 1 to 7, pos_accomplice = i for the accomplice at that position in the choice).  
+8. Check satisfiability of each candidate: if SAT, the choice is possible and is the answer; stop after finding the first valid one.  
+9. Output the index (0-based or as per instruction) of the first satisfying choice.

@@ -1,0 +1,19 @@
+1. Enumerate the six lab assistants: Julio, Kevin, Lan, Nessa, Olivia, Rebecca → assign indices 0–5.  
+2. Enumerate the six sessions: [Wed AM, Wed PM, Thu AM, Thu PM, Fri AM, Fri PM] → assign indices 0–5 in order.  
+3. Create integer variables `assign[i]` for each assistant i, representing the session index (0–5) they lead.  
+4. Add **domain constraints**: each `assign[i] ∈ {0,1,2,3,4,5}`; all `assign[i]` distinct (bijection).  
+5. Add **fixed constraint**: Julio leads Thursday afternoon → `assign[Julio] == 3`.  
+6. Add **Kevin-Rebecca same day constraint**: Kevin and Rebecca must be assigned to sessions on the same calendar day.  
+    - Map session indices to days: Wed AM=0/Wed PM=1 → Wed; Thu AM=2/Thu PM=3 → Thu; Fri AM=4/Fri PM=5 → Fri.  
+    - For sessions s1, s2: same_day(s1,s2) ⇔ s1//2 == s2//2 (using integer division).  
+    - Enforce: `(assign[Kevin] // 2) == (assign[Rebecca] // 2)`.  
+7. Add **Lan-Olivia different day constraint**: `(assign[Lan] // 2) != (assign[Olivia] // 2)`.  
+8. Add **Nessa afternoon constraint**: Nessa must lead an afternoon session → session index ∈ {1, 3, 5} ⇒ `assign[Nessa] % 2 == 1`.  
+9. Add **Julio earlier than Olivia constraint**: `assign[Julio] < assign[Olivia]` → 3 < assign[Olivia].  
+10. With Julio fixed to session 3, deduce implicitly: Olivia ∈ {4,5} (since >3 and distinct).  
+11. Compute possible assignments under these constraints using Z3: generate all satisfying models (or count distinct assignments if SAT, but more efficient to enumerate and check fixed values).  
+12. For each of the other five assistants (Kevin, Lan, Nessa, Olivia, Rebecca), check across all valid assignments whether their assigned session is uniquely determined (i.e., same value in every model).  
+13. Count how many assistants have fixed session assignments across all models.  
+14. Map that count to the answer choices: if count = k, select choice with index corresponding to k−1 (0→'one', 1→'two', etc.).  
+15. Return the matching answer string from the list ['one','two','three','four','five'].
+"

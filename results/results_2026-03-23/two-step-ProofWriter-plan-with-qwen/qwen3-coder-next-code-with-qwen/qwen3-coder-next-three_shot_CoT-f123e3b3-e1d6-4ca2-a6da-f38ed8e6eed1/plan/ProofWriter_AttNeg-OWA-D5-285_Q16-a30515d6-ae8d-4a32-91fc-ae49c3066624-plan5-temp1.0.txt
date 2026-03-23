@@ -1,0 +1,14 @@
+1. Identify all individuals: Bob, Fiona, Gary, Harry.
+2. Encode all directly stated facts using ternary predicates with boolean objects for unary properties (e.g., is_big("Bob", True), is_furry("Bob", True), is_smart("Bob", True), etc.) and for negations use explicit False (e.g., is_green("Fiona", False), is_white("Fiona", True)).
+3. Translate all universal conditionals and implications into PyKe rules:
+   • All green people are furry.
+   • If Gary is furry and not smart → Gary is white.
+   • Smart people are green.
+   • If Bob is not green and not white → Bob is furry.
+   • Big people are cold.
+   • If someone is smart and furry → they are big.
+   • If someone is white and not cold → they are not blue.
+   • All cold people are not blue (i.e., if someone is cold → they are not blue).
+4. For each rule, write a `foreach` clause capturing the antecedent conditions (including negated facts via `not facts.predicate(..., True)`) and an `assert` clause for the consequent.
+5. Formulate the query to check whether Bob is white:
+   → Use facts.is_white("Bob", True)

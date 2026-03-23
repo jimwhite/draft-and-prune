@@ -1,0 +1,16 @@
+1. Enumerate the six available colors and assign integer codes (0=forest, 1=olive, 2=peach, 3=turquoise, 4=white, 5=yellow).  
+2. Create Boolean variables for each color being used (exactly five of six colors are selected), but instead model selection via choosing which 5 colors are used—i.e., enumerate all subsets of size 5 from the six colors (6 total subsets).  
+3. For each subset S of 5 colors, generate all possible assignments of those colors to three rugs (solid or multicolored), subject to:  
+   - Each color in S is used in exactly one rug (so partition of S into up to three disjoint subsets, each corresponding to arug).  
+   - Exactly two rugs are solid (i.e., exactly two of the three rug-sets have size 1), and thus one rug is multicolored (size ≥2, since total colors =5: sizes must be 1,1,3).  
+4. For each such valid configuration (2 solid rugs + 1 multicolored rug), enforce the *rules*:  
+   - If white ∈ rug, then that rug must contain at least 3 colors (i.e., if white is in a solid rug → invalid; since solidrug size=1). So white cannot be in any solid rug.  
+   - If olive ∈ rug, then peach must also ∈ same rug. So if olive is in a solid rug → invalid (needs peach too); similarly, if olive and peach are split across rugs → invalid.  
+   - Forest and turquoise cannot appear together in same rug.  
+   - Peach and turquoise cannot appear together in same rug.  
+   - Peach and yellow cannot appear together in same rug.  
+5. For each valid configuration, record the pair of colors used in the two solid rugs (as an unordered pair).  
+6. Collect all possible pairs of colors that *can* be the two solid rugs across all valid configurations.  
+7. Define answer_index_list = [] and iterate over the five answer choices (each is a candidate pair):  
+   - For each choice, if the pair **does not appear** in any valid configuration (i.e., is impossible), append its index to answer_index_list.  
+8. Print answer_index_list (the list of indices for which the pair is impossible).

@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * List the seven books as variables: `["orange", "green", "red", "gray", "purple", "blue", "brown"]`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint:  
+     - "The purple book is the fourth from the left" → `purple == 4`  
+     - "The brown book is the third from the left" → `brown == 3`  
+     - "The green book is to the left of the blue book" → `green < blue`  
+     - "The red book is the leftmost" → `red == 1`  
+     - "The gray book is the third from the right" → Since there are 7 positions, third from the right = position `7 - 2 = 5` → `gray == 5`  
+     - "The orange book is the rightmost" → `orange == 7`
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the unique solution (should be a single dictionary mapping book names to positions).
+
+5. **Identify Which Statement in the Choices is True:**  
+   * The question asks: "Which of the following is true?" and lists options where each option asserts a specific book *is* the third from the right (i.e., position 5).  
+   * Note: Statement "The gray book is the third from the right" appears in choice D, and our constraints explicitly set `gray == 5`.  
+   * Create a mapping from choice letters (`['A','B','C','D','E','F','G']`) to book names:  
+     `{'A': 'orange', 'B': 'green', 'C': 'red', 'D': 'gray', 'E': 'purple', 'F': 'blue', 'G': 'brown'}`  
+   * Retrieve the position of each book in the solution.  
+   * Find which book has position 5 (third from right).  
+   * Return the choice letter corresponding to that book — which must be `'D'` (gray).

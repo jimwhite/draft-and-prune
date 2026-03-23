@@ -1,0 +1,15 @@
+1. Enumerate the six photographers and assign them integer indices (e.g., Frost=0, Gonzalez=1, Heideck=2, Knutson=3, Lai=4, Mays=5).  
+2. Create Boolean variables `s[i]` and `t[i]` for each photographer i: `s[i]` = True if assigned to Silva, `t[i]` = True if assigned to Thorne.  
+3. Add **mutual exclusivity constraint**: no photographer is assigned to both ceremonies: `~(s[i] & t[i])` for all i.  
+4. Add **at-least-two constraint**: at least two photographers assigned to each ceremony: `sum(s[i] for i) >= 2` and `sum(t[i] for i) >= 2`.  
+5. Add **Frost–Heideck together constraint**: Frost and Heideck must be assigned to the same ceremony (both Silva or both Thorne): `(s[0] == s[2]) & (t[0] == t[2])`.  
+6. Add **Lai–Mays separation constraint**: if both Lai and Mays are assigned, they must be on different ceremonies: `(s[4] & s[5]) | (t[4] & t[5]) => False`, equivalently: `~(s[4] & s[5]) & ~(t[4] & t[5])`.  
+7. Add **Gonzalez–Lai conditional constraint**: if Gonzalez is assigned to Silva, then Lai must be assigned to Thorne: `s[1] => t[4]`.  
+8. Add **Knutson–conditional constraint**: if Knutson is *not* assigned to Thorne, then Heideck and Mays must both be assigned to Thorne: `~t[3] => (t[2] & t[5])`.  
+9. Translate each answer choice into assignments: for each choice, build a model where exactly the listed photographers are assigned to Silva and Thorne (ensuring mutual exclusivity, and ignoring unassigned ones).  
+10. For each answer choice:  
+    - Clone base constraints into a fresh solver.  
+    - Add assertions fixing `s[i]` and `t[i]` per the choice (e.g., if Gonzalez is in Silva only, set `s[1]=True`, `t[1]=False`).  
+    - Check satisfiability (SAT/UNSAT).  
+11. Append the index of any choice that yields SAT to the answer index list `answer_index_list`.  
+12. Print the answer index list (should contain exactly one valid choice).

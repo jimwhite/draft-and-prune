@@ -1,0 +1,33 @@
+1.  **Initialize the Constraint Satisfaction Problem:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the arrangement.
+
+2.  **Define Variables and Domain:**
+    * Define the seven birds as string variables: `"cardinal"`, `"blue jay"`, `"robin"`, `"falcon"`, `"quail"`, `"hummingbird"`, and `"raven"`.
+    * Define the domain as integers from 1 to 7, where 1 = leftmost position and 7 = rightmost.
+    * Add all seven variables to the problem with domain {1,2,3,4,5,6,7}.
+
+3.  **Add All-Different Constraint:**
+    * Enforce that all birds occupy distinct positions using `AllDifferentConstraint`.
+
+4.  **Translate Each Statement into Positional Constraints:**
+    * "The falcon is to the right of the quail" → `falcon > quail`
+    * "The robin is to the right of the hummingbird" → `robin > hummingbird`
+    * "The raven is to the left of the quail" → `raven < quail`
+    * "The blue jay is the second from the left" → `blue jay == 2`
+    * "The robin is the third from the left" → `robin == 3`
+    * "The cardinal is the third from the right" → In a 7-position line, third from the right = position 5 (since positions 7 (rightmost), 6, and 5 are rightmost, second-rightmost, third-rightmost). So `cardinal == 5`
+
+5.  **Solve the Constraint System:**
+    * Use `getSolutions()` to find all satisfying assignments.
+    * Since the problem states consistency and uniqueness, extract the first (and only) solution.
+
+6.  **Determine "Fourth from the Left":**
+    * In our numbering, fourth from the left corresponds to position 4.
+    * Identify which bird has `position == 4` in the solution.
+
+7.  **Map to the Correct Choice:**
+    * Create a mapping from choice letters ("A" through "G") to bird names as given in the choices:
+        * A → "cardinal", B → "blue jay", C → "robin", D → "falcon", E → "quail", F → "hummingbird", G → "raven"
+    * Find the bird with position 4 and retrieve its corresponding choice letter from the mapping.
+    * Output that letter as the answer.

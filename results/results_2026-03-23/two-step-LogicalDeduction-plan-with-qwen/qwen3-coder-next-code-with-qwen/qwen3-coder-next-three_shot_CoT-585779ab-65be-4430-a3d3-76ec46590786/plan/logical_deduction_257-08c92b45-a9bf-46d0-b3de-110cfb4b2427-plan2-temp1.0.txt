@@ -1,0 +1,24 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.  
+
+2.  **Define Variables and Domain:**  
+    * Define the variables: `"yellow"`, `"green"`, `"red"` (representing the three books).  
+    * Define the domain as integers `{1, 2, 3}`, where **1 = leftmost**, **2 = middle (second from the left)**, and **3 = rightmost**.  
+    * Add all three variables to the problem with this domain using `addVariable`.  
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each book occupies a unique position.  
+    * Translate "The red book is to the left of the green book" into a constraint: `red < green`.  
+    * Translate "The yellow book is to the left of the red book" into a constraint: `yellow < red`.  
+    * Add both relational constraints using `addConstraint` with lambda expressions (e.g., `lambda y, r: y < r`).  
+
+4.  **Solve the Problem:**  
+    * Call `getSolutions()` to obtain all valid assignments of positions to books.  
+    * Since the constraints fully determine the order, there will be exactly one solution; retrieve it.  
+
+5.  **Identify the Correct Answer:**  
+    * The question asks which book is second from the left (i.e., position 2).  
+    * Create a mapping from choice letters to book names: `{'A': 'yellow', 'B': 'green', 'C': 'red'}`.  
+    * Find which book has position `2` in the solution dictionary.  
+    * Return (or print) the choice letter corresponding to that book as the final answer.

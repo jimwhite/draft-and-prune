@@ -1,0 +1,24 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to represent the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the variables: `"cantaloupes"`, `"watermelons"`, and `"mangoes"` (the three fruits).  
+   * Define the domain as integers from 1 to 3, where **1 = cheapest** and **3 = most expensive**, reflecting price ranking (lower number = lower cost).  
+   * Add these variables and the domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all fruits have distinct price ranks.  
+   * Translate each statement into a constraint:  
+     - "The mangoes are the cheapest" → `mangoes == 1`.  
+     - "The cantaloupes are the second-most expensive" → `cantaloupes == 2` (since with three items, second-most expensive = rank 2 under this numbering).  
+
+4. **Solve for the Arrangement:**  
+   * Call `getSolutions()` to find all valid price assignments satisfying the constraints.  
+   * Extract the unique solution from the returned list of solutions.
+
+5. **Determine the Correct Answer:**  
+   * The question is a verification: identify which statement among the choices is true.  
+   * Note that choice A directly restates one of the given premises ("The cantaloupes are the second-most expensive"), which we have encoded as `cantaloupes == 2`.  
+   * Since the constraints are consistent and this condition holds in the solution, **choice A is true**.  
+   * Select "A" as the final answer without needing further comparison (though verification can be done by checking that `cantaloupes == 2` in the solution).

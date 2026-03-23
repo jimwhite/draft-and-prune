@@ -1,0 +1,30 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to define and solve the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"mangoes"`, `"cantaloupes"`, `"apples"`, `"plums"`, `"loquats"`, `"watermelons"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive**, due to the pricing-based comparisons in the problem.
+    * Add all variables and their domain (1–7) to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.
+    * Translate each statement into a constraint using `lambda` functions:
+        * "The plums are more expensive than the mangoes" → `plums < mangoes` (since lower rank = cheaper).
+        * "The watermelons are more expensive than the loquats" → `watermelons < loquats`.
+        * "The loquats are the second-cheapest" → `loquats == 2`.
+        * "The plums are less expensive than the peaches" → `peaches < plums`.
+        * "The mangoes are the fourth-most expensive" → `mangoes == 4`.
+        * "The peaches are less expensive than the cantaloupes" → `cantaloupes < peaches`.
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to retrieve all valid assignments of price ranks to fruits.
+    * Extract the unique solution (since the constraints yield a single consistent ordering).
+
+5.  **Identify the Cheapest Fruit:**
+    * The cheapest fruit corresponds to rank 1.
+    * Create a dictionary mapping choice letters (`'A'` through `'G'`) to fruit names according to the given choices:
+        - 'A': `"mangoes"`, 'B': `"cantaloupes"`, 'C': `"apples"`, 'D': `"plums"`, 
+        - 'E': `"loquats"`, 'F': `"watermelons"`, 'G': `"peaches"`.
+    * In the solved solution, find which fruit has position 1.
+    * Return the choice letter corresponding to that fruit.

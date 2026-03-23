@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables `zone[i]` for each representative i, with domain {1, 2, 3}.  
+3. Add **mutual exclusion constraints**: each zone must contain exactly one assignment (handled implicitly by variable definitions).  
+4. Add **Parra-or-Tiao-in-Zone1 constraint**: exactly one of Parra or Tiao is assigned to Zone 1.  
+5. Add **Tiao-or-Udall-in-Zone2 constraint**: exactly one of Tiao or Udall is assigned to Zone 2.  
+6. Add **Parra-Quinn-same-zone constraint**: `zone[Parra] == zone[Quinn]`.  
+7. Add **Stuckey-Udall-same-zone constraint**: `zone[Stuckey] == zone[Udall]`.  
+8. Add **Zone3-larger-than-Zone2 constraint**: count(representatives in Zone 3) > count(representatives in Zone 2).  
+9. Translate each answer choice into a set of representative indices and compute the implied zone-3 assignment list.  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that *only* the representatives listed in the choice are assigned to Zone 3 (i.e., those in the list have `zone[i] == 3`, and all others have `zone[i] != 3`).  
+    - Also enforce that the zones assigned (1,2,3) are consistent with the other constraints.  
+    - If the model is SAT, then the choice is possible; record it as valid.  
+11. Output the index (or indices) of all valid choices.

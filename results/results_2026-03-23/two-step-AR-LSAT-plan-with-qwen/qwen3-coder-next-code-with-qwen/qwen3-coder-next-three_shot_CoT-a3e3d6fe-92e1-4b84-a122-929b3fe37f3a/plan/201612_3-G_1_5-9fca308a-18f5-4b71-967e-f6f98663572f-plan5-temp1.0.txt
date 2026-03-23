@@ -1,0 +1,15 @@
+1. Enumerate the five students and assign them integer codes (0=Juana, 1=Kelly, 2=Lateefah, 3=Mei, 4=Olga).  
+2. Create Boolean variables for team assignment: `green[i]` is True if student i is on green team, False otherwise.  
+3. Add **team-size constraints**: exactly two students on one team and three on the other: `sum(green) == 2 or sum(green) == 3`.  
+4. Add **fixed assignment constraint**: Lateefah is on green team: `green[2] == True`.  
+5. Add **Juana-Olga separation constraint**: Juana and Olga on different teams: `green[0] != green[4]`.  
+6. Add **Olga is facilitator constraint**: Since Olga is a facilitator, she must be on whichever team she’s assigned to (no additional variable needed yet), but facilitator assignment will be modeled separately.  
+7. Create Boolean variables for facilitator status: `facilitator[i]` is True if student i is a facilitator.  
+8. Add **facilitator-exclusivity constraint**: Exactly one facilitator per team: `facilitator[0] + facili... + facilitator[4] == 2`, and `sum_{i} (green[i] * facilitator[i]) == 1` and `sum_{i} ((not green[i]) * facilitator[i]) == 1`.  
+9. Add **Olga is a facilitator**: `facilitator[4] == True`.  
+10. Add **Kelly is not a facilitator**: `facilitator[1] == False`.  
+11. Add the *conditional assumption*: Mei is assigned to green team (`green[3] == True`).  
+12. For each choice, create a condition and test whether it *must* be true under the constraints:  
+    - For each choice C, assert the negation of C and check satisfiability with all other constraints (including `green[3] == True`).  
+    - If UNSAT, then C is forced; collect the index of that choice.  
+13. Output the list of indices corresponding to choices that must be true when Mei is on green team.

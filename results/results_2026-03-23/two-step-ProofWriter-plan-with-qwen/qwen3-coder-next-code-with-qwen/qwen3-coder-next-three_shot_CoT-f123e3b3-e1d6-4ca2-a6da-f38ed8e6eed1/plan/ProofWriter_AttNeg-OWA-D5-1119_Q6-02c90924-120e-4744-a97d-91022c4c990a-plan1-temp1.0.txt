@@ -1,0 +1,11 @@
+1. Identify all individuals: Anne, Bob, Dave, Fiona.  
+2. Encode all explicitly stated facts using ternary predicates of the form `predicate(subject, True)` for unary properties (e.g., is_blue("Anne", True)), and ensure negations are encoded as `predicate(subject, False)` where applicable (e.g., is_furry("Dave", False), is_quiet("Bob", False)).  
+3. Translate each universally quantified implication in the context into a `foreach` rule:  
+   • All cold people are blue → If is_cold(X, True) then is_blue(X, True).  
+   • Green, nice people are kind → If is_green(X, True) and is_nice(X, True) then is_kind(X, True).  
+   • All blue people are kind → If is_blue(X, True) then is_kind(X, True).  
+   • Kind, cold people are nice → If is_kind(X, True) and is_cold(X, True) then is_nice(X, True).  
+   • If someone is nice then they are green → If is_nice(X, True) then is_green(X, True).  
+   • Cold, green people are quiet → If is_cold(X, True) and is_green(X, True) then is_quiet(X, True).  
+4. For each rule, use `foreach` to match the condition (conjunction of facts) and `assert` for the consequent.  
+5. The query tests whether Fiona is not kind → Use `facts.is_kind("Fiona", False)`.

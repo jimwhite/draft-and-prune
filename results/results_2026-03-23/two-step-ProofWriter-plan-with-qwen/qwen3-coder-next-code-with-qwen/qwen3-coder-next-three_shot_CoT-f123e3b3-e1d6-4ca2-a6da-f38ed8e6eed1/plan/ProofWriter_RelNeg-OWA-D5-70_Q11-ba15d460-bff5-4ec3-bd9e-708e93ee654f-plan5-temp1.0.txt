@@ -1,0 +1,19 @@
+1. Identify all involved entities: bald_eagle, rabbit, lion, tiger.  
+2. Encode all directly stated facts as ternary predicates:  
+   - Chase relations: chases("bald_eagle", "rabbit", True), chases("bald_eagle", "tiger", True)  
+   - Need relations: needs("lion", "rabbit", True), needs("rabbit", "bald_eagle", True), needs("rabbit", "lion", True)  
+   - Visit relation: visits("tiger", "rabbit", True)  
+   - Explicit negation: chases("rabbit", "lion", False) (i.e., facts.chases("rabbit", "lion", False))  
+3. Translate each conditional into a PyKe rule with `foreach` condition and `assert` conclusion:  
+   • If X chases rabbit → X is big.  
+   • If X needs tiger → X is big.  
+   • If X needs lion and visits rabbit → X chases lion.  
+   • If X is big → X chases lion.  
+   • If X chases tiger → tiger needs rabbit.  
+   • If X visits tiger → tiger is not green (i.e., is_green("tiger", False)).  
+   • If X chases lion → lion chases rabbit.  
+   • If X chases tiger → X visits bald_eagle.  
+   • If X chases rabbit and does not visit lion → lion does not need rabbit (i.e., needs("lion", "rabbit", False)).  
+4. Note: Explicitly encode the negated fact that rabbit does not chase lion as a fact, not a rule.  
+5. The query tests whether the lion chases itself:  
+   → Use facts.chases("lion", "lion", True)

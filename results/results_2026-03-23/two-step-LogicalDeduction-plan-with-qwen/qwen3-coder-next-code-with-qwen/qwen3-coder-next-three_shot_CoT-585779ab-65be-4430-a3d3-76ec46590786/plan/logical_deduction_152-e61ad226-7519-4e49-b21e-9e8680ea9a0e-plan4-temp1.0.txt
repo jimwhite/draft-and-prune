@@ -1,0 +1,33 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"hawk"`, `"raven"`, `"hummingbird"`, `"falcon"`, `"owl"`, `"quail"`, and `"cardinal"`.  
+   * Define the domain as integers from 1 to 7 (inclusive), where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables to the problem with the domain `{1, 2, 3, 4, 5, 6, 7}`.
+
+3. **Add the AllDifferent Constraint:**  
+   * Enforce that all birds occupy distinct positions by adding an `AllDifferentConstraint` over the seven variables.
+
+4. **Translate Each Statement into a Constraint Using Lambda Functions:**  
+   * "The quail is to the left of the hummingbird" → `quail < hummingbird`  
+   * "The raven is to the right of the hummingbird" → `hummingbird < raven`  
+   * "The cardinal is the second from the left" → `cardinal == 2`  
+   * "The owl is to the left of the cardinal" → `owl < cardinal` (i.e., `owl < 2`, so `owl == 1`)  
+   * "The raven is the third from the right" → In a 7-position line, third from the right = position `7 - 3 + 1 = 5`, so `raven == 5`  
+   * "The falcon is the rightmost" → `falcon == 7`
+
+5. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments. Given the constraints, expect a unique solution.
+
+6. **Analyze the Solution to Determine Which Statement is True:**  
+   * The question asks which bird is **fourth from the left**, i.e., at position `4`.  
+   * Create a mapping from choice letters to bird names:  
+     - `'A' → 'hawk'`, `'B' → 'raven'`, `'C' → 'hummingbird'`, `'D' → 'falcon'`,  
+       `'E' → 'owl'`, `'F' → 'quail'`, `'G' → 'cardinal'`  
+   * Iterate over the choices and check in the solution dictionary whether the bird’s assigned position equals `4`.  
+   * Return the letter of the first (and only) matching choice.
+
+7. **Output the Final Answer:**  
+   * Print or return the letter (e.g., `'C'`) corresponding to the correct statement.

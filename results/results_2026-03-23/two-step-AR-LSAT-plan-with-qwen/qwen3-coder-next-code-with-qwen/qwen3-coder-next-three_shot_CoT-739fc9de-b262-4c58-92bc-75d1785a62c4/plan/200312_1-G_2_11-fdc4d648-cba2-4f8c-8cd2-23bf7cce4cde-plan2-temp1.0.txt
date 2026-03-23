@@ -1,0 +1,21 @@
+1. Enumerate the six cargo types and assign them integer codes: fuel, grain, livestock, machinery, produce, textiles → [0,1,2,3,4,5].  
+2. Create integer variables `pos[type]` for each cargo type, representing the bay number (1 to 6) where it is held.  
+3. Add **domain constraints**: each `pos[type]` ∈ {1,2,3,4,5,6}, and all `pos[type]` are pairwise distinct (six unique bays).  
+4. Add **given ordering constraints** from problem statement:  
+    - grain > livestock → `pos[grain] > pos[livestock]`  
+    - livestock > textiles → `pos[livestock] > pos[ textiles ]`  
+    - produce > fuel → `pos[produce] > pos[fuel]`  
+    - textiles adjacent to produce → `abs(pos[textiles] - pos[produce]) == 1`  
+5. Add the **hypothetical condition**: produce is next to livestock → `abs(pos[produce] - pos[livestock]) == 1`.  
+6. Combine constraints from steps 4 and 5 into the main solver (all must hold simultaneously under the "if" condition).  
+7. Translate answer choices into logical predicates involving `pos[type]`:  
+    - A: Bay 2 holds fuel → `pos[fuel] == 2`  
+    - B: Bay 4 holds produce → `pos[produce] == 4`  
+    - C: Bay 4 holds textiles → `pos[textiles] == 4`  
+    - D: Bay 5 holds grain → `pos[grain] == 5`  
+    - E: Bay 5 holds machinery → `pos[machinery] == 5`  
+8. For each choice (in order), clone the full constraint set into a fresh solver, add the choice's predicate as an assertion, and check satisfiability:  
+    - If SAT → the choice *could* be true (allowed).  
+    - If UNSAT → the choice *cannot* be true under the condition; this is a candidate for the EXCEPT answer.  
+9. Among the five choices, exactly one will be UNSAT (the one that *must not* hold under the condition); collect its index into `answer_index_list`.  
+10. Output the answer index list (index corresponds to 0-based position of EXCEPT choice: 0 for first, 1 for second, etc.).

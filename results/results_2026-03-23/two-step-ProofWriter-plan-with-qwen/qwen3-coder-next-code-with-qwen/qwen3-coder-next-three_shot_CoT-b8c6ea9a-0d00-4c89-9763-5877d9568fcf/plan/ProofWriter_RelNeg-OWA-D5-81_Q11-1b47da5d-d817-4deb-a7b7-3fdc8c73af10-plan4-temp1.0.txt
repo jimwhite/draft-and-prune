@@ -1,0 +1,25 @@
+1. Identify all entities involved: cat, cow, rabbit, squirrel.
+2. Define predicates for properties (e.g., is_round, is_cold, is_green) and relations (e.g., eats, sees, needs) using ternary form predicate(subject, object, True), where properties have boolean objects (True/False) and relations have entity names as objects.
+3. Encode all explicitly stated facts as facts.pred(subject, object, True):
+   - eats("cat", "squirrel", True)
+   - sees("cat", "squirrel", True)
+   - eats("cow", "squirrel", True)
+   - sees("cow", "cat", True)
+   - is_round("rabbit", True)
+   - sees("rabbit", "cat", True)
+   - eats("squirrel", "rabbit", True)
+   - is_cold("squirrel", True)
+   - needs("squirrel", "rabbit", True)
+   - sees("squirrel", "cat", True)
+4. Translate each conditional rule into a PyKe rule with `foreach` condition and `assert` consequence:
+   • If X sees cat ∧ ¬is_green(X) → sees(X, "cow", True)
+   • If rabbit is kind ∧ sees(rabbit, squirrel) → needs(squirrel, rabbit, True)
+   • Rough(X) ↔ is_rough(X, True); rule: If rough(X) → is_cold(X, True)
+   • If X sees rabbit → ¬is_round(X, True) (i.e., is_round(X, False))
+   • If X sees squirrel ∧ ¬is_green(X) → needs(X, "squirrel", True)
+   • If X eats cow → sees(X, rabbit, True)
+   • If X eats squirrel → is_rough(X, True)
+   • If X is cold → eats(X, cow, True)
+5. For rules involving negation (e.g., “not green”, “not round”), use conditional `foreach` clauses with constraints: e.g., `foreach sees(X, "cat", True), not is_green(X, True)`.
+6. For the query: verify whether cat is not round.
+   → Query using facts.is_round("cat", False).

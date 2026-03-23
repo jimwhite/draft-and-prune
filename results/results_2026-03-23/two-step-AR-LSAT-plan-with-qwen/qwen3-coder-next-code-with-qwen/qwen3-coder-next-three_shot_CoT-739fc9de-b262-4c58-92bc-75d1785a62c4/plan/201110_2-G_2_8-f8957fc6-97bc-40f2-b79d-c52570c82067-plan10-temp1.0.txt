@@ -1,0 +1,17 @@
+1. Enumerate the five candidates (Jaramillo, Kayne, Landon, Novetzke, Ong) and assign each an integer index (0–4).  
+2. Create Boolean variables for assignment: `assigned[i][j]` where i ∈ {0,1,2} (countries: Venezuela, Yemen, Zambia) and j ∈ {0,1,2,3,4} (candidates), with `assigned[c][j]` meaning candidate j is assigned to country c.  
+3. Add **one-to-one assignment constraints**:  
+    - Each candidate assigned to at most one country: for each j, sum over c of `assigned[c][j]` ≤ 1.  
+    - Each country gets exactly one ambassador: for each c, sum over j of `assigned[c][j]` = 1.  
+4. Add **candidate constraints**:  
+    - (a) Exactly one of Kayne or Novetzke is assigned: `assigned_to_Kayne + assigned_to_Novetzke == 1`, where `assigned_to_Kayne = sum_c assigned[c][Kayne]`, similarly for Novetzke.  
+    - (b) If Jaramillo is assigned, then Kayne must be assigned: `assigned_to_Jaramillo ≤ assigned_to_Kayne`.  
+    - (c) If Ong is assigned to Venezuela, then Kayne must not be assigned to Yemen: `assigned[Venezuela][Ong] + assigned[Yemen][Kayne] ≤ 1`.  
+    - (d) If Landon is assigned, it must be to Zambia: `assigned[Venezuela][Landon] = False` and `assigned[Yemen][Landon] = False`.  
+5. Translate the answer choices into pairs of candidate indices (e.g., ['Jaramillo', 'Novetzke'] → indices [0,3]).  
+6. For each candidate pair in the answer choices:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that exactly these two candidates are *not* assigned (i.e., both unassigned), and the other three candidates are *exactly* the ones assigned (i.e., sum over all j of `assigned_to_j` = 3, and the two specific candidates have assignment sum = 0).  
+    - Check satisfiability: if SAT, then this pair is a possible unassigned pair; record the index of this choice.  
+7. Collect all indices for which the model is SAT — these correspond to feasible unassigned pairs.  
+8. The question asks “could be the pair... not assigned”, so output the index of any SAT-allowed choice (only one correct per LSAT-style question).

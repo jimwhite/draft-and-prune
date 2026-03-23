@@ -1,0 +1,15 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative’s zone (1, 2, or 3).  
+3. Add **exactly-one-zone constraints**: each representative assigned exactly one zone (implicitly satisfied by using a single integer variable per person).  
+4. Add **Zone 1 constraint**: exactly one of Parra or Tiao is in Zone 1 (exclusive OR).  
+5. Add **Zone 2 constraint**: exactly one of Tiao or Udall is in Zone 2 (exclusive OR).  
+6. Add **Parra–Quinn constraint**: Parra and Quinn assigned to the same zone.  
+7. Add **Stuckey–Udall constraint**: Stuckey and Udall assigned to the same zone.  
+8. Add **zone-size constraint**: number of representatives in Zone 3 > number in Zone 2.  
+9. For each choice in the answer list:  
+   - Extract the proposed zone assignments for all seven representatives.  
+   - Clone the base constraints into a fresh solver.  
+   - Assert that each representative is assigned exactly their proposed zone (using equality constraints).  
+   - Check satisfiability: if SAT, then the choice is valid and can be selected.  
+10. Append the index of each valid choice to an answer index list.  
+11. Output the first (and only) valid choice’s full text as the answer.

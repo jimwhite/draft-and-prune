@@ -1,0 +1,16 @@
+1. Enumerate the five solos (positions 1 to 5) and assign each a pianist (Wayne or Zara) and a type (modern or traditional).  
+2. Create Boolean variables for pianist: `p[i] = True` if Wayne performs solo i, `False` if Zara; and for type: `t[i] = True` if traditional, `False` if modern (or vice versa consistently).  
+3. Add **fixed constraint**: third solo is traditional → `t[3] = True`.  
+4. Add **exactly two consecutive traditional pieces**: There is exactly one pair of adjacent solos (i, i+1) where both are traditional, and no other adjacent pair is both traditional. Formally: count of `i` such that `t[i] ∧ t[i+1]` is 1, and no three consecutive traditional.  
+5. Add **fourth solo constraint**: Either (Wayne performs traditional) OR (Zara performs modern) → `(p[4] ∧ t[4]) ∨ (¬p[4] ∧ ¬t[4])`.  
+6. Add **no same pianist in solos 2 and 5**: `p[2] ≠ p[5]`.  
+7. Add **no traditional before Wayne performs modern**: All solos before the first Wayne modern must be non-traditional (i.e., if a solo is traditional, then there exists some earlier solo j < i where `p[j] = True ∧ t[j] = False`). Equivalent: the first Wayne modern must occur before any traditional piece. Let `first_wayne_modern = min { j | p[j] ∧ ¬t[j] }`; then for all i where `t[i] = True`, we have `first_wayne_modern < i`. Implement via auxiliary variable or by enumerating possibilities for first Wayne modern position and enforcing constraint.  
+8. Add the **scenario assumption**: fifth solo is Wayne *and* traditional → `p[5] = True ∧ t[5] = True`.  
+9. For each answer choice, add the respective condition as a constraint and check satisfiability:  
+    - Choice 1: Zara performs first solo → `p[1] = False`.  
+    - Choice 2: Wayne performs second solo → `p[2] = True`.  
+    - Choice 3: Zara performs third solo → `p[3] = False`.  
+    - Choice 4: Second solo is modern → `t[2] = False`.  
+    - Choice 5: Fourth solo is traditional → `t[4] = True`.  
+10. Define the answer index list `answer_index_list = []`. For each choice index i (0–4), clone base + assumption solver, add constraint for choice i; if SAT, append i to `answer_index_list`.  
+11. Print or return the list of viable choice indices (those that could be true under the given condition).

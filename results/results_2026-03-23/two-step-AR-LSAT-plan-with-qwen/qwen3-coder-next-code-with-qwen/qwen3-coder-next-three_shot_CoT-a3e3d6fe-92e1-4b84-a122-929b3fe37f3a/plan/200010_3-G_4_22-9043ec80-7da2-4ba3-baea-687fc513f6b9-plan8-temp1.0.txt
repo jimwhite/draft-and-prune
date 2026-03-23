@@ -1,0 +1,14 @@
+1. Enumerate the seven days (1–7), and define integer decision variables for kitten breed (`k[i]`) and puppy breed (`p[i]`) on each day `i`, with values encoded as: Himalayan=0, Manx=1, Siamese=2 for kittens; Greyhound=3, Newfoundland=4, Rottweiler=5.  
+2. Add **domain constraints**: for each day `i`, `k[i] ∈ {0,1,2}` and `p[i] ∈ {3,4,5}`.  
+3. Add **fixed constraint**: Greyhounds featured on day 1 → `p[1] = 3`.  
+4. Add **no-consecutive-days constraint**: for each `i` from 1 to 6, `k[i] ≠ k[i+1]` and `p[i] ≠ p[i+1]`.  
+5. Add **day-1-not-on-day-7 constraint**: `k[1] ≠ k[7]` and `p[1] ≠ p[7]`.  
+6. Add **Himalayan constraint**: Himalayans appear on exactly 3 days, and not on day 1 → `k[1] ≠ 0`, and the count of `i` where `k[i] == 0` is exactly 3.  
+7. Add **Rottweiler constraint**: Rottweilers not on day 7 (`p[7] ≠ 5`), and not on any day with Himalayans → for all `i`, if `k[i] == 0` then `p[i] ≠ 5`.  
+8. Add the **conditional assumption**: Himalayans not featured on day 7 (`k[7] ≠ 0`).  
+9. Translate the answer choices into day pairs: (1,3), (2,6), (3,5), (4,6), (5,7).  
+10. Define `answer_index_list = []`. For each pair `(d1, d2)` in order:
+    - Clone base + assumption constraints into a fresh solver.
+    - Add constraint that both days have identical kitten and puppy breeds: `k[d1] == k[d2]` and `p[d1] == p[d2]`.
+    - If UNSAT, then this pair CANNOT feature identical breeds → append its index to `answer_index_list`.
+11. Print `answer_index_list`.

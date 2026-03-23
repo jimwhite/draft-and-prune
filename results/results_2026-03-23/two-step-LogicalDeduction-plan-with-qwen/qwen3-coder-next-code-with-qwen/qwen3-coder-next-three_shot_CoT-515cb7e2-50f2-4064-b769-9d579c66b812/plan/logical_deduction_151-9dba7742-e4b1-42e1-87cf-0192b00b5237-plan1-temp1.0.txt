@@ -1,0 +1,37 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven fruits as variables: `"watermelons"`, `"mangoes"`, `"kiwis"`, `"pears"`, `"cantaloupes"`, `"oranges"`, and `"peaches"`.
+    * Define the domain as integers from 1 to 7, where **1 represents the cheapest** and **7 represents the most expensive** fruit.
+    * Add all seven variables with domain {1, 2, 3, 4, 5, 6, 7} to the `Problem` instance.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that each fruit has a unique price rank by adding an `AllDifferentConstraint` over all seven variables.
+
+4.  **Translate Statements into Constraints:**
+    * Convert each sentence in the problem description into a formal constraint:
+        - "The oranges are more expensive than the peaches" → `oranges > peaches`
+        - "The cantaloupes are the fourth-most expensive" → `cantaloupes == 4` (since most expensive = highest rank)
+        - "The pears are less expensive than the cantaloupes" → `pears < cantaloupes`
+        - "The peaches are the second-most expensive" → `peaches == 6` (7 is most expensive, so 2nd-most = 6)
+        - "The mangoes are the cheapest" → `mangoes == 1`
+        - "The kiwis are the third-cheapest" → `kiwis == 3` (1st-cheapest=1, 2nd-cheapest=2, 3rd-cheapest=3)
+
+5.  **Solve the Problem:**
+    * Use `getSolutions()` to compute all valid assignments.
+    * Extract the unique solution (as the problem is well-constrained and consistent).
+
+6.  **Identify the Correct Choice:**
+    * The question asks which fruit is the second-most expensive, i.e., has rank **6**.
+    * Map each choice letter to its corresponding fruit:
+        - A → `"watermelons"`
+        - B → `"mangoes"`
+        - C → `"kiwis"`
+        - D → `"pears"`
+        - E → `"cantaloupes"`
+        - F → `"oranges"`
+        - G → `"peaches"`
+    * For each choice, check whether the assigned rank of its fruit equals 6 in the solution.
+    * Return the letter (e.g., "G") corresponding to the fruit with rank 6.

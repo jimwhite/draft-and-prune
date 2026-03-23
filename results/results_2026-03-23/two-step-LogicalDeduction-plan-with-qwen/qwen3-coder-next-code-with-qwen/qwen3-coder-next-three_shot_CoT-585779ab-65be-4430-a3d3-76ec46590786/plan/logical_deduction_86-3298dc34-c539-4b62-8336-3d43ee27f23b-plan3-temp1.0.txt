@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class.
+
+2. **Define Variables and Domain:**  
+   * Define variables as the five golfers: `"Eve"`, `"Eli"`, `"Joe"`, `"Rob"`, and `"Mya"`.  
+   * Define the domain as integers from 1 to 5, where **1 = first (top)** and **5 = last (bottom)**.  
+   * Add all variables with their domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of finishing positions.  
+   * Translate each statement into a constraint using `lambda`:  
+     - "Rob finished above Mya" → Rob's position < Mya's position (`lambda r, m: r < m`).  
+     - "Eve finished first" → Eve's position = 1.  
+     - "Joe finished above Eli" → Joe's position < Eli's position (`lambda j, e: j < e`).  
+     - "Joe finished below Mya" → Joe's position > Mya's position (`lambda j, m: j > m`).  
+   * Add all constraints to the problem.
+
+4. **Solve for the Finishing Order:**  
+   * Call `getSolutions()` to compute all valid assignments.  
+   * Extract the unique solution (since constraints yield one arrangement).
+
+5. **Identify the Last-Place Golfer:**  
+   * The question asks who finished last (position 5).  
+   * Create a mapping from choice letters to golfer names in the choices:  
+     - "A" → "Eve", "B" → "Eli", "C" → "Joe", "D" → "Rob", "E" → "Mya".  
+   * In the solution dictionary, find which golfer has position value 5.  
+   * Output the corresponding choice letter (e.g., if Eli is at position 5, output "B").

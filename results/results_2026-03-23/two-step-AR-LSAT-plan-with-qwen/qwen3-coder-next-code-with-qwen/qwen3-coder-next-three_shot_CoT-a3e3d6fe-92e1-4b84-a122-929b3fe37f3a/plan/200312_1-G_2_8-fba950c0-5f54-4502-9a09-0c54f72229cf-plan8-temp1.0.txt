@@ -1,0 +1,16 @@
+1. Enumerate the six cargo types and assign integer codes (0=fuel, 1=grain, 2=livestock, 3=machinery, 4=produce, 5=textiles).  
+2. Create integer variables `pos[type]` for the bay position (1–6) of each cargo type.  
+3. Add **domain constraints**: all `pos` variables are in [1,6] and pairwise distinct (each bay holds exactly one cargo type).  
+4. Add **ordering constraints** from the conditions:  
+    - grain > livestock (pos[grain] > pos[livestock])  
+    - livestock > textiles (pos[livestock] > pos[textiles])  
+    - produce > fuel (pos[produce] > pos[fuel])  
+    - textiles adjacent to produce: |pos[textiles] - pos[produce]| = 1  
+5. Add **extra condition** from the question: exactly one bay between machinery and grain → |pos[machinery] - pos[grain]| = 2.  
+6. Enumerate all permutations satisfying constraints (via Z3 solver) or use incremental reasoning to count how many bays have fixed cargo type across all solutions.  
+7. Since the question asks for the *number* of bays with completely determined cargo type (i.e., same cargo in every satisfying assignment), perform the following:  
+    - Solve the constraint system once to get one model.  
+    - For each bay position i (1 to 6), query: "is cargo at bay i fixed across all solutions?" by checking if assuming *different* cargoes at bay i leads to UNSAT.  
+    - Count the number of positions where cargo is fixed (i.e., forced in all solutions).  
+8. Map the final count to the answer choices: two, three, four, five, six.  
+9. Return the count as an integer (for use in selection).

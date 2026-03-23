@@ -1,0 +1,21 @@
+1. Enumerate the eight students and assign integer indices to each.  
+2. Create Boolean variables for whether each student gives a report (8 total).  
+3. Add constraint: exactly six students give reports (sum of report variables = 6).  
+4. Define per-day, per-slot position variables: create integer variables for morning and afternoon reportees on Monday (M_morn, M_aft), Tuesday (T_morn, T_aft), Wednesday (W_morn, W_aft).  
+5. Add **assignment constraints**: each slot must be filled by exactly one student; all reportees are distinct.  
+6. Add **availability constraints**:  
+    - Tuesday is the only day George can report: if George reports, his slot must be T_morn or T_aft.  
+    - Neither Olivia nor Robert can give an afternoon report: if Olivia reports, her slot ∈ {M_morn, T_morn, W_morn}; same for Robert.  
+7. Add **Nina conditional constraint**: If Nina reports and is not on Wednesday, then Helen and Irving must both report the next day. Specifically:  
+    - If Nina is on Monday → Helen and Irving must both report on Tuesday (both slots, any order).  
+    - If Nina is on Tuesday → Helen and Irving must both report on Wednesday.  
+    - If Nina is on Wednesday → no extra constraint.  
+8. Add **given condition**: Kyle and Lenore do NOT give reports → set their report variables to false.  
+9. Now, for each answer choice (a triple: morning reports Mon, Tue, Wed), translate the three students into indices.  
+10. For each answer choice:  
+    - Clone base constraints (steps 2–8).  
+    - Assert: M_morn = student1, T_morn = student2, W_morn = student3.  
+    - Ensure no conflict: e.g., Robert/Olivia not in afternoon slots (already enforced by step 6, but verify consistency).  
+    - Check if the constraint system is SAT.  
+11. If SAT, then this triple is possible → record its index in answer_index_list.  
+12. Print the answer index list (indices of choices that are possible).

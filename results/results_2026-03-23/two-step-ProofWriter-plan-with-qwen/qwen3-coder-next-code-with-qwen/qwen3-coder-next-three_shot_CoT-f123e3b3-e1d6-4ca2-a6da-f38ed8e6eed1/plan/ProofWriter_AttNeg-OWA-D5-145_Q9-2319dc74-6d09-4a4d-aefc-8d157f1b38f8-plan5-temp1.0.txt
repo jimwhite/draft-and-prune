@@ -1,0 +1,14 @@
+1. Identify all entities: Anne, Bob, Fiona, Gary.
+2. Represent all explicit facts using ternary predicates (e.g., is_kind("Anne", True), is_quiet("Anne", True), is_smart("Bob", True), etc.), including negative facts like is_nice("Fiona", False) and is_red("Fiona", True).
+3. Encode all conditional rules from the context as PyKe `foreach` + `assert` constructs:
+   • If Bob is kind → Bob is smart.
+   • If something is kind and nice → it is smart.
+   • If something is nice and red → it is smart.
+   • If something is quiet and not nice → it is smart.
+   • All green things are kind.
+   • If Anne is quiet and white → Anne is kind.
+   • If Fiona is not nice → Fiona is green.
+   • All smart, kind things are white.
+   • If something is kind and green → it is quiet.
+4. Ensure each rule uses `foreach` to match the condition (including negated literals where needed, e.g., is_nice(?x, False)) and `assert` to record the consequence.
+5. Query whether Fiona is smart: facts.is_smart("Fiona", True).

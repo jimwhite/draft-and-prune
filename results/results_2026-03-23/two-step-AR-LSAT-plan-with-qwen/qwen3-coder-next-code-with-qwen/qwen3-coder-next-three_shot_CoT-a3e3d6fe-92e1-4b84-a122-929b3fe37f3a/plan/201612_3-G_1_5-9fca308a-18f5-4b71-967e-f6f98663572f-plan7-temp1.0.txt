@@ -1,0 +1,31 @@
+1. Enumerate the five students and assign integer indices (0: Juana, 1: Kelly, 2: Lateefah, 3: Mei, 4: Olga).  
+2. Create Boolean variables `team[i]` (True = green team, False = red team) for each student i.  
+3. Create Boolean variables `fac[i]` (True = facilitator) for each student i.  
+4. Add **team-size constraints**: exactly two students on green team, three on red team (or vice versa). Since Lateefah is on green and Mei is assumed on green, enforce *at least* two green members (Lateefah + Mei), so green size = 2 or more—but the problem says one team has two, one has three, so green must be exactly 2 (Lateefah and Mei) if the assumption holds. Add: `(team[0] + team[1] + team[2] + team[3] + team[4]) == 2` (green = 2, red = 3), since Lateefah and Mei are fixed green.  
+5. Add **fixed constraints**:  
+    - Lateefah on green: `team[2] == True`.  
+    - Mei on green (assumption for conditional): `team[3] == True`.  
+    - Juana and Olga on different teams: `team[0] != team[4]`.  
+    - Olga is a facilitator: `fac[4] == True`.  
+6. Add **one-facilitator-per-team constraints**: exactly one facilitator per team:  
+    - `(fac[0] + fac[1] + fac[2] + fac[3] + fac[4]) == 2` (two facilitators total, one per team),  
+    - and for each team, sum of `fac[i]` over members = 1:  
+        - Green facilitator: `(fac[0]*team[0] + fac[1]*team[1] + fac[2]*team[2] + fac[3]*team[3] + fac[4]*team[4]) == 1` when restricted to green — better: enforce separately:  
+          `fac[0] <= team[0]`, `fac[1] <= team[1]`, ..., and  
+          `team[0]*fac[0] + ... + team[4]*fac[4] == 1`,  
+          `(1 - team[0])*fac[0] + ... + (1 - team[4])*fac[4] == 1`.  
+7. Add **Kelly not facilitator**: `fac[1] == False`.  
+8. Since Olga is a facilitator and on one team, the other facilitator must be someone else on her same team (since each team needs exactly one facilitator).  
+9. For the conditional "If Mei is assigned to green", we fix `team[3] = True`, plus constraints above.  
+10. Translate the answer choices into logical statements:  
+    A. Juana on green: `team[0] == True`  
+    B. Kelly on red: `team[1] == False`  
+    C. Olga on green: `team[4] == True`  
+    D. Lateefah is facilitator: `fac[2] == True`  
+    E. Mei is facilitator: `fac[3] == True`  
+11. For each choice, check if it **must be true** in *all* satisfying assignments under the Mei-on-green assumption. Use proof by contradiction:  
+    - Clone base constraints (with Mei on green fixed).  
+    - Assert the *negation* of the choice.  
+    - If UNSAT, then the choice *must* be true — record its index.  
+12. Since exactly one option must hold necessarily, collect all indices where UNSAT occurs under negation; this is the answer list.  
+13. Print the resulting index list (expected size 1).

@@ -1,0 +1,16 @@
+1. Identify all entities involved: Anne, Charlie, Erin, Fiona.
+2. Define and encode all explicit facts using ternary predicates of the form predicate(entity, boolean_or_entity, True):
+   - Properties (unary predicates encoded as binary with boolean): is_green("Anne", True), is_big("Charlie", True), is_quiet("Charlie", True), is_round("Charlie", True), is_green("Erin", True), is_kind("Erin", True), is_nice("Erin", True), is_quiet("Erin", True), is_blue("Fiona", True), is_kind("Fiona", True), is_quiet("Fiona", True).
+3. Translate all conditional statements and universal rules into PyKe rules using `foreach` blocks:
+   • If something is kind → it is nice: foreach is_kind(X, True) assert is_nice(X, True).
+   • If something is round and quiet → it is blue: foreach is_round(X, True), is_quiet(X, True) assert is_blue(X, True).
+   • If Charlie is kind → Charlie is big: This is a material conditional; encode as rule with body matching is_kind("Charlie", True) and asserting is_big("Charlie", True).
+   • All big, blue things are kind: foreach is_big(X, True), is_blue(X, True) assert is_kind(X, True).
+   • Nice things are quiet: foreach is_nice(X, True) assert is_quiet(X, True).
+   • All green things are big: foreach is_green(X, True) assert is_big(X, True).
+   • Quiet things are kind: foreach is_quiet(X, True) assert is_kind(X, True).
+   • Big things are kind: foreach is_big(X, True) assert is_kind(X, True).
+   • If Anne is green then Anne is round: foreach is_green("Anne", True) assert is_round("Anne", True).
+4. For conditional rules with specific individuals (e.g., Charlie), encode as dedicated `foreach` blocks with concrete subject.
+5. The query checks whether Erin is *not* blue:
+   → Assert the negation as facts.is_blue("Erin", False) and attempt to prove it using backward chaining; if provable, answer is true (i.e., statement holds); if contradicted, false; else unknown.

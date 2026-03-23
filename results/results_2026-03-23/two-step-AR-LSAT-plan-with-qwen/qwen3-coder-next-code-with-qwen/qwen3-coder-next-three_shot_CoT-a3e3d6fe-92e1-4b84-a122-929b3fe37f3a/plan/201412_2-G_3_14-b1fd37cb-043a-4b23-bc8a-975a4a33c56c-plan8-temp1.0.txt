@@ -1,0 +1,23 @@
+1. Enumerate the six colors: forest (0), olive (1), peach (2), turquoise (3), white (4), yellow (5).  
+2. Create Boolean variables `use[c]` for each color c indicating if it is used (exactly 5 colors used → sum(use[c] for c in range(6)) == 5).  
+3. Create Boolean variables `solid[r]` for r = 0,1,2 indicating if rug r is solid.  
+4. Introduce Boolean variables `color_in_rug[r][c]` for rug r and color c, indicating whether color c appears in rug r.  
+5. Add **color usage consistency**: `use[c]` iff at least one `color_in_rug[r][c]` is true (for each c).  
+6. Add **solid/multicolored constraints**:  
+    - For each rug r, if `solid[r]` is true, then exactly one `color_in_rug[r][c]` is true (i.e., only one color per solid rug).  
+    - If `solid[r]` is false, then at least two `color_in_rug[r][c]` are true (multicolored rug).  
+7. Add **given rules as implications**:  
+    - White rule: If `color_in_rug[r][4]` is true, then exactly two other colors are used in rug r → sum_{c≠4} `color_in_rug[r][c]` == 2.  
+    - Olive rule: If `color_in_rug[r][1]` is true, then `color_in_rug[r][2]` must be true.  
+    - Forest-turquoise incompatibility: `¬(color_in_rug[r][0] ∧ color_in_rug[r][3])`.  
+    - Peach-turquoise incompatibility: `¬(color_in_rug[r][2] ∧ color_in_rug[r][3])`.  
+    - Peach-yellow incompatibility: `¬(color_in_rug[r][2] ∧ color_in_rug[r][5])`.  
+8. Add constraint: exactly two solid rugs → `sum(solid[r] for r in range(3)) == 2`.  
+9. For each answer choice pair (e.g., "forest and peach"):  
+    - Clone the base constraints into a fresh solver.  
+    - Assert that rug A is solid with color X and rug B is solid with color Y (where A,B are distinct rugs, and X,Y are the two colors).  
+      - i.e., for some pair of distinct rugs r1,r2: `solid[r1] ∧ color_in_rug[r1][X] ∧ ¬∃c≠X color_in_rug[r1][c]`, similarly for r2,Y.  
+      - Ensure the third rug (r3) gets the remaining three colors, satisfying all rules and being multicolored.  
+    - Also ensure exactly 5 total colors are used (already in base constraints, but confirm compatibility).  
+    - If the instance is UNSAT, then the pair **cannot** be the two solid rugs; record this answer choice.  
+10. Return the list of impossible pairs (those that yield UNSAT).

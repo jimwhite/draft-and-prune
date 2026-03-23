@@ -1,0 +1,22 @@
+1. Enumerate the five witnesses and assign integer codes: Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4.  
+2. Enumerate the three days: Monday=0, Tuesday=1, Wednesday=2.  
+3. Create integer variables `day[f]` for each witness `f`, representing the day they testify (0, 1, or 2).  
+4. Add **domain constraints**: each `day[f]` ∈ {0, 1, 2}.  
+5. Add **fixed constraints**:  
+   - Iturbe testifies on Wednesday → `day[3] == 2`.  
+6. Add **cardinality constraints**:  
+   - Exactly two witnesses testify on Tuesday → count of `day[f] == 1` equals 2.  
+   - At least one witness testifies on Monday → count of `day[f] == 0` ≥ 1.  
+7. Add **mutual exclusion constraints**:  
+   - Franco and Garcia do not testify on same day → `day[0] != day[1]`.  
+   - Hong does not testify on Monday → `day[2] != 0`.  
+8. Add the **conditional assumption**: Franco and Hong testify on same day → `day[0] == day[2]`.  
+9. Translate the answer choices into logical conditions (each choice is a proposition about day assignments):  
+   - A: Franco on Wednesday → `day[0] == 2`  
+   - B: Garcia on Monday → `day[1] == 0`  
+   - C: Garcia on Wednesday → `day[1] == 2`  
+   - D: Hong on Tuesday → `day[2] == 1`  
+   - E: Iturbe is the only witness on Wednesday → count of `day[f] == 2` equals 1  
+10. For each answer choice (A–E), in a fresh solver under the base constraints + assumption (`day[0] == day[2]`), check if the negation of that choice is satisfiable:  
+    - If `solver + base_constraints + assumption + NOT(choice)` is UNSAT, then the choice **must be true**.  
+11. Collect indices (0–4) of choices that must be true under the assumption, and return them in a list.

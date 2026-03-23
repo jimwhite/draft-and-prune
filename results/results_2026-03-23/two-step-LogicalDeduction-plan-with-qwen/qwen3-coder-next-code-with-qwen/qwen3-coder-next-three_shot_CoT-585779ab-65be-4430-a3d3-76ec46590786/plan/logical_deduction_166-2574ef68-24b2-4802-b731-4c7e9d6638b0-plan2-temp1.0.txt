@@ -1,0 +1,29 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"falcon"`, `"owl"`, `"quail"`, `"raven"`, `"hummingbird"`, `"bluejay"`, and `"crow"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with their domain (1–7) to the problem.
+
+3. **Translate Statements into Constraints:**  
+   * Add `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Add the following constraints using lambda functions or `FunctionConstraint` (or direct comparison via `addConstraint(lambda a,b: a < b, [var1, var2])` style):  
+     - `"The quail is to the left of the owl"` → `quail < owl`  
+     - `"The owl is the second from the left"` → `owl == 2`  
+     - `"The crow is to the right of the falcon"` → `falcon < crow`  
+     - `"The blue jay is to the right of the hummingbird"` → `hummingbird < bluejay`  
+     - `"The hummingbird is to the right of the raven"` → `raven < hummingbird`  
+     - `"The blue jay is to the left of the falcon"` → `bluejay < falcon`  
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to obtain all valid assignments.  
+   * Extract the unique solution (since the constraints fully determine the order, there will be exactly one solution).
+
+5. **Determine the Leftmost Bird (Position 1):**  
+   * The question asks which bird is leftmost, i.e., has position value `1`.  
+   * Construct a mapping from choice letters to bird names using the provided choices:  
+     `{'A': 'falcon', 'B': 'owl', 'C': 'quail', 'D': 'raven', 'E': 'hummingbird', 'F': 'bluejay', 'G': 'crow'}`  
+   * Iterate over the solution dictionary (bird → position) to find which bird has value `1`.  
+   * Return the corresponding choice letter (e.g., `'D'` if `"raven"` is at position 1).

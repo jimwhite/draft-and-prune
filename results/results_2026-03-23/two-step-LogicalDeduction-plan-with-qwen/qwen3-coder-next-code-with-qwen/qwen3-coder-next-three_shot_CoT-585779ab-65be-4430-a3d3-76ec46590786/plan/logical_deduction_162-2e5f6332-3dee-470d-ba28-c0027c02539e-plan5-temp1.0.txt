@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Their Domain:**  
+   * Identify the seven vehicle types as variables: `"limousine"`, `"truck"`, `"sedan"`, `"tractor"`, `"minivan"`, `"motorcycle"`, and `"hatchback"`.  
+   * Define a domain of integers from 1 to 7, where **1 = oldest** and **7 = newest**, reflecting increasing age (i.e., higher number means newer).  
+   * Add all seven variables to the problem with this domain.
+
+3. **Translate Rules into Constraints Using Lambda Functions:**  
+   * Add an `AllDifferentConstraint` to ensure each vehicle has a unique age rank.  
+   * "The minivan is older than the tractor" → `minivan < tractor`.  
+   * "The hatchback is older than the sedan" → `hatchback < sedan`.  
+   * "The truck is the third-newest" → Since newest = 7, third-newest = position 5 (7 - 3 + 1 = 5) → `truck == 5`.  
+   * "The hatchback is the second-newest" → Second-newest = position 6 → `hatchback == 6`.  
+   * "The tractor is older than the limousine" → `tractor < limousine`.  
+   * "The motorcyle is newer than the limousine" → `limousine < motorcycle`.
+
+4. **Solve for the Unique Arrangement:**  
+   * Use `getSolutions()` to find all valid assignments. Given consistency and uniqueness, expect a single solution.  
+   * Extract the first (and only) solution dictionary mapping each vehicle to its age rank.
+
+5. **Determine Which Vehicle Is the Newest (Rank 7):**  
+   * The question asks which vehicle is the newest → find which variable has value 7 in the solution.  
+   * Create a mapping from choice letters to vehicle names based on the choices:  
+     - `"A"` → `"limousine"`, `"B"` → `"truck"`, `"C"` → `"sedan"`,  
+       `"D"` → `"tractor"`, `"E"` → `"minivan"`, `"F"` → `"motorcycle"`, `"G"` → `"hatchback"`.  
+   * Iterate through choices, check which vehicle’s rank in the solution equals 7.  
+   * Output the corresponding choice letter as the answer.

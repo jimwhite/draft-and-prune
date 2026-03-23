@@ -1,0 +1,25 @@
+1.  **Initialize the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Create an instance of the `Problem` class to hold variables and constraints.
+
+2.  **Define Variables and Their Domain:**
+    * Define the five vehicle variables: `"convertible"`, `"truck"`, `"bus"`, `"sedan"`, and `"motorcyle"`.
+    * Define the domain as integers 1 to 5, where **1 = oldest** and **5 = newest**.
+    * Add all variables to the problem with this domain.
+
+3.  **Translate Rules into Constraints:**
+    * Add `AllDifferentConstraint` to ensure each vehicle has a unique age rank.
+    * "The bus is newer than the truck" → `bus > truck` (i.e., bus rank number > truck rank number).
+    * "The truck is newer than the convertible" → `truck > convertible`.
+    * "The sedan is the second-oldest" → `sedan == 2`.
+    * "The motorcyle is newer than the bus" → `motorcyle > bus`.
+
+4.  **Solve for the Unique Arrangement:**
+    * Call `getSolutions()` to retrieve all valid solutions.
+    * Extract the single solution (since constraints imply uniqueness).
+
+5.  **Identify the Newest Vehicle and Match to Choices:**
+    * The question asks which vehicle is newest → position 5.
+    * Create a mapping from choice letters to vehicle names: `'A'→"convertible"`, `'B'→"truck"`, `'C'→"bus"`, `'D'→"sedan"`, `'E'→"motorcyle"`.
+    * In the solution, find which vehicle has rank 5.
+    * Return the corresponding choice letter.

@@ -1,0 +1,26 @@
+1. Enumerate the four riders (Reynaldo, Seamus, Theresa, Yuki) and four bicycles (F, G, H, J), assigning integer indices 0–3 to each.  
+2. Create Boolean variables for day-1 assignments: `d1[r][b]` = True if rider r tests bicycle b on day 1.  
+3. Create Boolean variables for day-2 assignments: `d2[r][b]` = True if rider r tests bicycle b on day 2.  
+4. Add **day-1 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 1: for each rider r, sum_b d1[r][b] == 1.  
+   - Each bicycle is tested by exactly one rider on day 1: for each bicycle b, sum_r d1[r][b] == 1.  
+5. Add **day-2 assignment constraints**:  
+   - Each rider tests exactly one bicycle on day 2: for each rider r, sum_b d2[r][b] == 1.  
+   - Each bicycle is tested by exactly one rider on day 2: for each bicycle b, sum_r d2[r][b] == 1.  
+6. Add **problem-specific constraints**:  
+   - Reynaldo cannot test F: ¬d1[Reynaldo][F] and ¬d2[Reynaldo][F].  
+   - Yuki cannot test J: ¬d1[Yuki][J] and ¬d2[Yuki][J].  
+   - Theresa must test H on at least one day: d1[Theresa][H] ∨ d2[Theresa][H].  
+   - The bicycle Yuki tests on day 1 must be tested by Seamus on day 2: for each bicycle b, d1[Yuki][b] → d2[Seamus][b].  
+7. Translate the answer choices into logical statements about assignments:  
+   - "Both R and S test J" means d1[R][J] ∧ d1[S][J] (day 1 only) — but since each bicycle is tested by exactly one rider per day, this implies both test J on the same day — check if *either* day 1 or day 2 (i.e., d1[R][J] ∧ d1[S][J]) is possible, and also d2[R][J] ∧ d2[S][J] — but due to uniqueness, only one rider per day can test J, so both testing J *on the same day* is impossible. However, note the phrasing: "Both Reynaldo and Seamus test J" — this likely means *over the two days*, i.e., each tests J once (possibly on different days). Clarify: since each rider tests one bike per day and bicycles are tested twice (once per day), it's possible for two riders to test the same bike *on different days*. So "both test J" means:  
+     - ∃d ∈ {1,2} such that rider R tests J on day d, and ∃d' ∈ {1,2} such that rider S tests J on day d', and d and d' may differ.  
+     - So enforce: (d1[R][J] ∨ d2[R][J]) ∧ (d1[S][J] ∨ d2[S][J]).  
+     - But we must respect per-day uniqueness: if d1[R][J] is true, then d1[S][J] must be false (and vice versa). So both riders can test J *only if one does on day 1 and the other on day 2*.  
+8. For each answer choice, construct the constraint corresponding to it being *true*, and check satisfiability with base constraints.  
+   - Since the question asks "Which one CANNOT be true?", we look for choices where adding the constraint yields UNSAT.  
+9. Define answer_index_list = [] and iterate over choices 0–4:  
+   - Clone base solver.  
+   - Add constraint for the choice (e.g., for "Both R and S test J": add (d1[R][J] ∨ d2[R][J]) ∧ (d1[S][J] ∨ d2[S][J])).  
+   - Solve. If UNSAT, then this choice **cannot** be true → append its index to answer_index_list.  
+10. After checking all, print the list of indices where UNSAT occurs (should be exactly one).

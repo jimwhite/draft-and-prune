@@ -1,0 +1,27 @@
+1. Enumerate the five students and assign integer indices (e.g., Juana=0, Kelly=1, Lateefah=2, Mei=3, Olga=4).  
+2. Create Boolean variables: `green[i]` for whether student i is on the green team (so red team is `not green[i]`).  
+3. Create Boolean variables: `facilitator[i]` for whether student i is the facilitator of their assigned team.  
+4. Add **team-size constraints**: exactly one team has size 2, the other size 3. This is expressed as:  
+    - `sum(green[i] for i in range(5)) == 2 OR sum(green[i] for i in range(5)) == 3`, but since sizes are complementary, enforce: `sum(green[i]) == 2` or `sum(green[i]) == 3`. However, to fix which is which, we directly enforce: `sum(green[i]) == 2 XOR sum(red[i]) == 2`, but simpler: add `sum(green[i]) == k` where k ∈ {2,3}, and later use the condition. Instead, we will enforce: `sum(green[i]) == 2 OR sum(green[i]) == 3`, but for deduction we'll consider both possibilities—better: directly use cardinality constraints to enforce one team has 2, the other 3: `sum(green[i]) == 2` OR `sum(green[i]) == 3`. Z3 supports `If`, but we'll model by noting the condition is symmetric—add `sum(green[i]) == 2` or `sum(green[i]) == 3`, but to avoid disjunction in solver, encode as: `sum(green[i]) >= 2`, `sum(green[i]) <= 3`, and at least one of `sum == 2` or `sum == 3` holds—but Z3 can handle `(sum == 2) + (sum == 3)` via `Or(sum(...) == 2, sum(...) == 3)`.  
+5. Add **team-size uniqueness per team**: Each team must have exactly one facilitator:  
+    - `facilitator[i]` is true for exactly one student on the green team: `sum( green[i] and facilitator[i] for i ) == 1`.  
+    - Similarly for red team: `sum( (not green[i]) and facilitator[i] for i ) == 1`.  
+6. Add **fixed assignment constraints**:  
+    - Lateefah is on green team: `green[2] == True`.  
+    - Juana and Olga are on different teams: `green[0] != green[4]`.  
+    - Olga is a facilitator: `facilitator[4] == True`.  
+    - Kelly is not a facilitator: `facilitator[1] == False`.  
+7. Add **hypothetical assumption**: Mei is on green team: `green[3] == True`.  
+8. Now, under this assumption, deduce what must be true. To find which choice *must* be true:  
+    - For each answer choice (represented as a logical statement), assert the *negation* of that statement along with all base + hypothetical constraints.  
+    - If UNSAT, then the statement *must* be true; otherwise, it’s possible for it to be false.  
+    Choices to evaluate:  
+        A. Juana is green → `green[0] == True`  
+        B. Kelly is red → `not green[1] == True` i.e., `green[1] == False`  
+        C. Olga is green → `green[4] == True` (but Olga ≠ Juana’s team, and Lateefah & Mei are green; if both Lateefah, Mei, Olga green → 3 greens, but Juana must be red; check feasibility later)  
+        D. Lateefah is facilitator → `facilitator[2] == True`  
+        E. Mei is facilitator → `facilitator[3] == True`  
+9. For each choice index i (0 to 4), clone the solver, add constraints from steps 2–7, and add `not(choice_i_condition)`.  
+10. If the cloned solver returns UNSAT, then choice i is forced; record its index.  
+11. Since only one answer must be true (single-choice question), there should be exactly one UNSAT case; output the corresponding choice text.  
+12. Print or return the correct answer based on the index found.

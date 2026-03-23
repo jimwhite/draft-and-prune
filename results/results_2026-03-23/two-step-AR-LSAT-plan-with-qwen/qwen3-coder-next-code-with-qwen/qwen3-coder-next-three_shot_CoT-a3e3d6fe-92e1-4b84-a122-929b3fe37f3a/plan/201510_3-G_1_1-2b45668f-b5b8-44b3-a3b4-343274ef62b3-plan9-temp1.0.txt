@@ -1,0 +1,12 @@
+1. Enumerate the seven accomplices and assign them integer indices (0: Peters, 1: Quinn, 2: Rovero, 3: Stanton, 4: Tao, 5: Villas, 6: White).  
+2. Create integer variables `pos[0..6]` representing the recruitment position (1 to 7) for each accomplice.  
+3. Add **domain constraints**: all positions are integers in [1,7] and pairwise distinct (i.e., `Distinct(pos[0], ..., pos[6])`).  
+4. Add **fixed constraint**: Peters is recruited fourth → `pos[0] == 4`.  
+5. Add **relative ordering constraints**:  
+    - Quinn earlier than Rovero → `pos[1] < pos[2]`.  
+6. Add **adjacency constraint**: Villas immediately before White → `pos[5] + 1 == pos[6]`.  
+7. Add **separation constraint**: Stanton not adjacent to Tao → `|pos[3] - pos[4]| != 1`.  
+8. Translate each choice (a sequence of names) into a list of accomplice indices in order, then infer candidate positions (e.g., first → position 1, second → 2, etc.).  
+9. For each choice, build a fresh solver with all constraints above, then add constraints that enforce the positions match the candidate ordering (i.e., for position k in [1..7], set `pos[accomplice_index] == k` for each slot in the sequence).  
+10. Check satisfiability of each candidate order; collect indices of all SAT choices.  
+11. Output the index (0-based) of the correct choice(s).

@@ -1,0 +1,30 @@
+1.  Identify all entities and types: Sam, tumpus, yumpus, wumpus, jompus, vumpus, impus, zumpus, numpus, dumpus, rompuses.
+2.  Identify all properties: small, aggressive, bright, liquid, orange, transparent, fruity, sour.
+3.  Represent "Sam is a wumpus" as a base fact: `is_a("Sam", "wumpus", True)`.
+4.  Convert all class properties and subclass relationships into rules:
+      * Tumpuses are not small.
+      * Tumpuses are yumpuses.
+      * Every yumpus is aggressive.
+      * Each yumpus is a wumpus.
+      * Every wumpus is bright.
+      * Each wumpus is a jompus.
+      * Jompuses are not liquid.
+      * Every jompus is a vumpus.
+      * Each vumpus is orange.
+      * Every vumpus is an impus.
+      * Every impus is not transparent.
+      * Each impus is a zumpus.
+      * Every zumpus is fruity.
+      * Every zumpus is a numpus.
+      * Every numpus is sour.
+      * Rompuses are not fruity. (Note: Not directly relevant unless rompuses are linked to Sam via hierarchy—verify relevance.)
+      * Numpuses are dumpuses.
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.
+6.  Derive Sam’s classification chain:  
+      Sam is a wumpus → Sam is a jompus (from wumpus ⊆ jompus)  
+      → Sam is a vumpus (jompus ⊆ vumpus)  
+      → Sam is an impus (vumpus ⊆ impus)  
+      → Sam is a zumpus (impus ⊆ zumpus).  
+7.  From "Every zumpus is fruity", conclude Sam is fruity.
+8.  The query tests if the statement "Sam is not fruity" is provable; since Sam *is* fruity, the negation is false.  
+    → Use `facts.is_fruity("Sam", False)` to check falsity of the statement.

@@ -1,0 +1,35 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate the `Problem` class to model the golf tournament ordering puzzle.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven variables as the golfers' names: `"Dan"`, `"Eve"`, `"Mya"`, `"Amy"`, `"Rob"`, `"Ada"`, and `"Joe"`.
+    * Define the domain as integers from 1 to 7, where **1 = first place (best/fini shes earliest)** and **7 = last place (finishes latest)**.
+    * Add all variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**
+    * Add an `AllDifferentConstraint` to ensure no two golfers share the same placement rank.
+    * Translate each statement into a precise constraint using lambda functions:
+        * "Amy finished third" → `Amy == 3`
+        * "Joe finished last" → `Joe == 7`
+        * "Mya finished above Dan" → `Mya < Dan` (lower rank number means better placement)
+        * "Eve finished fourth" → `Eve == 4`
+        * "Amy finished above Rob" → `Amy < Rob` (and since Amy=3, this implies Rob > 3)
+        * "Ada finished third-to-last" → In a 7-person field, third-to-last means position 5 (since last=7, second-to-last=6, third-to-last=5), so `Ada == 5`
+
+4.  **Solve the Problem:**
+    * Call `getSolutions()` to compute all valid assignments satisfying the constraints.
+    * Extract the unique solution (or first solution, as uniqueness is implied by consistency of the problem).
+
+5.  **Determine Which Golfer Is Third-to-Last:**
+    * The question asks which golfer is third-to-last, i.e., placement rank = 5 (as defined above).
+    * Iterate through the solution dictionary to find the golfer whose rank is 5.
+    * Map this golfer's name to the corresponding choice letter from the given list:
+        - `"Dan"` → "A"
+        - `"Eve"` → "B"
+        - `"Mya"` → "C"
+        - `"Amy"` → "D"
+        - `"Rob"` → "E"
+        - `"Ada"` → "F"
+        - `"Joe"` → "G"
+    * Output the choice letter (e.g., 'F') corresponding to the golfer at rank 5.

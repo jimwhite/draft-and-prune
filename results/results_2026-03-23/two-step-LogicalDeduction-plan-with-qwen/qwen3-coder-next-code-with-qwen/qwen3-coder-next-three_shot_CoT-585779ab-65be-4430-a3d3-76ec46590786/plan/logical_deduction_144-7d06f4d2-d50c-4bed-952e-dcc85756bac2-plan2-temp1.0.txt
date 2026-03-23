@@ -1,0 +1,34 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to model the golf tournament ranking puzzle.
+
+2.  **Define Variables and Domain:**
+    * Identify the seven golfers as variables: `"Joe"`, `"Dan"`, `"Ada"`, `"Amy"`, `"Rob"`, `"Mya"`, and `"Mel"`.
+    * Define the domain as integers from 1 to 7, where **1 represents first place (highest rank)** and **7 represents last place (lowest rank)**.
+    * Add all seven golfers as variables with domain {1, 2, 3, 4, 5, 6, 7} to the problem.
+
+3.  **Formulate Constraints from Statements:**
+    * Add an `AllDifferentConstraint` to ensure each golfer has a unique rank.
+    * Translate each textual statement into constraints using `lambda` functions:
+        * "Ada finished below Amy" → Ada's rank > Amy's rank (`lambda a, m: a > m`, where `a`=Ada, `m`=Amy).
+        * "Joe finished below Dan" → Joe's rank > Dan's rank (`lambda j, d: j > d`).
+        * "Dan finished below Ada" → Dan's rank > Ada's rank (`lambda d, a: d > a`).
+        * "Mel finished third-to-last" → In a 7-person race, third-to-last is position 5 (since 7th = last, 6th = second-to-last, 5th = third-to-last) → Mel's rank = 5.
+        * "Amy finished third" → Amy's rank = 3.
+        * "Rob finished below Mya" → Rob's rank > Mya's rank (`lambda r, y: r > y`, where `r`=Rob, `y`=Mya).
+
+4.  **Solve the Constraint Satisfaction Problem:**
+    * Call `getSolutions()` to find all valid assignments of ranks.
+    * Extract the unique solution (the problem is well-posed with a single solution).
+
+5.  **Map Solution to Answer Choices:**
+    * Identify which golfer has rank 1 (first place).
+    * Create a mapping from choice letters ('A' to 'G') to golfer names:
+        - 'A' → "Joe"
+        - 'B' → "Dan"
+        - 'C' → "Ada"
+        - 'D' → "Amy"
+        - 'E' → "Rob"
+        - 'F' → "Mya"
+        - 'G' → "Mel"
+    * Find the golfer in the solution with value 1 and return the corresponding choice letter.

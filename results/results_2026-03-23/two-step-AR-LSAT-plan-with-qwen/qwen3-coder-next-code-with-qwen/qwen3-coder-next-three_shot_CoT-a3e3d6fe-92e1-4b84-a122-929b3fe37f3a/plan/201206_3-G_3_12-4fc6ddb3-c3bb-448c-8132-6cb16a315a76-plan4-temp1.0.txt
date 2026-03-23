@@ -1,0 +1,17 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables `zone[i]` for each representative i, with domain {1, 2, 3} indicating their assigned zone.  
+3. Add **exactly-one-zone constraint**: implicitly enforced by domain {1,2,3} and no further grouping logic needed.  
+4. Add **Parra-or-Tiao-in-Zone1 constraint**: Exactly one of Parra or Tiao is in Zone 1.  
+    - `(zone[Parra] == 1) != (zone[Tiao] == 1)`  
+5. Add **Tiao-or-Udall-in-Zone2 constraint**: Exactly one of Tiao or Udall is in Zone 2.  
+    - `(zone[Tiao] == 2) != (zone[Udall] == 2)`  
+6. Add **Parra-and-Quinn-same-zone constraint**: `zone[Parra] == zone[Quinn]`  
+7. Add **Stuckey-and-Udall-same-zone constraint**: `zone[Stuckey] == zone[Udall]`  
+8. Add **Zone3-population-greater-than-Zone2 constraint**: Count representatives in Zone 3 > count in Zone 2.  
+    - Use `If(zone[i] == zone_val, 1, 0)` for each i and sum; compare sums.  
+9. Translate the five answer choices into full zone assignments (e.g., list of (rep, zone) pairs).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert the exact zone assignments implied by the choice (e.g., `zone[Kim] == 1`, `zone[Parra] == 1`, etc.).  
+    - If the model is SAT, then that choice is feasible; record its index.  
+11. Return the index of the first (or all) feasible choice(s); since question asks “which one could be accurate”, select the SAT choice(s).

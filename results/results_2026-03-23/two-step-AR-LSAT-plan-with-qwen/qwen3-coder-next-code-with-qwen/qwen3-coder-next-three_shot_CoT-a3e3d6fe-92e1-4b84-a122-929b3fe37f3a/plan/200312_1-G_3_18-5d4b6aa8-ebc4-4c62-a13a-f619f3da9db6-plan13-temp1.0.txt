@@ -1,0 +1,19 @@
+1. Enumerate cookie types: oatmeal (OAT), peanut butter (PBU), sugar (SUG) and assign integer codes 0,1,2.  
+2. Enumerate days: Monday=0, Tuesday=1, Wednesday=2, Thursday=3, Friday=4.  
+3. Create integer variables: `first_oat`, `second_oat`, `third_oat`, `first_pbu`, `second_pbu`, `third_pbu`, `first_sug`, `second_sug`, `third_sug`. Each variable represents the day (0–4) a specific batch is made.  
+4. Add **distinct-day-per-type constraints**: for each cookie type, its three batch days are pairwise distinct.  
+5. Add **at-least-one-on-Monday constraint**: min of all 9 batch days ≤ 0 (i.e., some batch day = 0).  
+6. Add **given constraints**:  
+    - `second_oat == first_pbu` (second oatmeal same day as first peanut butter).  
+    - `second_sug == 3` (second sugar on Thursday).  
+7. Add the conditional antecedent: assume there exists a pair (X_type, i=1st/2nd/3rd) and (Y_type ≠ X_type, j=1st/2nd/3rd) such that batch day of (X,i) = batch day of (Y,j). Encode using existential quantification: introduce boolean selectors or use disjunction over all 3×3×2=18 possible pairs (excluding same type) to assert `some_day_d` where two different-type batches (one first/second/third, the other first/second/third) share day d.  
+8. For each answer choice (5 statements), encode it as a logical proposition about the batch days:  
+    - A: ∀d ∈ {0,1,2,3,4}, ∃ batch with day = d  
+    - B: number of batches on Wednesday (day=2) ≥ 2  
+    - C: exactly one batch on Monday → count of batches with day=0 equals 1  
+    - D: exactly two batches on Tuesday → count of batches with day=1 equals 2  
+    - E: exactly one batch on Friday → count of batches with day=4 equals 1  
+9. For each answer choice, construct a fresh solver, add base constraints (steps 4–7), and *negate* the answer statement.  
+10. If this negated model is SAT (i.e., a scenario satisfying all conditions *and* the negation of the statement exists), then the original answer choice **could be false** — it is a correct candidate.  
+11. Collect indices of all answer choices for which the negated model is SAT.  
+12. The plan outputs the list of such answer indices (0-indexed).

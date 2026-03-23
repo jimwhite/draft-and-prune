@@ -1,0 +1,14 @@
+1. Enumerate the seven houses and assign them integer indices (e.g., J=0, K=1, L=2, M=3, N=4, O=5, P=6).  
+2. Create integer variables for the show position (1 to 7) of each house.  
+3. Add **domain constraints**: each position variable is in [1,7] and all positions are pairwise distinct.  
+4. Add **time-block constraints** based on morning (positions 1–2), afternoon (3–5), evening (6–7):  
+    - J must be in evening: position_J ∈ {6,7}.  
+    - K cannot be in morning: position_K ∉ {1,2} → position_K ∈ {3,4,5,6,7}.  
+5. Add **order constraints**: L after K and before M → position_K < position_L < position_M.  
+6. Translate the answer choices into logical statements about house positions (e.g., “K is shown in the evening” = position_K ∈ {6,7}).  
+7. For each answer choice, define a hypothesis (e.g., assume the statement is true) and check if it **must** hold across all valid schedules:  
+    - Clone the base constraints into a fresh solver.  
+    - Add the *negation* of the statement (e.g., assume K is *not* in evening: position_K ∈ {3,4,5}).  
+    - If the resulting model is UNSAT, then the original statement **must be true**; record its index.  
+8. The answer is the unique hypothesis whose negation is UNSAT (i.e., only one such statement must hold).  
+9. Return the index of that correct choice.

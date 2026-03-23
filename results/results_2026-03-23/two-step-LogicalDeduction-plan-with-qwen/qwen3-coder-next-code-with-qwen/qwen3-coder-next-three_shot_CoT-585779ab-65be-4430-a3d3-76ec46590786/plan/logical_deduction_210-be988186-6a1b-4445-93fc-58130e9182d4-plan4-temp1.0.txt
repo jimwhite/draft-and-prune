@@ -1,0 +1,28 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"black"`, `"yellow"`, `"white"`, `"gray"`, `"purple"`, `"orange"`, and `"green"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables to the problem with this domain.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce uniqueness of positions.  
+   * Translate each statement into a constraint using `lambda` or direct equality/inequality constraints:  
+     - "The green book is to the left of the gray book" → `green < gray`  
+     - "The gray book is the third from the right" → `gray == 5` (since positions are 1-based: rightmost is 7, second-rightmost is 6, third-rightmost is 5)  
+     - "The white book is the rightmost" → `white == 7`  
+     - "The orange book is the second from the left" → `orange == 2`  
+     - "The black book is to the right of the yellow book" → `yellow < black`  
+     - "The black book is the third from the left" → `black == 3`  
+
+4. **Solve the Problem:**  
+   * Use the solver’s `getSolutions()` method to enumerate all valid assignments.  
+   * Extract the unique solution (since the constraints fully determine positions).
+
+5. **Determine Which Book Is Rightmost (Position 7):**  
+   * Examine the solution dictionary to find which book has value `7`.  
+   * Map this book to the corresponding choice letter:  
+     - `'white'` → `"C) The white book is the rightmost."`  
+   * Return or output the correct choice letter (e.g., `"C"`).

@@ -1,0 +1,28 @@
+1.  Identify all entities and types: Wren, wumpus, yumpus, tumpus, vumpus, jompus, impus, numpus, rompus, zumpus.  
+2.  Identify all properties: sour, aggressive, transparent, wooden, feisty, large, red.  
+3.  Represent "Wren is a tumpus" as a base fact: `is_a("Wren", "tumpus", True)`.  
+4.  Convert all class properties and subclass relationships into rules:  
+    - Every wumpus is sour.  
+    - Wumpuses are yumpuses.  
+    - Every yumpus is aggressive.  
+    - Every yumpus is a tumpus.  
+    - Every tumpus is transparent.  
+    - Tumpuses are vumpuses.  
+    - Vumpuses are wooden.  
+    - Each vumpus is a jompus.  
+    - Each impus is not feisty.  
+    - Every jompus is large.  
+    - Jompuses are numpuses.  
+    - Numpuses are red.  
+    - Numpuses are rompuses.  
+    - Every rompus is feisty.  
+    - Each rompus is a zumpus.  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence (note: negative facts like “X is not Y” must be encoded as explicit negations or via complementary predicates—here, use `is_feisty(X, False)` to represent “X is not feisty”, and ensure consistency via closed-world or explicit rule-based derivation).  
+6.  Derive Wren’s properties step by step:  
+    - From `is_a(Wren, tumpus)`, and “Tumpuses are vumpuses” → `is_a(Wren, vumpus)`.  
+    - From `is_a(Wren, vumpus)` and “Each vumpus is a jompus” → `is_a(Wren, jompus)`.  
+    - From `is_a(Wren, jompus)` and “Jompuses are numpuses” → `is_a(Wren, numpus)`.  
+    - From `is_a(Wren, numpus)` and “Numpuses are rompuses” → `is_a(Wren, rompus)`.  
+    - From `is_a(Wren, rompus)` and “Every rompus is feisty” → `is_feisty(Wren, True)`.  
+7.  The query tests if “Wren is not feisty” is provable, i.e., whether `is_feisty(Wren, False)` can be deduced.  
+    → Use `facts.is_feisty("Wren", False)`.

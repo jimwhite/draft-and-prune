@@ -1,0 +1,24 @@
+1. Identify all entities and types: Rex, impus, yumpus, wumpus, numpus, jompus, dumpus, tumpus, vumpus, rompus, zumpus.  
+2. Identify all properties: mean, blue, hot, happy, fruity, dull, opaque, metallic.  
+3. Represent "Rex is a yumpus" as a base fact: `is_a("Rex", "yumpus", True)`.  
+4. Convert all class properties and subclass relationships into rules:  
+   - Impuses are mean → `foreach impus X, is_a(X, "impus", True) => is_mean(X, True)`  
+   - Each impus is a yumpus → `foreach X, is_a(X, "impus", True) => is_a(X, "yumpus", True)`  
+   - Yumpuses are blue → `foreach yumpus X, is_a(X, "yumpus", True) => is_blue(X, True)`  
+   - Yumpuses are wumpuses → `foreach yumpus X, is_a(X, "yumpus", True) => is_a(X, "wumpus", True)`  
+   - Wumpuses are hot → `foreach wumpus X, is_a(X, "wumpus", True) => is_hot(X, True)`  
+   - Every wumpus is a numpus → `foreach X, is_a(X, "wumpus", True) => is_a(X, "numpus", True)`  
+   - Jompuses are happy → `foreach jompus X, is_a(X, "jompus", True) => is_happy(X, True)`  
+   - Numpuses are fruity → `foreach numpus X, is_a(X, "numpus", True) => is_fruity(X, True)`  
+   - Numpuses are dumpuses → `foreach numpus X, is_a(X, "numpus", True) => is_a(X, "dumpus", True)`  
+   - Every dumpus is not dull → `foreach dumpus X, is_a(X, "dumpus", True) => is_dull(X, False)`  
+   - Every dumpus is a tumpus → `foreach X, is_a(X, "dumpus", True) => is_a(X, "tumpus", True)`  
+   - Tumpuses are not happy → `foreach tumpus X, is_a(X, "tumpus", True) => is_happy(X, False)`  
+   - Every tumpus is a vumpus → `foreach X, is_a(X, "tumpus", True) => is_a(X, "vumpus", True)`  
+   - Vumpuses are not opaque → `foreach vumpus X, is_a(X, "vumpus", True) => is_opaque(X, False)`  
+   - Every vumpus is a rompus → `foreach X, is_a(X, "vumpus", True) => is_a(X, "rompus", True)`  
+   - Rompuses are metallic → `foreach rompus X, is_a(X, "rompus", True) => is_metallic(X, True)`  
+   - Each rompus is a zumpus → `foreach X, is_a(X, "rompus", True) => is_a(X, "zumpus", True)`  
+5. Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6. The query tests if the statement "Rex is not happy" is provable:  
+   → Use `facts.is_happy("Rex", False)`.

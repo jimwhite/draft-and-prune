@@ -1,0 +1,26 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define variables for the five fruits: `"loquats"`, `"pears"`, `"watermelons"`, `"kiwis"`, and `"plums"`.  
+   * Define the domain as integers 1 through 5, where **1 = most expensive** and **5 = least expensive** (since “third-most expensive” implies ranking by price descending).  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Translate Statements into Constraints:**  
+   * Add an `AllDifferentConstraint` to enforce unique price ranks.  
+   * “The loquats are the third-most expensive” → `loquats == 3`.  
+   * “The loquats are more expensive than the watermelons” → `loquats < watermelons` (since lower rank number = more expensive).  
+   * “The plums are less expensive than the watermelons” → `plums > watermelons`.  
+   * “The kiwis are more expensive than the pears” → `kiwis < pears`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments.  
+   * Extract the first (or any) solution, as the problem is guaranteed to have a unique consistent arrangement.
+
+5. **Identify the Second-Most Expensive Fruit:**  
+   * The question asks which fruit is **second-most expensive**, i.e., rank `2`.  
+   * Create a mapping from choice letters (`'A'`, `'B'`, ..., `'E'`) to fruit names:  
+     `{'A': 'loquats', 'B': 'pears', 'C': 'watermelons', 'D': 'kiwis', 'E': 'plums'}`.  
+   * Iterate through choices, checking which fruit in the solution has rank `2`.  
+   * Return the corresponding choice letter as the answer.

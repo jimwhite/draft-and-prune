@@ -1,0 +1,21 @@
+1. Enumerate the six employees and assign integer indices.  
+2. Create integer variables `pos[employee]` for the parking space assigned to each employee (1 to 6).  
+3. Add **domain constraints**: `pos[e] ∈ {1,2,3,4,5,6}` for all employees.  
+4. Add **distinctness constraint**: All `pos[e]` values are pairwise distinct (use `Distinct`).  
+5. Add **given ordering constraints**:  
+    - Young > Togowa: `pos_Young > pos_Togowa`  
+    - Xu > Souza: `pos_Xu > pos_Souza`  
+    - Robertson > Young: `pos_Robertson > pos_Young`  
+    - Robertson ∈ {1,2,3,4}: Add constraint `Or(pos_Robertson == 1, pos_Robertson == 2, pos_Robertson == 3, pos_Robertson == 4)`  
+6. Add **additional condition** from the question: Young > Souza: `pos_Young > pos_Souza`  
+7. Translate the five answer choices into logical conditions involving employee positions:  
+    - A: Togowa = 1 → `pos_Togowa == 1`  
+    - B: Young = 2 → `pos_Young == 2`  
+    - C: Robertson = 3 → `pos_Robertson == 3`  
+    - D: Souza = 3 → `pos_Souza == 3`  
+    - E: Vaughn = 4 → `pos_Vaughn == 4`  
+8. For each choice, check **consistency under the condition Young > Souza**:  
+    - Clone base constraints + `Young > Souza` into a fresh solver.  
+    - Add the specific condition for the choice (e.g., `pos_Young == 2` for B).  
+    - If the model is SAT, then that choice **could be true**; record its index.  
+9. Collect all indices of choices for which the model is SAT, and output them (only one correct answer expected).

@@ -1,0 +1,31 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Define the seven bird variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"` (using concatenated names without spaces for consistency).  
+    * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+    * Add all seven variables with this domain to the `Problem` instance.
+
+3.  **Add All-Different Constraint:**  
+    * Add an `AllDifferentConstraint` to ensure all birds occupy distinct positions.
+
+4.  **Translate and Add Positional Constraints:**  
+    * Translate each statement from the problem into a constraint using `addConstraint` with lambda functions:  
+        * "The hummingbird is to the left of the crow" → `hummingbird < crow`  
+        * "The cardinal is to the right of the quail" → `cardinal > quail`  
+        * "The blue jay is the fourth from the left" → `bluejay == 4`  
+        * "The robin is the second from the left" → `robin == 2`  
+        * "The quail is to the right of the crow" → `quail > crow`  
+        * "The raven is to the left of the robin" → `raven < robin`  
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to find all valid assignments of positions to birds.  
+    * Extract the unique solution (a dictionary mapping bird names to their integer positions).
+
+6.  **Identify the Correct Answer:**  
+    * The question asks which bird is second from the left (i.e., position 2).  
+    * Create a mapping between choice letters ('A'–'G') and the corresponding bird names:  
+        `'A': 'robin', 'B': 'hummingbird', 'C': 'raven', 'D': 'bluejay', 'E': 'crow', 'F': 'cardinal', 'G': 'quail'`.  
+    * For each choice letter in order, check if the bird's position in the solution equals 2.  
+    * Return the first choice letter where this condition holds (only one will satisfy).

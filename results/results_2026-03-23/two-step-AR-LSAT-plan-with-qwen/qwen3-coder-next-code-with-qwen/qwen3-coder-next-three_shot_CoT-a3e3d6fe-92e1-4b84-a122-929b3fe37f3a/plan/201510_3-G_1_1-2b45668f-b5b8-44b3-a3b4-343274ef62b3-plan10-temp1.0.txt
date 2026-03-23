@@ -1,0 +1,13 @@
+1. Enumerate the seven accomplices and assign each an integer index.  
+2. Define permutation variables for the recruitment order: create a list `order` of 7 distinct integer variables, each ranging from 0 to 6 (representing positions 1 to 7, where position i corresponds to index i), with an AllDifferent constraint.  
+3. Add **fixed constraint**: Peters is recruited fourth → position of Peters = 3 (0-indexed).  
+4. Add **Villas-White adjacency constraint**: Villas is immediately before White → `pos_Villas + 1 == pos_White`.  
+5. Add **Quinn-Rovero precedence constraint**: Quinn recruited earlier than Rovero → `pos_Quinn < pos_Rovero`.  
+6. Add **Stanton-Tao non-adjacency constraint**: Stanton is neither immediately before nor after Tao → `abs(pos_Stanton - pos_Tao) != 1`.  
+7. For each answer choice (as a candidate order), convert the list of names into positions using the naming order (e.g., index 0 = first, ..., index 6 = seventh), and check consistency with all constraints:  
+   - Build a fresh solver for each choice.  
+   - Assert `order[i] == accomplice_index` for each position i (0 to 6), where `accomplice_index` is pre-mapped from name.  
+   - Ensure all global constraints (Peters=3, Villas+1=White, Quinn<Rovero, |Stanton−Tao|≠1) are added.  
+   - If the solver returns SAT, this choice is valid and can be selected as a possible order.  
+8. Since the question asks "which one could be the order", identify the first (or only) choice that yields SAT; collect its index in `answer_index_list`.  
+9. Print the answer index list (which should contain exactly one element).

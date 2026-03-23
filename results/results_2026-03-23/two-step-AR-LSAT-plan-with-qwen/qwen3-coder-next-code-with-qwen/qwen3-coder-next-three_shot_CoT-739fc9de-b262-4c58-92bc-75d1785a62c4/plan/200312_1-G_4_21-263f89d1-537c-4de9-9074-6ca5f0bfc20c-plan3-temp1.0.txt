@@ -1,0 +1,22 @@
+1. Enumerate the five students: Jiang, Kramer, Lopez, Megregian, O'Neill → assign integer indices 0–4.  
+2. Enumerate the three plays: Sunset (0), Tamerlane (1), Undulation (2).  
+3. Create Boolean variables `review[i][p]` for student i reviewing play p (i ∈ {0,…,4}, p ∈ {0,1,2}).  
+4. Add **non-empty review constraint**: each student reviews at least one play → for each i, `review[i][0] ∨ review[i][1] ∨ review[i][2]`.  
+5. Add **Kramer–Lopez vs. Megregian count constraint**: let `cnt[i] = review[i][0] + review[i][1] + review[i][2]` (as integer). Then `cnt[Kramer] < cnt[Megregian]` and `cnt[Lopez] < cnt[Megregian]`.  
+6. Add **Lopez–Jiang and Megregian–Jiang disjointness**: Lopez and Jiang share no plays: `review[Lopez][p] → ¬review[Jiang][p]` for p ∈ {0,1,2}; similarly Megregian–Jiang disjoint: `review[Megregian][p] → ¬review[Jiang][p]`.  
+7. Add **Kramer and O'Neill both review Tamerlane**: `review[Kramer][1] = True`, `review[O'Neill][1] = True`.  
+8. Add **global constraint**: exactly two students review the *exact same set* of plays (i.e., identical Boolean triples), and no other pair does.  
+    - For each unordered pair (i, j), define equality `eq[i][j] ↔ (∧_p review[i][p] == review[j][p])`.  
+    - Require that exactly one pair satisfies eq[i][j] = True (i.e., sum of all eq[i][j] over i < j equals 1).  
+9. Add **condition**: exactly three students review Undulation (play index 2) → `sum_i review[i][2] == 3`.  
+10. For each answer choice, interpret it as a propositional condition:  
+    - Choice A: Megregian does not review Undulation → `¬review[Megregian][2]`.  
+    - Choice B: O'Neill does not review Undulation → `¬review[O'Neill][2]`.  
+    - Choice C: Jiang reviews Undulation → `review[Jiang][2]`.  
+    - Choice D: Lopez reviews Tamerlane → `review[Lopez][1]`.  
+    - Choice E: O'Neill reviews Sunset → `review[O'Neill][0]`.  
+11. Define answer index list `answer_index_list = []`. For each choice k ∈ {0,…,4}:  
+    - Clone the full constraint set (including condition step 8 and condition 9).  
+    - Add choice k’s condition as a new assertion.  
+    - If the solver returns SAT, then the choice is *possible*; append k to `answer_index_list`.  
+12. Output `answer_index_list` (indices of feasible choices).

@@ -1,0 +1,29 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold the CSP.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven birds as variables: `"hummingbird"`, `"cardinal"`, `"blue jay"`, `"owl"`, `"raven"`, `"quail"`, and `"robin"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables to the problem with this domain.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce that all birds occupy distinct positions using `AllDifferentConstraint`.
+
+4. **Translate Each Statement into a Constraint:**  
+   * "The hummingbird is to the left of the quail" → `hummingbird < quail`  
+   * "The robin is to the left of the cardinal" → `robin < cardinal`  
+   * "The blue jay is the leftmost" → `blue_jay == 1`  
+   * "The cardinal is the fourth from the left" → `cardinal == 4`  
+   * "The raven is the third from the right" → Since rightmost is position 7, third from right = 7 − 2 = **5**, so `raven == 5`  
+   * "The owl is the third from the left" → `owl == 3`
+
+5. **Solve the CSP:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Extract the unique solution (assuming consistency guarantees one).
+
+6. **Verify and Match to Choices:**  
+   * The question asks: "Which of the following is true?" and lists options identifying who is leftmost (position 1).  
+   * From the solution, identify which bird has position 1.  
+   * Map that bird to its corresponding choice letter: `"blue jay"` maps to option **C**.  
+   * Output the correct choice letter (C).

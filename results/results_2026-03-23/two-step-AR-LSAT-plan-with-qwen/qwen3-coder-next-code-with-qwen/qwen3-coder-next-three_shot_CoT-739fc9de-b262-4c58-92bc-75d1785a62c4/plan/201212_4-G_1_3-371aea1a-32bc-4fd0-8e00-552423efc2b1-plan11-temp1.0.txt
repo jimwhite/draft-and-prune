@@ -1,0 +1,18 @@
+1. Enumerate the seven houses {J, K, L, M, N, O, P} and assign integer indices.  
+2. Create integer variables `pos[house]` for the showing position (1 to 7) of each house.  
+3. Add **domain constraints**: `pos[house] ∈ {1,2,3,4,5,6,7}` and all positions distinct (using `Distinct(pos.values())`).  
+4. Add **session constraints** based on position ranges:  
+    - Morning: positions 1–2; Afternoon: 3–5; Evening: 6–7.  
+5. Add **given constraints**:  
+    - J must be shown in the evening: `pos[J] ≥ 6`.  
+    - K cannot be shown in the morning: `pos[K] ≥ 3`.  
+    - L after K and before M: `pos[K] < pos[L]` and `pos[L] < pos[M]`.  
+6. Translate the answer choices into logical statements about house positions relative to sessions:  
+    - A: K in evening ⇔ `pos[K] ≥ 6`  
+    - B: L in afternoon ⇔ `3 ≤ pos[L] ≤ 5`  
+    - C: L in evening ⇔ `pos[L] ≥ 6`  
+    - D: M in morning ⇔ `pos[M] ≤ 2`  
+    - E: M in afternoon ⇔ `3 ≤ pos[M] ≤ 5`  
+7. For each answer choice, clone the base constraints into a fresh solver and assert the *negation* of the statement.  
+8. If the negated instance is UNSAT, then the original statement must be true; record that choice index.  
+9. Return the single choice index for which the statement is forced (UNSAT under negation).

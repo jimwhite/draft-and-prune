@@ -1,0 +1,17 @@
+1. Enumerate the six cookbooks (K, L, M, N, O, P) and assign integer indices.  
+2. Create Boolean variables for each cookbook indicating publication season: e.g., `K_fall`, `L_fall`, ..., `P_fall` (True = fall, False = spring).  
+3. Translate the fixed assumption: N is published in the fall → assert `N_fall == True`.  
+4. Add constraint for M and P not in same season: `M_fall != P_fall`.  
+5. Add constraint for K and N same season: `K_fall == N_fall` → since N is fall, this forces `K_fall == True`.  
+6. Add conditional constraint: if K is fall, then O must be fall → since K is forced to fall, assert `O_fall == True`.  
+7. Add conditional constraint: if M is fall, then N must be spring → but N is forced to fall, so the antecedent "M is fall" must be false; hence assert `M_fall == False` (i.e., M is spring).  
+8. Now derive forced assignments: N_fall=True, K_fall=True, O_fall=True, M_fall=False. L and P remain free (P must differ from M ⇒ P_fall=True since M is spring).  
+9. Translate answer choices into logical statements:  
+    - A: K_fall=False → contradicts forced K_fall=True ⇒ impossible  
+    - B: L_fall=True → possible (L unconstrained)  
+    - C: M_fall=True → contradicts forced M_fall=False ⇒ impossible  
+    - D: O_fall=False → contradicts forced O_fall=True ⇒ impossible  
+    - E: P_fall=False → contradicts M_fall=False and M≠P season ⇒ impossible  
+10. For each choice, clone base constraints + N_fall=True and add the choice's condition; check SAT.  
+11. Identify which choices are satisfiable — only choice B ("L is published in the fall") is possible.  
+12. Record indices of satisfiable choices into `answer_index_list`.

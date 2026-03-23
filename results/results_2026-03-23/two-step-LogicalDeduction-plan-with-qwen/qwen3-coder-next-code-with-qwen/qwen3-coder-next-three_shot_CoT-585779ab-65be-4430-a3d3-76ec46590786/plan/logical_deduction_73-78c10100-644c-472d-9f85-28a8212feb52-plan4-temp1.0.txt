@@ -1,0 +1,31 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five birds: `"falcon"`, `"raven"`, `"cardinal"`, `"hawk"`, and `"crow"`.  
+   * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+   * Add all variables with this domain to the `Problem` instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each statement into a constraint using `addConstraint` with lambda functions:  
+     - "The cardinal is the second from the right" → cardinal's position = 4.  
+     - "The raven is the second from the left" → raven's position = 2.  
+     - "The crow is the rightmost" → crow's position = 5.  
+     - "The hawk is to the right of the falcon" → falcon's position < hawk's position.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Extract the unique solution (since constraints fully determine positions).
+
+5. **Determine the Correct Answer:**  
+   * The question asks: "Which of the following is true?" with options identifying which bird is second from the left (position 2).  
+   * Use the solved assignment to find which bird occupies position 2.  
+   * Map that bird to the corresponding choice letter using the given list of options:  
+     - A) falcon at position 2  
+     - B) raven at position 2  
+     - C) cardinal at position 2  
+     - D) hawk at position 2  
+     - E) crow at position 2  
+   * Return the letter (e.g., `"B"`) whose described bird matches position 2 in the solution.

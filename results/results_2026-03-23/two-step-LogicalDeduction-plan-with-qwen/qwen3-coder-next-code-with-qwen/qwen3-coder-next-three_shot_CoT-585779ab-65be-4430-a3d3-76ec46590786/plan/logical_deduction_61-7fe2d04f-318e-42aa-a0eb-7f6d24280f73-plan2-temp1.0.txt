@@ -1,0 +1,27 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to build the constraint satisfaction model.
+
+2. **Define Variables and Domain:**  
+   * Define the variables as the five books: `"gray"`, `"red"`, `"purple"`, `"blue"`, and `"black"`.  
+   * Assign a domain of integers from 1 to 5, where position 1 = leftmost and position 5 = rightmost.  
+   * Add all variables with their domain to the problem instance.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure uniqueness of positions.  
+   * Translate each statement into a lambda-based constraint:  
+     - *"The red book is to the right of the gray book"* → `gray < red`  
+     - *"The black book is to the left of the blue book"* → `black < blue`  
+     - *"The blue book is to the left of the gray book"* → `blue < gray`  
+     - *"The purple book is the second from the right"* → `purple == 4` (since positions are left-to-right: 1–5 ⇒ 2nd from right = position 4)  
+
+4. **Solve for the Unique Arrangement:**  
+   * Call `getSolutions()` to enumerate all valid solutions.  
+   * Extract the single solution (as the constraints define a unique ordering).  
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is second from the right (i.e., at position 4).  
+   * The fourth constraint already forces `purple == 4`, so the solution will confirm purple is at position 4.  
+   * Map the answer choices to books: Choice C directly states "The purple book is the second from the right."  
+   * Verify that in the solution, the purple book occupies position 4.  
+   * Return choice **C** as the correct answer (no need to iterate—constraint directly enforces it, and consistency guarantees uniqueness).

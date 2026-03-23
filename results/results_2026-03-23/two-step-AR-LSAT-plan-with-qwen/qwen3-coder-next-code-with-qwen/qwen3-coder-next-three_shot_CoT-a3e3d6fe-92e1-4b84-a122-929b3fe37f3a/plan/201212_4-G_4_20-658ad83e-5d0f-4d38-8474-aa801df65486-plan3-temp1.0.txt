@@ -1,0 +1,18 @@
+1. Enumerate the seven articles and assign each an integer index: G=0, H=1, J=2, Q=3, R=4, S=5, Y=6.  
+2. Create integer variables `pos[0]` to `pos[6]` representing the editing position (1–7) for each article.  
+3. Add **domain and uniqueness constraints**: all `pos[i] ∈ {1,…,7}` and all positions are distinct (using `Distinct` or pairwise inequalities).  
+4. Add **topic grouping**: finance = {G,H,J}, nutrition = {Q,R,S}, wildlife = {Y}.  
+5. Add **consecutive-different-topic constraint**: for all adjacent positions `k` and `k+1` (1 ≤ k ≤ 6), if article A is at position `k` and article B at `k+1`, then topic(A) ≠ topic(B). Implement via auxiliary Boolean variables or by checking all permutations implicitly through position assignments.  
+6. Add **conditional constraint**: S can be earlier than Q *only if* Q is third ⇒ `pos_S < pos_Q → pos_Q == 3`. Equivalently: `(pos_S ≥ pos_Q) ∨ (pos_Q == 3)`.  
+7. Add **S before Y**: `pos_S < pos_Y`.  
+8. Add **J < G < R**: `pos_J < pos_G` and `pos_G < pos_R`.  
+9. Translate answer choices into article indices:  
+   - G is second → `pos_G == 2`  
+   - H is second → `pos_H == 2`  
+   - S is second → `pos_S == 2`  
+   - R is third → `pos_R == 3`  
+   - Y is third → `pos_Y == 3`  
+10. For each choice, clone base constraints into fresh solver, add the specific position constraint, and check satisfiability.  
+11. The article(s) for which `pos_article == position` yields SAT correspond to options that *could be true*. Since the question asks "Which one could be true?", return the first (or only) satisfiable choice’s index.  
+12. Append indices of satisfiable choices into `answer_index_list`.  
+13. Return the list (expected size 1).

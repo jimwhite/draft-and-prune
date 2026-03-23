@@ -1,0 +1,19 @@
+1. Enumerate the five witnesses and assign them integer codes: Franco=0, Garcia=1, Hong=2, Iturbe=3, Jackson=4.  
+2. Enumerate the three days: Monday=0, Tuesday=1, Wednesday=2.  
+3. Create integer variables `d[w]` for each witness `w`, representing the day they testify (domain: {0,1,2}).  
+4. Add **fixed constraint**: Iturbe testifies on Wednesday → `d[3] == 2`.  
+5. Add **cardinality constraints**:  
+   - Tuesday has exactly two witnesses: `number_of([d[w]==1 for w in range(5)]) == 2`.  
+   - Monday has at least one witness: `number_of([d[w]==0 for w in range(5)]) >= 1`.  
+6. Add **mutual exclusivity constraints**:  
+   - Franco and Garcia do not testify on same day: `d[0] != d[1]`.  
+   - Hong does not testify on Monday: `d[2] != 0`.  
+7. Add **additional constraint from question**: Franco and Hong testify on same day → `d[0] == d[2]`.  
+8. Compute possible witness-day assignments satisfying all constraints using Z3 solver.  
+9. For each answer choice, extract the logical condition (e.g., "Franco on Wednesday" → `d[0] == 2`) and check whether it holds in *all* satisfying assignments:  
+   - For each candidate answer statement S:  
+     - Clone the base solver.  
+     - Add `Not(S)` (negation of S).  
+     - If UNSAT, then S must be true in all models → mark as forced.  
+10. Collect all answer statements that are logically forced (i.e., their negation is unsatisfiable under constraints).  
+11. Map the forced statements back to the given answer choices and output the correct one (as per the plan, the index list will contain indices of forced statements).

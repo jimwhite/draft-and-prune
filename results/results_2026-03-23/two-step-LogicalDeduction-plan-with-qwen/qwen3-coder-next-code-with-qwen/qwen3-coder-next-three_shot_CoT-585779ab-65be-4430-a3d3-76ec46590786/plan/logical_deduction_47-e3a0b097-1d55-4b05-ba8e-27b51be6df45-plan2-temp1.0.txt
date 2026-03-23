@@ -1,0 +1,30 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraints.
+
+2. **Define Variables and Their Domain:**  
+   * Define the five birds as variables: `"bluejay"`, `"robin"`, `"cardinal"`, `"hawk"`, and `"falcon"`.  
+   * Define the domain as integers 1 to 5, where **1 = leftmost**, **5 = rightmost**.  
+   * Add all variables and the domain to the `Problem` instance.
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to ensure each bird occupies a unique position.  
+   * Translate each natural language statement into constraint functions:  
+     - "The blue jay is the rightmost" → `bluejay == 5`.  
+     - "The robin is to the right of the falcon" → `falcon < robin`.  
+     - "The cardinal is to the left of the hawk" → `cardinal < hawk`.  
+     - "The falcon is to the right of the hawk" → `hawk < falcon`.  
+
+4. **Solve the Constraint Satisfaction Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the solution(s); if multiple, examine them collectively (though problem states consistency and likely uniqueness).  
+
+5. **Determine Which Choice is True:**  
+   * The question asks which bird is the rightmost (i.e., has position 5).  
+   * Note that choice A explicitly states "The blue jay is the rightmost," which matches constraint `bluejay == 5`.  
+   * Since that constraint is given and the system is consistent, **A must be true regardless of other variables**, but verify consistency:  
+     - Confirm that `bluejay == 5` does not conflict with other constraints.  
+     - Check that the remaining constraints (falcon < robin, cardinal < hawk, hawk < falcon) can be satisfied with bluejay fixed at 5.  
+     - For example: cardinal < hawk < falcon < robin, with positions remaining {1,2,3,4} — possible (e.g., cardinal=1, hawk=2, falcon=3, robin=4).  
+   * Since all constraints are consistent and bluejay is forced to be at position 5, the correct answer is **A**.  
+   * Output the choice letter `"A"` as the final answer.

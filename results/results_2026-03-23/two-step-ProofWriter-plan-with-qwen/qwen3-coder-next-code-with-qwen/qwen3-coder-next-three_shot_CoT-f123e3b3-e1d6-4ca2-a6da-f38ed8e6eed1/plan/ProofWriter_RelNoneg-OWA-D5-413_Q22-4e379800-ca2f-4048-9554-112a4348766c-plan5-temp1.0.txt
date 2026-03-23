@@ -1,0 +1,17 @@
+1. Identify all entities involved: bear, mouse, squirrel, tiger.
+2. Encode all explicitly stated facts as ternary predicates of the form predicate(subject, object, True):
+   - Properties: is_green("bear", True), is_kind("bear", True), is_cold("squirrel", True), is_nice("squirrel", True), is_green("tiger", True)
+   - Relations: needs("mouse", "bear", True), visits("mouse", "bear", True), visits("mouse", "squirrel", True), visits("mouse", "tiger", True), chases("squirrel", "bear", True), needs("tiger", "bear", True)
+3. Translate each conditional statement in the context into a PyKe rule using `foreach` blocks (with appropriate conditions) followed by `assert` clauses for consequences:
+   • If something needs the mouse → it is kind.
+   • If the mouse is young → the mouse needs the bear. (Note: requires checking if mouse is young first; leave as conditional rule)
+   • If something chases the bear → it needs the tiger.
+   • If something needs the squirrel and visits the mouse → the mouse needs the squirrel.
+   • If something visits the squirrel → it needs the mouse.
+   • If something chases the squirrel and the squirrel is nice → it is young.
+   • If something visits the mouse and the mouse is green → it needs the tiger.
+   • If something is kind and visits the tiger → the tiger visits the squirrel.
+   • If the bear needs the squirrel and the bear visits the tiger → the bear chases the tiger.
+4. For rules with compound conditions, compose them in `foreach` using conjunctions (e.g., `is_chasing(X, "bear")`, `is_cold("squirrel", True)` → etc.).
+5. The query checks whether the squirrel chases the tiger:
+   → Use facts.chases("squirrel", "tiger", True)

@@ -1,0 +1,23 @@
+1. Enumerate the six lab assistants: Julio, Kevin, Lan, Nessa, Olivia, Rebecca → assign integer indices 0–5.  
+2. Enumerate the six sessions: Wed morning (WM), Wed afternoon (WA), Thu morning (TM), Thu afternoon (TA), Fri morning (FM), Fri afternoon (FA) → assign integer indices 0–5, and map each session to its day (Wed=0, Thu=1, Fri=2) and time (morning=0, afternoon=1).  
+3. Create integer variables `pos[i]` for each assistant i, representing which session index (0–5) they lead.  
+4. Add **domain constraints**: all `pos[i]` ∈ {0,1,2,3,4,5}, and all must be distinct (bijection).  
+5. Add **fixed constraint**: Julio leads Thu afternoon → `pos[Julio] == 3` (since TM=2, TA=3).  
+6. Add **Kevin & Rebecca same day constraint**: `day(pos[Kevin]) == day(pos[Rebecca])`.  
+7. Add **Lan & Olivia not same day constraint**: `day(pos[Lan]) != day(pos[Olivia])`.  
+8. Add **Nessa afternoon constraint**: `time(pos[Nessa]) == 1` (afternoon).  
+9. Add **Julio earlier than Olivia constraint**: `pos[Julio] < pos[Olivia]` (since session index order respects chronological time).  
+10. With the above, solve once to get *one* valid assignment (or enumerate all satisfying assignments if needed, but since we only need to count how many assistants have *uniquely determined* sessions across all solutions, we must consider all models).  
+11. To determine forced assignments:  
+    - For each assistant X ∈ {Kevin, Lan, Nessa, Olivia, Rebecca}, check if `pos[X]` is the same across *all* satisfying assignments under the given constraint (`pos[Julio]=3` and others).  
+    - This can be done by:  
+        a. Collect all 6 variables `pos[Kevin]`, `pos[Lan]`, etc.  
+        b. For each assistant X and for each possible session index s ∈ {0..5}:  
+            - Add constraint `pos[X] == s` to the base solver (with `pos[Julio]==3`).  
+            - If SAT, record that s is possible for X.  
+        c. After trying all s, if exactly one s yields SAT, then X’s session is uniquely determined.  
+    - Alternatively: for each assistant X, use two queries per candidate s to check uniqueness—but more efficiently:  
+        - For each X, collect all values `s` for which `solver.add(pos[X]==s)` is SAT.  
+        - Count how many X have |{possible s}| == 1.  
+12. Since the question asks "for how many of the other lab assistants can one determine which sessions they lead?" (i.e., have a uniquely determined session), count the number of assistants among Kevin, Lan, Nessa, Olivia, Rebecca for whom only one session index is possible across all satisfying assignments.  
+13. Return that count (an integer between 0 and 5), then map to one of the given answer choices: 'one', 'two', etc.

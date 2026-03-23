@@ -1,0 +1,22 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate the `Problem` class to initialize a constraint satisfaction solver.
+
+2. **Define Variables and Domain:**  
+   * Identify the three variables: `"purple"`, `"red"`, and `"yellow"` (representing the book titles).  
+   * Define a domain of positions as integers from 1 to 3, where **1 = leftmost**, **2 = middle**, and **3 = rightmost**.  
+   * Add all three book variables to the problem with domain `{1, 2, 3}`.
+
+3. **Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure each book occupies a distinct position.  
+   * Translate "The purple book is to the right of the yellow book" into a constraint: `purple > yellow`.  
+   * Translate "The yellow book is to the right of the red book" into a constraint: `yellow > red`.
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to compute all valid assignments of positions to books that satisfy the constraints.  
+   * Extract the unique solution (a dictionary mapping book names to their positions).
+
+5. **Identify the Leftmost Book and Match to Choices:**  
+   * The leftmost book corresponds to position 1. Find which book has value `1` in the solution.  
+   * Create a mapping from choice letters to books: `'A' → 'purple'`, `'B' → 'red'`, `'C' → 'yellow'`.  
+   * Identify the choice whose book equals the leftmost book found in step 4, and record its letter as the answer.

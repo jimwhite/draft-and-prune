@@ -1,0 +1,16 @@
+1. Enumerate the three clients (Image, Solide, Truvest) and two channels per client (website, voicemail), yielding six variables: `IW`, `IV`, `SW`, `SV`, `TW`, `TV` (all integers).  
+2. Assign integer codes to target values: 1 → "1 day", 2 → "2 days", 3 → "3 days".  
+3. Add **domain constraints**: each variable ∈ {1, 2, 3}.  
+4. Add **website ≤ voicemail constraints** for each client: `IW ≤ IV`, `SW ≤ SV`, `TW ≤ TV`.  
+5. Add **Image voicemail shortest constraint**: `IV < SV` and `IV < TV`.  
+6. Add **Solide website shorter than Truvest website**: `SW < TW`.  
+7. Add the given condition: `IW = 2`.  
+8. For each choice (Image's voicemail, Solide's website, etc.), define a hypothesis variable and check if the variable must be 2:  
+   - Clone base constraints.  
+   - Assert `IW = 2` and the specific variable = x for x ∈ {1, 2, 3} — but instead use proof by contradiction:  
+     - For each candidate target value *≠* 2 (i.e., try 1 and 3), assert the variable = that value.  
+     - If either assumption yields UNSAT, then that value is impossible; if only 2 remains possible, the variable must be 2.  
+   - Simplify: for each choice variable `V`, check if `V ≠ 2` leads to UNSAT.  
+9. For each of the five answer choices, determine whether `V = 2` is **forced** (i.e., `V ≠ 1` and `V ≠ 3` are both UNSAT under base + `IW = 2`).  
+10. Collect the indices of answer choices where the variable *must* be 2 → append to `answer_index_list`.  
+11. Output the resulting `answer_index_list` (should contain exactly one index).

@@ -1,0 +1,30 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven books as variables: `"brown"`, `"gray"`, `"orange"`, `"green"`, `"black"`, `"purple"`, and `"yellow"`.  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven book variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the problem.
+
+3. **Formulate and Add Constraints:**  
+   * Add an `AllDifferentConstraint` to ensure all books occupy distinct positions.  
+   * Translate each statement into a constraint using `addConstraint` with lambda functions:  
+     - "The purple book is the leftmost" → `purple == 1`  
+     - "The brown book is to the right of the yellow book" → `brown > yellow`  
+     - "The green book is to the left of the orange book" → `green < orange`  
+     - "The orange book is to the left of the gray book" → `orange < gray`  
+     - "The black book is the third from the left" → `black == 3`  
+     - "The green book is the third from the right" → `green == 5` (since positions: leftmost=1, ..., third from right = 7−2=5)
+
+4. **Solve for All Valid Arrangements:**  
+   * Call `getSolutions()` to obtain all solutions that satisfy the constraints.  
+   * Extract the unique solution (since the problem is well-constrained, exactly one solution exists).
+
+5. **Determine the Correct Answer:**  
+   * The question asks which book is the third from the right, i.e., position 5.  
+   * Observe that choice D directly states: "The green book is the third from the right."  
+   * Since we have already encoded `green == 5` as a constraint, this is *already enforced*, but verify consistency: confirm in the solution that `solution["green"] == 5`.  
+   * Among the choices, only D asserts that green is third from right; given constraints fix `green = 5`, and the other choices assign different books to position 5, which will not hold.  
+   * Therefore, the correct choice is D — no need to iterate; the constraint directly implies D is true.  
+   * Output: The answer is `'D'`.

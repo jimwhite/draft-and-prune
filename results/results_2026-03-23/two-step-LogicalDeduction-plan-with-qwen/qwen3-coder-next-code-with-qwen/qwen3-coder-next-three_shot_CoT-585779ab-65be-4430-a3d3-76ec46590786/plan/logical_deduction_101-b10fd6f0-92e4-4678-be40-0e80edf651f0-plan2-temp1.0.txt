@@ -1,0 +1,28 @@
+1.  **Initialize the Problem Environment:**  
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+    * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * Identify the seven fruits as variables: `"apples"`, `"pears"`, `"mangoes"`, `"oranges"`, `"watermelons"`, `"peaches"`, and `"cantaloupes"`.  
+    * Define a numerical domain from 1 to 7 representing price rank, where **1 = cheapest** and **7 = most expensive**.  
+    * Add all seven variables with this domain to the `Problem` instance.
+
+3.  **Formulate and Add Constraints:**  
+    * Add an `AllDifferentConstraint` to ensure each fruit has a unique price rank.  
+    * Translate each statement into constraints using `lambda` functions:  
+        - "The pears are more expensive than the oranges" → `pears > oranges` (since higher rank = more expensive).  
+        - "The oranges are more expensive than the cantaloupes" → `oranges > cantaloupes`.  
+        - "The peaches are less expensive than the cantaloupes" → `peaches < cantaloupes`.  
+        - "The apples are the third-cheapest" → `apples == 3`.  
+        - "The watermelons are the second-most expensive" → `watermelons == 6` (since most expensive = 7, second-most = 6).  
+        - "The mangoes are the fourth-most expensive" → `mangoes == 4` (since most expensive = 7, so fourth-most = 4).
+
+4.  **Solve the Constraint Problem:**  
+    * Call `getSolutions()` to enumerate all valid assignments of ranks to fruits.  
+    * Extract the unique solution (the list should contain exactly one dictionary mapping each fruit to its rank).
+
+5.  **Identify the Second-Cheapest Fruit:**  
+    * The question asks for the fruit that is second-cheapest, i.e., rank = 2.  
+    * Create a mapping from choice letters to fruit names: `{"A": "apples", "B": "pears", "C": "mangoes", "D": "oranges", "E": "watermelons", "F": "peaches", "G": "cantaloupes"}`.  
+    * Iterate over the choices, and for each choice letter, check if the corresponding fruit’s rank in the solution equals 2.  
+    * Return (or mark) the correct choice letter for which this condition holds.

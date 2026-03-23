@@ -1,0 +1,20 @@
+1. Enumerate the six available students: Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio (assign integer indices 0–5).  
+2. Enumerate the four years: 1921, 1922, 1923, 1924 (assign indices 0–3).  
+3. Create integer variables `assign[i]` for each student i ∈ {Louis, Mollie, Onyx, Ryan, Tiffany, Yoshio}, where `assign[i] = y` means student i is assigned to year y (0–3), or assign a special value (e.g., -1) if not assigned.  
+4. Since exactly four students are assigned, enforce: exactly four of the six `assign[i]` variables take values in {0,1,2,3}, and the rest are -1.  
+5. Enforce **year uniqueness**: among assigned students, their year values must be distinct (no two students assigned to same year).  
+6. Add constraint: **1923 assignment** — only Louis or Tiffany can be assigned to 1923 → if `assign[Louis] == 2`, allowed; if `assign[Tiffany] == 2`, allowed; for others (Mollie, Onyx, Ryan, Yoshio), `assign[i] != 2`.  
+7. Add constraint: **Mollie implication** — if Mollie is assigned (`assign[Mollie] != -1`), then she must be in 1921 or 1922 (`assign[Mollie] ∈ {0,1}`).  
+8. Add constraint: **Tiffany implication** — if Tiffany is assigned (`assign[Tiffany] != -1`), then Ryan must be assigned (`assign[Ryan] != -1`).  
+9. Add constraint: **Ryan–Onyx adjacency** — if Ryan is assigned, then Onyx must be assigned to the year *immediately prior* to Ryan’s: `assign[Onyx] == assign[Ryan] - 1`, and `assign[Ryan] > 0`.  
+10. Add the scenario assumption: **Ryan and Yoshio are assigned** → `assign[Ryan] != -1` and `assign[Yoshio] != -1`.  
+11. From step 4, exactly two more students must be assigned (to fill four slots); the remaining assignments come from Louis, Mollie, Tiffany, Onyx.  
+12. For each answer choice, translate into a constraint and check feasibility under the above setup:  
+    - "Louis is assigned to 1923" → `assign[Louis] == 2`  
+    - "Mollie is assigned to 1921" → `assign[Mollie] == 0`  
+    - "Onyx is assigned to 1922" → `assign[Onyx] == 1`  
+    - "Tiffany is assigned to 1924" → `assign[Tiffany] == 3`  
+    - "Yoshio is assigned to 1922" → `assign[Yoshio] == 1`  
+13. For each choice, clone the full constraint set (steps 4–10 + Ryan+Yoshio-assigned), add the choice constraint, and check SAT via Z3.  
+14. Collect indices of answer choices for which the model is SAT — those are candidates that "could be true".  
+15. Output the list of SAT indices (or directly identify the correct choice).

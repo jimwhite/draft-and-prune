@@ -1,0 +1,32 @@
+1. Enumerate the six lab assistants and assign integer codes (0: Julio, 1: Kevin, 2: Lan, 3: Nessa, 4: Olivia, 5: Rebecca).  
+2. Enumerate the six sessions: assign indices 0–5 to sessions in chronological order:  
+   - Wednesday morning (WM), Wednesday afternoon (WA), Thursday morning (TM), Thursday afternoon (TA), Friday morning (FM), Friday afternoon (FA).  
+3. Create integer variables `pos[i]` for each assistant i, representing the session index (0–5) they lead.  
+4. Add **domain constraints**: all `pos[i]` are distinct integers in [0,5].  
+5. Add **fixed constraint**: Julio leads Thursday afternoon → `pos[Julio] == 3`.  
+6. Add **day-based constraints** using session indices:  
+   - WM/WA = day 0, TM/TA = day 1, FM/FA = day 2.  
+   - Define helper function or constraints: `day(s) = s // 2`.  
+7. Add constraint: Kevin and Rebecca must be on same day → `pos[Kevin] // 2 == pos[Rebecca] // 2`.  
+8. Add constraint: Lan and Olivia cannot be on same day → `pos[Lan] // 2 != pos[Olivia] // 2`.  
+9. Add constraint: Nessa must lead afternoon session → `pos[Nessa] % 2 == 1`.  
+10. Add constraint: Julio’s session day < Olivia’s session day → `pos[Julio] // 2 < pos[Olivia] // 2`.  
+11. From known `pos[Julio] == 3`, deduce: Julio is on day 1 (Thursday), so Olivia must be on day 2 (Friday).  
+12. Infer: Olivia’s possible positions are {4,5} (FM or FA).  
+13. Use L & O not on same day → Lan ≠ Olivia’s day ⇒ Lan cannot be day 2 ⇒ Lan ∈ {0,1} → positions {0,1,2,3} but day ≤ 0 or 1.  
+14. Nessa must be in {1,3,5}, but 3 is taken (Julio), so Nessa ∈ {1,5}.  
+15. Kevin and Rebecca same day: possible day pairs = (0,0), (1,1), or (2,2). But Thursday (day 1) slot TA is taken (Julio), so day-1 has WM(0), TM(2) free → max two people can be on Thursday. So Kevin & Rebecca could be:  
+    - both day 0 (Wed): slots {0,1} available.  
+    - both day 2 (Fri): slots {4,5} available — fits both.  
+    - both day 1 impossible (only TM=2 free; TA taken, WM=0 maybe free but only one slot left → can’t host two people).  
+    ⇒ Kevin & Rebecca must both be on Wednesday (0,1) or both on Friday (4,5).  
+16. Olivia must be on Friday → positions 4 or 5.  
+17. Nessa ∈ {1,5} and Friday has Olivia occupying one slot (4 or 5), so if Nessa=5, then Olivia must be 4; if Nessa=1 (Wed afternoon), Friday slots are {4,5} for Olivia + one more.  
+18. Create a base solver with all constraints (including Julio=3).  
+19. For each assistant except Julio (i.e., Kevin, Lan, Nessa, Olivia, Rebecca), check how many of them have a *uniquely determined* session (i.e., all models assign same `pos[i]` to assistant i across all SAT solutions).  
+20. To determine if an assistant has a fixed position:  
+    - For each candidate assistant `a`, and for each possible session slot `s` ∈ {0,1,2,4,5} (since 3 taken),  
+        - Clone solver + assert `pos[a] == s`.  
+        - If UNSAT, discard `s`; if SAT for only one `s`, then position is forced.  
+21. Count how many assistants (among the 5 others) have exactly one possible session slot across all models.  
+22. Map count to answer choice: 1→'one', ..., 5→'five'.

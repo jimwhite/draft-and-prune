@@ -1,0 +1,39 @@
+1.  **Set Up the Problem Environment:**
+    * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.
+    * Instantiate a `Problem` object to represent the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**
+    * Define variables as the five vehicle types: `"hatchback"`, `"convertible"`, `"tractor"`, `"truck"`, and `"limousine"`.
+    * Define the domain as integers 1 to 5, where **1 = oldest**, and **5 = newest**.
+    * Add all variables to the problem with the domain {1, 2, 3, 4, 5}.
+
+3.  **Add AllDifferent Constraint:**
+    * Enforce that all vehicles have distinct age ranks using `AllDifferentConstraint`.
+
+4.  **Translate Statements into Constraints:**
+    * "The tractor is newer than the hatchback" → `tractor > hatchback`
+    * "The limousine is the second-newest" → `limousine == 4` (since newest = 5, second-newest = 4)
+    * "The truck is older than the hatchback" → `truck < hatchback`
+    * "The convertible is the second-oldest" → `convertible == 2` (since oldest = 1, second-oldest = 2)
+
+5.  **Solve the Constraint Problem:**
+    * Use `getSolutions()` to find all valid assignments.
+    * Extract the unique solution (expected single result due to problem constraints).
+
+6.  **Identify Which Vehicle Is Second-Newest (Position 4):**
+    * Note: The question asks which vehicle is the second-newest (i.e., rank = 4).
+    * The answer choices directly refer to which vehicle occupies that position.
+    * From the solution, find the vehicle with rank 4.
+
+7.  **Map to Correct Choice Letter:**
+    * Create a mapping from choice letters to vehicle names:
+        - "A" → "hatchback"
+        - "B" → "convertible"
+        - "C" → "tractor"
+        - "D" → "truck"
+        - "E" → "limousine"
+    * Since `limousine == 4` is a given constraint, the vehicle at position 4 is "limousine".
+    * Therefore, choice E ("The limousine is the second-newest") is true.
+
+8.  **Output the Final Answer:**
+    * Return or record choice letter "E" as the correct answer.

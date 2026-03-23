@@ -1,0 +1,24 @@
+1.  Identify all entities and types: Wren, wumpus, yumpus, tumpus, vumpus, jompus, impus, numpus, rompus, zumpus.  
+2.  Identify all properties: sour, aggressive, transparent, wooden, feisty, large, red, feisty (note: "feisty" appears twice—once negated for impus, once positive for rompuses—and note the logical conflict potential).  
+3.  Represent "Wren is a tumpus" as a base fact: `is_a("Wren", "tumpus", True)`.  
+4.  Convert all class property and subclass relationships into rules:  
+    - Every wumpus is sour → `foreach (x, "wumpus") assert is_sour(x, True)`  
+    - Wumpuses are yumpuses → `foreach (x, "wumpus") assert is_a(x, "yumpus", True)`  
+    - Every yumpus is aggressive → `foreach (x, "yumpus") assert is_aggressive(x, True)`  
+    - Every yumpus is a tumpus → `foreach (x, "yumpus") assert is_a(x, "tumpus", True)`  
+    - Every tumpus is transparent → `foreach (x, "tumpus") assert is_transparent(x, True)`  
+    - Tumpuses are vumpuses → `foreach (x, "tumpus") assert is_a(x, "vumpus", True)`  
+    - Vumpuses are wooden → `foreach (x, "vumpus") assert is_wooden(x, True)`  
+    - Each vumpus is a jompus → `foreach (x, "vumpus") assert is_a(x, "jompus", True)`  
+    - Each impus is not feisty → `foreach (x, "impus") assert is_feisty(x, False)`  
+    - Every jompus is large → `foreach (x, "jompus") assert is_large(x, True)`  
+    - Jompuses are numpuses → `foreach (x, "jompus") assert is_a(x, "numpus", True)`  
+    - Numpuses are red → `foreach (x, "numpus") assert is_red(x, True)`  
+    - Numpuses are rompuses → `foreach (x, "numpus") assert is_a(x, "rompus", True)`  
+    - Every rompus is feisty → `foreach (x, "rompus") assert is_feisty(x, True)`  
+    - Each rompus is a zumpus → `foreach (x, "rompus") assert is_a(x, "zumpus", True)`  
+5.  Implement each rule using a `foreach` clause for the condition and an `assert` clause for the consequence.  
+6.  Use transitive type inference via chaining of `is_a` facts (e.g., from `is_a(Wren, "tumpus", True)` and rules for tumpuses → vumpuses → jompuses → numpuses → rompuses, infer `is_a(Wren, "rompus", True)`).  
+7.  From `is_a(Wren, "rompus", True)` and rule "every rompus is feisty", derive `is_feisty(Wren, True)`.  
+8.  Since "Wren is not feisty" means `is_feisty(Wren, False)`, and we have derived `is_feisty(Wren, True)`, the statement is false.  
+9.  Query for `facts.is_feisty("Wren", False)` to test provability of the negated statement.

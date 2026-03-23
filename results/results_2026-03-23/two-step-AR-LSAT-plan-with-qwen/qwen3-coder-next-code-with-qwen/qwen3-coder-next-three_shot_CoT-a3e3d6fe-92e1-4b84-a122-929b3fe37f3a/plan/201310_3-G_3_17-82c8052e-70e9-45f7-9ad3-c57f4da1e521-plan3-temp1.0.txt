@@ -1,0 +1,32 @@
+1. Enumerate the five movies and assign them integer codes (e.g., horror=0, mystery=1, romance=2, sci-fi=3, western=4).  
+2. Enumerate the three screens (1, 2, 3) and create integer variables for each movie's screen assignment.  
+3. Create boolean or integer variables to represent the time slot (7PM/9PM) on screens 1 and 2:  
+   - Screens 1 and 2 each have two time slots (7PM and 9PM), so define for each screen a variable indicating which movie is at 7PM (the other will be at 9PM).  
+   - Screen 3 has only one movie at 8PM.  
+4. Model the schedule by assigning exactly:  
+   - Two movies to screen 1 (one at 7PM, one at 9PM),  
+   - Two movies to screen 2 (one at 7PM, one at 9PM),  
+   - One movie to screen 3 (at 8PM).  
+   Enforce this via cardinality constraints or explicit assignments.  
+5. Add **screen capacity constraints**: exactly 2 movies per screen 1 and 2, 1 movie for screen 3; all 5 movies assigned exactly once.  
+6. Add **screen-type constraints**:  
+   - Sci-fi ≠ screen 3 (from: "sci-fi not shown on screen 3").  
+   - Romance ≠ screen 2 (from: "romance not shown on screen 2").  
+7. Add **relative timing constraints** (using time order, not just screen):  
+   - Assign absolute time values to all slots:  
+     - Screen 1, 7PM = t=7  
+     - Screen 2, 7PM = t=7  
+     - Screen 3, 8PM = t=8  
+     - Screen 1, 9PM = t=9  
+     - Screen 2, 9PM = t=9  
+   - Western < horror in time: `time(western) < time(horror)`.  
+8. Add **screen-differentiation constraint**: horror and mystery on different screens.  
+9. For the question: screen 1 list = [7PM movie, 9PM movie]. Define a variable pair `(s1_7, s1_9)` for screen 1.  
+10. Translate each choice into an expected pair (7PM, 9PM) for screen 1:  
+   - e.g., ['sci-fi', 'horror'] → s1_7 == sci-fi ∧ s1_9 == horror  
+   - etc.  
+11. For each answer choice, clone base constraints into fresh solver, add the specific screen-1 list constraint, and check satisfiability.  
+12. Define `forbidden_list_index = []`. For each choice, if the model is UNSAT, append its index to `forbidden_list_index`.  
+13. The option(s) that are UNSAT correspond to the answer: choose the index from `forbidden_list_index` and map back to the choice string.  
+14. Since only one answer is valid (CANNOT be accurate), there will be exactly one UNSAT case.  
+15. Return the corresponding choice string.

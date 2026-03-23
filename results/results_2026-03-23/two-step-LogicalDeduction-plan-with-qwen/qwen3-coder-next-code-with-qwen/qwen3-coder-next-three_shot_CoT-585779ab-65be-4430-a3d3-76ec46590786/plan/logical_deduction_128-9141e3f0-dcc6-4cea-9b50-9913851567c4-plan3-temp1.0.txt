@@ -1,0 +1,32 @@
+1. **Initialize the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Identify the seven bird types as variables: `"robin"`, `"hummingbird"`, `"raven"`, `"bluejay"`, `"crow"`, `"cardinal"`, and `"quail"` (using lowercase, no spaces to avoid parsing issues).  
+   * Define the domain as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all seven variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem` instance.
+
+3. **Add AllDifferent Constraint:**  
+   * Enforce uniqueness of positions by adding an `AllDifferentConstraint` over all seven variables.
+
+4. **Translate Statements into Constraints:**  
+   * "The hummingbird is to the left of the crow" → `hummingbird < crow`  
+   * "The cardinal is to the right of the quail" → `quail < cardinal`  
+   * "The blue jay is the fourth from the left" → `bluejay == 4`  
+   * "The robin is the second from the left" → `robin == 2`  
+   * "The quail is to the right of the crow" → `crow < quail`  
+   * "The raven is to the left of the robin" → `raven < robin` (and since `robin == 2`, this implies `raven < 2`, so `raven == 1`)  
+
+5. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments satisfying all constraints.  
+   * Extract the unique solution (the problem is deterministic given the constraints).
+
+6. **Identify the Correct Answer Choice:**  
+   * The question asks which bird is the second from the left (i.e., position 2).  
+   * From the solution, find which bird has value `2`.  
+   * Note: Choice A explicitly states "The robin is the second from the left", and constraint `"robin == 2"` was given, so robin *must* be at position 2.  
+   * Create a mapping from choice letters (`"A"` to `"G"`) to bird names in order:  
+     `{"A": "robin", "B": "hummingbird", "C": "raven", "D": "bluejay", "E": "crow", "F": "cardinal", "G": "quail"}`  
+   * Determine which choice’s bird occupies position 2 in the solution. Since robin is forced to be at position 2, choice A will always be true regardless of other assignments.  
+   * Return the matching letter (in this case, `"A"`).

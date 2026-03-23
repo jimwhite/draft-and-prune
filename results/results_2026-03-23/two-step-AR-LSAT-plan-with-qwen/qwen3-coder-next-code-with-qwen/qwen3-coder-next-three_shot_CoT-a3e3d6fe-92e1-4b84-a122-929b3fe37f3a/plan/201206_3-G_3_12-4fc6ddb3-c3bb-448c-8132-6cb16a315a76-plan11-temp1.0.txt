@@ -1,0 +1,14 @@
+1. Enumerate the seven sales representatives and assign them integer indices.  
+2. Create integer variables for each representative's zone assignment (1, 2, or 3).  
+3. Add **mutual-exclusivity constraints**: each zone can have any number of representatives, but each representative is assigned exactly one zone.  
+4. Add **Parra-or-Tiao-in-Zone-1 constraint**: Exactly one of Parra or Tiao is in Zone 1.  
+5. Add **Tiao-or-Udall-in-Zone-2 constraint**: Exactly one of Tiao or Udall is in Zone 2.  
+6. Add **Parra-and-Quinn-same-zone constraint**: Parra and Quinn are assigned to the same zone.  
+7. Add **Stuckey-and-Udall-same-zone constraint**: Stuckey and Udall are assigned to the same zone.  
+8. Add **Zone-3-more-than-Zone-2 constraint**: Number of representatives in Zone 3 > number in Zone 2.  
+9. Translate each answer choice into a set of zone assignments and encode them as constraints (e.g., for a choice, assert that Kim is in Zone 1, Parra is in Zone 1, etc.).  
+10. For each answer choice:  
+    - Clone the base constraints into a fresh solver.  
+    - Assert all zone assignments implied by that choice (using the representative-zone mapping).  
+    - If the model is SAT, then this choice is possible; record its index.  
+11. Return the index of the SAT-possible choice (only one will satisfy all constraints).

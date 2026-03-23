@@ -1,0 +1,29 @@
+1.  **Initialize the Problem Environment:**  
+    * Import `Problem` and `AllDifferentConstraint` from the `constraint` library.  
+    * Instantiate a `Problem` object to model the constraint satisfaction problem.
+
+2.  **Define Variables and Domain:**  
+    * List the five bird types as string variables: `"owl"`, `"robin"`, `"blue jay"`, `"hawk"`, and `"hummingbird"`.  
+    * Define the domain as integers from 1 to 5, where **1 = leftmost** and **5 = rightmost**.  
+    * Add all five variables to the problem with domain `{1, 2, 3, 4, 5}`.
+
+3.  **Add All-Different Constraint:**  
+    * Enforce that each bird occupies a unique position using `AllDifferentConstraint`.
+
+4.  **Translate Statements into Constraints Using Lambda Functions:**  
+    * "The owl is the second from the right" → owl's position = 4 (since positions are left-to-right 1–5, rightmost is 5, so second-rightmost is 4).  
+    * "The robin is the second from the left" → robin's position = 2.  
+    * "The robin is to the right of the blue jay" → robin's position > blue jay's position (i.e., `robin > blue_jay`).  
+    * "The hummingbird is to the right of the hawk" → hummingbird's position > hawk's position (i.e., `hummingbird > hawk`).
+
+5.  **Solve the Problem:**  
+    * Call `getSolutions()` to retrieve all valid assignments. Given the constraints, expect exactly one solution.
+
+6.  **Analyze the Solution to Identify the Rightmost Bird:**  
+    * The question asks which bird is rightmost — i.e., has position value **5**.  
+    * Examine the solution dictionary to find which bird maps to position 5.
+
+7.  **Map to the Correct Multiple-Choice Answer:**  
+    * Create a mapping from choice letters to bird names: `'A' → 'owl'`, `'B' → 'robin'`, `'C' → 'blue jay'`, `'D' → 'hawk'`, `'E' → 'hummingbird'`.  
+    * Find the choice letter whose corresponding bird has position 5.  
+    * Output that letter as the final answer.

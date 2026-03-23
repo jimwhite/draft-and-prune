@@ -1,0 +1,13 @@
+1. Enumerate the six singers and assign indices: Kammer=0, Lugo=1, Trillo=2, Waite=3, Yoshida=4, Zinn=5.  
+2. Create integer variables `pos[i]` for each singer i, representing their audition position (1 to 6).  
+3. Add **domain constraints**: all `pos[i]` ∈ {1,2,3,4,5,6} and pairwise distinct (use `Distinct(pos)`).  
+4. Add **recording constraints**:  
+   - Recorded auditions: Kammer and Lugo (positions 4 cannot be recorded, so pos_Kammer ≠ 4, pos_Lugo ≠ 4; and position 5 must be recorded → exactly one of Kammer or Lugo is in position 5).  
+   - So: (pos_Kammer == 5) XOR (pos_Lugo == 5), and neither pos_Kammer nor pos_Lugo equals 4.  
+5. Add **Waite constraint**: Waite’s audition is earlier than *both* recorded auditions → `pos_Waite < pos_Kammer` AND `pos_Waite < pos_Lugo`.  
+6. Add **Kammer–Trillo constraint**: `pos_Kammer < pos_Trillo`.  
+7. Add **Zinn–Yoshida constraint**: `pos_Zinn < pos_Yoshida`.  
+8. For each choice (a list of 6 singers in order), convert it into a position assignment: singer at index j gets position j+1.  
+9. For each choice, clone the base solver, assert the exact positions from the choice, and check SAT.  
+10. Append indices of all choices for which the model is SAT to `answer_index_list`.  
+11. Print `answer_index_list` (should contain exactly one index).

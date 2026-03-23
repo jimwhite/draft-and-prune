@@ -1,0 +1,17 @@
+1. Identify all entities: bald_eagle, cat, cow, rabbit.
+2. Encode all directly stated facts using ternary predicates:  
+   - eats("bald_eagle", "cow", True), is_blue("bald_eagle", True), visits("cat", "bald_eagle", True), visits("cat", "rabbit", True),  
+     is_blue("cow", True), sees("cow", "rabbit", True), eats("rabbit", "bald_eagle", True), is_cold("rabbit", True),  
+     sees("rabbit", "cow", True), visits("rabbit", "cat", True).
+3. Translate each conditional into a rule with `foreach` condition and `assert` conclusion:  
+   • If X visits cow AND X sees cow → X visits bald_eagle.  
+   • If X is nice → X is big.  
+   • If X visits bald_eagle → X is nice.  
+   • If X is cold AND X visits cow → cow sees cat.  
+   • If X is round AND X eats bald_eagle → X sees bald_eagle.  
+   • If X visits cat → X visits rabbit.  
+   • If X visits rabbit AND X sees cow → X visits cow.
+4. For each rule, write a `foreach` block matching the antecedent conditions and an `assert` statement asserting the consequent.
+5. The query checks whether rabbit is big:  
+   → Use facts.is_big("rabbit", True)  
+   (If the solver proves it, answer is true; if it proves ~is_big, false; else unknown.)

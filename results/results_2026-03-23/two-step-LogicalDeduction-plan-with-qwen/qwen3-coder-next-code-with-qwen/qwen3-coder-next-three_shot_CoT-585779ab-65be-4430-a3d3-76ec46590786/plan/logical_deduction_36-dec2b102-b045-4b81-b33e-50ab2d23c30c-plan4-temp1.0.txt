@@ -1,0 +1,26 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Create an instance of the `Problem` class to model the constraint satisfaction problem.
+
+2. **Define Variables and Domain:**  
+   * Define the five golfers as variables: `"Dan"`, `"Amy"`, `"Eve"`, `"Ana"`, and `"Mya"`.  
+   * Define the domain for finishing positions as integers from 1 to 5, where **1 = first (best)** and **5 = last (worst)**.  
+   * Add all variables and the domain {1, 2, 3, 4, 5} to the problem.
+
+3. **Add Constraints Based on Statements:**  
+   * Add an `AllDifferentConstraint` to ensure all golfers have distinct finishing positions.  
+   * Translate each statement into a constraint:  
+     - "Dan finished above Eve" → Dan’s position is numerically smaller than Eve’s (`Dan < Eve`).  
+     - "Dan finished below Mya" → Mya’s position is numerically smaller than Dan’s (`Mya < Dan`).  
+     - "Amy finished third" → Amy’s position equals 3.  
+     - "Ana finished second-to-last" → In a 5-person race, second-to-last is position 4 (`Ana == 4`).
+
+4. **Solve the Problem:**  
+   * Call `getSolutions()` to find all valid assignments of positions.  
+   * Since the constraints uniquely determine the ordering, extract the single solution (or first solution) from the list.
+
+5. **Determine Who Finished Last:**  
+   * The question asks who finished last (position 5).  
+   * Create a mapping from choice letters to golfer names: `"A" → "Dan"`, `"B" → "Amy"`, `"C" → "Eve"`, `"D" → "Ana"`, `"E" → "Mya"`.  
+   * Using the solution dictionary, find which golfer has position 5.  
+   * Return the corresponding choice letter as the final answer.

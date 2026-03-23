@@ -1,0 +1,17 @@
+1. Identify all individuals: Bob, Dave, Fiona, Harry.
+2. Encode all explicitly stated properties of individuals using ternary predicates with boolean objects:
+   - is_big("Bob", True), is_blue("Bob", True), is_cold("Bob", True), is_quiet("Bob", True), is_rough("Bob", True), is_smart("Bob", True), is_white("Bob", True)
+   - is_rough("Dave", True), is_blue("Fiona", True), is_big("Harry", True), is_cold("Harry", True)
+3. Translate each universal conditional rule into a `foreach` rule with matching condition and assertion of consequence:
+   • If someone is blue → they are cold.
+   • If someone is big → they are white.
+   • If Bob is rough and Bob is blue → Bob is big. (Note: This is redundant with given facts, but encode as a ground rule if needed.)
+   • All blue, smart people are big.
+   • If someone is blue and rough → they are quiet.
+   • All smart people are blue.
+   • Cold people are rough.
+   • If someone is quiet → they are big.
+4. For rules involving predicates over individuals, use `foreach` to match individuals satisfying antecedent conditions and `assert` the consequent property (e.g., `is_cold(X, True)`).
+5. For ground rules like “If Bob is rough and Bob is blue then Bob is big”, either encode directly as a fact or skip since it's already asserted.
+6. The query checks whether Fiona is big:
+   → Use facts.is_big("Fiona", True) to test truth of the statement.

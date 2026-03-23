@@ -1,0 +1,36 @@
+1. **Set Up the Problem Environment:**  
+   * Import the `Problem` and `AllDifferentConstraint` classes from the `constraint` library.  
+   * Instantiate a `Problem` object to hold the CSP model.
+
+2. **Define Variables and Domain:**  
+   * Define the seven books as variables: `"orange"`, `"green"`, `"red"`, `"gray"`, `"purple"`, `"blue"`, and `"brown"`.  
+   * Define the domain for positions as integers from 1 to 7, where **1 = leftmost** and **7 = rightmost**.  
+   * Add all variables with domain `{1, 2, 3, 4, 5, 6, 7}` to the `Problem`.
+
+3. **Add Constraints from Statements:**  
+   * Add an `AllDifferentConstraint` to enforce that each book occupies a unique position.  
+   * Translate each statement into explicit constraints:  
+     - "The purple book is the fourth from the left" → `purple == 4`  
+     - "The brown book is the third from the left" → `brown == 3`  
+     - "The green book is to the left of the blue book" → `green < blue`  
+     - "The red book is the leftmost" → `red == 1`  
+     - "The gray book is the third from the right" → Since 7 positions: 3rd from right = position `7 - 3 + 1 = 5`, so `gray == 5`  
+     - "The orange book is the rightmost" → `orange == 7`
+
+4. **Solve the CSP:**  
+   * Call `getSolutions()` to retrieve all valid assignments.  
+   * Extract the unique solution (as the constraints fully determine the arrangement).
+
+5. **Determine the Fourth-from-Left Book:**  
+   * The question asks: which book is at position 4?  
+   * Iterate over the solution dictionary (key = book name, value = position).  
+   * Identify the book whose position is exactly 4.  
+   * Map that book to the corresponding choice letter from the list:  
+     A) orange → position 4?  
+     B) green  
+     C) red  
+     D) gray  
+     E) purple  
+     F) blue  
+     G) brown  
+   * Return the letter (e.g., `"E"`) corresponding to the book at position 4.
