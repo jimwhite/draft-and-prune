@@ -42,6 +42,8 @@ class ReasonerConfig:
                  # Plan generation parameters
                  num_paths: int = 3,
                  plan_temp: float = 1.0,
+                 # Thinking token control
+                 strip_thinking: bool = True,
                  # Result storage
                  results_root: str = "./results"):
         """
@@ -98,6 +100,7 @@ class ReasonerConfig:
         self.openai_compatible_extra_body = openai_compatible_extra_body
         self.num_paths = num_paths
         self.plan_temp = plan_temp
+        self.strip_thinking = strip_thinking
         self.results_root = results_root
     
     @classmethod
@@ -191,6 +194,8 @@ class ReasonerConfig:
         instance.plan_temp = config_data.get('plan_temp', 1.0)
         # Results root with default
         instance.results_root = config_data.get('results_root', "./results")
+        # Thinking token control
+        instance.strip_thinking = config_data.get('strip_thinking', True)
         instance._validate_config()
         return instance
     

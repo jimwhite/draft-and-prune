@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import time
 import random
 import os
@@ -35,7 +36,8 @@ class APIConfig:
         gemini_thinking_level: Optional[str] = None,
         openai_compatible_extra_body: Optional[Dict[str, Any]] = None,
         max_retries: int = 10,
-        inter_test_case_delay: float = 2.0
+        inter_test_case_delay: float = 2.0,
+        strip_thinking: bool = True,
     ):
         self.model_name = model_name
         self.temperature = temperature
@@ -44,6 +46,15 @@ class APIConfig:
         self.openai_compatible_extra_body = openai_compatible_extra_body
         self.max_retries = max_retries
         self.inter_test_case_delay = inter_test_case_delay
+        self.strip_thinking = strip_thinking
+
+
+_THINK_RE = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
+
+
+def strip_thinking_tokens(text: str) -> str:
+    """Remove <think>…</think> blocks from model output."""
+    return _THINK_RE.sub("", text).lstrip()
 
 class APIClient(ABC):
     """Base class for API clients"""
@@ -65,36 +76,39 @@ class APIClient(ABC):
         """Clear metadata from the previous API call."""
         self.last_call_metadata = {}
 
+    def _set_last_call_prompt(self, prompt: str) -> None:
+        """Store the prompt sent in this API call."""
+        self.last_call_metadata["prompt"] = prompt
+
+    def _set_last_call_raw_response(self, raw_response: str) -> None:
+        """Store the raw (unstripped) model response."""
+        self.last_call_metadata["raw_response"] = raw_response
+
+    def _postprocess_response(self, text: str) -> str:
+        """Strip thinking tokens if configured, storing raw text first."""
+        self._set_last_call_raw_response(text)
+        if self.config.strip_thinking and text:
+            return strip_thinking_tokens(text)
+        return text
+
     def _set_last_call_usage(self, usage_obj: Any) -> None:
         """Store token usage metadata from provider response objects."""
-        existing_timing = self.last_call_metadata.get("timing")
         if usage_obj is None:
-            self.last_call_metadata = {"usage": None}
-            if existing_timing is not None:
-                self.last_call_metadata["timing"] = existing_timing
+            self.last_call_metadata["usage"] = None
             return
 
-        self.last_call_metadata = {
-            "usage": {
-                "prompt_tokens": getattr(usage_obj, "prompt_tokens", None),
-                "completion_tokens": getattr(usage_obj, "completion_tokens", None),
-                "total_tokens": getattr(usage_obj, "total_tokens", None),
-            }
+        self.last_call_metadata["usage"] = {
+            "prompt_tokens": getattr(usage_obj, "prompt_tokens", None),
+            "completion_tokens": getattr(usage_obj, "completion_tokens", None),
+            "total_tokens": getattr(usage_obj, "total_tokens", None),
         }
-        if existing_timing is not None:
-            self.last_call_metadata["timing"] = existing_timing
 
     def _set_last_call_timing(self, api_time_only_sec: float, attempt_count: int) -> None:
         """Store API-only timing for the latest call."""
-        existing_usage = self.last_call_metadata.get("usage")
-        self.last_call_metadata = {
-            "timing": {
-                "api_time_only_sec": float(api_time_only_sec),
-                "attempt_count": int(attempt_count),
-            }
+        self.last_call_metadata["timing"] = {
+            "api_time_only_sec": float(api_time_only_sec),
+            "attempt_count": int(attempt_count),
         }
-        if existing_usage is not None:
-            self.last_call_metadata["usage"] = existing_usage
 
     def get_last_call_metadata(self) -> Dict[str, Any]:
         """Return a shallow copy of metadata for the latest API call."""
@@ -170,6 +184,7 @@ class GeminiClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call the Gemini API with error handling and retries"""
         self._clear_last_call_metadata()
+        self._set_last_call_prompt(prompt)
         api_time_only_sec = 0.0
         attempt_count = 0
 
@@ -207,7 +222,7 @@ class GeminiClient(APIClient):
                         self._set_last_call_usage(None)
                     else:
                         self._set_last_call_usage(self._build_usage_obj(usage_metadata))
-                    return response_text
+                    return self._postprocess_response(response_text)
 
                 block_reason = "Unknown"
                 prompt_feedback = getattr(response, "prompt_feedback", None)
@@ -253,6 +268,7 @@ class GPTClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call the GPT API with error handling and retries"""
         self._clear_last_call_metadata()
+        self._set_last_call_prompt(prompt)
         api_time_only_sec = 0.0
         attempt_count = 0
         last_error = None
@@ -272,7 +288,7 @@ class GPTClient(APIClient):
                     if response.choices[0].message:
                         self._set_last_call_timing(api_time_only_sec, attempt_count)
                         self._set_last_call_usage(getattr(response, "usage", None))
-                        return response.choices[0].message.content
+                        return self._postprocess_response(response.choices[0].message.content)
                     else:
                         error_message = "GPT response was empty."
                         print(f"Warning: {error_message}")
@@ -342,6 +358,7 @@ class AzureOpenAIClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call the Azure OpenAI API with error handling and retries"""
         self._clear_last_call_metadata()
+        self._set_last_call_prompt(prompt)
         api_time_only_sec = 0.0
         attempt_count = 0
         last_error = None
@@ -370,7 +387,7 @@ class AzureOpenAIClient(APIClient):
                     if response.choices[0].message:
                         self._set_last_call_timing(api_time_only_sec, attempt_count)
                         self._set_last_call_usage(getattr(response, "usage", None))
-                        return response.choices[0].message.content
+                        return self._postprocess_response(response.choices[0].message.content)
                     else:
                         error_message = "Azure OpenAI response was empty."
                         print(f"Warning: {error_message}")
@@ -412,6 +429,7 @@ class OpenAICompatibleClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call an OpenAI-compatible chat endpoint with retries."""
         self._clear_last_call_metadata()
+        self._set_last_call_prompt(prompt)
         api_time_only_sec = 0.0
         attempt_count = 0
         last_error = None
@@ -435,7 +453,7 @@ class OpenAICompatibleClient(APIClient):
                 if response.choices and len(response.choices) > 0 and response.choices[0].message:
                     self._set_last_call_timing(api_time_only_sec, attempt_count)
                     self._set_last_call_usage(getattr(response, "usage", None))
-                    return response.choices[0].message.content
+                    return self._postprocess_response(response.choices[0].message.content)
 
                 last_error = "OpenAI-compatible response was empty."
                 print(f"Warning: {last_error}")
@@ -481,6 +499,7 @@ class AnthropicClient(APIClient):
     def call(self, prompt: str) -> str:
         """Call Anthropic Messages API with retries."""
         self._clear_last_call_metadata()
+        self._set_last_call_prompt(prompt)
         api_time_only_sec = 0.0
         attempt_count = 0
         last_error = None
@@ -529,7 +548,7 @@ class AnthropicClient(APIClient):
                     self._set_last_call_timing(api_time_only_sec, attempt_count)
                     usage = body.get("usage") or {}
                     self._set_last_call_usage(self._build_usage_obj(usage))
-                    return text
+                    return self._postprocess_response(text)
 
                 last_error = "Anthropic response was empty."
                 print(f"Warning: {last_error}")

@@ -224,11 +224,14 @@ class CodeExecutor:
         return self.execute_python_code(z3_code, "Z3", timeout=30)
         
     def execute_pyke_code(self, pyke_code: str) -> Tuple[bool, str]:
-        """Execute the PyKe code and return the results."""
+        """Execute the PyKe code and return the results.
+
+        Accepts the canonical format (```facts / ```rules / ```query blocks)
+        as well as common LLM variations such as markdown-fenced blocks
+        (```pyke, ```python, or unlabelled ```) and thinking-token preamble.
+        """
         try:
-            facts = re.search(r"```facts\n(.*?)```", pyke_code, re.DOTALL).group(1)
-            rules = re.search(r"```rules\n(.*?)```", pyke_code, re.DOTALL).group(1)
-            query = re.search(r"```query\n(.*?)```", pyke_code, re.DOTALL).group(1)
+            facts, rules, query = self._parse_pyke_sections(pyke_code)
 
             if "True" in query:
                 final_answer = True
@@ -237,7 +240,8 @@ class CodeExecutor:
                 final_answer = False
                 query = query.replace("False", "$target")
             else:
-                raise ValueError("Boolean value for the query target not found")
+                return False, ("PyKe parse error: Boolean value for the query target not found. "
+                               "The generated code must contain True or False in the query section.")
             
             os.makedirs(self.temp_cache_dir, exist_ok=True)
             with open(os.path.join(self.temp_cache_dir, "facts.kfb"), 'w') as fp:
@@ -271,6 +275,72 @@ class CodeExecutor:
             if os.path.exists("./compiled_krb"):
                 print('removing compiled_krb')
                 os.system(f'rm -rf compiled_krb/*')
+
+    @staticmethod
+    def _parse_pyke_sections(pyke_code: str) -> Tuple[str, str, str]:
+        """Extract facts, rules, and query sections from LLM-generated PyKe output.
+
+        Tries the canonical ```facts / ```rules / ```query markers first.
+        Falls back to heuristic section-header parsing for markdown-wrapped
+        output (```pyke, ```python, plain ```, or no fences at all).
+
+        Raises ValueError with a descriptive message when sections cannot be
+        found so the caller can report it as a *generated-code* problem rather
+        than an internal framework exception.
+        """
+        # ── Canonical format: labelled fenced blocks ──────────────────────
+        facts_m = re.search(r"```facts\s*\n(.*?)```", pyke_code, re.DOTALL)
+        rules_m = re.search(r"```rules\s*\n(.*?)```", pyke_code, re.DOTALL)
+        query_m = re.search(r"```query\s*\n(.*?)```", pyke_code, re.DOTALL)
+
+        if facts_m and rules_m and query_m:
+            return facts_m.group(1), rules_m.group(1), query_m.group(1)
+
+        # ── Fallback: strip markdown fences, then look for section headers ─
+        text = pyke_code
+
+        # Remove fenced code blocks wrappers (```python, ```pyke, etc.)
+        text = re.sub(r"```[a-zA-Z]*\s*\n", "", text)
+        text = re.sub(r"\n?```", "", text)
+
+        # Use section headers like "Facts:", "Rules:", "Query:" (case-insensitive)
+        facts_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Facts\s*:\s*\n", text, re.IGNORECASE)
+        rules_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Rules\s*:\s*\n", text, re.IGNORECASE)
+        query_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Query\s*:\s*\n", text, re.IGNORECASE)
+
+        if facts_hdr and rules_hdr and query_hdr:
+            facts_start = facts_hdr.end()
+            rules_start = rules_hdr.end()
+            query_start = query_hdr.end()
+
+            # Determine section boundaries by order of headers
+            headers = sorted([
+                ("facts", facts_start, facts_hdr.start()),
+                ("rules", rules_start, rules_hdr.start()),
+                ("query", query_start, query_hdr.start()),
+            ], key=lambda x: x[2])
+
+            sections = {}
+            for i, (name, content_start, _hdr_start) in enumerate(headers):
+                if i + 1 < len(headers):
+                    sections[name] = text[content_start:headers[i + 1][2]]
+                else:
+                    sections[name] = text[content_start:]
+
+            return sections["facts"].strip() + "\n", sections["rules"].strip() + "\n", sections["query"].strip() + "\n"
+
+        missing = []
+        if not facts_m and not facts_hdr:
+            missing.append("facts")
+        if not rules_m and not rules_hdr:
+            missing.append("rules")
+        if not query_m and not query_hdr:
+            missing.append("query")
+        raise ValueError(
+            f"Could not find required PyKe section(s): {', '.join(missing)}. "
+            f"Expected ```facts / ```rules / ```query blocks or "
+            f"Facts: / Rules: / Query: section headers."
+        )
     
     def execute_csp_code(self, csp_code: str) -> Tuple[bool, str]:
         """Execute the Python CSP code and return the results."""
@@ -315,6 +385,8 @@ class CodeCleaner:
             return cleaned_code
         
         elif dataset == 'proofwriter':
+            # PyKe format: keep as-is — the execute_pyke_code parser handles
+            # both canonical (```facts/```rules/```query) and markdown variants.
             return code_text
         
         elif dataset == 'folio':
@@ -348,8 +420,11 @@ class Reasoner(ABC):
         
         self.summary_folder = os.path.join(self.results_folder, "summary")
         self.log_folder = os.path.join(self.results_folder, "log")
+        self.llm_io_folder = os.path.join(self.results_folder, "llm_io")
         os.makedirs(self.summary_folder, exist_ok=True)
         os.makedirs(self.log_folder, exist_ok=True)
+        os.makedirs(self.llm_io_folder, exist_ok=True)
+        self._llm_io_counter = 0
         
         # Initialize temp cache directory for PyKe
         self.temp_cache_dir = os.path.join(self.results_folder, "temp_cache_dir")
@@ -389,7 +464,8 @@ class Reasoner(ABC):
                 gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
                 openai_compatible_extra_body=self._get_openai_compatible_extra_body(model),
                 max_retries=self.config.max_retries,
-                inter_test_case_delay=self.config.test_delay
+                inter_test_case_delay=self.config.test_delay,
+                strip_thinking=getattr(self.config, "strip_thinking", True),
             )
             self.api_client = self.initialize_api_client(model, api_config)
             return
@@ -406,7 +482,8 @@ class Reasoner(ABC):
                 gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
                 openai_compatible_extra_body=self._get_openai_compatible_extra_body(plan_model),
                 max_retries=self.config.max_retries,
-                inter_test_case_delay=self.config.test_delay
+                inter_test_case_delay=self.config.test_delay,
+                strip_thinking=getattr(self.config, "strip_thinking", True),
             )
             self.api_client = self.initialize_api_client(plan_model, plan_api_config)
 
@@ -421,7 +498,8 @@ class Reasoner(ABC):
                 gemini_thinking_level=getattr(self.config, "gemini_thinking_level", None),
                 openai_compatible_extra_body=self._get_openai_compatible_extra_body(code_model),
                 max_retries=self.config.max_retries,
-                inter_test_case_delay=self.config.test_delay
+                inter_test_case_delay=self.config.test_delay,
+                strip_thinking=getattr(self.config, "strip_thinking", True),
             )
             self.code_api_client = self.initialize_api_client(code_model, code_api_config)
 
@@ -578,13 +656,36 @@ class Reasoner(ABC):
             os.makedirs(self.results_folder, exist_ok=True)
         return self.results_folder
 
+    def _log_llm_io(self, client: APIClient, role: str, response: str) -> None:
+        """Save an LLM call's prompt, raw response, and processed response to disk."""
+        self._llm_io_counter += 1
+        meta = client.get_last_call_metadata()
+        record = {
+            "call_index": self._llm_io_counter,
+            "role": role,
+            "model": getattr(client.config, "model_name", None),
+            "temperature": getattr(client.config, "temperature", None),
+            "prompt": meta.get("prompt"),
+            "raw_response": meta.get("raw_response"),
+            "processed_response": response,
+            "usage": meta.get("usage"),
+            "timing": meta.get("timing"),
+        }
+        path = os.path.join(self.llm_io_folder, f"{self._llm_io_counter:05d}_{role}.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(record, f, indent=2, ensure_ascii=False)
+
     def _call_api(self, prompt: str) -> str:
         """Common method to call the API using the modular client"""
-        return self.api_client.call(prompt)
+        response = self.api_client.call(prompt)
+        self._log_llm_io(self.api_client, "api", response)
+        return response
     
     def _call_fix_api(self, prompt: str) -> str:
         """Common method to call the API using the modular client"""
-        return self.code_api_client.call(prompt)
+        response = self.code_api_client.call(prompt)
+        self._log_llm_io(self.code_api_client, "fix", response)
+        return response
     
     def interpret_results(self, response_text: str) -> Tuple[bool, str, Optional[str]]:
         """Interpret the results from the reasoning"""
