@@ -1,0 +1,36 @@
+# LM Studio Configuration
+# Use for local LM Studio inference (OpenAI-compatible API on localhost:1234).
+# LM Studio must be running on the host with the Local Server enabled.
+# In a devcontainer the host is reachable at host.docker.internal.
+
+# Required fields
+provider: "openai-compatible"
+dataset: "" # AR-LSAT, ProofWriter, ProntoQA, LogicalDeduction, FOLIO
+model: "" # Model name as shown in LM Studio (e.g. "lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF")
+plan_model: "" # Required for two-step / three-step
+code_model: "" # Required for two-step / three-step
+test_file: "" # Path to the dataset file
+prompt_path: "" # Path to prompt templates
+reasoning_method: "" # cot, one-step, two-step, three-step
+shots: "three"
+desired_indices: null
+num_paths: 30
+
+# API / runtime settings
+api_key: "lm-studio" # LM Studio does not require a real key
+openai_compatible_api_key: "lm-studio"
+openai_compatible_base_url: "http://host.docker.internal:1234/v1" # LM Studio local server (devcontainer)
+# Use http://localhost:1234/v1 when running outside a container
+openai_compatible_default_extra_body: null
+openai_compatible_extra_body: null
+max_retries: 15
+test_delay: 1
+num_processes: 1 # LM Studio handles one request at a time by default
+
+# Generation settings
+plan_temp: 1
+code_temp: 0
+max_repairs: 3
+
+# Output
+results_root: "./results"
