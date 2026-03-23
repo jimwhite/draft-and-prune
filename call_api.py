@@ -6,9 +6,24 @@ import requests
 from typing import Optional, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 import openai
-from google import genai
-from openai import AzureOpenAI
-from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+
+# Provider-specific imports are deferred so that only the SDK you
+# actually use needs to be installed.
+try:
+    from google import genai
+except ImportError:
+    genai = None
+
+try:
+    from openai import AzureOpenAI
+except ImportError:
+    AzureOpenAI = None
+
+try:
+    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+except ImportError:
+    DefaultAzureCredential = None
+    get_bearer_token_provider = None
 
 class APIConfig:
     """Configuration class for API calls"""
@@ -93,6 +108,9 @@ class APIClient(ABC):
 class GeminiClient(APIClient):
     """Client for Gemini API using the official google-genai SDK."""
     def __init__(self, config: APIConfig, api_key: str = None, api_keys: list = None):
+        if genai is None:
+            raise ImportError("The 'google-generativeai' package is required for the Gemini provider. "
+                              "Install it with: pip install google-generativeai")
         super().__init__(config)
         if api_keys and isinstance(api_keys, list):
             self.api_keys = [k for k in api_keys if k]
@@ -287,6 +305,9 @@ class GPTClient(APIClient):
 class AzureOpenAIClient(APIClient):
     """Client for Azure OpenAI API with Entra ID authentication"""
     def __init__(self, config: APIConfig, endpoint: str = None, deployment: str = None, managed_identity_client_id: str = None):
+        if AzureOpenAI is None or DefaultAzureCredential is None:
+            raise ImportError("The 'azure-identity' and 'openai' packages are required for the Azure OpenAI provider. "
+                              "Install them with: pip install azure-identity openai")
         super().__init__(config)
         self.endpoint = endpoint
         self.deployment = deployment

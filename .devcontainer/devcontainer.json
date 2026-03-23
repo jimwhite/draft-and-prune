@@ -1,0 +1,79 @@
+{
+    "name": "Draft-and-Prune",
+    "image": "ghcr.io/jimwhite/acl2-jupyter:latest",
+    "runArgs": ["-p", "8888:8888"],
+    // jupyter lab --ip=0.0.0.0 --no-browser  --IdentityProvider.token="MY_TOKEN"
+    // "forwardPorts": [8888],
+    // "portsAttributes": {
+    //     "8888": {
+    //         "label": "Jupyter",
+    //         "requireLocalPort": true
+    //     }
+    // },
+    "containerEnv": {
+        "JUPYTER_PORT": "8888",
+        "RESTARTABLE": "yes",
+        "USER": "jovyan",
+        "ACL2_LISP": "sbcl",
+        // Only use one ACL2 / SAVED_ACL2 per container.
+        // Updated the symlinks /opt/acl2/bin/acl2 and /home/acl2/saved_acl2 to point to the same ACL2 executable.
+        "ACL2": "/opt/acl2/bin/acl2",
+        "ACL2_HOME": "/home/acl2",
+        "ACL2_SYSTEM_BOOKS": "/home/acl2/books"
+    },
+    "remoteEnv": {
+        "VIRTUAL_ENV": "${containerWorkspaceFolder}/.venv",
+        "PATH": "${containerWorkspaceFolder}/.venv/bin:${containerEnv:HOME}/.cargo/bin:${containerEnv:PATH}"
+    },
+    "postCreateCommand": ".devcontainer/post-create.sh ${containerWorkspaceFolder}",
+    "postStartCommand": "grep -q 'source.*\\.venv/bin/activate' ~/.bashrc || echo 'source ${containerWorkspaceFolder}/.venv/bin/activate' >> ~/.bashrc",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "ms-copilot.vscode-copilot-chat"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+                "python.terminal.activateEnvironment": true,
+                "python.terminal.activateEnvInCurrentTerminal": true
+            },
+            "mcp": {
+                "servers": {
+                    // "lmstudio": {
+                    //     "type": "sse",
+                    //     "url": "http://host.docker.internal:1234/sse"
+                    // },
+                    "acl2-mcp": {
+                        "command": "${containerWorkspaceFolder}/.venv/bin/acl2-mcp",
+                        "args": [],
+                        "env": {
+                            "ACL2_HOME": "/home/acl2",
+                            "ACL2_SYSTEM_BOOKS": "/home/acl2/books",
+                            "ACL2": "/home/acl2/saved_acl2",
+                            "SBCL_USER_ARGS": "--noinform",
+                            "VIRTUAL_ENV": "${containerWorkspaceFolder}/.venv",
+                            "PATH": "${containerWorkspaceFolder}/.venv/bin:/opt/acl2/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+                        }
+                    },
+                    "acl2-kg-mcp": {
+                        "command": "${containerWorkspaceFolder}/.venv/bin/acl2-kg-mcp",
+                        "args": [],
+                        "env": {
+                            "WEAVIATE_HOST": "host.docker.internal"
+                        }
+                    },
+                    "jupyter": {
+                        "command": "npx",
+                        "args": [
+                            "mcp-remote",
+                            "http://localhost:8888/mcp"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

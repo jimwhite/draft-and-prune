@@ -1,0 +1,40 @@
+# LM Studio Configuration — Draft-and-Prune (two-step) on AR-LSAT
+# Use for local LM Studio inference (OpenAI-compatible API on localhost:1234).
+# LM Studio must be running on the host with the Local Server enabled.
+# In a devcontainer the host is reachable at host.docker.internal.
+#
+# Paper reference: "Draft and Prune" (arXiv 2603.17233)
+# This is the flagship experiment: two-step D&P on AR-LSAT with k=20.
+# See configs/lm-studio/ for other dataset/method variants.
+
+# Required fields
+provider: "openai-compatible"
+dataset: "AR-LSAT"
+model: "qwen/qwen3-coder-next"
+plan_model: "qwen/qwen3-coder-next"
+code_model: "qwen/qwen3-coder-next"
+test_file: "data/AR-LSAT/blob/main/complete_lsat_data/test_ar.json"
+prompt_path: "prompts-all-3-shot-aligned/AR-LSAT-prompts-two-step-partition"
+reasoning_method: "two-step"
+shots: "three"
+desired_indices: null
+num_paths: 20              # k=20 paths (paper's main setting)
+
+# API / runtime settings
+api_key: "lm-studio"
+openai_compatible_api_key: "lm-studio"
+openai_compatible_base_url: "http://host.docker.internal:1234/v1"
+# Use http://localhost:1234/v1 when running outside a container
+openai_compatible_default_extra_body: null
+openai_compatible_extra_body: null
+max_retries: 15
+test_delay: 1
+num_processes: 1           # LM Studio handles one request at a time by default
+
+# Generation settings (paper's optimal values)
+plan_temp: 1.0             # T_draft = 1.0 — induces plan diversity
+code_temp: 0               # T_gen = 0 — greedy for code stability
+max_repairs: 2             # R=2 — paper's optimal (not default 3)
+
+# Output
+results_root: "./results"

@@ -1,0 +1,26 @@
+# ProofWriter — One-step auto-formalization baseline
+provider: "openai-compatible"
+dataset: "ProofWriter"
+model: "qwen/qwen3-coder-next"
+plan_model: ""
+code_model: ""
+test_file: "data/ProofWriter/dev.json"
+prompt_path: "prompts-all-3-shot-aligned/ProofWriter-prompts-one-step"
+reasoning_method: "one-step"
+shots: "three"
+desired_indices: null
+num_paths: 20
+
+api_key: "lm-studio"
+openai_compatible_api_key: "lm-studio"
+openai_compatible_base_url: "http://host.docker.internal:1234/v1"
+openai_compatible_default_extra_body: null
+openai_compatible_extra_body: null
+max_retries: 15
+test_delay: 1
+num_processes: 1
+
+plan_temp: 1.0
+code_temp: 0
+max_repairs: 2
+results_root: "./results"
