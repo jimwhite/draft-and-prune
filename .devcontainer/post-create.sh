@@ -17,6 +17,8 @@ if [ ! -d "${WORKSPACE_FOLDER}/.venv" ]; then
     "${WORKSPACE_FOLDER}/.venv/bin/pip" install --upgrade pip
     "${WORKSPACE_FOLDER}/.venv/bin/pip" install -r "${WORKSPACE_FOLDER}/requirements.txt"
     "${WORKSPACE_FOLDER}/.venv/bin/pip" install 'jupyter-mcp-server>=0.15.0'
+    # scitools-pyke uses deprecated 'imp' module removed in Python 3.12
+    bash "${WORKSPACE_FOLDER}/patch_pyke.sh"
     echo "✓ Python venv created and requirements installed"
 else
     echo "✓ Python venv already exists"

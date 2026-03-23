@@ -8,8 +8,8 @@ test_file: "data/AR-LSAT/blob/main/complete_lsat_data/test_ar.json"
 prompt_path: "prompts-all-3-shot-aligned/AR-LSAT-prompts-one-step"
 reasoning_method: "one-step"
 shots: "three"
-desired_indices: null
-num_paths: 20
+desired_indices: [0]
+num_paths: 5
 
 api_key: "lm-studio"
 openai_compatible_api_key: "lm-studio"
@@ -22,7 +22,7 @@ num_processes: 3
 
 plan_temp: 1.0
 code_temp: 0
-max_repairs: 2
+max_repairs: 3
 results_root: "./results"
 
 # Thinking token control

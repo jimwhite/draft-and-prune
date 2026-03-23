@@ -303,10 +303,14 @@ class CodeExecutor:
         text = re.sub(r"```[a-zA-Z]*\s*\n", "", text)
         text = re.sub(r"\n?```", "", text)
 
-        # Use section headers like "Facts:", "Rules:", "Query:" (case-insensitive)
-        facts_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Facts\s*:\s*\n", text, re.IGNORECASE)
-        rules_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Rules\s*:\s*\n", text, re.IGNORECASE)
-        query_hdr = re.search(r"(?:^|\n)\s*(?:#+\s*)?Query\s*:\s*\n", text, re.IGNORECASE)
+        # Match section headers: "Facts:", "# Facts:", or bare "facts" on its
+        # own line (with optional colon).  The label must be at the start of a
+        # line (possibly after whitespace or '#' characters).
+        _hdr = r"(?:^|\n)\s*(?:#+\s*)?{}\s*:?\s*\n"
+
+        facts_hdr = re.search(_hdr.format("Facts"), text, re.IGNORECASE)
+        rules_hdr = re.search(_hdr.format("Rules"), text, re.IGNORECASE)
+        query_hdr = re.search(_hdr.format("Query"), text, re.IGNORECASE)
 
         if facts_hdr and rules_hdr and query_hdr:
             facts_start = facts_hdr.end()
@@ -361,43 +365,68 @@ class CodeCleaner:
     Note: This is not counted as syntax errors.
     The code cleaning is used to remove the markdown fences and the code blocks from the model output.
     """
-    
+
+    @staticmethod
+    def _extract_fenced_block(text: str, lang_hints: Tuple[str, ...] = ()) -> Optional[str]:
+        """Extract code from a markdown fenced code block.
+
+        Searches for a fenced block whose language tag (if any) matches one of
+        *lang_hints* (case-insensitive).  If no hint matches, falls back to the
+        *last* fenced block in the text — the last block is used because LLMs
+        often put preliminary explanation code first and the real solution last.
+
+        Returns ``None`` when *text* does not contain any fenced block.
+        """
+        # Collect all fenced blocks: (lang_tag, content)
+        blocks: List[Tuple[str, str]] = []
+        for m in re.finditer(r"```(\w*)\s*\n(.*?)```", text, re.DOTALL):
+            blocks.append((m.group(1).lower(), m.group(2)))
+
+        if not blocks:
+            return None
+
+        # Prefer a block whose language tag matches a hint
+        if lang_hints:
+            hints_lower = tuple(h.lower() for h in lang_hints)
+            for lang, content in blocks:
+                if lang in hints_lower:
+                    return content.strip()
+
+        # Fallback: use the last fenced block
+        return blocks[-1][1].strip()
+
     @staticmethod
     def clean_code(code_text: str, dataset: str) -> str:
         """Clean the code from the model output which have '```python' or '```' fences"""
         dataset = dataset.lower()
         
         if dataset in ['ar-lsat', 'logicaldeduction']:
-            # Clean potential markdown fences
-            cleaned_code = code_text
-            if "```python" in cleaned_code:
-                match = re.search(r"```python\n(.*?)```", cleaned_code, re.DOTALL)
-                if match:
-                    cleaned_code = match.group(1).strip()
-            elif cleaned_code.strip().startswith("```") and cleaned_code.strip().endswith("```"):
-                # Remove opening fence (``` optionally followed by language identifier and newline)
-                cleaned_code = re.sub(r"^```[a-zA-Z]*\n?", "", cleaned_code.strip(), count=1)
-                # Remove closing fence (``` optionally followed by language identifier and newline)
-                cleaned_code = re.sub(r"\n?```$", "", cleaned_code.strip(), count=1)
-                # Remove any remaining whitespace
-                cleaned_code = cleaned_code.strip()
-
-            return cleaned_code
+            extracted = CodeCleaner._extract_fenced_block(code_text, ("python",))
+            if extracted is not None:
+                return extracted
+            return code_text
         
-        elif dataset == 'proofwriter':
-            # PyKe format: keep as-is — the execute_pyke_code parser handles
-            # both canonical (```facts/```rules/```query) and markdown variants.
+        elif dataset in ('proofwriter', 'prontoqa'):
+            # The canonical format uses ```facts / ```rules / ```query fenced
+            # blocks.  If those are present, keep the full text so that the
+            # PyKe parser can find them.
+            if re.search(r"```facts\s*\n", code_text) and re.search(r"```rules\s*\n", code_text):
+                return code_text
+
+            # Otherwise the LLM likely wrapped everything in a single markdown
+            # fence (```pyke, ```python, ```).  Extract the inner content.
+            extracted = CodeCleaner._extract_fenced_block(
+                code_text, ("pyke", "python", "prolog")
+            )
+            if extracted is not None:
+                return extracted
             return code_text
         
         elif dataset == 'folio':
-            matches = re.search(r"```prover9\n(.*?)```", code_text, re.DOTALL)
-            if matches:
-                return matches.group(1)
-            else:
-                print("Warning: No ```prover9 code block found in the output text.")
-                return code_text
-        
-        elif dataset == 'prontoqa':
+            extracted = CodeCleaner._extract_fenced_block(code_text, ("prover9",))
+            if extracted is not None:
+                return extracted
+            print("Warning: No ```prover9 code block found in the output text.")
             return code_text
         
         else:
